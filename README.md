@@ -234,6 +234,23 @@ The environment is accessible through the following URLs:
 
 </details>
 
+<details>
+  <summary><strong>Requirements for deploying the SPA</strong></summary>
+
+> ### Deploying a Keycloak Instance for Built-in Users Authentication
+>
+> To enable authentication for Dataverse built-in user accounts in the SPA, you must deploy a Keycloak instance as an OIDC authentication provider and broker for the SPA.
+>
+> However, using Keycloak is not mandatory. If you do not require authentication for Dataverse built-in users, you can use any OIDC provider to handle user authentication in the SPA.
+>
+> For supporting built-in users, Keycloak must be properly configured and integrated with the Dataverse backend using the [Dataverse Built-in Users SPI][dv_repo_builtin_users_spi_provider].
+>
+> On the SPA side, ensure that the PKCE environment variables are set up to connect to the chosen OIDC provider for authentication.
+>
+> Additionally, to allow the SPI to authenticate users against the Dataverse database, the Dataverse database must be accessible from the Keycloak service within the deployed infrastructure.
+
+</details>
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Roadmap
@@ -325,7 +342,7 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 [dv_repo_projectstatus_url]: https://www.repostatus.org/#wip
 [dv_repo_releases_url]: https://github.com/IQSS/dataverse-frontend/releases
 
-<!-- Datavserse Associated Repositories -->
+<!-- Dataverse Associated Repositories -->
 <!-- @iqss/dataverse-client-javascript -->
 
 [dv_repo_dvclientjs_url]: https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript
@@ -335,6 +352,7 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 [dv_repo_legacyjsf_releases_url]: https://github.com/IQSS/dataverse/releases
 [dv_repo_legacyjsf_issues_url]: https://github.com/IQSS/dataverse/issues
 [dv_repo_vscode_url]: https://github.com/IQSS/vscode-settings
+[dv_repo_builtin_users_spi_provider]: https://github.com/IQSS/dataverse/tree/develop/conf/keycloak/builtin-users-spi
 
 <!-- Application Instances -->
 <!-- [dv_app_] -->
