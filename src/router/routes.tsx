@@ -226,6 +226,15 @@ export const routes: RouteObject[] = [
             errorElement: <ErrorPage />
           },
           {
+            path: Route.EDIT_FILE_METADATA,
+            element: (
+              <Suspense fallback={<AppLoader />}>
+                <ReplaceFile />
+              </Suspense>
+            ),
+            errorElement: <ErrorPage />
+          },
+          {
             path: Route.FILES_REPLACE,
             element: (
               <Suspense fallback={<AppLoader />}>

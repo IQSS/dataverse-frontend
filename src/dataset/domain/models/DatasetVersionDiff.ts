@@ -20,10 +20,16 @@ export interface FileSummary {
   tags: string[]
   categories: string[]
 }
-
+export enum DatasetVersionState {
+  DRAFT = 'DRAFT',
+  RELEASED = 'RELEASED',
+  ARCHIVED = 'ARCHIVED',
+  DEACCESSIONED = 'DEACCESSIONED'
+}
 export interface VersionSummary {
   versionNumber: string
   lastUpdatedDate: string
+  versionState: DatasetVersionState
 }
 export interface MetadataBlockDiff {
   blockName: string

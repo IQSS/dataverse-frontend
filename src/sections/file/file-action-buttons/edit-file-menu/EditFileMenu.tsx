@@ -33,13 +33,23 @@ export const EditFileMenu = ({
     navigate(
       RouteWithParams.FILES_REPLACE(datasetInfo.persistentId, datasetInfo.versionNumber, fileId)
     )
-
+  const handleOnMetadataClick = () =>
+    navigate(
+      RouteWithParams.EDIT_FILE_METADATA(
+        datasetInfo.persistentId,
+        datasetInfo.versionNumber,
+        fileId
+      )
+    )
   return (
     <DropdownButton
       id="edit-files-menu"
       title={t('actionButtons.editFileMenu.title')}
       asButtonGroup
       variant="secondary">
+      <DropdownButtonItem onClick={handleOnMetadataClick}>
+        {t('actionButtons.editFileMenu.options.metadata')}
+      </DropdownButtonItem>
       <RestrictFileButton
         fileId={fileId}
         isRestricted={isRestricted}

@@ -15,6 +15,7 @@ import { FilesWithCount } from '../../files/domain/models/FilesWithCount'
 import { FileHolder } from '../../files/domain/models/FileHolder'
 import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
+import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -128,6 +129,13 @@ export class FileMockRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(1)
+      }, FakerHelper.loadingTimout())
+    })
+  }
+  updateMetadata(_fileId: number | string, _fileMetadata: FileMetadataDTO): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
       }, FakerHelper.loadingTimout())
     })
   }
