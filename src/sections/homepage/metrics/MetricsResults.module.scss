@@ -1,0 +1,55 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.metrics {
+  width: 100%;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation-name: fade-in;
+    animation-duration: 450ms;
+    animation-delay: 250ms;
+    animation-fill-mode: backwards;
+  }
+
+  // This is to avoid the animation on the counter when the user has reduced motion enabled
+  @media (prefers-reduced-motion: reduce) {
+    .slot_container {
+      :global .slot-counter-item-numbers {
+        transform: none !important;
+      }
+    }
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+.metrics_header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+  padding-left: 4px;
+
+  h4 {
+    margin: 0;
+  }
+}
+
+.dataset_metrics_column {
+  margin-bottom: 1.5rem;
+  border-bottom: solid 1px $dv-border-color;
+
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+    border-right: solid 1px $dv-border-color;
+    border-bottom: 0;
+  }
+}
