@@ -15,7 +15,8 @@ export enum Route {
   EDIT_COLLECTION = '/collections/:collectionId/edit',
   ACCOUNT = '/account',
   EDIT_COLLECTION_FEATURED_ITEMS = '/collections/:collectionId/edit-featured-items',
-  FEATURED_ITEM = '/featured-item/:parentCollectionId/:featuredItemId'
+  FEATURED_ITEM = '/featured-item/:parentCollectionId/:featuredItemId',
+  NOT_FOUND_PAGE = '/404'
 }
 
 export const RouteWithParams = {

@@ -11,7 +11,6 @@ import AddDataActionsButton from '../shared/add-data-actions/AddDataActionsButto
 import { CollectionItemsPanel } from './collection-items-panel/CollectionItemsPanel'
 import { CollectionInfo } from './CollectionInfo'
 import { CollectionSkeleton } from './CollectionSkeleton'
-import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
 import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
@@ -20,8 +19,9 @@ import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectio
 import { FeaturedItems } from './featured-items/FeaturedItems'
 import { Route } from '../Route.enum'
 import { CollectionHelper } from './CollectionHelper'
-import styles from './Collection.module.scss'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
+import styles from './Collection.module.scss'
 
 interface CollectionProps {
   collectionRepository: CollectionRepository
@@ -72,7 +72,7 @@ export function Collection({
   }
 
   if (!isLoadingCollection && !collection) {
-    return <PageNotFound />
+    return <NotFoundPage dvObjectNotFoundType="collection" />
   }
 
   return (
