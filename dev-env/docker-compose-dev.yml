@@ -53,6 +53,7 @@ services:
       DATAVERSE_AUTH_OIDC_CLIENT_ID: test
       DATAVERSE_AUTH_OIDC_CLIENT_SECRET: 94XHrfNRwXsjqTqApRrwWmhDLDHpIYV8
       DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://keycloak.mydomain.com:9080/realms/test
+      DATAVERSE_FEATURE_API_BEARER_AUTH_USE_BUILTIN_USER_ON_ID_MATCH: 1
       JVM_ARGS: -Ddataverse.pid.providers=fake
         -Ddataverse.pid.default-provider=fake
         -Ddataverse.pid.fake.type=FAKE
@@ -182,28 +183,50 @@ services:
       - /mail:mode=770,size=128M,uid=1000,gid=1000
 
   dev_keycloak:
-    container_name: 'dev_keycloak'
-    image: 'quay.io/keycloak/keycloak:21.0'
+    container_name: "dev_keycloak"
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile
+    image: gdcc/keycloak
     hostname: keycloak
-    command:
-      - 'start-dev'
-      - '--import-realm'
     environment:
-      - KC_HTTP_PORT=9080
-      - KC_HOSTNAME=localhost
-      - KC_HOSTNAME_PORT=8000
-      - KC_HOSTNAME_ADMIN_URL=http://localhost:8000
       - KEYCLOAK_ADMIN=kcadmin
       - KEYCLOAK_ADMIN_PASSWORD=kcpassword
       - KEYCLOAK_LOGLEVEL=DEBUG
+      - KC_HOSTNAME_STRICT=false
+      - KC_HOSTNAME=localhost
+      - KC_HTTP_PORT=9080
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres:5432/dataverse
+      - KC_DB_USERNAME=${DATAVERSE_DB_USER}
+      - KC_DB_PASSWORD=secret
+      - DATAVERSE_DB_HOST=postgres
+      - DATAVERSE_DB_PORT=5432
+      - DATAVERSE_DB_USER=${DATAVERSE_DB_USER}
+      - DATAVERSE_DB_PASSWORD=secret
+      - DATAVERSE_BASE_URL=http://dataverse:8080
     networks:
       dataverse:
         aliases:
           - keycloak.mydomain.com
+    command: start-dev --verbose --import-realm
     expose:
-      - 9080
+      - '9000'
+      - '9080'
+
+  dev_keycloak_initializer:
+    image: alpine:latest
+    container_name: "dev_keycloak_initializer"
+    depends_on:
+      - dev_keycloak
+    environment:
+      - KEYCLOAK_ADMIN=kcadmin
+      - KEYCLOAK_ADMIN_PASSWORD=kcpassword
     volumes:
-      - './keycloak/test-realm.json:/opt/keycloak/data/import/test-realm.json'
+      - ./keycloak/setup-spi.sh:/usr/local/bin/setup-spi.sh
+    command: [ "/bin/sh", "-c", "apk add --no-cache curl jq && /usr/local/bin/setup-spi.sh" ]
+    networks:
+      - dataverse
 
 networks:
   dataverse:
