@@ -20,7 +20,7 @@ export const MetricsResults = ({ metrics }: MetricsResultsProps) => {
   } = metrics
 
   return (
-    <div className={styles.metrics}>
+    <div className={styles.metrics} data-testid="metrics-results">
       <header className={styles.metrics_header}>
         <h4>{t('title')}</h4>
       </header>
@@ -107,7 +107,7 @@ export const MetricsResults = ({ metrics }: MetricsResultsProps) => {
 
 export const MetricsResultsSkeleton = () => (
   <SkeletonTheme>
-    <div>
+    <div data-testid="metrics-results-skeleton">
       <header className={styles.metrics_header}>
         <Skeleton width={200} height={22} />
       </header>
