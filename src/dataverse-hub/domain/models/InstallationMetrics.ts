@@ -5,6 +5,7 @@ export interface InstallationMetrics {
   continent: string
   launchYear: number
   metrics: Metric[]
+  lastMonthMetrics: MetricWithLastMonth
 }
 
 export interface Metric {
@@ -19,4 +20,14 @@ export interface Metric {
     downloaded: number
   }
   recordDate: string
+}
+
+export type MetricWithLastMonth = Metric & {
+  datasets: {
+    lastMonth: number
+  }
+  files: {
+    depositedLastMonth: number
+    downloadedLastMonth: number
+  }
 }

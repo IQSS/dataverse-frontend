@@ -10,15 +10,6 @@
     animation-fill-mode: backwards;
   }
 
-  // This is to avoid the animation on the counter when the user has reduced motion enabled
-  @media (prefers-reduced-motion: reduce) {
-    .slot_container {
-      :global .slot-counter-item-numbers {
-        transform: none !important;
-      }
-    }
-  }
-
   @keyframes fade-in {
     0% {
       opacity: 0;
@@ -31,10 +22,6 @@
 }
 
 .metrics_header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: baseline;
   margin-bottom: 0.75rem;
   padding-left: 4px;
 

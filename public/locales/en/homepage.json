@@ -1,16 +1,21 @@
 {
   "browseCollections": "Browse All Collections",
   "metrics": {
-    "title": "Activity",
+    "title": "Dataverse in Numbers",
     "datasets": "Datasets",
     "files": "Files",
     "total": "Total",
+    "lastMonth": "Last Month",
     "past30days": "Past 30 Days",
     "downloaded": "Downloaded",
     "download30days": "Downloads (30 days)",
+    "downloadedLastMonth": "Downloaded (last month)",
     "deposited": "Deposited",
     "deposited30days": "Deposited (30 days)",
-    "harvested": "Harvested"
+    "depositedLastMonth": "Deposited (last month)",
+    "harvested": "Harvested",
+    "harvestedLastMonth": "Harvested (last month)",
+    "poweredByDataverseHub": "Powered by the <a>Dataverse Hub</a>"
   },
   "usage": {
     "datasets": {

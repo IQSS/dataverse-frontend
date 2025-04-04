@@ -1,49 +1,28 @@
-import SlotCounter from 'react-slot-counter'
 import { Trans, useTranslation } from 'react-i18next'
 import { Col, Row } from '@iqss/dataverse-design-system'
-import styles from './MetricsResults.module.scss'
-import { InstallationMetrics } from '@/dataverse-hub/domain/models/InstallationMetrics'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-
-// Doc about react-slot-counter: https://almond-bongbong.github.io/react-slot-counter/
+import { InstallationMetrics } from '@/dataverse-hub/domain/models/InstallationMetrics'
+import styles from './MetricsResults.module.scss'
 
 const compactNumbersFormatter = Intl.NumberFormat(undefined, {
   notation: 'compact',
   compactDisplay: 'short'
 })
 
-const SLOT_PROPS = {
-  duration: 1.6,
-  speed: 0.6,
-  animateOnVisible: { triggerOnce: true, rootMargin: '0px 0px -50px 0px' },
-  containerClassName: styles.slot_container,
-  delay: 0.25
-}
-
 interface MetricsResultsProps {
   metrics: InstallationMetrics
-  prefersReducedMotion: boolean
 }
 
-export const MetricsResults = ({ metrics, prefersReducedMotion }: MetricsResultsProps) => {
+export const MetricsResults = ({ metrics }: MetricsResultsProps) => {
   const { t } = useTranslation('homepage', { keyPrefix: 'metrics' })
-
-  console.log(metrics)
+  const {
+    lastMonthMetrics: { datasets, files }
+  } = metrics
 
   return (
     <div className={styles.metrics}>
       <header className={styles.metrics_header}>
         <h4>{t('title')}</h4>
-
-        <em className="text-muted small">
-          <Trans
-            t={t}
-            i18nKey="poweredByDataverseHub"
-            components={{
-              a: <a href="https://hub.dataverse.org/" target="_blank" rel="noreferrer" />
-            }}
-          />
-        </em>
       </header>
 
       <Row>
@@ -53,44 +32,28 @@ export const MetricsResults = ({ metrics, prefersReducedMotion }: MetricsResults
               <h5 className="h4 text-muted mb-3">{t('datasets')}</h5>
             </Col>
             <Col xs={6} className="mb-4">
-              <div className="display-6 fw-bold text-primary">
-                <SlotCounter
-                  value={compactNumbersFormatter.format(187911)}
-                  startValue={!prefersReducedMotion ? '000K' : /* istanbul ignore next */ undefined}
-                  {...SLOT_PROPS}
-                />
-              </div>
+              <data className="display-6 fw-bold text-primary" value={datasets.total}>
+                {compactNumbersFormatter.format(datasets.total)}
+              </data>
               <div className="small text-muted">{t('total')}</div>
             </Col>
             <Col xs={6} className="mb-4">
-              <div className="display-6 fw-bold text-primary">
-                <SlotCounter
-                  value={compactNumbersFormatter.format(2162)}
-                  startValue={!prefersReducedMotion ? '00K' : /* istanbul ignore next */ undefined}
-                  {...SLOT_PROPS}
-                />
-              </div>
-              <div className="small text-muted">{t('past30days')}</div>
+              <data className="display-6 fw-bold text-primary" value={datasets.lastMonth}>
+                {compactNumbersFormatter.format(datasets.lastMonth)}
+              </data>
+              <div className="small text-muted">{t('lastMonth')}</div>
             </Col>
 
             <Col xs={6}>
-              <div className="display-6 fw-bold text-primary">
-                <SlotCounter
-                  value={compactNumbersFormatter.format(101869)}
-                  startValue={!prefersReducedMotion ? '000K' : /* istanbul ignore next */ undefined}
-                  {...SLOT_PROPS}
-                />
-              </div>
+              <data className="display-6 fw-bold text-primary" value={datasets.deposited}>
+                {compactNumbersFormatter.format(datasets.deposited)}
+              </data>
               <div className="small text-muted">{t('deposited')}</div>
             </Col>
             <Col xs={6}>
-              <div className="display-6 fw-bold text-primary">
-                <SlotCounter
-                  value={compactNumbersFormatter.format(86042)}
-                  startValue={!prefersReducedMotion ? '00K' : /* istanbul ignore next */ undefined}
-                  {...SLOT_PROPS}
-                />
-              </div>
+              <data className="display-6 fw-bold text-primary" value={datasets.harvested}>
+                {compactNumbersFormatter.format(datasets.harvested)}
+              </data>
               <div className="small text-muted">{t('harvested')}</div>
             </Col>
           </Row>
@@ -101,48 +64,43 @@ export const MetricsResults = ({ metrics, prefersReducedMotion }: MetricsResults
               <h5 className="h4 text-muted mb-3">{t('files')}</h5>
             </Col>
             <Col xs={6} className="mb-4">
-              <div className="display-6 fw-bold text-primary">
-                <SlotCounter
-                  value={compactNumbersFormatter.format(91514796)}
-                  startValue={!prefersReducedMotion ? '00M' : /* istanbul ignore next */ undefined}
-                  {...SLOT_PROPS}
-                />
-              </div>
+              <data className="display-6 fw-bold text-primary" value={files.downloaded}>
+                {compactNumbersFormatter.format(files.downloaded)}
+              </data>
               <div className="small text-muted">{t('downloaded')}</div>
             </Col>
             <Col xs={6} className="mb-4">
-              <div className="display-6 fw-bold text-primary">
-                <SlotCounter
-                  value={compactNumbersFormatter.format(4761951)}
-                  startValue={!prefersReducedMotion ? '00M' : /* istanbul ignore next */ undefined}
-                  {...SLOT_PROPS}
-                />
-              </div>
-              <div className="small text-muted">{t('download30days')}</div>
+              <data className="display-6 fw-bold text-primary" value={files.downloadedLastMonth}>
+                {compactNumbersFormatter.format(files.downloadedLastMonth)}
+              </data>
+              <div className="small text-muted">{t('downloadedLastMonth')}</div>
             </Col>
             <Col xs={6}>
-              <div className="display-6 fw-bold text-primary">
-                <SlotCounter
-                  value={compactNumbersFormatter.format(2302964)}
-                  startValue={!prefersReducedMotion ? '000M' : /* istanbul ignore next */ undefined}
-                  {...SLOT_PROPS}
-                />
-              </div>
+              <data className="display-6 fw-bold text-primary" value={files.deposited}>
+                {compactNumbersFormatter.format(files.deposited)}
+              </data>
               <div className="small text-muted">{t('deposited')}</div>
             </Col>
             <Col xs={6}>
-              <div className="display-6 fw-bold text-primary">
-                <SlotCounter
-                  value={compactNumbersFormatter.format(61622)}
-                  startValue={!prefersReducedMotion ? '00K' : /* istanbul ignore next */ undefined}
-                  {...SLOT_PROPS}
-                />
-              </div>
-              <div className="small text-muted">{t('deposited30days')}</div>
+              <data className="display-6 fw-bold text-primary" value={files.depositedLastMonth}>
+                {compactNumbersFormatter.format(files.depositedLastMonth)}
+              </data>
+              <div className="small text-muted">{t('depositedLastMonth')}</div>
             </Col>
           </Row>
         </Col>
       </Row>
+      <div className="text-center py-4">
+        <em className="text-muted small">
+          <Trans
+            t={t}
+            i18nKey="poweredByDataverseHub"
+            components={{
+              a: <a href="https://hub.dataverse.org/" target="_blank" rel="noreferrer" />
+            }}
+          />
+        </em>
+      </div>
     </div>
   )
 }
@@ -169,11 +127,11 @@ export const MetricsResultsSkeleton = () => (
               <Skeleton width={55} height={20} />
             </Col>
 
-            <Col xs={6}>
+            <Col xs={6} className="mb-4">
               <Skeleton width={130} height={40} />
               <Skeleton width={55} height={20} />
             </Col>
-            <Col xs={6}>
+            <Col xs={6} className="mb-4">
               <Skeleton width={130} height={40} />
               <Skeleton width={55} height={20} />
             </Col>
@@ -192,17 +150,21 @@ export const MetricsResultsSkeleton = () => (
               <Skeleton width={130} height={40} />
               <Skeleton width={55} height={20} />
             </Col>
-            <Col xs={6}>
+            <Col xs={6} className="mb-4">
               <Skeleton width={130} height={40} />
               <Skeleton width={55} height={20} />
             </Col>
-            <Col xs={6}>
+            <Col xs={6} className="mb-4">
               <Skeleton width={130} height={40} />
               <Skeleton width={55} height={20} />
             </Col>
           </Row>
         </Col>
       </Row>
+
+      <div className="text-center py-4">
+        <Skeleton width={200} height={22} />
+      </div>
     </div>
   </SkeletonTheme>
 )
