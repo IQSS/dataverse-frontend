@@ -7,7 +7,7 @@ import { FileMockRepository } from './FileMockRepository'
 import { File } from '../../files/domain/models/File'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { FilesWithCount } from '../../files/domain/models/FilesWithCount'
-import { RestrictDTO } from '@/files/domain/useCases/restrictFileDTO'
+import { RestrictFileDTO } from '@/files/domain/useCases/restrictFileDTO'
 
 export class FileMockLoadingRepository extends FileMockRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -58,7 +58,7 @@ export class FileMockLoadingRepository extends FileMockRepository implements Fil
     })
   }
 
-  restrict(_fileId: number | string, _restrict: RestrictDTO): Promise<void> {
+  restrict(_fileId: number | string, _restrict: RestrictFileDTO): Promise<void> {
     return new Promise(() => {
       setTimeout(() => {
         // Do nothing

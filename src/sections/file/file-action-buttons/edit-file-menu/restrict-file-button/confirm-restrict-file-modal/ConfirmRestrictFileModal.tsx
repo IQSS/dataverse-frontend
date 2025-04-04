@@ -1,8 +1,15 @@
-import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Trans, useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
-import { Button, Modal, Spinner, Stack, Col, Form } from '@iqss/dataverse-design-system'
+import {
+  Button,
+  Modal,
+  Spinner,
+  Stack,
+  Col,
+  Form,
+  QuestionMarkTooltip
+} from '@iqss/dataverse-design-system'
 import styles from './ConfirmRestrictFileModal.module.scss'
 
 interface ConfirmRestrictFileModalProps {
@@ -34,6 +41,13 @@ export const ConfirmRestrictFileModal = ({
   const [enableAccessRequest, setEnableAccessRequest] = useState(requestAccess)
   const [terms, setTerms] = useState(termsOfAccessForRestrictedFiles)
 
+  useEffect(() => {
+    if (!show) {
+      setEnableAccessRequest(requestAccess)
+      setTerms(termsOfAccessForRestrictedFiles)
+    }
+  }, [show, requestAccess, termsOfAccessForRestrictedFiles])
+
   return (
     <Modal show={show} onHide={isRestrictingFile ? () => {} : handleClose} centered size="lg">
       <Modal.Header>
@@ -48,17 +62,30 @@ export const ConfirmRestrictFileModal = ({
               <p>
                 {t('restriction.restrictionInfoP1')} <b>{t('restriction.restrictionInfoP2')}</b>
               </p>
-              <p>
-                {t('restriction.restrictionInfoP3')}
-                <Link to="https://guides.dataverse.org/en/6.5/user/dataset-management.html#restricted-files-terms-of-access">
-                  {t('restriction.userGuide')}
-                </Link>
+              <p className={styles.helper_text}>
+                <Trans
+                  t={t}
+                  i18nKey="restriction.restrictionInfoP3"
+                  components={{
+                    a: (
+                      <a
+                        href="https://guides.dataverse.org/en/latest/user/dataset-management.html#restricted-files-terms-of-access"
+                        target="_blank"
+                        rel="noreferrer"
+                      />
+                    )
+                  }}
+                />
               </p>
             </div>
             <Form>
               <Form.Group>
                 <Form.Group.Label column sm={3}>
-                  {t('restriction.restrictAccess')}
+                  {t('restriction.restrictAccess')}{' '}
+                  <QuestionMarkTooltip
+                    message={t('restriction.restrictAccessTooltipText')}
+                    placement={'auto'}
+                  />
                 </Form.Group.Label>
                 <Col sm={9}>
                   <Form.Group.Checkbox
@@ -72,7 +99,11 @@ export const ConfirmRestrictFileModal = ({
               </Form.Group>
               <Form.Group>
                 <Form.Group.Label column sm={3}>
-                  {t('restriction.termsOfAccess')}
+                  {t('restriction.termsOfAccess')}{' '}
+                  <QuestionMarkTooltip
+                    message={t('restriction.termsOfAccessTooltipText')}
+                    placement={'auto'}
+                  />
                 </Form.Group.Label>
                 <Col sm={9}>
                   <Form.Group.TextArea

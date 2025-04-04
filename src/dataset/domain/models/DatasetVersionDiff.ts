@@ -21,6 +21,13 @@ export interface FileSummary {
   categories: string[]
 }
 
+export declare enum DatasetVersionState {
+  DRAFT = 'DRAFT',
+  RELEASED = 'RELEASED',
+  ARCHIVED = 'ARCHIVED',
+  DEACCESSIONED = 'DEACCESSIONED'
+}
+
 export interface VersionSummary {
   versionNumber: string
   lastUpdatedDate: string

@@ -1,4 +1,4 @@
-export interface RestrictDTO {
+export interface RestrictFileDTO {
   restrict: boolean
   enableAccessRequest?: boolean
   termsOfAccess?: string

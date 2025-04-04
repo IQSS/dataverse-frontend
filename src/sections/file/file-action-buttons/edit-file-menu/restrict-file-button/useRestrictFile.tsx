@@ -4,7 +4,7 @@ import { WriteError } from '@iqss/dataverse-client-javascript'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { restrictFile } from '@/files/domain/useCases/restrictFile'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
-import { RestrictDTO } from '@/files/domain/useCases/restrictFileDTO'
+import { RestrictFileDTO } from '@/files/domain/useCases/restrictFileDTO'
 
 interface UseRestrictFile {
   fileRepository: FileRepository
@@ -39,17 +39,17 @@ export const useRestrictFile = ({
   ) => {
     setIsRestrictingFile(true)
 
-    const restrictDTO: RestrictDTO = {
+    const restrictFileDTO: RestrictFileDTO = {
       restrict: !isRestricted
     }
 
-    if (isRestricted == false) {
-      restrictDTO.enableAccessRequest = enableAccessRequest
-      restrictDTO.termsOfAccess = terms
+    if (isRestricted === false) {
+      restrictFileDTO.enableAccessRequest = enableAccessRequest
+      restrictFileDTO.termsOfAccess = terms
     }
 
     try {
-      await restrictFile(fileRepository, fileId, restrictDTO)
+      await restrictFile(fileRepository, fileId, restrictFileDTO)
       onSuccessfulRestrict()
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {

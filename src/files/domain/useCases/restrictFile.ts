@@ -1,10 +1,10 @@
 import { FileRepository } from '../repositories/FileRepository'
-import { RestrictDTO } from './restrictFileDTO'
+import { RestrictFileDTO } from './restrictFileDTO'
 
 export function restrictFile(
   fileRepository: FileRepository,
   fileId: number | string,
-  restrictDTO: RestrictDTO
+  restrictFileDTO: RestrictFileDTO
 ): Promise<void> {
-  return fileRepository.restrict(fileId, restrictDTO)
+  return fileRepository.restrict(fileId, restrictFileDTO)
 }

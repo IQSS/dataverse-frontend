@@ -36,7 +36,7 @@ import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 import { FilesWithCount } from '../domain/models/FilesWithCount'
 import { FileHolder } from '../domain/models/FileHolder'
 import { FixityAlgorithm } from '../domain/models/FixityAlgorithm'
-import { RestrictDTO } from '../domain/useCases/restrictFileDTO'
+import { RestrictFileDTO } from '../domain/useCases/restrictFileDTO'
 
 const includeDeaccessioned = true
 
@@ -338,7 +338,7 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  restrict(fileId: number | string, restrictDTO: RestrictDTO): Promise<void> {
-    return restrictFile.execute(fileId, restrictDTO)
+  restrict(fileId: number | string, restrictFileDTO: RestrictFileDTO): Promise<void> {
+    return restrictFile.execute(fileId, restrictFileDTO)
   }
 }
