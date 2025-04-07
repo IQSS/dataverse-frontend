@@ -18,7 +18,7 @@ export const FilePathField = ({ itemIndex, defaultValue }: FilePathFieldProps) =
       const currentFile = formValues.files[itemIndex]
 
       if (!FileUploaderHelper.isValidFilePath(value as string)) {
-        return t('fileUploader.uploadedFilesList.fields.filePath.invalid.characters')
+        return t('fileMetadataForm.fields.filePath.invalid.characters')
       }
 
       if (
@@ -29,7 +29,7 @@ export const FilePathField = ({ itemIndex, defaultValue }: FilePathFieldProps) =
           allFiles: formValues.files
         })
       ) {
-        return t('fileUploader.uploadedFilesList.fields.filePath.invalid.duplicateCombination', {
+        return t('fileMetadataForm.fields.filePath.invalid.duplicateCombination', {
           fileName: value
         })
       }
@@ -38,7 +38,7 @@ export const FilePathField = ({ itemIndex, defaultValue }: FilePathFieldProps) =
     },
     maxLength: {
       value: 255,
-      message: t('fileUploader.uploadedFilesList.fields.filePath.invalid.maxLength', {
+      message: t('fileMetadataForm.fields.filePath.invalid.maxLength', {
         maxLength: 255
       })
     }
@@ -46,11 +46,8 @@ export const FilePathField = ({ itemIndex, defaultValue }: FilePathFieldProps) =
 
   return (
     <Form.Group controlId={`files.${itemIndex}.fileDir`} as={Row}>
-      <Form.Group.Label
-        message={t('fileUploader.uploadedFilesList.fields.filePath.description')}
-        column
-        lg={2}>
-        {t('fileUploader.uploadedFilesList.fields.filePath.label')}
+      <Form.Group.Label message={t('fileMetadataForm.fields.filePath.description')} column lg={2}>
+        {t('fileMetadataForm.fields.filePath.label')}
       </Form.Group.Label>
       <Col lg={10}>
         <Controller
