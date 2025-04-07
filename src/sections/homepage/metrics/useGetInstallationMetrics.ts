@@ -17,7 +17,6 @@ export const useGetInstallationMetrics = (
 
       try {
         const metrics = await getInstallationMetrics(dataverseHubRepository, dvHubId)
-
         setMetrics(metrics)
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Error fetching metrics'

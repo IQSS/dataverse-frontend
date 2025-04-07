@@ -43,7 +43,6 @@ export const MetricsResults = ({ metrics }: MetricsResultsProps) => {
               </data>
               <div className="small text-muted">{t('lastMonth')}</div>
             </Col>
-
             <Col xs={6}>
               <data className="display-6 fw-bold text-primary" value={datasets.deposited}>
                 {compactNumbersFormatter.format(datasets.deposited)}
@@ -58,6 +57,7 @@ export const MetricsResults = ({ metrics }: MetricsResultsProps) => {
             </Col>
           </Row>
         </Col>
+
         <Col xs={12} md={6}>
           <Row className="text-center">
             <Col xs={12}>
@@ -126,7 +126,6 @@ export const MetricsResultsSkeleton = () => (
               <Skeleton width={130} height={40} />
               <Skeleton width={55} height={20} />
             </Col>
-
             <Col xs={6} className="mb-4">
               <Skeleton width={130} height={40} />
               <Skeleton width={55} height={20} />
