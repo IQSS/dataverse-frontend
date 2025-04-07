@@ -1,12 +1,15 @@
 import { KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { Button, Spinner, Stack, Table } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import styles from './EditFilesList.module.scss'
 import { EditFileMetadataRow } from '@/sections/edit-file-metadata/EditFileMetadataRow'
 import { SubmissionStatus, useSubmitFileMetadata } from './useSubmitFileMetadata'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
+import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
+import styles from './EditFilesList.module.scss'
 
 export interface FileMetadataFormRow {
   id: number
@@ -32,8 +35,10 @@ export const EditFilesList = ({ fileRepository, editFileMetadataFormData }: Edit
   const navigate = useNavigate()
   const form = useForm<EditFileMetadataFormData>({ mode: 'onChange' })
   const onSubmitSucceed = () => {
-    console.log('File metadata updated successfully')
-    // Add any additional actions to be taken upon successful submission
+    toast.success('File metadata updated successfully')
+    navigate(
+      `${Route.FILES}?id=${editFileMetadataFormData.files[0].id}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+    )
   }
   const { submitForm, submissionStatus, submitError } = useSubmitFileMetadata(
     fileRepository,
