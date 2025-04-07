@@ -64,18 +64,17 @@ export const EditFileMetadata = ({ fileId, fileRepository }: EditFileMetadataPro
   )
 }
 const createEditFileMetadataFormData = (file: File): EditFileMetadataFormData => {
-  console.log('file', file)
   return {
     files: [
       {
         id: file.id,
-        name: file.name,
+        fileName: file.name,
         fileType: file.metadata.type.toDisplayFormat(),
         fileSizeString: file.metadata.size.toString(),
         checksumValue: file.metadata.checksum?.value.toString(),
         checksumAlgorithm: file.metadata.checksum?.algorithm,
-        description: file.metadata.description,
-        directoryLabel: file.metadata.directory
+        description: file.metadata.description ?? '',
+        fileDir: file.metadata.directory ?? ''
       }
     ]
   }

@@ -37,7 +37,6 @@ export const useSubmitFileMetadata = (
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const submitForm = (formData: EditFileMetadataFormData): void => {
-    console.log('formData', formData)
     void (async () => {
       setSubmissionStatus(SubmissionStatus.IsSubmitting)
       try {
@@ -45,8 +44,8 @@ export const useSubmitFileMetadata = (
           const fileMetadataDTO = {
             id: file.id,
             description: file.description,
-            directoryLabel: file.directoryLabel,
-            name: file.name
+            directoryLabel: file.fileDir,
+            label: file.fileName
           }
           await editFileMetadata(fileRepository, file.id, fileMetadataDTO)
         }

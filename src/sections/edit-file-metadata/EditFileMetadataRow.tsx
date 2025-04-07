@@ -20,8 +20,6 @@ export const EditFileMetadataRow = ({ file, itemIndex, isSaving }: EditFileMetad
   const { t } = useTranslation('shared')
   const { register } = useFormContext()
   const iconName = FileTypeToFileIconMap[file.fileType] || /* istanbul ignore next */ IconName.OTHER
-  console.log('file.id', file.id)
-  console.log('description', file.description)
   return (
     <tr>
       <td colSpan={2}>
@@ -30,14 +28,13 @@ export const EditFileMetadataRow = ({ file, itemIndex, isSaving }: EditFileMetad
             <Icon name={iconName} />
           </div>
           <div className={styles.form_fields}>
-            {/* Hidden input field to capture file.id */}
             <input
               type="hidden"
               {...register(`files.${itemIndex}.id`)}
               defaultValue={file.id} // Provide the initial value
             />
-            <FileNameField itemIndex={itemIndex} defaultValue={file.name} />
-            <FilePathField itemIndex={itemIndex} defaultValue={file.directoryLabel} />
+            <FileNameField itemIndex={itemIndex} defaultValue={file.fileName} />
+            <FilePathField itemIndex={itemIndex} defaultValue={file.fileDir} />
             <FileDescriptionField itemIndex={itemIndex} defaultValue={file.description} />
             <div className={styles.file_extra_info}>
               <InfoCircleFill />

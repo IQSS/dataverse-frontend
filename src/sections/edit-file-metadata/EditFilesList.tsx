@@ -10,13 +10,13 @@ import { SubmissionStatus, useSubmitFileMetadata } from './useSubmitFileMetadata
 
 export interface FileMetadataFormRow {
   id: number
-  name: string
+  fileName: string
   fileType: string
   fileSizeString: string
   checksumValue?: string
   checksumAlgorithm?: string
   description?: string
-  directoryLabel?: string
+  fileDir?: string
 }
 export interface EditFileMetadataFormData {
   files: FileMetadataFormRow[]
@@ -48,7 +48,6 @@ export const EditFilesList = ({ fileRepository, editFileMetadataFormData }: Edit
     const isButton = e.target instanceof HTMLButtonElement
     const isButtonTypeSubmit = isButton ? (e.target as HTMLButtonElement).type === 'submit' : false
     const isTextarea = e.target instanceof HTMLTextAreaElement
-
     if (isButtonTypeSubmit || isTextarea) {
       return
     }
