@@ -46,7 +46,7 @@
     "react-infinite-scroll-hook": "4.1.1",
     "react-loader-spinner": "5.3.4",
     "react-markdown": "8.0.7",
-    "react-oauth2-code-pkce": "1.22.1",
+    "react-oauth2-code-pkce": "1.22.2",
     "react-router-dom": "6.23.1",
     "react-slot-counter": "3.3.0",
     "react-toastify": "11.0.2",
