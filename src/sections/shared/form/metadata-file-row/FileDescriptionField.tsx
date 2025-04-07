@@ -4,9 +4,10 @@ import { Col, Form, Row } from '@iqss/dataverse-design-system'
 
 interface FileDescriptionFieldProps {
   itemIndex: number
+  defaultValue?: string
 }
 
-export const FileDescriptionField = ({ itemIndex }: FileDescriptionFieldProps) => {
+export const FileDescriptionField = ({ itemIndex, defaultValue }: FileDescriptionFieldProps) => {
   const { control } = useFormContext()
   const { t } = useTranslation('shared')
 
@@ -28,6 +29,7 @@ export const FileDescriptionField = ({ itemIndex }: FileDescriptionFieldProps) =
         <Controller
           name={`files.${itemIndex}.description`}
           control={control}
+          defaultValue={defaultValue}
           rules={descriptionRules}
           render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
             <>

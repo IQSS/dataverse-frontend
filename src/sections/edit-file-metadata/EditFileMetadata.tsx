@@ -8,7 +8,11 @@ import { EditFileMetadataSkeleton } from './EditFileMetadataSkeleton'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { useFile } from '@/sections/file/useFile'
 import { useEffect } from 'react'
-
+import {
+  EditFileMetadataFormData,
+  EditFilesList
+} from '@/sections/edit-file-metadata/EditFilesList'
+import { File } from '@/files/domain/models/File'
 interface EditFileMetadataProps {
   fileId: number
   fileRepository: FileRepository
@@ -52,6 +56,27 @@ export const EditFileMetadata = ({ fileId, fileRepository }: EditFileMetadataPro
       </header>
 
       <SeparationLine />
+      <EditFilesList
+        fileRepository={fileRepository}
+        editFileMetadataFormData={createEditFileMetadataFormData(file)}
+      />
     </section>
   )
+}
+const createEditFileMetadataFormData = (file: File): EditFileMetadataFormData => {
+  console.log('file', file)
+  return {
+    files: [
+      {
+        id: file.id,
+        name: file.name,
+        fileType: file.metadata.type.toDisplayFormat(),
+        fileSizeString: file.metadata.size.toString(),
+        checksumValue: file.metadata.checksum?.value.toString(),
+        checksumAlgorithm: file.metadata.checksum?.algorithm,
+        description: file.metadata.description,
+        directoryLabel: file.metadata.directory
+      }
+    ]
+  }
 }

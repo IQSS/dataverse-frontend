@@ -2,6 +2,7 @@
   "collection": "Collection",
   "dataset": "Dataset",
   "file": "File",
+  "files": "Files",
   "page": "Page",
   "asterisksIndicateRequiredFields": "Asterisks indicate required fields",
   "remove": "Remove",
