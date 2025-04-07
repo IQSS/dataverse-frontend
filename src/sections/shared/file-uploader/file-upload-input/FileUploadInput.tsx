@@ -231,8 +231,9 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
           <ExclamationTriangle size={24} />
           <span>
             {t('fileUploader.fileTypeDifferentModal.message', {
-              originalFileType: MimeTypeDisplay[originalFileType],
-              replacementFileType: MimeTypeDisplay[replacementFileType]
+              originalFileType:
+                MimeTypeDisplay[originalFileType] ?? /* istanbul ignore next */ t('unknown'),
+              replacementFileType: MimeTypeDisplay[replacementFileType] ?? t('unknown')
             })}
           </span>
         </div>

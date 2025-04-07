@@ -1,4 +1,5 @@
 import { EditFileMenu } from '@/sections/file/file-action-buttons/edit-file-menu/EditFileMenu'
+import { QueryParamKey } from '@/sections/Route.enum'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
@@ -21,27 +22,18 @@ describe('EditFileMenu', () => {
     )
 
     cy.findByRole('button', { name: 'Edit File' }).should('exist').click()
-    cy.findByRole('button', { name: 'Replace' }).should('exist')
     cy.findByRole('button', { name: 'Delete' }).should('exist')
-  })
 
-  it('clicks the replace button', () => {
-    cy.customMount(
-      <EditFileMenu
-        fileId={testFile.id}
-        fileRepository={new FileMockRepository()}
-        isRestricted={false}
-        datasetInfo={{
-          persistentId: testFile.datasetPersistentId,
-          versionNumber: testFile.datasetVersion.number.toSearchParam(),
-          releasedVersionExists: false,
-          termsOfAccessForRestrictedFiles: 'terms of access for restricted files'
-        }}
-      />
-    )
+    const searchParams = new URLSearchParams({
+      [QueryParamKey.FILE_ID]: testFile.id.toString(),
+      [QueryParamKey.PERSISTENT_ID]: testFile.datasetPersistentId,
+      [QueryParamKey.DATASET_VERSION]: testFile.datasetVersion.number.toSearchParam(),
+      [QueryParamKey.REFERRER]: 'file'
+    })
 
-    cy.findByRole('button', { name: 'Edit File' }).click()
-    cy.findByRole('button', { name: 'Replace' }).click()
+    cy.findByRole('link', { name: 'Replace' })
+      .should('have.attr', 'href')
+      .and('include', searchParams.toString())
   })
 
   describe('Delete button', () => {

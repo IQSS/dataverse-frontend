@@ -267,6 +267,31 @@ describe('FileUploader', () => {
         )
       })
 
+      it('shows "Unknown" label when file type could not be mapped to a friendly type', () => {
+        cy.customMount(
+          <FileUploader
+            fileRepository={fileMockRepository}
+            datasetPersistentId=":latest"
+            storageType="S3"
+            operationType={OperationType.REPLACE_FILE}
+            originalFile={fileMock}
+          />
+        )
+
+        cy.findByTestId('file-uploader-drop-zone').as('dnd')
+        cy.get('@dnd').should('exist')
+
+        cy.get('@dnd').selectFile(
+          { fileName: 'users1.blah', contents: [{ name: 'John Doe the 1st' }] },
+          { action: 'drag-drop', force: true }
+        )
+
+        cy.findByText('File Type Different').should('exist').should('be.visible')
+        cy.findByText(
+          /The original file \(JSON\) and replacement file \(Unknown\) are different file types\. Would you like to continue?/
+        )
+      })
+
       it('cancels the upload when the user clicks on the cancel button', () => {
         cy.customMount(
           <FileUploader
