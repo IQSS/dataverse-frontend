@@ -49,11 +49,11 @@ services:
       DATAVERSE_DB_USER: ${DATAVERSE_DB_USER}
       DATAVERSE_FEATURE_API_BEARER_AUTH: 1
       DATAVERSE_FEATURE_API_BEARER_AUTH_PROVIDE_MISSING_CLAIMS: 1
+      DATAVERSE_FEATURE_API_BEARER_AUTH_USE_BUILTIN_USER_ON_ID_MATCH: 1
       DATAVERSE_AUTH_OIDC_ENABLED: 1
       DATAVERSE_AUTH_OIDC_CLIENT_ID: test
       DATAVERSE_AUTH_OIDC_CLIENT_SECRET: 94XHrfNRwXsjqTqApRrwWmhDLDHpIYV8
       DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://keycloak.mydomain.com:9080/realms/test
-      DATAVERSE_FEATURE_API_BEARER_AUTH_USE_BUILTIN_USER_ON_ID_MATCH: 1
       JVM_ARGS: -Ddataverse.pid.providers=fake
         -Ddataverse.pid.default-provider=fake
         -Ddataverse.pid.fake.type=FAKE
@@ -190,12 +190,15 @@ services:
     image: gdcc/keycloak
     hostname: keycloak
     environment:
+      - KC_HTTP_PORT=9080
+      - KC_HOSTNAME=http://localhost:8000
+      - KC_HOSTNAME_ADMIN_URL=http://localhost:8000
+      - KC_HTTP_ENABLED=true
+      - KC_HOSTNAME_STRICT=false
+      - KC_PROXY_HEADERS=xforwarded
       - KEYCLOAK_ADMIN=kcadmin
       - KEYCLOAK_ADMIN_PASSWORD=kcpassword
       - KEYCLOAK_LOGLEVEL=DEBUG
-      - KC_HOSTNAME_STRICT=false
-      - KC_HOSTNAME=localhost
-      - KC_HTTP_PORT=9080
       - KC_DB=postgres
       - KC_DB_URL=jdbc:postgresql://postgres:5432/dataverse
       - KC_DB_USERNAME=${DATAVERSE_DB_USER}
@@ -209,7 +212,7 @@ services:
       dataverse:
         aliases:
           - keycloak.mydomain.com
-    command: start-dev --verbose --import-realm
+    command: start-dev --import-realm
     expose:
       - '9000'
       - '9080'
