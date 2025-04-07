@@ -55,7 +55,6 @@ export const EditFileMetadata = ({ fileId, fileRepository }: EditFileMetadataPro
         <h1>{t('pageTitle')}</h1>
       </header>
 
-      <SeparationLine />
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={createEditFileMetadataFormData(file)}
@@ -69,7 +68,7 @@ const createEditFileMetadataFormData = (file: File): EditFileMetadataFormData =>
       {
         id: file.id,
         fileName: file.name,
-        fileType: file.metadata.type.toDisplayFormat(),
+        fileType: file.metadata.type.value,
         fileSizeString: file.metadata.size.toString(),
         checksumValue: file.metadata.checksum?.value.toString(),
         checksumAlgorithm: file.metadata.checksum?.algorithm,
