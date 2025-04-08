@@ -613,45 +613,128 @@ describe('FileUploader', () => {
       cy.findByText('Adding files failed because of A, B, C.')
     })
 
-    it('cancels saving uploaded files and show leave confirmation modal', () => {
-      cy.customMount(
-        <FileUploader
-          fileRepository={fileMockRepository}
-          datasetPersistentId=":latest"
-          storageType="S3"
-          operationType={OperationType.ADD_FILES_TO_DATASET}
-        />
-      )
+    describe('Leave Confirmation Modal', () => {
+      it('it is shown when user click the Cancel button', () => {
+        cy.customMount(
+          <FileUploader
+            fileRepository={fileMockRepository}
+            datasetPersistentId=":latest"
+            storageType="S3"
+            operationType={OperationType.ADD_FILES_TO_DATASET}
+          />
+        )
 
-      cy.findByTestId('file-uploader-drop-zone').as('dnd')
-      cy.get('@dnd').should('exist')
+        cy.findByTestId('file-uploader-drop-zone').as('dnd')
+        cy.get('@dnd').should('exist')
 
-      cy.get('@dnd').selectFile(
-        { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-        { action: 'drag-drop' }
-      )
-      cy.get('@dnd').selectFile(
-        { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
-        { action: 'drag-drop' }
-      )
+        cy.get('@dnd').selectFile(
+          { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+          { action: 'drag-drop' }
+        )
+        cy.get('@dnd').selectFile(
+          { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
+          { action: 'drag-drop' }
+        )
 
-      cy.findByText('users1.json').should('exist')
-      cy.findByText('users2.json').should('exist')
-      cy.findAllByTitle('Cancel upload').should('have.length', 2)
-      cy.findAllByRole('progressbar').should('have.length', 2)
-      cy.findByText('Select files to add').should('exist')
+        cy.findByText('users1.json').should('exist')
+        cy.findByText('users2.json').should('exist')
+        cy.findAllByTitle('Cancel upload').should('have.length', 2)
+        cy.findAllByRole('progressbar').should('have.length', 2)
+        cy.findByText('Select files to add').should('exist')
 
-      // wait for upload to finish
-      cy.wait(3_000)
+        // wait for upload to finish
+        cy.wait(3_000)
 
-      cy.findByText('Cancel').click()
+        cy.findByText('Cancel').click()
 
-      cy.findByText('Discard Uploaded Files?').should('exist')
+        cy.findByText('Discard Uploaded Files?').should('exist')
 
-      cy.findByText('Leave without saving').click()
+        cy.findByText('Leave without saving').click()
 
-      cy.findByText('users1.json').should('not.exist')
-      cy.findByText('users2.json').should('not.exist')
+        cy.findByLabelText(/File Name/).should('not.exist')
+      })
+
+      it('it is shown when user click the Cancel button and user stays on the page', () => {
+        cy.customMount(
+          <FileUploader
+            fileRepository={fileMockRepository}
+            datasetPersistentId=":latest"
+            storageType="S3"
+            operationType={OperationType.ADD_FILES_TO_DATASET}
+          />
+        )
+
+        cy.findByTestId('file-uploader-drop-zone').as('dnd')
+        cy.get('@dnd').should('exist')
+
+        cy.get('@dnd').selectFile(
+          { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+          { action: 'drag-drop' }
+        )
+        cy.get('@dnd').selectFile(
+          { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
+          { action: 'drag-drop' }
+        )
+
+        cy.findByText('users1.json').should('exist')
+        cy.findByText('users2.json').should('exist')
+        cy.findAllByTitle('Cancel upload').should('have.length', 2)
+        cy.findAllByRole('progressbar').should('have.length', 2)
+        cy.findByText('Select files to add').should('exist')
+
+        // wait for upload to finish
+        cy.wait(3_000)
+
+        cy.findByText('Cancel').click()
+
+        cy.findByText('Discard Uploaded Files?').should('exist')
+
+        cy.findByText('Stay on this page').click()
+
+        cy.findAllByLabelText(/File Name/)
+          .should('have.length', 2)
+          .spread((first, second) => {
+            expect(first).to.have.value('users1.json')
+            expect(second).to.have.value('users2.json')
+          })
+      })
+
+      it('clears uploading in progress files when user clicks on Leave without saving', () => {
+        cy.customMount(
+          <FileUploader
+            fileRepository={fileMockRepository}
+            datasetPersistentId=":latest"
+            storageType="S3"
+            operationType={OperationType.ADD_FILES_TO_DATASET}
+          />
+        )
+
+        cy.findByTestId('file-uploader-drop-zone').as('dnd')
+        cy.get('@dnd').should('exist')
+
+        // Upload one file first so we get the cancel button from the uploaded files list
+        cy.get('@dnd').selectFile(
+          { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+          { action: 'drag-drop' }
+        )
+
+        cy.findByText('users1.json').should('exist')
+
+        // wait for upload to finish
+        cy.wait(3_000)
+
+        // Now upload a second file and dont wait for it to finish
+        cy.get('@dnd').selectFile(
+          { fileName: 'users2.json', contents: [{ name: 'John Doe the 1st' }] },
+          { action: 'drag-drop' }
+        )
+
+        cy.findByText('Cancel').click()
+
+        cy.findByText('Discard Uploaded Files?').should('exist')
+
+        cy.findByText('Leave without saving').click()
+      })
     })
 
     it('removes uploaded file from the list', () => {
