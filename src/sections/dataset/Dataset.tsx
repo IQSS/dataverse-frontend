@@ -29,6 +29,7 @@ import { CollectionRepository } from '../../collection/domain/repositories/Colle
 import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
 import { DatasetVersions } from './dataset-versions/DatasetVersions'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { DatasetMetrics } from './dataset-metrics/DatasetMetrics'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -119,7 +120,6 @@ export function Dataset({
             </Col>
           </Row>
         </div>
-
         <header className={styles.header}>
           <h1>{dataset.version.title}</h1>
           <DatasetLabels labels={dataset.version.labels} />
@@ -127,7 +127,7 @@ export function Dataset({
 
         <div className={styles.container}>
           <Row>
-            <Col sm={9}>
+            <Col lg={9} className="mb-4">
               <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
             </Col>
             <Col sm={3}>
@@ -147,6 +147,18 @@ export function Dataset({
                 license={dataset.license}
                 onCustomTermsClick={handleCustomTermsClick}
                 metadataBlockInfoRepository={metadataBlockInfoRepository}
+              />
+            </Col>
+            <Col lg={3}>
+              <DatasetActionButtons
+                datasetRepository={datasetRepository}
+                collectionRepository={collectionRepository}
+                dataset={dataset}
+                contactRepository={contactRepository}
+              />
+              <DatasetMetrics
+                datasetRepository={datasetRepository}
+                datasetId={dataset.persistentId}
               />
             </Col>
           </Row>

@@ -8,6 +8,7 @@ import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
+import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 
 export class DatasetErrorMockRepository implements DatasetMockRepository {
   getAllWithCount: (
@@ -96,6 +97,17 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     _version: string,
     _datasetDeaccessionDTO: DatasetDeaccessionDTO
   ): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getDownloadCount(
+    _datasetId: string | number,
+    _includeMDC?: boolean
+  ): Promise<DatasetDownloadCount> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

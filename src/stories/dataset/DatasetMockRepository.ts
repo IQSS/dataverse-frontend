@@ -12,6 +12,9 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
+import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
+import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
+
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
     collectionId: string,
@@ -106,6 +109,21 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getDownloadCount(
+    _datasetId: string | number,
+    includeMDC?: boolean
+  ): Promise<DatasetDownloadCount> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(
+          includeMDC
+            ? DatasetDownloadCountMother.createWithMDCStartDate()
+            : DatasetDownloadCountMother.createWithoutMDCStartDate()
+        )
       }, FakerHelper.loadingTimout())
     })
   }
