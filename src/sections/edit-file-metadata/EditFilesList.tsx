@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Button, Spinner, Stack, Table } from '@iqss/dataverse-design-system'
+import { Alert, Button, Spinner, Stack, Table } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { EditFileMetadataRow } from '@/sections/edit-file-metadata/EditFileMetadataRow'
 import { SubmissionStatus, useSubmitFileMetadata } from './useSubmitFileMetadata'
@@ -68,6 +68,11 @@ export const EditFilesList = ({ fileRepository, editFileMetadataFormData }: Edit
         noValidate={true}
         data-testid="edit-file-metadata-form">
         <Stack>
+          {submitError && (
+            <Alert variant="danger" data-testid="submit-error">
+              {submitError}
+            </Alert>
+          )}
           <div className={styles.table_wrapper}>
             <Table>
               <thead>

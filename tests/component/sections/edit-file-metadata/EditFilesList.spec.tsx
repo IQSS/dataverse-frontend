@@ -111,4 +111,19 @@ describe('EditFilesList Component', () => {
     cy.findByTestId('edit-file-metadata-form').submit()
     cy.wrap(editFileMetadataStub).should('have.been.called')
   })
+  it('handles error when submitting the form', () => {
+    const editFileMetadataStub = cy
+      .stub(fileRepository, 'updateMetadata')
+      .rejects(new Error('Error'))
+    cy.customMount(
+      <EditFilesList
+        fileRepository={fileRepository}
+        editFileMetadataFormData={editFileMetadataFormData}
+      />
+    )
+
+    cy.findByTestId('edit-file-metadata-form').submit()
+    cy.wrap(editFileMetadataStub).should('have.been.called')
+    cy.findByText('Error').should('exist')
+  })
 })
