@@ -23,6 +23,7 @@ describe('EditFileMenu', () => {
     cy.findByRole('button', { name: 'Edit File' }).should('exist').click()
     cy.findByRole('button', { name: 'Replace' }).should('exist')
     cy.findByRole('button', { name: 'Delete' }).should('exist')
+    cy.findByRole('button', { name: 'Metadata' }).should('exist')
   })
 
   it('clicks the replace button', () => {
@@ -44,6 +45,24 @@ describe('EditFileMenu', () => {
     cy.findByRole('button', { name: 'Replace' }).click()
   })
 
+  it('clicks the Metadata button', () => {
+    cy.customMount(
+      <EditFileMenu
+        fileId={testFile.id}
+        fileRepository={new FileMockRepository()}
+        isRestricted={false}
+        datasetInfo={{
+          persistentId: testFile.datasetPersistentId,
+          versionNumber: testFile.datasetVersion.number.toSearchParam(),
+          releasedVersionExists: false,
+          termsOfAccessForRestrictedFiles: 'terms of access for restricted files'
+        }}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Edit File' }).click()
+    cy.findByRole('button', { name: 'Metadata' }).click()
+  })
   describe('Delete button', () => {
     it('opens and close the delete file confirmation modal', () => {
       cy.customMount(
