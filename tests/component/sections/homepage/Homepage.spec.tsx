@@ -1,6 +1,7 @@
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
+import { DataverseHubMockRepository } from '@/stories/dataverse-hub/DataverseHubMockRepository'
 import Homepage from '@/sections/homepage/Homepage'
 
 const testCollectionRepository = {} as CollectionRepository
@@ -20,18 +21,33 @@ describe('Homepage', () => {
   })
 
   it('shows app loader while loading root collection', () => {
-    cy.customMount(<Homepage collectionRepository={testCollectionRepository} />)
+    cy.customMount(
+      <Homepage
+        collectionRepository={testCollectionRepository}
+        dataverseHubRepository={new DataverseHubMockRepository()}
+      />
+    )
     cy.findByTestId('app-loader').should('exist')
   })
 
   it('shows featured items if the root collection has any', () => {
-    cy.customMount(<Homepage collectionRepository={testCollectionRepository} />)
+    cy.customMount(
+      <Homepage
+        collectionRepository={testCollectionRepository}
+        dataverseHubRepository={new DataverseHubMockRepository()}
+      />
+    )
     cy.findByTestId('featured-items').should('exist')
   })
 
   it('does not show featured items if the root collection has none', () => {
     testCollectionRepository.getFeaturedItems = cy.stub().resolves([])
-    cy.customMount(<Homepage collectionRepository={testCollectionRepository} />)
+    cy.customMount(
+      <Homepage
+        collectionRepository={testCollectionRepository}
+        dataverseHubRepository={new DataverseHubMockRepository()}
+      />
+    )
     cy.findByTestId('featured-items').should('not.exist')
   })
 })
