@@ -64,7 +64,10 @@ export const DatasetRestrictFileButton = ({
       <ConfirmRestrictFileModal
         show={showConfirmationModal}
         handleClose={handleCloseModal}
-        handleRestrict={() => handleRestrictFile(fileId)}
+        handleRestrict={(enableAccessRequest, terms) =>
+          handleRestrictFile(fileId, enableAccessRequest, terms || undefined)
+        }
+        requestAccess={datasetInfo.requestAccess}
         datasetReleasedVersionExists={datasetInfo.releasedVersionExists}
         termsOfAccessForRestrictedFiles={datasetInfo.termsOfAccessForRestrictedFiles}
         isRestrictingFile={isRestrictingFile}

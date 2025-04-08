@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { DatasetVersionDiff } from '../../../../../src/dataset/domain/models/DatasetVersionDiff'
+import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
 
 export class DatasetVersionDiffMother {
   static create(props?: Partial<DatasetVersionDiff>): DatasetVersionDiff {
@@ -7,11 +8,13 @@ export class DatasetVersionDiffMother {
       persistentId: faker.datatype.uuid(),
       oldVersion: {
         versionNumber: '1.0',
-        lastUpdatedDate: '2023-05-15T08:21:03Z'
+        lastUpdatedDate: '2023-05-15T08:21:03Z',
+        versionState: DatasetVersionState.RELEASED
       },
       newVersion: {
         versionNumber: '1.1',
-        lastUpdatedDate: '2023-05-20T08:21:03Z'
+        lastUpdatedDate: '2023-05-20T08:21:03Z',
+        versionState: DatasetVersionState.DRAFT
       },
       metadataBlockDiffs: [
         {
