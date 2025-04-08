@@ -66,7 +66,7 @@ export const EditFilesList = ({ fileRepository, editFileMetadataFormData }: Edit
         onSubmit={form.handleSubmit(submitForm)}
         onKeyDown={handleKeyDown}
         noValidate={true}
-        data-testid="uploaded-files-list-form">
+        data-testid="edit-file-metadata-form">
         <Stack>
           <div className={styles.table_wrapper}>
             <Table>

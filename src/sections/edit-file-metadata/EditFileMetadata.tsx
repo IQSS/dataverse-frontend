@@ -29,35 +29,37 @@ export const EditFileMetadata = ({ fileId, fileRepository }: EditFileMetadataPro
   if (isLoading) {
     return <EditFileMetadataSkeleton />
   }
+
   if (!file) {
     return <NotFoundPage dvObjectNotFoundType="file" />
   }
 
-  if (!file.permissions.canEditOwnerDataset) {
-    return (
-      <div className="pt-4">
-        <Alert variant="danger" dismissible={false}>
-          {t('notAllowedToEditFileMetadata')}
-        </Alert>
-      </div>
-    )
-  }
+  const { canEditOwnerDataset } = file.permissions
 
   return (
     <section>
       <BreadcrumbsGenerator
-        hierarchy={file?.hierarchy}
+        hierarchy={file.hierarchy}
         withActionItem
         actionItemText={t('pageTitle')}
       />
+
       <header>
         <h1>{t('pageTitle')}</h1>
       </header>
 
-      <EditFilesList
-        fileRepository={fileRepository}
-        editFileMetadataFormData={createEditFileMetadataFormData(file)}
-      />
+      {!canEditOwnerDataset ? (
+        <div className="pt-4">
+          <Alert variant="danger" dismissible={false}>
+            {t('errorAlert.notAllowedToEditFileMetadata')}
+          </Alert>
+        </div>
+      ) : (
+        <EditFilesList
+          fileRepository={fileRepository}
+          editFileMetadataFormData={createEditFileMetadataFormData(file)}
+        />
+      )}
     </section>
   )
 }

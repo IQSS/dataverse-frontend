@@ -28,11 +28,7 @@ export const EditFileMetadataRow = ({ file, itemIndex, isSaving }: EditFileMetad
             <Icon name={iconName} />
           </div>
           <div className={styles.form_fields}>
-            <input
-              type="hidden"
-              {...register(`files.${itemIndex}.id`)}
-              defaultValue={file.id} // Provide the initial value
-            />
+            <input type="hidden" {...register(`files.${itemIndex}.id`)} defaultValue={file.id} />
             <FileNameField itemIndex={itemIndex} defaultValue={file.fileName} />
             <FilePathField itemIndex={itemIndex} defaultValue={file.fileDir} />
             <FileDescriptionField itemIndex={itemIndex} defaultValue={file.description} />
