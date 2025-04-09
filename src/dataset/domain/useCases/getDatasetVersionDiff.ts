@@ -5,10 +5,11 @@ export async function getDatasetVersionDiff(
   datasetRepository: DatasetRepository,
   persistentId: string,
   oldVersion: string,
-  newVersion: string
+  newVersion: string,
+  includeDeaccessioned: boolean
 ): Promise<DatasetVersionDiff | undefined> {
   return datasetRepository
-    .getVersionDiff(persistentId, oldVersion, newVersion)
+    .getVersionDiff(persistentId, oldVersion, newVersion, includeDeaccessioned)
     .catch((error: Error) => {
       throw new Error(error.message)
     })

@@ -102,11 +102,13 @@ const jsDatasetLocks: JSDatasetLock[] = [
 const jsDatasetVersionDiff = {
   oldVersion: {
     versionNumber: '1.0',
-    lastUpdatedDate: '2023-05-15T08:21:03Z'
+    lastUpdatedDate: '2023-05-15T08:21:03Z',
+    versionState: DatasetVersionState.RELEASED
   },
   newVersion: {
     versionNumber: '2.0',
-    lastUpdatedDate: '2023-06-15T08:21:03Z'
+    lastUpdatedDate: '2023-06-15T08:21:03Z',
+    versionState: DatasetVersionState.RELEASED
   },
   metadataChanges: [
     {
@@ -186,13 +188,15 @@ const jsDatasetVersionDiff = {
       }
     }
   ],
-  termsOfAccess: [
-    {
-      fieldName: 'termsOfAccess',
-      oldValue: 'Old terms',
-      newValue: 'New terms'
-    }
-  ]
+  termsOfAccess: {
+    changed: [
+      {
+        fieldName: 'termsOfAccess',
+        oldValue: 'Old terms',
+        newValue: 'New terms'
+      }
+    ]
+  }
 }
 const jsDatasetFilesTotalOriginalDownloadSize = 5
 const jsDatasetFilesTotalArchivalDownloadSize = 7
