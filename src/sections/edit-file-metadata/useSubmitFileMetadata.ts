@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { EditFileMetadataFormData } from '@/sections/edit-file-metadata/EditFilesList'
 import { editFileMetadata } from '@/files/domain/useCases/editFileMetadata'
@@ -30,7 +29,6 @@ export const useSubmitFileMetadata = (
   fileRepository: FileRepository,
   onSubmitSucceed: () => void
 ) => {
-  const navigate = useNavigate()
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
   )

@@ -86,12 +86,7 @@ export const EditFilesList = ({ fileRepository, editFileMetadataFormData }: Edit
               </thead>
               <tbody className={styles.table_body}>
                 {editFileMetadataFormData.files.map((file, index) => (
-                  <EditFileMetadataRow
-                    isSaving={isSaving}
-                    file={file}
-                    itemIndex={index}
-                    key={file.id}
-                  />
+                  <EditFileMetadataRow file={file} itemIndex={index} key={file.id} />
                 ))}
               </tbody>
               <tfoot>

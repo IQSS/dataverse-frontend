@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import { Icon, IconName } from '@iqss/dataverse-design-system'
 import { useFormContext } from 'react-hook-form'
 import { InfoCircleFill } from 'react-bootstrap-icons'
@@ -13,11 +12,9 @@ import { FileMetadataFormRow } from '@/sections/edit-file-metadata/EditFilesList
 interface EditFileMetadataRowProps {
   file: FileMetadataFormRow
   itemIndex: number
-  isSaving: boolean
 }
 
-export const EditFileMetadataRow = ({ file, itemIndex, isSaving }: EditFileMetadataRowProps) => {
-  const { t } = useTranslation('shared')
+export const EditFileMetadataRow = ({ file, itemIndex }: EditFileMetadataRowProps) => {
   const { register } = useFormContext()
   const iconName = FileTypeToFileIconMap[file.fileType] || /* istanbul ignore next */ IconName.OTHER
   return (
