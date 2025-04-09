@@ -5,6 +5,7 @@ import { DatasetDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../models/DatasetsWithCount'
 import { VersionUpdateType } from '../models/VersionUpdateType'
 import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
+import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
 
 export interface DatasetRepository {
   getByPersistentId: (
@@ -22,7 +23,11 @@ export interface DatasetRepository {
   ) => Promise<DatasetVersionDiff>
 
   create: (dataset: DatasetDTO, collectionId: string) => Promise<{ persistentId: string }>
-  updateMetadata: (datasetId: string | number, datasetDTO: DatasetDTO) => Promise<void>
+  updateMetadata: (
+    datasetId: string | number,
+    datasetDTO: DatasetDTO,
+    internalVersionNumber: number
+  ) => Promise<void>
   deaccession: (
     datasetId: string | number,
     version: string,
@@ -34,4 +39,8 @@ export interface DatasetRepository {
     paginationInfo: DatasetPaginationInfo
   ) => Promise<DatasetsWithCount>
   publish(persistentId: string, versionUpdateType: VersionUpdateType): Promise<void>
+  getDownloadCount: (
+    datasetId: string | number,
+    includeMDC?: boolean
+  ) => Promise<DatasetDownloadCount>
 }

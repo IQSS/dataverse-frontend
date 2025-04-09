@@ -298,7 +298,10 @@ export class MetadataFieldsHelper {
     return formattedNewObject
   }
 
-  public static formatFormValuesToDatasetDTO(formValues: DatasetMetadataFormValues): DatasetDTO {
+  public static formatFormValuesToDatasetDTO(
+    formValues: DatasetMetadataFormValues,
+    mode: 'create' | 'edit'
+  ): DatasetDTO {
     const metadataBlocks: DatasetDTO['metadataBlocks'] = []
 
     for (const metadataBlockName in formValues) {
@@ -310,14 +313,14 @@ export class MetadataFieldsHelper {
 
       Object.entries(metadataBlockFormValues).forEach(([fieldName, fieldValue]) => {
         if (this.isPrimitiveFieldValue(fieldValue)) {
-          if (fieldValue !== '') {
+          if (fieldValue !== '' || mode === 'edit') {
             formattedMetadataBlock.fields[fieldName] = fieldValue
             return
           }
           return
         }
         if (this.isVocabularyMultipleFieldValue(fieldValue)) {
-          if (fieldValue.length > 0) {
+          if (fieldValue.length > 0 || mode === 'edit') {
             formattedMetadataBlock.fields[fieldName] = fieldValue
             return
           }
@@ -329,7 +332,7 @@ export class MetadataFieldsHelper {
             .map((primitiveField) => primitiveField.value)
             .filter((v) => v !== '')
 
-          if (primitiveMultipleFieldValues.length > 0) {
+          if (primitiveMultipleFieldValues.length > 0 || mode === 'edit') {
             formattedMetadataBlock.fields[fieldName] = primitiveMultipleFieldValues
             return
           }
@@ -340,7 +343,7 @@ export class MetadataFieldsHelper {
           const formattedMetadataChildFieldValue: DatasetMetadataChildFieldValueDTO = {}
 
           Object.entries(fieldValue).forEach(([nestedFieldName, nestedFieldValue]) => {
-            if (nestedFieldValue !== '') {
+            if (nestedFieldValue !== '' || mode === 'edit') {
               formattedMetadataChildFieldValue[nestedFieldName] = nestedFieldValue
             }
           })
@@ -357,15 +360,15 @@ export class MetadataFieldsHelper {
           fieldValue.forEach((composedFieldValues) => {
             const composedField: DatasetMetadataChildFieldValueDTO = {}
             Object.entries(composedFieldValues).forEach(([nestedFieldName, nestedFieldValue]) => {
-              if (nestedFieldValue !== '') {
+              if (nestedFieldValue !== '' || mode === 'edit') {
                 composedField[nestedFieldName] = nestedFieldValue
               }
             })
-            if (Object.keys(composedField).length > 0) {
+            if (Object.keys(composedField).length > 0 || mode === 'edit') {
               formattedMetadataChildFieldValues.push(composedField)
             }
           })
-          if (formattedMetadataChildFieldValues.length > 0) {
+          if (formattedMetadataChildFieldValues.length > 0 || mode === 'edit') {
             formattedMetadataBlock.fields[fieldName] = formattedMetadataChildFieldValues
           }
 

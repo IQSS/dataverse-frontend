@@ -23,6 +23,7 @@ interface FormProps {
   errorLoadingMetadataBlocksInfo: string | null
   datasetRepository: DatasetRepository
   datasetPersistentID?: string
+  datasetInternalVersionNumber?: number
 }
 
 export const MetadataForm = ({
@@ -32,7 +33,8 @@ export const MetadataForm = ({
   metadataBlocksInfo,
   errorLoadingMetadataBlocksInfo,
   datasetRepository,
-  datasetPersistentID
+  datasetPersistentID,
+  datasetInternalVersionNumber
 }: FormProps) => {
   const { user } = useSession()
   const navigate = useNavigate()
@@ -53,7 +55,8 @@ export const MetadataForm = ({
     collectionId,
     datasetRepository,
     onSubmitDatasetError,
-    datasetPersistentID
+    datasetPersistentID,
+    datasetInternalVersionNumber
   )
 
   useEffect(() => {

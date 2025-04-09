@@ -35,6 +35,7 @@ export interface EditFilesMenuDatasetInfo {
   versionNumber: string
   releasedVersionExists: boolean
   termsOfAccessForRestrictedFiles?: string
+  requestAccess: boolean
 }
 
 const SELECTED_FILES_EMPTY = 0

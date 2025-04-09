@@ -1,14 +1,23 @@
-import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Trans, useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
-import { Button, Modal, Spinner, Stack, Col, Form, Alert } from '@iqss/dataverse-design-system'
+import {
+  Button,
+  Modal,
+  Spinner,
+  Stack,
+  Col,
+  Form,
+  QuestionMarkTooltip
+} from '@iqss/dataverse-design-system'
 import styles from './ConfirmRestrictFileModal.module.scss'
 
 interface ConfirmRestrictFileModalProps {
   show: boolean
   handleClose: () => void
-  handleRestrict: () => void
+  handleRestrict: (enableAccessRequest: boolean, terms: string | undefined) => void
   datasetReleasedVersionExists: boolean
+  requestAccess: boolean
   isRestrictingFile: boolean
   errorRestrictingFile: string | null
   termsOfAccessForRestrictedFiles?: string
@@ -19,16 +28,25 @@ export const ConfirmRestrictFileModal = ({
   show,
   handleClose,
   handleRestrict,
-  datasetReleasedVersionExists,
+  requestAccess,
   termsOfAccessForRestrictedFiles,
+  datasetReleasedVersionExists,
   isRestrictingFile,
   errorRestrictingFile,
   isRestricted
 }: ConfirmRestrictFileModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('file')
-  const requestAccess = true // TODO need connect to API
-  const terms = termsOfAccessForRestrictedFiles // TODO need connect to API
+
+  const [enableAccessRequest, setEnableAccessRequest] = useState(requestAccess)
+  const [terms, setTerms] = useState(termsOfAccessForRestrictedFiles)
+
+  useEffect(() => {
+    if (!show) {
+      setEnableAccessRequest(requestAccess)
+      setTerms(termsOfAccessForRestrictedFiles)
+    }
+  }, [show, requestAccess, termsOfAccessForRestrictedFiles])
 
   return (
     <Modal show={show} onHide={isRestrictingFile ? () => {} : handleClose} centered size="lg">
@@ -37,9 +55,6 @@ export const ConfirmRestrictFileModal = ({
       </Modal.Header>
       <Modal.Body>
         {' '}
-        <Alert variant={'info'} dismissible={false}>
-          {'Request Access and Terms of Access are not editable now, waiting for API connection.'}
-        </Alert>
         {!isRestricted && (
           <div className={styles.restriction_form}>
             {' '}
@@ -47,37 +62,56 @@ export const ConfirmRestrictFileModal = ({
               <p>
                 {t('restriction.restrictionInfoP1')} <b>{t('restriction.restrictionInfoP2')}</b>
               </p>
-              <p>
-                {t('restriction.restrictionInfoP3')}
-                <Link to="https://guides.dataverse.org/en/6.5/user/dataset-management.html#restricted-files-terms-of-access">
-                  {t('restriction.userGuide')}
-                </Link>
+              <p className={styles.helper_text}>
+                <Trans
+                  t={t}
+                  i18nKey="restriction.restrictionInfoP3"
+                  components={{
+                    a: (
+                      <a
+                        href="https://guides.dataverse.org/en/latest/user/dataset-management.html#restricted-files-terms-of-access"
+                        target="_blank"
+                        rel="noreferrer"
+                      />
+                    )
+                  }}
+                />
               </p>
             </div>
             <Form>
               <Form.Group>
                 <Form.Group.Label column sm={3}>
-                  {t('restriction.restrictAccess')}
+                  {t('restriction.restrictAccess')}{' '}
+                  <QuestionMarkTooltip
+                    message={t('restriction.restrictAccessTooltipText')}
+                    placement={'auto'}
+                  />
                 </Form.Group.Label>
                 <Col sm={9}>
                   <Form.Group.Checkbox
-                    disabled
                     label={t('restriction.enableAccessRequest')}
                     data-testid="enable-access-request-checkbox"
                     id={'requestAccessCheckbox'}
-                    checked={requestAccess}
+                    defaultChecked={enableAccessRequest}
+                    onChange={(e) => setEnableAccessRequest(e.target.checked)}
                   />
                 </Col>
               </Form.Group>
               <Form.Group>
                 <Form.Group.Label column sm={3}>
-                  {t('restriction.termsOfAccess')}
+                  {t('restriction.termsOfAccess')}{' '}
+                  <QuestionMarkTooltip
+                    message={t('restriction.termsOfAccessTooltipText')}
+                    placement={'auto'}
+                  />
                 </Form.Group.Label>
                 <Col sm={9}>
                   <Form.Group.TextArea
                     data-testid="terms-of-access-textarea"
                     defaultValue={terms}
-                    disabled
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      setTerms(e.target.value)
+                    }
                   />
                 </Col>
               </Form.Group>
@@ -112,9 +146,9 @@ export const ConfirmRestrictFileModal = ({
           {tShared('cancel')}
         </Button>
         <Button
-          onClick={handleRestrict}
+          onClick={() => handleRestrict(enableAccessRequest, terms)}
           type="button"
-          disabled={isRestrictingFile || (!requestAccess && !terms)}>
+          disabled={isRestrictingFile || (!enableAccessRequest && !terms)}>
           <Stack direction="horizontal" gap={1}>
             {t('restriction.saveChanges')}
             {isRestrictingFile && <Spinner variant="light" animation="border" size="sm" />}

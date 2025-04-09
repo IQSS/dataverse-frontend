@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
 import { File } from './File'
 import { useSearchParams } from 'react-router-dom'
-import { PageNotFound } from '../page-not-found/PageNotFound'
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { searchParamVersionToDomainVersion } from '../../router'
 
 const repository = new FileJSDataverseRepository()
@@ -20,7 +20,7 @@ function FileWithSearchParams() {
   const datasetVersionNumber = searchParamVersionToDomainVersion(datasetVersionSearchParam)
 
   if (!id) {
-    return <PageNotFound />
+    return <NotFoundPage dvObjectNotFoundType="file" />
   }
 
   return <File repository={repository} id={id} datasetVersionNumber={datasetVersionNumber} />

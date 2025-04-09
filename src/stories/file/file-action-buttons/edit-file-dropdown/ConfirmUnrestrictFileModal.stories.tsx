@@ -23,6 +23,7 @@ export const WithDatasetNotReleased: Story = {
       handleRestrict={() => {}}
       termsOfAccessForRestrictedFiles="terms of access for restricted files"
       isRestricted={true}
+      requestAccess={false}
     />
   )
 }
@@ -38,6 +39,7 @@ export const WithReleasedDataset: Story = {
       handleRestrict={() => {}}
       termsOfAccessForRestrictedFiles="terms of access for restricted files"
       isRestricted={true}
+      requestAccess={false}
     />
   )
 }
@@ -53,6 +55,7 @@ export const WithError: Story = {
       handleRestrict={() => {}}
       termsOfAccessForRestrictedFiles="terms of access for restricted files"
       isRestricted={true}
+      requestAccess={false}
     />
   )
 }
@@ -68,6 +71,7 @@ export const RestrictingFileInProgress: Story = {
       handleRestrict={() => {}}
       termsOfAccessForRestrictedFiles="terms of access for restricted files"
       isRestricted={true}
+      requestAccess={false}
     />
   )
 }

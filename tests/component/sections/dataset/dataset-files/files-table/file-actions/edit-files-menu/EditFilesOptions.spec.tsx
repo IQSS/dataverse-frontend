@@ -10,7 +10,8 @@ const datasetInfo = {
   persistentId: `doi:10.5072/FK2/0000}`,
   releasedVersionExists: false,
   termsOfAccessForRestrictedFiles: '',
-  versionNumber: '1.0'
+  versionNumber: '1.0',
+  requestAccess: true
 }
 
 describe('EditFilesOptions', () => {

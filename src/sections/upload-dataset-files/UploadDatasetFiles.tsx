@@ -4,7 +4,7 @@ import { Tabs } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useLoading } from '../loading/LoadingContext'
 import { useDataset } from '../dataset/DatasetContext'
-import { PageNotFound } from '../page-not-found/PageNotFound'
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { FileUploader, OperationType } from '../shared/file-uploader/FileUploader'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
@@ -29,7 +29,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   }
 
   if (!dataset) {
-    return <PageNotFound />
+    return <NotFoundPage dvObjectNotFoundType="dataset" />
   }
 
   return (

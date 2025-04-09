@@ -82,7 +82,7 @@ describe('UploadDatasetFiles', () => {
       </LoadingProvider>
     )
 
-    cy.findByText('Page Not Found').should('exist')
+    cy.findByTestId('not-found-page').should('exist')
   })
 
   it('renders the file being replaced info', () => {

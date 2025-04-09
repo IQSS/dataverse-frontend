@@ -16,7 +16,8 @@ describe('EditFileMenu', () => {
         datasetInfo={{
           persistentId: testFile.datasetPersistentId,
           versionNumber: testFile.datasetVersion.number.toSearchParam(),
-          releasedVersionExists: false
+          releasedVersionExists: false,
+          requestAccess: false
         }}
       />
     )
@@ -46,7 +47,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: false
+            releasedVersionExists: false,
+            requestAccess: false
           }}
         />
       )
@@ -69,7 +71,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: true
+            releasedVersionExists: true,
+            requestAccess: false
           }}
         />
       )
@@ -92,7 +95,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: false
+            releasedVersionExists: false,
+            requestAccess: false
           }}
         />
       )
@@ -124,7 +128,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: false
+            releasedVersionExists: false,
+            requestAccess: false
           }}
         />
       )
@@ -150,7 +155,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: false
+            releasedVersionExists: false,
+            requestAccess: false
           }}
         />
       )
@@ -175,7 +181,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            versionNumber: testFile.datasetVersion.number.toSearchParam(),
+            requestAccess: true
           }}
         />
       )
@@ -183,7 +190,7 @@ describe('EditFileMenu', () => {
       cy.findByRole('button', { name: 'Edit File' }).click()
       cy.findByRole('button', { name: 'Restrict' }).click()
       cy.findByRole('dialog').should('exist')
-      cy.findByRole('checkbox').should('exist')
+      cy.findByRole('checkbox').should('exist').should('be.checked')
       cy.findAllByText(/terms of access for restricted files/i).should('exist')
 
       cy.findByRole('button', { name: /Cancel/i }).click()
@@ -201,7 +208,8 @@ describe('EditFileMenu', () => {
             persistentId: testFile.datasetPersistentId,
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             releasedVersionExists: false,
-            termsOfAccessForRestrictedFiles: 'test terms of access'
+            termsOfAccessForRestrictedFiles: 'test terms of access',
+            requestAccess: false
           }}
         />
       )
@@ -209,7 +217,7 @@ describe('EditFileMenu', () => {
       cy.findByRole('button', { name: 'Edit File' }).click()
       cy.findByRole('button', { name: 'Restrict' }).click()
       cy.findByRole('dialog').should('exist')
-      cy.findByRole('checkbox').should('exist')
+      cy.findByRole('checkbox').should('exist').should('not.be.checked')
       cy.findAllByText(/terms of access for restricted files/i).should('exist')
       cy.findByText(/test terms of access/i).should('exist')
 
@@ -227,7 +235,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             releasedVersionExists: true,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            versionNumber: testFile.datasetVersion.number.toSearchParam(),
+            requestAccess: false
           }}
         />
       )
@@ -241,8 +250,7 @@ describe('EditFileMenu', () => {
       ).should('exist')
     })
 
-    it.skip('should disable Save button if no terms of acccess and disenable access request', () => {
-      //skipped because the access request and terms of access are not editable yet
+    it('should disable Save button if no terms of acccess and disenable access request', () => {
       cy.customMount(
         <EditFileMenu
           fileId={testFile.id}
@@ -251,7 +259,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            versionNumber: testFile.datasetVersion.number.toSearchParam(),
+            requestAccess: false
           }}
         />
       )
@@ -276,7 +285,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            versionNumber: testFile.datasetVersion.number.toSearchParam(),
+            requestAccess: true
           }}
         />
       )
@@ -307,7 +317,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            versionNumber: testFile.datasetVersion.number.toSearchParam(),
+            requestAccess: true
           }}
         />
       )
@@ -333,7 +344,8 @@ describe('EditFileMenu', () => {
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
             releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            versionNumber: testFile.datasetVersion.number.toSearchParam(),
+            requestAccess: true
           }}
         />
       )
@@ -345,6 +357,35 @@ describe('EditFileMenu', () => {
       cy.findByRole('button', { name: /Save Changes/i }).click()
 
       cy.findByText('error message.').should('exist')
+    })
+
+    it('should be able to restrict file with access request', () => {
+      cy.customMount(
+        <EditFileMenu
+          fileId={testFile.id}
+          fileRepository={new FileMockRepository()}
+          isRestricted={false}
+          datasetInfo={{
+            persistentId: testFile.datasetPersistentId,
+            releasedVersionExists: false,
+            versionNumber: testFile.datasetVersion.number.toSearchParam(),
+            requestAccess: false
+          }}
+        />
+      )
+
+      cy.findByRole('button', { name: 'Edit File' }).click()
+      cy.findByRole('button', { name: 'Restrict' }).click()
+      cy.findByRole('dialog').should('exist')
+      cy.findByRole('checkbox').check()
+      cy.findByRole('textbox').type('test terms of access')
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+
+      cy.findByRole('status').should('exist')
+      cy.findByRole('dialog').should('not.exist')
+      cy.findByText(/The file has been restricted./)
+        .should('exist')
+        .should('be.visible')
     })
   })
 
