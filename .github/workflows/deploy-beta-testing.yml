@@ -33,9 +33,19 @@ jobs:
       - name: Create and populate .env file
         env:
           DATAVERSE_BACKEND_URL: ${{ secrets.BETA_DATAVERSE_BACKEND_URL }}
+          OIDC_CLIENT_ID: ${{ secrets.BETA_OIDC_CLIENT_ID }}
+          OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.BETA_OIDC_AUTHORIZATION_ENDPOINT }}
+          OIDC_TOKEN_ENDPOINT: ${{ secrets.BETA_OIDC_TOKEN_ENDPOINT }}
+          OIDC_LOGOUT_ENDPOINT: ${{ secrets.BETA_OIDC_LOGOUT_ENDPOINT }}
+          OIDC_STORAGE_KEY_PREFIX: ${{ secrets.BETA_OIDC_STORAGE_KEY_PREFIX }}
         run: |
           touch .env
           echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
+          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
+          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
+          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
+          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
         shell: bash
 
       - name: Build with base path
