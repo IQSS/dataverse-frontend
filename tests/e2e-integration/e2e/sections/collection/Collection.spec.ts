@@ -26,7 +26,7 @@ describe('Collection Page', () => {
       cy.wait(1_000)
       cy.visit('/spa/collections')
 
-      cy.findByText(/Dataverse User/i).should('exist')
+      cy.findByText(/Dataverse Admin/i).should('exist')
 
       cy.findByText(title).should('be.visible')
       cy.findByText(title).click({ force: true })
@@ -58,7 +58,7 @@ describe('Collection Page', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
         cy.visit('/spa/collections?page=2')
         cy.findAllByText(/Root/i).should('exist')
-        cy.findByText(/Dataverse User/i).should('exist')
+        cy.findByText(/Dataverse Admin/i).should('exist')
 
         cy.findByText('11 to 12 of 12 Datasets').should('exist')
       })
@@ -69,7 +69,7 @@ describe('Collection Page', () => {
         cy.visit('/spa/collections')
 
         cy.findAllByText(/Root/i).should('exist')
-        cy.findByText(/Dataverse User/i).should('exist')
+        cy.findByText(/Dataverse Admin/i).should('exist')
 
         cy.findByRole('button', { name: 'Next' }).click()
         cy.findByText('11 to 12 of 12 Datasets').should('exist')
@@ -82,7 +82,7 @@ describe('Collection Page', () => {
         cy.visit('/spa/collections?page=2')
 
         cy.findAllByText(/Root/i).should('exist')
-        cy.findByText(/Dataverse User/i).should('exist')
+        cy.findByText(/Dataverse Admin/i).should('exist')
         cy.findByText('11 to 12 of 12 Datasets').should('exist')
 
         cy.findByRole('button', { name: '1' }).click({ force: true })
@@ -102,7 +102,7 @@ describe('Collection Page', () => {
       cy.visit('/spa/collections/collection-1')
 
       cy.findAllByText(/Scientific Research/i).should('exist')
-      cy.findByText(/Dataverse User/i).should('exist')
+      cy.findByText(/Dataverse Admin/i).should('exist')
     })
   })
 })

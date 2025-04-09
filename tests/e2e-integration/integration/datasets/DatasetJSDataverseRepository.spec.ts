@@ -129,7 +129,7 @@ const datasetData = (persistentId: string, versionId: number) => {
         versionNumber: 'DRAFT',
         publishedOn: '',
         summary: 'firstDraft',
-        contributors: 'Dataverse User'
+        contributors: 'Dataverse Admin'
       }
     ],
     permissions: {
