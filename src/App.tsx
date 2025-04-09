@@ -24,16 +24,16 @@ const origin = window.location.origin
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 
 const authConfig: TAuthConfig = {
-  clientId: 'test',
-  authorizationEndpoint: `${origin}/realms/test/protocol/openid-connect/auth`,
-  tokenEndpoint: `${origin}/realms/test/protocol/openid-connect/token`,
-  logoutEndpoint: `${origin}/realms/test/protocol/openid-connect/logout`,
+  clientId: OIDC_AUTH_CONFIG.CLIENT_ID,
+  authorizationEndpoint: OIDC_AUTH_CONFIG.AUTHORIZATION_ENDPOINT,
+  tokenEndpoint: OIDC_AUTH_CONFIG.TOKEN_ENDPOINT,
+  logoutEndpoint: OIDC_AUTH_CONFIG.LOGOUT_ENDPOINT,
+  storageKeyPrefix: OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX,
   logoutRedirect: `${origin}${BASENAME_URL}`,
   redirectUri: `${origin}${BASENAME_URL}${Route.AUTH_CALLBACK}`,
   scope: 'openid',
   autoLogin: false,
-  clearURL: false,
-  storageKeyPrefix: OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX
+  clearURL: false
 }
 
 function App() {
