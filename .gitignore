@@ -67,6 +67,9 @@ _site/
 *.gz
 *.iso
 *.jar
+# Do not ignore the Keycloak SPI jar file
+# which is necessary for the local development environment
+!keycloak-dv-builtin-users-authenticator-1.0-SNAPSHOT.jar
 *.rar
 *.tar
 *.zip
