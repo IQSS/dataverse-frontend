@@ -183,7 +183,7 @@ describe('Dataset', () => {
           TestsUtils.logout()
           cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
 
-          cy.findByText('Page Not Found').should('exist')
+          cy.findByTestId('not-found-page').should('exist')
         })
     })
 
@@ -225,7 +225,7 @@ describe('Dataset', () => {
 
     it('loads page not found when passing a wrong persistentId', () => {
       cy.visit('/spa/datasets?persistentId=doi:10.5072/FK2/WRONG')
-      cy.findByText('Page Not Found').should('exist')
+      cy.findByTestId('not-found-page').should('exist')
     })
 
     it('successfully loads a dataset using a privateUrlToken', () => {

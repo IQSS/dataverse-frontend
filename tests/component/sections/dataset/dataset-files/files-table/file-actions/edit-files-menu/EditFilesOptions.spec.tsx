@@ -1,3 +1,4 @@
+import { QueryParamKey } from '@/sections/Route.enum'
 import { EditFilesOptions } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/EditFilesOptions'
 import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
@@ -8,7 +9,9 @@ const fileRepository: FileRepository = {} as FileRepository
 const datasetInfo = {
   persistentId: `doi:10.5072/FK2/0000}`,
   releasedVersionExists: false,
-  termsOfAccessForRestrictedFiles: ''
+  termsOfAccessForRestrictedFiles: '',
+  versionNumber: '1.0',
+  requestAccess: true
 }
 
 describe('EditFilesOptions', () => {
@@ -23,7 +26,6 @@ describe('EditFilesOptions', () => {
     )
 
     cy.findByRole('button', { name: 'Metadata' }).should('exist')
-    cy.findByRole('button', { name: 'Replace' }).should('exist')
     cy.findByRole('button', { name: 'Embargo' }).should('not.exist')
     cy.findByRole('button', { name: 'Provenance' }).should('not.exist')
     cy.findByRole('button', { name: 'Delete' }).should('exist')
@@ -105,10 +107,6 @@ describe('EditFilesOptions', () => {
     cy.findByText('Select File(s)').should('exist')
     cy.findByText('Close').click()
 
-    cy.findByRole('button', { name: 'Replace' }).click()
-    cy.findByText('Select File(s)').should('exist')
-    cy.findByText('Close').click()
-
     cy.findByRole('button', { name: 'Delete' }).click()
     cy.findByText('Select File(s)').should('exist')
     cy.findByText('Close').click()
@@ -125,9 +123,6 @@ describe('EditFilesOptions', () => {
     )
 
     cy.findByRole('button', { name: 'Metadata' }).click()
-    cy.findByText('Select File(s)').should('not.exist')
-
-    cy.findByRole('button', { name: 'Replace' }).click()
     cy.findByText('Select File(s)').should('not.exist')
 
     cy.findByRole('button', { name: 'Delete' }).click()
@@ -148,6 +143,18 @@ describe('EditFilesOptions for a single file', () => {
     )
 
     cy.findByRole('button', { name: 'Restrict' }).should('exist')
+
+    const searchParams = new URLSearchParams({
+      [QueryParamKey.FILE_ID]: fileUnrestricted.id.toString(),
+      [QueryParamKey.PERSISTENT_ID]: datasetInfo.persistentId,
+      [QueryParamKey.DATASET_VERSION]: datasetInfo.versionNumber,
+      [QueryParamKey.REFERRER]: 'dataset'
+    })
+
+    cy.findByRole('link', { name: 'Replace' })
+      .should('have.attr', 'href')
+      .and('include', searchParams.toString())
+
     cy.findByRole('button', { name: 'Delete' }).should('exist')
   })
 

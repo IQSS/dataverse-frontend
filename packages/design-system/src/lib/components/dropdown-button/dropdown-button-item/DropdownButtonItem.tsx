@@ -8,6 +8,7 @@ interface DropdownItemProps extends React.HTMLAttributes<HTMLElement> {
   download?: string
   children: ReactNode
   as?: ElementType
+  to?: string // When passing <Link> as the `as` prop, this prop is used to pass the URL <DropdownButtonItem as={Link} to="/some-path">...</DropdownButtonItem>
 }
 
 export function DropdownButtonItem({

@@ -1,5 +1,6 @@
 import { File as FileModel } from '@/files/domain/models/File'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { FileUploaderProvider } from './context/FileUploaderContext'
 import { useGetFixityAlgorithm } from './useGetFixityAlgorithm'
 import { FileUploaderGlobalConfig } from './context/fileUploaderReducer'
@@ -13,6 +14,7 @@ type FileUploaderProps =
       storageType: StorageType
       operationType: OperationType.REPLACE_FILE
       originalFile: FileModel
+      referrer?: ReplaceFileReferrer
     }
   | {
       fileRepository: FileRepository
@@ -20,6 +22,7 @@ type FileUploaderProps =
       storageType: StorageType
       operationType: OperationType.ADD_FILES_TO_DATASET
       originalFile?: never
+      referrer?: never
     }
 
 export type StorageType = 'S3'
@@ -37,7 +40,8 @@ export const FileUploader = ({
   datasetPersistentId,
   storageType,
   operationType,
-  originalFile
+  originalFile,
+  referrer
 }: FileUploaderProps) => {
   const { fixityAlgorithm, isLoadingFixityAlgorithm } = useGetFixityAlgorithm(fileRepository)
 
@@ -64,6 +68,7 @@ export const FileUploader = ({
       <FileUploaderPanel
         fileRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
+        referrer={referrer}
       />
     </FileUploaderProvider>
   )

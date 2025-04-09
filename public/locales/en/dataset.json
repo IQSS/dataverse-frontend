@@ -216,5 +216,30 @@
     "forwardUrl": "URL where this dataset can be accessed after deaccessioning:",
     "cancelButton": "Cancel",
     "deaccessionButton": "Deaccession"
+  },
+  "metrics": {
+    "title": "Dataset Metrics",
+    "tip": {
+      "default": "Aggregated metrics for this dataset.",
+      "makeDataCount": "Metrics collected using Make Data Count standards."
+    },
+    "makeDataCount": {
+      "title": "Make Data Count (MDC) Metrics",
+      "since": "since"
+    },
+    "downloads": {
+      "count": {
+        "default_zero": "{{count}} Downloads",
+        "default_one": "{{count}} Download",
+        "default_other": "{{count}} Downloads",
+        "preMDC_zero": "{{count}} Downloads pre-MDC",
+        "preMDC_one": "{{count}} Download pre-MDC",
+        "preMDC_other": "{{count}} Downloads pre-MDC"
+      },
+      "defaultTip": "Total aggregated downloads of files in this dataset.",
+      "preMakeDataCountTip": "Downloads prior to enabling MDC. Counts do not have the same filtering and detail as MDC metrics.",
+      "makeDataCountTip": "Each file downloaded is counted as 1, and added to the total download count."
+    },
+    "defaultGetDownloadCountError": "Something went wrong while getting the dataset download count. Try again later."
   }
 }

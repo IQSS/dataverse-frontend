@@ -219,6 +219,13 @@ export enum DatasetNonNumericVersionSearchParam {
   DRAFT = 'DRAFT'
 }
 
+export enum DatasetVersionState {
+  DRAFT = 'DRAFT',
+  RELEASED = 'RELEASED',
+  ARCHIVED = 'ARCHIVED',
+  DEACCESSIONED = 'DEACCESSIONED'
+}
+
 export class DatasetVersionNumber {
   constructor(public readonly majorNumber?: number, public readonly minorNumber?: number) {}
 

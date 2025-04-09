@@ -7,7 +7,7 @@ import { useLoading } from '../loading/LoadingContext'
 import { FileInfo } from './file-info/FileInfo'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
-import { PageNotFound } from '../page-not-found/PageNotFound'
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { FileUploader, OperationType } from '../shared/file-uploader/FileUploader'
 import styles from './ReplaceFile.module.scss'
 
@@ -16,13 +16,21 @@ interface ReplaceFileProps {
   fileIdFromParams: number
   datasetPidFromParams: string
   datasetVersionFromParams: string
+  referrer?: ReplaceFileReferrer
+}
+
+// From where the user is coming from
+export enum ReplaceFileReferrer {
+  DATASET = 'dataset',
+  FILE = 'file'
 }
 
 export const ReplaceFile = ({
   fileRepository,
   fileIdFromParams,
   datasetPidFromParams,
-  datasetVersionFromParams
+  datasetVersionFromParams,
+  referrer
 }: ReplaceFileProps) => {
   const { t } = useTranslation('replaceFile')
   const { t: tFiles } = useTranslation('files')
@@ -45,7 +53,7 @@ export const ReplaceFile = ({
   }
 
   if (!file) {
-    return <PageNotFound />
+    return <NotFoundPage dvObjectNotFoundType="file" />
   }
 
   return (
@@ -74,6 +82,7 @@ export const ReplaceFile = ({
               storageType="S3"
               operationType={OperationType.REPLACE_FILE}
               originalFile={file}
+              referrer={referrer}
             />
           </div>
         </Tabs.Tab>

@@ -25,7 +25,8 @@ export const Default: Story = {
       datasetInfo={{
         persistentId: storyFile.datasetPersistentId,
         releasedVersionExists: false,
-        versionNumber: storyFile.datasetVersion.number.toString()
+        versionNumber: storyFile.datasetVersion.number.toString(),
+        requestAccess: true
       }}
     />
   )
