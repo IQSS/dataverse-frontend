@@ -6,9 +6,9 @@ import { DATAVERSE_BACKEND_URL, OIDC_AUTH_CONFIG } from '../../../src/config'
 
 export class TestsUtils {
   static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
-  static readonly USER_EMAIL = 'dataverse-user@mailinator.com'
-  static readonly USER_PASSWORD = 'user'
-  static readonly USER_USERNAME = 'user'
+  static readonly USER_EMAIL = 'dataverse@mailinator.com'
+  static readonly USER_PASSWORD = 'admin1'
+  static readonly USER_USERNAME = 'dataverseAdmin'
 
   static async setup(bearerToken: string) {
     ApiConfig.init(
@@ -65,7 +65,7 @@ export class TestsUtils {
   }
 
   static enterCredentialsInKeycloak() {
-    cy.get('#username').type(this.USER_EMAIL)
+    cy.get('#username').type(this.USER_USERNAME)
     cy.get('#password').type(this.USER_PASSWORD)
     cy.get('#kc-login').click()
   }

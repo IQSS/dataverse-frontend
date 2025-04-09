@@ -79,19 +79,6 @@ Cypress.Commands.add(
   }
 )
 
-// Cypress.Commands.add(
-//   'customMount',
-//   (component: ReactNode, initialEntries?: RouterInitialEntry[]) => {
-//     return cy.mount(
-//       <MemoryRouter initialEntries={initialEntries}>
-//         <ThemeProvider>
-//           <I18nextProvider i18n={i18next}>{component}</I18nextProvider>
-//         </ThemeProvider>
-//       </MemoryRouter>
-//     )
-//   }
-// )
-
 Cypress.Commands.add(
   'mountAuthenticated',
   (component: ReactNode, initialEntries?: RouterInitialEntry[], userOverrides?: Partial<User>) => {
@@ -141,36 +128,15 @@ Cypress.Commands.add('login', () => {
 
   cy.wait(1_500)
 
-  // This function will check if the sign-up page is visible (valid token not linked account) and finish the sign-up process and return the token
-  // Else, it will check if the home page is visible and return the token
+  cy.url()
+    .should('eq', `${Cypress.config().baseUrl as string}/spa`)
+    .then(() => {
+      const token = Utils.getLocalStorageItem<string>(
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
 
-  ifElseVisible(
-    () => cy.get('[data-testid="sign-up-page"]', { timeout: 10_000 }),
-    () => {
-      TestsUtils.finishSignUp()
-
-      cy.url()
-        .should('eq', `${Cypress.config().baseUrl as string}/spa/collections`)
-        .then(() => {
-          const token = Utils.getLocalStorageItem<string>(
-            `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-          )
-
-          return cy.wrap(token)
-        })
-    },
-    () => {
-      cy.url()
-        .should('eq', `${Cypress.config().baseUrl as string}/spa`)
-        .then(() => {
-          const token = Utils.getLocalStorageItem<string>(
-            `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-          )
-
-          return cy.wrap(token)
-        })
-    }
-  )
+      return cy.wrap(token)
+    })
 })
 
 Cypress.Commands.add('logout', () => {
