@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { DataverseHubRepository } from '@/dataverse-hub/domain/repositories/DataverseHubRepository'
 import { useCollection } from '../collection/useCollection'
 import { FeaturedItems } from '../collection/featured-items/FeaturedItems'
 import { useLoading } from '../loading/LoadingContext'
@@ -13,9 +14,10 @@ import styles from './Homepage.module.scss'
 
 interface HomepageProps {
   collectionRepository: CollectionRepository
+  dataverseHubRepository: DataverseHubRepository
 }
 
-export const Homepage = ({ collectionRepository }: HomepageProps) => {
+export const Homepage = ({ collectionRepository, dataverseHubRepository }: HomepageProps) => {
   const { collection, isLoading: isLoadingCollection } = useCollection(collectionRepository)
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('homepage')
@@ -58,7 +60,7 @@ export const Homepage = ({ collectionRepository }: HomepageProps) => {
         </>
       )}
 
-      <Metrics />
+      <Metrics dataverseHubRepository={dataverseHubRepository} />
     </section>
   )
 }

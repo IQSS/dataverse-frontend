@@ -1,3 +1,5 @@
+import { DatasetVersionState } from './Dataset'
+
 export interface DatasetVersionDiff {
   oldVersion: VersionSummary
   newVersion: VersionSummary
@@ -26,7 +28,9 @@ export interface FileSummary {
 export interface VersionSummary {
   versionNumber: string
   lastUpdatedDate: string
+  versionState: DatasetVersionState
 }
+
 export interface MetadataBlockDiff {
   blockName: string
   changed: FieldDiff[]
