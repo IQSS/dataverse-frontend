@@ -124,24 +124,10 @@ export function Dataset({
           <h1>{dataset.version.title}</h1>
           <DatasetLabels labels={dataset.version.labels} />
         </header>
-
         <div className={styles.container}>
           <Row>
             <Col lg={9} className="mb-4">
               <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
-            </Col>
-            <Col sm={3}>
-              <DatasetActionButtons
-                datasetRepository={datasetRepository}
-                collectionRepository={collectionRepository}
-                dataset={dataset}
-                contactRepository={contactRepository}
-              />
-            </Col>
-          </Row>
-
-          <Row>
-            <Col sm={9} className={styles['summary-container']}>
               <DatasetSummary
                 summaryFields={dataset.summaryFields}
                 license={dataset.license}
