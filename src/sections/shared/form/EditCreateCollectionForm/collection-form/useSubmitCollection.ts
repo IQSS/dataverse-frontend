@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { WriteError } from '@iqss/dataverse-client-javascript'
-import { CollectionFormData, CollectionFormValuesOnSubmit } from '../types'
+import {
+  CollectionFormData,
+  CollectionFormDirtyFields,
+  CollectionFormValuesOnSubmit
+} from '../types'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import {
   EditCreateCollectionFormMode,
@@ -43,7 +47,8 @@ export function useSubmitCollection(
   mode: EditCreateCollectionFormMode,
   collectionIdOrParentCollectionId: string,
   collectionRepository: CollectionRepository,
-  onSubmitErrorCallback: () => void
+  onSubmitErrorCallback: () => void,
+  dirtyFields: CollectionFormDirtyFields
 ): UseSubmitCollectionReturnType {
   const navigate = useNavigate()
 
@@ -62,9 +67,14 @@ export function useSubmitCollection(
         formData[METADATA_BLOCKS_NAMES_GROUPER]
       )
 
+    const changedInputLevelsValues = CollectionFormHelper.getModifiedInputLevelValuesOnly(
+      dirtyFields.inputLevels,
+      formData[INPUT_LEVELS_GROUPER]
+    )
+
     const inputLevelsDTO = CollectionFormHelper.formatFormInputLevelsToInputLevelsDTO(
       metadataBlockNamesDTO,
-      formData[INPUT_LEVELS_GROUPER]
+      changedInputLevelsValues
     )
 
     const facetIdsDTO = formData.facetIds.map((facet) => facet.value)
