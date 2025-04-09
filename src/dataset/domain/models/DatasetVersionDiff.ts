@@ -31,6 +31,7 @@ export interface VersionSummary {
   lastUpdatedDate: string
   versionState: DatasetVersionState
 }
+
 export interface MetadataBlockDiff {
   blockName: string
   changed: FieldDiff[]

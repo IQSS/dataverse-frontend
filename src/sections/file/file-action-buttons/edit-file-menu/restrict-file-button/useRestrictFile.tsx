@@ -4,6 +4,7 @@ import { WriteError } from '@iqss/dataverse-client-javascript'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { restrictFile } from '@/files/domain/useCases/restrictFile'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
+import { RestrictFileDTO } from '@/files/domain/useCases/restrictFileDTO'
 
 interface UseRestrictFile {
   fileRepository: FileRepository
@@ -14,7 +15,11 @@ interface UseRestrictFile {
 interface UseRestrictFileReturn {
   isRestrictingFile: boolean
   errorRestrictingFile: string | null
-  handleRestrictFile: (fileId: number) => Promise<void>
+  handleRestrictFile: (
+    fileId: number,
+    enableAccessRequest: boolean,
+    terms: string | undefined
+  ) => Promise<void>
   isRestricted: boolean
 }
 
@@ -27,11 +32,24 @@ export const useRestrictFile = ({
   const [isRestrictingFile, setIsRestrictingFile] = useState<boolean>(false)
   const [errorRestrictingFile, seterrorRestrictingFile] = useState<string | null>(null)
 
-  const handleRestrictFile = async (fileId: number) => {
+  const handleRestrictFile = async (
+    fileId: number,
+    enableAccessRequest: boolean,
+    terms?: string
+  ) => {
     setIsRestrictingFile(true)
 
+    const restrictFileDTO: RestrictFileDTO = {
+      restrict: !isRestricted
+    }
+
+    if (isRestricted === false) {
+      restrictFileDTO.enableAccessRequest = enableAccessRequest
+      restrictFileDTO.termsOfAccess = terms
+    }
+
     try {
-      await restrictFile(fileRepository, fileId, !isRestricted)
+      await restrictFile(fileRepository, fileId, restrictFileDTO)
       onSuccessfulRestrict()
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {
