@@ -16,13 +16,21 @@ interface ReplaceFileProps {
   fileIdFromParams: number
   datasetPidFromParams: string
   datasetVersionFromParams: string
+  referrer?: ReplaceFileReferrer
+}
+
+// From where the user is coming from
+export enum ReplaceFileReferrer {
+  DATASET = 'dataset',
+  FILE = 'file'
 }
 
 export const ReplaceFile = ({
   fileRepository,
   fileIdFromParams,
   datasetPidFromParams,
-  datasetVersionFromParams
+  datasetVersionFromParams,
+  referrer
 }: ReplaceFileProps) => {
   const { t } = useTranslation('replaceFile')
   const { t: tFiles } = useTranslation('files')
@@ -74,6 +82,7 @@ export const ReplaceFile = ({
               storageType="S3"
               operationType={OperationType.REPLACE_FILE}
               originalFile={file}
+              referrer={referrer}
             />
           </div>
         </Tabs.Tab>

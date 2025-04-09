@@ -1,4 +1,4 @@
-import { ReplaceFile } from '@/sections/replace-file/ReplaceFile'
+import { ReplaceFile, ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
 import {
   FileMetadataMother,
@@ -36,6 +36,7 @@ describe('UploadDatasetFiles', () => {
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
           fileIdFromParams={1}
           fileRepository={fileMockRepository}
+          referrer={ReplaceFileReferrer.FILE}
         />
       </LoadingProvider>
     )
@@ -53,6 +54,7 @@ describe('UploadDatasetFiles', () => {
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
           fileIdFromParams={1}
           fileRepository={fileMockRepository}
+          referrer={ReplaceFileReferrer.FILE}
         />
       </LoadingProvider>
     )
@@ -75,6 +77,7 @@ describe('UploadDatasetFiles', () => {
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
           fileIdFromParams={1}
           fileRepository={fileMockRepository}
+          referrer={ReplaceFileReferrer.FILE}
         />
       </LoadingProvider>
     )
@@ -90,6 +93,7 @@ describe('UploadDatasetFiles', () => {
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
           fileIdFromParams={1}
           fileRepository={fileMockRepository}
+          referrer={ReplaceFileReferrer.FILE}
         />
       </LoadingProvider>
     )
@@ -111,6 +115,38 @@ describe('UploadDatasetFiles', () => {
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
           fileIdFromParams={1}
           fileRepository={fileMockRepository}
+          referrer={ReplaceFileReferrer.FILE}
+        />
+      </LoadingProvider>
+    )
+
+    cy.findByTestId('file-uploader-drop-zone').as('dnd')
+    cy.get('@dnd').should('exist')
+
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.findByText('users1.json').should('exist')
+
+    // wait for upload to finish
+    cy.wait(3_000)
+
+    cy.findByText('Save Changes').click()
+
+    // Check toast
+    cy.findByText('The file has been replaced successfully.')
+  })
+
+  it('replace the file successfully coming from Dataset page', () => {
+    cy.customMount(
+      <LoadingProvider>
+        <ReplaceFile
+          datasetVersionFromParams=":latest"
+          datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
+          fileIdFromParams={1}
+          fileRepository={fileMockRepository}
+          referrer={ReplaceFileReferrer.DATASET}
         />
       </LoadingProvider>
     )
