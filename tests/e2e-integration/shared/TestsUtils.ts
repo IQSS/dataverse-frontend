@@ -64,9 +64,9 @@ export class TestsUtils {
     throw new Error('Max retries reached.')
   }
 
-  static enterCredentialsInKeycloak() {
-    cy.get('#username').type(this.USER_USERNAME)
-    cy.get('#password').type(this.USER_PASSWORD)
+  static enterCredentialsInKeycloak(username?: string, password?: string) {
+    cy.get('#username').type(username ?? this.USER_USERNAME)
+    cy.get('#password').type(password ?? this.USER_PASSWORD)
     cy.get('#kc-login').click()
   }
 

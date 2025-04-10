@@ -54,10 +54,6 @@ export const useSubmitUser = (
     const registrationDTO: UserDTO =
       ValidTokenNotLinkedAccountFormHelper.defineRegistrationDTOProperties(formData, tokenData)
 
-    // TODO:ME - Ask Guillermo, when sending username or preferred_username even if it is in tokenData the endpoint is not failing.
-    // Also sending position property as 3 and not a string is ok?
-    // Ask team about this, should not be merged to 6.5 until fixed
-
     registerUser(userRepository, registrationDTO)
       .then(async () => {
         setSubmitError(null)

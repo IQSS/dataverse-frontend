@@ -6,8 +6,9 @@ import { useLoading } from '../loading/LoadingContext'
 import { ValidTokenNotLinkedAccountForm } from './valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
 import styles from './SignUp.module.scss'
 
-// TODO:ME - All use cases will return same error message so this is blocking us for making requests to other public use cases like get root collection, should work removing access token from localstorage but we need it for future call
-
+// TODO:ME - E2E test failing in CI -
+// performs different search, filtering and respond to back and forward navigation. Timed out retrying after 10000ms: Expected to find content: 'Volta' within the element: <article._card-main-container_949f1_37> but never did.
+// should upload 2 files and add it to the dataset - Error: Network Error
 interface SignUpProps {
   userRepository: UserRepository
   hasValidTokenButNotLinkedAccount: boolean

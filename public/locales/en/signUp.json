@@ -15,32 +15,50 @@
       "label": "Username",
       "description": "Between 2-60 characters, and can use “a-z”, “0-9”, “_” for your username.",
       "required": "Username is required.",
-      "invalid": "Username is invalid.",
-      "helperText": "Create a valid username of 2 to 60 characters in length containing letters (a-Z), numbers (0-9), dashes (-), underscores (_), and periods (.)."
+      "helperText": "Create a valid username of 2 to 60 characters in length containing letters (a-Z), numbers (0-9), dashes (-), underscores (_), and periods (.).",
+      "invalid": {
+        "username": "Username is invalid.",
+        "maxLength": "Username must be at most {{maxLength}} characters."
+      }
     },
     "firstName": {
       "label": "Given Name",
       "description": "The first name or name you would like to use for this account.",
-      "required": "Given Name is required."
+      "required": "Given Name is required.",
+      "invalid": {
+        "maxLength": "Given Name must be at most {{maxLength}} characters."
+      }
     },
     "lastName": {
       "label": "Family Name",
       "description": "The last name you would like to use for this account.",
-      "required": "Family Name is required."
+      "required": "Family Name is required.",
+      "invalid": {
+        "maxLength": "Family Name must be at most {{maxLength}} characters."
+      }
     },
     "emailAddress": {
       "label": "Email",
       "description": "A valid email address you have access to in order to be contacted",
-      "invalid": "Email is invalid.",
-      "required": "Email is required."
+      "required": "Email is required.",
+      "invalid": {
+        "email": "Email is invalid.",
+        "maxLength": "Email must be at most {{maxLength}} characters."
+      }
     },
     "affiliation": {
       "label": "Affiliation",
-      "description": "The organization with which you are affiliated."
+      "description": "The organization with which you are affiliated.",
+      "invalid": {
+        "maxLength": "Affiliation must be at most {{maxLength}} characters."
+      }
     },
     "position": {
       "label": "Position",
-      "description": "Your role or title at the organization you are affiliated with; such as staff, faculty, student, etc."
+      "description": "Your role or title at the organization you are affiliated with; such as staff, faculty, student, etc.",
+      "invalid": {
+        "maxLength": "Position must be at most {{maxLength}} characters."
+      }
     },
     "termsAccepted": {
       "primaryLabel": "General Terms of Use",

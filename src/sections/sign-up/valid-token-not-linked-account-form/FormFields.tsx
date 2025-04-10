@@ -53,27 +53,69 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
     required: isUsernameRequired ? t('fields.username.required') : false,
     validate: (value: string) => {
       if (!Validator.isValidUsername(value)) {
-        return t('fields.username.invalid')
+        return t('fields.username.invalid.username')
       }
       return true
+    },
+    maxLength: {
+      value: 255,
+      message: t('fields.username.invalid.maxLength', {
+        maxLength: 255
+      })
     }
   }
 
   const firstNameRules = {
-    required: isFirstNameRequired ? t('fields.firstName.required') : false
+    required: isFirstNameRequired ? t('fields.firstName.required') : false,
+    maxLength: {
+      value: 255,
+      message: t('fields.firstName.invalid.maxLength', {
+        maxLength: 255
+      })
+    }
   }
 
   const lastNameRules = {
-    required: isLastNameRequired ? t('fields.lastName.required') : false
+    required: isLastNameRequired ? t('fields.lastName.required') : false,
+    maxLength: {
+      value: 255,
+      message: t('fields.lastName.invalid.maxLength', {
+        maxLength: 255
+      })
+    }
   }
 
   const emailRules = {
     required: isEmailRequired ? t('fields.emailAddress.required') : false,
     validate: (value: string) => {
       if (!Validator.isValidEmail(value)) {
-        return t('fields.emailAddress.invalid')
+        return t('fields.emailAddress.invalid.email')
       }
       return true
+    },
+    maxLength: {
+      value: 255,
+      message: t('fields.emailAddress.invalid.maxLength', {
+        maxLength: 255
+      })
+    }
+  }
+
+  const affiliationRules = {
+    maxLength: {
+      value: 255,
+      message: t('fields.affiliation.invalid.maxLength', {
+        maxLength: 255
+      })
+    }
+  }
+
+  const positionRules = {
+    maxLength: {
+      value: 255,
+      message: t('fields.position.invalid.maxLength', {
+        maxLength: 255
+      })
     }
   }
 
@@ -221,6 +263,7 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
             <Controller
               name="affiliation"
               control={form.control}
+              rules={affiliationRules}
               render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
                 <Col md={6}>
                   <Form.Group.Input
@@ -244,6 +287,7 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
             <Controller
               name="position"
               control={form.control}
+              rules={positionRules}
               render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
                 <Col md={6}>
                   <Form.Group.Input
