@@ -86,7 +86,6 @@ Cypress.Commands.add(
       <SessionContext.Provider
         value={{
           user: UserMother.create(userOverrides),
-          logout: () => Promise.resolve(),
           setUser: () => {},
           isLoadingUser: false,
           sessionError: null,
@@ -106,7 +105,6 @@ Cypress.Commands.add(
       <SessionContext.Provider
         value={{
           user: UserMother.createSuperUser(),
-          logout: () => Promise.resolve(),
           setUser: () => {},
           isLoadingUser: false,
           sessionError: null,
@@ -150,54 +148,3 @@ Cypress.Commands.add('compareDate', (date, expectedDate) => {
   expect(date.getUTCMonth()).to.deep.equal(expectedDate.getUTCMonth())
   expect(date.getUTCFullYear()).to.deep.equal(expectedDate.getUTCFullYear())
 })
-
-// Define the type for the conditional functions
-type ConditionCallback = ($el: JQuery<HTMLElement>) => boolean
-type CypressCommandFn = (cyChainable: () => Cypress.Chainable<any>) => void
-
-export function ifElseVisible(
-  cyChainable: () => Cypress.Chainable<JQuery<HTMLElement>>,
-  ifFn: CypressCommandFn,
-  elseFn: CypressCommandFn
-) {
-  return ifElse(
-    cyChainable,
-    (el) => Cypress.dom.isElement(el) && Cypress.dom.isVisible(el),
-    ifFn,
-    elseFn
-  )
-}
-
-export function ifElse(
-  cyChainable: () => Cypress.Chainable<JQuery<HTMLElement>>,
-  conditionCallback: ConditionCallback,
-  ifFn: CypressCommandFn,
-  elseFn: CypressCommandFn
-) {
-  cyChainable()
-    .should((_) => {})
-    .then(($el) => {
-      const result = conditionCallback($el)
-
-      Cypress.log({
-        name: 'ifElse',
-        message: `conditionCallback returned ${String(result)}, calling ${
-          String(result) === 'true' ? 'ifFn' : 'elseFn'
-        }`,
-        type: 'parent',
-        consoleProps: () => {
-          return {
-            conditionCallback
-          }
-        }
-      })
-      if (result) {
-        ifFn(cyChainable)
-      } else {
-        if (elseFn) {
-          elseFn(cyChainable)
-        }
-      }
-    })
-  return cyChainable
-}

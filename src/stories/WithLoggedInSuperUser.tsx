@@ -7,7 +7,6 @@ export const WithLoggedInSuperUser = (Story: StoryFn) => {
     <SessionContext.Provider
       value={{
         user: UserMother.createSuperUser(),
-        logout: () => Promise.resolve(),
         setUser: () => {},
         isLoadingUser: false,
         sessionError: null,

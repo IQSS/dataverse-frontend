@@ -1,13 +1,13 @@
-import { Outlet, useNavigate } from 'react-router-dom'
 import { useCallback, useContext, useEffect, useState } from 'react'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { AuthContext } from 'react-oauth2-code-pkce'
+import { ReadError } from '@iqss/dataverse-client-javascript'
 import { User } from '../../users/domain/models/User'
 import { SessionContext, SessionError } from './SessionContext'
 import { getUser } from '../../users/domain/useCases/getUser'
 import { UserRepository } from '../../users/domain/repositories/UserRepository'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { QueryParamKey, Route } from '../Route.enum'
-import { ReadError } from '@iqss/dataverse-client-javascript'
 
 export const BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE =
   'Bearer token is validated, but there is no linked user account.'
