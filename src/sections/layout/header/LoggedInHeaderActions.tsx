@@ -20,7 +20,7 @@ export const LoggedInHeaderActions = ({
   collectionRepository
 }: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
-  const { logOut: oidcLogout } = useContext(AuthContext)
+  const { logOut } = useContext(AuthContext)
 
   const { collection } = useCollection(collectionRepository)
 
@@ -28,10 +28,6 @@ export const LoggedInHeaderActions = ({
     collectionIdOrAlias: undefined,
     collectionRepository: collectionRepository
   })
-
-  const handleOidcLogout = () => {
-    oidcLogout()
-  }
 
   if (!collection) {
     return null
@@ -67,7 +63,7 @@ export const LoggedInHeaderActions = ({
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}`}>
           {t('navigation.apiToken')}
         </Navbar.Dropdown.Item>
-        <Navbar.Dropdown.Item href="#" onClick={handleOidcLogout} data-testid="oidc-logout">
+        <Navbar.Dropdown.Item href="#" onClick={() => logOut()} data-testid="oidc-logout">
           {t('logOut')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>

@@ -17,7 +17,7 @@ interface FormFieldsProps {
 }
 
 export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: FormFieldsProps) => {
-  const { tokenData, logOut: oidcLogout } = useContext(AuthContext)
+  const { tokenData, logOut } = useContext(AuthContext)
   const { t } = useTranslation('signUp')
   const { t: tShared } = useTranslation('shared')
 
@@ -41,7 +41,7 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
 
   // If the user cancels the registration, we should logout the user and redirect to the home page.
   // This is to avoid sending the valid bearer token and receiving the same BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE error
-  const handleCancel = () => oidcLogout()
+  const handleCancel = () => logOut()
 
   function onSubmitUserError() {
     if (formContainerRef.current) {
