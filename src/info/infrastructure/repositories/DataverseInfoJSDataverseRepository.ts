@@ -30,8 +30,8 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
       })
   }
 
-  async getApiTermsOfUse() {
-    //TODO - implement using js-dataverse
+  async getTermsOfUse() {
+    //TODO - This is not actually used and should be replaced with a js-dataverse use case when we have available the endpoint to get the installation terms of use not api terms of use.
     const response = await axiosInstance.get<{ data: { message: TermsOfUse } }>(
       '/api/v1/info/apiTermsOfUse',
       { excludeToken: true }

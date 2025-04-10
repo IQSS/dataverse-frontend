@@ -3,5 +3,5 @@ import { TermsOfUse } from '../models/TermsOfUse'
 
 export interface DataverseInfoRepository {
   getVersion(): Promise<DataverseVersion>
-  getApiTermsOfUse: () => Promise<TermsOfUse>
+  getTermsOfUse: () => Promise<TermsOfUse>
 }

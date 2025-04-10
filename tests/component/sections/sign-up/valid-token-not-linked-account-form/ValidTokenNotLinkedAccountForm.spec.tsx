@@ -23,8 +23,8 @@ describe('ValidTokenNotLinkedAccountForm', () => {
   beforeEach(() => {
     cy.viewport(1280, 720)
 
-    // dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves(sanitizedTermsOfUseMock)
-    // dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves('')
+    // dataverseInfoRepository.getTermsOfUse = cy.stub().resolves(sanitizedTermsOfUseMock)
+    // dataverseInfoRepository.getTermsOfUse = cy.stub().resolves('')
     userRepository.register = cy.stub().as('registerUser').resolves()
   })
 

@@ -1,16 +1,16 @@
 import { act, renderHook } from '@testing-library/react'
-import { useGetApiTermsOfUse } from '@/shared/hooks/useGetApiTermsOfUse'
+import { useGetTermsOfUse } from '@/shared/hooks/useGetTermsOfUse'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { TermsOfUseMother } from '@tests/component/info/models/TermsOfUseMother'
 
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
 const termsOfUseMock = TermsOfUseMother.create()
 
-describe('useGetApiTermsOfUse', () => {
+describe('useGetTermsOfUse', () => {
   it('should return terms of use correctly', async () => {
-    dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves(termsOfUseMock)
+    dataverseInfoRepository.getTermsOfUse = cy.stub().resolves(termsOfUseMock)
 
-    const { result } = renderHook(() => useGetApiTermsOfUse(dataverseInfoRepository))
+    const { result } = renderHook(() => useGetTermsOfUse(dataverseInfoRepository))
 
     await act(() => {
       expect(result.current.isLoading).to.deep.equal(true)
@@ -26,9 +26,9 @@ describe('useGetApiTermsOfUse', () => {
 
   describe('Error handling', () => {
     it('should return correct error message when there is an error type catched', async () => {
-      dataverseInfoRepository.getApiTermsOfUse = cy.stub().rejects(new Error('Error message'))
+      dataverseInfoRepository.getTermsOfUse = cy.stub().rejects(new Error('Error message'))
 
-      const { result } = renderHook(() => useGetApiTermsOfUse(dataverseInfoRepository))
+      const { result } = renderHook(() => useGetTermsOfUse(dataverseInfoRepository))
 
       await act(() => {
         expect(result.current.isLoading).to.deep.equal(true)
@@ -42,9 +42,9 @@ describe('useGetApiTermsOfUse', () => {
     })
 
     it('should return correct error message when there is not an error type catched', async () => {
-      dataverseInfoRepository.getApiTermsOfUse = cy.stub().rejects('Error message')
+      dataverseInfoRepository.getTermsOfUse = cy.stub().rejects('Error message')
 
-      const { result } = renderHook(() => useGetApiTermsOfUse(dataverseInfoRepository))
+      const { result } = renderHook(() => useGetTermsOfUse(dataverseInfoRepository))
 
       await act(() => {
         expect(result.current.isLoading).to.deep.equal(true)
