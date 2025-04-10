@@ -20,6 +20,15 @@ if (DATAVERSE_BACKEND_URL === '') {
   )
 }
 
+if (Object.values(OIDC_AUTH_CONFIG).includes('')) {
+  const missingEnv = Object.entries(OIDC_AUTH_CONFIG)
+    .filter(([, value]) => value === '')
+    .map(([key]) => key)
+    .join(', ')
+
+  throw Error(`The following environment variables should be specified: ${missingEnv}`)
+}
+
 const origin = window.location.origin
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 

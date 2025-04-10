@@ -1,17 +1,9 @@
 export const DATAVERSE_BACKEND_URL = (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
 
 export const OIDC_AUTH_CONFIG = {
-  CLIENT_ID: getEnvVar('VITE_OIDC_CLIENT_ID'),
-  AUTHORIZATION_ENDPOINT: getEnvVar('VITE_OIDC_AUTHORIZATION_ENDPOINT'),
-  TOKEN_ENDPOINT: getEnvVar('VITE_OIDC_TOKEN_ENDPOINT'),
-  LOGOUT_ENDPOINT: getEnvVar('VITE_OIDC_LOGOUT_ENDPOINT'),
-  LOCAL_STORAGE_KEY_PREFIX: getEnvVar('VITE_OIDC_STORAGE_KEY_PREFIX')
-}
-
-function getEnvVar(key: string): string {
-  const value = import.meta.env[key] as string | undefined
-  if (!value) {
-    throw Error(`${key} environment variable should be specified.`)
-  }
-  return value
+  CLIENT_ID: (import.meta.env.VITE_OIDC_CLIENT_ID as string) ?? '',
+  AUTHORIZATION_ENDPOINT: (import.meta.env.VITE_OIDC_AUTHORIZATION_ENDPOINT as string) ?? '',
+  TOKEN_ENDPOINT: (import.meta.env.VITE_OIDC_TOKEN_ENDPOINT as string) ?? '',
+  LOGOUT_ENDPOINT: (import.meta.env.VITE_OIDC_LOGOUT_ENDPOINT as string) ?? '',
+  LOCAL_STORAGE_KEY_PREFIX: (import.meta.env.VITE_OIDC_STORAGE_KEY_PREFIX as string) ?? ''
 }
