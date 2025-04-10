@@ -5,7 +5,6 @@ import { User } from '../../users/domain/models/User'
 import { SessionContext, SessionError } from './SessionContext'
 import { getUser } from '../../users/domain/useCases/getUser'
 import { UserRepository } from '../../users/domain/repositories/UserRepository'
-import { logOut } from '../../users/domain/useCases/logOut'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { QueryParamKey, Route } from '../Route.enum'
 import { ReadError } from '@iqss/dataverse-client-javascript'
@@ -77,15 +76,6 @@ export function SessionProvider({ repository }: SessionProviderProps) {
     await fetchUser()
   }
 
-  const submitLogOut = async () => {
-    try {
-      await logOut(repository)
-      setUser(null)
-    } catch (error) {
-      console.error('Error logging out:', error)
-    }
-  }
-
   useEffect(() => {
     if (token && !loginInProgress) {
       void fetchUser()
@@ -99,7 +89,6 @@ export function SessionProvider({ repository }: SessionProviderProps) {
         isLoadingUser,
         sessionError,
         setUser,
-        logout: submitLogOut,
         refetchUserSession
       }}>
       <Outlet />

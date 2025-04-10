@@ -6,7 +6,6 @@ interface SessionContextProps {
   isLoadingUser: boolean
   sessionError: SessionError | null
   setUser: (user: User) => void
-  logout: () => Promise<void>
   refetchUserSession: () => Promise<void>
 }
 export const SessionContext = createContext<SessionContextProps>({
@@ -14,7 +13,6 @@ export const SessionContext = createContext<SessionContextProps>({
   isLoadingUser: true,
   sessionError: null,
   setUser: /* istanbul ignore next */ () => {},
-  logout: /* istanbul ignore next */ () => Promise.resolve(),
   refetchUserSession: /* istanbul ignore next */ () => Promise.resolve()
 })
 
