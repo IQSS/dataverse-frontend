@@ -11,7 +11,7 @@ export const OIDC_AUTH_CONFIG = {
 function getEnvVar(key: string): string {
   const value = import.meta.env[key] as string | undefined
   if (!value) {
-    throw new Error(`${key} environment variable should be specified.`)
+    throw Error(`${key} environment variable should be specified.`)
   }
   return value
 }
