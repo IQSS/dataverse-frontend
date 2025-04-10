@@ -1,4 +1,4 @@
-export const DATAVERSE_BACKEND_URL = getEnvVar('VITE_DATAVERSE_BACKEND_URL')
+export const DATAVERSE_BACKEND_URL = (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
 
 export const OIDC_AUTH_CONFIG = {
   CLIENT_ID: getEnvVar('VITE_OIDC_CLIENT_ID'),
