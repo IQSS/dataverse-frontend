@@ -4,6 +4,8 @@ import { faker } from '@faker-js/faker'
 import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 
 describe('Collection Page', () => {
+  const title = faker.lorem.sentence(2)
+
   beforeEach(() => {
     TestsUtils.login().then((token) => {
       if (!token) {
@@ -20,8 +22,6 @@ describe('Collection Page', () => {
   })
 
   it('navigates to a dataset from the list when clicking the title', () => {
-    const title = faker.lorem.sentence(2)
-
     cy.wrap(DatasetHelper.createWithTitle(title), { timeout: 10000 }).then(() => {
       cy.wait(1_000)
       cy.visit('/spa/collections')
