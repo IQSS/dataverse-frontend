@@ -1006,11 +1006,13 @@ describe('JS Dataset Mapper', () => {
     const expectedDatasetVersionDiff = {
       oldVersion: {
         versionNumber: '1.0',
-        lastUpdatedDate: '2023-05-15T08:21:03Z'
+        lastUpdatedDate: '2023-05-15T08:21:03Z',
+        versionState: DatasetVersionState.RELEASED
       },
       newVersion: {
         versionNumber: '2.0',
-        lastUpdatedDate: '2023-06-15T08:21:03Z'
+        lastUpdatedDate: '2023-06-15T08:21:03Z',
+        versionState: DatasetVersionState.RELEASED
       },
       metadataChanges: [
         {
@@ -1090,13 +1092,15 @@ describe('JS Dataset Mapper', () => {
           }
         }
       ],
-      termsOfAccess: [
-        {
-          fieldName: 'termsOfAccess',
-          oldValue: 'Old terms',
-          newValue: 'New terms'
-        }
-      ]
+      termsOfAccess: {
+        changed: [
+          {
+            fieldName: 'termsOfAccess',
+            oldValue: 'Old terms',
+            newValue: 'New terms'
+          }
+        ]
+      }
     }
     const actual = JSDatasetMapper.toDatasetVersionDiff(jsDatasetVersionDiff)
     expect(expectedDatasetVersionDiff).to.deep.equal(actual)
