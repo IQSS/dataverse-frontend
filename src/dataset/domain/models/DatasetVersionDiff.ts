@@ -1,3 +1,5 @@
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
+
 export interface DatasetVersionDiff {
   oldVersion: VersionSummary
   newVersion: VersionSummary
@@ -20,12 +22,7 @@ export interface FileSummary {
   tags: string[]
   categories: string[]
 }
-export enum DatasetVersionState {
-  DRAFT = 'DRAFT',
-  RELEASED = 'RELEASED',
-  ARCHIVED = 'ARCHIVED',
-  DEACCESSIONED = 'DEACCESSIONED'
-}
+
 export interface VersionSummary {
   versionNumber: string
   lastUpdatedDate: string
