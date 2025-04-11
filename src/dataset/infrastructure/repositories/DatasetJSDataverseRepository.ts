@@ -80,10 +80,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   getVersionDiff(
     persistentId: string,
     oldVersion: string,
-    newVersion: string
+    newVersion: string,
+    includeDeaccessioned: boolean
   ): Promise<DatasetVersionDiff> {
     return getDatasetVersionDiff
-      .execute(persistentId, oldVersion, newVersion)
+      .execute(persistentId, oldVersion, newVersion, includeDeaccessioned)
       .then((jsDatasetVersionDiff) => {
         return JSDatasetMapper.toDatasetVersionDiff(jsDatasetVersionDiff)
       })
@@ -93,7 +94,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     datasetDetails: IDatasetDetails
   ): Promise<IDatasetDetails> {
     await getDataset
-      .execute(datasetDetails.jsDataset.persistentId, DatasetNonNumericVersion.LATEST_PUBLISHED)
+      .execute(
+        datasetDetails.jsDataset.persistentId,
+        DatasetNonNumericVersion.LATEST_PUBLISHED,
+        includeDeaccessioned
+      )
       .then((latestPublishedDataset) => {
         datasetDetails.latestPublishedVersionMajorNumber =
           latestPublishedDataset.versionInfo.majorNumber
@@ -109,7 +114,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     await this.getVersionDiff(
       datasetDetails.jsDataset.persistentId,
       DatasetNonNumericVersion.LATEST_PUBLISHED,
-      DatasetNonNumericVersion.DRAFT
+      DatasetNonNumericVersion.DRAFT,
+      includeDeaccessioned
     ).then((datasetVersionDiff) => {
       datasetDetails.datasetVersionDiff = datasetVersionDiff
       return datasetDetails
