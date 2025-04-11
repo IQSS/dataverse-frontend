@@ -1,5 +1,6 @@
 import { EditFilesList } from '@/sections/edit-file-metadata/EditFilesList'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
+import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
 
 describe('EditFilesList Component', () => {
   const fileRepository = new FileMockRepository()
@@ -49,6 +50,7 @@ describe('EditFilesList Component', () => {
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
+        referrer={EditFileMetadataReferrer.FILE}
       />
     )
 
@@ -67,6 +69,8 @@ describe('EditFilesList Component', () => {
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={multipleFilesFormData}
+        referrer={EditFileMetadataReferrer.DATASET}
+        datasetPersistentId="dataset-persistent-id"
       />
     )
 
@@ -92,6 +96,7 @@ describe('EditFilesList Component', () => {
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
+        referrer={EditFileMetadataReferrer.FILE}
       />
     )
 
@@ -105,6 +110,7 @@ describe('EditFilesList Component', () => {
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
+        referrer={EditFileMetadataReferrer.FILE}
       />
     )
 
@@ -119,6 +125,7 @@ describe('EditFilesList Component', () => {
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
+        referrer={EditFileMetadataReferrer.FILE}
       />
     )
 

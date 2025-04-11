@@ -1,7 +1,8 @@
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { EditFileMetadata } from './EditFileMetadata'
+import { EditFileMetadata, EditFileMetadataReferrer } from './EditFileMetadata'
 import { FileJSDataverseRepository } from '@/files/infrastructure/FileJSDataverseRepository'
+import { QueryParamKey } from '@/sections/Route.enum'
 
 const fileRepository = new FileJSDataverseRepository()
 
@@ -15,10 +16,12 @@ function EditFileMetadataWithParams() {
   const [searchParams] = useSearchParams()
   const fileId = searchParams.get('fileId')
   const fileIdNumber = Number(fileId)
+  const referrer = searchParams.get(QueryParamKey.REFERRER) as EditFileMetadataReferrer
 
-  console.log('fileId', fileId)
   if (isNaN(fileIdNumber)) {
     throw new Error('Invalid file ID')
   }
-  return <EditFileMetadata fileId={fileIdNumber} fileRepository={fileRepository} />
+  return (
+    <EditFileMetadata fileId={fileIdNumber} fileRepository={fileRepository} referrer={referrer} />
+  )
 }

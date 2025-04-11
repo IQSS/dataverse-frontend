@@ -11,6 +11,7 @@ import { DatasetRestrictFileButton } from '@/sections/dataset/dataset-files/file
 import { DatasetDeleteFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetDeleteFileButton'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
+import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
 
 type EditFilesOptionsProps =
   | {
@@ -57,6 +58,17 @@ export function EditFilesOptions({
   if (!isHeader) {
     return (
       <>
+        <DropdownButtonItem
+          as={Link}
+          to={RouteWithParams.EDIT_FILE_METADATA(
+            datasetInfo.persistentId,
+            datasetInfo.versionNumber,
+            file.id,
+            EditFileMetadataReferrer.DATASET
+          )}>
+          {tFile('actionButtons.editFileMenu.options.metadata')}
+        </DropdownButtonItem>
+
         <DatasetRestrictFileButton
           fileId={file.id}
           isRestricted={file.access.restricted}

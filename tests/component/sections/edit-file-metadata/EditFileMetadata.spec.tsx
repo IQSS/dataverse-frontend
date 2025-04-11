@@ -1,10 +1,14 @@
-import { EditFileMetadata } from '@/sections/edit-file-metadata/EditFileMetadata'
+import {
+  EditFileMetadata,
+  EditFileMetadataReferrer
+} from '@/sections/edit-file-metadata/EditFileMetadata'
 import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '@/i18n'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
 import { FilePermissionsMother } from '@tests/component/files/domain/models/FilePermissionsMother'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
+
 const fileRepository = new FileMockRepository()
 
 describe('EditFileMetadata Component', () => {
@@ -14,7 +18,11 @@ describe('EditFileMetadata Component', () => {
     cy.customMount(
       <I18nextProvider i18n={i18n}>
         <LoadingProvider>
-          <EditFileMetadata fileId={1} fileRepository={fileRepository} />
+          <EditFileMetadata
+            fileId={1}
+            fileRepository={fileRepository}
+            referrer={EditFileMetadataReferrer.FILE}
+          />
         </LoadingProvider>
       </I18nextProvider>
     )
@@ -28,7 +36,11 @@ describe('EditFileMetadata Component', () => {
     fileNotFoundRepository.getById = cy.stub().resolves(undefined)
     cy.customMount(
       <LoadingProvider>
-        <EditFileMetadata fileId={1} fileRepository={fileNotFoundRepository} />
+        <EditFileMetadata
+          fileId={1}
+          fileRepository={fileNotFoundRepository}
+          referrer={EditFileMetadataReferrer.FILE}
+        />
       </LoadingProvider>
     )
 
@@ -38,7 +50,11 @@ describe('EditFileMetadata Component', () => {
   it('renders edit form if file exists and user has permissions', () => {
     cy.customMount(
       <LoadingProvider>
-        <EditFileMetadata fileId={1} fileRepository={fileRepository} />
+        <EditFileMetadata
+          fileId={1}
+          fileRepository={fileRepository}
+          referrer={EditFileMetadataReferrer.FILE}
+        />
       </LoadingProvider>
     )
     cy.findByRole('heading', { name: 'Edit File Metadata' }).should('exist')
@@ -54,7 +70,11 @@ describe('EditFileMetadata Component', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <EditFileMetadata fileId={1} fileRepository={fileRepository} />
+        <EditFileMetadata
+          fileId={1}
+          fileRepository={fileRepository}
+          referrer={EditFileMetadataReferrer.FILE}
+        />
       </LoadingProvider>
     )
 

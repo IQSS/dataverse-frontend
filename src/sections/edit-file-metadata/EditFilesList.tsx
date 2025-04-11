@@ -10,6 +10,7 @@ import { SubmissionStatus, useSubmitFileMetadata } from './useSubmitFileMetadata
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import styles from './EditFilesList.module.scss'
+import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
 
 export interface FileMetadataFormRow {
   id: number
@@ -24,21 +25,41 @@ export interface FileMetadataFormRow {
 export interface EditFileMetadataFormData {
   files: FileMetadataFormRow[]
 }
-
-interface EditFilesListProps {
-  fileRepository: FileRepository
-  editFileMetadataFormData: EditFileMetadataFormData
+type DatasetReferrerProps = {
+  referrer: EditFileMetadataReferrer.DATASET
+  datasetPersistentId: string
 }
 
-export const EditFilesList = ({ fileRepository, editFileMetadataFormData }: EditFilesListProps) => {
+type OtherReferrerProps = {
+  referrer: EditFileMetadataReferrer.FILE
+  datasetPersistentId?: string
+}
+
+type EditFilesListProps = {
+  fileRepository: FileRepository
+  editFileMetadataFormData: EditFileMetadataFormData
+} & (DatasetReferrerProps | OtherReferrerProps)
+
+export const EditFilesList = ({
+  fileRepository,
+  editFileMetadataFormData,
+  referrer,
+  datasetPersistentId
+}: EditFilesListProps) => {
   const { t } = useTranslation('shared')
   const navigate = useNavigate()
   const form = useForm<EditFileMetadataFormData>({ mode: 'onChange' })
   const onSubmitSucceed = () => {
     toast.success('File metadata updated successfully')
-    navigate(
-      `${Route.FILES}?id=${editFileMetadataFormData.files[0].id}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
-    )
+    if (referrer === EditFileMetadataReferrer.DATASET) {
+      navigate(
+        `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+      )
+    } else {
+      navigate(
+        `${Route.FILES}?id=${editFileMetadataFormData.files[0].id}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+      )
+    }
   }
   const { submitForm, submissionStatus, submitError } = useSubmitFileMetadata(
     fileRepository,
@@ -77,7 +98,7 @@ export const EditFilesList = ({ fileRepository, editFileMetadataFormData }: Edit
             <Table>
               <thead>
                 <tr>
-                  <th scope="col" colSpan={1}>
+                  <th scope="col" colSpan={1} className={styles.align_left}>
                     {`${editFileMetadataFormData.files.length} ${
                       editFileMetadataFormData.files.length > 1 ? t('files') : t('file')
                     }`}

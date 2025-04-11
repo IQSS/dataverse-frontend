@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Alert } from '@iqss/dataverse-design-system'
+import { Alert, Tabs } from '@iqss/dataverse-design-system'
 import { useLoading } from '../loading/LoadingContext'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
@@ -12,13 +12,23 @@ import {
   EditFilesList
 } from '@/sections/edit-file-metadata/EditFilesList'
 import { File } from '@/files/domain/models/File'
+import styles from './EditFileMetadata.module.scss'
+
 interface EditFileMetadataProps {
   fileId: number
   fileRepository: FileRepository
+  referrer: EditFileMetadataReferrer
 }
 
-export const EditFileMetadata = ({ fileId, fileRepository }: EditFileMetadataProps) => {
-  const { t } = useTranslation('editFileMetadata')
+// From where the user is coming from
+export enum EditFileMetadataReferrer {
+  DATASET = 'dataset',
+  FILE = 'file'
+}
+
+export const EditFileMetadata = ({ fileId, fileRepository, referrer }: EditFileMetadataProps) => {
+  const { t: tEditFileMetadata } = useTranslation('editFileMetadata')
+  const { t: tFiles } = useTranslation('files')
   const { setIsLoading } = useLoading()
   const { file, isLoading } = useFile(fileRepository, fileId)
 
@@ -41,24 +51,41 @@ export const EditFileMetadata = ({ fileId, fileRepository }: EditFileMetadataPro
       <BreadcrumbsGenerator
         hierarchy={file.hierarchy}
         withActionItem
-        actionItemText={t('pageTitle')}
+        actionItemText={tEditFileMetadata('pageTitle')}
       />
 
       <header>
-        <h1>{t('pageTitle')}</h1>
+        <h1>{tEditFileMetadata('pageTitle')}</h1>
       </header>
 
       {!canEditOwnerDataset ? (
         <div className="pt-4">
           <Alert variant="danger" dismissible={false}>
-            {t('errorAlert.notAllowedToEditFileMetadata')}
+            {tEditFileMetadata('errorAlert.notAllowedToEditFileMetadata')}
           </Alert>
         </div>
       ) : (
-        <EditFilesList
-          fileRepository={fileRepository}
-          editFileMetadataFormData={createEditFileMetadataFormData(file)}
-        />
+        <Tabs defaultActiveKey="files">
+          <Tabs.Tab eventKey="files" title={tFiles('files')}>
+            <div className={styles.tab_container}>
+              {referrer === EditFileMetadataReferrer.DATASET &&
+              file.hierarchy.parent?.persistentId ? (
+                <EditFilesList
+                  fileRepository={fileRepository}
+                  editFileMetadataFormData={createEditFileMetadataFormData(file)}
+                  referrer={referrer}
+                  datasetPersistentId={file.hierarchy.parent?.persistentId}
+                />
+              ) : (
+                <EditFilesList
+                  fileRepository={fileRepository}
+                  editFileMetadataFormData={createEditFileMetadataFormData(file)}
+                  referrer={EditFileMetadataReferrer.FILE}
+                />
+              )}
+            </div>
+          </Tabs.Tab>
+        </Tabs>
       )}
     </section>
   )

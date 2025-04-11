@@ -3,7 +3,10 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { FileMockRepository } from '../file/FileMockRepository'
 import { WithDataset } from '../dataset/WithDataset'
-import { EditFileMetadata } from '@/sections/edit-file-metadata/EditFileMetadata'
+import {
+  EditFileMetadata,
+  EditFileMetadataReferrer
+} from '@/sections/edit-file-metadata/EditFileMetadata'
 import { WithToasts } from '../WithToasts'
 
 const meta: Meta<typeof EditFileMetadata> = {
@@ -21,5 +24,11 @@ type Story = StoryObj<typeof EditFileMetadata>
 
 export const Default: Story = {
   decorators: [WithLayout, WithDataset, WithToasts],
-  render: () => <EditFileMetadata fileRepository={new FileMockRepository()} fileId={1} />
+  render: () => (
+    <EditFileMetadata
+      fileRepository={new FileMockRepository()}
+      fileId={1}
+      referrer={EditFileMetadataReferrer.FILE}
+    />
+  )
 }

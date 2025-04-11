@@ -1,5 +1,9 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
+.align_left {
+  text-align: left;
+}
+
 .table_wrapper {
   width: 100%;
   max-height: 650px;
