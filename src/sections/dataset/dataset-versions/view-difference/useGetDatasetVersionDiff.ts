@@ -40,7 +40,8 @@ export const useGetDatasetVersionDiff = ({
           oldVersion,
           newVersion == DatasetNonNumericVersionSearchParam.DRAFT
             ? DatasetNonNumericVersion.DRAFT
-            : newVersion
+            : newVersion,
+          true
         )
         setDifferences(response)
       } catch (err) {
