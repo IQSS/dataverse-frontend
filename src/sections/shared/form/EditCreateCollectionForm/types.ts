@@ -1,3 +1,4 @@
+import { type FieldNamesMarkedBoolean } from 'react-hook-form'
 import { CollectionStorage } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import {
   MetadataBlockInfo,
@@ -27,6 +28,8 @@ export type CollectionFormData = {
   [USE_FACETS_FROM_PARENT]: boolean
   facetIds: CollectionFormFacet[]
 }
+
+export type CollectionFormDirtyFields = FieldNamesMarkedBoolean<CollectionFormData>
 
 export type CollectionFormMetadataBlocks = Record<MetadataBlockName, boolean>
 

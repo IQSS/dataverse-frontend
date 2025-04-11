@@ -12,6 +12,7 @@ import {
 import { CollectionContact } from '@/collection/domain/models/CollectionContact'
 import {
   CollectionFormContactValue,
+  CollectionFormDirtyFields,
   CollectionFormMetadataBlocks,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName,
@@ -245,5 +246,20 @@ export class CollectionFormHelper {
     } else {
       return true
     }
+  }
+
+  public static getModifiedInputLevelValuesOnly(
+    inputLevelDirtyFields: CollectionFormDirtyFields['inputLevels'],
+    formCollectionInputLevels: FormattedCollectionInputLevels
+  ): FormattedCollectionInputLevels {
+    const modifiedValues: FormattedCollectionInputLevels = {}
+
+    for (const key in inputLevelDirtyFields) {
+      if (Object.hasOwn(inputLevelDirtyFields, key)) {
+        modifiedValues[key] = formCollectionInputLevels[key]
+      }
+    }
+
+    return modifiedValues
   }
 }

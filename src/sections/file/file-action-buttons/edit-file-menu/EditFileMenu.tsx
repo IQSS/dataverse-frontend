@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { DeleteFileButton } from './delete-file-button/DeleteFileButton'
 import { RestrictFileButton } from './restrict-file-button/RestrictFileButton'
+import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 
 interface EditFileMenuProps {
   fileId: number
@@ -28,27 +29,20 @@ export const EditFileMenu = ({
   isRestricted
 }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
-  const navigate = useNavigate()
 
-  const handleOnReplaceClick = () =>
-    navigate(
-      RouteWithParams.FILES_REPLACE(datasetInfo.persistentId, datasetInfo.versionNumber, fileId)
-    )
-  const handleOnMetadataClick = () =>
-    navigate(
-      RouteWithParams.EDIT_FILE_METADATA(
-        datasetInfo.persistentId,
-        datasetInfo.versionNumber,
-        fileId
-      )
-    )
   return (
     <DropdownButton
       id="edit-files-menu"
       title={t('actionButtons.editFileMenu.title')}
       asButtonGroup
       variant="secondary">
-      <DropdownButtonItem onClick={handleOnMetadataClick}>
+      <DropdownButtonItem
+        as={Link}
+        to={RouteWithParams.EDIT_FILE_METADATA(
+          datasetInfo.persistentId,
+          datasetInfo.versionNumber,
+          fileId
+        )}>
         {t('actionButtons.editFileMenu.options.metadata')}
       </DropdownButtonItem>
       <RestrictFileButton
@@ -57,7 +51,14 @@ export const EditFileMenu = ({
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
       />
-      <DropdownButtonItem onClick={handleOnReplaceClick}>
+      <DropdownButtonItem
+        as={Link}
+        to={RouteWithParams.FILES_REPLACE(
+          datasetInfo.persistentId,
+          datasetInfo.versionNumber,
+          fileId,
+          ReplaceFileReferrer.FILE
+        )}>
         {t('actionButtons.editFileMenu.options.replace')}
       </DropdownButtonItem>
       <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />

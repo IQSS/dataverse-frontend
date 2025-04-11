@@ -239,7 +239,7 @@ export class FileJSDataverseRepository implements FileRepository {
           jsFile,
           jsDataset,
           getDatasetCitation.execute(jsDataset.id, datasetVersionNumber, includeDeaccessioned),
-          FileJSDataverseRepository.getCitationById(jsFile.id),
+          FileJSDataverseRepository.getCitationById(jsFile.id, datasetVersionNumber),
           FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
           FileJSDataverseRepository.getPermissionsById(jsFile.id),
           FileJSDataverseRepository.getThumbnailById(jsFile.id),
@@ -273,9 +273,9 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  private static getCitationById(id: number): Promise<string> {
+  private static getCitationById(id: number, datasetVersionNumber?: string): Promise<string> {
     return getFileCitation
-      .execute(id, undefined, includeDeaccessioned)
+      .execute(id, datasetVersionNumber, includeDeaccessioned)
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })

@@ -19,7 +19,8 @@ export interface DatasetRepository {
   getVersionDiff: (
     persistentId: string,
     oldVersion: string,
-    newVersion: string
+    newVersion: string,
+    includeDeaccessioned: boolean
   ) => Promise<DatasetVersionDiff>
 
   create: (dataset: DatasetDTO, collectionId: string) => Promise<{ persistentId: string }>
