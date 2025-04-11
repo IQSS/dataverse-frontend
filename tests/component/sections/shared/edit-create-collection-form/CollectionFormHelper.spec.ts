@@ -9,6 +9,7 @@ import {
 import { CollectionFormHelper } from '@/sections/shared/form/EditCreateCollectionForm/CollectionFormHelper'
 import {
   CollectionFormContactValue,
+  CollectionFormDirtyFields,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName,
   MetadataFieldWithParentBlockInfo
@@ -585,6 +586,56 @@ describe('CollectionFormHelper', () => {
     const result = CollectionFormHelper.formatCollectionContactsToFormContacts(collectionContacts)
 
     expect(result).to.deep.equal([{ value: '' }])
+  })
+
+  it('gets the input levels values that were modified only', () => {
+    const collectionInputLevelsFormValues: FormattedCollectionInputLevels = {
+      title: {
+        include: true,
+        optionalOrRequired: 'required',
+        parentBlockName: 'citation' as MetadataBlockName
+      },
+      subtitle: {
+        include: false,
+        optionalOrRequired: 'optional',
+        parentBlockName: 'citation' as MetadataBlockName
+      },
+      foo: {
+        include: true,
+        optionalOrRequired: 'required',
+        parentBlockName: 'socialscience' as MetadataBlockName
+      },
+      bar: {
+        include: false,
+        optionalOrRequired: 'optional',
+        parentBlockName: 'socialscience' as MetadataBlockName
+      }
+    }
+
+    // This is what we expect from the form.formState.dirtyFields object from the react-hook-form library
+    // Only the input levels fields and their properties that were modified
+    const dirtyFields: CollectionFormDirtyFields['inputLevels'] = {
+      subtitle: { optionalOrRequired: true },
+      foo: { include: true }
+    }
+
+    const result = CollectionFormHelper.getModifiedInputLevelValuesOnly(
+      dirtyFields,
+      collectionInputLevelsFormValues
+    )
+
+    expect(result).to.deep.equal({
+      subtitle: {
+        include: false,
+        optionalOrRequired: 'optional',
+        parentBlockName: 'citation' as MetadataBlockName
+      },
+      foo: {
+        include: true,
+        optionalOrRequired: 'required',
+        parentBlockName: 'socialscience' as MetadataBlockName
+      }
+    })
   })
 
   describe('defineShouldCheckUseFromParent', () => {

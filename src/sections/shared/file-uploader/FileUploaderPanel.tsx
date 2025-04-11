@@ -7,6 +7,7 @@ import { Stack } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
+import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { useFileUploaderContext } from './context/FileUploaderContext'
 import FileUploadInput from './file-upload-input/FileUploadInput'
 import { UploadedFilesList } from './uploaded-files-list/UploadedFilesList'
@@ -15,9 +16,14 @@ import { ConfirmLeaveModal } from './confirm-leave-modal/ConfirmLeaveModal'
 interface FileUploaderPanelProps {
   fileRepository: FileRepository
   datasetPersistentId: string
+  referrer?: ReplaceFileReferrer
 }
 
-const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploaderPanelProps) => {
+const FileUploaderPanel = ({
+  fileRepository,
+  datasetPersistentId,
+  referrer
+}: FileUploaderPanelProps) => {
   const { t } = useTranslation('shared')
   const navigate = useNavigate()
 
@@ -62,22 +68,36 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
   }
 
   useDeepCompareEffect(() => {
+    const datasetPageRedirectUrl = `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+
     // Listens to the replace operation info result and navigates to the new file page if the operation was successful
     if (replaceOperationInfo.success && replaceOperationInfo.newFileIdentifier) {
       toast.success(t('fileUploader.fileReplacedSuccessfully'))
-      navigate(
-        `${Route.FILES}?id=${replaceOperationInfo.newFileIdentifier}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
-      )
+
+      if (referrer === ReplaceFileReferrer.DATASET) {
+        navigate(datasetPageRedirectUrl)
+      }
+
+      if (referrer === ReplaceFileReferrer.FILE) {
+        navigate(
+          `${Route.FILES}?id=${replaceOperationInfo.newFileIdentifier}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+        )
+      }
     }
 
     // Listens to the add files to dataset operation info result and navigates to the dataset page if the operation was successful
     if (addFilesToDatasetOperationInfo.success) {
       toast.success(t('fileUploader.filesAddedToDatasetSuccessfully'))
-      navigate(
-        `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
-      )
+      navigate(datasetPageRedirectUrl)
     }
-  }, [replaceOperationInfo, addFilesToDatasetOperationInfo, datasetPersistentId, t, navigate])
+  }, [
+    replaceOperationInfo,
+    addFilesToDatasetOperationInfo,
+    datasetPersistentId,
+    t,
+    navigate,
+    referrer
+  ])
 
   return (
     <Stack gap={4}>

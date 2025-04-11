@@ -53,7 +53,8 @@ export const CollectionForm = ({
     mode,
     collectionIdOrParentCollectionId,
     collectionRepository,
-    onSubmittedCollectionError
+    onSubmittedCollectionError,
+    form.formState.dirtyFields
   )
 
   function onSubmittedCollectionError() {
