@@ -26,7 +26,7 @@ describe('EditFileMetadata', () => {
           cy.findByText('Metadata').should('exist')
 
           cy.findByRole('button', { name: 'Edit File' }).should('exist').click({ force: true })
-          cy.findByRole('button', { name: 'Metadata' }).should('exist').click({ force: true })
+          cy.findByRole('link', { name: 'Metadata' }).should('exist').click({ force: true })
           cy.findByRole('heading', { name: 'Edit File Metadata' }).should('exist')
           cy.findByTestId('edit-file-metadata-form').should('exist')
           cy.findByRole('button', { name: 'Save Changes' }).should('exist')
