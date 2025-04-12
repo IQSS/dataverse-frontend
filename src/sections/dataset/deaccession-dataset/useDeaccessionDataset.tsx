@@ -22,7 +22,7 @@ type UseDeaccessionDatasetReturnType =
 export function useDeaccessionDataset(
   repository: DatasetRepository,
   persistentId: string,
-  onDeaccessionhSucceed: () => void
+  onDeaccessionSucceed: () => void
 ): UseDeaccessionDatasetReturnType {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
@@ -50,7 +50,7 @@ export function useDeaccessionDataset(
 
         setDeaccessionError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
-        onDeaccessionhSucceed()
+        onDeaccessionSucceed()
       } catch (err) {
         const errorMessage =
           err instanceof Error && err.message
