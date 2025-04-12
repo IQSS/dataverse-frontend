@@ -1,0 +1,50 @@
+import { useEffect, useState } from 'react'
+import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { getDatasetVersionsSummaries } from '@/dataset/domain/useCases/getDatasetVersionsSummaries'
+
+interface UseGetDatasetVersionsSummaries {
+  datasetVersionSummaries: DatasetVersionSummaryInfo[] | undefined
+  error: string | null
+  isLoading: boolean
+}
+
+interface Props {
+  datasetRepository: DatasetRepository
+  persistentId: string
+}
+export const useGetDatasetVersionsSummaries = ({
+  datasetRepository,
+  persistentId
+}: Props): UseGetDatasetVersionsSummaries => {
+  const [summaries, setSummaries] = useState<DatasetVersionSummaryInfo[]>()
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const handleGetDatasetVersionsSummaries = async () => {
+      setIsLoading(true)
+      try {
+        const versionSummaries = await getDatasetVersionsSummaries(datasetRepository, persistentId)
+
+        setSummaries(versionSummaries)
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong getting the information from the dataset versions summaries. Try again later.'
+        setError(errorMessage)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    void handleGetDatasetVersionsSummaries()
+  }, [datasetRepository, persistentId])
+
+  return {
+    datasetVersionSummaries: summaries,
+    error,
+    isLoading
+  }
+}

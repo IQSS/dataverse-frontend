@@ -40,6 +40,7 @@ import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
+import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 
 const includeDeaccessioned = true
@@ -256,24 +257,26 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
     ])
       .then(async ([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) => {
-        const [permissions, locks, originalSize, archivalSize] = await Promise.all([
-          getDatasetUserPermissions.execute(jsDataset.id),
-          getDatasetLocks.execute(jsDataset.id),
-          getDatasetFilesTotalDownloadSize.execute(
-            jsDataset.id,
-            DatasetNonNumericVersion.DRAFT,
-            FileDownloadSizeMode.ORIGINAL,
-            undefined,
-            includeDeaccessioned
-          ),
-          getDatasetFilesTotalDownloadSize.execute(
-            jsDataset.id,
-            DatasetNonNumericVersion.DRAFT,
-            FileDownloadSizeMode.ARCHIVAL,
-            undefined,
-            includeDeaccessioned
-          )
-        ])
+        const [permissions, locks, originalSize, archivalSize, versionsSummaries] =
+          await Promise.all([
+            getDatasetUserPermissions.execute(jsDataset.id),
+            getDatasetLocks.execute(jsDataset.id),
+            getDatasetFilesTotalDownloadSize.execute(
+              jsDataset.id,
+              DatasetNonNumericVersion.DRAFT,
+              FileDownloadSizeMode.ORIGINAL,
+              undefined,
+              includeDeaccessioned
+            ),
+            getDatasetFilesTotalDownloadSize.execute(
+              jsDataset.id,
+              DatasetNonNumericVersion.DRAFT,
+              FileDownloadSizeMode.ARCHIVAL,
+              undefined,
+              includeDeaccessioned
+            ),
+            getDatasetVersionsSummaries.execute(jsDataset.id)
+          ])
 
         return JSDatasetMapper.toDataset(
           jsDataset,
@@ -282,7 +285,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           permissions,
           locks,
           originalSize,
-          archivalSize
+          archivalSize,
+          versionsSummaries
         )
       })
       .catch((error: ReadError) => {
@@ -347,7 +351,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         throw new Error(error.message)
       })
   }
-
+  getDatasetVersionsSummaries(datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
+    return getDatasetVersionsSummaries.execute(datasetId).catch((error: ReadError) => {
+      throw error
+    })
+  }
   getDownloadCount(
     datasetId: string | number,
     includeMDC?: boolean

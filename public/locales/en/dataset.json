@@ -217,6 +217,56 @@
     "cancelButton": "Cancel",
     "deaccessionButton": "Deaccession"
   },
+  "versions": {
+    "select": "Select",
+    "viewDifferences": "View Differences",
+    "viewDifferencesDetail": "Version Differences Details",
+    "selectTwo": "Please select two versions to view the differences.",
+    "datasetVersions": "Dataset Version",
+    "summary": "Summary",
+    "versionNote": "Version Note",
+    "contributors": "Contributors",
+    "publishedOn": "Published On",
+    "version": "Version",
+    "lastUpdated": "Last Updated",
+    "files": "Files",
+    "citationMetadata": "Citation Metadata",
+    "additionalCitationMetadata": "Additional Citation Metadata",
+    "termsAccess": "Terms of Use and Access",
+    "fileID": "File ID",
+    "MD5": "MD5",
+    "name": "Name",
+    "type": "Type",
+    "description": "Description",
+    "access": "Access",
+    "needTwoVersions": "Please select two versions to view the differences.",
+    "viewDetails": "View Details",
+    "replace": "File Replace"
+  },
+  "getDatasetVersionDiffError": "Error Fetching Dataset Version Differences",
+  "datasetVersionSummary": {
+    "firstPublished": "This is the First Published Version.",
+    "firstDraft": "This is a draft version.",
+    "versionDeaccessioned": "Deaccessioned Reason: The research article has been retracted.",
+    "previousVersionDeaccessioned": "Due to the previous version being deaccessioned, there are no difference notes available for this published version.",
+    "citationMetadata": {
+      "changed": "Changed",
+      "added": "{{count}} Added"
+    },
+    "additionalCitationMetadata": {
+      "added": "{{count}} Added",
+      "removed": "{{count}} Removed",
+      "changed": "{{count}} Changed"
+    },
+    "files": {
+      "added": "Added: {{count}}",
+      "removed": "Removed: {{count}}",
+      "replaced": "Replaced: {{count}}",
+      "fileMetadataChanged": "File Metadata Changed: {{count}}",
+      "variableMetadataChanged": "Variable Metadata Changed: {{count}}"
+    },
+    "termsAccessChanged": "Changed"
+  },
   "metrics": {
     "title": "Dataset Metrics",
     "tip": {

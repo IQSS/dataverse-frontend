@@ -37,6 +37,7 @@ export interface MetadataBlockDiff {
 export interface FileDiff {
   fileName: string
   md5: string
+  MD5?: string
   fileId: number
   changed: FieldDiff[]
 }

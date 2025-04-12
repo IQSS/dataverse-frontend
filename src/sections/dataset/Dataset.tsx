@@ -27,6 +27,7 @@ import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
+import { DatasetVersions } from './dataset-versions/DatasetVersions'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { DatasetMetrics } from './dataset-metrics/DatasetMetrics'
 
@@ -64,7 +65,6 @@ export function Dataset({
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
   const [activeTab, setActiveTab] = useState<string>(tab)
   const termsTabRef = useRef<HTMLDivElement>(null)
-
   useUpdateDatasetAlerts({
     dataset,
     created,
@@ -107,7 +107,6 @@ export function Dataset({
       setActiveTab(key)
     }
   }
-
   return (
     <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
@@ -172,6 +171,7 @@ export function Dataset({
                   )}
                 </div>
               </Tabs.Tab>
+
               <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
                 <div className={styles['tab-container']}>
                   <DatasetMetadata
@@ -181,7 +181,8 @@ export function Dataset({
                   />
                 </div>
               </Tabs.Tab>
-              <Tabs.Tab title={t('termsTabTitle')} eventKey={'terms'}>
+
+              <Tabs.Tab eventKey="terms" title={t('termsTabTitle')}>
                 <div ref={termsTabRef} className={styles['tab-container']}>
                   <DatasetTerms
                     license={dataset.license}
@@ -192,8 +193,19 @@ export function Dataset({
                   />
                 </div>
               </Tabs.Tab>
+
+              <Tabs.Tab eventKey="versions" title={t('Versions')}>
+                <div className={styles['tab-container']}>
+                  <DatasetVersions
+                    datasetRepository={datasetRepository}
+                    datasetId={dataset.persistentId}
+                    key={dataset.version.publishingStatus}
+                  />
+                </div>
+              </Tabs.Tab>
             </Tabs>
           )}
+
           <SeparationLine />
         </div>
       </article>

@@ -1,0 +1,19 @@
+.dataset-versions-difference-table {
+  width: 100%;
+  font-size: 14px;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  th,
+  td {
+    width: 30%;
+    padding: 12px;
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+
+  th {
+    font-weight: 600;
+  }
+}
