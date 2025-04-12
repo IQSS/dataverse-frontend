@@ -24,7 +24,7 @@ describe('EditFileMenu', () => {
 
     cy.findByRole('button', { name: 'Edit File' }).should('exist').click()
     cy.findByRole('button', { name: 'Delete' }).should('exist')
-    cy.findByRole('button', { name: 'Metadata' }).should('exist')
+    cy.findByRole('link', { name: 'Metadata' }).should('exist')
 
     const searchParams = new URLSearchParams({
       [QueryParamKey.FILE_ID]: testFile.id.toString(),
@@ -34,6 +34,10 @@ describe('EditFileMenu', () => {
     })
 
     cy.findByRole('link', { name: 'Replace' })
+      .should('have.attr', 'href')
+      .and('include', searchParams.toString())
+
+    cy.findByRole('link', { name: 'Metadata' })
       .should('have.attr', 'href')
       .and('include', searchParams.toString())
   })
