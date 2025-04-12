@@ -8,7 +8,12 @@ interface FilePathFieldProps {
   itemIndex: number
   defaultValue?: string
 }
-
+/**
+ * FilePathField component
+ * This field is meant to be used within a form that is using react-hook-form.
+ * It is a controlled component that uses the Controller from react-hook-form to manage its state.
+ * It is shared between the EditFileMetadata and FileUploader components.
+ */
 export const FilePathField = ({ itemIndex, defaultValue }: FilePathFieldProps) => {
   const { control } = useFormContext()
   const { t } = useTranslation('shared')
