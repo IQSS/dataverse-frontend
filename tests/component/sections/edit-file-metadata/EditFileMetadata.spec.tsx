@@ -3,8 +3,6 @@ import {
   EditFileMetadataReferrer
 } from '@/sections/edit-file-metadata/EditFileMetadata'
 import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
-import { I18nextProvider } from 'react-i18next'
-import i18n from '@/i18n'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
 import { FilePermissionsMother } from '@tests/component/files/domain/models/FilePermissionsMother'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
