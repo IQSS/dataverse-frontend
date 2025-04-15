@@ -25,6 +25,8 @@ function transformHtmlToMarkdown(source: string): string {
   return turndownService.turndown(source)
 }
 
+const timePeriodObj = new Set(['timePeriodCovered', 'dateOfCollection'])
+
 export function DatasetMetadataFieldValueFormatted({
   metadataBlockName,
   metadataFieldName,
@@ -35,13 +37,37 @@ export function DatasetMetadataFieldValueFormatted({
 
   const valueFormatted = metadataFieldValueToDisplayFormat(
     metadataFieldValue,
-    metadataBlockDisplayFormatInfo
+    metadataBlockDisplayFormatInfo,
+    metadataFieldName
   )
 
-  const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
+  let valueFormattedWithNamesTranslated
+
+  if (metadataFieldName == 'software') {
+    valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
+      METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
+      'Version'
+    )
+  }
+
+  if (timePeriodObj.has(metadataFieldName)) {
+    valueFormattedWithNamesTranslated = valueFormatted
+      .replace(METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER, 'Start Date')
+      .replace(METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER, 'End Date')
+  }
+
+  valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
     METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
     t(`${metadataBlockName}.datasetField.${metadataFieldName}.name`)
   )
+
+  if (metadataFieldName === 'alternativeURL') {
+    return (
+      <a href={`${String(metadataFieldValue)}`} target="_blank" rel="noreferrer">
+        {String(metadataFieldValue)}
+      </a>
+    )
+  }
 
   if (metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.type === 'TEXTBOX') {
     const markdownValue = transformHtmlToMarkdown(valueFormattedWithNamesTranslated)
@@ -54,13 +80,16 @@ export function DatasetMetadataFieldValueFormatted({
 
 export function metadataFieldValueToDisplayFormat(
   metadataFieldValue: DatasetMetadataFieldValueModel,
-  metadataBlockInfo?: MetadataBlockInfoDisplayFormat
+  metadataBlockInfo?: MetadataBlockInfoDisplayFormat,
+  metadataFieldName?: string
 ): string {
   const separator = ';'
 
   if (isArrayOfObjects(metadataFieldValue)) {
     return metadataFieldValue
-      .map((metadataSubField) => joinSubFields(metadataSubField, metadataBlockInfo))
+      .map((metadataSubField) =>
+        joinSubFields(metadataSubField, metadataBlockInfo, metadataFieldName)
+      )
       .join(' \n \n')
   }
 
@@ -89,22 +118,47 @@ function joinObjectValues(obj: object, separator: string): string {
 
 function joinSubFields(
   metadataSubField: DatasetMetadataSubField,
-  metadataBlockInfo?: MetadataBlockInfoDisplayFormat
+  metadataBlockInfo?: MetadataBlockInfoDisplayFormat,
+  parentFieldName?: string
 ): string {
-  return Object.entries(metadataSubField)
-    .map(([subFieldName, subFieldValue]) => {
-      let formattedSubFieldValue = formatSubFieldValue(
-        subFieldValue,
-        metadataBlockInfo?.fields[subFieldName]?.displayFormat
-      )
-      const subFieldType = metadataBlockInfo?.fields[subFieldName]?.type as string | undefined
+  const commaJoinObj = new Set(['software'])
+  const colunJoinObj = new Set(['series', 'grantNumber', 'contributor', 'otherId', 'fundingAgency'])
 
-      if (subFieldType === 'TEXTBOX')
-        formattedSubFieldValue = transformHtmlToMarkdown(formattedSubFieldValue)
+  const useColonJoin = parentFieldName && colunJoinObj.has(parentFieldName)
+  const useSeperatorJoin = parentFieldName && timePeriodObj.has(parentFieldName)
+  const useCommaJoin = parentFieldName && commaJoinObj.has(parentFieldName)
 
-      return formattedSubFieldValue
-    })
-    .join(' ')
+  const subfields = Object.entries(metadataSubField).map(([subFieldName, subFieldValue]) => {
+    let formattedSubFieldValue = formatSubFieldValue(
+      subFieldValue,
+      metadataBlockInfo?.fields[subFieldName]?.displayFormat
+    )
+
+    const subFieldType = metadataBlockInfo?.fields[subFieldName]?.type as string
+
+    if (subFieldType === 'TEXTBOX') {
+      formattedSubFieldValue = transformHtmlToMarkdown(formattedSubFieldValue)
+    }
+
+    return {
+      fullFieldName: subFieldName,
+      value: formattedSubFieldValue
+    }
+  })
+
+  if (useSeperatorJoin) {
+    return subfields.map((field) => `${field.value}`).join('; ')
+  }
+
+  if (useColonJoin && subfields.length === 2) {
+    return `${subfields[0].value}: ${subfields[1].value}`
+  }
+
+  if (useCommaJoin && subfields.length === 2) {
+    return `${subfields[0].value}, ${subfields[1].value}`
+  }
+
+  return subfields.map((field) => `${field.value}`).join(' \n ')
 }
 
 function formatSubFieldValue(
