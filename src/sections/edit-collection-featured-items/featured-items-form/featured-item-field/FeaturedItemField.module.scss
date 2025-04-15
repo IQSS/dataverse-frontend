@@ -38,6 +38,20 @@
     }
   }
 
+  .featured-item-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-bottom: 0.75rem;
+
+    .badges-column {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+
   .form-group-content,
   .form-group-image {
     margin-bottom: 1rem;
@@ -90,16 +104,6 @@
       align-self: flex-start;
       justify-self: flex-end;
     }
-  }
-
-  .order-value {
-    position: absolute;
-    top: 0.75rem;
-    right: 1rem;
-    padding: 0.25rem 0.5rem;
-    font-size: $dv-font-size-sm;
-    background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
-    border-radius: 6px;
   }
 
   &.sorting {

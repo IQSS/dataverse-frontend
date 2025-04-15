@@ -31,9 +31,21 @@ export const Default: Story = {
 
 const collectionRepositoryWithFeaturedItems = new CollectionMockRepository()
 collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
+  const customFeaturedItem = CollectionFeaturedItemMother.createCustomFeaturedItem('css')
+  const dvObjectCollectionFeaturedItem =
+    CollectionFeaturedItemMother.createDvObjectCollectionFeaturedItem()
+  const dvObjectDatasetFeaturedItem =
+    CollectionFeaturedItemMother.createDvObjectDatasetFeaturedItem()
+  const dvObjectFileFeaturedItem = CollectionFeaturedItemMother.createDvObjectFileFeaturedItem()
+
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(CollectionFeaturedItemMother.createFeaturedItems())
+      resolve([
+        customFeaturedItem,
+        dvObjectCollectionFeaturedItem,
+        dvObjectDatasetFeaturedItem,
+        dvObjectFileFeaturedItem
+      ])
     }, FakerHelper.loadingTimout())
   })
 }

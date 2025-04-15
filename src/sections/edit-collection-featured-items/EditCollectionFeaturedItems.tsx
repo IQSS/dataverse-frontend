@@ -68,7 +68,7 @@ export const EditCollectionFeaturedItems = ({
 
       <SeparationLine />
 
-      {collectionFeaturedItems.length === 0 && <Alert variant="info">{t('infoMessage')}</Alert>}
+      {/* {collectionFeaturedItems.length === 0 && <Alert variant="info">{t('infoMessage')}</Alert>} */}
 
       <FeaturedItemsForm
         collectionId={collection.id}

@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Accordion } from '@iqss/dataverse-design-system'
 import {
   CollectionFeaturedItem,
-  CustomFeaturedItem
+  CustomFeaturedItem,
+  FeaturedItemType
 } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemView } from '@/sections/featured-item/featured-item-view/FeaturedItemView'
 import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
@@ -19,6 +20,10 @@ export const PreviewCarousel = () => {
   const formFieldsToFeaturedItems: CollectionFeaturedItem[] =
     FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(featuredItemFieldValues)
 
+  const customFeaturedItems = formFieldsToFeaturedItems.filter(
+    (featuredItem) => featuredItem.type === FeaturedItemType.CUSTOM
+  ) as CustomFeaturedItem[]
+
   return (
     <Accordion className={styles['preview-carousel-accordion']}>
       <Accordion.Item eventKey="0" className={styles['accordion-item']}>
@@ -29,11 +34,8 @@ export const PreviewCarousel = () => {
             nextLabel={tCollection('featuredItems.slider.nextLabel')}
             dotLabel={tCollection('featuredItems.slider.dotLabel')}
             dataTestId="featured-items-slider"
-            items={formFieldsToFeaturedItems.map((featuredItem) => (
-              <FeaturedItemView
-                key={featuredItem.id}
-                featuredItem={featuredItem as CustomFeaturedItem}
-              />
+            items={customFeaturedItems.map((featuredItem) => (
+              <FeaturedItemView key={featuredItem.id} featuredItem={featuredItem} />
             ))}
           />
         </Accordion.Body>

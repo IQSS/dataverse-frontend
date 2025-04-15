@@ -1,6 +1,7 @@
 import {
   CollectionFeaturedItem,
-  CustomFeaturedItem
+  CustomFeaturedItem,
+  FeaturedItemType
 } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemsFormHelper } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsFormHelper'
 import { FeaturedItemField } from '@/sections/edit-collection-featured-items/types'
@@ -26,25 +27,30 @@ const testFormFields: FeaturedItemField[] = [
   {
     content: '<h1 class="rte-heading">Featured Item One</h1>',
     image: 'https://via.placeholder.com/400x400',
-    itemId: 1
+    itemId: 1,
+    type: FeaturedItemType.CUSTOM
   },
   {
     content: '<h1 class="rte-heading">Featured Item Two</h1>',
     image: null,
-    itemId: 2
+    itemId: 2,
+    type: FeaturedItemType.CUSTOM
   },
   {
     content: '<h1 class="rte-heading">Featured Item Three</h1>',
-    image: new File([''], 'image.jpg')
+    image: new File([''], 'image.jpg'),
+    type: FeaturedItemType.CUSTOM
   },
   {
     content: '<h1 class="rte-heading">Featured Item Four</h1>',
-    image: null
+    image: null,
+    type: FeaturedItemType.CUSTOM
   },
   {
     content: '<h1 class="rte-heading">Featured Item Five</h1>',
     image: new File([''], 'image.jpg'),
-    itemId: 3
+    itemId: 3,
+    type: FeaturedItemType.CUSTOM
   }
 ]
 

@@ -2,19 +2,27 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useTranslation } from 'react-i18next'
 import cn from 'classnames'
-import { Col, Row } from '@iqss/dataverse-design-system'
+import { Badge, Button, Col, Row, Tooltip } from '@iqss/dataverse-design-system'
+import { ArrowLeft } from 'react-bootstrap-icons'
+import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
+import { DvObjectFormItem } from './dv-object-form-item/DvObjectFormItem'
 import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
 import { ImageField } from './ImageField'
+import { ContentField } from './ContentField'
+import { FeaturedItemTypeBadge } from './FeaturedItemTypeBadge'
+import { BaseFormItem } from './base-form-item/BaseFormItem'
 import styles from './FeaturedItemField.module.scss'
-import ContentField from './ContentField'
 
 interface FeaturedItemFieldProps {
   id: string
   itemIndex: number
   onAddField: (index: number) => void
   onRemoveField: (index: number) => void
+  onSelectType: (index: number, type: FeaturedItemType | 'base') => void
   disableDragWhenOnlyOneItem: boolean
   initialImageUrl?: string
+  featuredItemType: FeaturedItemType | '' | 'base'
+  isExistingItem: boolean
 }
 
 export const FeaturedItemField = ({
@@ -22,8 +30,11 @@ export const FeaturedItemField = ({
   itemIndex,
   onAddField,
   onRemoveField,
+  onSelectType,
   disableDragWhenOnlyOneItem,
-  initialImageUrl
+  initialImageUrl,
+  featuredItemType,
+  isExistingItem
 }: FeaturedItemFieldProps) => {
   const { t: tShared } = useTranslation('shared')
 
@@ -47,6 +58,16 @@ export const FeaturedItemField = ({
     transition
   }
 
+  const showCustomFeaturedItemFields = featuredItemType === FeaturedItemType.CUSTOM
+
+  const showDvObjectFeaturedItemFields =
+    featuredItemType === FeaturedItemType.COLLECTION ||
+    featuredItemType === FeaturedItemType.DATASET ||
+    featuredItemType === FeaturedItemType.FILE ||
+    featuredItemType === ''
+
+  const isBaseFeaturedItemField = featuredItemType === 'base'
+
   return (
     <div
       id={id}
@@ -59,43 +80,87 @@ export const FeaturedItemField = ({
         [styles['active']]: active?.id === id
       })}>
       <Row>
-        <Col md={1}>
-          <button
-            type="button"
-            ref={setActivatorNodeRef}
-            {...attributesCheckingDisabled}
-            {...listeners}
-            className={cn(styles['drag-handle'], {
-              [styles['disabled']]: disableDragWhenOnlyOneItem
-            })}
-            aria-label={tShared('dragHandleLabel')}
-            disabled={disableDragWhenOnlyOneItem}>
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="9" cy="6" r="1.5" fill="#777" />
-              <circle cx="15" cy="6" r="1.5" fill="#777" />
-              <circle cx="9" cy="12" r="1.5" fill="#777" />
-              <circle cx="15" cy="12" r="1.5" fill="#777" />
-              <circle cx="9" cy="18" r="1.5" fill="#777" />
-              <circle cx="15" cy="18" r="1.5" fill="#777" />
-            </svg>
-          </button>
+        <Col xs={12}>
+          <Row className={styles['featured-item-header']}>
+            <Col md={1}>{''}</Col>
+            <Col md={8} lg={9}>
+              <div>
+                {!isBaseFeaturedItemField && !isExistingItem && (
+                  <Tooltip overlay="Back to featured item type selection" placement="top">
+                    <Button
+                      onClick={() => onSelectType(itemIndex, 'base')}
+                      icon={<ArrowLeft size={16} />}
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      aria-label="Go back to featured item type selection"
+                    />
+                  </Tooltip>
+                )}
+              </div>
+            </Col>
+            <Col md={3} lg={2}>
+              <div className={styles['badges-column']}>
+                {featuredItemType !== 'base' && featuredItemType !== '' && (
+                  <FeaturedItemTypeBadge type={featuredItemType} />
+                )}
+
+                <Badge variant="secondary">Order {itemIndex + 1}</Badge>
+              </div>
+            </Col>
+          </Row>
         </Col>
-        <Col md={8} lg={9}>
-          {/* CONTENT FIELD */}
-          <ContentField itemIndex={itemIndex} />
-          {/* IMAGE FIELD */}
-          <ImageField itemIndex={itemIndex} initialImageUrl={initialImageUrl} />
-        </Col>
-        <Col md={3} lg={2} style={{ marginTop: '2rem' }}>
-          <DynamicFieldsButtons
-            fieldName="Featured Item"
-            onAddButtonClick={() => onAddField(itemIndex)}
-            onRemoveButtonClick={() => onRemoveField(itemIndex)}
-            originalField={itemIndex === 0}
-          />
+        <Col xs={12}>
+          <Row>
+            <Col md={1}>
+              <button
+                type="button"
+                ref={setActivatorNodeRef}
+                {...attributesCheckingDisabled}
+                {...listeners}
+                className={cn(styles['drag-handle'], {
+                  [styles['disabled']]: disableDragWhenOnlyOneItem
+                })}
+                aria-label={tShared('dragHandleLabel')}
+                disabled={disableDragWhenOnlyOneItem || isBaseFeaturedItemField}>
+                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="9" cy="6" r="1.5" fill="#777" />
+                  <circle cx="15" cy="6" r="1.5" fill="#777" />
+                  <circle cx="9" cy="12" r="1.5" fill="#777" />
+                  <circle cx="15" cy="12" r="1.5" fill="#777" />
+                  <circle cx="9" cy="18" r="1.5" fill="#777" />
+                  <circle cx="15" cy="18" r="1.5" fill="#777" />
+                </svg>
+              </button>
+            </Col>
+            <Col md={8} lg={9}>
+              {isBaseFeaturedItemField && (
+                <BaseFormItem itemIndex={itemIndex} onSelectType={onSelectType} />
+              )}
+              {showCustomFeaturedItemFields && (
+                <>
+                  {/* CONTENT FIELD */}
+                  <ContentField itemIndex={itemIndex} />
+                  {/* IMAGE FIELD */}
+                  <ImageField itemIndex={itemIndex} initialImageUrl={initialImageUrl} />
+                </>
+              )}
+              {showDvObjectFeaturedItemFields && (
+                <DvObjectFormItem itemIndex={itemIndex} featuredItemType={featuredItemType} />
+              )}
+            </Col>
+            <Col md={3} lg={2} style={{ marginTop: '2rem' }}>
+              <DynamicFieldsButtons
+                fieldName="Featured Item"
+                onAddButtonClick={() => onAddField(itemIndex)}
+                onRemoveButtonClick={() => onRemoveField(itemIndex)}
+                originalField={itemIndex === 0}
+                hideAddButton={isBaseFeaturedItemField}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
-      <span className={styles['order-value']}>Order {itemIndex + 1}</span>
     </div>
   )
 }

@@ -1,0 +1,25 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.types-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-left: 0;
+  list-style: none;
+
+  .card-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: color.adjust($dv-brand-color, $alpha: -0.9);
+      border: solid 1px $dv-brand-color;
+      border-radius: 8px;
+    }
+
+    &:active {
+      background: color.adjust($dv-brand-color, $alpha: -0.6);
+    }
+  }
+}

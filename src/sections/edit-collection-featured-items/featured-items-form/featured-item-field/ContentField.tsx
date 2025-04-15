@@ -9,7 +9,7 @@ interface ContentFieldProps {
 
 export const FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED = 15_000
 
-const ContentField = ({ itemIndex }: ContentFieldProps) => {
+export const ContentField = ({ itemIndex }: ContentFieldProps) => {
   const { control } = useFormContext()
   const { t } = useTranslation('editCollectionFeaturedItems')
 
@@ -63,5 +63,3 @@ const ContentField = ({ itemIndex }: ContentFieldProps) => {
     </Form.Group>
   )
 }
-
-export default ContentField

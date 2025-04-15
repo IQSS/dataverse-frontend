@@ -23,6 +23,7 @@ import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCr
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { JSCollectionFeaturedItemsMapper } from '../mappers/JSCollectionFeaturedItemsMapper'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -80,7 +81,11 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
   }
 
   getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
-    return getCollectionFeaturedItems.execute(collectionIdOrAlias)
+    return getCollectionFeaturedItems
+      .execute(collectionIdOrAlias)
+      .then((jsCollectionFeaturedItems) =>
+        JSCollectionFeaturedItemsMapper.toCollectionFeaturedItems(jsCollectionFeaturedItems)
+      )
   }
 
   updateFeaturedItems(
