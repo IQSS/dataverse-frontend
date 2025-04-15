@@ -11,7 +11,7 @@ describe('EditFileMetadata', () => {
     TestsUtils.login()
   })
   describe('Visit the Edit File Metadata Page as a logged in user', () => {
-    it.only('successfully loads the edit file metadata page and submits form', () => {
+    it('successfully loads the edit file metadata page and submits form', () => {
       cy.wrap(
         DatasetHelper.createWithFile(FileHelper.create()).then(
           (datasetResponse) => datasetResponse.file

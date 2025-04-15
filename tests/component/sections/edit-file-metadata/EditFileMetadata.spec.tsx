@@ -16,15 +16,13 @@ describe('EditFileMetadata Component', () => {
     cy.stub(fileRepository, 'getById').returns(new Promise(() => {})) // Simulate loading
 
     cy.customMount(
-      <I18nextProvider i18n={i18n}>
-        <LoadingProvider>
-          <EditFileMetadata
-            fileId={1}
-            fileRepository={fileRepository}
-            referrer={EditFileMetadataReferrer.FILE}
-          />
-        </LoadingProvider>
-      </I18nextProvider>
+      <LoadingProvider>
+        <EditFileMetadata
+          fileId={1}
+          fileRepository={fileRepository}
+          referrer={EditFileMetadataReferrer.FILE}
+        />
+      </LoadingProvider>
     )
 
     cy.findByTestId('edit-file-metadata-skeleton').should('exist')
