@@ -38,7 +38,9 @@ type OtherReferrerProps = {
 type EditFilesListProps = {
   fileRepository: FileRepository
   editFileMetadataFormData: EditFileMetadataFormData
-} & (DatasetReferrerProps | OtherReferrerProps)
+  referrer: EditFileMetadataReferrer
+  datasetPersistentId?: string
+}
 
 export const EditFilesList = ({
   fileRepository,
@@ -51,9 +53,11 @@ export const EditFilesList = ({
   const form = useForm<EditFileMetadataFormData>({ mode: 'onChange' })
   const onSubmitSucceed = () => {
     toast.success('File metadata updated successfully')
-    if (referrer === EditFileMetadataReferrer.DATASET) {
+    if (datasetPersistentId) {
       navigate(
-        `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+        `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId!}&${
+          QueryParamKey.VERSION
+        }=${DatasetNonNumericVersionSearchParam.DRAFT}`
       )
     } else {
       navigate(

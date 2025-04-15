@@ -1,17 +1,17 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Tabs } from '@iqss/dataverse-design-system'
-import { useLoading } from '../loading/LoadingContext'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { File } from '@/files/domain/models/File'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { EditFileMetadataSkeleton } from './EditFileMetadataSkeleton'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { useFile } from '@/sections/file/useFile'
-import { useEffect } from 'react'
 import {
   EditFileMetadataFormData,
   EditFilesList
 } from '@/sections/edit-file-metadata/EditFilesList'
-import { File } from '@/files/domain/models/File'
+import { useLoading } from '../loading/LoadingContext'
+import { useFile } from '@/sections/file/useFile'
 import styles from './EditFileMetadata.module.scss'
 
 interface EditFileMetadataProps {
@@ -68,21 +68,12 @@ export const EditFileMetadata = ({ fileId, fileRepository, referrer }: EditFileM
         <Tabs defaultActiveKey="files">
           <Tabs.Tab eventKey="files" title={tFiles('files')}>
             <div className={styles.tab_container}>
-              {referrer === EditFileMetadataReferrer.DATASET &&
-              file.hierarchy.parent?.persistentId ? (
-                <EditFilesList
-                  fileRepository={fileRepository}
-                  editFileMetadataFormData={createEditFileMetadataFormData(file)}
-                  referrer={referrer}
-                  datasetPersistentId={file.hierarchy.parent?.persistentId}
-                />
-              ) : (
-                <EditFilesList
-                  fileRepository={fileRepository}
-                  editFileMetadataFormData={createEditFileMetadataFormData(file)}
-                  referrer={EditFileMetadataReferrer.FILE}
-                />
-              )}
+              <EditFilesList
+                fileRepository={fileRepository}
+                editFileMetadataFormData={createEditFileMetadataFormData(file)}
+                referrer={referrer}
+                datasetPersistentId={file.hierarchy.parent?.persistentId}
+              />
             </div>
           </Tabs.Tab>
         </Tabs>
