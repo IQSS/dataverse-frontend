@@ -8,6 +8,8 @@ import {
   EditFileMetadataReferrer
 } from '@/sections/edit-file-metadata/EditFileMetadata'
 import { WithToasts } from '../WithToasts'
+import { FileMother } from '@tests/component/files/domain/models/FileMother'
+import { FilePermissionsMother } from '@tests/component/files/domain/models/FilePermissionsMother'
 
 const meta: Meta<typeof EditFileMetadata> = {
   title: 'Pages/Edit File Metadata',
@@ -26,7 +28,13 @@ export const Default: Story = {
   decorators: [WithLayout, WithDataset, WithToasts],
   render: () => (
     <EditFileMetadata
-      fileRepository={new FileMockRepository()}
+      fileRepository={
+        new FileMockRepository(
+          FileMother.createWithTypeTabular({
+            permissions: FilePermissionsMother.createWithGrantedPermissions()
+          })
+        )
+      }
       fileId={1}
       referrer={EditFileMetadataReferrer.FILE}
     />

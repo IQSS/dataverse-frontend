@@ -241,6 +241,7 @@ export class FileMetadataMother {
       description: FakerHelper.paragraph(),
       type: FileTypeMother.createTabular(),
       tabularData: FileTabularDataMother.create(),
+      checksum: FileChecksumMother.create(),
       ...props
     })
   }
