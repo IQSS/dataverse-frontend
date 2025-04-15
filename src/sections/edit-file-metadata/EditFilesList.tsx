@@ -4,13 +4,13 @@ import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Alert, Button, Spinner, Stack, Table } from '@iqss/dataverse-design-system'
+import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { EditFileMetadataRow } from '@/sections/edit-file-metadata/EditFileMetadataRow'
 import { SubmissionStatus, useSubmitFileMetadata } from './useSubmitFileMetadata'
-import { QueryParamKey, Route } from '@/sections/Route.enum'
-import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
-import styles from './EditFilesList.module.scss'
 import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
+import styles from './EditFilesList.module.scss'
 
 export interface FileMetadataFormRow {
   id: number
@@ -24,15 +24,6 @@ export interface FileMetadataFormRow {
 }
 export interface EditFileMetadataFormData {
   files: FileMetadataFormRow[]
-}
-type DatasetReferrerProps = {
-  referrer: EditFileMetadataReferrer.DATASET
-  datasetPersistentId: string
-}
-
-type OtherReferrerProps = {
-  referrer: EditFileMetadataReferrer.FILE
-  datasetPersistentId?: string
 }
 
 type EditFilesListProps = {
@@ -53,11 +44,9 @@ export const EditFilesList = ({
   const form = useForm<EditFileMetadataFormData>({ mode: 'onChange' })
   const onSubmitSucceed = () => {
     toast.success('File metadata updated successfully')
-    if (datasetPersistentId) {
+    if (datasetPersistentId && referrer === EditFileMetadataReferrer.DATASET) {
       navigate(
-        `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId!}&${
-          QueryParamKey.VERSION
-        }=${DatasetNonNumericVersionSearchParam.DRAFT}`
+        `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
       )
     } else {
       navigate(
