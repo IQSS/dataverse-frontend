@@ -116,7 +116,7 @@ function joinObjectValues(obj: object, separator: string): string {
   return Object.values(obj).join(separator)
 }
 
-function joinSubFields(
+export function joinSubFields(
   metadataSubField: DatasetMetadataSubField,
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat,
   parentFieldName?: string
