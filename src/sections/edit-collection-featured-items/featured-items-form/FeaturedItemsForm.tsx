@@ -52,6 +52,8 @@ export const FeaturedItemsForm = ({
     defaultValues
   })
 
+  console.log(form.formState.errors)
+
   const {
     fields: fieldsArray,
     insert,

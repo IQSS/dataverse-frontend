@@ -10,12 +10,13 @@ import styles from './FeaturedItemField.module.scss'
 
 interface ImageFieldProps {
   itemIndex: number
+  editEnabled: boolean
   initialImageUrl?: string
 }
 
 export const FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED = 1_000_000 // 1MB
 
-export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
+export const ImageField = ({ itemIndex, editEnabled, initialImageUrl }: ImageFieldProps) => {
   const { control, setValue } = useFormContext()
   const { t } = useTranslation('editCollectionFeaturedItems')
   const [selectedFileObjectURL, setSelectedFileObjectURL] = useState<string | null>(null)
@@ -104,6 +105,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                   accept=".png, .jpg, .jpeg, .webp"
                   onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileChange(e, onChange)}
                   isInvalid={invalid}
+                  disabled={!editEnabled}
                   style={{ display: showFileInput ? 'block' : 'none' }}
                   ref={(elem: HTMLInputElement | null) => {
                     ref(elem)
@@ -115,6 +117,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                     <Button
                       type="button"
                       onClick={handleRestoreInitialImage}
+                      disabled={!editEnabled}
                       aria-label={t('form.image.restoreInitial')}>
                       <ArrowCounterclockwise />
                     </Button>
@@ -146,6 +149,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                         type="button"
                         size="sm"
                         onClick={handleRestoreInitialImage}
+                        disabled={!editEnabled}
                         aria-label={t('form.image.restoreInitial')}>
                         <ArrowCounterclockwise />
                       </Button>
@@ -157,6 +161,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                       type="button"
                       size="sm"
                       onClick={handleClickChangeImage}
+                      disabled={!editEnabled}
                       aria-label={t('form.image.changeImage')}>
                       <ArrowDownUp />
                     </Button>
@@ -167,6 +172,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                       type="button"
                       size="sm"
                       onClick={handleRemoveImage}
+                      disabled={!editEnabled}
                       aria-label={t('form.image.removeImage')}>
                       <XLg />
                     </Button>

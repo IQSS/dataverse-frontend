@@ -12,19 +12,25 @@ export const labelToValue = (labelOpt: string): string =>
 interface DvObjectFormItemProps {
   itemIndex: number
   featuredItemType: FeaturedItemType | ''
+  editEnabled: boolean
 }
 
-export const DvObjectFormItem = ({ itemIndex, featuredItemType }: DvObjectFormItemProps) => {
+export const DvObjectFormItem = ({
+  itemIndex,
+  featuredItemType,
+  editEnabled
+}: DvObjectFormItemProps) => {
   return (
     <div>
       {/* Select to change dv object type, should update form. */}
-      <DvObjectTypeSelect itemIndex={itemIndex} />
+      <DvObjectTypeSelect itemIndex={itemIndex} editEnabled={editEnabled} />
 
       {/* Select to search for choosen dv object */}
       {featuredItemType !== '' && (
         <DvObjectIdSelect
           itemIndex={itemIndex}
           featuredItemType={featuredItemType}
+          editEnabled={editEnabled}
           key={featuredItemType}
         />
       )}

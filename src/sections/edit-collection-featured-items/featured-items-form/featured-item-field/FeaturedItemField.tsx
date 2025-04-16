@@ -1,9 +1,10 @@
+import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useTranslation } from 'react-i18next'
 import cn from 'classnames'
 import { Badge, Button, Col, Row, Tooltip } from '@iqss/dataverse-design-system'
-import { ArrowLeft } from 'react-bootstrap-icons'
+import { ArrowLeft, Pencil } from 'react-bootstrap-icons'
 import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
 import { DvObjectFormItem } from './dv-object-form-item/DvObjectFormItem'
 import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
@@ -37,6 +38,7 @@ export const FeaturedItemField = ({
   isExistingItem
 }: FeaturedItemFieldProps) => {
   const { t: tShared } = useTranslation('shared')
+  const [editEnabled, setEditEnabled] = useState(!isExistingItem)
 
   const {
     attributes,
@@ -77,7 +79,8 @@ export const FeaturedItemField = ({
       data-testid={`featured-item-${itemIndex.toString()}`}
       className={cn(styles['featured-item-fields-wrapper'], {
         [styles['sorting']]: isSorting,
-        [styles['active']]: active?.id === id
+        [styles['active']]: active?.id === id,
+        [styles['edit-disabled']]: !editEnabled
       })}>
       <Row>
         <Col xs={12}>
@@ -86,6 +89,8 @@ export const FeaturedItemField = ({
             <Col md={8} lg={9}>
               <div>
                 {!isBaseFeaturedItemField && !isExistingItem && (
+                  // TODO:ME - When going back we need to make the user confirm if they want to discard the changes
+                  // As this is only shown when the user is editing a new item we can detect the content property and thats it. Check maybe we have a util to do that already in the content rules
                   <Tooltip overlay="Back to featured item type selection" placement="top">
                     <Button
                       onClick={() => onSelectType(itemIndex, 'base')}
@@ -112,7 +117,24 @@ export const FeaturedItemField = ({
         </Col>
         <Col xs={12}>
           <Row>
-            <Col md={1}>
+            <Col md={1} className={styles['drag-edit-btn-column']}>
+              {!isBaseFeaturedItemField && (
+                <div>
+                  <Tooltip overlay="Toggle edit mode" placement="right">
+                    <Button
+                      onClick={() => setEditEnabled(!editEnabled)}
+                      className={cn(styles['edit-button'], {
+                        [styles['edit-disabled']]: !editEnabled
+                      })}
+                      icon={<Pencil size={18} />}
+                      type="button"
+                      variant="primary"
+                      aria-label="Toggle edit mode"
+                    />
+                  </Tooltip>
+                </div>
+              )}
+
               <button
                 type="button"
                 ref={setActivatorNodeRef}
@@ -140,13 +162,21 @@ export const FeaturedItemField = ({
               {showCustomFeaturedItemFields && (
                 <>
                   {/* CONTENT FIELD */}
-                  <ContentField itemIndex={itemIndex} />
+                  <ContentField itemIndex={itemIndex} editEnabled={editEnabled} />
                   {/* IMAGE FIELD */}
-                  <ImageField itemIndex={itemIndex} initialImageUrl={initialImageUrl} />
+                  <ImageField
+                    itemIndex={itemIndex}
+                    editEnabled={editEnabled}
+                    initialImageUrl={initialImageUrl}
+                  />
                 </>
               )}
               {showDvObjectFeaturedItemFields && (
-                <DvObjectFormItem itemIndex={itemIndex} featuredItemType={featuredItemType} />
+                <DvObjectFormItem
+                  itemIndex={itemIndex}
+                  featuredItemType={featuredItemType}
+                  editEnabled={editEnabled}
+                />
               )}
             </Col>
             <Col md={3} lg={2} style={{ marginTop: '2rem' }}>

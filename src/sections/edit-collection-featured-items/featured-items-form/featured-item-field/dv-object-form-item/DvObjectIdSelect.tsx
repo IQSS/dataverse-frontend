@@ -6,6 +6,7 @@ import { valueToLabel } from './DvObjectFormItem'
 interface DvObjectIdSelectProps {
   itemIndex: number
   featuredItemType: FeaturedItemType
+  editEnabled: boolean
 }
 
 const COLLECTION_OPTIONS = [
@@ -44,7 +45,11 @@ const FILES_OPTIONS = [
   'File9'
 ]
 
-export const DvObjectIdSelect = ({ itemIndex, featuredItemType }: DvObjectIdSelectProps) => {
+export const DvObjectIdSelect = ({
+  itemIndex,
+  featuredItemType,
+  editEnabled
+}: DvObjectIdSelectProps) => {
   const { control, setFocus } = useFormContext()
 
   const rules: UseControllerProps['rules'] = {
@@ -76,11 +81,12 @@ export const DvObjectIdSelect = ({ itemIndex, featuredItemType }: DvObjectIdSele
           name={`featuredItems.${itemIndex}.dvObjectId`}
           control={control}
           rules={rules}
-          render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => {
+          render={({ field: { value, onChange, ref }, fieldState: { invalid, error } }) => {
             return (
               <>
                 <Form.Group.SelectAdvanced
                   options={options}
+                  defaultValue={value as string}
                   onChange={(newValue) => {
                     onChange(newValue)
                     setTimeout(() => {
@@ -90,6 +96,7 @@ export const DvObjectIdSelect = ({ itemIndex, featuredItemType }: DvObjectIdSele
                   inputButtonId={`dv-object-id-${itemIndex}`}
                   isSearchable
                   isInvalid={invalid}
+                  isDisabled={!editEnabled}
                   ref={ref}
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>

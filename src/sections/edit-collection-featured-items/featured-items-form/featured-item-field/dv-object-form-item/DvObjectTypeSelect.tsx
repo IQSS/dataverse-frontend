@@ -5,9 +5,10 @@ import { dvObjectTypesValueLabels, labelToValue, valueToLabel } from './DvObject
 
 interface DvObjectTypeSelectProps {
   itemIndex: number
+  editEnabled: boolean
 }
 
-export const DvObjectTypeSelect = ({ itemIndex }: DvObjectTypeSelectProps) => {
+export const DvObjectTypeSelect = ({ itemIndex, editEnabled }: DvObjectTypeSelectProps) => {
   const { control, setFocus } = useFormContext()
 
   const dvObjectTypesLabels = dvObjectTypesValueLabels.map(({ value: _value, label }) => label)
@@ -56,6 +57,7 @@ export const DvObjectTypeSelect = ({ itemIndex }: DvObjectTypeSelectProps) => {
                   inputButtonId={`dv-object-type-${itemIndex}`}
                   isSearchable={false}
                   isInvalid={invalid}
+                  isDisabled={!editEnabled}
                   ref={ref}
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>

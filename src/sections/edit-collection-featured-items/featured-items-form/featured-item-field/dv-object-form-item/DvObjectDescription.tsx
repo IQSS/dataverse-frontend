@@ -22,6 +22,7 @@ export const DvObjectDescription = ({ itemIndex }: DvObjectDescriptionProps) => 
                 value={value as string}
                 onChange={onChange}
                 isInvalid={invalid}
+                rows={2}
                 ref={ref}
               />
               <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>

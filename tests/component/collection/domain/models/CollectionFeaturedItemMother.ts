@@ -63,7 +63,7 @@ export class CollectionFeaturedItemMother {
     return {
       id: 1,
       displayOrder: 1,
-      dvObjectId: '12345',
+      dvObjectId: 'Collection3',
       type: FeaturedItemType.COLLECTION,
       description:
         'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo impedit perferendis expedita fuga harum quis excepturi porro accusantium earum quos. ',
@@ -77,7 +77,7 @@ export class CollectionFeaturedItemMother {
     return {
       id: 1,
       displayOrder: 1,
-      dvObjectId: '12345',
+      dvObjectId: 'Dataset2',
       type: FeaturedItemType.DATASET,
       description:
         'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo impedit perferendis expedita fuga harum quis excepturi porro accusantium earum quos. ',
@@ -91,7 +91,7 @@ export class CollectionFeaturedItemMother {
     return {
       id: 1,
       displayOrder: 1,
-      dvObjectId: '12345',
+      dvObjectId: 'File5',
       type: FeaturedItemType.FILE,
       description:
         'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo impedit perferendis expedita fuga harum quis excepturi porro accusantium earum quos. ',
