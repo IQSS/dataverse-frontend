@@ -7,9 +7,8 @@ import {
 } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { EditDatasetPermissionsMenu } from './EditDatasetPermissionsMenu'
-import { DeleteDatasetButton } from './DeleteDatasetButton'
+import { DeleteDatasetButton } from './delete-draft-dataset/DeleteDatasetButton'
 import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
-import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
 import { useSession } from '../../../session/SessionContext'
 import { QueryParamKey, Route } from '../../../Route.enum'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
@@ -31,7 +30,6 @@ export enum EditDatasetMenuItems {
 
 export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuProps) {
   const { user } = useSession()
-  const { showModal } = useNotImplementedModal()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
 
@@ -51,7 +49,6 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
       navigate(`${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`)
       return
     }
-    showModal()
   }
 
   if (!user || !dataset.permissions.canUpdateDataset) {
@@ -91,7 +88,7 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
       <DropdownButtonItem eventKey={EditDatasetMenuItems.THUMBNAILS_PLUS_WIDGETS} as="button">
         {t('datasetActionButtons.editDataset.thumbnailsPlusWidgets')}
       </DropdownButtonItem>
-      <DeleteDatasetButton dataset={dataset} />
+      <DeleteDatasetButton dataset={dataset} datasetRepository={datasetRepository} />
       <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
     </DropdownButton>
   )

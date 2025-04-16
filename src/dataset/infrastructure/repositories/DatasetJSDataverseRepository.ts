@@ -31,7 +31,8 @@ import {
   getDatasetVersionDiff,
   DatasetDeaccessionDTO,
   getDatasetVersionsSummaries,
-  getDatasetDownloadCount
+  getDatasetDownloadCount,
+  deleteDataset
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -363,5 +364,12 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return getDatasetDownloadCount
       .execute(datasetId, includeMDC)
       .then((jsDatasetDownloadCount) => jsDatasetDownloadCount)
+  }
+  deleteDataset(datasetId: string | number): Promise<void> {
+    const result = deleteDataset.execute(datasetId).catch((error: WriteError) => {
+      throw new Error(error.message)
+    })
+    console.log('Delete dataset result:', result)
+    return result
   }
 }
