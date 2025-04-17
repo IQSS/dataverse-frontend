@@ -1,6 +1,7 @@
 import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
 import { DvObjectTypeSelect } from './DvObjectTypeSelect'
 import DvObjectIdSelect from './DvObjectIdSelect'
+import { Col, Form } from '@iqss/dataverse-design-system'
 // import { DvObjectDescription } from './DvObjectDescription'
 
 export const valueToLabel = (valueOpt: FeaturedItemType): string =>
@@ -20,20 +21,44 @@ export const DvObjectFormItem = ({
   featuredItemType,
   editEnabled
 }: DvObjectFormItemProps) => {
+  /*
+  - Detect the featured item type based on the url identifiers.
+  - After getting the identifier and type of it we can search for the object and see if it exists.
+  - If it doesn't exist we show an error message to the user.
+  - If it exists but it is outside the collection we show a warning message to the user like:
+    - "This object is not part of this collection."
+  - Then to the API we will just show the identifier and type of it.
+  - A collection alias could be confused with a file identifier.
+  - The url type and indentifier detector should handle both JSF and SPA urls for every object type.
+  */
+
   return (
     <div>
+      <Form.Group>
+        <Form.Group.Label required htmlFor={`dv-object-id-${itemIndex}`} sm={3}>
+          Dataverse Object Identifier
+        </Form.Group.Label>
+        <Col md={9}>
+          <Form.Group.Input type="text" aria-required={true} />
+          <Form.Group.Text>
+            Paste the Collection, Dataset or File URL you want to feature. You can also paste a
+            dataset DOI directly.
+          </Form.Group.Text>
+        </Col>
+      </Form.Group>
+
       {/* Select to change dv object type, should update form. */}
-      <DvObjectTypeSelect itemIndex={itemIndex} editEnabled={editEnabled} />
+      {/* <DvObjectTypeSelect itemIndex={itemIndex} editEnabled={editEnabled} /> */}
 
       {/* Select to search for choosen dv object */}
-      {featuredItemType !== '' && (
+      {/* {featuredItemType !== '' && (
         <DvObjectIdSelect
           itemIndex={itemIndex}
           featuredItemType={featuredItemType}
           editEnabled={editEnabled}
           key={featuredItemType}
         />
-      )}
+      )} */}
 
       {/* Textarea to add a description. */}
       {/* <DvObjectDescription itemIndex={itemIndex} /> */}
