@@ -27,6 +27,10 @@ export const SignUp = ({ userRepository, hasValidTokenButNotLinkedAccount }: Sig
             </span>
           </Alert>
         )}
+
+        {/* TODO: Handle new signups from here */}
+
+        {/* For now we are only handling the case of registering users who are already logged into the oidc provider but do not have a dataverse account. */}
         {hasValidTokenButNotLinkedAccount && (
           <>
             <Alert variant="info" customHeading={t('hasValidTokenButNotLinkedAccount.heading')}>
