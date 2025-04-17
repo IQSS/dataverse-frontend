@@ -366,10 +366,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .then((jsDatasetDownloadCount) => jsDatasetDownloadCount)
   }
   deleteDataset(datasetId: string | number): Promise<void> {
-    const result = deleteDataset.execute(datasetId).catch((error: WriteError) => {
+    return deleteDataset.execute(datasetId).catch((error: WriteError) => {
       throw new Error(error.message)
     })
-    console.log('Delete dataset result:', result)
-    return result
   }
 }

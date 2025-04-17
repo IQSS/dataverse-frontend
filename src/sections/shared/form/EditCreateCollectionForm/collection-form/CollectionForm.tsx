@@ -88,7 +88,7 @@ export const CollectionForm = ({
             : t('collectionForm.submitStatus.editSuccess')}
         </Alert>
       )}
-      <FormProvider {...form}>adsa
+      <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(submitForm)}
           noValidate={true}

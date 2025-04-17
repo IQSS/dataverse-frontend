@@ -5,6 +5,7 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
+import { WriteError } from '@iqss/dataverse-client-javascript'
 
 describe('DeleteDatasetButton', () => {
   const repository: DatasetRepository = {} as DatasetRepository
@@ -121,7 +122,7 @@ describe('DeleteDatasetButton', () => {
   })
 
   it('should not delete dataset if delete button clicked and repository fails', () => {
-    repository.deleteDataset = cy.stub().rejects()
+    repository.deleteDataset = cy.stub().rejects(new Error('Some unknown error'))
     cy.customMount(
       <DeleteDatasetButton
         datasetRepository={repository}
@@ -137,5 +138,46 @@ describe('DeleteDatasetButton', () => {
     cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: 'Delete' }).click()
     cy.findByText(/An error occurred while deleting the dataset./).should('exist')
+  })
+
+  it('sets formatted error message if a WriteError is thrown', () => {
+    const err = new WriteError()
+    repository.deleteDataset = cy.stub().rejects(err)
+
+    cy.customMount(
+      <DeleteDatasetButton
+        datasetRepository={repository}
+        dataset={DatasetMother.create({
+          permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
+          locks: [],
+          version: DatasetVersionMother.createNotReleased()
+        })}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Delete Dataset' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: 'Delete' }).click()
+    cy.findByText(/There was an error when writing the resource./).should('exist')
+  })
+
+  it('disables Delete button during deletion', () => {
+    repository.deleteDataset = cy
+      .stub()
+      .callsFake(() => new Promise((resolve) => setTimeout(resolve, 1000)))
+
+    cy.customMount(
+      <DeleteDatasetButton
+        datasetRepository={repository}
+        dataset={DatasetMother.create({
+          permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
+          locks: [],
+          version: DatasetVersionMother.createNotReleased()
+        })}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Delete Dataset' }).click()
+    cy.findByRole('button', { name: 'Delete' }).click().should('be.disabled')
   })
 })

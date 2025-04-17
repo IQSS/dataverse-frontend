@@ -6,6 +6,8 @@ import {
 } from '../../../../dataset/domain/models/DatasetMother'
 import { EditDatasetMenu } from '../../../../../../src/sections/dataset/dataset-action-buttons/edit-dataset-menu/EditDatasetMenu'
 import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
+import { QueryParamKey } from '@/sections/Route.enum'
+import { DatasetNonNumericVersion } from '@/dataset/domain/models/Dataset'
 
 describe('EditDatasetMenu', () => {
   it('renders the EditDatasetMenu if the user has update dataset permissions', () => {
@@ -188,6 +190,15 @@ describe('EditDatasetMenu', () => {
     cy.findByText(/Are you sure you want to delete this dataset?/i).should('exist')
     cy.findByRole('button', { name: 'Delete' }).click()
     cy.findByText(/The dataset has been deleted./).should('exist')
+
+    const searchParams = new URLSearchParams({
+      [QueryParamKey.PERSISTENT_ID]: dataset.persistentId,
+      [QueryParamKey.VERSION]: DatasetNonNumericVersion.LATEST_PUBLISHED
+    })
+
+    expect(decodeURIComponent(searchParams.toString())).to.equal(
+      `${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersion.LATEST_PUBLISHED}`
+    )
   })
 
   it('clicks on the Terms button', () => {
