@@ -6,8 +6,9 @@ import {
   DatasetMetadataFields as JSDatasetMetadataFields,
   DatasetUserPermissions as JSDatasetPermissions,
   DatasetVersionDiff as JSDatasetVersionDiff,
-  DvObjectOwnerNode as JSUpwardHierarchyNode,
-  DatasetVersionSummaryInfo as JSDatasetVersionSummaryInfo
+  DatasetVersionState,
+  DatasetVersionSummaryInfo as JSDatasetVersionSummaryInfo,
+  DvObjectOwnerNode as JSUpwardHierarchyNode
 } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
@@ -44,7 +45,7 @@ export class JSDatasetMapper {
     jsDatasetLocks: JSDatasetLock[],
     jsDatasetFilesTotalOriginalDownloadSize: number,
     jsDatasetFilesTotalArchivalDownloadSize: number,
-    jsDatasetVersionSummaries?: JSDatasetVersionSummaryInfo[],
+    jsDatasetVersionSummaries: JSDatasetVersionSummaryInfo[],
     requestedVersion?: string,
     privateUrl?: PrivateUrl,
     latestPublishedVersionMajorNumber?: number,
@@ -86,6 +87,7 @@ export class JSDatasetMapper {
         version,
         jsDataset.isPartOf
       ),
+      jsDatasetVersionSummaries,
       jsDataset.license,
       undefined, // TODO: get dataset thumbnail from js-dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl,
@@ -95,8 +97,7 @@ export class JSDatasetMapper {
         latestPublishedVersionMajorNumber,
         latestPublishedVersionMinorNumber
       ),
-      JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff),
-      jsDatasetVersionSummaries
+      JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff)
     ).build()
   }
 
@@ -132,7 +133,8 @@ export class JSDatasetMapper {
       return false
     }
     const required =
-      ((datasetVersionDiff.filesAdded && datasetVersionDiff.filesAdded.length > 0) ||
+      (datasetVersionDiff.oldVersion.versionState === DatasetVersionState.DEACCESSIONED ||
+        (datasetVersionDiff.filesAdded && datasetVersionDiff.filesAdded.length > 0) ||
         (datasetVersionDiff.filesRemoved && datasetVersionDiff.filesRemoved.length > 0) ||
         (datasetVersionDiff.filesReplaced && datasetVersionDiff.filesReplaced.length > 0)) ??
       false

@@ -5,10 +5,12 @@ import { DatasetMother } from '../../../tests/component/dataset/domain/models/Da
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
 import { DatasetItemTypePreviewMother } from '../../../tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 import { DatasetVersionDiffMother } from '../../../tests/component/dataset/domain/models/DatasetVersionDiffMother'
+import { DatasetVersionsSummariesMother } from '../../../tests/component/dataset/domain/models/DatasetVersionsSummariesMother'
 import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType'
+import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
@@ -90,6 +92,15 @@ export class DatasetMockRepository implements DatasetRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  getDatasetVersionsSummaries(_datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(DatasetVersionsSummariesMother.create())
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
   deaccession(
     _datasetId: string | number,
     _version: string,

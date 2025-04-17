@@ -10,7 +10,7 @@ export type DatasetVersionSummary = {
   [key: string]: SummaryUpdates | SummaryUpdatesWithFields | FilesSummaryUpdates | boolean
 }
 
-interface SummaryUpdates {
+export interface SummaryUpdates {
   added: number
   deleted: number
   changed: number
@@ -20,7 +20,7 @@ interface SummaryUpdatesWithFields {
   [key: string]: SummaryUpdates
 }
 
-interface FilesSummaryUpdates {
+export interface FilesSummaryUpdates {
   added: number
   removed: number
   replaced: number

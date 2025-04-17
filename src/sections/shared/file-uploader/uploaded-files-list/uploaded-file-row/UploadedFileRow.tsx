@@ -5,9 +5,9 @@ import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
 import { FileTypeToFileIconMap } from '@/sections/file/file-preview/FileTypeToFileIconMap'
 import { RowSelectionCheckbox } from '@/sections/shared/form/row-selection-checkbox/RowSelectionCheckbox'
 import { UploadedFile } from '../../context/fileUploaderReducer'
-import { FileNameField } from './FileNameField'
-import { FilePathField } from './FilePathField'
-import { FileDescriptionField } from './FileDescriptionField'
+import { FileNameField } from '@/sections/shared/form/metadata-file-row/FileNameField'
+import { FilePathField } from '@/sections/shared/form/metadata-file-row/FilePathField'
+import { FileDescriptionField } from '@/sections/shared/form/metadata-file-row/FileDescriptionField'
 import styles from './UploadedFileRow.module.scss'
 
 interface UploadedFileRowProps {

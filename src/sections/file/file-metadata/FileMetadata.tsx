@@ -1,5 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next'
 import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
+import TurndownService from 'turndown'
 import { FilePreview } from '../file-preview/FilePreview'
 import { FileLabels } from '../file-labels/FileLabels'
 import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
@@ -8,12 +9,18 @@ import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/
 import { FilePermissions } from '../../../files/domain/models/FilePermissions'
 import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
 import styles from './FileMetadata.module.scss'
+import { MarkdownComponent } from '@/sections/dataset/markdown/MarkdownComponent'
 
 interface FileMetadataProps {
   name: string
   metadata: FileMetadataModel
   permissions: FilePermissions
   datasetPublishingStatus: DatasetPublishingStatus
+}
+
+const turndownService = new TurndownService()
+function convertHtmlToMarkdown(html: string): string {
+  return turndownService.turndown(html)
 }
 
 export function FileMetadata({
@@ -180,7 +187,9 @@ export function FileMetadata({
               <Col sm={3}>
                 <strong>{t('metadata.fields.description')}</strong>
               </Col>
-              <Col>{metadata.description}</Col>
+              <Col>
+                <MarkdownComponent markdown={convertHtmlToMarkdown(metadata.description)} />
+              </Col>
             </Row>
           )}
         </Accordion.Body>

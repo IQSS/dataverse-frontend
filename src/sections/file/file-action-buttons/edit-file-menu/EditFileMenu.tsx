@@ -6,6 +6,7 @@ import { RouteWithParams } from '@/sections/Route.enum'
 import { DeleteFileButton } from './delete-file-button/DeleteFileButton'
 import { RestrictFileButton } from './restrict-file-button/RestrictFileButton'
 import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
+import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
 
 interface EditFileMenuProps {
   fileId: number
@@ -36,6 +37,16 @@ export const EditFileMenu = ({
       title={t('actionButtons.editFileMenu.title')}
       asButtonGroup
       variant="secondary">
+      <DropdownButtonItem
+        as={Link}
+        to={RouteWithParams.EDIT_FILE_METADATA(
+          datasetInfo.persistentId,
+          datasetInfo.versionNumber,
+          fileId,
+          EditFileMetadataReferrer.FILE
+        )}>
+        {t('actionButtons.editFileMenu.options.metadata')}
+      </DropdownButtonItem>
       <RestrictFileButton
         fileId={fileId}
         isRestricted={isRestricted}

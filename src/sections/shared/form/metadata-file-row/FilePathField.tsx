@@ -1,14 +1,20 @@
 import { useTranslation } from 'react-i18next'
 import { Controller, FieldValues, UseControllerProps, useFormContext } from 'react-hook-form'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
-import { FilesListFormData } from '../UploadedFilesList'
-import { FileUploaderHelper } from '../../FileUploaderHelper'
+import { FilesListFormData } from '../../file-uploader/uploaded-files-list/UploadedFilesList'
+import { FileUploaderHelper } from '../../file-uploader/FileUploaderHelper'
 
 interface FilePathFieldProps {
   itemIndex: number
+  defaultValue?: string
 }
-
-export const FilePathField = ({ itemIndex }: FilePathFieldProps) => {
+/**
+ * FilePathField component
+ * This field is meant to be used within a form that is using react-hook-form.
+ * It is a controlled component that uses the Controller from react-hook-form to manage its state.
+ * It is shared between the EditFileMetadata and FileUploader components.
+ */
+export const FilePathField = ({ itemIndex, defaultValue }: FilePathFieldProps) => {
   const { control } = useFormContext()
   const { t } = useTranslation('shared')
 
@@ -17,7 +23,7 @@ export const FilePathField = ({ itemIndex }: FilePathFieldProps) => {
       const currentFile = formValues.files[itemIndex]
 
       if (!FileUploaderHelper.isValidFilePath(value as string)) {
-        return t('fileUploader.uploadedFilesList.fields.filePath.invalid.characters')
+        return t('fileMetadataForm.fields.filePath.invalid.characters')
       }
 
       if (
@@ -28,7 +34,7 @@ export const FilePathField = ({ itemIndex }: FilePathFieldProps) => {
           allFiles: formValues.files
         })
       ) {
-        return t('fileUploader.uploadedFilesList.fields.filePath.invalid.duplicateCombination', {
+        return t('fileMetadataForm.fields.filePath.invalid.duplicateCombination', {
           fileName: value
         })
       }
@@ -37,7 +43,7 @@ export const FilePathField = ({ itemIndex }: FilePathFieldProps) => {
     },
     maxLength: {
       value: 255,
-      message: t('fileUploader.uploadedFilesList.fields.filePath.invalid.maxLength', {
+      message: t('fileMetadataForm.fields.filePath.invalid.maxLength', {
         maxLength: 255
       })
     }
@@ -45,11 +51,8 @@ export const FilePathField = ({ itemIndex }: FilePathFieldProps) => {
 
   return (
     <Form.Group controlId={`files.${itemIndex}.fileDir`} as={Row}>
-      <Form.Group.Label
-        message={t('fileUploader.uploadedFilesList.fields.filePath.description')}
-        column
-        lg={2}>
-        {t('fileUploader.uploadedFilesList.fields.filePath.label')}
+      <Form.Group.Label message={t('fileMetadataForm.fields.filePath.description')} column lg={2}>
+        {t('fileMetadataForm.fields.filePath.label')}
       </Form.Group.Label>
       <Col lg={10}>
         <Controller
@@ -60,6 +63,7 @@ export const FilePathField = ({ itemIndex }: FilePathFieldProps) => {
             <>
               <Form.Group.Input
                 type="text"
+                defaultValue={defaultValue}
                 value={value as string}
                 onChange={onChange}
                 isInvalid={invalid}

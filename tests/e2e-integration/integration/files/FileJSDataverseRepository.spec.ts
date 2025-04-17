@@ -34,6 +34,7 @@ import {
 import { File } from '../../../../src/files/domain/models/File'
 import { FileIngest, FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
 import { DateHelper } from '@/shared/helpers/DateHelper'
+import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 
 const DRAFT_PARAM = DatasetNonNumericVersion.DRAFT
 
@@ -919,6 +920,30 @@ describe('File JSDataverse Repository', () => {
         expect(file.datasetVersion.labels).to.deep.equal(expectedFile.datasetVersion.labels)
         expect(file.citation).to.match(expectedFileCitationRegex)
         compareMetadata(file.metadata, expectedFile.metadata)
+      })
+    })
+  })
+  describe('edit file metadata', () => {
+    it('edits file metadata', async () => {
+      const datasetResponse = await DatasetHelper.createWithFile(FileHelper.create())
+      if (!datasetResponse.file) throw new Error('File not found')
+
+      const newMetadata: FileMetadataDTO = {
+        label: 'newFileName.txt',
+        description: 'New description',
+        directoryLabel: 'newDirectoryLabel',
+        categories: ['newCategory']
+      }
+
+      await fileRepository.updateMetadata(datasetResponse.file.id, newMetadata)
+
+      await fileRepository.getById(datasetResponse.file.id).then((file) => {
+        expect(file.name).to.deep.equal(newMetadata.label)
+        expect(file.metadata.description).to.deep.equal(newMetadata.description)
+        expect(file.metadata.directory).to.deep.equal(newMetadata.directoryLabel)
+        expect(file.metadata.labels).to.deep.equal([
+          { type: FileLabelType.CATEGORY, value: 'newCategory' }
+        ])
       })
     })
   })

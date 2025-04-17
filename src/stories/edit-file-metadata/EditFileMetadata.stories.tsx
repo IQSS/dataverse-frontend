@@ -1,0 +1,42 @@
+import type { Meta, StoryObj } from '@storybook/react'
+import { WithI18next } from '../WithI18next'
+import { WithLayout } from '../WithLayout'
+import { FileMockRepository } from '../file/FileMockRepository'
+import { WithDataset } from '../dataset/WithDataset'
+import {
+  EditFileMetadata,
+  EditFileMetadataReferrer
+} from '@/sections/edit-file-metadata/EditFileMetadata'
+import { WithToasts } from '../WithToasts'
+import { FileMother } from '@tests/component/files/domain/models/FileMother'
+import { FilePermissionsMother } from '@tests/component/files/domain/models/FilePermissionsMother'
+
+const meta: Meta<typeof EditFileMetadata> = {
+  title: 'Pages/Edit File Metadata',
+  component: EditFileMetadata,
+  decorators: [WithI18next],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
+  }
+}
+
+export default meta
+type Story = StoryObj<typeof EditFileMetadata>
+
+export const Default: Story = {
+  decorators: [WithLayout, WithDataset, WithToasts],
+  render: () => (
+    <EditFileMetadata
+      fileRepository={
+        new FileMockRepository(
+          FileMother.createWithTypeTabular({
+            permissions: FilePermissionsMother.createWithGrantedPermissions()
+          })
+        )
+      }
+      fileId={1}
+      referrer={EditFileMetadataReferrer.FILE}
+    />
+  )
+}

@@ -91,6 +91,14 @@ const ReplaceFile = lazy(() =>
   }))
 )
 
+const EditFileMetadata = lazy(() =>
+  import('../sections/edit-file-metadata/EditFileMetadataFactory').then(
+    ({ EditFileMetadataFactory }) => ({
+      default: () => EditFileMetadataFactory.create()
+    })
+  )
+)
+
 const FeaturedItemPage = lazy(() =>
   import('../sections/featured-item/FeaturedItemFactory').then(({ FeaturedItemFactory }) => ({
     default: () => FeaturedItemFactory.create()
@@ -248,6 +256,15 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <EditCollectionFeaturedItems />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.EDIT_FILE_METADATA,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditFileMetadata />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

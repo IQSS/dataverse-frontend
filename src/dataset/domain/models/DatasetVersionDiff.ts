@@ -1,4 +1,4 @@
-import { DatasetVersionState } from './Dataset'
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 
 export interface DatasetVersionDiff {
   oldVersion: VersionSummary
@@ -8,7 +8,7 @@ export interface DatasetVersionDiff {
   filesRemoved?: FileSummary[]
   fileChanges?: FileDiff[]
   filesReplaced?: FileReplacement[]
-  termsOfAccess?: FieldDiff[]
+  termsOfAccess?: { changed: FieldDiff[] }
 }
 
 export interface FileSummary {
@@ -37,6 +37,7 @@ export interface MetadataBlockDiff {
 export interface FileDiff {
   fileName: string
   md5: string
+  MD5?: string
   fileId: number
   changed: FieldDiff[]
 }

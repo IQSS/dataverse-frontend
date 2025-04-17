@@ -1,4 +1,5 @@
 import { ReplaceFileReferrer } from './replace-file/ReplaceFile'
+import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
 
 export enum Route {
   HOME = '/',
@@ -10,6 +11,7 @@ export enum Route {
   UPLOAD_DATASET_FILES = '/datasets/upload-files',
   EDIT_DATASET_METADATA = '/datasets/edit-metadata',
   FILES = '/files',
+  EDIT_FILE_METADATA = '/files/edit-metadata',
   FILES_REPLACE = '/files/replace',
   COLLECTIONS_BASE = '/collections',
   COLLECTIONS = '/collections/:collectionId',
@@ -31,6 +33,21 @@ export const RouteWithParams = {
   EDIT_COLLECTION: (collectionId: string) => `/collections/${collectionId}/edit`,
   EDIT_COLLECTION_FEATURED_ITEMS: (collectionId: string) =>
     `/collections/${collectionId}/edit-featured-items`,
+  EDIT_FILE_METADATA: (
+    datasetPersistentId: string,
+    datasetVersion: string,
+    fileId: number,
+    referrer: EditFileMetadataReferrer
+  ) => {
+    const searchParams = new URLSearchParams({
+      [QueryParamKey.FILE_ID]: fileId.toString(),
+      [QueryParamKey.PERSISTENT_ID]: datasetPersistentId,
+      [QueryParamKey.DATASET_VERSION]: datasetVersion,
+      [QueryParamKey.REFERRER]: referrer
+    })
+
+    return `/files/edit-metadata?${searchParams.toString()}`
+  },
   FILES_REPLACE: (
     datasetPersistentId: string,
     datasetVersion: string,

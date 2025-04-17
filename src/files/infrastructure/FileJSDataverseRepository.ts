@@ -21,7 +21,8 @@ import {
   ReadError,
   deleteFile,
   replaceFile,
-  restrictFile
+  restrictFile,
+  updateFileMetadata
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -39,6 +40,7 @@ import { FilesWithCount } from '../domain/models/FilesWithCount'
 import { FileHolder } from '../domain/models/FileHolder'
 import { FixityAlgorithm } from '../domain/models/FixityAlgorithm'
 import { RestrictFileDTO } from '../domain/useCases/restrictFileDTO'
+import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 
 const includeDeaccessioned = true
 
@@ -322,6 +324,9 @@ export class FileJSDataverseRepository implements FileRepository {
       .then((newFileIdentifier) => newFileIdentifier)
   }
 
+  updateMetadata(fileId: number | string, fileMetadata: FileMetadataDTO): Promise<void> {
+    return updateFileMetadata.execute(fileId, fileMetadata)
+  }
   // TODO - Not a priority but could be nice to implement this use case in js-dataverse when having time
   getFixityAlgorithm(): Promise<FixityAlgorithm> {
     return fetch(`${DATAVERSE_BACKEND_URL}/api/files/fixityAlgorithm`)
