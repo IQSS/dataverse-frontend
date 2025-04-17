@@ -27,13 +27,12 @@ export function DeleteDatasetButton({ dataset, datasetRepository }: DeleteDatase
     datasetRepository,
     onSuccessfulDelete: closeModalAndNavigateToDataset
   })
-  console.log('dataset', dataset)
+
   function closeModalAndNavigateToDataset() {
     handleCloseModal()
 
     if (!dataset.version.someDatasetVersionHasBeenReleased) {
       navigate(RouteWithParams.COLLECTIONS(dataset.hierarchy.id))
-      console.log('dataset.hierarchy.id', dataset.hierarchy.id)
     } else {
       const searchParams = new URLSearchParams()
       searchParams.set('persistentId', dataset.persistentId)
@@ -57,8 +56,8 @@ export function DeleteDatasetButton({ dataset, datasetRepository }: DeleteDatase
       <DropdownSeparator />
       <DropdownButtonItem onClick={handleOpenModal}>
         {dataset.version.someDatasetVersionHasBeenReleased
-          ? t('datasetActionButtons.editDataset.delete.released')
-          : t('datasetActionButtons.editDataset.delete.draft')}
+          ? t('datasetActionButtons.editDataset.delete.draft')
+          : t('datasetActionButtons.editDataset.delete.released')}
       </DropdownButtonItem>
       <ConfirmDeleteDatasetModal
         show={showConfirmationModal}

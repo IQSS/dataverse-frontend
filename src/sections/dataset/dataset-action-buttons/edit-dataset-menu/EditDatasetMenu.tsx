@@ -25,7 +25,8 @@ export enum EditDatasetMenuItems {
   PERMISSIONS = 'permissions',
   PRIVATE_URL = 'privateUrl',
   THUMBNAILS_PLUS_WIDGETS = 'thumbnailsPlusWidgets',
-  DEACCESSION = 'deaccession'
+  DEACCESSION = 'deaccession',
+  DELETE = 'delete'
 }
 
 export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuProps) {

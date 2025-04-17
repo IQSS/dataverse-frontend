@@ -114,4 +114,12 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  deleteDataset(_datasetId: string | number): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

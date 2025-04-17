@@ -173,6 +173,23 @@ describe('EditDatasetMenu', () => {
     cy.findByText('Deaccession is permanent.').should('exist')
   })
 
+  it('clicks on the Delete button', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createNotReleased(),
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true
+    })
+    cy.mountAuthenticated(
+      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+    )
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: /Delete/ }).click()
+    cy.findByText(/Are you sure you want to delete this dataset?/i).should('exist')
+    cy.findByRole('button', { name: 'Delete' }).click()
+    cy.findByText(/The dataset has been deleted./).should('exist')
+  })
+
   it('clicks on the Terms button', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createReleased(),
