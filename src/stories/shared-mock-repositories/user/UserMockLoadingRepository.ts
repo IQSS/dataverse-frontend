@@ -7,10 +7,6 @@ export class UserMockLoadingRepository extends UserMockRepository {
     return new Promise(() => {})
   }
 
-  removeAuthenticated(): Promise<void> {
-    return new Promise(() => {})
-  }
-
   getCurrentApiToken(): Promise<TokenInfo> {
     return new Promise(() => {})
   }

@@ -12,14 +12,6 @@ export class UserMockErrorRepository extends UserMockRepository {
     })
   }
 
-  removeAuthenticated(): Promise<void> {
-    return new Promise((_resolve, reject) => {
-      setTimeout(() => {
-        reject('Something went wrong removing authentication. Try again later.')
-      }, FakerHelper.loadingTimout())
-    })
-  }
-
   getCurrentApiToken(): Promise<TokenInfo> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {

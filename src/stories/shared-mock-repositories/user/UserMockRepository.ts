@@ -14,10 +14,6 @@ export class UserMockRepository extends UserJSDataverseRepository {
     })
   }
 
-  removeAuthenticated(): Promise<void> {
-    return Promise.resolve()
-  }
-
   getCurrentApiToken(): Promise<TokenInfo> {
     return new Promise((resolve) => {
       setTimeout(() => {

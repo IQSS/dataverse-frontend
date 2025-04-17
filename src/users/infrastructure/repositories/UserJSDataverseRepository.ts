@@ -9,7 +9,7 @@ import {
   deleteCurrentApiToken,
   registerUser
 } from '@iqss/dataverse-client-javascript'
-import { logout, ReadError, WriteError } from '@iqss/dataverse-client-javascript'
+import { ReadError } from '@iqss/dataverse-client-javascript'
 import { JSUserMapper } from '../mappers/JSUserMapper'
 import { UserDTO } from '@/users/domain/useCases/DTOs/UserDTO'
 
@@ -28,12 +28,6 @@ export class UserJSDataverseRepository implements UserRepository {
       .catch((error: ReadError) => {
         throw error
       })
-  }
-
-  removeAuthenticated(): Promise<void> {
-    return logout.execute().catch((error: WriteError) => {
-      throw new Error(error.message)
-    })
   }
 
   getCurrentApiToken(): Promise<TokenInfo> {

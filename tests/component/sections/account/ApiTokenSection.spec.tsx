@@ -20,7 +20,6 @@ describe('ApiTokenSection', () => {
       recreateApiToken: cy.stub().resolves(mockApiTokenInfo),
       deleteApiToken: cy.stub().resolves(),
       getAuthenticated: cy.stub().resolves(),
-      removeAuthenticated: cy.stub().resolves(),
       register: cy.stub().resolves()
     }
 
