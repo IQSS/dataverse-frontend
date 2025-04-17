@@ -1,4 +1,4 @@
-import { DatasetVersionState } from './Dataset'
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 
 export interface DatasetVersionDiff {
   oldVersion: VersionSummary
