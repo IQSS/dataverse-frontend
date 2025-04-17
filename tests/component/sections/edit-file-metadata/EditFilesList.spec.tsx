@@ -117,6 +117,22 @@ describe('EditFilesList Component', () => {
     cy.findByTestId('edit-file-metadata-form').submit()
     cy.wrap(editFileMetadataStub).should('have.been.called')
   })
+
+  it('submits the form when referrer is Dataset', () => {
+    const editFileMetadataStub = cy.stub(fileRepository, 'updateMetadata').resolves()
+    cy.customMount(
+      <EditFilesList
+        fileRepository={fileRepository}
+        editFileMetadataFormData={editFileMetadataFormData}
+        referrer={EditFileMetadataReferrer.DATASET}
+        datasetPersistentId="dataset-persistent-id"
+      />
+    )
+
+    cy.findByTestId('edit-file-metadata-form').submit()
+    cy.wrap(editFileMetadataStub).should('have.been.called')
+  })
+
   it('handles error when submitting the form', () => {
     const editFileMetadataStub = cy
       .stub(fileRepository, 'updateMetadata')
@@ -132,5 +148,33 @@ describe('EditFilesList Component', () => {
     cy.findByTestId('edit-file-metadata-form').submit()
     cy.wrap(editFileMetadataStub).should('have.been.called')
     cy.findByText('Error').should('exist')
+  })
+
+  it('does not submit the form when pressing enter in the description textarea', () => {
+    const editFileMetadataStub = cy.stub(fileRepository, 'updateMetadata').resolves()
+    cy.customMount(
+      <EditFilesList
+        fileRepository={fileRepository}
+        editFileMetadataFormData={editFileMetadataFormData}
+        referrer={EditFileMetadataReferrer.FILE}
+      />
+    )
+
+    cy.findByLabelText('Description').type('{enter}')
+    cy.wrap(editFileMetadataStub).should('not.have.been.called')
+  })
+
+  it('does submit the form when pressing enter in the Save Changes button', () => {
+    const editFileMetadataStub = cy.stub(fileRepository, 'updateMetadata').resolves()
+    cy.customMount(
+      <EditFilesList
+        fileRepository={fileRepository}
+        editFileMetadataFormData={editFileMetadataFormData}
+        referrer={EditFileMetadataReferrer.FILE}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Save Changes' }).type('{enter}')
+    cy.wrap(editFileMetadataStub).should('have.been.called')
   })
 })
