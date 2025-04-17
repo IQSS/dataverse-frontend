@@ -3,16 +3,6 @@ import { Utils } from '@/shared/helpers/Utils'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 
 describe('Login', () => {
-  // beforeEach(() => {
-  //   TestsUtils.login().then((token) => {
-  //     if (!token) {
-  //       throw new Error('Token not found after Keycloak login')
-  //     }
-
-  //     cy.wrap(TestsUtils.setup(token))
-  //   })
-  // })
-
   it('successfully log in with a user that exists in dataverse and not in the OIDC provider', () => {
     cy.visit('/spa/')
     cy.wait(1_000)
