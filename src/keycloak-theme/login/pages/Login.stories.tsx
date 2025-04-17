@@ -1,0 +1,390 @@
+import type { Meta, StoryObj } from '@storybook/react'
+import { createKcPageStory } from '../KcPageStory'
+
+const { KcPageStory } = createKcPageStory({ pageId: 'login.ftl' })
+
+const meta = {
+  title: 'Keycloak/Login Page',
+  component: KcPageStory
+} satisfies Meta<typeof KcPageStory>
+
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+const defaultRealmArgs = {
+  registrationAllowed: true,
+  rememberMe: true,
+  resetPasswordAllowed: true,
+  internationalizationEnabled: false
+}
+
+export const Default: Story = {
+  render: () => <KcPageStory kcContext={{ realm: defaultRealmArgs }} />
+}
+
+export const WithInvalidCredential: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        login: {
+          username: 'johndoe'
+        },
+        messagesPerField: {
+          // NOTE: The other functions of messagesPerField are derived from get() and
+          // existsError() so they are the only ones that need to mock.
+          existsError: (fieldName: string, ...otherFieldNames: string[]) => {
+            const fieldNames = [fieldName, ...otherFieldNames]
+            return fieldNames.includes('username') || fieldNames.includes('password')
+          },
+          get: (fieldName: string) => {
+            if (fieldName === 'username' || fieldName === 'password') {
+              return 'Invalid username or password.'
+            }
+            return ''
+          }
+        },
+        realm: defaultRealmArgs
+      }}
+    />
+  )
+}
+
+export const WithoutRegistration: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        realm: { ...defaultRealmArgs, registrationAllowed: false }
+      }}
+    />
+  )
+}
+
+export const WithoutRememberMe: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        realm: { ...defaultRealmArgs, rememberMe: false }
+      }}
+    />
+  )
+}
+
+export const WithoutPasswordReset: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        realm: { ...defaultRealmArgs, resetPasswordAllowed: false }
+      }}
+    />
+  )
+}
+
+export const WithEmailAsUsername: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        realm: { ...defaultRealmArgs, loginWithEmailAllowed: false }
+      }}
+    />
+  )
+}
+
+export const WithPresetUsername: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        login: { username: 'max.mustermann@mail.com' },
+        realm: defaultRealmArgs
+      }}
+    />
+  )
+}
+
+export const WithImmutablePresetUsername: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        auth: {
+          attemptedUsername: 'max.mustermann@mail.com',
+          showUsername: true
+        },
+        usernameHidden: true,
+        message: {
+          type: 'info',
+          summary: 'Please re-authenticate to continue'
+        },
+        realm: defaultRealmArgs
+      }}
+    />
+  )
+}
+
+export const WithSocialProviders: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        realm: defaultRealmArgs,
+        social: {
+          displayInfo: true,
+          providers: [
+            {
+              loginUrl: 'google',
+              alias: 'google',
+              providerId: 'google',
+              displayName: 'Google',
+              iconClasses: 'fa fa-google'
+            },
+            {
+              loginUrl: 'microsoft',
+              alias: 'microsoft',
+              providerId: 'microsoft',
+              displayName: 'Microsoft',
+              iconClasses: 'fa fa-windows'
+            },
+            {
+              loginUrl: 'facebook',
+              alias: 'facebook',
+              providerId: 'facebook',
+              displayName: 'Facebook',
+              iconClasses: 'fa fa-facebook'
+            },
+            {
+              loginUrl: 'instagram',
+              alias: 'instagram',
+              providerId: 'instagram',
+              displayName: 'Instagram',
+              iconClasses: 'fa fa-instagram'
+            },
+            {
+              loginUrl: 'twitter',
+              alias: 'twitter',
+              providerId: 'twitter',
+              displayName: 'Twitter',
+              iconClasses: 'fa fa-twitter'
+            },
+            {
+              loginUrl: 'linkedin',
+              alias: 'linkedin',
+              providerId: 'linkedin',
+              displayName: 'LinkedIn',
+              iconClasses: 'fa fa-linkedin'
+            },
+            {
+              loginUrl: 'stackoverflow',
+              alias: 'stackoverflow',
+              providerId: 'stackoverflow',
+              displayName: 'Stackoverflow',
+              iconClasses: 'fa fa-stack-overflow'
+            },
+            {
+              loginUrl: 'github',
+              alias: 'github',
+              providerId: 'github',
+              displayName: 'Github',
+              iconClasses: 'fa fa-github'
+            },
+            {
+              loginUrl: 'gitlab',
+              alias: 'gitlab',
+              providerId: 'gitlab',
+              displayName: 'Gitlab',
+              iconClasses: 'fa fa-gitlab'
+            },
+            {
+              loginUrl: 'bitbucket',
+              alias: 'bitbucket',
+              providerId: 'bitbucket',
+              displayName: 'Bitbucket',
+              iconClasses: 'fa fa-bitbucket'
+            },
+            {
+              loginUrl: 'paypal',
+              alias: 'paypal',
+              providerId: 'paypal',
+              displayName: 'PayPal',
+              iconClasses: 'fa fa-paypal'
+            },
+            {
+              loginUrl: 'openshift',
+              alias: 'openshift',
+              providerId: 'openshift',
+              displayName: 'OpenShift',
+              iconClasses: 'fa fa-cloud'
+            }
+          ]
+        }
+      }}
+    />
+  )
+}
+
+export const WithoutPasswordField: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        realm: { ...defaultRealmArgs, password: false }
+      }}
+    />
+  )
+}
+
+export const WithErrorMessage: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        realm: defaultRealmArgs,
+        message: {
+          summary:
+            'The time allotted for the connection has elapsed.<br/>The login process will restart from the beginning.',
+          type: 'error'
+        }
+      }}
+    />
+  )
+}
+
+export const WithOneSocialProvider: Story = {
+  render: (args) => (
+    <KcPageStory
+      {...args}
+      kcContext={{
+        realm: defaultRealmArgs,
+        social: {
+          displayInfo: true,
+          providers: [
+            {
+              loginUrl: 'google',
+              alias: 'google',
+              providerId: 'google',
+              displayName: 'Google',
+              iconClasses: 'fa fa-google'
+            }
+          ]
+        }
+      }}
+    />
+  )
+}
+
+export const WithTwoSocialProviders: Story = {
+  render: (args) => (
+    <KcPageStory
+      {...args}
+      kcContext={{
+        realm: defaultRealmArgs,
+        social: {
+          displayInfo: true,
+          providers: [
+            {
+              loginUrl: 'google',
+              alias: 'google',
+              providerId: 'google',
+              displayName: 'Google',
+              iconClasses: 'fa fa-google'
+            },
+            {
+              loginUrl: 'microsoft',
+              alias: 'microsoft',
+              providerId: 'microsoft',
+              displayName: 'Microsoft',
+              iconClasses: 'fa fa-windows'
+            }
+          ]
+        }
+      }}
+    />
+  )
+}
+
+export const WithNoSocialProviders: Story = {
+  render: (args) => (
+    <KcPageStory
+      {...args}
+      kcContext={{
+        realm: defaultRealmArgs,
+        social: {
+          displayInfo: true,
+          providers: []
+        }
+      }}
+    />
+  )
+}
+
+export const WithMoreThanTwoSocialProviders: Story = {
+  render: (args) => (
+    <KcPageStory
+      {...args}
+      kcContext={{
+        realm: defaultRealmArgs,
+        social: {
+          displayInfo: true,
+          providers: [
+            {
+              loginUrl: 'google',
+              alias: 'google',
+              providerId: 'google',
+              displayName: 'Google',
+              iconClasses: 'fa fa-google'
+            },
+            {
+              loginUrl: 'microsoft',
+              alias: 'microsoft',
+              providerId: 'microsoft',
+              displayName: 'Microsoft',
+              iconClasses: 'fa fa-windows'
+            },
+            {
+              loginUrl: 'facebook',
+              alias: 'facebook',
+              providerId: 'facebook',
+              displayName: 'Facebook',
+              iconClasses: 'fa fa-facebook'
+            },
+            {
+              loginUrl: 'twitter',
+              alias: 'twitter',
+              providerId: 'twitter',
+              displayName: 'Twitter',
+              iconClasses: 'fa fa-twitter'
+            }
+          ]
+        }
+      }}
+    />
+  )
+}
+
+export const WithSocialProvidersAndWithoutRememberMe: Story = {
+  render: (args) => (
+    <KcPageStory
+      {...args}
+      kcContext={{
+        social: {
+          displayInfo: true,
+          providers: [
+            {
+              loginUrl: 'google',
+              alias: 'google',
+              providerId: 'google',
+              displayName: 'Google',
+              iconClasses: 'fa fa-google'
+            }
+          ]
+        },
+        realm: { ...defaultRealmArgs, rememberMe: false }
+      }}
+    />
+  )
+}
+
+/*
+Below are some examples of how to use the KcPageStory component with different props.
+These file was autogenerated when running for the first time npx keycloakify add-story.
+Could be useful to have them in the future, but for now they are commented out.
+*/
+
+// export const Default: Story = {
+//   render: () => <KcPageStory />
+// }
