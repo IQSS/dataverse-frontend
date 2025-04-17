@@ -10,10 +10,6 @@ const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 describe('Metadata Block Info JSDataverse Repository', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
-      if (!token) {
-        throw new Error('Token not found after Keycloak login')
-      }
-
       cy.wrap(TestsUtils.setup(token))
     })
   })

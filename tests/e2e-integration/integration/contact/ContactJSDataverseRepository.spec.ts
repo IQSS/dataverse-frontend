@@ -11,8 +11,11 @@ const expect = chai.expect
 const repository = new ContactJSDataverseRepository()
 
 describe('Contact JSDataverse Repository', () => {
-  before(() => TestsUtils.setup())
-  beforeEach(() => TestsUtils.login())
+  beforeEach(() => {
+    TestsUtils.login().then((token) => {
+      cy.wrap(TestsUtils.setup(token))
+    })
+  })
 
   it('send information to contacts', async () => {
     const data: FeedbackDTO = {

@@ -133,6 +133,10 @@ Cypress.Commands.add('login', () => {
         `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
       )
 
+      if (!token) {
+        throw new Error('Token not found after OIDC login')
+      }
+
       return cy.wrap(token)
     })
 })

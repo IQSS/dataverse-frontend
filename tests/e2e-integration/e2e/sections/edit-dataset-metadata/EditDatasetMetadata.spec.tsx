@@ -10,10 +10,6 @@ import { QueryParamKey, Route } from '../../../../../src/sections/Route.enum'
 describe('Edit Dataset metadata', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
-      if (!token) {
-        throw new Error('Token not found after Keycloak login')
-      }
-
       cy.wrap(TestsUtils.setup(token))
     })
   })

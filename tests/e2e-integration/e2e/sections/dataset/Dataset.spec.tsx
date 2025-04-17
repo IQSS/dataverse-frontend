@@ -17,10 +17,6 @@ const DRAFT_PARAM = DatasetNonNumericVersionSearchParam.DRAFT
 describe('Dataset', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
-      if (!token) {
-        throw new Error('Token not found after Keycloak login')
-      }
-
       cy.wrap(TestsUtils.setup(token))
     })
   })

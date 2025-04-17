@@ -6,10 +6,6 @@ const CREATE_DATASET_PAGE_URL = '/spa/datasets/root/create'
 describe('Create Dataset', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
-      if (!token) {
-        throw new Error('Token not found after Keycloak login')
-      }
-
       cy.wrap(TestsUtils.setup(token))
     })
   })

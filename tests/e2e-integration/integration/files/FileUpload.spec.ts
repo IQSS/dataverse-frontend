@@ -15,10 +15,6 @@ const datasetRepository = new DatasetJSDataverseRepository()
 describe('DirectUpload', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
-      if (!token) {
-        throw new Error('Token not found after Keycloak login')
-      }
-
       cy.wrap(TestsUtils.setup(token))
     })
   })

@@ -44,10 +44,6 @@ function extractInfoFromInterceptedResponse(interception: Interception) {
 describe('Collection Items Panel', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
-      if (!token) {
-        throw new Error('Token not found after Keycloak login')
-      }
-
       cy.wrap(TestsUtils.setup(token)).then(async () => {
         cy.viewport(1280, 720)
 

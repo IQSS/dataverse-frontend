@@ -48,7 +48,7 @@ declare global {
         component: ReactNode,
         initialEntries?: RouterInitialEntry[]
       ) => Cypress.Chainable<MountReturn>
-      login(): Chainable<string | null>
+      login(): Chainable<string>
       logout(): Chainable<JQuery<HTMLElement>>
       compareDate(date: Date, expectedDate: Date): Chainable
     }

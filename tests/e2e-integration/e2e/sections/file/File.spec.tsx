@@ -6,10 +6,6 @@ import { FileHelper } from '../../../shared/files/FileHelper'
 describe('File', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
-      if (!token) {
-        throw new Error('Token not found after Keycloak login')
-      }
-
       cy.wrap(TestsUtils.setup(token))
     })
   })
