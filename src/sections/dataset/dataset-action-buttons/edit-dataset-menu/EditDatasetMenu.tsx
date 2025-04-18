@@ -7,7 +7,7 @@ import {
 } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { EditDatasetPermissionsMenu } from './EditDatasetPermissionsMenu'
-import { DeleteDatasetButton } from './delete-draft-dataset/DeleteDatasetButton'
+import { DeleteDraftDatasetButton } from './delete-draft-dataset/DeleteDraftDatasetButton'
 import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
 import { useSession } from '../../../session/SessionContext'
 import { QueryParamKey, Route } from '../../../Route.enum'
@@ -89,7 +89,7 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
       <DropdownButtonItem eventKey={EditDatasetMenuItems.THUMBNAILS_PLUS_WIDGETS} as="button">
         {t('datasetActionButtons.editDataset.thumbnailsPlusWidgets')}
       </DropdownButtonItem>
-      <DeleteDatasetButton dataset={dataset} datasetRepository={datasetRepository} />
+      <DeleteDraftDatasetButton dataset={dataset} datasetRepository={datasetRepository} />
       <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
     </DropdownButton>
   )

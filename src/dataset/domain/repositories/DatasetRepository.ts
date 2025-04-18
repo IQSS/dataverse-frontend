@@ -46,5 +46,5 @@ export interface DatasetRepository {
     datasetId: string | number,
     includeMDC?: boolean
   ) => Promise<DatasetDownloadCount>
-  deleteDataset: (datasetId: string | number) => Promise<void>
+  deleteDatasetDraft: (datasetId: string | number) => Promise<void>
 }

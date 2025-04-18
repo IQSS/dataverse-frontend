@@ -128,7 +128,7 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
-  deleteDataset(_datasetId: string | number): Promise<void> {
+  deleteDatasetDraft(_datasetId: string | number): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()

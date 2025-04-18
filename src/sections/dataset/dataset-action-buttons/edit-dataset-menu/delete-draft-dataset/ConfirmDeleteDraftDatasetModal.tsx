@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Button, Modal, Spinner, Stack } from '@iqss/dataverse-design-system'
 import { ExclamationCircleFill, ExclamationTriangle } from 'react-bootstrap-icons'
-import styles from './ConfirmDeleteDatasetModal.module.scss'
+import styles from './ConfirmDeleteDraftDatasetModal.module.scss'
 
-interface ConfirmDeleteDatasetModalProps {
+interface ConfirmDeleteDraftDatasetModalProps {
   show: boolean
   handleClose: () => void
   handleDelete: () => void
@@ -11,13 +11,13 @@ interface ConfirmDeleteDatasetModalProps {
   errorDeletingDataset: string | null
 }
 
-export const ConfirmDeleteDatasetModal = ({
+export const ConfirmDeleteDraftDatasetModal = ({
   show,
   handleClose,
   handleDelete,
   isDeletingDataset,
   errorDeletingDataset
-}: ConfirmDeleteDatasetModalProps) => {
+}: ConfirmDeleteDraftDatasetModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('dataset')
 

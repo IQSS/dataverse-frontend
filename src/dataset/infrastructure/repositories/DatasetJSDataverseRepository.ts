@@ -32,7 +32,7 @@ import {
   DatasetDeaccessionDTO,
   getDatasetVersionsSummaries,
   getDatasetDownloadCount,
-  deleteDataset
+  deleteDatasetDraft
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -365,8 +365,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .execute(datasetId, includeMDC)
       .then((jsDatasetDownloadCount) => jsDatasetDownloadCount)
   }
-  deleteDataset(datasetId: string | number): Promise<void> {
-    return deleteDataset.execute(datasetId).catch((error: WriteError) => {
+  deleteDatasetDraft(datasetId: string | number): Promise<void> {
+    return deleteDatasetDraft.execute(datasetId).catch((error: WriteError) => {
       throw new Error(error.message)
     })
   }

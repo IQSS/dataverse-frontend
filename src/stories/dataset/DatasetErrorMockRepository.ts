@@ -115,7 +115,7 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     })
   }
 
-  deleteDataset(_datasetId: string | number): Promise<void> {
+  deleteDatasetDraft(_datasetId: string | number): Promise<void> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

@@ -1,5 +1,5 @@
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { DeleteDatasetButton } from '../../../../../../src/sections/dataset/dataset-action-buttons/edit-dataset-menu/delete-draft-dataset/DeleteDatasetButton'
+import { DeleteDraftDatasetButton } from '../../../../../../src/sections/dataset/dataset-action-buttons/edit-dataset-menu/delete-draft-dataset/DeleteDraftDatasetButton'
 import {
   DatasetMother,
   DatasetPermissionsMother,
@@ -7,17 +7,17 @@ import {
 } from '../../../../dataset/domain/models/DatasetMother'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 
-describe('DeleteDatasetButton', () => {
+describe('DeleteDraftDatasetButton', () => {
   const repository: DatasetRepository = {} as DatasetRepository
 
-  it('renders the DeleteDatasetButton if the user has delete dataset permissions and the latest version is a draft', () => {
+  it('renders the DeleteDraftDatasetButton if the user has delete dataset permissions and the latest version is a draft', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
       locks: [],
       version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
     })
 
-    cy.customMount(<DeleteDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(<DeleteDraftDatasetButton datasetRepository={repository} dataset={dataset} />)
 
     cy.findByRole('separator').should('exist')
     cy.findByRole('button', { name: /Delete/ }).should('exist')
@@ -30,7 +30,7 @@ describe('DeleteDatasetButton', () => {
       version: DatasetVersionMother.createNotReleased()
     })
 
-    cy.customMount(<DeleteDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(<DeleteDraftDatasetButton datasetRepository={repository} dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Delete Dataset' }).should('exist')
   })
@@ -42,31 +42,31 @@ describe('DeleteDatasetButton', () => {
       version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
     })
 
-    cy.customMount(<DeleteDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(<DeleteDraftDatasetButton datasetRepository={repository} dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Delete Draft Version' }).should('exist')
   })
 
-  it('does not render the DeleteDatasetButton if the user does not have delete dataset permissions', () => {
+  it('does not render the DeleteDraftDatasetButton if the user does not have delete dataset permissions', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithDeleteDatasetNotAllowed(),
       locks: [],
       version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
     })
 
-    cy.customMount(<DeleteDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(<DeleteDraftDatasetButton datasetRepository={repository} dataset={dataset} />)
 
     cy.findByRole('button', { name: /Delete/ }).should('not.exist')
   })
 
-  it('does not render the DeleteDatasetButton if the latest version is not a draft', () => {
+  it('does not render the DeleteDraftDatasetButton if the latest version is not a draft', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
       locks: [],
       version: DatasetVersionMother.createDraftWithLatestVersionIsReleased()
     })
 
-    cy.customMount(<DeleteDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(<DeleteDraftDatasetButton datasetRepository={repository} dataset={dataset} />)
 
     cy.findByRole('button', { name: /Delete/ }).should('not.exist')
   })
@@ -78,7 +78,7 @@ describe('DeleteDatasetButton', () => {
       version: DatasetVersionMother.createNotReleased()
     })
 
-    cy.customMount(<DeleteDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(<DeleteDraftDatasetButton datasetRepository={repository} dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Delete Dataset' }).click()
 
@@ -93,7 +93,7 @@ describe('DeleteDatasetButton', () => {
       version: DatasetVersionMother.createNotReleased()
     })
 
-    cy.customMount(<DeleteDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(<DeleteDraftDatasetButton datasetRepository={repository} dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Delete Dataset' }).click()
     cy.findByRole('button', { name: /Cancel/i }).click()
@@ -102,9 +102,9 @@ describe('DeleteDatasetButton', () => {
   })
 
   it('should delete dataset if delete button clicked', () => {
-    repository.deleteDataset = cy.stub().resolves()
+    repository.deleteDatasetDraft = cy.stub().resolves()
     cy.customMount(
-      <DeleteDatasetButton
+      <DeleteDraftDatasetButton
         datasetRepository={repository}
         dataset={DatasetMother.create({
           permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
@@ -122,9 +122,9 @@ describe('DeleteDatasetButton', () => {
   })
 
   it('should not delete dataset if delete button clicked and repository fails', () => {
-    repository.deleteDataset = cy.stub().rejects(new Error('Some unknown error'))
+    repository.deleteDatasetDraft = cy.stub().rejects(new Error('Some unknown error'))
     cy.customMount(
-      <DeleteDatasetButton
+      <DeleteDraftDatasetButton
         datasetRepository={repository}
         dataset={DatasetMother.create({
           permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
@@ -142,10 +142,10 @@ describe('DeleteDatasetButton', () => {
 
   it('sets formatted error message if a WriteError is thrown', () => {
     const err = new WriteError()
-    repository.deleteDataset = cy.stub().rejects(err)
+    repository.deleteDatasetDraft = cy.stub().rejects(err)
 
     cy.customMount(
-      <DeleteDatasetButton
+      <DeleteDraftDatasetButton
         datasetRepository={repository}
         dataset={DatasetMother.create({
           permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
@@ -162,12 +162,12 @@ describe('DeleteDatasetButton', () => {
   })
 
   it('disables Delete button during deletion', () => {
-    repository.deleteDataset = cy
+    repository.deleteDatasetDraft = cy
       .stub()
       .callsFake(() => new Promise((resolve) => setTimeout(resolve, 1000)))
 
     cy.customMount(
-      <DeleteDatasetButton
+      <DeleteDraftDatasetButton
         datasetRepository={repository}
         dataset={DatasetMother.create({
           permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),

@@ -1,43 +1,45 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { ConfirmDeleteDatasetModal } from '@/sections/dataset/dataset-action-buttons/edit-dataset-menu/delete-draft-dataset/ConfirmDeleteDatasetModal'
+import { ConfirmDeleteDraftDatasetModal } from '@/sections/dataset/dataset-action-buttons/edit-dataset-menu/delete-draft-dataset/ConfirmDeleteDraftDatasetModal'
 
 import { WithI18next } from '@/stories/WithI18next'
 
-const meta: Meta<typeof ConfirmDeleteDatasetModal> = {
-  title: 'Sections/Dataset Page/Delete Dataset/ConfirmDeleteDatasetModal',
-  component: ConfirmDeleteDatasetModal,
+const meta: Meta<typeof ConfirmDeleteDraftDatasetModal> = {
+  title: 'Sections/Dataset Page/Delete Dataset/ConfirmDeleteDraftDatasetModal',
+  component: ConfirmDeleteDraftDatasetModal,
   decorators: [WithI18next]
 }
 export default meta
 
-type Story = StoryObj<typeof ConfirmDeleteDatasetModal>
+type Story = StoryObj<typeof ConfirmDeleteDraftDatasetModal>
 export const Default: Story = {
   render: () => (
-    <ConfirmDeleteDatasetModal
+    <ConfirmDeleteDraftDatasetModal
       show={true}
       handleClose={() => {}}
       handleDelete={() => {}}
       isDeletingDataset={false}
-      errorDeletingDataset={null}></ConfirmDeleteDatasetModal>
+      errorDeletingDataset={null}></ConfirmDeleteDraftDatasetModal>
   )
 }
 export const WithSpinner: Story = {
   render: () => (
-    <ConfirmDeleteDatasetModal
+    <ConfirmDeleteDraftDatasetModal
       show={true}
       isDeletingDataset={true}
       handleClose={() => {}}
       handleDelete={() => {}}
-      errorDeletingDataset={null}></ConfirmDeleteDatasetModal>
+      errorDeletingDataset={null}></ConfirmDeleteDraftDatasetModal>
   )
 }
 export const WithError: Story = {
   render: () => (
-    <ConfirmDeleteDatasetModal
+    <ConfirmDeleteDraftDatasetModal
       show={true}
       isDeletingDataset={true}
       handleClose={() => {}}
       handleDelete={() => {}}
-      errorDeletingDataset={Error('Error deleting dataset').message}></ConfirmDeleteDatasetModal>
+      errorDeletingDataset={
+        Error('Error deleting dataset').message
+      }></ConfirmDeleteDraftDatasetModal>
   )
 }

@@ -4,18 +4,21 @@ import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { Dataset, DatasetPublishingStatus } from '../../../../../dataset/domain/models/Dataset'
-import { useDeleteDataset } from './useDeleteDataset'
+import { useDeleteDraftDataset } from './useDeleteDraftDataset'
 import { DropdownButtonItem, DropdownSeparator } from '@iqss/dataverse-design-system'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersion } from '@/dataset/domain/models/Dataset'
-import { ConfirmDeleteDatasetModal } from './ConfirmDeleteDatasetModal'
+import { ConfirmDeleteDraftDatasetModal } from './ConfirmDeleteDraftDatasetModal'
 
-interface DeleteDatasetButtonProps {
+interface DeleteDraftDatasetButtonProps {
   dataset: Dataset
   datasetRepository: DatasetRepository
 }
-export function DeleteDatasetButton({ dataset, datasetRepository }: DeleteDatasetButtonProps) {
+export function DeleteDraftDatasetButton({
+  dataset,
+  datasetRepository
+}: DeleteDraftDatasetButtonProps) {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const navigate = useNavigate()
   const { t } = useTranslation('dataset')
@@ -23,10 +26,11 @@ export function DeleteDatasetButton({ dataset, datasetRepository }: DeleteDatase
   const handleOpenModal = () => setShowConfirmationModal(true)
   const handleCloseModal = () => setShowConfirmationModal(false)
 
-  const { handleDeleteDataset, isDeletingDataset, errorDeletingDataset } = useDeleteDataset({
-    datasetRepository,
-    onSuccessfulDelete: closeModalAndNavigateToDataset
-  })
+  const { handleDeleteDraftDataset, isDeletingDataset, errorDeletingDataset } =
+    useDeleteDraftDataset({
+      datasetRepository,
+      onSuccessfulDelete: closeModalAndNavigateToDataset
+    })
 
   function closeModalAndNavigateToDataset() {
     handleCloseModal()
@@ -59,10 +63,10 @@ export function DeleteDatasetButton({ dataset, datasetRepository }: DeleteDatase
           ? t('datasetActionButtons.editDataset.delete.draft')
           : t('datasetActionButtons.editDataset.delete.released')}
       </DropdownButtonItem>
-      <ConfirmDeleteDatasetModal
+      <ConfirmDeleteDraftDatasetModal
         show={showConfirmationModal}
         handleClose={handleCloseModal}
-        handleDelete={() => handleDeleteDataset(dataset.persistentId)}
+        handleDelete={() => handleDeleteDraftDataset(dataset.persistentId)}
         isDeletingDataset={isDeletingDataset}
         errorDeletingDataset={errorDeletingDataset}
       />

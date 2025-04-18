@@ -3,33 +3,33 @@ import { useTranslation } from 'react-i18next'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { deleteDataset } from '@/dataset/domain/useCases/deleteDataset'
+import { deleteDatasetDraft } from '@/dataset/domain/useCases/deleteDatasetDraft'
 import { Utils } from '@/shared/helpers/Utils'
 
-interface UseDeleteDataset {
+interface UseDeleteDraftDataset {
   datasetRepository: DatasetRepository
   onSuccessfulDelete: () => void
 }
 
-interface UseDeleteDatasetReturn {
+interface UseDeleteDraftDatasetReturn {
   isDeletingDataset: boolean
   errorDeletingDataset: string | null
-  handleDeleteDataset: (datasetId: number | string) => Promise<void>
+  handleDeleteDraftDataset: (datasetId: number | string) => Promise<void>
 }
 
-export const useDeleteDataset = ({
+export const useDeleteDraftDataset = ({
   datasetRepository,
   onSuccessfulDelete
-}: UseDeleteDataset): UseDeleteDatasetReturn => {
+}: UseDeleteDraftDataset): UseDeleteDraftDatasetReturn => {
   const { t } = useTranslation('dataset')
   const [isDeletingDataset, setIsDeletingDataset] = useState<boolean>(false)
   const [errorDeletingDataset, setErrorDeletingDataset] = useState<string | null>(null)
 
-  const handleDeleteDataset = async (datasetId: number | string) => {
+  const handleDeleteDraftDataset = async (datasetId: number | string) => {
     setIsDeletingDataset(true)
 
     try {
-      await deleteDataset(datasetRepository, datasetId)
+      await deleteDatasetDraft(datasetRepository, datasetId)
 
       // Wait before calling onSuccessfulDelete (which is redirecting to parent collection)
       // Otherwise Search API will still return the deleted dataset item
@@ -44,7 +44,7 @@ export const useDeleteDataset = ({
         setErrorDeletingDataset(formattedError)
       } else {
         setErrorDeletingDataset(
-          t('datasetActionButtons.editDataset.deleteDatasetModal.defaultDatasetDeleteError')
+          t('datasetActionButtons.editDataset.deleteDatasetDraftModal.defaultDatasetDeleteError')
         )
       }
     } finally {
@@ -55,6 +55,6 @@ export const useDeleteDataset = ({
   return {
     isDeletingDataset,
     errorDeletingDataset,
-    handleDeleteDataset
+    handleDeleteDraftDataset
   }
 }
