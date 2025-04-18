@@ -44,7 +44,7 @@ export const useDeleteDraftDataset = ({
         setErrorDeletingDataset(formattedError)
       } else {
         setErrorDeletingDataset(
-          t('datasetActionButtons.editDataset.deleteDatasetDraftModal.defaultDatasetDeleteError')
+          t('datasetActionButtons.editDataset.deleteDatasetModal.defaultDatasetDeleteError')
         )
       }
     } finally {
