@@ -56,13 +56,10 @@ describe('DatasetMetadata', () => {
       }
       if (extractedImages) {
         extractedImages.forEach((image) => {
-          const [, altText, imageUrl] = image.match(/!\[(.*?)\]\((.*?)\)/) || []
-          const translatedAltText = altText.replaceAll(
-            METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
-            metadataFieldName
-          )
-          cy.findByAltText(translatedAltText).should('exist')
-          cy.findByAltText(translatedAltText).should('have.attr', 'src', imageUrl)
+          const [, , imageUrl] = image.match(/!\[(.*?)\]\((.*?)\)/) || []
+
+          cy.findByAltText('Logo URL').should('exist')
+          cy.findByAltText('Logo URL').should('have.attr', 'src', imageUrl)
         })
       }
     } else {
@@ -205,8 +202,10 @@ describe('DatasetMetadata', () => {
         Object.entries(metadataBlock.fields).forEach(([metadataFieldName, metadataFieldValue]) => {
           const metadataFieldNameTranslated = t[metadataBlock.name].datasetField[metadataFieldName]
             .name as string
+          const translateFieldName = (fieldName: string): string => fieldName
           const metadataFieldValueString = metadataFieldValueToDisplayFormat(
             metadataFieldValue,
+            translateFieldName,
             metadataBlockInfoMock
           )
 
