@@ -25,8 +25,6 @@ function transformHtmlToMarkdown(source: string): string {
   return turndownService.turndown(source)
 }
 
-const timePeriodObj = new Set(['timePeriodCovered', 'dateOfCollection'])
-
 export function DatasetMetadataFieldValueFormatted({
   metadataBlockName,
   metadataFieldName,
@@ -34,34 +32,23 @@ export function DatasetMetadataFieldValueFormatted({
   metadataBlockDisplayFormatInfo
 }: DatasetMetadataFieldValueFormattedProps) {
   const { t } = useTranslation(metadataBlockName)
+  const translateFieldName = (fieldName: string): string => {
+    return t(`${metadataBlockName}.datasetField.${fieldName}.name`)
+  }
 
   const valueFormatted = metadataFieldValueToDisplayFormat(
     metadataFieldValue,
+    translateFieldName,
     metadataBlockDisplayFormatInfo,
     metadataFieldName
   )
 
-  let valueFormattedWithNamesTranslated
-
-  if (metadataFieldName == 'software') {
-    valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
-      METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
-      'Version'
-    )
-  }
-
-  if (timePeriodObj.has(metadataFieldName)) {
-    valueFormattedWithNamesTranslated = valueFormatted
-      .replace(METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER, 'Start Date')
-      .replace(METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER, 'End Date')
-  }
-
-  valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
+  const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
     METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
-    t(`${metadataBlockName}.datasetField.${metadataFieldName}.name`)
+    translateFieldName(metadataFieldName)
   )
 
-  if (metadataFieldName === 'alternativeURL') {
+  if (metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.type === 'URL') {
     return (
       <a href={`${String(metadataFieldValue)}`} target="_blank" rel="noreferrer">
         {String(metadataFieldValue)}
@@ -80,6 +67,7 @@ export function DatasetMetadataFieldValueFormatted({
 
 export function metadataFieldValueToDisplayFormat(
   metadataFieldValue: DatasetMetadataFieldValueModel,
+  translateFieldName: (fieldName: string) => string,
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat,
   metadataFieldName?: string
 ): string {
@@ -88,7 +76,7 @@ export function metadataFieldValueToDisplayFormat(
   if (isArrayOfObjects(metadataFieldValue)) {
     return metadataFieldValue
       .map((metadataSubField) =>
-        joinSubFields(metadataSubField, metadataBlockInfo, metadataFieldName)
+        joinSubFields(metadataSubField, translateFieldName, metadataBlockInfo, metadataFieldName)
       )
       .join(' \n \n')
   }
@@ -118,20 +106,20 @@ function joinObjectValues(obj: object, separator: string): string {
 
 export function joinSubFields(
   metadataSubField: DatasetMetadataSubField,
+  translateFieldName: (fieldName: string) => string,
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat,
   parentFieldName?: string
 ): string {
-  const commaJoinObj = new Set(['software'])
-  const colunJoinObj = new Set(['series', 'grantNumber', 'contributor', 'otherId', 'fundingAgency'])
-
-  const useColonJoin = parentFieldName && colunJoinObj.has(parentFieldName)
-  const useSeperatorJoin = parentFieldName && timePeriodObj.has(parentFieldName)
-  const useCommaJoin = parentFieldName && commaJoinObj.has(parentFieldName)
+  let parentDisplayFormat = ''
+  if (parentFieldName) {
+    parentDisplayFormat = metadataBlockInfo?.fields[parentFieldName]?.displayFormat ?? ''
+  }
 
   const subfields = Object.entries(metadataSubField).map(([subFieldName, subFieldValue]) => {
     let formattedSubFieldValue = formatSubFieldValue(
       subFieldValue,
-      metadataBlockInfo?.fields[subFieldName]?.displayFormat
+      metadataBlockInfo?.fields[subFieldName]?.displayFormat,
+      translateFieldName(subFieldName)
     )
 
     const subFieldType = metadataBlockInfo?.fields[subFieldName]?.type as string
@@ -139,31 +127,18 @@ export function joinSubFields(
     if (subFieldType === 'TEXTBOX') {
       formattedSubFieldValue = transformHtmlToMarkdown(formattedSubFieldValue)
     }
-
     return {
       fullFieldName: subFieldName,
       value: formattedSubFieldValue
     }
   })
-
-  if (useSeperatorJoin) {
-    return subfields.map((field) => `${field.value}`).join('; ')
-  }
-
-  if (useColonJoin && subfields.length === 2) {
-    return `${subfields[0].value}: ${subfields[1].value}`
-  }
-
-  if (useCommaJoin && subfields.length === 2) {
-    return `${subfields[0].value}, ${subfields[1].value}`
-  }
-
-  return subfields.map((field) => `${field.value}`).join(' \n ')
+  return subfields.map((field) => `${field.value}`).join(parentDisplayFormat + ' ')
 }
 
 function formatSubFieldValue(
   subFieldValue: string | undefined,
-  displayFormat: string | undefined
+  displayFormat: string | undefined,
+  translatedName: string | undefined
 ): string {
   if (subFieldValue === undefined) {
     return ''
@@ -173,5 +148,13 @@ function formatSubFieldValue(
     return subFieldValue
   }
 
-  return displayFormat.replaceAll(METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER, subFieldValue)
+  const valueFormatted = displayFormat.replaceAll(
+    METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER,
+    subFieldValue
+  )
+  const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
+    METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
+    translatedName ?? ''
+  )
+  return valueFormattedWithNamesTranslated
 }
