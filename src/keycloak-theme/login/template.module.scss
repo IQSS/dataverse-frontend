@@ -15,21 +15,17 @@
   }
 }
 
-.display-name {
-  color: $dv-subtext-color;
-  font-weight: 600;
-  font-size: 1rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
+.header-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
 
-  &:not(:empty) {
-    margin-bottom: 1rem;
-    padding: 1rem;
+  img {
+    width: 40px;
   }
+
   @media (min-width: 768px) {
-    color: $dv-primary-text-color;
-    font-weight: 400;
-    font-size: 2rem;
+    margin-bottom: 1rem;
   }
 }
 

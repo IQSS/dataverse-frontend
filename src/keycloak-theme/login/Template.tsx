@@ -8,6 +8,7 @@ import type { I18n } from './i18n'
 import type { KcContext } from './KcContext'
 import { Alert, DropdownButton, DropdownButtonItem, Tooltip } from '@iqss/dataverse-design-system'
 import { ArrowUpRightSquareFill } from 'react-bootstrap-icons'
+import dataverse_logo from '@/assets/dataverse_brand_icon.svg'
 import styles from './template.module.scss'
 
 /*
@@ -35,7 +36,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
 
   const { msg, msgStr, currentLanguage, enabledLanguages } = i18n
 
-  const { realm, auth, url, message, isAppInitiatedAction } = kcContext
+  const { realm: _realm, auth, url, message, isAppInitiatedAction } = kcContext
 
   useEffect(() => {
     document.title = documentTitle ?? msgStr('loginTitle', kcContext.realm.displayName)
@@ -60,8 +61,8 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
   return (
     <div className={styles.login}>
       <div id="kc-header">
-        <div id="kc-header-wrapper" className={styles['display-name']}>
-          {msg('loginTitleHtml', realm.displayNameHtml)}
+        <div id="kc-header-wrapper" className={styles['header-wrapper']}>
+          <img src={dataverse_logo} />
         </div>
       </div>
       <div className={styles['login-card']}>
