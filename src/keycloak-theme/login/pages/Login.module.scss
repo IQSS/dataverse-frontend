@@ -6,23 +6,27 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+
+  input[type='checkbox'],
+  input[type='checkbox'] + label {
+    cursor: pointer;
+  }
 }
 
 .info {
-  padding: 1rem 2rem;
+  padding: 2rem;
   text-align: center;
-  background-color: color.adjust($dv-secondary-color, $lightness: 5%);
 
   span {
-    color: color.adjust($dv-subtext-color, $lightness: -5%);
+    color: $dv-subtext-color;
   }
 
   a {
     margin-left: 0.5rem;
 
     span {
-      color: color.adjust($dv-link-color, $lightness: -7%);
+      color: $dv-link-color;
     }
   }
 }

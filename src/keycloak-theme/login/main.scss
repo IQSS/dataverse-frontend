@@ -1,13 +1,11 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
-// body.kcBodyClass {
-//   background: $dv-secondary-color;
-// }
+body {
+  font-family: $dv-font-family;
+}
 
-// .kcFormCardClass {
-//   border-radius: 8px;
-// }
-
-// .kcInputClass {
-//   border-radius: 4px;
-// }
+body.kcBodyClass {
+  background: $dv-primary-color;
+}
