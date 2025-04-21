@@ -3,13 +3,12 @@ import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../../shared/files/FileHelper'
 
 describe('EditFileMetadata', () => {
-  before(() => {
-    TestsUtils.setup()
+  beforeEach(() => {
+    TestsUtils.login().then((token) => {
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
-  beforeEach(() => {
-    TestsUtils.login()
-  })
   describe('Visit the Edit File Metadata Page as a logged in user', () => {
     it('successfully loads the edit file metadata page and submits form', () => {
       cy.wrap(

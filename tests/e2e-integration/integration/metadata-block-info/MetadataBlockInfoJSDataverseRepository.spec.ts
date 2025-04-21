@@ -8,8 +8,11 @@ const expect = chai.expect
 
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 describe('Metadata Block Info JSDataverse Repository', () => {
-  before(() => TestsUtils.setup())
-  beforeEach(() => TestsUtils.login())
+  beforeEach(() => {
+    TestsUtils.login().then((token) => {
+      cy.wrap(TestsUtils.setup(token))
+    })
+  })
 
   it('returns JSON in the  correct format', async () => {
     await metadataBlockInfoRepository.getByName('citation').then((metadataBlockInfo) => {

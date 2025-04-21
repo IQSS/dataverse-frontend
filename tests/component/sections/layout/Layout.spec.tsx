@@ -18,8 +18,7 @@ describe('Layout', () => {
     cy.findByText('Dataverse').should('exist')
 
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
-    cy.findByRole('link', { name: 'Sign Up' }).should('exist')
-    cy.findByRole('link', { name: 'Log In' }).should('exist')
+    cy.findByRole('button', { name: 'Log In' }).should('exist')
   })
 
   it('renders the Footer', () => {

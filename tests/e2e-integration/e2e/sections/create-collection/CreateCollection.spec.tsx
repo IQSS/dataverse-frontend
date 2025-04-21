@@ -1,17 +1,23 @@
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { faker } from '@faker-js/faker'
 
+const CREATE_COLLECTION_PAGE_URL = '/spa/collections/root/create'
+
 describe('Create Collection', () => {
-  before(() => {
-    TestsUtils.setup()
+  beforeEach(() => {
+    TestsUtils.login().then((token) => {
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
-  beforeEach(() => {
-    TestsUtils.login()
+  it('visits the Create Collection Page as a logged in user', () => {
+    cy.visit(CREATE_COLLECTION_PAGE_URL)
+
+    cy.findByRole('heading', { name: 'Create Collection' }).should('exist')
   })
 
   it('navigates to the collection page after submitting a valid form', () => {
-    cy.visit('/spa/collections/root/create')
+    cy.visit(CREATE_COLLECTION_PAGE_URL)
 
     const collectionName = faker.lorem.words(3)
 
@@ -29,7 +35,7 @@ describe('Create Collection', () => {
   })
 
   it('shows correct selected facets from parent collection in Browse/Search facets section', () => {
-    cy.visit('/spa/collections/root/create')
+    cy.visit(CREATE_COLLECTION_PAGE_URL)
 
     const collectionName = faker.lorem.words(3)
 
@@ -87,11 +93,29 @@ describe('Create Collection', () => {
     })
   })
 
-  it('redirects to the Log in page when the user is not authenticated', () => {
-    cy.wrap(TestsUtils.logout())
+  it('should redirect the user to the Login page when the user is not authenticated', () => {
+    TestsUtils.logout()
 
-    cy.visit('/spa/collections/root/create')
-    cy.get('#login-container').should('exist')
-    cy.url().should('include', '/loginpage.xhtml')
+    // Visit a protected route 🔐, ProtectedRoute component should redirect automatically to the Keycloack login page
+    cy.visit(CREATE_COLLECTION_PAGE_URL)
+
+    // Check if the Keycloak login form is present
+    cy.get('#kc-form-login').should('exist')
+  })
+
+  it('should redirect the user back to the create collection page after a successful login', () => {
+    TestsUtils.logout()
+
+    cy.visit(CREATE_COLLECTION_PAGE_URL)
+
+    // Check if the Keycloak login form is present
+    cy.get('#kc-form-login').should('exist')
+
+    TestsUtils.enterCredentialsInKeycloak()
+
+    // Check if the user is redirected back to the create collection page
+    cy.url().should('eq', `${Cypress.config().baseUrl as string}${CREATE_COLLECTION_PAGE_URL}`)
+
+    cy.findByRole('heading', { name: 'Create Collection' }).should('exist')
   })
 })

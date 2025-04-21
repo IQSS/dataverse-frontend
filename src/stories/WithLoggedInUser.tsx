@@ -7,9 +7,10 @@ export const WithLoggedInUser = (Story: StoryFn) => {
     <SessionContext.Provider
       value={{
         user: UserMother.create(),
-        logout: () => Promise.resolve(),
         setUser: () => {},
-        isLoadingUser: false
+        isLoadingUser: false,
+        sessionError: null,
+        refetchUserSession: () => Promise.resolve()
       }}>
       <Story />
     </SessionContext.Provider>

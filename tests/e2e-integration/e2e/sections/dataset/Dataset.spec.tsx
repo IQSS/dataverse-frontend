@@ -15,12 +15,10 @@ type Dataset = {
 const DRAFT_PARAM = DatasetNonNumericVersionSearchParam.DRAFT
 
 describe('Dataset', () => {
-  before(() => {
-    TestsUtils.setup()
-  })
-
   beforeEach(() => {
-    TestsUtils.login()
+    TestsUtils.login().then((token) => {
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
   describe('Visit the Dataset Page as a logged in user', () => {
@@ -29,17 +27,14 @@ describe('Dataset', () => {
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
-
           cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
             cy.findByRole('heading', {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
             cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
-
             cy.findByText('Metadata').should('exist')
             cy.findByText('Files').should('exist')
-
             cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
             cy.findByRole('button', { name: 'Permissions' }).should('exist').click()
             cy.findByRole('button', { name: 'Dataset' }).should('exist')
@@ -159,7 +154,7 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.wrap(TestsUtils.logout())
+          TestsUtils.logout()
           cy.wait(1500) // Wait for the dataset to be published
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
@@ -181,7 +176,7 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.wrap(TestsUtils.logout())
+          TestsUtils.logout()
           cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
 
           cy.findByTestId('not-found-page').should('exist')
@@ -412,7 +407,7 @@ describe('Dataset', () => {
         .its('persistentId')
         .then((persistentId: string) => {
           cy.wait(1500) // Wait for the dataset to be published
-          cy.wrap(TestsUtils.logout())
+          TestsUtils.logout()
 
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
@@ -458,7 +453,7 @@ describe('Dataset', () => {
         .then((persistentId: string) => {
           cy.wait(1500) // Wait for the dataset to be published
 
-          cy.wrap(TestsUtils.logout())
+          TestsUtils.logout()
 
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
@@ -473,7 +468,8 @@ describe('Dataset', () => {
           cy.findByRole('button', { name: 'Access File' }).as('accessButton')
           cy.get('@accessButton').should('exist')
           cy.get('@accessButton').click()
-          cy.findByText('Restricted').should('exist')
+          // cy.findByText(new RegExp('^Restricted$', 'i')).should('exist')
+          cy.findByText('Restricted', { exact: true }).should('exist')
         })
     })
 

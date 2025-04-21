@@ -13,6 +13,7 @@ import { CollectionInfo } from './CollectionInfo'
 import { CollectionSkeleton } from './CollectionSkeleton'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
+import { AccountCreatedAlert } from './AccountCreatedAlert'
 import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
 import { ContactButton } from '@/sections/shared/contact/ContactButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
@@ -30,6 +31,7 @@ interface CollectionProps {
   published: boolean
   edited?: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
+  accountCreated: boolean
   infiniteScrollEnabled?: boolean
   contactRepository: ContactRepository
 }
@@ -41,7 +43,8 @@ export function Collection({
   published,
   edited,
   collectionQueryParams,
-  contactRepository
+  contactRepository,
+  accountCreated
 }: CollectionProps) {
   useScrollTop()
   const { t } = useTranslation('collection')
@@ -84,6 +87,7 @@ export function Collection({
           <>
             <BreadcrumbsGenerator hierarchy={collection.hierarchy} />
             <CollectionInfo collection={collection} />
+
             {created && <CreatedAlert />}
             {edited && (
               <Alert variant="success" dismissible={false}>
@@ -95,6 +99,7 @@ export function Collection({
                 {t('publishedAlert')}
               </Alert>
             )}
+            {accountCreated && <AccountCreatedAlert />}
 
             {previousPathIsHomepage &&
             /* istanbul ignore next */ CollectionHelper.isRootCollection(

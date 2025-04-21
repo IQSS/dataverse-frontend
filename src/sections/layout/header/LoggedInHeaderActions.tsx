@@ -1,15 +1,14 @@
+import { useContext } from 'react'
+import { AuthContext } from 'react-oauth2-code-pkce'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Navbar } from '@iqss/dataverse-design-system'
-import { useGetCollectionUserPermissions } from '../../../shared/hooks/useGetCollectionUserPermissions'
-import { useSession } from '../../session/SessionContext'
-import { RouteWithParams, Route } from '../../Route.enum'
-import { User } from '../../../users/domain/models/User'
-import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
-import { AccountHelper } from '../../account/AccountHelper'
+import { User } from '@/users/domain/models/User'
+import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
+import { RouteWithParams, Route } from '@/sections//Route.enum'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { AccountHelper } from '@/sections/account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
-
-const currentPage = 0
 
 interface LoggedInHeaderActionsProps {
   user: User
@@ -21,20 +20,14 @@ export const LoggedInHeaderActions = ({
   collectionRepository
 }: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
-  const { logout } = useSession()
-  const navigate = useNavigate()
+  const { logOut } = useContext(AuthContext)
+
   const { collection } = useCollection(collectionRepository)
 
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: undefined,
     collectionRepository: collectionRepository
   })
-
-  const onLogoutClick = () => {
-    void logout().then(() => {
-      navigate(currentPage)
-    })
-  }
 
   if (!collection) {
     return null
@@ -62,10 +55,15 @@ export const LoggedInHeaderActions = ({
       <Navbar.Dropdown title={user.displayName} id="dropdown-user">
         <Navbar.Dropdown.Item
           as={Link}
+          to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}`}>
+          {t('navigation.accountInfo')}
+        </Navbar.Dropdown.Item>
+        <Navbar.Dropdown.Item
+          as={Link}
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}`}>
           {t('navigation.apiToken')}
         </Navbar.Dropdown.Item>
-        <Navbar.Dropdown.Item href="#" onClick={onLogoutClick}>
+        <Navbar.Dropdown.Item href="#" onClick={() => logOut()} data-testid="oidc-logout">
           {t('logOut')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>

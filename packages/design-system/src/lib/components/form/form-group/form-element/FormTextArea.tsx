@@ -2,7 +2,7 @@ import { Form as FormBS } from 'react-bootstrap'
 import * as React from 'react'
 
 export type FormInputElement = HTMLInputElement | HTMLTextAreaElement
-export interface FormTextAreaProps extends Omit<React.HTMLAttributes<FormInputElement>, 'rows'> {
+export interface FormTextAreaProps extends React.HTMLAttributes<FormInputElement> {
   name?: string
   disabled?: boolean
   isValid?: boolean

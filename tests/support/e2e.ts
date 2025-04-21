@@ -15,13 +15,8 @@
 
 // Import commands.js using ES2015 syntax:
 import '../../tests/support/commands'
-import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
-import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
-import { BASE_URL } from '../../src/config'
 
-ApiConfig.init(`${BASE_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
-
-//https://github.com/cypress-io/cypress/issues/18182
+// This global declaration is to get automatic typescript inferring for wrap https://github.com/cypress-io/cypress/issues/18182
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {

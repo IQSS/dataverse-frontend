@@ -1,23 +1,36 @@
-import { Outlet } from 'react-router-dom'
-import { Route } from '../sections/Route.enum'
-import { useSession } from '../sections/session/SessionContext'
+import { useContext, useEffect } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
+import { AuthContext } from 'react-oauth2-code-pkce'
 import { AppLoader } from '../sections/shared/layout/app-loader/AppLoader'
-import { BASE_URL } from '../config'
+import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
+import { useSession } from '@/sections/session/SessionContext'
+
+/**
+ * This component is responsible for protecting routes that require authentication.
+ * If we dont have a token, we redirect the user to the OIDC login page with the current pathname as a state parameter.
+ * This state parameter is used to redirect the user back to their former intended pathname after the OIDC login is complete.
+ */
 
 export const ProtectedRoute = () => {
+  const { pathname, search } = useLocation()
+  const { token, loginInProgress: oidcLoginInProgress, logIn: oidcLogin } = useContext(AuthContext)
   const { user, isLoadingUser } = useSession()
 
-  if (isLoadingUser) {
+  const isSafeToRenderProtectedRoute = !oidcLoginInProgress && !isLoadingUser && token && user
+
+  useEffect(() => {
+    if (oidcLoginInProgress || isLoadingUser) return
+
+    if (!token) {
+      const state = encodeReturnToPathInStateQueryParam(`${pathname}${search}`)
+
+      oidcLogin(state)
+    }
+  }, [token, oidcLogin, oidcLoginInProgress, isLoadingUser, pathname, search])
+
+  if (!isSafeToRenderProtectedRoute) {
     return <AppLoader />
   }
-
-  if (!user) {
-    window.location.href = `${BASE_URL}${Route.LOG_IN}`
-    return null
-  }
-
-  // When we have the login page inside the SPA, we can use the following code:
-  // return !user ? <Navigate to="/login" replace /> : <Outlet />
 
   return <Outlet />
 }

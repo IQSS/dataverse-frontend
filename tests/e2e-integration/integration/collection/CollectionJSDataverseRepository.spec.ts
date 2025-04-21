@@ -44,9 +44,10 @@ const collectionExpected: Collection = {
 }
 
 describe('Collection JSDataverse Repository', () => {
-  before(() => TestsUtils.setup())
   beforeEach(() => {
-    TestsUtils.login()
+    TestsUtils.login().then((token) => {
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
   it('gets the collection by id', async () => {
@@ -64,6 +65,7 @@ describe('Collection JSDataverse Repository', () => {
     const timestamp = new Date().valueOf()
     const uniqueCollectionId = `test-publish-collection-${timestamp}`
     const collectionResponse = await CollectionHelper.create(uniqueCollectionId)
+
     await collectionRepository.publish(collectionResponse.id)
     await collectionRepository.getById(collectionResponse.id).then((collection) => {
       if (!collection) {

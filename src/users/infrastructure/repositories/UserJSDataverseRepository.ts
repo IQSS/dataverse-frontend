@@ -6,9 +6,12 @@ import {
   getCurrentAuthenticatedUser,
   getCurrentApiToken,
   recreateCurrentApiToken,
-  deleteCurrentApiToken
-} from '@iqss/dataverse-client-javascript/dist/users'
-import { logout, ReadError, WriteError } from '@iqss/dataverse-client-javascript'
+  deleteCurrentApiToken,
+  registerUser
+} from '@iqss/dataverse-client-javascript'
+import { ReadError } from '@iqss/dataverse-client-javascript'
+import { JSUserMapper } from '../mappers/JSUserMapper'
+import { UserDTO } from '@/users/domain/useCases/DTOs/UserDTO'
 
 interface ApiTokenInfoPayload {
   apiToken: string
@@ -20,25 +23,11 @@ export class UserJSDataverseRepository implements UserRepository {
     return getCurrentAuthenticatedUser
       .execute()
       .then((authenticatedUser: AuthenticatedUser) => {
-        return {
-          displayName: authenticatedUser.displayName,
-          persistentId: authenticatedUser.persistentUserId,
-          firstName: authenticatedUser.firstName,
-          lastName: authenticatedUser.lastName,
-          email: authenticatedUser.email,
-          affiliation: authenticatedUser.affiliation,
-          superuser: authenticatedUser.superuser
-        }
+        return JSUserMapper.toUser(authenticatedUser)
       })
       .catch((error: ReadError) => {
-        throw new Error(error.message)
+        throw error
       })
-  }
-
-  removeAuthenticated(): Promise<void> {
-    return logout.execute().catch((error: WriteError) => {
-      throw new Error(error.message)
-    })
   }
 
   getCurrentApiToken(): Promise<TokenInfo> {
@@ -61,5 +50,9 @@ export class UserJSDataverseRepository implements UserRepository {
 
   deleteApiToken(): Promise<void> {
     return deleteCurrentApiToken.execute()
+  }
+
+  register(user: UserDTO): Promise<void> {
+    return registerUser.execute(user)
   }
 }

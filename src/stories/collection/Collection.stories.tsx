@@ -31,6 +31,7 @@ export const Default: Story = {
       collectionIdFromParams="collection"
       created={false}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{
         pageQuery: 1,
         searchQuery: undefined,
@@ -48,6 +49,7 @@ export const Loading: Story = {
       contactRepository={new ContactMockRepository()}
       created={false}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -62,6 +64,7 @@ export const LoggedIn: Story = {
       contactRepository={new ContactMockRepository()}
       created={false}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -75,6 +78,7 @@ export const Unpublished: Story = {
       contactRepository={new ContactMockRepository()}
       created={false}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -89,6 +93,7 @@ export const Created: Story = {
       collectionIdFromParams="collection"
       created={true}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -102,6 +107,22 @@ export const Published: Story = {
       collectionIdFromParams="collection"
       created={false}
       published={true}
+      accountCreated={false}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+    />
+  )
+}
+
+export const AccountCreated: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <Collection
+      collectionRepository={new CollectionMockRepository()}
+      contactRepository={new ContactMockRepository()}
+      collectionIdFromParams="collection"
+      created={false}
+      published={false}
+      accountCreated={true}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -117,6 +138,7 @@ export const Edited: Story = {
       created={false}
       published={false}
       edited={true}
+      accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -140,6 +162,7 @@ export const WithFeaturedItems: Story = {
       collectionIdFromParams="collection"
       created={false}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{
         pageQuery: 1,
         searchQuery: undefined,

@@ -1,7 +1,4 @@
 import { RequestAccessModal } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/RequestAccessModal'
-import { UserMother } from '../../../../users/domain/models/UserMother'
-import { UserRepository } from '../../../../../../src/users/domain/repositories/UserRepository'
-import { SessionProvider } from '../../../../../../src/sections/session/SessionProvider'
 import { Route } from '../../../../../../src/sections/Route.enum'
 import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
 
@@ -22,12 +19,11 @@ describe('RequestAccessModal', () => {
     cy.findByRole('dialog').should('exist')
     cy.findAllByText('Request Access').should('exist')
 
-    cy.findByRole('link', { name: 'Log In' })
-      .should('exist')
-      .should('have.attr', 'href', Route.LOG_IN)
+    cy.findByRole('button', { name: 'Log In' }).should('exist')
+
     cy.findByRole('link', { name: 'Sign Up' })
       .should('exist')
-      .should('have.attr', 'href', Route.SIGN_UP)
+      .should('have.attr', 'href', Route.SIGN_UP_JSF)
 
     cy.findByText('Close').click()
     cy.findByRole('dialog').should('not.exist')
@@ -35,16 +31,8 @@ describe('RequestAccessModal', () => {
 
   it('shows request access modal when button is clicked and user is logged in', () => {
     const file = FilePreviewMother.create()
-    const user = UserMother.create()
-    const userRepository = {} as UserRepository
-    userRepository.getAuthenticated = cy.stub().resolves(user)
-    userRepository.removeAuthenticated = cy.stub().resolves()
 
-    cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <RequestAccessModal fileId={file.id} />
-      </SessionProvider>
-    )
+    cy.mountAuthenticated(<RequestAccessModal fileId={file.id} />)
 
     cy.findByRole('button', { name: 'Request Access' }).click()
 

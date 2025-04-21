@@ -41,6 +41,7 @@
     "error": "There was an error publishing your collection."
   },
   "publishedAlert": "Your collection is now public.",
+  "accountJustCreated": "Welcome to Dataverse! Your account is all set, and we're thrilled to have you on board. Start exploring today!",
   "addFacetFilter": "Add {{labelName}} facet filter",
   "removeSelectedFacet": "Remove {{labelName}} facet filter",
   "share": {

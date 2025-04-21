@@ -1,0 +1,19 @@
+.header {
+  padding-block: 1rem;
+}
+
+.alert-container {
+  padding-top: 1rem;
+
+  &:empty {
+    padding-top: 0;
+  }
+}
+
+.not-linked-account-text {
+  white-space: pre-wrap;
+}
+
+.tab-container {
+  padding: 1em 0;
+}

@@ -60,3 +60,28 @@ export const Default: Story = {
     </Table>
   )
 }
+
+export const WithoutBordersAndStrips: Story = {
+  render: () => (
+    <Table striped={false} bordered={false} borderless>
+      <tbody>
+        <tr>
+          <th scope="row">Username</th>
+          <td>johndoe</td>
+        </tr>
+        <tr>
+          <th scope="row">Given Name</th>
+          <td>John</td>
+        </tr>
+        <tr>
+          <th scope="row">Family Name</th>
+          <td>Doe</td>
+        </tr>
+        <tr>
+          <th scope="row">Email</th>
+          <td>johndoe@email.com</td>
+        </tr>
+      </tbody>
+    </Table>
+  )
+}

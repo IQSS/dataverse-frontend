@@ -36,9 +36,19 @@ jobs:
       - name: Create and populate .env file
         env:
           DATAVERSE_BACKEND_URL: 'http://localhost:8000'
+          OIDC_CLIENT_ID: 'test'
+          OIDC_AUTHORIZATION_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/auth'
+          OIDC_TOKEN_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/token'
+          OIDC_LOGOUT_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/logout'
+          OIDC_STORAGE_KEY_PREFIX: 'DV_'
         run: |
           touch .env
           echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
+          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
+          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
+          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
+          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
         shell: bash
 
       - name: Create containerized development environment .env file
@@ -106,9 +116,19 @@ jobs:
       - name: Create and populate .env file
         env:
           DATAVERSE_BACKEND_URL: 'http://localhost:8000'
+          OIDC_CLIENT_ID: 'test'
+          OIDC_AUTHORIZATION_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/auth'
+          OIDC_TOKEN_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/token'
+          OIDC_LOGOUT_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/logout'
+          OIDC_STORAGE_KEY_PREFIX: 'DV_'
         run: |
           touch .env
           echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
+          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
+          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
+          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
+          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
         shell: bash
 
       - name: Install Dependencies
@@ -122,7 +142,6 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           component: true
-
       - name: Cypress run Design System
         uses: cypress-io/github-action@v5
         with:

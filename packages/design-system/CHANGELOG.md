@@ -47,13 +47,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormSelect:** extend Props Interface to accept `autoFocus` prop.
 - **Stack:** NEW Stack element to manage layouts.
 - **TransferList:** NEW TransferList component to transfer items between two list, also sortable.
-- **Table:** extend Props Interface to accept `bordered` prop to add or remove borders on all sides of the table and cells. Defaults to true.
+- **Table:** extend Props Interface to accept `bordered`, `borderless` and `striped`.
 - **Spinner:** New Spinner component.
 - **CloseButton:** NEW close button component.
 - **Tab:** extend Props Interface to accept `disabled` prop to disable the tab.
 - **Offcanvas:** NEW Offcanvas component.
 - **FormCheckbox:** modify Props Interface to allow any react node as `label` prop.
 - **RichTextEditor:** NEW Rich Text Editor component.
+- **FormTextArea:** modify Props Interface to allow `rows` prop.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 

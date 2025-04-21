@@ -10,6 +10,12 @@ export class Validator {
     return IDENTIFIER_REGEX.test(input)
   }
 
+  static isValidUsername(input: string): boolean {
+    const USERNAME_REGEX = /^[a-zA-Z0-9_.-]{2,60}$/
+
+    return USERNAME_REGEX.test(input)
+  }
+
   static isValidNumber(input: string): boolean {
     const NUMBER_REGEX = /^\d+$/
     return NUMBER_REGEX.test(input)

@@ -42,20 +42,22 @@ function extractInfoFromInterceptedResponse(interception: Interception) {
 }
 
 describe('Collection Items Panel', () => {
-  before(() => {
-    TestsUtils.setup()
-    TestsUtils.login()
-  })
+  beforeEach(() => {
+    TestsUtils.login().then((token) => {
+      cy.wrap(TestsUtils.setup(token)).then(async () => {
+        cy.viewport(1280, 720)
 
-  beforeEach(async () => {
-    cy.viewport(1280, 720)
+        cy.intercept(SEARCH_ENDPOINT_REGEX).as('getCollectionItems')
 
-    cy.intercept(SEARCH_ENDPOINT_REGEX).as('getCollectionItems')
-
-    // Creates 8 datasets with 1 file each
-    for (const _number of numbersOfDatasetsToCreate) {
-      await DatasetHelper.createWithFileAndTitle(FileHelper.create(), datasetTitles[_number - 1])
-    }
+        // Creates 8 datasets with 1 file each
+        for (const _number of numbersOfDatasetsToCreate) {
+          await DatasetHelper.createWithFileAndTitle(
+            FileHelper.create(),
+            datasetTitles[_number - 1]
+          )
+        }
+      })
+    })
   })
 
   afterEach(() => {

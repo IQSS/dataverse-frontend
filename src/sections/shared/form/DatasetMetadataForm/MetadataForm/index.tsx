@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
@@ -11,6 +11,7 @@ import { type DatasetMetadataFormMode } from '..'
 import { SubmissionStatus, useSubmitDataset } from '../useSubmitDataset'
 import { MetadataBlockFormFields } from './MetadataBlockFormFields'
 import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
+import { RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import styles from './index.module.scss'
@@ -78,9 +79,8 @@ export const MetadataForm = ({
     }
   }, [setValue, user, mode])
 
-  const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    navigate(-1)
+  const handleCancel = () => {
+    navigate(RouteWithParams.COLLECTIONS(collectionId))
   }
 
   const onInvalidSubmit = (errors: FieldErrors<DatasetMetadataFormValues>) => {

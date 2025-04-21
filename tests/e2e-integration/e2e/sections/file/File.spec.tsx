@@ -4,13 +4,12 @@ import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Data
 import { FileHelper } from '../../../shared/files/FileHelper'
 
 describe('File', () => {
-  before(() => {
-    TestsUtils.setup()
+  beforeEach(() => {
+    TestsUtils.login().then((token) => {
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
-  beforeEach(() => {
-    TestsUtils.login()
-  })
   describe('Visit the File Page as a logged in user', () => {
     it('successfully loads a file in draft mode', () => {
       cy.wrap(
@@ -41,7 +40,7 @@ describe('File', () => {
       )
         .its('id')
         .then((id: string) => {
-          cy.wrap(TestsUtils.logout())
+          TestsUtils.logout()
           cy.visit(`/spa/files?id=${id}`)
 
           cy.findByRole('heading', { name: 'blob' }).should('exist')
@@ -64,7 +63,7 @@ describe('File', () => {
       )
         .its('id')
         .then((id: string) => {
-          cy.wrap(TestsUtils.logout())
+          TestsUtils.logout()
           cy.visit(`/spa/files?id=${id}`)
 
           cy.findByTestId('not-found-page').should('exist')

@@ -43,6 +43,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -69,6 +70,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -84,6 +86,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -99,6 +102,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -113,6 +117,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -127,6 +132,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -146,6 +152,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -160,6 +167,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={true}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -182,6 +190,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -202,6 +211,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -214,6 +224,24 @@ describe('Collection page', () => {
     cy.findByText('Publish Collection').should('not.exist')
   })
 
+  it('should display the account created alert', () => {
+    cy.mountAuthenticated(
+      <Collection
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+        collectionIdFromParams="collection"
+        created={false}
+        published={false}
+        accountCreated={true}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+
+    cy.findByText(
+      /Welcome to Dataverse! Your account is all set, and we're thrilled to have you on board. Start exploring today!/
+    ).should('exist')
+  })
+
   it('opens and close the share collection modal', () => {
     cy.viewport(1200, 800)
 
@@ -224,6 +252,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -249,6 +278,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -266,6 +296,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -283,6 +314,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -304,6 +336,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -323,6 +356,7 @@ describe('Collection page', () => {
         collectionIdFromParams="collection"
         created={false}
         published={false}
+        accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )

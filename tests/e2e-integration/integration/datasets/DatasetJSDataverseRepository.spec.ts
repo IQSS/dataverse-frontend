@@ -151,15 +151,16 @@ const datasetData = (persistentId: string, versionId: number) => {
     ]
   }
 }
+
 const collectionId = 'DatasetJSDataverseRepository'
 const datasetRepository = new DatasetJSDataverseRepository()
 describe('Dataset JSDataverse Repository', () => {
-  before(() => {
-    TestsUtils.setup()
-    TestsUtils.login().then(() => CollectionHelper.createAndPublish(collectionId))
-  })
   beforeEach(() => {
-    TestsUtils.login()
+    TestsUtils.login().then((token) => {
+      cy.wrap(TestsUtils.setup(token)).then(
+        async () => await CollectionHelper.createAndPublish(collectionId)
+      )
+    })
   })
 
   it('gets the dataset by persistentId', async () => {
@@ -193,7 +194,9 @@ describe('Dataset JSDataverse Repository', () => {
 
     await TestsUtils.wait(1500)
 
-    await TestsUtils.logout()
+    // This is to simulate the user being logged out
+    cy.clearAllLocalStorage()
+    cy.clearAllCookies()
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')
@@ -222,6 +225,7 @@ describe('Dataset JSDataverse Repository', () => {
           expectedPublicationDate
         )
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+
         expect(dataset.permissions).to.deep.equal({
           canDownloadFiles: true,
           canUpdateDataset: false,
@@ -237,6 +241,7 @@ describe('Dataset JSDataverse Repository', () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.publish(datasetResponse.persistentId)
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
+
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')
       .then((dataset) => {
@@ -265,6 +270,7 @@ describe('Dataset JSDataverse Repository', () => {
           expectedPublicationDate
         )
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+
         expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
       })
   })
@@ -350,6 +356,7 @@ describe('Dataset JSDataverse Repository', () => {
     await TestsUtils.wait(1500)
 
     await DatasetHelper.deaccession(datasetResponse.id)
+
     await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
       if (!dataset) {
         throw new Error('Dataset not found')
@@ -374,9 +381,10 @@ describe('Dataset JSDataverse Repository', () => {
         const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
         expect(dataset.version.title).to.deep.equal(datasetExpected.title)
+
         expect(dataset.locks).to.deep.equal([
           {
-            userPersistentId: 'dataverseAdmin',
+            userPersistentId: TestsUtils.USER_USERNAME,
             reason: DatasetLockReason.FINALIZE_PUBLICATION
           }
         ])
@@ -421,8 +429,10 @@ describe('Dataset JSDataverse Repository', () => {
       expect(response.persistentId).to.exist
     })
   })
+
   it('publishes a draft dataset', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
+
     await datasetRepository.publish(datasetResponse.persistentId).then((response) => {
       expect(response).to.not.exist
     })
@@ -435,6 +445,7 @@ describe('Dataset JSDataverse Repository', () => {
         expect(datasetResponse?.version.publishingStatus).to.equal(DatasetPublishingStatus.RELEASED)
       })
   })
+
   it.skip('publishes a new version of a previously released dataset', async () => {
     const datasetResponse = await DatasetHelper.createAndPublish(collectionId)
     // TODO: update dataset

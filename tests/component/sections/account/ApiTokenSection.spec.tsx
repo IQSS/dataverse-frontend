@@ -12,26 +12,26 @@ describe('ApiTokenSection', () => {
     expirationDate: new Date('2025-12-31')
   }
 
-  let apiTokenRepository: UserRepository
+  let userRepository: UserRepository
 
   beforeEach(() => {
-    apiTokenRepository = {
+    userRepository = {
       getCurrentApiToken: cy.stub().resolves(mockApiTokenInfo),
       recreateApiToken: cy.stub().resolves(mockApiTokenInfo),
       deleteApiToken: cy.stub().resolves(),
       getAuthenticated: cy.stub().resolves(),
-      removeAuthenticated: cy.stub().resolves()
+      register: cy.stub().resolves()
     }
 
-    cy.mountAuthenticated(<ApiTokenSection repository={apiTokenRepository} />)
+    cy.mountAuthenticated(<ApiTokenSection repository={userRepository} />)
   })
 
   it('should show the loading skeleton while fetching the token', () => {
-    apiTokenRepository.getCurrentApiToken = cy.stub().callsFake(() => {
+    userRepository.getCurrentApiToken = cy.stub().callsFake(() => {
       return Cypress.Promise.delay(500).then(() => mockApiTokenInfo)
     })
 
-    cy.mount(<ApiTokenSection repository={apiTokenRepository} />)
+    cy.mount(<ApiTokenSection repository={userRepository} />)
     cy.get('[data-testid="loadingSkeleton"]').should('exist')
 
     cy.wait(500)
@@ -62,7 +62,7 @@ describe('ApiTokenSection', () => {
   })
 
   it('should recreate and display a new API token', () => {
-    apiTokenRepository.recreateApiToken = cy.stub().resolves(newMockApiTokenInfo)
+    userRepository.recreateApiToken = cy.stub().resolves(newMockApiTokenInfo)
     cy.get('button').contains('Recreate Token').click()
     cy.get('[data-testid="api-token"]').should('contain.text', newMockApiTokenInfo.apiToken)
     cy.get('[data-testid="expiration-date"]').should(

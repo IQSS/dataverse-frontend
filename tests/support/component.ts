@@ -19,11 +19,10 @@ import '@cypress/code-coverage/support'
 import '../../src/assets/swal-custom.scss'
 import '../../src/assets/react-toastify-custom.scss'
 import 'react-loading-skeleton/dist/skeleton.css'
-
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
-
-import { mount } from 'cypress/react18'
+import { mount, MountReturn } from 'cypress/react18'
+import { RouterInitialEntry } from './commands'
+import { ReactNode } from 'react'
+import { User } from '@/users/domain/models/User'
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -35,11 +34,22 @@ declare global {
   namespace Cypress {
     interface Chainable {
       mount: typeof mount
-      customMount: typeof mount
-      mountAuthenticated: typeof mount
-      mountSuperuser: typeof mount
-      loginAsAdmin(go?: string): Chainable<JQuery<HTMLElement>>
-      getApiToken(): Chainable<string>
+      // customMount: typeof mount
+      customMount: (
+        component: ReactNode,
+        initialEntries?: RouterInitialEntry[]
+      ) => Cypress.Chainable<MountReturn>
+      mountAuthenticated: (
+        component: ReactNode,
+        initialEntries?: RouterInitialEntry[],
+        userOverrides?: Partial<User>
+      ) => Cypress.Chainable<MountReturn>
+      mountSuperuser: (
+        component: ReactNode,
+        initialEntries?: RouterInitialEntry[]
+      ) => Cypress.Chainable<MountReturn>
+      login(): Chainable<string>
+      logout(): Chainable<JQuery<HTMLElement>>
       compareDate(date: Date, expectedDate: Date): Chainable
     }
   }

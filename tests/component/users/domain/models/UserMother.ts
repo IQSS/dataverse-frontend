@@ -1,7 +1,7 @@
 import { User } from '../../../../../src/users/domain/models/User'
 
 export class UserMother {
-  static create(): User {
+  static create(props?: Partial<User>): User {
     return {
       displayName: 'James D. Potts',
       persistentId: 'jamesPotts',
@@ -9,7 +9,9 @@ export class UserMother {
       lastName: 'Potts',
       email: 'jamesPotts@g.harvard.edu',
       affiliation: 'Harvard University',
-      superuser: false
+      superuser: false,
+      identifier: 'jamespotts',
+      ...props
     }
   }
   static createSuperUser(): User {
@@ -20,7 +22,8 @@ export class UserMother {
       firstName: 'James',
       lastName: 'Potts',
       email: 'jamesPotts@g.harvard.edu',
-      affiliation: 'Harvard University'
+      affiliation: 'Harvard University',
+      identifier: 'jamespotts'
     }
   }
 }

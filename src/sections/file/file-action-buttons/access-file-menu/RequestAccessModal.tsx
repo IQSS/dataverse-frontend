@@ -1,11 +1,13 @@
-import { Button, Col, DropdownButtonItem, Modal } from '@iqss/dataverse-design-system'
-import { useSession } from '../../../session/SessionContext'
-import { FormEvent, useState } from 'react'
-import { Form } from '@iqss/dataverse-design-system'
+import { FormEvent, useContext, useState } from 'react'
+import { AuthContext } from 'react-oauth2-code-pkce'
+import { useLocation } from 'react-router-dom'
+import { Button, Col, DropdownButtonItem, Modal, Form } from '@iqss/dataverse-design-system'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
-import { Route } from '../../../Route.enum'
-import styles from './AccessFileMenu.module.scss'
 import { useTranslation } from 'react-i18next'
+import { useSession } from '../../../session/SessionContext'
+import { Route } from '../../../Route.enum'
+import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
+import styles from './AccessFileMenu.module.scss'
 
 interface RequestAccessButtonProps {
   fileId: number
@@ -80,12 +82,21 @@ const RequestAccessForm = ({
 
 const RequestAccessLoginMessage = ({ handleClose }: { handleClose: () => void }) => {
   const { t } = useTranslation('files')
+  const { logIn: oidcLogin } = useContext(AuthContext)
+  const { pathname, search } = useLocation()
+
   return (
     <>
       <Modal.Body>
         <p className={styles['request-access-login-message']}>
-          <ExclamationTriangle /> You need to <a href={Route.SIGN_UP}>Sign Up</a> or{' '}
-          <a href={Route.LOG_IN}>Log In</a> to request access.
+          <ExclamationTriangle /> You need to <a href={Route.SIGN_UP_JSF}>Sign Up</a> or{' '}
+          <Button
+            variant="link"
+            onClick={() => oidcLogin(encodeReturnToPathInStateQueryParam(`${pathname}${search}`))}
+            className="p-0 align-baseline">
+            Log In
+          </Button>{' '}
+          to request access.
         </p>
       </Modal.Body>
       <Modal.Footer>

@@ -1,10 +1,15 @@
 import { lazy, Suspense } from 'react'
 import { Navigate, RouteObject } from 'react-router-dom'
-import { Route } from '../sections/Route.enum'
-import { Layout } from '../sections/layout/Layout'
-import { ErrorPage } from '../sections/error-page/ErrorPage'
+import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
+import { Route } from '@/sections/Route.enum'
+import { Layout } from '@/sections/layout/Layout'
+import { ErrorPage } from '@/sections/error-page/ErrorPage'
+import { AppLoader } from '@/sections/shared/layout/app-loader/AppLoader'
+import { AuthCallback } from '@/sections/auth-callback/AuthCallback'
+import { SessionProvider } from '@/sections/session/SessionProvider'
 import { ProtectedRoute } from './ProtectedRoute'
-import { AppLoader } from '../sections/shared/layout/app-loader/AppLoader'
+
+const userRepository = new UserJSDataverseRepository()
 
 const Homepage = lazy(() =>
   import('../sections/homepage/HomepageFactory').then(({ HomepageFactory }) => ({
@@ -106,150 +111,174 @@ const NotFoundPage = lazy(() =>
   }))
 )
 
+const SignUpPage = lazy(() =>
+  import('../sections/sign-up/SignUpFactory').then(({ SignUpFactory }) => ({
+    default: () => SignUpFactory.create()
+  }))
+)
+
 export const routes: RouteObject[] = [
   {
-    path: '/',
-    element: <Layout />,
-    errorElement: <ErrorPage fullViewport />,
+    element: <SessionProvider repository={userRepository} />,
     children: [
       {
-        path: Route.HOME,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <Homepage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      {
-        path: Route.COLLECTIONS_BASE,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <CollectionPage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      {
-        path: Route.COLLECTIONS,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <CollectionPage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      {
-        path: Route.DATASETS,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <DatasetPage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      {
-        path: Route.FILES,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <FilePage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      {
-        path: Route.FEATURED_ITEM,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <FeaturedItemPage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      // 🔐 Protected routes are only accessible to authenticated users
-      {
-        element: <ProtectedRoute />,
+        path: '/',
+        element: <Layout />,
+        errorElement: <ErrorPage fullViewport />,
         children: [
           {
-            path: Route.CREATE_COLLECTION,
+            path: Route.HOME,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <CreateCollectionPage />
+                <Homepage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
           {
-            path: Route.EDIT_COLLECTION,
+            path: Route.COLLECTIONS_BASE,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <EditCollectionPage />
+                <CollectionPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
           {
-            path: Route.CREATE_DATASET,
+            path: Route.COLLECTIONS,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <CreateDatasetPage />
+                <CollectionPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
           {
-            path: Route.UPLOAD_DATASET_FILES,
+            path: Route.DATASETS,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <UploadDatasetFilesPage />
+                <DatasetPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
           {
-            path: Route.EDIT_DATASET_METADATA,
+            path: Route.FILES,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <EditDatasetMetadataPage />
+                <FilePage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
           {
-            path: Route.ACCOUNT,
+            path: Route.FEATURED_ITEM,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <AccountPage />
+                <FeaturedItemPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
           {
-            path: Route.EDIT_COLLECTION_FEATURED_ITEMS,
+            path: Route.AUTH_CALLBACK,
+            element: <AuthCallback />
+          },
+          {
+            path: Route.SIGN_UP,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <EditCollectionFeaturedItems />
+                <SignUpPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
+          // 🔐 Protected routes are only accessible to authenticated users
           {
-            path: Route.EDIT_FILE_METADATA,
-            element: (
-              <Suspense fallback={<AppLoader />}>
-                <EditFileMetadata />
-              </Suspense>
-            ),
-            errorElement: <ErrorPage />
-          },
-          {
-            path: Route.FILES_REPLACE,
-            element: (
-              <Suspense fallback={<AppLoader />}>
-                <ReplaceFile />
-              </Suspense>
-            ),
-            errorElement: <ErrorPage />
+            element: <ProtectedRoute />,
+            children: [
+              {
+                path: Route.CREATE_COLLECTION,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <CreateCollectionPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.EDIT_COLLECTION,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditCollectionPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.CREATE_DATASET,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <CreateDatasetPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.UPLOAD_DATASET_FILES,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <UploadDatasetFilesPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.EDIT_DATASET_METADATA,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditDatasetMetadataPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.ACCOUNT,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <AccountPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.EDIT_COLLECTION_FEATURED_ITEMS,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditCollectionFeaturedItems />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.EDIT_FILE_METADATA,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditFileMetadata />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.FILES_REPLACE,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <ReplaceFile />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              }
+            ]
           }
         ]
       },
