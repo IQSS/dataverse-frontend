@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { kcSanitize } from 'keycloakify/lib/kcSanitize'
 import { useIsPasswordRevealed } from 'keycloakify/tools/useIsPasswordRevealed'
 import type { PageProps } from 'keycloakify/login/pages/PageProps'
-import { getKcClsx, type KcClsx } from 'keycloakify/login/lib/kcClsx'
 import type { KcContext } from '../KcContext'
 import type { I18n } from '../i18n'
 import { Button, Col, Form } from '@iqss/dataverse-design-system'
@@ -26,11 +25,6 @@ import styles from './Login.module.scss'
 
 export default function Login(props: PageProps<Extract<KcContext, { pageId: 'login.ftl' }>, I18n>) {
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props
-
-  const { kcClsx } = getKcClsx({
-    doUseDefaultCss,
-    classes
-  })
 
   const {
     social,
@@ -81,18 +75,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: 'log
                       <span className={styles['social-icon']}>
                         {SocialAliasToIconMapper[p.alias as keyof typeof SocialAliasToIconMapper]}
                       </span>
-
-                      {/* {p.iconClasses && (
-                        <i
-                          className={clsx(kcClsx('kcCommonLogoIdP'), p.iconClasses)}
-                          aria-hidden="true"></i>
-                      )} */}
-                      <span
-                        // className={clsx(
-                        //   kcClsx('kcFormSocialAccountNameClass'),
-                        //   p.iconClasses && 'kc-social-icon-text'
-                        // )}
-                        dangerouslySetInnerHTML={{ __html: kcSanitize(p.displayName) }}></span>
+                      <span dangerouslySetInnerHTML={{ __html: kcSanitize(p.displayName) }}></span>
                     </a>
                   </li>
                 ))}
@@ -149,7 +132,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: 'log
               {/* Password Field */}
               <Form.Group as={Col}>
                 <Form.Group.Label htmlFor="password">{msg('password')}</Form.Group.Label>
-                <PasswordWrapper kcClsx={kcClsx} i18n={i18n} passwordInputId="password">
+                <PasswordWrapper i18n={i18n} passwordInputId="password">
                   <Form.Group.Input
                     id="password"
                     name="password"
@@ -193,7 +176,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: 'log
                 </div>
               </div>
 
-              <div id="kc-form-buttons" className={kcClsx('kcFormGroupClass')}>
+              <div id="kc-form-buttons">
                 <input
                   type="hidden"
                   id="id-hidden-input"
@@ -217,12 +200,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: 'log
   )
 }
 
-function PasswordWrapper(props: {
-  kcClsx: KcClsx
-  i18n: I18n
-  passwordInputId: string
-  children: JSX.Element
-}) {
+function PasswordWrapper(props: { i18n: I18n; passwordInputId: string; children: JSX.Element }) {
   const { i18n, passwordInputId, children } = props
 
   const { msgStr } = i18n
