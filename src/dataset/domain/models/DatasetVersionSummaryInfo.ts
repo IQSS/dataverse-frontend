@@ -7,7 +7,17 @@ export interface DatasetVersionSummaryInfo {
 }
 
 export type DatasetVersionSummary = {
-  [key: string]: SummaryUpdates | SummaryUpdatesWithFields | FilesSummaryUpdates | boolean
+  [key: string]:
+    | SummaryUpdates
+    | SummaryUpdatesWithFields
+    | FilesSummaryUpdates
+    | Deaccessioned
+    | boolean
+}
+
+interface Deaccessioned {
+  deaccessionReason: string
+  deaccessionURL: string
 }
 
 export interface SummaryUpdates {

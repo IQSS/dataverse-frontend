@@ -21,7 +21,7 @@ export const Default: Story = {
       errorDeletingDataset={null}></ConfirmDeleteDraftDatasetModal>
   )
 }
-export const WithSpinner: Story = {
+export const DeleteInProgress: Story = {
   render: () => (
     <ConfirmDeleteDraftDatasetModal
       show={true}

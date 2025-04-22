@@ -367,7 +367,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   }
   deleteDatasetDraft(datasetId: string | number): Promise<void> {
     return deleteDatasetDraft.execute(datasetId).catch((error: WriteError) => {
-      throw new Error(error.message)
+      throw error
     })
   }
 }
