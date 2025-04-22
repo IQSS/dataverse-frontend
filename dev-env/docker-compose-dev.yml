@@ -216,8 +216,15 @@ services:
     expose:
       - '9000'
       - '9080'
-    volumes:
-      - ../dist_keycloak/dv-spa-kc-theme.jar:/opt/keycloak/providers/dv-spa-kc-theme.jar
+    # The following volume is commented out. To use it, uncomment the line and make sure to build the custom theme first.:
+    # 1. Run `npm run build-keycloak-theme` to build the custom theme, you need to have maven installed for this step.
+    #    This will create a jar file in the `dist_keycloak` directory.
+    #    The jar file is named `dv-spa-kc-theme.jar`.
+    # 2. Uncomment the volume line below to mount the jar file into the Keycloak container.
+    # 3. Restart the dev dockerized environment.
+    # 4. The custom theme will be available in the test realm in Keycloak. Realm settings => Themes => Login Theme => select dataverse-spa
+    # volumes:
+    # - ../dist_keycloak/dv-spa-kc-theme.jar:/opt/keycloak/providers/dv-spa-kc-theme.jar
 
   dev_keycloak_initializer:
     image: alpine:latest
