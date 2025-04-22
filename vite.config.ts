@@ -12,11 +12,12 @@ export default defineConfig({
       requireEnv: false
     }),
     keycloakify({
-      keycloakifyBuildDirPath: "./keycloak-theme-dist",
+      themeName: 'dataverse-spa',
+      keycloakifyBuildDirPath: "./dist_keycloak",
       accountThemeImplementation: 'none',
       keycloakVersionTargets: {
         '22-to-25': false,
-        'all-other-versions': 'dataverse-spa-keycloak-theme.jar'
+        'all-other-versions': 'dv-spa-kc-theme.jar'
       }
     })
   ],
@@ -28,5 +29,5 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
       '@tests': path.resolve(__dirname, 'tests')
     }
-  }
+  },
 })

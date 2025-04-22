@@ -128,5 +128,8 @@ bower_components/
 .grunt/
 src/vendor/
 dist/
+
+# Keycloakify
+#################
 keycloakify-dev-resources
-keycloak-theme-dist
+dist_keycloak

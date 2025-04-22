@@ -40,6 +40,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
 
   useEffect(() => {
     document.title = documentTitle ?? msgStr('loginTitle', kcContext.realm.displayName)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useSetClassName({

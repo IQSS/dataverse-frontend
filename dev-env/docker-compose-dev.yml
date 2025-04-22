@@ -216,6 +216,8 @@ services:
     expose:
       - '9000'
       - '9080'
+    volumes:
+      - ../dist_keycloak/dv-spa-kc-theme.jar:/opt/keycloak/providers/dv-spa-kc-theme.jar
 
   dev_keycloak_initializer:
     image: alpine:latest

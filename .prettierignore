@@ -10,9 +10,10 @@ dev-env
 # Ignore deployment files
 deployment
 
-# Ignore both dist folders from SPA and Design System
+# Ignore dist folders from SPA, Design System and keycloak theme
 dist
 /packages/design-system/dist
+public/keycloakify-dev-resources
 
 # Ignore mdx files due to different conflicts between prettier and mdx files
 *.mdx
