@@ -32,16 +32,29 @@ export function DatasetMetadataFieldValueFormatted({
   metadataBlockDisplayFormatInfo
 }: DatasetMetadataFieldValueFormattedProps) {
   const { t } = useTranslation(metadataBlockName)
+  const translateFieldName = (fieldName: string): string => {
+    return t(`${metadataBlockName}.datasetField.${fieldName}.name`)
+  }
 
   const valueFormatted = metadataFieldValueToDisplayFormat(
     metadataFieldValue,
-    metadataBlockDisplayFormatInfo
+    translateFieldName,
+    metadataBlockDisplayFormatInfo,
+    metadataFieldName
   )
 
   const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
     METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
-    t(`${metadataBlockName}.datasetField.${metadataFieldName}.name`)
+    translateFieldName(metadataFieldName)
   )
+
+  if (metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.type === 'URL') {
+    return (
+      <a href={`${String(metadataFieldValue)}`} target="_blank" rel="noreferrer">
+        {String(metadataFieldValue)}
+      </a>
+    )
+  }
 
   if (metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.type === 'TEXTBOX') {
     const markdownValue = transformHtmlToMarkdown(valueFormattedWithNamesTranslated)
@@ -54,13 +67,17 @@ export function DatasetMetadataFieldValueFormatted({
 
 export function metadataFieldValueToDisplayFormat(
   metadataFieldValue: DatasetMetadataFieldValueModel,
-  metadataBlockInfo?: MetadataBlockInfoDisplayFormat
+  translateFieldName: (fieldName: string) => string,
+  metadataBlockInfo?: MetadataBlockInfoDisplayFormat,
+  metadataFieldName?: string
 ): string {
   const separator = ';'
 
   if (isArrayOfObjects(metadataFieldValue)) {
     return metadataFieldValue
-      .map((metadataSubField) => joinSubFields(metadataSubField, metadataBlockInfo))
+      .map((metadataSubField) =>
+        joinSubFields(metadataSubField, translateFieldName, metadataBlockInfo, metadataFieldName)
+      )
       .join(' \n \n')
   }
 
@@ -87,29 +104,41 @@ function joinObjectValues(obj: object, separator: string): string {
   return Object.values(obj).join(separator)
 }
 
-function joinSubFields(
+export function joinSubFields(
   metadataSubField: DatasetMetadataSubField,
-  metadataBlockInfo?: MetadataBlockInfoDisplayFormat
+  translateFieldName: (fieldName: string) => string,
+  metadataBlockInfo?: MetadataBlockInfoDisplayFormat,
+  parentFieldName?: string
 ): string {
-  return Object.entries(metadataSubField)
-    .map(([subFieldName, subFieldValue]) => {
-      let formattedSubFieldValue = formatSubFieldValue(
-        subFieldValue,
-        metadataBlockInfo?.fields[subFieldName]?.displayFormat
-      )
-      const subFieldType = metadataBlockInfo?.fields[subFieldName]?.type as string | undefined
+  let parentDisplayFormat = ''
+  if (parentFieldName) {
+    parentDisplayFormat = metadataBlockInfo?.fields[parentFieldName]?.displayFormat ?? ''
+  }
 
-      if (subFieldType === 'TEXTBOX')
-        formattedSubFieldValue = transformHtmlToMarkdown(formattedSubFieldValue)
+  const subfields = Object.entries(metadataSubField).map(([subFieldName, subFieldValue]) => {
+    let formattedSubFieldValue = formatSubFieldValue(
+      subFieldValue,
+      metadataBlockInfo?.fields[subFieldName]?.displayFormat,
+      translateFieldName(subFieldName)
+    )
 
-      return formattedSubFieldValue
-    })
-    .join(' ')
+    const subFieldType = metadataBlockInfo?.fields[subFieldName]?.type as string
+
+    if (subFieldType === 'TEXTBOX') {
+      formattedSubFieldValue = transformHtmlToMarkdown(formattedSubFieldValue)
+    }
+    return {
+      fullFieldName: subFieldName,
+      value: formattedSubFieldValue
+    }
+  })
+  return subfields.map((field) => `${field.value}`).join(parentDisplayFormat + ' ')
 }
 
 function formatSubFieldValue(
   subFieldValue: string | undefined,
-  displayFormat: string | undefined
+  displayFormat: string | undefined,
+  translatedName: string | undefined
 ): string {
   if (subFieldValue === undefined) {
     return ''
@@ -119,5 +148,13 @@ function formatSubFieldValue(
     return subFieldValue
   }
 
-  return displayFormat.replaceAll(METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER, subFieldValue)
+  const valueFormatted = displayFormat.replaceAll(
+    METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER,
+    subFieldValue
+  )
+  const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
+    METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
+    translatedName ?? ''
+  )
+  return valueFormattedWithNamesTranslated
 }
