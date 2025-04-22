@@ -36,7 +36,7 @@ export function DeleteDraftDatasetButton({
     handleCloseModal()
 
     if (!dataset.version.someDatasetVersionHasBeenReleased) {
-      navigate(RouteWithParams.COLLECTIONS(dataset.hierarchy.id))
+      navigate(RouteWithParams.COLLECTIONS(dataset.hierarchy.parent?.id))
     } else {
       const searchParams = new URLSearchParams()
       searchParams.set('persistentId', dataset.persistentId)
