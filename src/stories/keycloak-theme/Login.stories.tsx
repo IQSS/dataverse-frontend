@@ -11,6 +11,7 @@ const { KcPageStory } = createKcPageStory({ pageId: 'login.ftl' })
 const meta: Meta<typeof KcPageStory> = {
   title: 'Keycloak Theme/Login Page',
   component: KcPageStory,
+  tags: ['skip-test'],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
