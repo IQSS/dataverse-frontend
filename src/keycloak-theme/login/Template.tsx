@@ -60,7 +60,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
   }
 
   return (
-    <div className={styles.login}>
+    <div className={styles.login} id="kc-login-template">
       <div id="kc-header">
         <div id="kc-header-wrapper" className={styles['header-wrapper']}>
           <img src={dataverse_logo} alt="Brand Logo Image" />

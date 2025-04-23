@@ -5,7 +5,17 @@ import { getStoryContext } from '@storybook/test-runner'
 import type { TestRunnerConfig } from '@storybook/test-runner'
 
 const a11yConfig: TestRunnerConfig = {
-  async preVisit(page) {
+  async preVisit(page, context) {
+    const { parameters } = await getStoryContext(page, context)
+
+    // Wait for the Story
+    if (parameters.waitForSelector) {
+      await page.locator(parameters.waitForSelector).waitFor({ state: 'attached', timeout: 15_000 })
+    }
+    // if (tags.includes('wait-attached')) {
+    //   await page.locator('#kc-login-template').waitFor({ state: 'attached', timeout: 15_000 })
+    // }
+
     await injectAxe(page)
   },
   async postVisit(page, context) {
