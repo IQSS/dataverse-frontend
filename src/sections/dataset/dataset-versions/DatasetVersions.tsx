@@ -29,7 +29,6 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
     datasetRepository,
     persistentId: datasetId
   })
-  console.log('datasetVersionSummaries', datasetVersionSummaries)
 
   const handleCheckboxChange = (datasetSummary: DatasetVersionSummaryInfo) => {
     setSelectedVersions((prevSelected) => {
