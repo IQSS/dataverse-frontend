@@ -21,6 +21,7 @@
       }
     }
   },
+  "deaccessionReason": "Deaccession Reason",
   "datasetActionButtons": {
     "title": "Dataset Action Buttons",
     "submitForReview": {

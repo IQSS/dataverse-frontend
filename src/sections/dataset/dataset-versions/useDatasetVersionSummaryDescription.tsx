@@ -3,7 +3,8 @@ import {
   DatasetVersionSummaryStringValues,
   DatasetVersionSummary,
   FilesSummaryUpdates,
-  SummaryUpdates
+  SummaryUpdates,
+  Deaccessioned
 } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 export const useDatasetVersionSummaryDescription = (
@@ -108,6 +109,13 @@ export const useDatasetVersionSummaryDescription = (
       case 'termsAccessChanged':
         if (value)
           description['Terms of Use/Access'] = t('datasetVersionSummary.termsAccessChanged')
+        break
+
+      case 'deaccessioned':
+        if (value) {
+          const deaccessioned = value as Deaccessioned
+          description['Deaccessioned Reason'] = deaccessioned.reason
+        }
         break
     }
   })

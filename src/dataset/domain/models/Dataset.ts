@@ -255,7 +255,8 @@ export class DatasetVersion {
     public readonly isInReview: boolean,
     public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
     public readonly someDatasetVersionHasBeenReleased: boolean,
-    public readonly termsOfAccess?: TermsOfAccess
+    public readonly termsOfAccess?: TermsOfAccess,
+    public readonly deaccessionNote?: string
   ) {}
 
   static Builder = class {
@@ -270,7 +271,8 @@ export class DatasetVersion {
       public readonly isInReview: boolean,
       public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
       public readonly someDatasetVersionHasBeenReleased: boolean,
-      public readonly termsOfAccess?: TermsOfAccess
+      public readonly termsOfAccess?: TermsOfAccess,
+      public readonly deaccessionNote?: string
     ) {
       this.createLabels()
     }
@@ -337,7 +339,8 @@ export class DatasetVersion {
         this.isInReview,
         this.latestVersionPublishingStatus,
         this.someDatasetVersionHasBeenReleased,
-        this.termsOfAccess
+        this.termsOfAccess,
+        this.deaccessionNote
       )
     }
   }
