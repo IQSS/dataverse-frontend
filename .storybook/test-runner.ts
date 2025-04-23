@@ -10,8 +10,13 @@ const a11yConfig: TestRunnerConfig = {
 
     // Wait for the Story
     if (parameters.waitForSelector) {
-      await page.locator(parameters.waitForSelector).waitFor({ state: 'attached', timeout: 15_000 })
+      console.dir({ waitForSelector: parameters.waitForSelector })
+      await page.waitForSelector(parameters.waitForSelector, {
+        timeout: 15_000
+      })
     }
+    // await page.locator(parameters.waitForSelector).waitFor({ state: 'attached', timeout: 15_000 })
+
     // if (tags.includes('wait-attached')) {
     //   await page.locator('#kc-login-template').waitFor({ state: 'attached', timeout: 15_000 })
     // }
