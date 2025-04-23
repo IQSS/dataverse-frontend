@@ -23,6 +23,14 @@ import {
 import cn from 'classnames'
 import styles from './Login.module.scss'
 
+/**
+ * This file was originally generated with keycloakify(https://docs.keycloakify.dev/) by running the command:
+ *  `npx keycloakify eject-page` and then select `login.ftl` option.
+ * We use keycloakify to be able to generate a custom login page for Keycloak.
+ * The generated template is modified only to use our design system, we do not apply any custom logic.
+ * We follow the keycloakify documentation here: https://docs.keycloakify.dev/common-use-case-examples/using-a-component-library
+ */
+
 export default function Login(props: PageProps<Extract<KcContext, { pageId: 'login.ftl' }>, I18n>) {
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props
 
