@@ -39,10 +39,14 @@ export const DvObjectFormItem = ({
           Dataverse Object Identifier
         </Form.Group.Label>
         <Col md={9}>
-          <Form.Group.Input type="text" aria-required={true} />
+          <Form.Group.Input
+            type="text"
+            aria-required={true}
+            placeholder={`${window.location.origin}/spa/datasets?persistentId=doi:10.5072/FK2/8YOKQI`}
+          />
           <Form.Group.Text>
-            Paste the Collection, Dataset or File URL you want to feature. You can also paste a
-            dataset DOI directly.
+            Paste the Collection, Dataset or File URL you want to feature.
+            <br /> You can also paste a Dataset DOI directly.
           </Form.Group.Text>
         </Col>
       </Form.Group>
