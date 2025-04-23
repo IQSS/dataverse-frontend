@@ -11,11 +11,10 @@ const { KcPageStory } = createKcPageStory({ pageId: 'login.ftl' })
 const meta: Meta<typeof KcPageStory> = {
   title: 'Keycloak Theme/Login Page',
   component: KcPageStory,
-  //tags: ['wait-attached'], // TODO: Skipping a11 test on this story because it is throwing "page.evaluate: TypeError: globalThis.__getContext is not a function"
+  tags: ['skip-test'], // TODO: Skipping a11 test on this story because it is throwing many errors not related to a11 like: "page.evaluate: TypeError: globalThis.__getContext is not a function"
   parameters: {
     // Sets the delay for all stories.
-    chromatic: { delay: 15000, pauseAnimationAtEnd: true },
-    waitForSelector: '#kc-login-template'
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
   }
 }
 
