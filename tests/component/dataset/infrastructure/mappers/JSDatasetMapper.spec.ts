@@ -25,6 +25,16 @@ import {
 chai.use(chaiAsPromised)
 const expect = chai.expect
 
+const termsOfAccess = {
+  fileAccessRequest: true,
+  termsOfAccess: 'New terms',
+  dataAccessPlace: 'New place',
+  originalArchive: 'New archive',
+  availabilityStatus: 'New status',
+  contactForAccess: 'New contact',
+  sizeOfCollection: 'New size',
+  studyCompletion: 'New completion'
+}
 const jsDataset = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -35,7 +45,8 @@ const jsDataset = {
     minorNumber: 0,
     createTime: new Date('2023-09-07T13:40:04.000Z'),
     lastUpdateTime: new Date('2023-09-07T13:40:04.000Z'),
-    releaseTime: undefined
+    releaseTime: undefined,
+    deaccessionNote: undefined
   },
   internalVersionNumber: 1,
   termsOfUse: {
@@ -246,7 +257,8 @@ const expectedDataset = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: false,
-    termsOfAccess: undefined,
+    termsOfAccess: termsOfAccess,
+    deaccessionNote: undefined,
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
@@ -381,7 +393,8 @@ const expectedDatasetWithPublicationDate = {
     publishingStatus: 'draft',
     isLatest: true,
     isInReview: false,
-    termsOfAccess: undefined,
+    termsOfAccess: termsOfAccess,
+    deaccessionNote: undefined,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
@@ -529,7 +542,8 @@ const expectedDatasetWithNextVersionNumbers = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: true,
-    termsOfAccess: undefined,
+    termsOfAccess: termsOfAccess,
+    deaccessionNote: undefined,
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
@@ -675,7 +689,8 @@ const expectedDatasetAlternateVersion = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: false,
-    termsOfAccess: undefined,
+    termsOfAccess: termsOfAccess,
+    deaccessionNote: undefined,
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
@@ -825,7 +840,6 @@ describe('JS Dataset Mapper', () => {
       jsDatasetFilesTotalArchivalDownloadSize,
       jsDatasetVersionSummaries
     )
-
     expect(mapped).to.deep.equal(expectedDataset)
   })
 
@@ -950,6 +964,7 @@ describe('JS Dataset Mapper', () => {
 
     expect(expectedDatasetWithPublicationDate).to.deep.equal(actual)
   })
+
   it('maps jsDataset model to the domain Dataset model when latest published version numbers are provided', () => {
     const jsDatasetWithPublicationDate = {
       ...jsDataset,
@@ -974,6 +989,7 @@ describe('JS Dataset Mapper', () => {
     )
     expect(expectedDatasetWithNextVersionNumbers).to.deep.equal(actual)
   })
+
   it('maps jsDataset model to the domain Dataset model when datasetVersionDiff is provided', () => {
     const latestPublishedVersionMajorNumber = 1
     const latestPublishedVersionMinorNumber = 2
