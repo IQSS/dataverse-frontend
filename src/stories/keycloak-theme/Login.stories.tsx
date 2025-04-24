@@ -11,7 +11,7 @@ const { KcPageStory } = createKcPageStory({ pageId: 'login.ftl' })
 const meta: Meta<typeof KcPageStory> = {
   title: 'Keycloak Theme/Login Page',
   component: KcPageStory,
-  tags: ['skip-test'], // TODO: Skipping a11 test on this story because it is throwing many errors not related to a11 like: "page.evaluate: TypeError: globalThis.__getContext is not a function"
+  tags: ['skip-test'], // TODO: Skipping a11 test on this story on CI because it is throwing many errors not related to a11 like: "page.evaluate: TypeError: globalThis.__getContext is not a function"
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -22,22 +22,22 @@ export default meta
 
 type Story = StoryObj<typeof KcPageStory>
 
-const defaultRealmArgs = {
+const currentSpaKeycloakRealmArgs = {
   registrationAllowed: false,
   rememberMe: false,
   resetPasswordAllowed: false,
   internationalizationEnabled: false
 }
 
-export const CurrentConfiguration: Story = {
-  render: () => <KcPageStory kcContext={{ realm: defaultRealmArgs }} />
+export const Default: Story = {
+  render: () => <KcPageStory kcContext={{ realm: currentSpaKeycloakRealmArgs }} />
 }
 
 export const WithInvalidCredential: Story = {
   render: () => (
     <KcPageStory
       kcContext={{
-        realm: defaultRealmArgs,
+        realm: currentSpaKeycloakRealmArgs,
         login: {
           username: 'johndoe'
         },
@@ -64,7 +64,7 @@ export const WithErrorMessage: Story = {
   render: () => (
     <KcPageStory
       kcContext={{
-        realm: defaultRealmArgs,
+        realm: currentSpaKeycloakRealmArgs,
         message: {
           summary:
             'The time allotted for the connection has elapsed.<br/>The login process will restart from the beginning.',
@@ -80,10 +80,6 @@ export const WithErrorMessage: Story = {
   The custom Login Page theme is prepared for these variants but we do not use them in the application.
   You can uncomment them if you want to see how they look like.
 */
-
-// export const Default: Story = {
-//   render: () => <KcPageStory />
-// }
 
 // export const WithoutRegistration: Story = {
 //   render: () => (

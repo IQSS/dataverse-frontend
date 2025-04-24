@@ -1,11 +1,6 @@
-@use 'sass:color';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
-@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
-
-body {
-  font-family: $dv-font-family;
-}
 
 body.kcBodyClass {
+  font-family: $dv-font-family;
   background-color: #fafafa;
 }
