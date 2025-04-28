@@ -22,6 +22,7 @@
   "submitSearch": "Submit Search",
   "dragHandleLabel": "press space to select and keys to drag",
   "unknown": "Unknown",
+  "send": "Send",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
@@ -266,8 +267,9 @@
     },
     "defaultFeedbackSubmitError": "An error occurred while submitting your feedback. Please try again later."
   },
-  "userFeedback": {
+  "spaUserFeedback": {
     "cta": "Open feedback form",
+    "title": "Send us your feedback",
     "fields": {
       "page": {
         "label": "Page",
@@ -275,8 +277,12 @@
       },
       "feedback": {
         "label": "Feedback",
-        "placeholder": "We’d love to hear what you think — whether it’s a bug you found or something you liked!"
+        "placeholder": "We’d love to hear what you think — whether it’s a bug you found or something you liked!",
+        "required": "Feedback is required.",
+        "maxLength": "Feedback cannot exceed {{maxLength}} characters."
       }
-    }
+    },
+    "success": "Thank you for your feedback!",
+    "defaultSendFeedbackError": "An error occurred while sending your feedback. Please try again later."
   }
 }

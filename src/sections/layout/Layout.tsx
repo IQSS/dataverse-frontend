@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { Container } from '@iqss/dataverse-design-system'
 import { HistoryTrackerProvider } from '@/router/HistoryTrackerProvider'
 import TopBarProgressIndicator from './topbar-progress-indicator/TopbarProgressIndicator'
-import { UserFeedbackCTA } from './user-feedback-cta/UserFeedbackCTA'
+import { SpaUserFeedbackCTA } from './spa-user-feedback-cta/SpaUserFeedbackCTA'
 import { FooterFactory } from './footer/FooterFactory'
 import { HeaderFactory } from './header/HeaderFactory'
 import styles from './Layout.module.scss'
@@ -20,7 +20,7 @@ export function Layout() {
 
       {FooterFactory.create()}
 
-      <UserFeedbackCTA />
+      <SpaUserFeedbackCTA />
     </HistoryTrackerProvider>
   )
 }

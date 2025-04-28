@@ -2,22 +2,28 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 
-.user-feedback-cta {
-  position: fixed;
-  right: 1.5rem;
-  bottom: 1.5rem;
+.spa-user-feedback-cta {
   display: grid;
   place-content: center;
   width: 50px;
   height: 50px;
+  margin: 0 1rem 1rem auto;
   padding: 1rem;
-  background-color: $dv-primary-color;
+  background-color: $dv-brand-color;
   border: 0;
   border-radius: 50%;
   transition: all 0.15s ease-in-out;
 
+  @media (min-width: 768px) {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 10;
+    margin: 0;
+  }
+
   &:hover {
     scale: 1.05;
-    background-color: color.adjust($dv-primary-color, $lightness: -5%);
+    background-color: color.adjust($dv-brand-color, $lightness: -5%);
   }
 }
