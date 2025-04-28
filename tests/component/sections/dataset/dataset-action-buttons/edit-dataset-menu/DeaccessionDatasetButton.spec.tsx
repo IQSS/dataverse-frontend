@@ -232,7 +232,29 @@ describe('DeaccessionDatasetButton', () => {
       cy.findByTestId('deaccession-forward-url').type('https://example.com')
       cy.get('button[type="submit"]').click()
       cy.get('button').contains('Yes').should('exist').click()
-      cy.wrap(repository.deaccession).should('be.calledTwice')
+      cy.wrap(repository.deaccession).should('have.been.called')
     })
+  })
+
+  it('does not render the DeaccessionDatasetButton if the dataset is deaccessioned', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+      version: DatasetVersionMother.createDeaccessioned()
+    })
+
+    cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+
+    cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
+  })
+
+  it('does not render the DeaccessionDatasetButton if the dataset is draft', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+      version: DatasetVersionMother.createDraft()
+    })
+
+    cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+
+    cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
   })
 })

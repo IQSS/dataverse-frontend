@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useContext } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
-import { Dataset } from '../../../../dataset/domain/models/Dataset'
+import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButtonItem, DropdownSeparator } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { DeaccessionDatasetModal } from '@/sections/dataset/deaccession-dataset/DeaccessionDatasetModal'
@@ -10,7 +11,6 @@ import { DatasetRepository } from '@/dataset/domain/repositories/DatasetReposito
 import { DeaccessionFormData } from '@/sections/dataset/deaccession-dataset/DeaccessionFormData'
 import { useDeaccessionDataset } from '@/sections/dataset/deaccession-dataset/useDeaccessionDataset'
 import { ConfirmationModal } from '@/sections/dataset/deaccession-dataset/ConfirmationModal'
-import { useForm, SubmitHandler } from 'react-hook-form'
 
 interface DeaccessionDatasetButtonProps {
   dataset: Dataset
@@ -48,13 +48,16 @@ export function DeaccessionDatasetButton({
   } = useForm<DeaccessionFormData>({
     defaultValues: { versions: defaultVersions, deaccessionForwardUrl: '' }
   })
+
   if (
+    dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED ||
+    dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT ||
     !dataset.version.someDatasetVersionHasBeenReleased ||
-    !dataset.permissions.canPublishDataset ||
-    publishedVersions.length === 0
+    !dataset.permissions.canPublishDataset
   ) {
     return <></>
   }
+
   const handleOpen = (e: React.MouseEvent) => {
     e.stopPropagation()
     setShowDeaccessionModal(true)
