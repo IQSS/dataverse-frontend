@@ -32,7 +32,7 @@ export const useDatasetVersionSummaryDescription = (
 
   Object.entries(summary).forEach(([key, value]) => {
     switch (key) {
-      case 'Citation Metadata': {
+      case t('versions.citationMetadata'): {
         const metadataChanges: string[] = []
 
         Object.entries(value as Record<string, SummaryUpdates>).forEach(([field, change]) => {
@@ -50,7 +50,7 @@ export const useDatasetVersionSummaryDescription = (
         break
       }
 
-      case 'Additional Citation Metadata': {
+      case t('versions.additionalCitationMetadata'): {
         const additionalChanges: string[] = []
         const additionalMetadata = value as SummaryUpdates
 
@@ -77,7 +77,7 @@ export const useDatasetVersionSummaryDescription = (
         break
       }
 
-      case 'files': {
+      case t('versions.filesAsKey'): {
         const fileSummary = value as FilesSummaryUpdates
         const fileChanges: string[] = []
 
@@ -102,19 +102,21 @@ export const useDatasetVersionSummaryDescription = (
             })
           )
 
-        if (fileChanges.length) description['Files'] = fileChanges.join('; ')
+        if (fileChanges.length) description[t('versions.files')] = fileChanges.join('; ')
         break
       }
 
-      case 'termsAccessChanged':
+      case t('versions.termsAccessChangedAsKey'):
         if (value)
-          description['Terms of Use/Access'] = t('datasetVersionSummary.termsAccessChanged')
+          description[t('versions.termsOfUseandAccess')] = t(
+            'datasetVersionSummary.termsAccessChanged'
+          )
         break
 
-      case 'deaccessioned':
+      case t('versions.deaccessionedAsKey'):
         if (value) {
           const deaccessioned = value as Deaccessioned
-          description['Deaccessioned Reason'] = deaccessioned.reason
+          description[t('versions.deaccessionedReason')] = deaccessioned.reason
         }
         break
     }

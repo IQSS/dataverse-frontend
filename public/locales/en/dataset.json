@@ -231,6 +231,9 @@
     "version": "Version",
     "lastUpdated": "Last Updated",
     "files": "Files",
+    "filesAsKey": "files",
+    "termsAccessChangedAsKey": "termsAccessChanged",
+    "deaccessionedAsKey": "deaccessioned",
     "citationMetadata": "Citation Metadata",
     "additionalCitationMetadata": "Additional Citation Metadata",
     "termsAccess": "Terms of Use and Access",
@@ -242,7 +245,9 @@
     "access": "Access",
     "needTwoVersions": "Please select two versions to view the differences.",
     "viewDetails": "View Details",
-    "replace": "File Replace"
+    "replace": "File Replace",
+    "termsOfUseandAccess": "Terms of Use/Access",
+    "deaccessionedReason": "Deaccessioned Reason"
   },
   "getDatasetVersionDiffError": "Error Fetching Dataset Version Differences",
   "datasetVersionSummary": {
