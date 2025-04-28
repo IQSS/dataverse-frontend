@@ -9,9 +9,9 @@ import { SubmitForReviewButton } from './submit-for-review-button/SubmitForRevie
 import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
 import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
-import styles from './DatasetActionButtons.module.scss'
 import { ContactButton } from '@/sections/shared/contact/ContactButton'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import styles from './DatasetActionButtons.module.scss'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset

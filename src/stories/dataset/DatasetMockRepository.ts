@@ -127,4 +127,12 @@ export class DatasetMockRepository implements DatasetRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  deleteDatasetDraft(_datasetId: string | number): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

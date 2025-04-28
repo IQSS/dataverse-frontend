@@ -53,6 +53,11 @@
         "title": "Permissions",
         "dataset": "Dataset",
         "file": "File"
+      },
+      "deleteDatasetModal": {
+        "title": "Delete Dataset",
+        "message": "Are you sure you want to delete this dataset? This action cannot be undone.",
+        "defaultDatasetDeleteError": "An error occurred while deleting the dataset."
       }
     },
     "accessDataset": {
@@ -119,7 +124,8 @@
     "unpublishedDataset": {
       "heading": "Unpublished Dataset Private URL",
       "alertText": "This unpublished dataset is being privately shared."
-    }
+    },
+    "datasetDeletedSuccess": "The dataset has been deleted."
   },
   "termsTab": {
     "editTermsButton": "Edit Term Requirements",
