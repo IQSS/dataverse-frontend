@@ -1,4 +1,4 @@
-import { Modal, Button, Alert } from '@iqss/dataverse-design-system'
+import { Modal, Button, Alert, Spinner, Stack } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { SubmissionStatus } from '@/sections/shared/form/DatasetMetadataForm/useSubmitDataset'
 
@@ -6,6 +6,7 @@ interface ConfirmationModalProps {
   show: boolean
   submissionStatus: SubmissionStatus
   deaccessionError: string | null
+  isDeaccessioning: boolean
   onConfirm: () => void
   onCancel: () => void
 }
@@ -14,6 +15,7 @@ export function ConfirmationModal({
   show,
   submissionStatus,
   deaccessionError,
+  isDeaccessioning,
   onConfirm,
   onCancel
 }: ConfirmationModalProps) {
@@ -35,10 +37,15 @@ export function ConfirmationModal({
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={onConfirm}>
-          {t('yes', { ns: 'shared' })}
+        <Button variant="primary" onClick={onConfirm} disabled={isDeaccessioning}>
+          <Stack direction="horizontal" gap={1}>
+            {t('yes', { ns: 'shared' })}
+            {isDeaccessioning && (
+              <Spinner variant="light" animation="border" size="sm" data-testid="loading-spinner" />
+            )}
+          </Stack>
         </Button>
-        <Button variant="secondary" onClick={onCancel}>
+        <Button variant="secondary" onClick={onCancel} disabled={isDeaccessioning}>
           {t('no', { ns: 'shared' })}
         </Button>
       </Modal.Footer>

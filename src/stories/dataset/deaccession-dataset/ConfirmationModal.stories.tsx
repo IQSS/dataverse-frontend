@@ -16,18 +16,36 @@ export const Default: Story = {
     <ConfirmationModal
       show={true}
       submissionStatus={SubmissionStatus.IsSubmitting}
+      isDeaccessioning={false}
       deaccessionError={null}
       onConfirm={() => {}}
-      onCancel={() => {}}></ConfirmationModal>
+      onCancel={() => {}}
+    />
   )
 }
+
+export const WithLoading: Story = {
+  render: () => (
+    <ConfirmationModal
+      show={true}
+      submissionStatus={SubmissionStatus.IsSubmitting}
+      isDeaccessioning={true}
+      deaccessionError={null}
+      onConfirm={() => {}}
+      onCancel={() => {}}
+    />
+  )
+}
+
 export const WithError: Story = {
   render: () => (
     <ConfirmationModal
       show={true}
       submissionStatus={SubmissionStatus.Errored}
+      isDeaccessioning={false}
       deaccessionError={'Error message'}
       onConfirm={() => {}}
-      onCancel={() => {}}></ConfirmationModal>
+      onCancel={() => {}}
+    />
   )
 }

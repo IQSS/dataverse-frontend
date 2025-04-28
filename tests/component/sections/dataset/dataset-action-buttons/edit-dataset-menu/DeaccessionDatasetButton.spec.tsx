@@ -115,19 +115,22 @@ describe('DeaccessionDatasetButton', () => {
           id: 1,
           versionNumber: '1.0',
           publishedOn: '2021-01-01',
-          contributors: 'Contributors'
+          contributors: 'Contributors',
+          summary: {}
         },
         {
           id: 2,
           versionNumber: '2.0',
           publishedOn: '2021-01-02',
-          contributors: 'Contributors'
+          contributors: 'Contributors',
+          summary: {}
         },
         {
           id: 3,
           versionNumber: 'draft',
           publishedOn: undefined,
-          contributors: 'Contributors'
+          contributors: 'Contributors',
+          summary: {}
         }
       ]
       const dataset = DatasetMother.create({

@@ -91,6 +91,7 @@ export function DeaccessionDatasetButton({
         submissionStatus={submissionStatus}
         deaccessionError={deaccessionError}
         show={showConfirmationModal}
+        isDeaccessioning={submissionStatus === 'IsSubmitting'}
         onConfirm={handleConfirmDeaccession}
         onCancel={handleCancelConfirmation}
       />
