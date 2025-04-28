@@ -1,10 +1,11 @@
 import { Outlet } from 'react-router-dom'
 import { Container } from '@iqss/dataverse-design-system'
-import styles from './Layout.module.scss'
-import { FooterFactory } from './footer/FooterFactory'
-import TopBarProgressIndicator from './topbar-progress-indicator/TopbarProgressIndicator'
-import { HeaderFactory } from './header/HeaderFactory'
 import { HistoryTrackerProvider } from '@/router/HistoryTrackerProvider'
+import TopBarProgressIndicator from './topbar-progress-indicator/TopbarProgressIndicator'
+import { UserFeedbackCTA } from './user-feedback-cta/UserFeedbackCTA'
+import { FooterFactory } from './footer/FooterFactory'
+import { HeaderFactory } from './header/HeaderFactory'
+import styles from './Layout.module.scss'
 
 export function Layout() {
   return (
@@ -18,6 +19,8 @@ export function Layout() {
       </main>
 
       {FooterFactory.create()}
+
+      <UserFeedbackCTA />
     </HistoryTrackerProvider>
   )
 }

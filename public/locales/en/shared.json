@@ -265,5 +265,18 @@
       }
     },
     "defaultFeedbackSubmitError": "An error occurred while submitting your feedback. Please try again later."
+  },
+  "userFeedback": {
+    "cta": "Open feedback form",
+    "fields": {
+      "page": {
+        "label": "Page",
+        "helpText": "Let us know which page you're referring to. If you’re not sure or can’t find it, just leave this blank."
+      },
+      "feedback": {
+        "label": "Feedback",
+        "placeholder": "We’d love to hear what you think — whether it’s a bug you found or something you liked!"
+      }
+    }
   }
 }
