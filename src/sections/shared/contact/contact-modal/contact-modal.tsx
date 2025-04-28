@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useForm, FormProvider } from 'react-hook-form'
 import { Alert, Button, Modal, Spinner } from '@iqss/dataverse-design-system'
-import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
+import { FeedbackDTO } from '@/contact/domain/useCases/DTOs/FeedbackDTO'
 import { ContactForm } from '@/sections/shared/form/ContactForm/ContactForm'
 import { useSession } from '@/sections/session/SessionContext'
 import { useSendFeedbacktoOwners } from '@/sections/shared/form/ContactForm/useSendFeedbacktoOwners'

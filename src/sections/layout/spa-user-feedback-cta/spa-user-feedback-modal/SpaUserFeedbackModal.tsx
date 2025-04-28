@@ -1,25 +1,36 @@
+import { Controller, FormProvider, UseControllerProps, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { SendFill } from 'react-bootstrap-icons'
-import { Controller, FormProvider, UseControllerProps, useForm } from 'react-hook-form'
-import { Button, Col, Form, Modal, Stack } from '@iqss/dataverse-design-system'
+import { toast } from 'react-toastify'
+import { Button, Col, Form, Modal, Spinner, Stack } from '@iqss/dataverse-design-system'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { PAGE_OPTIONS, useGetDefaultPageOptionFromURL } from '../useGetDefaultPageOptionFromURL'
 import { useSendFeedback } from '../useSendFeedback'
-import { toast } from 'react-toastify'
 
 interface SpaUserFeedbackModalProps {
+  contactRepository: ContactRepository
   showModal: boolean
+  userEmail: string
   handleClose: () => void
 }
 
 export interface SpaUserFeedbackFormData {
   page: string
   feedback: string
+  fromEmail: string
 }
 
-export const SpaUserFeedbackModal = ({ showModal, handleClose }: SpaUserFeedbackModalProps) => {
+export const SpaUserFeedbackModal = ({
+  contactRepository,
+  showModal,
+  userEmail,
+  handleClose
+}: SpaUserFeedbackModalProps) => {
   const { t } = useTranslation('shared')
   const defaultPageOption: string | undefined = useGetDefaultPageOptionFromURL()
+
   const { submitFeedback, isSendingFeedback, errorSendingFeedback } = useSendFeedback({
+    contactRepository,
     onSuccessfulSend: () => {
       handleClose()
       formInstance.reset()
@@ -31,7 +42,8 @@ export const SpaUserFeedbackModal = ({ showModal, handleClose }: SpaUserFeedback
     mode: 'onChange',
     values: {
       page: defaultPageOption ?? '',
-      feedback: ''
+      feedback: '',
+      fromEmail: userEmail
     }
   })
 
@@ -56,7 +68,12 @@ export const SpaUserFeedbackModal = ({ showModal, handleClose }: SpaUserFeedback
   }
 
   return (
-    <Modal show={showModal} onHide={onHideHandler} id="feedback-modal" size="lg" centered>
+    <Modal
+      show={showModal}
+      onHide={isSendingFeedback ? () => {} : onHideHandler}
+      id="feedback-modal"
+      size="lg"
+      centered>
       <Modal.Header>
         <Modal.Title>{t('spaUserFeedback.title')}</Modal.Title>
       </Modal.Header>
@@ -107,13 +124,22 @@ export const SpaUserFeedbackModal = ({ showModal, handleClose }: SpaUserFeedback
         </FormProvider>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHideHandler} type="button">
+        <Button
+          variant="secondary"
+          onClick={onHideHandler}
+          type="button"
+          disabled={isSendingFeedback}>
           {t('cancel')}
         </Button>
-        <Button variant="primary" type="submit" onClick={formInstance.handleSubmit(submitFeedback)}>
+        <Button
+          variant="primary"
+          type="submit"
+          onClick={formInstance.handleSubmit(submitFeedback)}
+          disabled={isSendingFeedback}>
           <Stack direction="horizontal" gap={2}>
             <SendFill aria-hidden size={14} color="white" />
             <span>{t('send')}</span>
+            {isSendingFeedback && <Spinner variant="light" animation="border" size="sm" />}
           </Stack>
         </Button>
       </Modal.Footer>

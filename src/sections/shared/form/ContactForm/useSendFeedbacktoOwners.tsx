@@ -1,5 +1,5 @@
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
-import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
+import { FeedbackDTO } from '@/contact/domain/useCases/DTOs/FeedbackDTO'
 import { ContactResponse } from '@/contact/domain/models/ContactResponse'
 import { useState } from 'react'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'

@@ -1,6 +1,6 @@
 import { ContactRepository } from '../repositories/ContactRepository'
 import { WriteError } from '@iqss/dataverse-client-javascript'
-import { FeedbackDTO } from '../useCases/FeedbackDTO'
+import { FeedbackDTO } from './DTOs/FeedbackDTO'
 import { ContactResponse } from '../models/ContactResponse'
 
 export async function sendFeedbacktoOwners(

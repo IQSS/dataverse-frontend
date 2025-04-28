@@ -3,10 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { ChatTextFill } from 'react-bootstrap-icons'
 import { useSession } from '@/sections/session/SessionContext'
 import { SpaUserFeedbackModal } from './spa-user-feedback-modal/SpaUserFeedbackModal'
+import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 import styles from './SpaUserFeedbackCTA.module.scss'
 
 // TODO: Connect with JSDataverse Use Case
 // TODO: Write unit tests
+
+const contactRepository = new ContactJSDataverseRepository()
 
 export const SpaUserFeedbackCTA = () => {
   const { t } = useTranslation('shared')
@@ -33,6 +36,8 @@ export const SpaUserFeedbackCTA = () => {
       <SpaUserFeedbackModal
         showModal={showModal}
         handleClose={handleClose}
+        contactRepository={contactRepository}
+        userEmail={user.email}
         key={showModal.toString()}
       />
     </>

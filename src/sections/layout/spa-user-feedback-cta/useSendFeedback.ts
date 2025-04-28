@@ -2,28 +2,32 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { SpaUserFeedbackFormData } from './spa-user-feedback-modal/SpaUserFeedbackModal'
+import { SpaFeedbackDTO } from '@/contact/domain/useCases/DTOs/SpaFeedbackDTO'
 
 interface UseSendFeedback {
-  //   collectionRepository: CollectionRepository
+  contactRepository: ContactRepository
   onSuccessfulSend: () => void
 }
 
-export const useSendFeedback = ({ onSuccessfulSend }: UseSendFeedback) => {
+export const useSendFeedback = ({ contactRepository, onSuccessfulSend }: UseSendFeedback) => {
   const { t } = useTranslation('shared')
   const [isSendingFeedback, setIsSendingFeedback] = useState<boolean>(false)
   const [errorSendingFeedback, setErrorSendingFeedback] = useState<string | null>(null)
 
-  const submitFeedback = (data: SpaUserFeedbackFormData) => {
+  const submitFeedback = async (data: SpaUserFeedbackFormData) => {
     setIsSendingFeedback(true)
 
     try {
-      // TODO: Once we have an API for sending user feedback, we can replace this with the actual API call
-      const feedbackDTO = {
+      const spaFeedbackDTO: SpaFeedbackDTO = {
         page: data.page,
-        feedback: data.feedback.trim()
+        feedback: data.feedback.trim(),
+        fromEmail: data.fromEmail
       }
-      console.log({ payload: feedbackDTO })
+      console.log({ feedbackDTO: spaFeedbackDTO })
+
+      await contactRepository.sendSpaFeedback(spaFeedbackDTO)
 
       onSuccessfulSend()
     } catch (err: WriteError | unknown) {
