@@ -1,7 +1,7 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
-import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
+import { FeedbackDTO } from '@/contact/domain/useCases/DTOs/FeedbackDTO'
 import { ContactResponse } from '@/contact/domain/models/ContactResponse'
 import { TestsUtils } from '../../shared/TestsUtils'
 

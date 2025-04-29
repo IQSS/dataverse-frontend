@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
 import { useSendFeedbacktoOwners } from '@/sections/shared/form/ContactForm/useSendFeedbacktoOwners'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
-import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
+import { FeedbackDTO } from '@/contact/domain/useCases/DTOs/FeedbackDTO'
 import { ContactResponse } from '@/contact/domain/models/ContactResponse'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 
