@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { SettingName } from '../../../../settings/domain/models/Setting'
 import { HasPublicStore } from '../../../../settings/domain/models/HasPublicStore'
 import { useTranslation } from 'react-i18next'
+import { useNotImplementedModal } from '../../.././not-implemented/NotImplementedModalContext'
 
 interface EditDatasetPermissionsMenuProps {
   dataset: Dataset
@@ -13,6 +14,7 @@ export function EditDatasetPermissionsMenu({ dataset }: EditDatasetPermissionsMe
   const { t } = useTranslation('dataset')
   const { getSettingByName } = useSettings()
   const [hasPublicStore, setHasPublicStore] = useState<HasPublicStore>(false)
+  const { showModal } = useNotImplementedModal()
 
   useEffect(() => {
     getSettingByName<HasPublicStore>(SettingName.HAS_PUBLIC_STORE)
@@ -43,7 +45,8 @@ export function EditDatasetPermissionsMenu({ dataset }: EditDatasetPermissionsMe
     <DropdownButton
       id={`edit-permissions-menu`}
       title={t('datasetActionButtons.editDataset.permissions.title')}
-      variant="secondary">
+      variant="secondary"
+      onSelect={() => showModal()}>
       {dataset.permissions.canManageDatasetPermissions && (
         <DropdownButtonItem>
           {t('datasetActionButtons.editDataset.permissions.dataset')}
