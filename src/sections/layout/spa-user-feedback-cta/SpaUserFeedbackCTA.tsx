@@ -27,7 +27,6 @@ export const SpaUserFeedbackCTA = () => {
       <button
         type="button"
         aria-haspopup="dialog"
-        aria-controls="feedback-modal"
         aria-label={t('spaUserFeedback.cta')}
         onClick={handleShow}
         className={styles['spa-user-feedback-cta']}>

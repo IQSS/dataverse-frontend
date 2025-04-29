@@ -37,7 +37,7 @@ export const useSendFeedback = ({ contactRepository, onSuccessfulSend }: UseSend
           error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
         setErrorSendingFeedback(formattedError)
       } else {
-        setErrorSendingFeedback(t('defaultCollectionDeleteError'))
+        setErrorSendingFeedback(t('spaUserFeedback.defaultSendFeedbackError'))
       }
     } finally {
       setIsSendingFeedback(false)

@@ -282,7 +282,7 @@
         "maxLength": "Feedback cannot exceed {{maxLength}} characters."
       }
     },
-    "success": "Thank you for your feedback!",
+    "success": "Thanks for your feedback!",
     "defaultSendFeedbackError": "An error occurred while sending your feedback. Please try again later."
   }
 }

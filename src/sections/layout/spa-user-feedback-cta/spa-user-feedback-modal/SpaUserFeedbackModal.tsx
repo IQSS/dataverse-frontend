@@ -2,7 +2,7 @@ import { Controller, FormProvider, UseControllerProps, useForm } from 'react-hoo
 import { useTranslation } from 'react-i18next'
 import { SendFill } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
-import { Button, Col, Form, Modal, Spinner, Stack } from '@iqss/dataverse-design-system'
+import { Alert, Button, Col, Form, Modal, Spinner, Stack } from '@iqss/dataverse-design-system'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { PAGE_OPTIONS, useGetDefaultPageOptionFromURL } from '../useGetDefaultPageOptionFromURL'
 import { useSendFeedback } from '../useSendFeedback'
@@ -71,13 +71,15 @@ export const SpaUserFeedbackModal = ({
     <Modal
       show={showModal}
       onHide={isSendingFeedback ? () => {} : onHideHandler}
-      id="feedback-modal"
       size="lg"
       centered>
       <Modal.Header>
         <Modal.Title>{t('spaUserFeedback.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {errorSendingFeedback && !isSendingFeedback && (
+          <Alert variant="danger">{errorSendingFeedback}</Alert>
+        )}
         <FormProvider {...formInstance}>
           <form onSubmit={formInstance.handleSubmit(submitFeedback)} noValidate>
             {/* Page field */}
