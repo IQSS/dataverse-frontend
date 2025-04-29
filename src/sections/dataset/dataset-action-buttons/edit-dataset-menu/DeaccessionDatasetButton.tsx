@@ -50,7 +50,7 @@ export function DeaccessionDatasetButton({
   })
 
   if (
-  dataset.version.publishingStatus !== DatasetPublishingStatus.RELEASED ||
+    dataset.version.publishingStatus !== DatasetPublishingStatus.RELEASED ||
     !dataset.permissions.canPublishDataset
   ) {
     return <></>
