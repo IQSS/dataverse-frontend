@@ -76,7 +76,7 @@ export function DeaccessionDatasetModal({
                               <Form.Group.Checkbox
                                 key={version.versionNumber}
                                 id={version.versionNumber}
-                                label={`${version.versionNumber} - ${version.publishedOn ?? ''}`}
+                                label={`${version.versionNumber} - ${version.publishedOn}`}
                                 value={version.versionNumber}
                                 checked={field.value.includes(version.versionNumber)}
                                 isInvalid={!!errors.versions}
