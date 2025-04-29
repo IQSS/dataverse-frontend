@@ -70,29 +70,26 @@ export function DeaccessionDatasetModal({
                     }}
                     render={({ field }) => (
                       <>
-                        {publishedVersions
-                          .filter((version) => {
-                            const summary = version.summary as { deaccessioned?: object }
-                            return version.publishedOn && !summary.deaccessioned
-                          })
-                          .map((version) => (
-                            <Form.Group.Checkbox
-                              key={version.versionNumber}
-                              id={version.versionNumber}
-                              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                              label={`${version.versionNumber} - ${version.publishedOn}`}
-                              value={version.versionNumber}
-                              checked={field.value.includes(version.versionNumber)}
-                              isInvalid={!!errors.versions}
-                              invalidFeedback={errors.versions?.message}
-                              onChange={(e) => {
-                                const newValue = e.target.checked
-                                  ? [...field.value, e.target.value]
-                                  : field.value.filter((val) => val !== e.target.value)
-                                field.onChange(newValue)
-                              }}
-                            />
-                          ))}
+                        {publishedVersions.map(
+                          (version) =>
+                            version.publishedOn && (
+                              <Form.Group.Checkbox
+                                key={version.versionNumber}
+                                id={version.versionNumber}
+                                label={`${version.versionNumber} - ${version.publishedOn ?? ''}`}
+                                value={version.versionNumber}
+                                checked={field.value.includes(version.versionNumber)}
+                                isInvalid={!!errors.versions}
+                                invalidFeedback={errors.versions?.message}
+                                onChange={(e) => {
+                                  const newValue = e.target.checked
+                                    ? [...field.value, e.target.value]
+                                    : field.value.filter((val) => val !== e.target.value)
+                                  field.onChange(newValue)
+                                }}
+                              />
+                            )
+                        )}
                       </>
                     )}
                   />

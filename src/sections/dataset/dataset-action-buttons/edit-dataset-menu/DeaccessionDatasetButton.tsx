@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useContext } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { Dataset } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButtonItem, DropdownSeparator } from '@iqss/dataverse-design-system'
@@ -10,7 +11,7 @@ import { DatasetRepository } from '@/dataset/domain/repositories/DatasetReposito
 import { DeaccessionFormData } from '@/sections/dataset/deaccession-dataset/DeaccessionFormData'
 import { useDeaccessionDataset } from '@/sections/dataset/deaccession-dataset/useDeaccessionDataset'
 import { ConfirmationModal } from '@/sections/dataset/deaccession-dataset/ConfirmationModal'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { Deaccessioned } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 interface DeaccessionDatasetButtonProps {
   dataset: Dataset
@@ -31,9 +32,10 @@ export function DeaccessionDatasetButton({
     onDeaccessionSucceed
   )
   const publishedVersions =
-    dataset.versionsSummaries?.filter(
-      (version) => version.publishedOn && version.summary !== 'versionDeaccessioned'
-    ) || []
+    dataset.versionsSummaries?.filter((version) => {
+      const summary = version.summary as { deaccessioned: Deaccessioned }
+      return version.publishedOn && !summary.deaccessioned
+    }) || []
   const defaultVersions = publishedVersions.length === 1 ? [publishedVersions[0].versionNumber] : []
   function onDeaccessionSucceed() {
     setShowConfirmationModal(false)
@@ -91,7 +93,6 @@ export function DeaccessionDatasetButton({
         submissionStatus={submissionStatus}
         deaccessionError={deaccessionError}
         show={showConfirmationModal}
-        isDeaccessioning={submissionStatus === 'IsSubmitting'}
         onConfirm={handleConfirmDeaccession}
         onCancel={handleCancelConfirmation}
       />

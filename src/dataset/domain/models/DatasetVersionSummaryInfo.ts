@@ -15,9 +15,9 @@ export type DatasetVersionSummary = {
     | boolean
 }
 
-interface Deaccessioned {
+export interface Deaccessioned {
   reason: string
-  url: string
+  url?: string
 }
 
 export interface SummaryUpdates {

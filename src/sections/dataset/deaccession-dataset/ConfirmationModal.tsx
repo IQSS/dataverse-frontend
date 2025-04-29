@@ -6,7 +6,6 @@ interface ConfirmationModalProps {
   show: boolean
   submissionStatus: SubmissionStatus
   deaccessionError: string | null
-  isDeaccessioning: boolean
   onConfirm: () => void
   onCancel: () => void
 }
@@ -15,11 +14,11 @@ export function ConfirmationModal({
   show,
   submissionStatus,
   deaccessionError,
-  isDeaccessioning,
   onConfirm,
   onCancel
 }: ConfirmationModalProps) {
   const { t } = useTranslation(['dataset', 'shared'])
+  const isDeaccessioning = submissionStatus === SubmissionStatus.IsSubmitting
 
   return (
     <Modal size={'lg'} show={show} onHide={onCancel}>
