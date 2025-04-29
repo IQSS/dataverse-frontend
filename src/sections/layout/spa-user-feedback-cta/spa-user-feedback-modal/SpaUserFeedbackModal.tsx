@@ -87,7 +87,9 @@ export const SpaUserFeedbackModal = ({
               name="page"
               render={({ field: { onChange, ref, value } }) => (
                 <Form.Group as={Col}>
-                  <Form.Group.Label>{t('spaUserFeedback.fields.page.label')}</Form.Group.Label>
+                  <Form.Group.Label htmlFor="feedback-type">
+                    {t('spaUserFeedback.fields.page.label')}
+                  </Form.Group.Label>
                   <Form.Group.SelectAdvanced
                     options={Object.values(PAGE_OPTIONS)}
                     onChange={onChange}
