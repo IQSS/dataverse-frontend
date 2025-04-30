@@ -57,7 +57,9 @@ export class JSDatasetMapper {
       jsDataset.versionInfo,
       JSDatasetMapper.toDatasetTitle(jsDataset.metadataBlocks),
       jsDatasetCitation,
-      jsDataset.publicationDate
+      jsDataset.publicationDate,
+      jsDataset.termsOfUse?.termsOfAccess,
+      jsDataset.versionInfo.deaccessionNote as string
     )
     return new Dataset.Builder(
       jsDataset.persistentId,

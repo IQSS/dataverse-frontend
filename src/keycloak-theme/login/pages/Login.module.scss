@@ -1,0 +1,91 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+
+.settings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  input[type='checkbox'],
+  input[type='checkbox'] + label {
+    cursor: pointer;
+  }
+}
+
+.info {
+  padding: 2rem;
+  text-align: center;
+
+  span {
+    color: $dv-subtext-color;
+  }
+
+  a {
+    margin-left: 0.5rem;
+
+    span {
+      color: $dv-link-color;
+    }
+  }
+}
+
+.social-providers {
+  padding-inline: 1rem;
+  text-align: center;
+
+  h2 {
+    color: $dv-subtext-color;
+    font-weight: $dv-font-weight;
+    font-size: $dv-font-size-sm;
+  }
+
+  hr {
+    margin-block: 20px;
+  }
+
+  .social-account-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &.grid {
+      display: grid;
+      gap: 1rem;
+
+      @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    li {
+      width: 100%;
+
+      a {
+        min-width: 100%;
+        padding-block: 0.25rem;
+        padding-inline: 0.5rem;
+        color: $dv-text-color;
+        text-decoration: none;
+        background-color: color.adjust($dv-secondary-color, $lightness: 7%);
+        border: solid 1px $dv-primary-color;
+        border-radius: 6px;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          background-color: $dv-secondary-color;
+          border: solid 1px $dv-primary-color;
+        }
+
+        .social-icon {
+          float: left;
+          color: $dv-primary-color;
+        }
+      }
+    }
+  }
+}

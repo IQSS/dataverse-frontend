@@ -1,4 +1,4 @@
-import { HTMLAttributes, MouseEvent, ReactNode } from 'react'
+import { ButtonHTMLAttributes, MouseEvent, ReactNode } from 'react'
 import styles from './Button.module.scss'
 import { Button as ButtonBS } from 'react-bootstrap'
 import { IconName } from '../icon/IconName'
@@ -8,7 +8,7 @@ type ButtonSize = 'sm' | 'lg'
 type ButtonVariant = 'primary' | 'secondary' | 'link' | 'danger'
 type ButtonType = 'button' | 'reset' | 'submit'
 
-interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize
   variant?: ButtonVariant
   disabled?: boolean

@@ -40,6 +40,13 @@ describe('DatasetCitation', () => {
     ).should('exist')
   })
 
+  it('shows the deaccessioned reason when version is deaccessioned', () => {
+    const version = DatasetVersionMother.createDeaccessioned()
+    cy.customMount(<DatasetCitation version={version} />)
+
+    cy.findByText(/Deaccession Reason/).should('exist')
+  })
+
   it('does not render the thumbnail when withoutThumbnail prop is true', () => {
     const version = DatasetVersionMother.createRealistic()
     cy.customMount(<DatasetCitation version={version} withoutThumbnail={true} />)
