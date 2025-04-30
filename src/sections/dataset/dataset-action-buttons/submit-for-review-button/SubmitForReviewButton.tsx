@@ -32,9 +32,7 @@ export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
         !dataset.hasValidTermsOfAccess ||
         !dataset.isValid
       }
-      onClick={() => {
-        showModal()
-      }}>
+      onClick={showModal}>
       {dataset.version.isInReview
         ? t('datasetActionButtons.submitForReview.disabled')
         : t('datasetActionButtons.submitForReview.enabled')}

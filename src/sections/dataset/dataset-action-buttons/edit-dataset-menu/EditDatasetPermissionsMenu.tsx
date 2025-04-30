@@ -46,7 +46,7 @@ export function EditDatasetPermissionsMenu({ dataset }: EditDatasetPermissionsMe
       id={`edit-permissions-menu`}
       title={t('datasetActionButtons.editDataset.permissions.title')}
       variant="secondary"
-      onSelect={() => showModal()}>
+      onSelect={showModal}>
       {dataset.permissions.canManageDatasetPermissions && (
         <DropdownButtonItem>
           {t('datasetActionButtons.editDataset.permissions.dataset')}
