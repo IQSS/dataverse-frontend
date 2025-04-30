@@ -30,5 +30,5 @@
     "packages/design-system/src/",
     "public"
   ],
-  "exclude": ["tests/**/**.spec.ts", "tests/**/**.spec.tsx"]
+  "exclude": ["tests/**/**.spec.ts", "tests/**/**.spec.tsx", "public/keycloakify-dev-resources"]
 }

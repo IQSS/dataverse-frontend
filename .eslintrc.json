@@ -94,5 +94,5 @@
       }
     }
   ],
-  "ignorePatterns": ["packages/design-system/dist/**", "dev-env/vite.config.ts"]
+  "ignorePatterns": ["packages/design-system/dist/**", "dev-env/vite.config.ts", "public/keycloakify-dev-resources"]
 }

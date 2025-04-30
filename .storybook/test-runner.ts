@@ -5,10 +5,10 @@ import { getStoryContext } from '@storybook/test-runner'
 import type { TestRunnerConfig } from '@storybook/test-runner'
 
 const a11yConfig: TestRunnerConfig = {
-  async preRender(page) {
+  async preVisit(page) {
     await injectAxe(page)
   },
-  async postRender(page, context) {
+  async postVisit(page, context) {
     const storyContext = await getStoryContext(page, context)
 
     await configureAxe(page, {
