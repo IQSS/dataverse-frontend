@@ -21,6 +21,7 @@
       }
     }
   },
+  "deaccessionReason": "Deaccession Reason",
   "datasetActionButtons": {
     "title": "Dataset Action Buttons",
     "submitForReview": {
@@ -247,7 +248,9 @@
     "access": "Access",
     "needTwoVersions": "Please select two versions to view the differences.",
     "viewDetails": "View Details",
-    "replace": "File Replace"
+    "replace": "File Replace",
+    "termsOfUseandAccess": "Terms of Use/Access",
+    "deaccessionedReason": "Deaccessioned Reason"
   },
   "getDatasetVersionDiffError": "Error Fetching Dataset Version Differences",
   "datasetVersionSummary": {

@@ -4,12 +4,14 @@
   margin: 0 0 20px;
   padding: 10px 0;
   border: 1px solid $dv-info-border-color;
+  border-radius: 4px;
 }
 
 .deaccessioned {
   margin: 0.5rem 0;
   padding: 10px;
   border: 1px solid $dv-danger-color;
+  border-radius: 4px;
 }
 
 .row {

@@ -46,6 +46,16 @@ function getCitationString(persistentId: string, version: 'DRAFT VERSION' | 'V1'
     persistentId
   )}" target="_blank">${getPersistentIdUrl(persistentId)}</a>, Root, ${version}`
 }
+const termsOfUse = {
+  fileAccessRequest: true,
+  dataAccessPlace: undefined,
+  originalArchive: undefined,
+  availabilityStatus: undefined,
+  contactForAccess: undefined,
+  sizeOfCollection: undefined,
+  studyCompletion: undefined,
+  termsOfAccessForRestrictedFiles: undefined
+}
 
 const datasetData = (persistentId: string, versionId: number) => {
   return {
@@ -117,11 +127,18 @@ const datasetData = (persistentId: string, versionId: number) => {
       citation: getCitationString(persistentId, 'DRAFT VERSION'),
       title: "Darwin's Finches",
       labels: [
-        { semanticMeaning: 'dataset', value: 'Draft' },
-        { semanticMeaning: 'warning', value: 'Unpublished' }
+        {
+          semanticMeaning: 'dataset',
+          value: 'Draft'
+        },
+        {
+          semanticMeaning: 'warning',
+          value: 'Unpublished'
+        }
       ],
       someDatasetVersionHasBeenReleased: false,
-      termsOfAccess: undefined
+      termsOfAccess: termsOfUse,
+      deaccessionNote: undefined
     },
     versionsSummaries: [
       {
@@ -173,7 +190,6 @@ describe('Dataset JSDataverse Repository', () => {
           throw new Error('Dataset not found')
         }
         const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
-
         expect(dataset.license).to.deep.equal(datasetExpected.license)
         expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
         expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
@@ -217,7 +233,9 @@ describe('Dataset JSDataverse Repository', () => {
           true,
           false,
           DatasetPublishingStatus.RELEASED,
-          true
+          true,
+          termsOfUse,
+          undefined
         )
         const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
         expect(dataset.version).to.deep.equal(newVersion)
@@ -262,7 +280,9 @@ describe('Dataset JSDataverse Repository', () => {
           true,
           false,
           DatasetPublishingStatus.RELEASED,
-          true
+          true,
+          termsOfUse,
+          undefined
         )
         const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
         expect(dataset.version).to.deep.equal(newVersion)
