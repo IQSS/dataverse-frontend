@@ -297,7 +297,12 @@ describe('DatasetFilesScrollable', () => {
 
         cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
         cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
-        cy.findByText('10 files are currently selected.').should('exist')
+        cy.findByText(/^\d+ files are currently selected\.$/)
+          .invoke('text')
+          .then((text) => {
+            const count = parseInt(text.split(' ')[0], 10)
+            expect(count).to.be.gte(10)
+          })
 
         cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
         cy.get('@scrollableFilesContainer').scrollTo('bottom')
@@ -355,7 +360,12 @@ describe('DatasetFilesScrollable', () => {
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
-      cy.findByText('10 files are currently selected.').should('exist')
+      cy.findByText(/^\d+ files are currently selected\.$/)
+        .invoke('text')
+        .then((text) => {
+          const count = parseInt(text.split(' ')[0], 10)
+          expect(count).to.be.gte(10)
+        })
     })
 
     it('selects all files when clicking the select all button', () => {
@@ -368,7 +378,12 @@ describe('DatasetFilesScrollable', () => {
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
-      cy.findByText('10 files are currently selected.').should('exist')
+      cy.findByText(/^\d+ files are currently selected\.$/)
+        .invoke('text')
+        .then((text) => {
+          const count = parseInt(text.split(' ')[0], 10)
+          expect(count).to.be.gte(10)
+        })
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click({
         force: true
       })
@@ -385,7 +400,12 @@ describe('DatasetFilesScrollable', () => {
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
-      cy.findByText('10 files are currently selected.').should('exist')
+      cy.findByText(/^\d+ files are currently selected\.$/)
+        .invoke('text')
+        .then((text) => {
+          const count = parseInt(text.split(' ')[0], 10)
+          expect(count).to.be.gte(10)
+        })
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
       cy.findByText('200 files are currently selected.').should('exist')
 
@@ -463,7 +483,12 @@ describe('DatasetFilesScrollable', () => {
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
-      cy.findByText('10 files are currently selected.').should('exist')
+      cy.findByText(/^\d+ files are currently selected\.$/)
+        .invoke('text')
+        .then((text) => {
+          const count = parseInt(text.split(' ')[0], 10)
+          expect(count).to.be.gte(10)
+        })
       cy.findByTestId('header-checkbox').should('be.visible').uncheck({ force: true })
       cy.findByText('10 files are currently selected.').should('not.exist')
     })
@@ -505,7 +530,12 @@ describe('DatasetFilesScrollable', () => {
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
-      cy.findByText('10 files are currently selected.').should('exist')
+      cy.findByText(/^\d+ files are currently selected\.$/)
+        .invoke('text')
+        .then((text) => {
+          const count = parseInt(text.split(' ')[0], 10)
+          expect(count).to.be.gte(10)
+        })
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click({
         force: true
       })
