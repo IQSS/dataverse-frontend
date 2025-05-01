@@ -2,6 +2,7 @@ import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/mod
 import { Button } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { useSession } from '../../../session/SessionContext'
+import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
 
 interface SubmitForReviewButtonProps {
   dataset: Dataset
@@ -10,6 +11,7 @@ interface SubmitForReviewButtonProps {
 export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
   const { user } = useSession()
   const { t } = useTranslation('dataset')
+  const { showModal } = useNotImplementedModal()
 
   if (
     !dataset.version.isLatest ||
@@ -29,7 +31,8 @@ export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
         dataset.checkIsLockedFromPublishing(user.persistentId) ||
         !dataset.hasValidTermsOfAccess ||
         !dataset.isValid
-      }>
+      }
+      onClick={showModal}>
       {dataset.version.isInReview
         ? t('datasetActionButtons.submitForReview.disabled')
         : t('datasetActionButtons.submitForReview.enabled')}
