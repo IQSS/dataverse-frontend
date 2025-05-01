@@ -296,10 +296,7 @@ describe('DatasetFilesScrollable', () => {
         )
 
         cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-        cy.findByTestId('header-checkbox')
-          .should('exist')
-          .should('be.visible')
-          .click({ force: true })
+        cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
         cy.findByText('10 files are currently selected.').should('exist')
 
         cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
