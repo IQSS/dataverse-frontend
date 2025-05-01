@@ -115,19 +115,22 @@ describe('DeaccessionDatasetButton', () => {
           id: 1,
           versionNumber: '1.0',
           publishedOn: '2021-01-01',
-          contributors: 'Contributors'
+          contributors: 'Contributors',
+          summary: {}
         },
         {
           id: 2,
           versionNumber: '2.0',
           publishedOn: '2021-01-02',
-          contributors: 'Contributors'
+          contributors: 'Contributors',
+          summary: {}
         },
         {
           id: 3,
           versionNumber: 'draft',
           publishedOn: undefined,
-          contributors: 'Contributors'
+          contributors: 'Contributors',
+          summary: {}
         }
       ]
       const dataset = DatasetMother.create({
@@ -233,6 +236,89 @@ describe('DeaccessionDatasetButton', () => {
       cy.get('button[type="submit"]').click()
       cy.get('button').contains('Yes').should('exist').click()
       cy.wrap(repository.deaccession).should('have.been.called')
+    })
+
+    it('does not show deaccessioned versions in the version list', () => {
+      const versionsSummaries: DatasetVersionSummaryInfo[] = [
+        {
+          id: 1,
+          versionNumber: '1.0',
+          publishedOn: '2021-01-01',
+          contributors: 'Contributors',
+          summary: {
+            deaccessioned: {
+              reason: 'IRB request.',
+              url: 'https://example.com'
+            }
+          }
+        },
+        {
+          id: 2,
+          versionNumber: '2.0',
+          publishedOn: '2021-01-02',
+          contributors: 'Contributors',
+          summary: {}
+        },
+        {
+          id: 3,
+          versionNumber: '3.0',
+          publishedOn: '2021-01-22',
+          contributors: 'Contributors',
+          summary: {}
+        }
+      ]
+
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+        version: DatasetVersionMother.createReleased(),
+        versionsSummaries: versionsSummaries
+      })
+
+      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
+      cy.get('form').should('exist')
+      cy.findByText('1.0 - 2021-01-01').should('not.exist')
+      cy.findByText('2.0 - 2021-01-02').should('exist')
+      cy.findByText('3.0 - 2021-01-22').should('exist')
+      cy.get('input[type="checkbox"]').should('have.length', 2)
+    })
+
+    it('does not show versions list in the version list if there is only one deaccessioned version available', () => {
+      const versionsSummaries: DatasetVersionSummaryInfo[] = [
+        {
+          id: 1,
+          versionNumber: '1.0',
+          publishedOn: '2021-01-01',
+          contributors: 'Contributors',
+          summary: {
+            deaccessioned: {
+              reason: 'IRB request.',
+              url: 'https://example.com'
+            }
+          }
+        },
+        {
+          id: 2,
+          versionNumber: '2.0',
+          publishedOn: '2021-01-02',
+          contributors: 'Contributors',
+          summary: {}
+        }
+      ]
+
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+        version: DatasetVersionMother.createReleased(),
+        versionsSummaries: versionsSummaries
+      })
+
+      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
+      cy.get('form').should('exist')
+      cy.findByText('1.0 - 2021-01-01').should('not.exist')
+      cy.findByText('2.0 - 2021-01-02').should('not.exist')
     })
   })
 })

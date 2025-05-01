@@ -33,8 +33,20 @@ export const Default: Story = {
         control={control}
         errors={{}}
         publishedVersions={[
-          { id: 1, contributors: 'contributors', versionNumber: '1.0', publishedOn: '2023-01-01' },
-          { id: 2, contributors: 'contributors', versionNumber: '1.1', publishedOn: '2023-02-01' }
+          {
+            id: 1,
+            contributors: 'contributors',
+            versionNumber: '1.0',
+            publishedOn: '2023-01-01',
+            summary: {}
+          },
+          {
+            id: 2,
+            contributors: 'contributors',
+            versionNumber: '1.1',
+            publishedOn: '2023-02-01',
+            summary: {}
+          }
         ]}
       />
     )
