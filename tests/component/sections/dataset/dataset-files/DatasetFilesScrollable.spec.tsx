@@ -347,7 +347,7 @@ describe('DatasetFilesScrollable', () => {
     })
   })
 
-  describe.only('File selection', () => {
+  describe('File selection', () => {
     it('selects first 10 files when clicking the top header checkbox', () => {
       cy.customMount(
         <DatasetFilesScrollable
