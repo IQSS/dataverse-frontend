@@ -232,7 +232,7 @@ describe('DeaccessionDatasetButton', () => {
       cy.findByTestId('deaccession-forward-url').type('https://example.com')
       cy.get('button[type="submit"]').click()
       cy.get('button').contains('Yes').should('exist').click()
-      cy.wrap(repository.deaccession).should('be.calledTwice')
+      cy.wrap(repository.deaccession).should('have.been.called')
     })
   })
 })

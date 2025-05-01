@@ -19,6 +19,7 @@ export const createColumnsDefinition = (
     id: 'select',
     header: ({ table }) => (
       <RowSelectionCheckbox
+        data-testid="header-checkbox"
         {...{
           checked: table.getIsAllRowsSelected(),
           indeterminate: table.getIsSomePageRowsSelected(),

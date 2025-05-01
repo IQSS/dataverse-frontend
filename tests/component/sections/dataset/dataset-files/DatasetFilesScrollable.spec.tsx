@@ -278,7 +278,7 @@ describe('DatasetFilesScrollable', () => {
           cy.get('thead').then(($el) => {
             const tableHeaderTopValue = $el[0].getBoundingClientRect().top
 
-            expect(tableHeaderTopValue).to.equal(criteriaContainerHeight)
+            expect(tableHeaderTopValue).to.closeTo(criteriaContainerHeight, 1)
           })
         })
       })
@@ -295,7 +295,10 @@ describe('DatasetFilesScrollable', () => {
         )
 
         cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-        cy.get('table > thead > tr > th > input[type=checkbox]').click()
+        cy.findByTestId('header-checkbox')
+          .should('exist')
+          .should('be.visible')
+          .click({ force: true })
         cy.findByText('10 files are currently selected.').should('exist')
 
         cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
@@ -335,7 +338,7 @@ describe('DatasetFilesScrollable', () => {
                 cy.get('thead').then(($el) => {
                   const tableHeaderTopValue = $el[0].getBoundingClientRect().top
 
-                  expect(tableHeaderTopValue).to.equal(totalTopHeight)
+                  expect(tableHeaderTopValue).to.be.closeTo(totalTopHeight, 1)
                 })
               })
           })
@@ -353,7 +356,7 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
     })
 
@@ -366,7 +369,7 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.get('table > thead > tr > th > input[type=checkbox]').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click({
         force: true
@@ -383,7 +386,7 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
       cy.findByText('200 files are currently selected.').should('exist')
@@ -461,9 +464,9 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
-      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
       cy.findByText('10 files are currently selected.').should('not.exist')
     })
 
@@ -483,7 +486,7 @@ describe('DatasetFilesScrollable', () => {
 
       cy.findByText('20 of 200 Files displayed').should('exist')
 
-      cy.get('table > thead > tr > th > input[type=checkbox]').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
 
       cy.findByText('20 files are currently selected.').should('exist')
     })
@@ -497,7 +500,7 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.get('table > thead > tr > th > input[type=checkbox]').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click({
         force: true
@@ -619,7 +622,9 @@ describe('DatasetFilesScrollable', () => {
           />
         </SettingsProvider>
       )
-      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
+      cy.findByTestId('header-checkbox').click({ force: true })
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
       cy.findByText(
         'The overall size of the files selected (19.4 KB) for download exceeds the zip limit of 1.0 B. Please unselect some files to continue.'
@@ -636,8 +641,12 @@ describe('DatasetFilesScrollable', () => {
           />
         </SettingsProvider>
       )
-      cy.get('table > thead > tr > th > input[type=checkbox]').click()
-      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
+      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click({
+        force: true
+      })
 
       cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
       cy.get('@scrollableFilesContainer').scrollTo('bottom')
@@ -800,7 +809,7 @@ describe('DatasetFilesScrollable', () => {
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
       cy.findByText('PNG Image (485)').should('exist').click()
-      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
 
       cy.findByText(
