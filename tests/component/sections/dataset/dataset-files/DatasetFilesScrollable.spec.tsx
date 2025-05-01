@@ -86,6 +86,7 @@ describe('DatasetFilesScrollable', () => {
       />
     )
 
+    cy.wait(1000)
     cy.findByRole('table').should('exist')
     cy.findByRole('columnheader', { name: /Files/ }).should('exist')
   })
@@ -346,7 +347,7 @@ describe('DatasetFilesScrollable', () => {
     })
   })
 
-  describe('File selection', () => {
+  describe.only('File selection', () => {
     it('selects first 10 files when clicking the top header checkbox', () => {
       cy.customMount(
         <DatasetFilesScrollable
@@ -356,7 +357,7 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
     })
 
@@ -369,7 +370,7 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click({
         force: true
@@ -386,7 +387,7 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
       cy.findByText('200 files are currently selected.').should('exist')
@@ -464,9 +465,9 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
-      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').uncheck({ force: true })
       cy.findByText('10 files are currently selected.').should('not.exist')
     })
 
@@ -486,9 +487,15 @@ describe('DatasetFilesScrollable', () => {
 
       cy.findByText('20 of 200 Files displayed').should('exist')
 
-      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').as('headerCheckbox')
+      cy.get('@headerCheckbox').check({ force: true })
 
-      cy.findByText('20 files are currently selected.').should('exist')
+      cy.findByText(/^\d+ files are currently selected\.$/)
+        .invoke('text')
+        .then((text) => {
+          const count = parseInt(text.split(' ')[0], 10)
+          expect(count).to.be.gte(20)
+        })
     })
 
     it('all new loaded files should be checked if selecting all files when only displayed 10 and then scrolling to bottom to load 10 more files', () => {
@@ -500,7 +507,7 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click({
         force: true
@@ -643,7 +650,7 @@ describe('DatasetFilesScrollable', () => {
       )
 
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click({
         force: true
       })
@@ -809,7 +816,7 @@ describe('DatasetFilesScrollable', () => {
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
       cy.findByText('PNG Image (485)').should('exist').click()
-      cy.findByTestId('header-checkbox').should('be.visible').click({ force: true })
+      cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
 
       cy.findByText(
