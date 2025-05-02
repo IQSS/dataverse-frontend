@@ -1,6 +1,6 @@
-@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
-@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
-@import 'src/assets/variables';
+@import '../../../../../node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import '../../../../../node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+@import '../../../../assets/variables';
 
 .items-list-root-ref {
   flex: 1;

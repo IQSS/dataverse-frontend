@@ -2,7 +2,7 @@ import { Collection } from '../models/Collection'
 import { CollectionFacet } from '../models/CollectionFacet'
 import { CollectionFeaturedItem } from '../models/CollectionFeaturedItem'
 import { CollectionItemsPaginationInfo } from '../models/CollectionItemsPaginationInfo'
-import { CollectionItemSubset, MyDataCollectionItemSubset } from '../models/CollectionItemSubset'
+import { CollectionItemSubset } from '../models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../models/CollectionSearchCriteria'
 import { CollectionUserPermissions } from '../models/CollectionUserPermissions'
 import { CollectionDTO } from '../useCases/DTOs/CollectionDTO'
@@ -21,9 +21,14 @@ export interface CollectionRepository {
     searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset>
   getMyDataItems(
-    paginationInfo: CollectionItemsPaginationInfo,
-    searchCriteria?: CollectionSearchCriteria
-  ): Promise<MyDataCollectionItemSubset>
+    roleIds: number[],
+    collectionItemTypes: string[],
+    publicationStatuses: string[],
+    limit?: number,
+    selectedPage?: number,
+    searchText?: string,
+    otherUserName?: string
+  ): Promise<CollectionItemSubset>
   edit(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void>
   getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]>
   updateFeaturedItems(

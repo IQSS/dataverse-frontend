@@ -1,4 +1,4 @@
-import { CollectionCard } from '@/sections/collection/collection-items-panel/items-list/collection-card/CollectionCard'
+import { CollectionCard } from '@/sections/shared/collection-items-panel/items-list/collection-card/CollectionCard'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import { CollectionItemTypePreviewMother } from '../../../../collection/domain/models/CollectionItemTypePreviewMother'
 

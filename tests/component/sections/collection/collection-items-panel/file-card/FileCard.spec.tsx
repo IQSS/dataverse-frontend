@@ -1,7 +1,7 @@
-import { FileCard } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCard'
+import { FileCard } from '@/sections/shared/collection-items-panel/items-list/file-card/FileCard'
 import { FileItemTypePreviewMother } from '@tests/component/files/domain/models/FileItemTypePreviewMother'
 import { DateHelper } from '@/shared/helpers/DateHelper'
-import { FileCardHelper } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCardHelper'
+import { FileCardHelper } from '@/sections/shared/collection-items-panel/items-list/file-card/FileCardHelper'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 describe('FileCard', () => {

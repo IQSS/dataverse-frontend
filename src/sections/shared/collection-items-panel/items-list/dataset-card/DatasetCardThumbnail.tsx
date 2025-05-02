@@ -6,7 +6,7 @@ import {
 import { DatasetCardHelper } from './DatasetCardHelper'
 import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { DatasetThumbnail } from '../../../../dataset/dataset-thumbnail/DatasetThumbnail'
-import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
+import { LinkToPage } from '../../../link-to-page/LinkToPage'
 import styles from './DatasetCard.module.scss'
 
 interface DatasetCardThumbnailProps {

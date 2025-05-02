@@ -1,6 +1,6 @@
-import { FacetsFilters } from '@/sections/collection/collection-items-panel/filter-panel/facets-filters/FacetsFilters'
+import { FacetsFilters } from '@/sections/shared/collection-items-panel/filter-panel/facets-filters/FacetsFilters'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
-import styles from '@/sections/collection/collection-items-panel/filter-panel/facets-filters/FacetsFilters.module.scss'
+import styles from '@/sections/shared/collection-items-panel/filter-panel/facets-filters/FacetsFilters.module.scss'
 
 const facets = CollectionItemsMother.createItemsFacets()
 

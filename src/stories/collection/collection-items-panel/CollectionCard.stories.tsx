@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
-import { CollectionCard } from '@/sections/collection/collection-items-panel/items-list/collection-card/CollectionCard'
+import { CollectionCard } from '@/sections/shared/collection-items-panel/items-list/collection-card/CollectionCard'
 import { CollectionItemTypePreviewMother } from '../../../../tests/component/collection/domain/models/CollectionItemTypePreviewMother'
 import { FakerHelper } from '../../../../tests/component/shared/FakerHelper'
 

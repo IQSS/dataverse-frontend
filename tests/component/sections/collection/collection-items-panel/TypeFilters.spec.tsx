@@ -1,4 +1,4 @@
-import { TypeFilters } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
+import { TypeFilters } from '@/sections/shared/collection-items-panel/filter-panel/type-filters/TypeFilters'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 
 describe('TypeFilters', () => {

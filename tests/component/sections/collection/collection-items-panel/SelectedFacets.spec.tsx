@@ -1,4 +1,4 @@
-import { SelectedFacets } from '@/sections/collection/collection-items-panel/selected-facets/SelectedFacets'
+import { SelectedFacets } from '@/sections/shared/collection-items-panel/selected-facets/SelectedFacets'
 
 describe('SelectedFacets', () => {
   it('should render the correct selected facets', () => {

@@ -10,7 +10,7 @@ export enum MyDataPublishingStatus {
 
 export type FilterQuery = `${string}:${string}`
 
-export class CollectionSearchCriteria {
+export class MyDataSearchCriteria {
   constructor(
     public readonly itemTypes: CollectionItemType[],
     public readonly publishingStatuses: MyDataPublishingStatus[] = [],
