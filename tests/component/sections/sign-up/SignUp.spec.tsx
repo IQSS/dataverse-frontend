@@ -26,7 +26,11 @@ describe('SignUp', () => {
           error: null,
           login: () => {} // 👈 deprecated
         }}>
-        <SignUp userRepository={userRepository} hasValidTokenButNotLinkedAccount={true} />
+        <SignUp
+          userRepository={userRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+          hasValidTokenButNotLinkedAccount={true}
+        />
       </AuthContext.Provider>
     )
 
@@ -52,7 +56,11 @@ describe('SignUp', () => {
           error: null,
           login: () => {} // 👈 deprecated
         }}>
-        <SignUp userRepository={userRepository} hasValidTokenButNotLinkedAccount={false} />
+        <SignUp
+          userRepository={userRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+          hasValidTokenButNotLinkedAccount={false}
+        />
       </AuthContext.Provider>
     )
 
