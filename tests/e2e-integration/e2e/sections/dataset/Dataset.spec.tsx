@@ -266,12 +266,13 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create())
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         .then((dataset) => Promise.all([dataset, DatasetHelper.publish(dataset.persistentId)]))
-        .then(([dataset]: [DatasetResponse]) => {
+        .then((response: [DatasetResponse, { status: string; persistentId: string }]) => {
+          const [dataset] = response
           return cy
             .wait(2500)
             .then(() => Promise.all([dataset, DatasetHelper.deaccession(dataset.id)]))
         })
-        .then(([dataset]: [DatasetResponse]) => {
+        .then(([dataset]: [DatasetResponse, { status: string }]) => {
           cy.visit(`/spa/datasets?persistentId=${dataset.persistentId}`)
 
           cy.findByText(DatasetLabelValue.DEACCESSIONED).should('exist')
@@ -292,6 +293,20 @@ describe('Dataset', () => {
           cy.findByRole('link', { name: 'Scientific Research' }).should('exist').click()
 
           cy.findAllByText('Scientific Research').should('exist')
+        })
+    })
+
+    it('successfully loads the delete dataset page', () => {
+      cy.wrap(DatasetHelper.create())
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+
+          cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
+          cy.findByRole('button', { name: 'Delete Dataset' }).should('exist').click()
+          cy.findByText(/Are you sure you want to delete this dataset?/i).should('exist')
+          cy.findByRole('button', { name: 'Delete' }).should('exist').click()
+          cy.findByText(/The dataset has been deleted./i).should('exist')
         })
     })
   })

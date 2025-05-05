@@ -48,12 +48,16 @@ describe('useDatasetVersionSummaryDescription', () => {
     expect(result.current).to.deep.equal({ firstPublished: 'This is the First Published Version.' })
   })
 
-  it('returns correct values for version deaccessioned', () => {
-    const { result } = renderHook(() =>
-      useDatasetVersionSummaryDescription(DatasetVersionSummaryStringValues.versionDeaccessioned)
-    )
+  it('returns correct values for deaccessioned dataset', () => {
+    const deaccessionedSummary = {
+      deaccessioned: {
+        reason: 'The research article has been retracted.',
+        url: ''
+      }
+    }
+    const { result } = renderHook(() => useDatasetVersionSummaryDescription(deaccessionedSummary))
     expect(result.current).to.deep.equal({
-      versionDeaccessioned: 'Deaccessioned Reason: The research article has been retracted.'
+      'Deaccessioned Reason': 'The research article has been retracted.'
     })
   })
 

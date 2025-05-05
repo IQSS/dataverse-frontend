@@ -114,9 +114,9 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
                     </Button>
                   </td>
                   <td>
-                    <p style={{ display: 'flex', flexWrap: 'wrap', margin: 0 }}>
+                    <p style={{ display: 'flex', flexWrap: 'wrap', margin: 0, textAlign: 'left' }}>
                       <SummaryDescription summary={dataset.summary} />
-                      {previousDataset && (
+                      {previousDataset && typeof dataset.summary !== 'string' && (
                         <DatasetViewDetailButton
                           datasetRepository={datasetRepository}
                           oldVersionNumber={previousDataset.versionNumber}

@@ -7,12 +7,12 @@ import {
 } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { EditDatasetPermissionsMenu } from './EditDatasetPermissionsMenu'
-import { DeleteDatasetButton } from './DeleteDatasetButton'
+import { DeleteDraftDatasetButton } from './delete-draft-dataset/DeleteDraftDatasetButton'
 import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
-import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
 import { useSession } from '../../../session/SessionContext'
 import { QueryParamKey, Route } from '../../../Route.enum'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { useNotImplementedModal } from '../../.././not-implemented/NotImplementedModalContext'
 
 interface EditDatasetMenuProps {
   dataset: Dataset
@@ -26,14 +26,15 @@ export enum EditDatasetMenuItems {
   PERMISSIONS = 'permissions',
   PRIVATE_URL = 'privateUrl',
   THUMBNAILS_PLUS_WIDGETS = 'thumbnailsPlusWidgets',
-  DEACCESSION = 'deaccession'
+  DEACCESSION = 'deaccession',
+  DELETE = 'delete'
 }
 
 export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuProps) {
   const { user } = useSession()
-  const { showModal } = useNotImplementedModal()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
+  const { showModal } = useNotImplementedModal()
 
   const handleOnSelect = (eventKey: EditDatasetMenuItems | string | null) => {
     const searchParams = new URLSearchParams()
@@ -51,7 +52,22 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
       navigate(`${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`)
       return
     }
-    showModal()
+    if (eventKey === EditDatasetMenuItems.TERMS) {
+      showModal()
+      return
+    }
+    if (eventKey === EditDatasetMenuItems.PERMISSIONS) {
+      showModal()
+      return
+    }
+    if (eventKey === EditDatasetMenuItems.PRIVATE_URL) {
+      showModal()
+      return
+    }
+    if (eventKey === EditDatasetMenuItems.THUMBNAILS_PLUS_WIDGETS) {
+      showModal()
+      return
+    }
   }
 
   if (!user || !dataset.permissions.canUpdateDataset) {
@@ -91,7 +107,7 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
       <DropdownButtonItem eventKey={EditDatasetMenuItems.THUMBNAILS_PLUS_WIDGETS} as="button">
         {t('datasetActionButtons.editDataset.thumbnailsPlusWidgets')}
       </DropdownButtonItem>
-      <DeleteDatasetButton dataset={dataset} />
+      <DeleteDraftDatasetButton dataset={dataset} datasetRepository={datasetRepository} />
       <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
     </DropdownButton>
   )

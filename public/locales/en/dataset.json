@@ -21,6 +21,7 @@
       }
     }
   },
+  "deaccessionReason": "Deaccession Reason",
   "datasetActionButtons": {
     "title": "Dataset Action Buttons",
     "submitForReview": {
@@ -53,6 +54,11 @@
         "title": "Permissions",
         "dataset": "Dataset",
         "file": "File"
+      },
+      "deleteDatasetModal": {
+        "title": "Delete Dataset",
+        "message": "Are you sure you want to delete this dataset? This action cannot be undone.",
+        "defaultDatasetDeleteError": "An error occurred while deleting the dataset."
       }
     },
     "accessDataset": {
@@ -119,7 +125,8 @@
     "unpublishedDataset": {
       "heading": "Unpublished Dataset Private URL",
       "alertText": "This unpublished dataset is being privately shared."
-    }
+    },
+    "datasetDeletedSuccess": "The dataset has been deleted."
   },
   "termsTab": {
     "editTermsButton": "Edit Term Requirements",
@@ -241,7 +248,9 @@
     "access": "Access",
     "needTwoVersions": "Please select two versions to view the differences.",
     "viewDetails": "View Details",
-    "replace": "File Replace"
+    "replace": "File Replace",
+    "termsOfUseandAccess": "Terms of Use/Access",
+    "deaccessionedReason": "Deaccessioned Reason"
   },
   "getDatasetVersionDiffError": "Error Fetching Dataset Version Differences",
   "datasetVersionSummary": {

@@ -40,5 +40,11 @@ export const TabsSkeleton = () => (
     <Tabs.Tab eventKey="metadata" title="Metadata">
       <Skeleton height="1000px" style={{ marginTop: 20 }} />
     </Tabs.Tab>
+    <Tabs.Tab eventKey="terms" title="Terms">
+      <Skeleton height="1000px" style={{ marginTop: 20 }} />
+    </Tabs.Tab>
+    <Tabs.Tab eventKey="versions" title="Versions">
+      <Skeleton height="1000px" style={{ marginTop: 20 }} />
+    </Tabs.Tab>
   </Tabs>
 )

@@ -5,10 +5,6 @@ export interface DatasetVersionSummaryInfo {
   contributors: string
   publishedOn?: string
 }
-export interface Deaccessioned {
-  reason: string
-  url?: string
-}
 
 export type DatasetVersionSummary = {
   [key: string]:
@@ -17,6 +13,11 @@ export type DatasetVersionSummary = {
     | FilesSummaryUpdates
     | Deaccessioned
     | boolean
+}
+
+export interface Deaccessioned {
+  reason: string
+  url?: string
 }
 
 export interface SummaryUpdates {
