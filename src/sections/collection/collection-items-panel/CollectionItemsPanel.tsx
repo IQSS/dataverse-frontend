@@ -23,6 +23,7 @@ import { ItemTypeChange } from '../../shared/collection-items-panel/filter-panel
 import { RemoveAddFacetFilter } from '../../shared/collection-items-panel/filter-panel/facets-filters/FacetFilterGroup'
 import { SelectedFacets } from '../../shared/collection-items-panel/selected-facets/SelectedFacets'
 import styles from './CollectionItemsPanel.module.scss'
+import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 interface CollectionItemsPanelProps {
   collectionId: string
@@ -87,7 +88,14 @@ export const CollectionItemsPanel = ({
     collectionRepository,
     collectionId
   })
-
+  const myDataItems = collectionRepository.getMyDataItems(
+    [1],
+    [CollectionItemType.COLLECTION],
+    [PublicationStatus.Unpublished],
+    10,
+    1
+  )
+  console.log('myDataItems', myDataItems)
   async function handleLoadMoreOnBottomReach(currentPagination: CollectionItemsPaginationInfo) {
     let paginationInfoToSend = currentPagination
     if (totalAvailable !== undefined) {

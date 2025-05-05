@@ -5,9 +5,18 @@ export interface DatasetVersionSummaryInfo {
   contributors: string
   publishedOn?: string
 }
+export interface Deaccessioned {
+  reason: string
+  url?: string
+}
 
 export type DatasetVersionSummary = {
-  [key: string]: SummaryUpdates | SummaryUpdatesWithFields | FilesSummaryUpdates | boolean
+  [key: string]:
+    | SummaryUpdates
+    | SummaryUpdatesWithFields
+    | FilesSummaryUpdates
+    | Deaccessioned
+    | boolean
 }
 
 export interface SummaryUpdates {
