@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { ReadError } from '@iqss/dataverse-client-javascript'
+import { JSDataverseReadErrorHandler } from '../helpers/JSDataverseReadErrorHandler'
 
 interface UseGetTermsOfUseReturnType {
   termsOfUse: string
@@ -22,11 +24,15 @@ export const useGetTermsOfUse = (
 
         setTermsOfUse(termsOfUse)
       } catch (err) {
-        const errorMessage =
-          err instanceof Error && err.message
-            ? err.message
-            : 'Something went wrong getting the use of terms. Try again later.'
-        setError(errorMessage)
+        if (err instanceof ReadError) {
+          const error = new JSDataverseReadErrorHandler(err)
+          const formattedError =
+            error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
+
+          setError(formattedError)
+        } else {
+          setError('Something went wrong getting the use of terms. Try again later.')
+        }
       } finally {
         setIsLoading(false)
       }

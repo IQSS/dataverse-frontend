@@ -1,24 +1,30 @@
 import { useContext } from 'react'
 import { AuthContext } from 'react-oauth2-code-pkce'
+import { Alert } from '@iqss/dataverse-design-system'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
-// import { useGetTermsOfUse } from '@/shared/hooks/useGetTermsOfUse'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { useGetTermsOfUse } from '@/shared/hooks/useGetTermsOfUse'
 import { OIDC_STANDARD_CLAIMS, type ValidTokenNotLinkedAccountFormData } from './types'
 import { ValidTokenNotLinkedAccountFormHelper } from './ValidTokenNotLinkedAccountFormHelper'
 import { FormFields } from './FormFields'
-// import { FormFieldsSkeleton } from './FormFieldsSkeleton'
+import { FormFieldsSkeleton } from './FormFieldsSkeleton'
 
 interface ValidTokenNotLinkedAccountFormProps {
   userRepository: UserRepository
+  dataverseInfoRepository: DataverseInfoRepository
 }
 
 export const ValidTokenNotLinkedAccountForm = ({
-  userRepository
+  userRepository,
+  dataverseInfoRepository
 }: ValidTokenNotLinkedAccountFormProps) => {
   const { tokenData } = useContext(AuthContext)
 
-  // TODO - Use actual terms of use when available in API 👇
-  // const { termsOfUse, isLoading: isLoadingTermsOfUse } =
-  //   useGetTermsOfUse(dataverseInfoRepository)
+  const {
+    termsOfUse,
+    isLoading: isLoadingTermsOfUse,
+    error: errorTermsOfUse
+  } = useGetTermsOfUse(dataverseInfoRepository)
 
   const defaultUserName =
     ValidTokenNotLinkedAccountFormHelper.getTokenDataValue<string>(
@@ -58,15 +64,19 @@ export const ValidTokenNotLinkedAccountForm = ({
     termsAccepted: false
   }
 
-  // if (isLoadingTermsOfUse) {
-  //   return <FormFieldsSkeleton />
-  // }
+  if (isLoadingTermsOfUse) {
+    return <FormFieldsSkeleton />
+  }
+
+  if (errorTermsOfUse) {
+    return <Alert variant="danger">{errorTermsOfUse}</Alert>
+  }
 
   return (
     <FormFields
       userRepository={userRepository}
       formDefaultValues={formDefaultValues}
-      termsOfUse=""
+      termsOfUse={termsOfUse}
     />
   )
 }

@@ -318,7 +318,7 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
                     <div
                       className={styles['terms-of-use-wrapper']}
                       dangerouslySetInnerHTML={{
-                        __html: termsOfUse ? termsOfUse : t('fields.termsAccepted.noTerms')
+                        __html: termsOfUse
                       }}
                     />
 

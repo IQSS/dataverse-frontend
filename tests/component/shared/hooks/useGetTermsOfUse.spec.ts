@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react'
 import { useGetTermsOfUse } from '@/shared/hooks/useGetTermsOfUse'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { TermsOfUseMother } from '@tests/component/info/models/TermsOfUseMother'
+import { ReadError } from '@iqss/dataverse-client-javascript'
 
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
 const termsOfUseMock = TermsOfUseMother.create()
@@ -25,8 +26,8 @@ describe('useGetTermsOfUse', () => {
   })
 
   describe('Error handling', () => {
-    it('should return correct error message when there is an error type catched', async () => {
-      dataverseInfoRepository.getTermsOfUse = cy.stub().rejects(new Error('Error message'))
+    it('should return correct error message when it is a ReadError instance from js-dataverse', async () => {
+      dataverseInfoRepository.getTermsOfUse = cy.stub().rejects(new ReadError('Error message'))
 
       const { result } = renderHook(() => useGetTermsOfUse(dataverseInfoRepository))
 
@@ -41,7 +42,7 @@ describe('useGetTermsOfUse', () => {
       })
     })
 
-    it('should return correct error message when there is not an error type catched', async () => {
+    it('should return correct default error message when it is not a ReadError instance from js-dataverse', async () => {
       dataverseInfoRepository.getTermsOfUse = cy.stub().rejects('Error message')
 
       const { result } = renderHook(() => useGetTermsOfUse(dataverseInfoRepository))

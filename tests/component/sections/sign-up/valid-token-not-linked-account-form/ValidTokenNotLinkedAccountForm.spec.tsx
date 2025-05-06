@@ -1,18 +1,18 @@
 import { AuthContext } from 'react-oauth2-code-pkce'
+import { ReadError } from '@iqss/dataverse-client-javascript'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
+import { UserDTO } from '@/users/domain/useCases/DTOs/UserDTO'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { JSTermsOfUseMapper } from '@/info/infrastructure/mappers/JSTermsOfUseMapper'
 import { ValidTokenNotLinkedAccountForm } from '@/sections/sign-up/valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
 import { AuthContextMother } from '@tests/component/auth/AuthContextMother'
-import { UserDTO } from '@/users/domain/useCases/DTOs/UserDTO'
-// import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
-// import { TermsOfUseMother } from '@tests/component/info/models/TermsOfUseMother'
-// import { JSTermsOfUseMapper } from '@/info/infrastructure/mappers/JSTermsOfUseMapper'
+import { TermsOfUseMother } from '@tests/component/info/models/TermsOfUseMother'
 
-// const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
 const userRepository: UserRepository = {} as UserRepository
+const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
 
-// TODO - Uncomment when application terms of use are available in API
-// const termsOfUseMock = TermsOfUseMother.create()
-// const sanitizedTermsOfUseMock = JSTermsOfUseMapper.toSanitizedTermsOfUse(termsOfUseMock)
+const termsOfUseMock = TermsOfUseMother.createWithOnClickScript()
+const sanitizedTermsOfUseMock = JSTermsOfUseMapper.toSanitizedTermsOfUse(termsOfUseMock)
 
 const mockUserName = 'mockUserName'
 const mockFirstName = 'mockFirstName'
@@ -23,8 +23,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
   beforeEach(() => {
     cy.viewport(1280, 720)
 
-    // dataverseInfoRepository.getTermsOfUse = cy.stub().resolves(sanitizedTermsOfUseMock)
-    // dataverseInfoRepository.getTermsOfUse = cy.stub().resolves('')
+    dataverseInfoRepository.getTermsOfUse = cy.stub().resolves(sanitizedTermsOfUseMock)
     userRepository.register = cy.stub().as('registerUser').resolves()
   })
 
@@ -48,7 +47,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
+          <ValidTokenNotLinkedAccountForm
+            userRepository={userRepository}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
         </AuthContext.Provider>
       )
 
@@ -73,7 +75,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
+          <ValidTokenNotLinkedAccountForm
+            userRepository={userRepository}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
         </AuthContext.Provider>
       )
 
@@ -110,7 +115,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
+          <ValidTokenNotLinkedAccountForm
+            userRepository={userRepository}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
         </AuthContext.Provider>
       )
 
@@ -148,7 +156,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
+          <ValidTokenNotLinkedAccountForm
+            userRepository={userRepository}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
         </AuthContext.Provider>
       )
 
@@ -235,12 +246,120 @@ describe('ValidTokenNotLinkedAccountForm', () => {
           error: null,
           login: () => {} // 👈 deprecated
         }}>
-        <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
+        <ValidTokenNotLinkedAccountForm
+          userRepository={userRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
       </AuthContext.Provider>
     )
 
     cy.findByRole('button', { name: 'Cancel' }).click()
 
     cy.get('@logOut').should('have.been.called')
+  })
+
+  it('shows loading skeleton when loading terms of use', () => {
+    dataverseInfoRepository.getTermsOfUse = cy.stub().resolves(new Promise(() => {}))
+
+    cy.customMount(
+      <AuthContext.Provider
+        value={{
+          token: AuthContextMother.createToken(),
+          idToken: AuthContextMother.createToken(),
+          logIn: () => {},
+          logOut: () => {},
+          loginInProgress: false,
+          tokenData: AuthContextMother.createTokenData(),
+          idTokenData: AuthContextMother.createTokenData(),
+          error: null,
+          login: () => {} // 👈 deprecated
+        }}>
+        <ValidTokenNotLinkedAccountForm
+          userRepository={userRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
+      </AuthContext.Provider>
+    )
+
+    cy.findByTestId('form-fields-skeleton').should('exist')
+  })
+
+  it('shows error message alert when there is an error loading terms of use', () => {
+    dataverseInfoRepository.getTermsOfUse = cy
+      .stub()
+      .rejects(new ReadError('Error loading terms of use'))
+
+    cy.customMount(
+      <AuthContext.Provider
+        value={{
+          token: AuthContextMother.createToken(),
+          idToken: AuthContextMother.createToken(),
+          logIn: () => {},
+          logOut: () => {},
+          loginInProgress: false,
+          tokenData: AuthContextMother.createTokenData(),
+          idTokenData: AuthContextMother.createTokenData(),
+          error: null,
+          login: () => {} // 👈 deprecated
+        }}>
+        <ValidTokenNotLinkedAccountForm
+          userRepository={userRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
+      </AuthContext.Provider>
+    )
+
+    cy.findByText(/Error loading terms of use/).should('exist')
+  })
+
+  it('shows error message alert when there is an error registering the user', () => {
+    userRepository.register = cy
+      .stub()
+      .as('registerUser')
+      .rejects(new ReadError('Error registering user'))
+
+    cy.customMount(
+      <AuthContext.Provider
+        value={{
+          token: AuthContextMother.createToken(),
+          idToken: AuthContextMother.createToken(),
+          logIn: () => {},
+          logOut: () => {},
+          loginInProgress: false,
+          tokenData: AuthContextMother.createTokenData({
+            preferred_username: mockUserName,
+            given_name: mockFirstName,
+            family_name: mockLastName,
+            email: mockEmail
+          }),
+          idTokenData: AuthContextMother.createTokenData({
+            preferred_username: mockUserName,
+            given_name: mockFirstName,
+            family_name: mockLastName,
+            email: mockEmail
+          }),
+          error: null,
+          login: () => {} // 👈 deprecated
+        }}>
+        <ValidTokenNotLinkedAccountForm
+          userRepository={userRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
+      </AuthContext.Provider>
+    )
+
+    cy.wait(300)
+
+    cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
+
+    cy.wait(300)
+
+    cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
+
+    cy.findByRole('button', { name: 'Create Account' }).click()
+
+    cy.findByText(/Error registering user/)
+      .should('exist')
+      .should('be.visible')
   })
 })
