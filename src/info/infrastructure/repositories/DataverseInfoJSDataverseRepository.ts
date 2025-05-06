@@ -1,4 +1,9 @@
-import { getDataverseVersion, ReadError } from '@iqss/dataverse-client-javascript'
+import {
+  getDataverseVersion,
+  getMaxEmbargoDurationInMonths,
+  getZipDownloadLimit,
+  ReadError
+} from '@iqss/dataverse-client-javascript'
 import { axiosInstance } from '@/axiosInstance'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { DataverseVersion } from '@/info/domain/models/DataverseVersion'
@@ -37,5 +42,15 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
       { excludeToken: true }
     )
     return JSTermsOfUseMapper.toSanitizedTermsOfUse(response.data.data.message)
+  }
+
+  getZipDownloadLimit(): Promise<number> {
+    return getZipDownloadLimit.execute().then((zipDownloadLimit) => zipDownloadLimit)
+  }
+
+  getMaxEmbargoDurationInMonths(): Promise<number> {
+    return getMaxEmbargoDurationInMonths
+      .execute()
+      .then((maxEmbargoDurationInMonths) => maxEmbargoDurationInMonths)
   }
 }
