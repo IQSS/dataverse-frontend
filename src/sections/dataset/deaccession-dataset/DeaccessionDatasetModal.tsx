@@ -1,5 +1,5 @@
 import { Trans, useTranslation } from 'react-i18next'
-import { Alert, Button, Form, Modal, Stack } from '@iqss/dataverse-design-system'
+import { Alert, Button, Col, Form, Modal, Stack } from '@iqss/dataverse-design-system'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { isValidURL } from '@/metadata-block-info/domain/models/fieldValidations'
 import { DeaccessionFormData } from './DeaccessionFormData'
@@ -58,7 +58,7 @@ export function DeaccessionDatasetModal({
           </Alert>
           <form noValidate={true} onSubmit={handleSubmitForm}>
             {publishedVersions.length > 1 && (
-              <Form.Group>
+              <Form.Group as={Col}>
                 <Form.Group.Label>{t('deaccession.version.label')}</Form.Group.Label>
                 <div>
                   <Controller
@@ -85,7 +85,6 @@ export function DeaccessionDatasetModal({
                                   const newValue = e.target.checked
                                     ? [...field.value, e.target.value]
                                     : field.value.filter((val) => val !== e.target.value)
-
                                   field.onChange(newValue)
                                 }}
                               />
@@ -97,7 +96,7 @@ export function DeaccessionDatasetModal({
                 </div>
               </Form.Group>
             )}
-            <Form.Group controlId={'deccessionReason'}>
+            <Form.Group as={Col} controlId={'deccessionReason'}>
               <Form.Group.Label required>{t('deaccession.reason.label')}</Form.Group.Label>
               <Controller
                 name="deaccessionReason"
@@ -136,7 +135,7 @@ export function DeaccessionDatasetModal({
                   </>
                 )}></Controller>
             </Form.Group>
-            <Form.Group>
+            <Form.Group as={Col}>
               <Form.Group.Label>{t('deaccession.reasonOther.label')}</Form.Group.Label>
               <Controller
                 name="deaccessionReasonOther"
@@ -156,7 +155,7 @@ export function DeaccessionDatasetModal({
                 )}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group as={Col}>
               <Form.Group.Label>{t('deaccession.forwardUrl.label')}</Form.Group.Label>
               <Controller
                 name="deaccessionForwardUrl"

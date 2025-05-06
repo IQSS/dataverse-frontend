@@ -12,6 +12,7 @@ import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
 import { useSession } from '../../../session/SessionContext'
 import { QueryParamKey, Route } from '../../../Route.enum'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { useNotImplementedModal } from '../../.././not-implemented/NotImplementedModalContext'
 
 interface EditDatasetMenuProps {
   dataset: Dataset
@@ -33,6 +34,7 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
   const { user } = useSession()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
+  const { showModal } = useNotImplementedModal()
 
   const handleOnSelect = (eventKey: EditDatasetMenuItems | string | null) => {
     const searchParams = new URLSearchParams()
@@ -48,6 +50,22 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
     }
     if (eventKey === EditDatasetMenuItems.METADATA) {
       navigate(`${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`)
+      return
+    }
+    if (eventKey === EditDatasetMenuItems.TERMS) {
+      showModal()
+      return
+    }
+    if (eventKey === EditDatasetMenuItems.PERMISSIONS) {
+      showModal()
+      return
+    }
+    if (eventKey === EditDatasetMenuItems.PRIVATE_URL) {
+      showModal()
+      return
+    }
+    if (eventKey === EditDatasetMenuItems.THUMBNAILS_PLUS_WIDGETS) {
+      showModal()
       return
     }
   }
