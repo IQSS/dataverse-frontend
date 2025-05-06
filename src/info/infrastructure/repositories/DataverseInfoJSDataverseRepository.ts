@@ -9,6 +9,9 @@ import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInf
 import { DataverseVersion } from '@/info/domain/models/DataverseVersion'
 import { TermsOfUse } from '@/info/domain/models/TermsOfUse'
 import { JSTermsOfUseMapper } from '../mappers/JSTermsOfUseMapper'
+import { ZipDownloadLimit } from '@/settings/domain/models/ZipDownloadLimit'
+import { FileSizeUnit } from '@/files/domain/models/FileMetadata'
+import { Setting, SettingName } from '@/settings/domain/models/Setting'
 
 interface JSDataverseDataverseVersion {
   number: string
@@ -44,13 +47,27 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
     return JSTermsOfUseMapper.toSanitizedTermsOfUse(response.data.data.message)
   }
 
-  getZipDownloadLimit(): Promise<number> {
-    return getZipDownloadLimit.execute().then((zipDownloadLimit) => zipDownloadLimit)
+  getZipDownloadLimit(): Promise<Setting<ZipDownloadLimit>> {
+    return getZipDownloadLimit.execute().then((zipDownloadLimit) => ({
+      name: SettingName.ZIP_DOWNLOAD_LIMIT,
+      value: new ZipDownloadLimit(zipDownloadLimit, FileSizeUnit.BYTES)
+    }))
   }
 
-  getMaxEmbargoDurationInMonths(): Promise<number> {
+  getMaxEmbargoDurationInMonths(): Promise<Setting<number>> {
     return getMaxEmbargoDurationInMonths
       .execute()
-      .then((maxEmbargoDurationInMonths) => maxEmbargoDurationInMonths)
+      .then((maxEmbargoDurationInMonths) => ({
+        name: SettingName.MAX_EMBARGO_DURATION_IN_MONTHS,
+        value: maxEmbargoDurationInMonths
+      }))
+      .catch(() => {
+        // https://guides.dataverse.org/en/latest/installation/config.html#maxembargodurationinmonths
+        // In case of error, we default to 0 which indicates embargoes are not supported.
+        return {
+          name: SettingName.MAX_EMBARGO_DURATION_IN_MONTHS,
+          value: 0
+        }
+      })
   }
 }
