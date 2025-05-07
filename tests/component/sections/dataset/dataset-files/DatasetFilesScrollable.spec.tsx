@@ -17,12 +17,12 @@ import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { SettingMother } from '../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
-import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { DatasetFilesScrollable } from '../../../../../src/sections/dataset/dataset-files/DatasetFilesScrollable'
 import { FilesWithCount } from '../../../../../src/files/domain/models/FilesWithCount'
 import { getCellStyle } from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTableScrollable'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 
 const TOTAL_FILES_COUNT = 200
 const ONLY_4_FILES_COUNT = 4
@@ -63,7 +63,7 @@ const testFilesCountInfo = FilesCountInfoMother.create({
     { tag: new FileTag('code'), count: 10 }
   ]
 })
-const settingsRepository = {} as SettingRepository
+const dataverseInfoRepository = {} as DataverseInfoRepository
 
 describe('DatasetFilesScrollable', () => {
   beforeEach(() => {
@@ -72,9 +72,14 @@ describe('DatasetFilesScrollable', () => {
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
 
-    settingsRepository.getByName = cy
+    dataverseInfoRepository.getZipDownloadLimit = cy
       .stub()
       .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(1, FileSizeUnit.BYTES)))
+    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy
+      .stub()
+      .resolves(SettingMother.createMaxEmbargoDurationInMonths(12))
+    dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
+    dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
   })
 
   it('renders the scrollable files table', () => {
@@ -216,7 +221,7 @@ describe('DatasetFilesScrollable', () => {
 
       it('should stick the table top messages on top of the table header when scrolling down with selected files', () => {
         cy.customMount(
-          <SettingsProvider repository={settingsRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
             <DatasetFilesScrollable
               filesRepository={fileRepository}
               datasetPersistentId={datasetPersistentId}
@@ -249,7 +254,7 @@ describe('DatasetFilesScrollable', () => {
 
       it('table header should have css top value according to criteria container height', () => {
         cy.customMount(
-          <SettingsProvider repository={settingsRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
             <DatasetFilesScrollable
               filesRepository={fileRepository}
               datasetPersistentId={datasetPersistentId}
@@ -285,7 +290,7 @@ describe('DatasetFilesScrollable', () => {
 
       it('table header should have css top value according to criteria container height + top messages container height when selected files ,top messages container should have top value only according to criteria container height', () => {
         cy.customMount(
-          <SettingsProvider repository={settingsRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
             <DatasetFilesScrollable
               filesRepository={fileRepository}
               datasetPersistentId={datasetPersistentId}
@@ -586,7 +591,7 @@ describe('DatasetFilesScrollable', () => {
         metadata: FileMetadataMother.create({ size: new FileSize(2, FileSizeUnit.BYTES) })
       })
       cy.customMount(
-        <SettingsProvider repository={settingsRepository}>
+        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
           <DatasetFilesScrollable
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
@@ -611,7 +616,7 @@ describe('DatasetFilesScrollable', () => {
 
     it('renders the zip download limit message when selecting all rows', () => {
       cy.customMount(
-        <SettingsProvider repository={settingsRepository}>
+        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
           <DatasetFilesScrollable
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
@@ -628,7 +633,7 @@ describe('DatasetFilesScrollable', () => {
 
     it('renders the zip download limit message when selecting all rows and then scrolling to bottom to load more files', () => {
       cy.customMount(
-        <SettingsProvider repository={settingsRepository}>
+        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
           <DatasetFilesScrollable
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
@@ -789,7 +794,7 @@ describe('DatasetFilesScrollable', () => {
     })
     it('calls getFilesTotalDownloadSizeByDatasetPersistentId with the correct parameters when applying search file criteria', () => {
       cy.customMount(
-        <SettingsProvider repository={settingsRepository}>
+        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
           <DatasetFilesScrollable
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
