@@ -8,4 +8,6 @@ export interface DataverseInfoRepository {
   getTermsOfUse: () => Promise<TermsOfUse>
   getZipDownloadLimit: () => Promise<Setting<ZipDownloadLimit>>
   getMaxEmbargoDurationInMonths: () => Promise<Setting<number>>
+  getHasPublicStore: () => Promise<Setting<boolean>>
+  getExternalStatusesAllowed: () => Promise<Setting<string[]>>
 }

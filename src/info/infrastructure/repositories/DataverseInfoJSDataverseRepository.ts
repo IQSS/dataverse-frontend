@@ -70,4 +70,33 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
         }
       })
   }
+
+  // TODO - make js-dataverse use case for this
+  getHasPublicStore(): Promise<Setting<boolean>> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          name: SettingName.HAS_PUBLIC_STORE,
+          value: false
+        })
+      }, 1000)
+    })
+  }
+
+  // TODO - make js-dataverse use case for this
+  getExternalStatusesAllowed(): Promise<Setting<string[]>> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          name: SettingName.ALLOWED_EXTERNAL_STATUSES,
+          value: [
+            'Author Contacted',
+            'Privacy Review',
+            'Awaiting Paper Publication',
+            'Final Approval'
+          ]
+        })
+      }, 1000)
+    })
+  }
 }

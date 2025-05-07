@@ -4,7 +4,6 @@ import {
   DropdownSeparator
 } from '@iqss/dataverse-design-system'
 import { useSettings } from '../../../settings/SettingsContext'
-import { useEffect, useState } from 'react'
 import { SettingName } from '../../../../settings/domain/models/Setting'
 import { AllowedExternalStatuses } from '../../../../settings/domain/models/AllowedExternalStatuses'
 import { useTranslation } from 'react-i18next'
@@ -14,16 +13,8 @@ export function ChangeCurationStatusMenu() {
   const { t } = useTranslation('dataset')
   const { getSettingByName } = useSettings()
   const { showModal } = useNotImplementedModal()
-  const [allowedExternalStatuses, setAllowedExternalStatuses] = useState<string[]>([])
-  useEffect(() => {
-    getSettingByName<AllowedExternalStatuses>(SettingName.ALLOWED_EXTERNAL_STATUSES)
-      .then((allowedExternalStatuses) => {
-        setAllowedExternalStatuses(allowedExternalStatuses.value)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  }, [getSettingByName])
+  const allowedExternalStatuses =
+    getSettingByName<AllowedExternalStatuses>(SettingName.ALLOWED_EXTERNAL_STATUSES)?.value || []
 
   const handleItemClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation()

@@ -1,11 +1,12 @@
 import { createContext, useContext } from 'react'
 import { Setting, SettingName } from '../../settings/domain/models/Setting'
 
-interface SettingsContextProps {
-  getSettingByName: <T>(name: SettingName) => Promise<Setting<T>>
+interface SettingsContextType {
+  getSettingByName: <T>(name: SettingName) => Setting<T> | undefined
 }
 
-export const SettingsContext = createContext<SettingsContextProps>({
-  getSettingByName: () => Promise.reject('Not implemented')
+export const SettingsContext = createContext<SettingsContextType>({
+  getSettingByName: <T>(_name: SettingName): Setting<T> | undefined => undefined
 })
+
 export const useSettings = () => useContext(SettingsContext)
