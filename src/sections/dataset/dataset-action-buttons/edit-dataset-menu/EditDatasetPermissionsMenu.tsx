@@ -23,8 +23,6 @@ export function EditDatasetPermissionsMenu({ dataset }: EditDatasetPermissionsMe
     return <></>
   }
 
-  console.log({ hasPublicStore })
-
   if (hasPublicStore) {
     return (
       <DropdownButtonItem>
