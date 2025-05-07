@@ -29,4 +29,11 @@ export class SettingMother {
       value: value ? value : faker.datatype.boolean()
     }
   }
+
+  static createMaxEmbargoDurationInMonths(value?: number): Setting<number> {
+    return {
+      name: SettingName.MAX_EMBARGO_DURATION_IN_MONTHS,
+      value: value ? value : faker.datatype.number()
+    }
+  }
 }

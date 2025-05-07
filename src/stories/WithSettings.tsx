@@ -7,23 +7,24 @@ import { FileSizeUnit } from '../files/domain/models/FileMetadata'
 
 const zipDownloadLimitMock = new ZipDownloadLimit(1, FileSizeUnit.BYTES)
 export const WithSettings = (Story: StoryFn) => {
-  function getSettingByName<T>(name: SettingName): Promise<Setting<T>> {
+  function getSettingByName<T>(name: SettingName): Setting<T> {
     switch (name) {
       case SettingName.ZIP_DOWNLOAD_LIMIT:
-        return Promise.resolve(
-          SettingMother.createZipDownloadLimit(zipDownloadLimitMock) as Setting<T>
-        )
+        return SettingMother.createZipDownloadLimit(zipDownloadLimitMock) as Setting<T>
+
       case SettingName.ALLOWED_EXTERNAL_STATUSES:
-        return Promise.resolve(
-          SettingMother.createExternalStatusesAllowed([
-            'Author Contacted',
-            'Privacy Review',
-            'Awaiting Paper Publication',
-            'Final Approval'
-          ]) as Setting<T>
-        )
+        return SettingMother.createExternalStatusesAllowed([
+          'Author Contacted',
+          'Privacy Review',
+          'Awaiting Paper Publication',
+          'Final Approval'
+        ]) as Setting<T>
+
       case SettingName.HAS_PUBLIC_STORE:
-        return Promise.resolve(SettingMother.createHasPublicStore(false) as Setting<T>)
+        return SettingMother.createHasPublicStore(false) as Setting<T>
+
+      case SettingName.MAX_EMBARGO_DURATION_IN_MONTHS:
+        return SettingMother.createMaxEmbargoDurationInMonths(-1) as Setting<T>
     }
   }
 
