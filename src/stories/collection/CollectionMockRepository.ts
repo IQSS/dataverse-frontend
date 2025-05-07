@@ -111,8 +111,10 @@ export class CollectionMockRepository implements CollectionRepository {
     const items = CollectionItemsMother.createItems({
       numberOfCollections,
       numberOfDatasets,
-      numberOfFiles
+      numberOfFiles,
+      includeUserRoles: true
     })
+    console.log('items', items)
 
     const facets = CollectionItemsMother.createMyDataItemsFacets()
 

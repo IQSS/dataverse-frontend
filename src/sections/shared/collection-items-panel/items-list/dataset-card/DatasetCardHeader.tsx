@@ -6,13 +6,15 @@ import { DatasetIcon } from '@/sections/dataset/dataset-icon/DatasetIcon'
 import { DatasetLabels } from '@/sections/dataset/dataset-labels/DatasetLabels'
 import { LinkToPage } from '@/sections/shared/link-to-page/LinkToPage'
 import styles from './DatasetCard.module.scss'
+import { Badge } from '@iqss/dataverse-design-system'
 
 interface DatasetCardHeaderProps {
   persistentId: string
   version: DatasetVersion
+  userRoles?: string[]
 }
 
-export function DatasetCardHeader({ persistentId, version }: DatasetCardHeaderProps) {
+export function DatasetCardHeader({ persistentId, version, userRoles }: DatasetCardHeaderProps) {
   return (
     <header className={styles['card-header-container']}>
       <div className={styles['left-side-content']}>
@@ -26,6 +28,15 @@ export function DatasetCardHeader({ persistentId, version }: DatasetCardHeaderPr
           {version.title}
         </LinkToPage>
         <DatasetLabels labels={version.labels} />
+        {userRoles && (
+          <div>
+            {userRoles.map((role, index) => (
+              <Badge key={index} variant="info">
+                {role}
+              </Badge>
+            ))}
+          </div>
+        )}
       </div>
       <div className={styles['top-right-icon']}>
         <DatasetIcon />

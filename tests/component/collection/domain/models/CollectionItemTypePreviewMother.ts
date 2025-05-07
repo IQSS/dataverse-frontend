@@ -23,11 +23,18 @@ export class CollectionItemTypePreviewMother {
 
   static createMany(
     amount: number,
+    includeUserRoles = false,
     props?: Partial<CollectionItemTypePreview>
   ): CollectionItemTypePreview[] {
-    return Array.from({ length: amount }).map(() => this.create(props))
+    return Array.from({ length: amount }).map(() =>
+      this.create({
+        ...props,
+        userRoles: includeUserRoles
+          ? faker.helpers.arrayElements(['Admin', 'Curator', 'Contributor', 'FileUploader'])
+          : props?.userRoles
+      })
+    )
   }
-
   static createRealistic(): CollectionItemTypePreview {
     return CollectionItemTypePreviewMother.create({
       isReleased: true,

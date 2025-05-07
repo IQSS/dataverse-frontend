@@ -12,4 +12,5 @@ export interface DatasetItemTypePreview {
   publicationStatuses: PublicationStatus[]
   parentCollectionName: string
   parentCollectionAlias: string
+  userRoles?: string[]
 }

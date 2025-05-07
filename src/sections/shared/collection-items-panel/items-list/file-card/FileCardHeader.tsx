@@ -1,4 +1,4 @@
-import { Icon, IconName } from '@iqss/dataverse-design-system'
+import { Badge, Icon, IconName } from '@iqss/dataverse-design-system'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { FileItemTypePreview } from '@/files/domain/models/FileItemTypePreview'
@@ -43,6 +43,15 @@ export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
             !filePreview.publicationStatuses.includes(PublicationStatus.Unpublished)
           )}
         />
+        {filePreview.userRoles && (
+          <div>
+            {filePreview.userRoles.map((role, index) => (
+              <Badge key={index} variant="info">
+                {role}
+              </Badge>
+            ))}
+          </div>
+        )}
       </div>
       <div className={styles['top-right-icon']}>
         <Icon name={iconName} />

@@ -10,17 +10,22 @@ interface CreateItemsProps {
   numberOfCollections?: number
   numberOfDatasets?: number
   numberOfFiles?: number
+  includeUserRoles?: boolean
 }
 
 export class CollectionItemsMother {
   static createItems({
     numberOfCollections = 1,
     numberOfDatasets = 1,
-    numberOfFiles = 1
+    numberOfFiles = 1,
+    includeUserRoles = false
   }: CreateItemsProps): CollectionItem[] {
-    const collections = CollectionItemTypePreviewMother.createMany(numberOfCollections)
-    const datasets = DatasetItemTypePreviewMother.createMany(numberOfDatasets)
-    const files = FileItemTypePreviewMother.createMany(numberOfFiles)
+    const collections = CollectionItemTypePreviewMother.createMany(
+      numberOfCollections,
+      includeUserRoles
+    )
+    const datasets = DatasetItemTypePreviewMother.createMany(numberOfDatasets, includeUserRoles)
+    const files = FileItemTypePreviewMother.createMany(numberOfFiles, includeUserRoles)
 
     return [...collections, ...datasets, ...files]
   }

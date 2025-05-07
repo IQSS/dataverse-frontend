@@ -43,8 +43,19 @@ export class FileItemTypePreviewMother {
     }
   }
 
-  static createMany(amount: number, props?: Partial<FileItemTypePreview>): FileItemTypePreview[] {
-    return Array.from({ length: amount }).map(() => this.create(props))
+  static createMany(
+    amount: number,
+    includeUserRoles = false,
+    props?: Partial<FileItemTypePreview>
+  ): FileItemTypePreview[] {
+    return Array.from({ length: amount }).map(() =>
+      this.create({
+        ...props,
+        userRoles: includeUserRoles
+          ? faker.helpers.arrayElements(['Admin', 'Curator', 'Contributor', 'Editor'])
+          : props?.userRoles
+      })
+    )
   }
 
   static createRealistic(props?: Partial<FileItemTypePreview>): FileItemTypePreview {

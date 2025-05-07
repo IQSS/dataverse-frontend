@@ -9,11 +9,13 @@ interface DatasetCardProps {
 }
 
 export function DatasetCard({ datasetPreview }: DatasetCardProps) {
+  console.log('DatasetCard', datasetPreview)
   return (
     <article className={styles['card-main-container']} data-testid="dataset-card">
       <DatasetCardHeader
         persistentId={datasetPreview.persistentId}
         version={datasetPreview.version}
+        userRoles={datasetPreview.userRoles}
       />
       <div className={styles['thumbnail-and-info-wrapper']}>
         <DatasetCardThumbnail
