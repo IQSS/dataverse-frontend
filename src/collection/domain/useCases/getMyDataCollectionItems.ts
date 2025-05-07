@@ -1,7 +1,7 @@
 import { CollectionRepository } from '../repositories/CollectionRepository'
 import { CollectionItemSubset } from '../models/CollectionItemSubset'
 
-export async function getCollectionItems(
+export async function getMyDataCollectionItems(
   collectionRepository: CollectionRepository,
   roleIds: number[],
   collectionItemTypes: string[],

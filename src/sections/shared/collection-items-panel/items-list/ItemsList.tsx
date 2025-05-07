@@ -23,7 +23,6 @@ import { Col, Row } from '@iqss/dataverse-design-system'
 import { ItemsSortBy } from '@/sections/shared/collection-items-panel/items-list/ItemsSortBy'
 
 interface ItemsListProps {
-  parentCollectionAlias: string
   items: CollectionItem[]
   error: string | null
   accumulatedCount: number
@@ -34,9 +33,11 @@ interface ItemsListProps {
   hasSearchValue: boolean
   paginationInfo: CollectionItemsPaginationInfo
   onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
-  onSortChange: (newSortType?: SortType, newOrderType?: OrderType) => void
   itemsTypesSelected: CollectionItemType[]
   filterQueriesSelected: FilterQuery[]
+  parentCollectionAlias?: string
+  allowSorting?: boolean
+  onSortChange?: (newSortType?: SortType, newOrderType?: OrderType) => void
   sortSelected?: SortType
   orderSelected?: OrderType
   searchText?: string
@@ -45,7 +46,6 @@ interface ItemsListProps {
 export const ItemsList = forwardRef(
   (
     {
-      parentCollectionAlias,
       items,
       error,
       accumulatedCount,
@@ -56,9 +56,11 @@ export const ItemsList = forwardRef(
       hasSearchValue,
       paginationInfo,
       onBottomReach,
-      onSortChange,
       itemsTypesSelected,
       filterQueriesSelected,
+      parentCollectionAlias,
+      allowSorting = true,
+      onSortChange,
       sortSelected,
       orderSelected
     }: ItemsListProps,
@@ -112,14 +114,16 @@ export const ItemsList = forwardRef(
                       />
                     )}
                   </Col>
-                  <Col className={styles['sort-button']}>
-                    <ItemsSortBy
-                      isLoadingCollectionItems={isLoadingItems}
-                      currentSortType={sortSelected}
-                      currentSortOrder={orderSelected}
-                      hasSearchValue={hasSearchValue}
-                      onSortChange={onSortChange}></ItemsSortBy>
-                  </Col>
+                  {allowSorting && onSortChange && (
+                    <Col className={styles['sort-button']}>
+                      <ItemsSortBy
+                        isLoadingCollectionItems={isLoadingItems}
+                        currentSortType={sortSelected}
+                        currentSortOrder={orderSelected}
+                        hasSearchValue={hasSearchValue}
+                        onSortChange={onSortChange}></ItemsSortBy>
+                    </Col>
+                  )}
                 </Row>
               </header>
 

@@ -24,7 +24,31 @@ export class CollectionItemsMother {
 
     return [...collections, ...datasets, ...files]
   }
-
+  static createMyDataItemsFacets(): CollectionItemsFacet[] {
+    return [
+      {
+        name: 'PublicationStatus',
+        friendlyName: 'Publication Status',
+        labels: [
+          { name: 'Published', count: 1 },
+          { name: 'Unpublished', count: 1 },
+          { name: 'Draft', count: 0 },
+          { name: 'In Review', count: 1 },
+          { name: 'Deaccessioned', count: 1 }
+        ]
+      },
+      {
+        name: 'roles',
+        friendlyName: 'Roles',
+        labels: [
+          { name: 'Owner' },
+          { name: 'Curator' },
+          { name: 'Contributor' },
+          { name: 'Editor' }
+        ]
+      }
+    ]
+  }
   static createItemsFacets(): CollectionItemsFacet[] {
     return [
       {

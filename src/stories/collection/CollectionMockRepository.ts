@@ -114,7 +114,7 @@ export class CollectionMockRepository implements CollectionRepository {
       numberOfFiles
     })
 
-    const facets = CollectionItemsMother.createItemsFacets()
+    const facets = CollectionItemsMother.createMyDataItemsFacets()
 
     const isDefaultSelected =
       collectionItemTypes?.length === 2 &&

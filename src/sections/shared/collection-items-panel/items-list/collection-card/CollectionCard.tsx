@@ -6,7 +6,7 @@ import styles from './CollectionCard.module.scss'
 
 interface CollectionCardProps {
   collectionPreview: CollectionItemTypePreview
-  parentCollectionAlias: string
+  parentCollectionAlias?: string
 }
 
 export function CollectionCard({ collectionPreview, parentCollectionAlias }: CollectionCardProps) {

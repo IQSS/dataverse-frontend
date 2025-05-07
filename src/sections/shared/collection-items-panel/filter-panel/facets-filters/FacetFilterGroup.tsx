@@ -76,7 +76,10 @@ export const FacetFilterGroup = ({
                 disabled={isLoadingCollectionItems}
                 variant="link"
                 size="sm">
-                <span>{`${label.name} (${label.count})`}</span>
+                <span>
+                  {label.name}
+                  {label.count !== undefined && ` (${label.count})`}
+                </span>
                 {isFacetLabelSelected && <CloseIcon size={22} />}
               </Button>
             </li>
