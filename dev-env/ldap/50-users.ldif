@@ -22,7 +22,7 @@ objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
 objectClass: top
-sn: Bob
+sn: Marley
 givenName: Bob
 cn: Bob Marley
 uid: bob
