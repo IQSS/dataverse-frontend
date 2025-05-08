@@ -21,6 +21,7 @@ describe('PublishDatasetMenu', () => {
     dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
     dataverseInfoRepository.getZipDownloadLimit = cy.stub().resolves({})
   })
+
   it('renders the PublishDatasetMenu if is dataset latest version and it is a draft and publishing is allowed', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),

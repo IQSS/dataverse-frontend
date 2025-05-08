@@ -41,6 +41,7 @@ describe('ChangeCurationStatusMenu', () => {
 
     cy.findByRole('button', { name: 'Change Curation Status' }).should('not.exist')
   })
+
   it('renders the Not Implemented Modal when button is clicked', () => {
     dataverseInfoRepository.getExternalStatusesAllowed = cy
       .stub()

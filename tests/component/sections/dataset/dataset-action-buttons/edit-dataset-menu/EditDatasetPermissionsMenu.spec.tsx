@@ -16,6 +16,7 @@ describe('EditDatasetPermissionsMenu', () => {
     dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
     dataverseInfoRepository.getZipDownloadLimit = cy.stub().resolves({})
   })
+
   it('renders the EditDatasetPermissionsMenu if the user has  manage dataset permissions', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithManageDatasetPermissionsAllowed(),
