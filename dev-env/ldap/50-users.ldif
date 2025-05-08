@@ -28,3 +28,30 @@ cn: Bob Marley
 uid: bob
 mail: bob.marley@dataverse.org
 userPassword: bobspassword
+
+# Test user 3 (Conflicts with an existing built-in user with the same email)
+dn: uid=john,ou=users,dc=example,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+sn: Doe
+givenName: John
+cn: John Doe
+uid: john
+mail: dataverse@mailinator.com
+userPassword: johnspassword
+
+
+# Test user 3 (Conflicts with an existing built-in user with the same uid)
+dn: uid=dataverseAdmin,ou=users,dc=example,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+sn: Twain
+givenName: Mark
+cn: Mark Twain
+uid: dataverseAdmin
+mail: mark.twain@dataverse.org
+userPassword: markspassword
