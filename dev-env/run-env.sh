@@ -14,4 +14,4 @@ echo "INFO - Removing current environment if exists..."
 ./rm-env.sh
 
 echo "INFO - Running docker containers..."
-docker compose -f "./docker-compose-dev.yml" up -d --build
+SKIP_DEPLOY=1 docker compose -f "./docker-compose-dev.yml" up -d --build
