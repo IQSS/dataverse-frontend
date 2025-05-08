@@ -141,7 +141,7 @@ th {
 }
 
 // Removes default underlined style from:
-// - <a> elements that are not inside <p> or <span> tags with accessibility standards, see https://dequeuniversity.com/rules/axe/4.8/link-in-text-block?application=axeAPI
+// - <a> elements that are not inside <p> or <span> tags to comply with accessibility standards, see https://dequeuniversity.com/rules/axe/4.8/link-in-text-block?application=axeAPI
 // - .btn-link Buttons type links, nav-links, and dropdown items
 
 a:not(p a, span a),
