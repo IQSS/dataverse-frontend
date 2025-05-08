@@ -140,12 +140,8 @@ th {
   border-bottom-left-radius: 0;
 }
 
-a,
-.btn-link {
+// To remove underline from all <a/> elements except those inside <p> or <span> tags to comply with accessibility standards
+// See: Links must be distinguishable without relying on color https://dequeuniversity.com/rules/axe/4.8/link-in-text-block?application=axeAPI
+a:not(p a, span a) {
   text-decoration: none;
-}
-
-p a,
-span a {
-  text-decoration: underline;
 }
