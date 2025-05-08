@@ -140,9 +140,23 @@ th {
   border-bottom-left-radius: 0;
 }
 
-// To remove underline from buttons type link and all <a/> elements except those inside <p> or <span> tags to comply with accessibility standards
-// See: Links must be distinguishable without relying on color https://dequeuniversity.com/rules/axe/4.8/link-in-text-block?application=axeAPI
+// Removes default underlined style from:
+// - <a> elements that are not inside <p> or <span> tags with accessibility standards, see https://dequeuniversity.com/rules/axe/4.8/link-in-text-block?application=axeAPI
+// - .btn-link Buttons type links, nav-links, and dropdown items
+
 a:not(p a, span a),
-.btn-link {
+.btn-link,
+.nav-link,
+.dropdown-item {
   text-decoration: none;
+}
+
+// Applies hover underlined style to:
+// - <a> elements that are not inside <p> or <span> tags, not nav-links, and not dropdown items.
+// - .btn-link Buttons type links
+a:not(p a, span a, .nav-link, .dropdown-item),
+.btn-link {
+  &:hover {
+    text-decoration: underline;
+  }
 }
