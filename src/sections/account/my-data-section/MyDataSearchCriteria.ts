@@ -4,12 +4,18 @@ import type { FilterQuery } from '@/collection/domain/models/CollectionSearchCri
 export class MyDataSearchCriteria {
   constructor(
     public readonly itemTypes: CollectionItemType[],
-    public readonly filterQueries?: FilterQuery[],
+    public readonly publicationQueries?: FilterQuery[],
+    public readonly roleIds?: number,
     public readonly searchText?: string
   ) {}
 
   withSearchText(searchText: string | undefined): MyDataSearchCriteria {
-    return new MyDataSearchCriteria(this.itemTypes, this.filterQueries, searchText)
+    return new MyDataSearchCriteria(
+      this.itemTypes,
+      this.publicationQueries,
+      this.roleIds,
+      searchText
+    )
   }
   hasSearchText(): boolean {
     return !!this.searchText

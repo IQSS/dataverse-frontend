@@ -8,7 +8,6 @@ import {
 } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataSearchCriteria'
-import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 export const NO_COLLECTION_ITEMS = 0
@@ -113,13 +112,27 @@ async function loadNextItems(
   paginationInfo: CollectionItemsPaginationInfo,
   searchCriteria: MyDataSearchCriteria
 ): Promise<CollectionItemSubset> {
-  return getMyDataCollectionItems(
-    collectionRepository,
-    [1, 2, 3, 4, 5, 6, 7],
-    [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
-    [PublicationStatus.Published, PublicationStatus.Draft, PublicationStatus.InReview],
-    paginationInfo.pageSize,
-    paginationInfo.page,
-    searchCriteria.searchText
-  )
+  try {
+    // MYDATA_TODO: remove the hardcoded values for the role ids
+    return await getMyDataCollectionItems(
+      collectionRepository,
+      [1, 2, 3, 4, 5, 6, 7],
+      searchCriteria.itemTypes,
+      [PublicationStatus.Published, PublicationStatus.Draft, PublicationStatus.InReview],
+      paginationInfo.pageSize,
+      paginationInfo.page,
+      searchCriteria.searchText
+    )
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+    // MYDATA_TODO: remove this when the API is fixed
+    if (errorMessage.includes('no results')) {
+      return {
+        items: [],
+        facets: [],
+        totalItemCount: 0
+      }
+    }
+    throw err
+  }
 }

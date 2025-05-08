@@ -21,7 +21,7 @@ export const TypeFilters = ({
   isLoadingCollectionItems
 }: TypeFiltersProps) => {
   const { t } = useTranslation('collection')
-
+  console.log('currentItemTypes', currentItemTypes)
   const handleItemTypeChange = (type: CollectionItemType, checked: boolean) => {
     onItemTypesChange({ type, checked })
   }

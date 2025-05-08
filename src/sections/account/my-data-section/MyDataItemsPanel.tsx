@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
-import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
+import {
+  CollectionSearchCriteria,
+  FilterQuery
+} from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { useLoadMoreOnPopStateEvent } from '../../shared/collection-items-panel/useLoadMoreOnPopStateEvent'
 import { useLoading } from '@/sections/loading/LoadingContext'
@@ -37,12 +40,13 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
 
   useLoadMoreOnPopStateEvent(loadItemsOnBackAndForwardNavigation)
 
-  // This object will update every time we update a query param in the URL with the setSearchParams setter
   // TODO: define Publishing list elsewhere
-  const currentSearchCriteria = new MyDataSearchCriteria(
-    [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
-    undefined,
-    undefined
+  const [currentSearchCriteria, setCurrentSearchCriteria] = useState<MyDataSearchCriteria>(
+    new MyDataSearchCriteria(
+      [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
+      undefined,
+      undefined
+    )
   )
 
   const [paginationInfo, setPaginationInfo] = useState<CollectionItemsPaginationInfo>(
@@ -84,7 +88,36 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   ) => {}
   const handleSearchSubmit = async (searchValue: string) => {}
 
-  const handleItemsTypeChange = async (itemTypeChange: ItemTypeChange) => {}
+  const handleItemsTypeChange = async (itemTypeChange: ItemTypeChange) => {
+    const { type, checked } = itemTypeChange
+    console.log('handleItemsTypeChange', type, checked)
+    // These istanbul comments are only because checking if itemTypes is undefined is not possible is just a good defensive code to have
+    const newItemsTypes = checked
+      ? [...new Set([...(currentSearchCriteria?.itemTypes ?? /* istanbul ignore next */ []), type])]
+      : (currentSearchCriteria.itemTypes ?? /* istanbul ignore next */ []).filter(
+          (itemType) => itemType !== type
+        )
+    console.log('newItemsTypes', newItemsTypes)
+    itemsListContainerRef.current?.scrollTo({ top: 0 })
+
+    const resetPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetPaginationInfo)
+
+    const newMyDataSearchCriteria = new MyDataSearchCriteria(
+      newItemsTypes,
+      currentSearchCriteria.publicationQueries,
+      currentSearchCriteria.roleIds,
+      currentSearchCriteria.searchText
+    )
+
+    const totalItemsCount = await loadMore(resetPaginationInfo, newMyDataSearchCriteria, true)
+
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
+      setPaginationInfo(paginationInfoUpdated)
+    }
+    setCurrentSearchCriteria(newMyDataSearchCriteria)
+  }
 
   async function loadItemsOnBackAndForwardNavigation() {
     const newPaginationInfo = new CollectionItemsPaginationInfo()
@@ -103,7 +136,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   }
 
   const showSelectedFacets =
-    currentSearchCriteria.filterQueries && currentSearchCriteria.filterQueries.length > 0
+    currentSearchCriteria.publicationQueries && currentSearchCriteria.publicationQueries.length > 0
 
   useEffect(() => {
     setIsLoading(isLoadingItems)
@@ -139,7 +172,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
             isEmptyItems={isEmptyItems}
             hasSearchValue={currentSearchCriteria.hasSearchText()}
             itemsTypesSelected={currentSearchCriteria.itemTypes}
-            filterQueriesSelected={currentSearchCriteria.filterQueries ?? []}
+            filterQueriesSelected={currentSearchCriteria.publicationQueries ?? []}
             paginationInfo={paginationInfo}
             onBottomReach={handleLoadMoreOnBottomReach}
             ref={itemsListContainerRef}
