@@ -145,9 +145,7 @@ th {
 // - .btn-link Buttons type links, nav-links, and dropdown items
 
 a:not(p a, span a),
-.btn-link,
-.nav-link,
-.dropdown-item {
+.btn-link {
   text-decoration: none;
 }
 
