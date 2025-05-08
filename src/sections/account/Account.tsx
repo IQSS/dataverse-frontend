@@ -5,15 +5,22 @@ import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/U
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { AccountInfoSection } from './account-info-section/AccountInfoSection'
 import styles from './Account.module.scss'
+import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 
 interface AccountProps {
   defaultActiveTabKey: AccountPanelTabKey
   userRepository: UserJSDataverseRepository
+  collectionRepository: CollectionRepository
 }
 
-export const Account = ({ defaultActiveTabKey, userRepository }: AccountProps) => {
+export const Account = ({
+  defaultActiveTabKey,
+  userRepository,
+  collectionRepository
+}: AccountProps) => {
   const { t } = useTranslation('account')
 
   return (
@@ -32,6 +39,11 @@ export const Account = ({ defaultActiveTabKey, userRepository }: AccountProps) =
         <Tabs.Tab eventKey={tabsKeys.accountInformation} title={t('tabs.accountInformation')}>
           <div className={styles['tab-container']}>
             <AccountInfoSection />
+          </div>
+        </Tabs.Tab>
+        <Tabs.Tab eventKey={tabsKeys.myData} title={t('tabs.myData')}>
+          <div className={styles['tab-container']}>
+            <MyDataItemsPanel collectionRepository={collectionRepository} />
           </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.apiToken} title={t('tabs.apiToken')}>

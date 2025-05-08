@@ -63,6 +63,11 @@ export const LoggedInHeaderActions = ({
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}`}>
           {t('navigation.apiToken')}
         </Navbar.Dropdown.Item>
+        <Navbar.Dropdown.Item
+          as={Link}
+          to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.myData}`}>
+          {t('navigation.myData')}
+        </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item href="#" onClick={() => logOut()} data-testid="oidc-logout">
           {t('logOut')}
         </Navbar.Dropdown.Item>

@@ -115,7 +115,7 @@ async function loadNextItems(
 ): Promise<CollectionItemSubset> {
   return getMyDataCollectionItems(
     collectionRepository,
-    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    [1, 2, 3, 4, 5, 6, 7],
     [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
     [PublicationStatus.Published, PublicationStatus.Draft, PublicationStatus.InReview],
     paginationInfo.pageSize,

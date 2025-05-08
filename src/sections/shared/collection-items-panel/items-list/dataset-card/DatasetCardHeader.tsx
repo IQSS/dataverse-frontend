@@ -31,9 +31,11 @@ export function DatasetCardHeader({ persistentId, version, userRoles }: DatasetC
         {userRoles && (
           <div>
             {userRoles.map((role, index) => (
-              <Badge key={index} variant="info">
-                {role}
-              </Badge>
+              <div className={styles['role-label']}>
+                <Badge key={index} variant="info">
+                  {role}
+                </Badge>
+              </div>
             ))}
           </div>
         )}
