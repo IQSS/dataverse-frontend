@@ -4,15 +4,19 @@ services:
     image: nginx:stable
     ports:
       - '8000:80'
+      - '443:443'
     networks:
       - dataverse
     depends_on:
       - dev_dataverse
       - dev_frontend
       - dev_keycloak
+      - dev_shibboleth_idp
+      - dev_ldap
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker-dev-volumes/nginx/logs:/var/log/nginx/
+      - ./nginx/ssl:/etc/nginx/ssl
 
   dev_frontend:
     container_name: 'dev_frontend'
@@ -194,8 +198,8 @@ services:
       - KC_HOSTNAME_STRICT=false
       - KC_HTTP_PORT=9080
       - KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true
-      - KC_HOSTNAME=http://localhost:8000
-      - KC_HOSTNAME_ADMIN_URL=http://localhost:8000
+      - KC_HOSTNAME=https://localhost
+      - KC_HOSTNAME_ADMIN_URL=https://localhost
       - KEYCLOAK_ADMIN=kcadmin
       - KEYCLOAK_ADMIN_PASSWORD=kcpassword
       - KEYCLOAK_LOGLEVEL=DEBUG
@@ -239,6 +243,39 @@ services:
     command: [ "/bin/sh", "-c", "apk add --no-cache curl jq && /usr/local/bin/setup-spi.sh" ]
     networks:
       - dataverse
+
+  dev_shibboleth_idp:
+    build:
+      context: ./shibboleth-idp
+      dockerfile: Dockerfile
+    hostname: "shibboleth_idp"
+    image: shibboleth-idp
+    container_name: dev_shibboleth_idp
+    restart: unless-stopped
+    expose:
+      - "443"
+    networks:
+      dataverse:
+        aliases:
+          - shibboleth.mydomain.com
+
+  dev_ldap:
+    build:
+      context: ./ldap
+      dockerfile: Dockerfile
+    container_name: dev_ldap
+    hostname: ldap
+    networks:
+      dataverse:
+        aliases:
+          - ldap
+    ports:
+      - "389:389"
+      - "636:636"
+    environment:
+      - LDAP_ADMIN_PASSWORD=admin
+      - LDAP_ORGANISATION="Example Org"
+      - LDAP_DOMAIN=example.org
 
 networks:
   dataverse:
