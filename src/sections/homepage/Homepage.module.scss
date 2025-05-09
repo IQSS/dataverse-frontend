@@ -2,6 +2,12 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 @import 'src/assets/variables';
 
+@mixin border-bottom-separator($pb: 1.5rem) {
+  margin-bottom: 1.5rem;
+  padding-bottom: $pb;
+  border-bottom: solid 1px $dv-border-color;
+}
+
 .section-wrapper {
   display: flex;
   flex-direction: column;
@@ -10,34 +16,42 @@
   padding-top: 2rem;
 }
 
-.separation-line {
-  width: 100%;
-  height: 1px;
-  margin: 0 auto;
-  background-color: $dv-border-color;
-  margin-block: 1.5rem;
-}
+.usage-wrapper {
+  @include border-bottom-separator;
 
-.featured-items-wrapper {
-  min-width: 100%;
+  order: 2;
 
-  .separation-line {
-    display: none;
-  }
-
-  &:has(h4) {
-    .separation-line {
-      display: block;
-    }
+  @media (min-width: 1024px) {
+    order: 1;
   }
 }
 
 .middle-search-cta-wrapper {
+  @include border-bottom-separator(3.5rem);
+
   display: flex;
   flex-direction: column;
   gap: 2rem;
   align-items: center;
   justify-content: center;
+  order: 1;
   width: 100%;
-  padding-block: 2rem;
+  padding-top: 2rem;
+
+  @media (min-width: 1024px) {
+    order: 2;
+  }
+}
+
+.featured-items-wrapper {
+  order: 3;
+  min-width: 100%;
+
+  &:has(h4) {
+    @include border-bottom-separator;
+  }
+}
+
+.metrics-wrapper {
+  order: 4;
 }
