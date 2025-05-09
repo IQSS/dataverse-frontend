@@ -35,7 +35,7 @@ jobs:
 
       - name: Create and populate .env file
         env:
-          DATAVERSE_BACKEND_URL: 'http://localhost:8000'
+          DATAVERSE_BACKEND_URL: 'https://localhost'
           OIDC_CLIENT_ID: 'test'
           OIDC_AUTHORIZATION_ENDPOINT: 'https://localhost/realms/test/protocol/openid-connect/auth'
           OIDC_TOKEN_ENDPOINT: 'https://localhost/realms/test/protocol/openid-connect/token'
@@ -115,7 +115,7 @@ jobs:
 
       - name: Create and populate .env file
         env:
-          DATAVERSE_BACKEND_URL: 'http://localhost:8000'
+          DATAVERSE_BACKEND_URL: 'https://localhost'
           OIDC_CLIENT_ID: 'test'
           OIDC_AUTHORIZATION_ENDPOINT: 'https://localhost/realms/test/protocol/openid-connect/auth'
           OIDC_TOKEN_ENDPOINT: 'https://localhost/realms/test/protocol/openid-connect/token'

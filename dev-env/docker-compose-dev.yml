@@ -3,7 +3,6 @@ services:
     container_name: 'dev_nginx_proxy'
     image: nginx:stable
     ports:
-      - '8000:80'
       - '443:443'
     networks:
       - dataverse
@@ -32,8 +31,6 @@ services:
       - dataverse
     depends_on:
       - dev_dataverse
-    environment:
-      - VITE_DATAVERSE_BACKEND_URL=http://localhost:8000
     volumes:
       - ../:/usr/src/app
       - ../dev-env/vite.config.ts:/usr/src/app/vite.config.ts
