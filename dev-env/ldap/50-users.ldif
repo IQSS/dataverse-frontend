@@ -43,7 +43,7 @@ mail: dataverse@mailinator.com
 userPassword: johnspassword
 
 
-# Test user 3 (Conflicts with an existing built-in user with the same uid)
+# Test user 4 (Conflicts with an existing built-in user with the same uid)
 dn: uid=dataverseAdmin,ou=users,dc=example,dc=org
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
