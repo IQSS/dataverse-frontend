@@ -1,29 +1,51 @@
-import { PropsWithChildren, useState } from 'react'
+import { PropsWithChildren, useEffect, useState } from 'react'
 import { SettingsContext } from './SettingsContext'
 import { Setting, SettingName } from '../../settings/domain/models/Setting'
-import { SettingRepository } from '../../settings/domain/repositories/SettingRepository'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { getZipDownloadLimit } from '@/info/domain/useCases/getZipDownloadLimit'
+import { getMaxEmbargoDurationInMonths } from '@/info/domain/useCases/getMaxEmbargoDurationInMonths'
+import { getHasPublicStore } from '@/info/domain/useCases/getHasPublicStore'
+import { getExternalStatusesAllowed } from '@/info/domain/useCases/getExternalStatusesAllowed'
+import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 
 interface SettingsProviderProps {
-  repository: SettingRepository
+  dataverseInfoRepository: DataverseInfoRepository
 }
 
 export function SettingsProvider({
-  repository,
+  dataverseInfoRepository,
   children
 }: PropsWithChildren<SettingsProviderProps>) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [settings, setSettings] = useState<Setting<any>[]>([])
+  const [settings, setSettings] = useState<Setting<unknown>[]>([])
+  const [isLoadingSettings, setIsLoadingSettings] = useState(true)
 
-  function getSettingByName<T>(name: SettingName): Promise<Setting<T>> {
-    const setting = settings.find((setting) => setting.name === name)
-    if (setting) {
-      return Promise.resolve(setting as Setting<T>)
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const settingsResponse = await Promise.all([
+          getZipDownloadLimit(dataverseInfoRepository),
+          getMaxEmbargoDurationInMonths(dataverseInfoRepository),
+          getHasPublicStore(dataverseInfoRepository),
+          getExternalStatusesAllowed(dataverseInfoRepository)
+        ])
+
+        setSettings(settingsResponse)
+      } catch (error) {
+        console.error('Error fetching settings:', error)
+      } finally {
+        setIsLoadingSettings(false)
+      }
     }
 
-    return repository.getByName<T>(name).then((setting) => {
-      setSettings((settings) => [...settings, setting])
-      return setting
-    })
+    void fetchSettings()
+  }, [dataverseInfoRepository])
+
+  function getSettingByName<T>(name: SettingName): Setting<T> | undefined {
+    return settings.find((setting) => setting.name === name) as Setting<T> | undefined
+  }
+
+  if (isLoadingSettings) {
+    return <AppLoader />
   }
 
   return (

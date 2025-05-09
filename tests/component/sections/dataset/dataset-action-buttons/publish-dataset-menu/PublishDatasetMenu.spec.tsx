@@ -5,15 +5,23 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
-import { SettingRepository } from '@/settings/domain/repositories/SettingRepository'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { SettingsProvider } from '../../../../../../src/sections/settings/SettingsProvider'
 const collectionRepository = {} as CollectionRepository
 const datasetRepository = {} as DatasetRepository
+const dataverseInfoRepository = {} as DataverseInfoRepository
 
 describe('PublishDatasetMenu', () => {
+  beforeEach(() => {
+    dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
+    dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
+    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
+    dataverseInfoRepository.getZipDownloadLimit = cy.stub().resolves({})
+  })
+
   it('renders the PublishDatasetMenu if is dataset latest version and it is a draft and publishing is allowed', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
@@ -48,13 +56,12 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    const settingRepository = {} as SettingRepository
-    settingRepository.getByName = cy
+    dataverseInfoRepository.getExternalStatusesAllowed = cy
       .stub()
       .resolves(SettingMother.createExternalStatusesAllowed(['Author Contacted', 'Privacy Review']))
 
     cy.mountAuthenticated(
-      <SettingsProvider repository={settingRepository}>
+      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
         <PublishDatasetMenu
           datasetRepository={datasetRepository}
           collectionRepository={collectionRepository}

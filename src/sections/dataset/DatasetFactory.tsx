@@ -8,7 +8,7 @@ import { useAnonymized } from './anonymized/AnonymizedContext'
 import { AnonymizedProvider } from './anonymized/AnonymizedProvider'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
-import { SettingJSDataverseRepository } from '../../settings/infrastructure/SettingJSDataverseRepository'
+import { DataverseInfoJSDataverseRepository } from '@/info/infrastructure/repositories/DataverseInfoJSDataverseRepository'
 import { SettingsProvider } from '../settings/SettingsProvider'
 import { DatasetProvider } from './DatasetProvider'
 import { MultipleFileDownloadProvider } from '../file/multiple-file-download/MultipleFileDownloadProvider'
@@ -24,13 +24,13 @@ const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
-const settingRepository = new SettingJSDataverseRepository()
+const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
 
 export class DatasetFactory {
   static create(): ReactElement {
     return (
       <MultipleFileDownloadProvider repository={fileRepository}>
-        <SettingsProvider repository={settingRepository}>
+        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
           <NotImplementedModalProvider>
             <AnonymizedProvider>
               <AlertProvider>
