@@ -533,6 +533,86 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister": false,
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
   "webAuthnPolicyPasswordlessExtraOrigins": [],
+  "users": [
+    {
+      "id": "a3d8e76d-7e7b-42dc-bbd7-4258818a8a1b",
+      "createdTimestamp": 1684755806552,
+      "username": "affiliate",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Dataverse",
+      "lastName": "Affiliate",
+      "email": "dataverse-affiliate@mailinator.com",
+      "credentials": [
+        {
+          "id": "31c8eb1e-b2a8-4f86-833b-7c0536cd61a1",
+          "type": "password",
+          "userLabel": "My password",
+          "createdDate": 1684755821743,
+          "secretData": "{\"value\":\"T+RQ4nvmjknj7ds8NU7782j6PJ++uCu98zNoDQjIe9IKXah+13q4EcXO9IHmi2BJ7lgT0OIzwIoac4JEQLxhjQ==\",\"salt\":\"fnRmE9WmjAp4tlvGh/bxxQ==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["default-roles-test"],
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "e5531496-cfb8-498c-a902-50c98d649e79",
+      "createdTimestamp": 1684755721064,
+      "username": "curator",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Dataverse",
+      "lastName": "Curator",
+      "email": "dataverse-curator@mailinator.com",
+      "credentials": [
+        {
+          "id": "664546b4-b936-45cf-a4cf-5e98b743fc7f",
+          "type": "password",
+          "userLabel": "My password",
+          "createdDate": 1684755740776,
+          "secretData": "{\"value\":\"AvVqybCNtCBVAdLEeJKresy9tc3c4BBUQvu5uHVQw4IjVagN6FpKGlDEKOrxhzdSM8skEvthOEqJkloPo1w+NQ==\",\"salt\":\"2em2DDRRlNEYsNR3xDqehw==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["default-roles-test"],
+      "notBefore": 0,
+      "groups": ["/curators"]
+    },
+    {
+      "id": "c0082e7e-a3e9-45e6-95e9-811a34adce9d",
+      "createdTimestamp": 1684755585802,
+      "username": "user",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Dataverse",
+      "lastName": "User",
+      "email": "dataverse-user@mailinator.com",
+      "credentials": [
+        {
+          "id": "00d6d67f-2e30-4da6-a567-bec38a1886a0",
+          "type": "password",
+          "userLabel": "My password",
+          "createdDate": 1684755599597,
+          "secretData": "{\"value\":\"z991rnjznAgosi5nX962HjM8/gN5GLJTdrlvi6G9cj8470X2/oZUb4Lka6s8xImgtEloCgWiKqH0EH9G4Y3a5A==\",\"salt\":\"/Uz7w+2IqDo+fQUGqxjVHw==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["default-roles-test"],
+      "notBefore": 0,
+      "groups": ["/members"]
+    }
+  ],
   "scopeMappings": [
     {
       "clientScope": "offline_access",
