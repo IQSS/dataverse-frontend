@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Form, CloseButton } from '@iqss/dataverse-design-system'
@@ -6,13 +6,23 @@ import { Search as SearchIcon } from 'react-bootstrap-icons'
 import { Route } from '../../Route.enum'
 import { CollectionItemType } from '../../../collection/domain/models/CollectionItemType'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
+import { SearchDropdown } from './SearchDropdown'
 import styles from './SearchInput.module.scss'
 
-export const SearchInput = () => {
+interface SearchInputProps {
+  hasMoreThanOneSearchEngine?: boolean
+  searchDropdownPosition?: 'left' | 'right'
+}
+
+export const SearchInput = ({
+  hasMoreThanOneSearchEngine = false,
+  searchDropdownPosition = 'left'
+}: SearchInputProps) => {
   const navigate = useNavigate()
   const { t } = useTranslation('shared')
   const inputSearchRef = useRef<HTMLInputElement>(null)
   const [searchValue, setSearchValue] = useState('')
+  const [searchEngineSelected, setSearchEngineSelected] = useState<string>('one')
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value)
@@ -44,8 +54,19 @@ export const SearchInput = () => {
     inputSearchRef.current?.focus()
   }
 
+  const handleSearchEngineSelect = (eventKey: string | null) => {
+    setSearchEngineSelected(eventKey as string)
+  }
+
   return (
     <form onSubmit={handleSubmit} className={styles['search-input-wrapper']} role="search">
+      {hasMoreThanOneSearchEngine && searchDropdownPosition === 'left' && (
+        <SearchDropdown
+          searchEngineSelected={searchEngineSelected}
+          handleSearchEngineSelect={handleSearchEngineSelect}
+          position="left"
+        />
+      )}
       <div className={styles['input-and-clear-wrapper']}>
         <Form.Group.Input
           type="text"
@@ -65,7 +86,13 @@ export const SearchInput = () => {
           />
         )}
       </div>
-
+      {hasMoreThanOneSearchEngine && searchDropdownPosition === 'right' && (
+        <SearchDropdown
+          searchEngineSelected={searchEngineSelected}
+          handleSearchEngineSelect={handleSearchEngineSelect}
+          position="right"
+        />
+      )}
       <button type="submit" aria-label={t('submitSearch')} className={styles['search-btn']}>
         <SearchIcon size={22} />
       </button>
