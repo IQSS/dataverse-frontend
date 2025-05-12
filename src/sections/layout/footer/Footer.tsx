@@ -19,7 +19,7 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
       <Container>
         <Row>
           <Col sm={8}>
-            <p className={styles.copyright}>
+            <em className={styles.copyright}>
               {t('copyright', { year: currentYear })}
               <a
                 href="https://dataverse.org/best-practices/harvard-dataverse-privacy-policy"
@@ -27,7 +27,7 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
                 target="_blank">
                 {t('privacyPolicy')}
               </a>
-            </p>
+            </em>
           </Col>
           <Col sm={4}>
             <div className={styles['powered-by-container']}>

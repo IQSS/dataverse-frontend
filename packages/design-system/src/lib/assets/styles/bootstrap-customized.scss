@@ -140,15 +140,9 @@ th {
   border-bottom-left-radius: 0;
 }
 
-// Removes default underlined style to buttons type link and <a> elements that are not inside <p> or <span> tags, this last condition is
-// to comply with accessibility standards, see Axe Rule https://dequeuniversity.com/rules/axe/4.8/link-in-text-block?application=axeAPI.
-a:not(p a, span a),
 .btn-link {
   text-decoration: none;
-}
 
-a:not(p a, span a, .nav-link, .dropdown-item),
-.btn-link {
   &:hover {
     text-decoration: underline;
   }
