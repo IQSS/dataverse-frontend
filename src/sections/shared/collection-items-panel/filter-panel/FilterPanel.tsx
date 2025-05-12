@@ -7,15 +7,24 @@ import { ItemTypeChange, TypeFilters } from './type-filters/TypeFilters'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
 import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { FacetsFilters } from './facets-filters/FacetsFilters'
+import { RoleFilters } from './role-filters/RoleFilters'
 import { RemoveAddFacetFilter } from './facets-filters/FacetFilterGroup'
+import { RoleChange } from './role-filters/RoleFilters'
 import styles from './FilterPanel.module.scss'
+import { Role } from '@/users/domain/models/Role'
 
+interface RoleFilterProps {
+  userRoles: Role[]
+  currentUserRoleIds: number[]
+  onRolesChange: (roleChange: RoleChange) => void
+}
 interface FilterPanelProps {
   currentItemTypes?: CollectionItemType[]
   onItemTypesChange: (itemTypeChange: ItemTypeChange) => void
   facets: CollectionItemsFacet[]
   currentFilterQueries?: FilterQuery[]
   onFacetChange: (filterQuery: FilterQuery, removeOrAdd: RemoveAddFacetFilter) => void
+  roleFilterProps?: RoleFilterProps
   isLoadingCollectionItems: boolean
 }
 
@@ -25,6 +34,7 @@ export const FilterPanel = ({
   facets,
   currentFilterQueries,
   onFacetChange,
+  roleFilterProps,
   isLoadingCollectionItems
 }: FilterPanelProps) => {
   const { t } = useTranslation('collection')
@@ -62,6 +72,14 @@ export const FilterPanel = ({
               onFacetChange={onFacetChange}
               isLoadingCollectionItems={isLoadingCollectionItems}
             />
+            {roleFilterProps && (
+              <RoleFilters
+                currentRoleIds={roleFilterProps.currentUserRoleIds}
+                userRoles={roleFilterProps.userRoles}
+                onRolesChange={roleFilterProps.onRolesChange}
+                isLoadingCollectionItems={isLoadingCollectionItems}
+              />
+            )}
           </div>
         </Offcanvas.Body>
       </Offcanvas>

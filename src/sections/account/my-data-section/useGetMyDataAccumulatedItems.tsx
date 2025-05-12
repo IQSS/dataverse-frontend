@@ -116,7 +116,7 @@ async function loadNextItems(
     // MYDATA_TODO: remove the hardcoded values for the role ids
     return await getMyDataCollectionItems(
       collectionRepository,
-      [1, 2, 3, 4, 5, 6, 7],
+      searchCriteria.roleIds,
       searchCriteria.itemTypes,
       [PublicationStatus.Published, PublicationStatus.Draft, PublicationStatus.InReview],
       paginationInfo.pageSize,

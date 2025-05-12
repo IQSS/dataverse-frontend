@@ -2,10 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
-import {
-  CollectionSearchCriteria,
-  FilterQuery
-} from '@/collection/domain/models/CollectionSearchCriteria'
+import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { useLoadMoreOnPopStateEvent } from '../../shared/collection-items-panel/useLoadMoreOnPopStateEvent'
 import { useLoading } from '@/sections/loading/LoadingContext'
@@ -13,10 +10,11 @@ import { FilterPanel } from '../../shared/collection-items-panel/filter-panel/Fi
 import { ItemsList } from '../../shared/collection-items-panel/items-list/ItemsList'
 import { SearchPanel } from '../../shared/collection-items-panel/search-panel/SearchPanel'
 import { ItemTypeChange } from '../../shared/collection-items-panel/filter-panel/type-filters/TypeFilters'
-import { RemoveAddFacetFilter } from '../../shared/collection-items-panel/filter-panel/facets-filters/FacetFilterGroup'
 import styles from './MyDataItemsPanel.module.scss'
 import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataSearchCriteria'
 import { useGetMyDataAccumulatedItems } from '@/sections/account/my-data-section/useGetMyDataAccumulatedItems'
+import { RemoveAddFacetFilter } from '@/sections/shared/collection-items-panel/filter-panel/facets-filters/FacetFilterGroup'
+import { RoleChange } from '@/sections/shared/collection-items-panel/filter-panel/role-filters/RoleFilters'
 
 interface MyDataItemsPanelProps {
   collectionRepository: CollectionRepository
@@ -37,13 +35,21 @@ interface MyDataItemsPanelProps {
 
 export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps) => {
   const { setIsLoading } = useLoading()
-
+  // TODO: add roleIds from API
+  const [userRoles, setUserRoles] = useState([
+    { roleId: 1, roleName: 'Admin' },
+    { roleId: 6, roleName: 'Contributor' },
+    { roleId: 7, roleName: 'Curator' }
+  ])
   useLoadMoreOnPopStateEvent(loadItemsOnBackAndForwardNavigation)
+
+  const roleIds = userRoles.map((role) => role.roleId)
 
   // TODO: define Publishing list elsewhere
   const [currentSearchCriteria, setCurrentSearchCriteria] = useState<MyDataSearchCriteria>(
     new MyDataSearchCriteria(
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
+      roleIds,
       undefined,
       undefined
     )
@@ -85,7 +91,9 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   const handleFacetChange = async (
     filterQuery: FilterQuery,
     removeAddFacetFilter: RemoveAddFacetFilter
-  ) => {}
+  ) => {
+    console.log('handleFacetChange', filterQuery, removeAddFacetFilter)
+  }
   const handleSearchSubmit = async (searchValue: string) => {}
 
   const handleItemsTypeChange = async (itemTypeChange: ItemTypeChange) => {
@@ -105,8 +113,39 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
 
     const newMyDataSearchCriteria = new MyDataSearchCriteria(
       newItemsTypes,
-      currentSearchCriteria.publicationQueries,
       currentSearchCriteria.roleIds,
+      currentSearchCriteria.publicationQueries,
+      currentSearchCriteria.searchText
+    )
+
+    const totalItemsCount = await loadMore(resetPaginationInfo, newMyDataSearchCriteria, true)
+
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
+      setPaginationInfo(paginationInfoUpdated)
+    }
+    setCurrentSearchCriteria(newMyDataSearchCriteria)
+  }
+
+  const handleRoleChange = async (roleChange: RoleChange) => {
+    const { roleId, checked } = roleChange
+    console.log('handleRoleChange', roleId, checked)
+    // These istanbul comments are only because checking if itemTypes is undefined is not possible is just a good defensive code to have
+    const newRoleIds = checked
+      ? [...new Set([...(currentSearchCriteria?.roleIds ?? /* istanbul ignore next */ []), roleId])]
+      : (currentSearchCriteria.roleIds ?? /* istanbul ignore next */ []).filter(
+          (currentRoleId) => currentRoleId !== roleId
+        )
+    console.log('newRoleIds', newRoleIds)
+    itemsListContainerRef.current?.scrollTo({ top: 0 })
+
+    const resetPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetPaginationInfo)
+
+    const newMyDataSearchCriteria = new MyDataSearchCriteria(
+      currentSearchCriteria.itemTypes,
+      newRoleIds,
+      currentSearchCriteria.publicationQueries,
       currentSearchCriteria.searchText
     )
 
@@ -124,6 +163,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     // WHEN SEARCHING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES!!
     const newCollectionSearchCriteria = new MyDataSearchCriteria(
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
+      roleIds,
       undefined,
       undefined
     )
@@ -158,6 +198,11 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
           onItemTypesChange={handleItemsTypeChange}
           facets={facets}
           onFacetChange={handleFacetChange}
+          roleFilterProps={{
+            currentUserRoleIds: currentSearchCriteria.roleIds,
+            userRoles: userRoles,
+            onRolesChange: handleRoleChange
+          }}
           isLoadingCollectionItems={isLoadingItems}
         />
 

@@ -20,9 +20,9 @@ import { FilterPanel } from '../../shared/collection-items-panel/filter-panel/Fi
 import { ItemsList } from '../../shared/collection-items-panel/items-list/ItemsList'
 import { SearchPanel } from '../../shared/collection-items-panel/search-panel/SearchPanel'
 import { ItemTypeChange } from '../../shared/collection-items-panel/filter-panel/type-filters/TypeFilters'
-import { RemoveAddFacetFilter } from '../../shared/collection-items-panel/filter-panel/facets-filters/FacetFilterGroup'
 import { SelectedFacets } from '../../shared/collection-items-panel/selected-facets/SelectedFacets'
 import styles from './CollectionItemsPanel.module.scss'
+import { RemoveAddFacetFilter } from '@/sections/shared/collection-items-panel/filter-panel/RemoveAddFilter'
 
 interface CollectionItemsPanelProps {
   collectionId: string
