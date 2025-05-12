@@ -10,8 +10,8 @@ export async function getMyDataCollectionItems(
   selectedPage?: number,
   searchText?: string
 ): Promise<CollectionItemSubset> {
-  return collectionRepository
-    .getMyDataItems(
+  try {
+    const result = await collectionRepository.getMyDataItems(
       roleIds,
       collectionItemTypes,
       publicationStatuses,
@@ -19,7 +19,9 @@ export async function getMyDataCollectionItems(
       selectedPage,
       searchText
     )
-    .catch((error: Error) => {
-      throw new Error(error.message)
-    })
+    console.log('getMyDataCollectionItems result:', result)
+    return result
+  } catch (error: Error | unknown) {
+    throw new Error(error instanceof Error ? error.message : 'Unknown error')
+  }
 }

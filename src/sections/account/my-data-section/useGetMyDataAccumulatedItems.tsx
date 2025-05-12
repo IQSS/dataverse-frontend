@@ -126,7 +126,7 @@ async function loadNextItems(
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error'
     // MYDATA_TODO: remove this when the API is fixed
-    if (errorMessage.includes('no results')) {
+    if (errorMessage.includes('no results') || errorMessage.includes('nothing was found')) {
       return {
         items: [],
         facets: [],
