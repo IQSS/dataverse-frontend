@@ -1,6 +1,7 @@
 @use 'sass:color';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+@import 'src/assets/mixins';
 
 .card-main-container {
   display: flex;
@@ -20,6 +21,10 @@
   display: flex;
   gap: 1rem;
   justify-content: space-between;
+
+  a {
+    @include link-hover-underlined;
+  }
 
   .left-side-content {
     display: flex;

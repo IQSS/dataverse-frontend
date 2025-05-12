@@ -96,7 +96,14 @@ export const MetricsResults = ({ metrics }: MetricsResultsProps) => {
             t={t}
             i18nKey="poweredByDataverseHub"
             components={{
-              a: <a href="https://hub.dataverse.org/" target="_blank" rel="noreferrer" />
+              a: (
+                <a
+                  href="https://hub.dataverse.org/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.hub_link}
+                />
+              )
             }}
           />
         </em>
