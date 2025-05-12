@@ -18,6 +18,7 @@ interface DropdownButtonProps {
   disabled?: boolean
   children: ReactNode
   ariaLabel?: string
+  size?: 'sm' | 'lg'
 }
 
 export function DropdownButton({
@@ -30,6 +31,7 @@ export function DropdownButton({
   onSelect,
   disabled,
   ariaLabel,
+  size,
   children
 }: DropdownButtonProps) {
   return (
@@ -46,6 +48,7 @@ export function DropdownButton({
       variant={variant}
       as={asButtonGroup ? ButtonGroup : undefined}
       disabled={disabled}
+      size={size}
       onSelect={onSelect}>
       {children}
     </DropdownButtonBS>

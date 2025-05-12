@@ -9,6 +9,7 @@ interface DropdownItemProps extends React.HTMLAttributes<HTMLElement> {
   children: ReactNode
   as?: ElementType
   to?: string // When passing <Link> as the `as` prop, this prop is used to pass the URL <DropdownButtonItem as={Link} to="/some-path">...</DropdownButtonItem>
+  active?: boolean
 }
 
 export function DropdownButtonItem({
@@ -18,6 +19,7 @@ export function DropdownButtonItem({
   download,
   children,
   as,
+  active,
   ...props
 }: DropdownItemProps) {
   return (
@@ -26,6 +28,7 @@ export function DropdownButtonItem({
       eventKey={eventKey}
       disabled={disabled}
       download={download}
+      active={active}
       as={as}
       {...props}>
       {children}
