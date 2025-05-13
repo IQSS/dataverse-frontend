@@ -17,6 +17,7 @@ import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 import { RestrictFileDTO } from '@/files/domain/useCases/restrictFileDTO'
+import { FileVersionSummaryInfo } from '@/files/domain/models/FileVersionSummaryInfo'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -153,6 +154,14 @@ export class FileMockRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getFileVersionSummaries(_id: number | string): Promise<FileVersionSummaryInfo[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([])
       }, FakerHelper.loadingTimout())
     })
   }

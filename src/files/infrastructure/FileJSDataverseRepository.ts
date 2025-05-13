@@ -22,7 +22,8 @@ import {
   deleteFile,
   replaceFile,
   restrictFile,
-  updateFileMetadata
+  updateFileMetadata,
+  getFileVersionSummaries
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -41,6 +42,8 @@ import { FileHolder } from '../domain/models/FileHolder'
 import { FixityAlgorithm } from '../domain/models/FixityAlgorithm'
 import { RestrictFileDTO } from '../domain/useCases/restrictFileDTO'
 import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
+import { FileVersionSummaryInfo } from '../domain/models/FileVersionSummaryInfo'
+import { JSFileVersionSummaryMapper } from './mappers/JSFileVersionSummaryMapper'
 
 const includeDeaccessioned = true
 
@@ -234,6 +237,16 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
+  getFileVersionSummaries(fileId: number | string): Promise<FileVersionSummaryInfo[]> {
+    return getFileVersionSummaries
+      .execute(fileId)
+      .then((jsFileVersionSummaries: FileVersionSummaryInfo[]) => {
+        return jsFileVersionSummaries.map((jsFileVersionSummary) =>
+          JSFileVersionSummaryMapper.toFileVersionSummary(jsFileVersionSummary)
+        )
+      })
+  }
+
   getById(id: number, datasetVersionNumber?: string): Promise<File> {
     return getFileAndDataset
       .execute(id, datasetVersionNumber)
@@ -246,7 +259,8 @@ export class FileJSDataverseRepository implements FileRepository {
           FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
           FileJSDataverseRepository.getPermissionsById(jsFile.id),
           FileJSDataverseRepository.getThumbnailById(jsFile.id),
-          FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
+          FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData),
+          getFileVersionSummaries.execute(jsFile.id)
         ])
       )
       .then(
@@ -258,7 +272,8 @@ export class FileJSDataverseRepository implements FileRepository {
           downloadsCount,
           permissions,
           thumbnail,
-          tabularData
+          tabularData,
+          jsFileVersionSummaries
         ]) =>
           JSFileMapper.toFile(
             jsFile,
@@ -267,6 +282,7 @@ export class FileJSDataverseRepository implements FileRepository {
             citation,
             downloadsCount,
             permissions,
+            jsFileVersionSummaries,
             thumbnail,
             tabularData
           )

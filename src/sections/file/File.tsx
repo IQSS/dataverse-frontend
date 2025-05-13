@@ -17,12 +17,14 @@ import { DatasetPublishingStatus } from '../../dataset/domain/models/Dataset'
 import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
+import { FileVersion } from './file-version/FileVersion'
 
 interface FileProps {
   repository: FileRepository
   id: number
   datasetVersionNumber?: string
 }
+
 export function File({ repository, id, datasetVersionNumber }: FileProps) {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
@@ -39,6 +41,8 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
   if (!file) {
     return <NotFoundPage dvObjectNotFoundType="file" />
   }
+
+  // TODO: if the file is deccessioned, we should show the format
 
   return (
     <>
@@ -111,6 +115,14 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                   metadata={file.metadata}
                   permissions={file.permissions}
                   datasetPublishingStatus={file.datasetVersion.publishingStatus}
+                />
+              </div>
+            </Tabs.Tab>
+            <Tabs.Tab eventKey="fileVersion" title={t('tabs.fileVersion')}>
+              <div className={styles['tab-container']}>
+                <FileVersion
+                  version={file.fileVersionSummaries}
+                  datasetVersionNumber={datasetVersionNumber}
                 />
               </div>
             </Tabs.Tab>

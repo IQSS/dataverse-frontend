@@ -20,6 +20,7 @@ export class FileMother {
       metadata: FileMetadataMother.create(),
       permissions: FilePermissionsMother.create(),
       ingest: FileIngestMother.create(),
+      fileVersionSummaries: [],
       ...props
     }
   }

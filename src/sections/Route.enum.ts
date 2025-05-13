@@ -76,7 +76,7 @@ export enum QueryParamKey {
   PAGE = 'page',
   COLLECTION_ID = 'collectionId',
   TAB = 'tab',
-  FILE_ID = 'fileId',
+  FILE_ID = 'id',
   DATASET_VERSION = 'datasetVersion',
   REFERRER = 'referrer',
   AUTH_STATE = 'state',

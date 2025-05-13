@@ -1,7 +1,15 @@
 {
   "tabs": {
-    "metadata": "Metadata"
+    "metadata": "Metadata",
+    "fileVersion": "Versions"
   },
+  "fileVersion": {
+    "version": "Dataset Version",
+    "publishedOn": "Published On",
+    "summary": "Summary",
+    "contributors": "Contributors"
+  },
+  "fileNotIncluded": "File is not included in this version",
   "subtext": "This file is part of \"{{datasetTitle}}\".",
   "datasetCitationTitle": "Dataset Citation",
   "fileCitationTitle": "File Citation",

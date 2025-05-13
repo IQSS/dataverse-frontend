@@ -18,6 +18,7 @@ import {
 import { JSDatasetVersionMapper } from '../../../dataset/infrastructure/mappers/JSDatasetVersionMapper'
 import { JSDatasetMapper } from '../../../dataset/infrastructure/mappers/JSDatasetMapper'
 import { JSUpwardHierarchyNodeMapper } from '../../../shared/hierarchy/infrastructure/mappers/JSUpwardHierarchyNodeMapper'
+import { FileVersionSummaryInfo } from '@/files/domain/models/FileVersionSummaryInfo'
 
 export class JSFileMapper {
   static toFilePreview(
@@ -47,6 +48,7 @@ export class JSFileMapper {
     citation: string,
     downloadsCount: number,
     permissions: FilePermissions,
+    jsFileVersionSummaries: FileVersionSummaryInfo[],
     thumbnail?: string,
     tabularData?: FileTabularData
   ): File {
@@ -68,7 +70,8 @@ export class JSFileMapper {
       metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),
       ingest: JSFileIngestMapper.toFileIngest(),
       permissions: permissions,
-      hierarchy: JSFileMapper.toHierarchy(jsFile.name, jsFile.id, jsFile.isPartOf)
+      hierarchy: JSFileMapper.toHierarchy(jsFile.name, jsFile.id, jsFile.isPartOf),
+      fileVersionSummaries: jsFileVersionSummaries
     }
   }
 
