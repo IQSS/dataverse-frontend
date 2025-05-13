@@ -15,6 +15,8 @@ import { RoleChange } from '@/sections/account/my-data-section/my-data-filter-pa
 import { AllPublicationStatuses } from '@/shared/core/domain/models/PublicationStatus'
 import styles from './MyDataItemsPanel.module.scss'
 import { PublicationStatusChange } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
+import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 
 interface MyDataItemsPanelProps {
   collectionRepository: CollectionRepository
@@ -36,7 +38,7 @@ interface MyDataItemsPanelProps {
 export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps) => {
   const { setIsLoading } = useLoading()
   // TODO: add roleIds from API
-  const [userRoles, setUserRoles] = useState([
+  const [userRoles] = useState([
     { roleId: 1, roleName: 'Admin' },
     { roleId: 6, roleName: 'Contributor' },
     { roleId: 7, roleName: 'Curator' }
@@ -125,7 +127,26 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     setCurrentSearchCriteria(newMyDataSearchCriteria)
   }
 
-  const handleSearchSubmit = async (searchValue: string) => {}
+  const handleSearchSubmit = async (searchValue: string) => {
+    itemsListContainerRef.current?.scrollTo({ top: 0 })
+    // WHEN SEARCHING, WE RESET THE PAGINATION INFO AND THE OTHER FILTERS
+    const resetPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetPaginationInfo)
+
+    const newCollectionSearchCriteria = new MyDataSearchCriteria(
+      [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
+      roleIds,
+      AllPublicationStatuses,
+      searchValue === '' ? undefined : searchValue
+    )
+
+    const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
+
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
+      setPaginationInfo(paginationInfoUpdated)
+    }
+  }
 
   const handleItemsTypeChange = async (itemTypeChange: ItemTypeChange) => {
     const { type, checked } = itemTypeChange

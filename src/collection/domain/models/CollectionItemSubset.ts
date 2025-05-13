@@ -23,8 +23,3 @@ interface CollectionItemsFacetLabel {
   name: string
   count: number
 }
-interface CountPerObjectType {
-  collections: number
-  datasets: number
-  files: number
-}

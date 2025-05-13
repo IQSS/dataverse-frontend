@@ -5,8 +5,6 @@ import styles from './RoleFilters.module.scss'
 
 import { Role } from '@/users/domain/models/Role'
 
-
-
 interface RoleFiltersProps {
   userRoles: Role[]
   currentRoleIds: number[]
