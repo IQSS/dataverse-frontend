@@ -8,6 +8,7 @@ import {
 } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataSearchCriteria'
+import { PublicationStatusCount } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 export const NO_COLLECTION_ITEMS = 0
@@ -15,7 +16,7 @@ export const NO_COLLECTION_ITEMS = 0
 type UseGetMyDataAccumulatedItemsReturnType = {
   isLoadingItems: boolean
   accumulatedItems: CollectionItem[]
-  facets: CollectionItemsFacet[]
+  publicationStatusCounts: PublicationStatusCount[]
   totalAvailable: number | undefined
   hasNextPage: boolean
   error: string | null
@@ -38,7 +39,9 @@ export const useGetMyDataAccumulatedItems = ({
 }: UseGetAccumulatedItemsParams): UseGetMyDataAccumulatedItemsReturnType => {
   const [isLoadingItems, setIsLoadingItems] = useState(false)
   const [accumulatedItems, setAccumulatedItems] = useState<CollectionItem[]>([])
-  const [facets, setFacets] = useState<CollectionItemsFacet[]>([])
+  const [publicationStatusCounts, setPublicationStatusCounts] = useState<PublicationStatusCount[]>(
+    []
+  )
   const [hasNextPage, setHasNextPage] = useState<boolean>(true)
   const [totalAvailable, setTotalAvailable] = useState<number | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
@@ -67,7 +70,7 @@ export const useGetMyDataAccumulatedItems = ({
 
       setAccumulatedItems(newAccumulatedItems)
 
-      setFacets(facets)
+      setPublicationStatusCounts(convertFacetsToPublicationStatusCounts(facets))
 
       setTotalAvailable(totalItemCount)
 
@@ -96,7 +99,7 @@ export const useGetMyDataAccumulatedItems = ({
   return {
     isLoadingItems,
     accumulatedItems,
-    facets,
+    publicationStatusCounts,
     totalAvailable,
     hasNextPage,
     error,
@@ -106,6 +109,19 @@ export const useGetMyDataAccumulatedItems = ({
     accumulatedCount
   }
 }
+const convertFacetsToPublicationStatusCounts = (
+  facets: CollectionItemsFacet[]
+): PublicationStatusCount[] => {
+  if (!facets[0]) {
+    return []
+  } else
+    return facets[0].labels
+      .filter((facetLabel) => facetLabel.count > 0) // Include only items with count > 0
+      .map((facetLabel) => ({
+        status: facetLabel.name as PublicationStatus,
+        count: facetLabel.count
+      }))
+}
 
 async function loadNextItems(
   collectionRepository: CollectionRepository,
@@ -113,12 +129,12 @@ async function loadNextItems(
   searchCriteria: MyDataSearchCriteria
 ): Promise<CollectionItemSubset> {
   try {
-    // MYDATA_TODO: remove the hardcoded values for the role ids
+    const publicationStatuses = (searchCriteria.publicationStatuses as string[]) ?? []
     return await getMyDataCollectionItems(
       collectionRepository,
       searchCriteria.roleIds,
       searchCriteria.itemTypes,
-      [PublicationStatus.Published, PublicationStatus.Draft, PublicationStatus.InReview],
+      publicationStatuses,
       paginationInfo.pageSize,
       paginationInfo.page,
       searchCriteria.searchText

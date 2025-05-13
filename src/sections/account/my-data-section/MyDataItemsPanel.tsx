@@ -2,19 +2,19 @@ import { useEffect, useRef, useState } from 'react'
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
-import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { useLoadMoreOnPopStateEvent } from '../../shared/collection-items-panel/useLoadMoreOnPopStateEvent'
 import { useLoading } from '@/sections/loading/LoadingContext'
-import { FilterPanel } from '../../shared/collection-items-panel/filter-panel/FilterPanel'
 import { ItemsList } from '../../shared/collection-items-panel/items-list/ItemsList'
+import { MyDataFilterPanel } from '@/sections/account/my-data-section/my-data-filter-panel/MyDataFilterPanel'
 import { SearchPanel } from '../../shared/collection-items-panel/search-panel/SearchPanel'
 import { ItemTypeChange } from '../../shared/collection-items-panel/filter-panel/type-filters/TypeFilters'
-import styles from './MyDataItemsPanel.module.scss'
 import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataSearchCriteria'
 import { useGetMyDataAccumulatedItems } from '@/sections/account/my-data-section/useGetMyDataAccumulatedItems'
-import { RemoveAddFacetFilter } from '@/sections/shared/collection-items-panel/filter-panel/facets-filters/FacetFilterGroup'
-import { RoleChange } from '@/sections/shared/collection-items-panel/filter-panel/role-filters/RoleFilters'
+import { RoleChange } from '@/sections/account/my-data-section/my-data-filter-panel/role-filters/RoleFilters'
+import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import styles from './MyDataItemsPanel.module.scss'
+import { PublicationStatusChange } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
 
 interface MyDataItemsPanelProps {
   collectionRepository: CollectionRepository
@@ -41,16 +41,23 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     { roleId: 6, roleName: 'Contributor' },
     { roleId: 7, roleName: 'Curator' }
   ])
-  useLoadMoreOnPopStateEvent(loadItemsOnBackAndForwardNavigation)
-
   const roleIds = userRoles.map((role) => role.roleId)
+  const publicationStatuses = [
+    PublicationStatus.Published,
+    PublicationStatus.Draft,
+    PublicationStatus.InReview,
+    PublicationStatus.Unpublished,
+    PublicationStatus.Deaccessioned
+  ]
+
+  useLoadMoreOnPopStateEvent(loadItemsOnBackAndForwardNavigation)
 
   // TODO: define Publishing list elsewhere
   const [currentSearchCriteria, setCurrentSearchCriteria] = useState<MyDataSearchCriteria>(
     new MyDataSearchCriteria(
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
       roleIds,
-      undefined,
+      publicationStatuses,
       undefined
     )
   )
@@ -63,7 +70,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   const {
     isLoadingItems,
     accumulatedItems,
-    facets,
+    publicationStatusCounts,
     totalAvailable,
     hasNextPage,
     error,
@@ -88,12 +95,44 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       setPaginationInfo(paginationInfoUpdated)
     }
   }
-  const handleFacetChange = async (
-    filterQuery: FilterQuery,
-    removeAddFacetFilter: RemoveAddFacetFilter
+
+  const handlePublicationStatusChange = async (
+    publicationStatusChange: PublicationStatusChange
   ) => {
-    console.log('handleFacetChange', filterQuery, removeAddFacetFilter)
+    const { publicationStatus, checked } = publicationStatusChange
+    console.log('handlePublicationStatusChange', publicationStatus, checked)
+    // These istanbul comments are only because checking if publicationStatuses is undefined is not possible is just a good defensive code to have
+    const newPublicationStatuses = checked
+      ? [
+          ...new Set([
+            ...(currentSearchCriteria?.publicationStatuses ?? /* istanbul ignore next */ []),
+            publicationStatus
+          ])
+        ]
+      : (currentSearchCriteria.publicationStatuses ?? /* istanbul ignore next */ []).filter(
+          (status) => status !== publicationStatus
+        )
+    itemsListContainerRef.current?.scrollTo({ top: 0 })
+
+    const resetPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetPaginationInfo)
+
+    const newMyDataSearchCriteria = new MyDataSearchCriteria(
+      currentSearchCriteria.itemTypes,
+      currentSearchCriteria.roleIds,
+      newPublicationStatuses,
+      currentSearchCriteria.searchText
+    )
+
+    const totalItemsCount = await loadMore(resetPaginationInfo, newMyDataSearchCriteria, true)
+
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
+      setPaginationInfo(paginationInfoUpdated)
+    }
+    setCurrentSearchCriteria(newMyDataSearchCriteria)
   }
+
   const handleSearchSubmit = async (searchValue: string) => {}
 
   const handleItemsTypeChange = async (itemTypeChange: ItemTypeChange) => {
@@ -105,7 +144,6 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       : (currentSearchCriteria.itemTypes ?? /* istanbul ignore next */ []).filter(
           (itemType) => itemType !== type
         )
-    console.log('newItemsTypes', newItemsTypes)
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
@@ -114,7 +152,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     const newMyDataSearchCriteria = new MyDataSearchCriteria(
       newItemsTypes,
       currentSearchCriteria.roleIds,
-      currentSearchCriteria.publicationQueries,
+      currentSearchCriteria.publicationStatuses,
       currentSearchCriteria.searchText
     )
 
@@ -145,7 +183,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     const newMyDataSearchCriteria = new MyDataSearchCriteria(
       currentSearchCriteria.itemTypes,
       newRoleIds,
-      currentSearchCriteria.publicationQueries,
+      currentSearchCriteria.publicationStatuses,
       currentSearchCriteria.searchText
     )
 
@@ -164,7 +202,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     const newCollectionSearchCriteria = new MyDataSearchCriteria(
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
       roleIds,
-      undefined,
+      currentSearchCriteria.publicationStatuses,
       undefined
     )
     const totalItemsCount = await loadMore(newPaginationInfo, newCollectionSearchCriteria, true)
@@ -176,7 +214,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   }
 
   const showSelectedFacets =
-    currentSearchCriteria.publicationQueries && currentSearchCriteria.publicationQueries.length > 0
+    currentSearchCriteria.publicationStatuses &&
+    currentSearchCriteria.publicationStatuses.length > 0
 
   useEffect(() => {
     setIsLoading(isLoadingItems)
@@ -193,16 +232,15 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       </header>
 
       <div className={styles['bottom-wrapper']}>
-        <FilterPanel
+        <MyDataFilterPanel
           currentItemTypes={currentSearchCriteria.itemTypes}
           onItemTypesChange={handleItemsTypeChange}
-          facets={facets}
-          onFacetChange={handleFacetChange}
-          roleFilterProps={{
-            currentUserRoleIds: currentSearchCriteria.roleIds,
-            userRoles: userRoles,
-            onRolesChange: handleRoleChange
-          }}
+          currentPublicationStatuses={currentSearchCriteria.publicationStatuses}
+          publicationStatusCounts={publicationStatusCounts}
+          onPublicationStatusesChange={handlePublicationStatusChange}
+          currentRoleIds={currentSearchCriteria.roleIds}
+          userRoles={userRoles}
+          onRolesChange={handleRoleChange}
           isLoadingCollectionItems={isLoadingItems}
         />
 
@@ -217,7 +255,11 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
             isEmptyItems={isEmptyItems}
             hasSearchValue={currentSearchCriteria.hasSearchText()}
             itemsTypesSelected={currentSearchCriteria.itemTypes}
-            filterQueriesSelected={currentSearchCriteria.publicationQueries ?? []}
+            filterQueriesSelected={
+              currentSearchCriteria.publicationStatuses?.map(
+                (status) => `publicationStatus:${status}` as `${string}:${string}`
+              ) ?? []
+            }
             paginationInfo={paginationInfo}
             onBottomReach={handleLoadMoreOnBottomReach}
             ref={itemsListContainerRef}

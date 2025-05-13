@@ -27,6 +27,7 @@
     "title": "My Data",
     "description": "This is a list of all the datasets you have created or contributed to. You can view, edit, or delete your datasets from here.",
     "noData": "You have not created or contributed to any datasets yet.",
-    "roleFilterTitle": "Roles"
+    "roleFilterTitle": "Roles",
+    "publicationStatusFilterTitle": "Publication Statuses"
   }
 }

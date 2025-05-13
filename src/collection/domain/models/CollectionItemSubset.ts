@@ -21,7 +21,7 @@ export interface CollectionItemsFacet {
 
 interface CollectionItemsFacetLabel {
   name: string
-  count?: number
+  count: number
 }
 interface CountPerObjectType {
   collections: number
