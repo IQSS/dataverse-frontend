@@ -10,7 +10,7 @@ export interface PublicationStatusCount {
 }
 
 interface PublicationStatusFiltersProps {
-  currentPublicationStatuses?: PublicationStatus[]
+  currentPublicationStatuses: PublicationStatus[]
   publicationStatusCounts?: PublicationStatusCount[]
   onPublicationStatusChange: (publicationStatusChange: PublicationStatusChange) => void
   isLoadingCollectionItems: boolean

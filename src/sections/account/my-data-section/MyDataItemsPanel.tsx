@@ -12,7 +12,7 @@ import { ItemTypeChange } from '../../shared/collection-items-panel/filter-panel
 import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataSearchCriteria'
 import { useGetMyDataAccumulatedItems } from '@/sections/account/my-data-section/useGetMyDataAccumulatedItems'
 import { RoleChange } from '@/sections/account/my-data-section/my-data-filter-panel/role-filters/RoleFilters'
-import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import { AllPublicationStatuses } from '@/shared/core/domain/models/PublicationStatus'
 import styles from './MyDataItemsPanel.module.scss'
 import { PublicationStatusChange } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
 
@@ -42,22 +42,14 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     { roleId: 7, roleName: 'Curator' }
   ])
   const roleIds = userRoles.map((role) => role.roleId)
-  const publicationStatuses = [
-    PublicationStatus.Published,
-    PublicationStatus.Draft,
-    PublicationStatus.InReview,
-    PublicationStatus.Unpublished,
-    PublicationStatus.Deaccessioned
-  ]
 
   useLoadMoreOnPopStateEvent(loadItemsOnBackAndForwardNavigation)
 
-  // TODO: define Publishing list elsewhere
   const [currentSearchCriteria, setCurrentSearchCriteria] = useState<MyDataSearchCriteria>(
     new MyDataSearchCriteria(
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
       roleIds,
-      publicationStatuses,
+      AllPublicationStatuses,
       undefined
     )
   )
@@ -174,7 +166,6 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       : (currentSearchCriteria.roleIds ?? /* istanbul ignore next */ []).filter(
           (currentRoleId) => currentRoleId !== roleId
         )
-    console.log('newRoleIds', newRoleIds)
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
@@ -212,10 +203,6 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       setPaginationInfo(paginationInfoUpdated)
     }
   }
-
-  const showSelectedFacets =
-    currentSearchCriteria.publicationStatuses &&
-    currentSearchCriteria.publicationStatuses.length > 0
 
   useEffect(() => {
     setIsLoading(isLoadingItems)

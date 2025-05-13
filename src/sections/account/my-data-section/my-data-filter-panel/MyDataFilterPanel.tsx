@@ -20,8 +20,8 @@ import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus
 interface FilterPanelProps {
   currentItemTypes?: CollectionItemType[]
   onItemTypesChange: (itemTypeChange: ItemTypeChange) => void
-  currentPublicationStatuses?: PublicationStatus[]
-  publicationStatusCounts?: PublicationStatusCount[]
+  currentPublicationStatuses: PublicationStatus[]
+  publicationStatusCounts: PublicationStatusCount[]
   onPublicationStatusesChange: (publicationStatusChange: PublicationStatusChange) => void
   userRoles: Role[]
   currentRoleIds: number[]

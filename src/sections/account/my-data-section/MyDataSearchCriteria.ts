@@ -1,12 +1,11 @@
 import type { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import type { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 export class MyDataSearchCriteria {
   constructor(
     public readonly itemTypes: CollectionItemType[],
     public readonly roleIds: number[],
-    public readonly publicationStatuses?: PublicationStatus[],
+    public readonly publicationStatuses: PublicationStatus[],
     public readonly searchText?: string
   ) {}
 

@@ -9,7 +9,10 @@ import {
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataSearchCriteria'
 import { PublicationStatusCount } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
-import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import {
+  AllPublicationStatuses,
+  PublicationStatus
+} from '@/shared/core/domain/models/PublicationStatus'
 
 export const NO_COLLECTION_ITEMS = 0
 
@@ -113,14 +116,20 @@ const convertFacetsToPublicationStatusCounts = (
   facets: CollectionItemsFacet[]
 ): PublicationStatusCount[] => {
   if (!facets[0]) {
-    return []
+    // Create a list of PublicationStatusCount with 0 counts
+    const publicationStatusCounts: PublicationStatusCount[] = []
+    for (const status of Object.values(AllPublicationStatuses)) {
+      publicationStatusCounts.push({
+        status: status,
+        count: 0
+      })
+    }
+    return publicationStatusCounts
   } else
-    return facets[0].labels
-      .filter((facetLabel) => facetLabel.count > 0) // Include only items with count > 0
-      .map((facetLabel) => ({
-        status: facetLabel.name as PublicationStatus,
-        count: facetLabel.count
-      }))
+    return facets[0].labels.map((facetLabel) => ({
+      status: facetLabel.name as PublicationStatus,
+      count: facetLabel.count
+    }))
 }
 
 async function loadNextItems(
