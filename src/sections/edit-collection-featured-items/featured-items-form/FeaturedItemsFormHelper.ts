@@ -9,7 +9,9 @@ import {
 } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class FeaturedItemsFormHelper {
-  // To define the default form featured items values
+  /**
+   * @description To define the default form featured items values
+   */
   static defineFormDefaultFeaturedItems(
     collectionFeaturedItems: CollectionFeaturedItem[]
   ): FeaturedItemsFormData['featuredItems'] {
@@ -33,7 +35,9 @@ export class FeaturedItemsFormHelper {
     })
   }
 
-  // This method is to transform current form data into "actual featured items" to show the current preview while the user is editing
+  /**
+   * @description This method is to transform current form data into "actual featured items" to show the current preview while the user is editing
+   */
   static transformFormFieldsToFeaturedItems(
     featuredItemsFieldValues: FeaturedItemField[]
   ): CollectionFeaturedItem[] {
@@ -60,7 +64,9 @@ export class FeaturedItemsFormHelper {
     })
   }
 
-  // This method is to transform the form data into DTOs to send to the backend
+  /**
+   * @description This method is to transform the form data into DTOs to send to the backend
+   */
   static defineFeaturedItemsDTO(
     formFeaturedItems: FeaturedItemsFormData['featuredItems']
   ): CollectionFeaturedItemsDTO {
@@ -114,5 +120,71 @@ export class FeaturedItemsFormHelper {
 
   static generateFakeNumberId(): number {
     return Date.now() + Math.floor(Math.random() * 1000)
+  }
+
+  static hasRecommendedAspectRatio(file: File): Promise<{
+    hasRecommendedAspectRatio: boolean
+    aspectRatioStringValue: string
+  }> {
+    return new Promise((resolve) => {
+      const img = new Image()
+      img.src = URL.createObjectURL(file)
+
+      img.onload = () => {
+        const { width, height } = img
+        const aspectRatio = width / height
+
+        const minRatio = 1.3 // means the width is 30% greater than the height
+
+        URL.revokeObjectURL(img.src)
+
+        const aspectRatioStringValue = FeaturedItemsFormHelper.getAspectRatioString(width, height)
+
+        resolve({
+          hasRecommendedAspectRatio: aspectRatio >= minRatio,
+          aspectRatioStringValue: aspectRatioStringValue
+        })
+      }
+
+      img.onerror = () =>
+        resolve({
+          hasRecommendedAspectRatio: false,
+          aspectRatioStringValue: '0:0'
+        })
+    })
+  }
+
+  /**
+   * @description This method calculates the aspect ratio of an image and returns it as a string in the format "width:height".
+   * @example
+   * getAspectRatioString(1920, 1080) // returns "16:9"
+   * getAspectRatioString(800, 600) // returns "4:3"
+   */
+  static getAspectRatioString = (width: number, height: number): string => {
+    const maxVal = 16
+
+    const gcd = (a: number, b: number): number => {
+      while (b !== 0) [a, b] = [b, a % b]
+      return a
+    }
+
+    let w = width
+    let h = height
+
+    const divisor = gcd(w, h)
+    w = w / divisor
+    h = h / divisor
+
+    // If the width or height is greater than the maxVal, scale it down
+    if (w > maxVal || h > maxVal) {
+      const scale = maxVal / Math.max(w, h)
+      w = Math.round(w * scale)
+      h = Math.round(h * scale)
+      const reduced = gcd(w, h)
+      w = w / reduced
+      h = h / reduced
+    }
+
+    return `${w}:${h}`
   }
 }
