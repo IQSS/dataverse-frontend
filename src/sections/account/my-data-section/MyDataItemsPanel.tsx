@@ -15,8 +15,6 @@ import { RoleChange } from '@/sections/account/my-data-section/my-data-filter-pa
 import { AllPublicationStatuses } from '@/shared/core/domain/models/PublicationStatus'
 import styles from './MyDataItemsPanel.module.scss'
 import { PublicationStatusChange } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
-import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
-import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 
 interface MyDataItemsPanelProps {
   collectionRepository: CollectionRepository

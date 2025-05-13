@@ -46,10 +46,10 @@ export class CollectionItemsMother {
         name: 'roles',
         friendlyName: 'Roles',
         labels: [
-          { name: 'Owner' },
-          { name: 'Curator' },
-          { name: 'Contributor' },
-          { name: 'Editor' }
+          { name: 'Owner', count: 1 },
+          { name: 'Curator', count: 1 },
+          { name: 'Contributor', count: 2 },
+          { name: 'Admin', count: 0 }
         ]
       }
     ]

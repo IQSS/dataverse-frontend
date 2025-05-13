@@ -5,6 +5,7 @@ import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { AccountHelper } from '../../sections/account/AccountHelper'
 import { UserMockRepository } from '../shared-mock-repositories/user/UserMockRepository'
+import { CollectionMockRepository } from '../collection/CollectionMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Pages/Account',
@@ -24,6 +25,7 @@ export const AccountInformation: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
       userRepository={new UserMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
     />
   )
 }
@@ -33,6 +35,7 @@ export const ApiTokenTab: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
       userRepository={new UserMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
     />
   )
 }
