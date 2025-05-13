@@ -126,8 +126,6 @@ services:
       - POSTGRES_PASSWORD=secret
     expose:
       - '5432'
-    ports:
-        - '5432:5432'
     networks:
       - dataverse
     volumes:
