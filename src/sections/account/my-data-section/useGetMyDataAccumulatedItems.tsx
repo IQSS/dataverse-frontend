@@ -6,13 +6,13 @@ import {
   CollectionItemsFacet,
   CollectionItemSubset
 } from '@/collection/domain/models/CollectionItemSubset'
-import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
-import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataSearchCriteria'
-import { PublicationStatusCount } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
 import {
   AllPublicationStatuses,
   PublicationStatus
 } from '@/shared/core/domain/models/PublicationStatus'
+import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
+import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataSearchCriteria'
+import { PublicationStatusCount } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
 
 export const NO_COLLECTION_ITEMS = 0
 

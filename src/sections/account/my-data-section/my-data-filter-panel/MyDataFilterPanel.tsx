@@ -9,13 +9,12 @@ import { PublicationStatusChange } from '@/sections/account/my-data-section/my-d
 import { RoleChange } from '@/sections/account/my-data-section/my-data-filter-panel/role-filters/RoleFilters'
 import { TypeFilters } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
 import { RoleFilters } from '@/sections/account/my-data-section/my-data-filter-panel/role-filters/RoleFilters'
-
-import styles from './MyDataFilterPanel.module.scss'
 import {
   PublicationStatusCount,
   PublicationStatusFilters
 } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import styles from './MyDataFilterPanel.module.scss'
 
 interface FilterPanelProps {
   currentItemTypes?: CollectionItemType[]

@@ -55,6 +55,7 @@ export const FilterPanel = ({
               currentItemTypes={currentItemTypes}
               isLoadingCollectionItems={isLoadingCollectionItems}
             />
+
             <FacetsFilters
               facets={facets}
               currentFilterQueries={currentFilterQueries}

@@ -2,11 +2,12 @@ import { useTranslation } from 'react-i18next'
 import { Tabs } from '@iqss/dataverse-design-system'
 import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { AccountInfoSection } from './account-info-section/AccountInfoSection'
-import styles from './Account.module.scss'
 import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+
+import styles from './Account.module.scss'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 

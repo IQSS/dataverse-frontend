@@ -1,9 +1,8 @@
 import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, Stack } from '@iqss/dataverse-design-system'
-import styles from './RoleFilters.module.scss'
-
 import { Role } from '@/users/domain/models/Role'
+import styles from './RoleFilters.module.scss'
 
 interface RoleFiltersProps {
   userRoles: Role[]
