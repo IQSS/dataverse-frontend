@@ -194,12 +194,22 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                   </Tooltip>
                 </div>
               </div>
-              {invalid && <div className={styles['error-msg']}>{error?.message}</div>}
+              {invalid && (
+                <div
+                  className={styles['error-msg']}
+                  data-testid={`image-invalid-message-${itemIndex.toString()}`}>
+                  {error?.message}
+                </div>
+              )}
               {!showAspectRatioWarning && !invalid && (
-                <Form.Group.Text>{t('form.image.helperText')}</Form.Group.Text>
+                <div data-testid={`image-helper-text-${itemIndex.toString()}`}>
+                  <Form.Group.Text>{t('form.image.helperText')}</Form.Group.Text>
+                </div>
               )}
               {showAspectRatioWarning && !invalid && (
-                <div className={styles['aspect-ratio-warning']}>
+                <div
+                  className={styles['aspect-ratio-warning']}
+                  data-testid={`aspect-ratio-warning-${itemIndex.toString()}`}>
                   <div>
                     <ExclamationCircleFill size={18} />
                   </div>

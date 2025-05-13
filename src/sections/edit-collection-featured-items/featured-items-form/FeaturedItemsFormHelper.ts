@@ -122,6 +122,10 @@ export class FeaturedItemsFormHelper {
     return Date.now() + Math.floor(Math.random() * 1000)
   }
 
+  /**
+   * @description This method checks if the image has a recommended aspect ratio (width is 30% greater than height).
+   */
+
   static hasRecommendedAspectRatio(file: File): Promise<{
     hasRecommendedAspectRatio: boolean
     aspectRatioStringValue: string
