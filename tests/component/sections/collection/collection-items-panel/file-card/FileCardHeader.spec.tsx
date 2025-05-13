@@ -1,4 +1,4 @@
-import { FileCardHeader } from '@/sections/shared/collection-items-panel/items-list/file-card/FileCardHeader'
+import { FileCardHeader } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCardHeader'
 import { FileItemTypePreviewMother } from '@tests/component/files/domain/models/FileItemTypePreviewMother'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 

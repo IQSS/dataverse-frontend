@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { DatasetCard } from '@/sections/shared/collection-items-panel/items-list/dataset-card/DatasetCard'
+import { DatasetCard } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard'
 import { WithI18next } from '../../WithI18next'
 import { DatasetItemTypePreviewMother } from '../../../../tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 

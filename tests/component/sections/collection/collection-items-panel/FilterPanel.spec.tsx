@@ -1,5 +1,5 @@
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { FilterPanel } from '@/sections/shared/collection-items-panel/filter-panel/FilterPanel'
+import { FilterPanel } from '@/sections/collection/collection-items-panel/filter-panel/FilterPanel'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 
 const facets = CollectionItemsMother.createItemsFacets()

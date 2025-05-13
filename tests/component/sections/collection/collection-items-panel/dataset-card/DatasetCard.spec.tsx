@@ -1,4 +1,4 @@
-import { DatasetCard } from '@/sections/shared/collection-items-panel/items-list/dataset-card/DatasetCard'
+import { DatasetCard } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard'
 import { DatasetItemTypePreviewMother } from '@tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 

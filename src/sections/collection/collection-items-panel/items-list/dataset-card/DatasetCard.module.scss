@@ -1,6 +1,6 @@
 @use 'sass:color';
-@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
-@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+@import '../../../../../../node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import '../../../../../../node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 
 .card-main-container {
   display: flex;

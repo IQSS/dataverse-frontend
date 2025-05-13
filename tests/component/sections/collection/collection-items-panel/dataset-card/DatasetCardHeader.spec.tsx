@@ -1,4 +1,4 @@
-import { DatasetCardHeader } from '@/sections/shared/collection-items-panel/items-list/dataset-card/DatasetCardHeader'
+import { DatasetCardHeader } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardHeader'
 import { DatasetItemTypePreviewMother } from '@tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 
 describe('DatasetCardHeader', () => {

@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
-import { ItemsSortBy } from '@/sections/shared/collection-items-panel/items-list/ItemsSortBy'
+import { ItemsSortBy } from '@/sections/collection/collection-items-panel/items-list/ItemsSortBy'
 import { OrderType, SortType } from '@/collection/domain/models/CollectionSearchCriteria'
 
 const meta: Meta<typeof ItemsSortBy> = {

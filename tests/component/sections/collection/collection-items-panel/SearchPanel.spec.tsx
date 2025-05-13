@@ -1,4 +1,4 @@
-import { SearchPanel } from '@/sections/shared/collection-items-panel/search-panel/SearchPanel'
+import { SearchPanel } from '@/sections/collection/collection-items-panel/search-panel/SearchPanel'
 
 describe('SearchPanel', () => {
   it('prefills the search input with the search query param', () => {

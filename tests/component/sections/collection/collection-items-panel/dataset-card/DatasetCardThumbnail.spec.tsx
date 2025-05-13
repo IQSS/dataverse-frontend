@@ -1,4 +1,4 @@
-import { DatasetCardThumbnail } from '@/sections/shared/collection-items-panel/items-list/dataset-card/DatasetCardThumbnail'
+import { DatasetCardThumbnail } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardThumbnail'
 import { DatasetItemTypePreviewMother } from '@tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 
 describe('DatasetCardThumbnail', () => {

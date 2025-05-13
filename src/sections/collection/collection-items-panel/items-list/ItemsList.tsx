@@ -20,7 +20,7 @@ import { DatasetCard } from './dataset-card/DatasetCard'
 import { FileCard } from './file-card/FileCard'
 import styles from './ItemsList.module.scss'
 import { Col, Row } from '@iqss/dataverse-design-system'
-import { ItemsSortBy } from '@/sections/shared/collection-items-panel/items-list/ItemsSortBy'
+import { ItemsSortBy } from '@/sections/collection/collection-items-panel/items-list/ItemsSortBy'
 
 interface ItemsListProps {
   items: CollectionItem[]

@@ -1,7 +1,7 @@
-import { DatasetCardInfo } from '@/sections/shared/collection-items-panel/items-list/dataset-card/DatasetCardInfo'
+import { DatasetCardInfo } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardInfo'
 import { DatasetItemTypePreviewMother } from '../../../../dataset/domain/models/DatasetItemTypePreviewMother'
 import { DateHelper } from '@/shared/helpers/DateHelper'
-import styles from '@/sections/shared/collection-items-panel/items-list/dataset-card/DatasetCard.module.scss'
+import styles from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard.module.scss'
 
 describe('DatasetCardInfo', () => {
   it('should render the dataset info', () => {

@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { FileCard } from '@/sections/shared/collection-items-panel/items-list/file-card/FileCard'
+import { FileCard } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCard'
 import { WithI18next } from '../../WithI18next'
 import { FileItemTypePreviewMother } from '../../../../tests/component/files/domain/models/FileItemTypePreviewMother'
 import { FakerHelper } from '../../../../tests/component/shared/FakerHelper'

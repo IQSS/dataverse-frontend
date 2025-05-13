@@ -1,4 +1,4 @@
-import { FileCardThumbnail } from '@/sections/shared/collection-items-panel/items-list/file-card/FileCardThumbnail'
+import { FileCardThumbnail } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCardThumbnail'
 import { FileItemTypePreviewMother } from '@tests/component/files/domain/models/FileItemTypePreviewMother'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
