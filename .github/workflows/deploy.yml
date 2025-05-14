@@ -3,26 +3,21 @@ name: deploy
 on:
   workflow_dispatch:
     inputs:
-      infra_type:
-        description: Remote infrastructure type
+      environment:
+        description: Target environment
         type: choice
         required: true
         options:
-          - S3
-          - Payara
-      environment:
-        description: Environment to run the deployment against
-        type: environment
-        required: true
+          - beta
+          - qa
       basepath:
-        description: 'Server basepath, without slashes, to serve the application (For example: spa). This is only for Payara deployment, and should be left blank if a basepath is not needed.'
+        description: 'Server base path (without slashes) for serving the application (e.g., spa). If left empty, the base path will be set to /spa.'
         type: string
         required: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
 
     steps:
       - uses: actions/checkout@v3
@@ -45,21 +40,48 @@ jobs:
         working-directory: packages/design-system
         run: npm run build
 
-      - name: Create and populate .env file
+      # For BETA environment
+      - name: Create and populate .env file for BETA
+        if: ${{ github.event.inputs.environment == 'beta' }}
         env:
-          DATAVERSE_BACKEND_URL: ${{ secrets.DATAVERSE_BACKEND_URL }}
+          DATAVERSE_BACKEND_URL: ${{ secrets.BETA_DATAVERSE_BACKEND_URL }}
+          OIDC_CLIENT_ID: ${{ secrets.BETA_OIDC_CLIENT_ID }}
+          OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.BETA_OIDC_AUTHORIZATION_ENDPOINT }}
+          OIDC_TOKEN_ENDPOINT: ${{ secrets.BETA_OIDC_TOKEN_ENDPOINT }}
+          OIDC_LOGOUT_ENDPOINT: ${{ secrets.BETA_OIDC_LOGOUT_ENDPOINT }}
+          OIDC_STORAGE_KEY_PREFIX: ${{ secrets.BETA_OIDC_STORAGE_KEY_PREFIX }}
         run: |
           touch .env
           echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
+          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
+          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
+          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
+          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
         shell: bash
 
-      - name: Build
-        if: ${{ github.event.inputs.infra_type == 'S3' || (github.event.inputs.infra_type == 'Payara' && github.event.inputs.basepath == '') }}
-        run: npm run build
+      # For QA environment
+      - name: Create and populate .env file for QA
+        if: ${{ github.event.inputs.environment == 'qa' }}
+        env:
+          DATAVERSE_BACKEND_URL: ${{ secrets.QA_DATAVERSE_BACKEND_URL }}
+          OIDC_CLIENT_ID: ${{ secrets.QA_OIDC_CLIENT_ID }}
+          OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.QA_OIDC_AUTHORIZATION_ENDPOINT }}
+          OIDC_TOKEN_ENDPOINT: ${{ secrets.QA_OIDC_TOKEN_ENDPOINT }}
+          OIDC_LOGOUT_ENDPOINT: ${{ secrets.QA_OIDC_LOGOUT_ENDPOINT }}
+          OIDC_STORAGE_KEY_PREFIX: ${{ secrets.QA_OIDC_STORAGE_KEY_PREFIX }}
+        run: |
+          touch .env
+          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
+          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
+          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
+          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
+          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
+        shell: bash
 
       - name: Build with base path
-        if: ${{ github.event.inputs.infra_type == 'Payara' && github.event.inputs.basepath != '' }}
-        run: npm run build -- --base=/${{ github.event.inputs.basepath }}
+        run: npm run build -- --base=/${{ github.event.inputs.basepath || 'spa' }}
 
       - uses: actions/upload-artifact@v4
         with:
@@ -67,42 +89,9 @@ jobs:
           path: ./dist
           include-hidden-files: true
 
-  deploy-to-s3:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-    if: ${{ github.event.inputs.infra_type == 'S3' }}
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install awscli
-        run: |
-          python -m pip install --upgrade pip
-          pip install awscli
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: built-site
-          path: ./dist
-
-      - name: Upload to S3
-        run: |
-          aws s3 sync ./dist s3://${{ secrets.AWS_S3_BUCKET_NAME }} --delete
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-
   deploy-to-payara:
     needs: build
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-    if: ${{ github.event.inputs.infra_type == 'Payara' }}
 
     steps:
       - uses: actions/checkout@v3
@@ -125,26 +114,58 @@ jobs:
         working-directory: ./deployment/payara
         run: mvn package "-Dversion=${{ steps.branch-name.outputs.current_branch }}"
 
-      - name: Copy war file to remote instance
+      # For BETA environment
+      - name: Copy war file to remote BETA instance
+        if: ${{ github.event.inputs.environment == 'beta' }}
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.PAYARA_INSTANCE_HOST }}
-          username: ${{ secrets.PAYARA_INSTANCE_USERNAME }}
-          key: ${{ secrets.PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.BETA_PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.BETA_PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.BETA_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
           source: './deployment/payara/target/dataverse-frontend.war'
-          target: '/home/${{ secrets.PAYARA_INSTANCE_USERNAME }}'
+          target: '/home/${{ secrets.BETA_PAYARA_INSTANCE_USERNAME }}'
           overwrite: true
 
-      - name: Execute payara war deployment remotely
-        uses: appleboy/ssh-action@v0.1.8
+      # For QA environment
+      - name: Copy war file to remote QA instance
+        if: ${{ github.event.inputs.environment == 'qa' }}
+        uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.PAYARA_INSTANCE_HOST }}
-          username: ${{ secrets.PAYARA_INSTANCE_USERNAME }}
-          key: ${{ secrets.PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.QA_PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.QA_PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.QA_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          source: './deployment/payara/target/dataverse-frontend.war'
+          target: '/tmp'
+          overwrite: true
+
+      # For BETA environment
+      - name: Execute payara war deployment remotely on BETA
+        if: ${{ github.event.inputs.environment == 'beta' }}
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.BETA_PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.BETA_PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.BETA_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
           script: |
             APPLICATION_NAME=dataverse-frontend
             APPLICATION_WAR_PATH=deployment/payara/target/$APPLICATION_NAME.war
             ASADMIN='/usr/local/payara6/bin/asadmin --user admin'
             DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
             $ASADMIN undeploy $DATAVERSE_FRONTEND
-            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /${{ github.event.inputs.basepath }} $APPLICATION_WAR_PATH
+            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /spa $APPLICATION_WAR_PATH
+
+      # For QA environment
+      - name: Execute payara war deployment remotely on QA
+        if: ${{ github.event.inputs.environment == 'qa' }}
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.QA_PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.QA_PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.QA_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          script: |
+            APPLICATION_NAME=dataverse-frontend
+            APPLICATION_WAR_PATH=/tmp/deployment/payara/target/$APPLICATION_NAME.war
+            ASADMIN='/usr/local/payara6/bin/asadmin --user admin'
+            DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
+            $ASADMIN undeploy $DATAVERSE_FRONTEND
+            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /spa $APPLICATION_WAR_PATH
