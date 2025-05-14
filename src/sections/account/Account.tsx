@@ -31,8 +31,10 @@ export const Account = ({
       </header>
 
       <Tabs defaultActiveKey={defaultActiveTabKey}>
-        <Tabs.Tab eventKey={tabsKeys.myData} title={t('tabs.myData')} disabled>
-          <div className={styles['tab-container']}></div>
+        <Tabs.Tab eventKey={tabsKeys.myData} title={t('tabs.myData')}>
+          <div className={styles['tab-container']}>
+            <MyDataItemsPanel collectionRepository={collectionRepository} />
+          </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.notifications} title={t('tabs.notifications')} disabled>
           <div className={styles['tab-container']}></div>
@@ -40,11 +42,6 @@ export const Account = ({
         <Tabs.Tab eventKey={tabsKeys.accountInformation} title={t('tabs.accountInformation')}>
           <div className={styles['tab-container']}>
             <AccountInfoSection />
-          </div>
-        </Tabs.Tab>
-        <Tabs.Tab eventKey={tabsKeys.myData} title={t('tabs.myData')}>
-          <div className={styles['tab-container']}>
-            <MyDataItemsPanel collectionRepository={collectionRepository} />
           </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.apiToken} title={t('tabs.apiToken')}>
