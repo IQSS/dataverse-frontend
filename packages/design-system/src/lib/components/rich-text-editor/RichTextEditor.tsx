@@ -4,10 +4,11 @@ import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
-import Image from '@tiptap/extension-image'
+// import Image from '@tiptap/extension-image'
 import { EditorActions } from './EditorActions'
 import { richTextEditorDefaultLocales, RichTextEditorLocales } from './defaultLocales'
 import './RichTextEditor.scss'
+import { CustomImageExtension } from './CustomImageExtension'
 
 export enum RichTextEditorCustomClasses {
   HEADING = 'rte-heading',
@@ -37,7 +38,6 @@ export interface RichTextEditorProps {
   ariaRequired?: boolean
 }
 
-// TODO:ME - Add image extension
 // TODO:ME - Add tests for the image extension
 // TODO:ME - Check about clicking a link that has already a value, prepopulate the dialog with the current value https://tiptap.dev/docs/editor/extensions/marks/link#page-title
 
@@ -126,7 +126,7 @@ export const RichTextEditor = forwardRef(
         Placeholder.configure({
           placeholder: locales?.placeholder ?? richTextEditorDefaultLocales.placeholder
         }),
-        Image.configure({
+        CustomImageExtension.configure({
           HTMLAttributes: {
             class: RichTextEditorCustomClasses.IMAGE
           }

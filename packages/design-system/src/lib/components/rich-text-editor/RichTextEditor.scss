@@ -53,12 +53,60 @@
         display: block;
         max-width: 100%;
         height: auto;
-        margin: 1rem 0;
+        padding-block: 1rem;
         border-radius: 6px;
         outline: 0.125rem solid transparent;
 
         &.ProseMirror-selectednode {
           outline-color: $dv-primary-color;
+        }
+      }
+
+      #image-resize-container {
+        position: relative;
+        cursor: pointer;
+
+        &:has(#img-alignment-controller) {
+          border: 2px dashed $dv-primary-color;
+        }
+      }
+
+      #img-alignment-controller {
+        position: absolute;
+        top: 0%;
+        left: 50%;
+        z-index: 999;
+        display: inline-flex;
+        vertical-align: middle;
+        transform: translateX(-50%);
+        cursor: pointer;
+
+        button {
+          background-color: $dv-secondary-color;
+          border: 1px solid #ccc;
+          outline: 0;
+
+          &:hover {
+            background-color: color.adjust($dv-secondary-color, $lightness: 3%);
+          }
+
+          &:active {
+            background-color: color.adjust($dv-secondary-color, $lightness: -6%);
+          }
+
+          &:first-child {
+            border-right: 0;
+            border-radius: 0.25rem;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+          }
+
+          &:last-child {
+            border-left: 0;
+            border-radius: 0.25rem;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+          }
         }
       }
     }
