@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { Editor } from '@tiptap/react'
 import { ButtonGroup } from '../button-group/ButtonGroup'
 import { Button } from '../button/Button'
@@ -8,6 +8,7 @@ import {
   BlockquoteRight,
   Code,
   CodeSquare,
+  Image,
   Link,
   ListOl,
   ListUl,
@@ -62,6 +63,15 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
     }
     setLinkDialogOpen(false)
   }
+
+  const handleAddImage = useCallback(() => {
+    const url = window.prompt('URL')
+
+    // TODO:ME - Use a custom dialog, allow to add also an alt text
+    if (url) {
+      editor?.chain().focus().setImage({ src: url }).run()
+    }
+  }, [editor])
 
   const handleToggleH1 = () => editor?.chain().focus().toggleHeading({ level: 1 }).run()
   const isActiveH1 = !disabled && editor?.isActive(EDITOR_FORMATS.heading, { level: 1 })
@@ -288,6 +298,18 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             variant="secondary"
             size="sm"
             icon={<BlockquoteRight size={18} />}
+          />
+
+          <Button
+            onClick={handleAddImage}
+            className={styles['editor-actions-button']}
+            aria-label="Add image"
+            title="Add image"
+            type="button"
+            disabled={disabled}
+            variant="secondary"
+            size="sm"
+            icon={<Image size={18} />}
           />
         </ButtonGroup>
 
