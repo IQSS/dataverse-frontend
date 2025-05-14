@@ -22,7 +22,7 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
             <em className={styles.copyright}>
               {t('copyright', { year: currentYear })}
               <a
-                href="https://dataverse.org/best-practices/harvard-dataverse-privacy-policy"
+                href="https://support.dataverse.harvard.edu/harvard-dataverse-privacy-policy"
                 rel="noreferrer"
                 target="_blank">
                 {t('privacyPolicy')}
