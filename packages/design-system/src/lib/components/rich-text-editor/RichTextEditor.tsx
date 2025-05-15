@@ -4,11 +4,10 @@ import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
-// import Image from '@tiptap/extension-image'
+import { CustomImageExtension } from './CustomImageExtension'
 import { EditorActions } from './EditorActions'
 import { richTextEditorDefaultLocales, RichTextEditorLocales } from './defaultLocales'
 import './RichTextEditor.scss'
-import { CustomImageExtension } from './CustomImageExtension'
 
 export enum RichTextEditorCustomClasses {
   HEADING = 'rte-heading',

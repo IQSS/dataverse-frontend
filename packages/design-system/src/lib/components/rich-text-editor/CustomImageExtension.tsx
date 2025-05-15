@@ -1,19 +1,19 @@
 import Image from '@tiptap/extension-image'
+import { RichTextEditorCustomClasses } from './RichTextEditor'
+
 /**
  * This file extends the default Image extension of TipTap to be able to adjust the size and align the image position.
- * See documentation about Custom Extensions: https://tiptap.dev/docs/editor/extensions/custom-extensions/extend-existing
+ * It was inspired by this repository https://github.com/bae-sh/tiptap-extension-resize-image by https://github.com/bae-sh
+ * and modified to fit our needs in terms of a11ty and styling.
+ * See also documentation about Custom Extensions: https://tiptap.dev/docs/editor/extensions/custom-extensions/extend-existing
  */
 
-// TODO:ME - Change the corner dots styles, move those styles to the scss fille.
-// TODO:ME - Understand that resizing part.
-// TODO:ME - What will addAttributes().style.defualt do with default images in the editor?
-// TODO:ME - Understand // const isClickInside = $container.contains($target) || $target.style.cssText === iconStyle - why was settting again the iconStyle styles
 export const CustomImageExtension = Image.extend({
   addAttributes() {
     return {
       ...this.parent?.(),
       style: {
-        default: 'width: 100%; height: auto;',
+        default: 'height: auto;',
         parseHTML: (element) => {
           const width = element.getAttribute('width')
           return width ? `width: ${width}px; height: auto;` : `${element.style.cssText}`
@@ -25,11 +25,10 @@ export const CustomImageExtension = Image.extend({
     return ({ node, editor, getPos }) => {
       const { view } = editor
       const { style } = node.attrs
-      const $wrapper = document.createElement('section')
+      const $wrapper = document.createElement('div')
       const $container = document.createElement('div')
       const $img = document.createElement('img')
-      //   const iconStyle =
-      //     'display: grid; place-items:center; width: 24px; height: 24px; cursor: pointer;'
+      $img.classList.add(RichTextEditorCustomClasses.IMAGE)
 
       const dispatchNodeView = () => {
         if (typeof getPos === 'function') {
@@ -42,7 +41,7 @@ export const CustomImageExtension = Image.extend({
       }
       const paintImageAlignmentController = () => {
         const $imgAlignmentController = document.createElement('div')
-        $imgAlignmentController.setAttribute('id', 'img-alignment-controller')
+        $imgAlignmentController.classList.add('img-alignment-controller')
         $imgAlignmentController.setAttribute('role', 'group')
 
         const $leftController = document.createElement('button')
@@ -50,10 +49,15 @@ export const CustomImageExtension = Image.extend({
         const $rightController = document.createElement('button')
 
         $leftController.setAttribute('aria-label', 'Align left')
-        $centerController.setAttribute('aria-label', 'Align center')
-        $rightController.setAttribute('aria-label', 'Align right')
+        $leftController.setAttribute('title', 'Align left')
         $leftController.setAttribute('type', 'button')
+
+        $centerController.setAttribute('aria-label', 'Align center')
+        $centerController.setAttribute('title', 'Align center')
         $centerController.setAttribute('type', 'button')
+
+        $rightController.setAttribute('aria-label', 'Align right')
+        $rightController.setAttribute('title', 'Align right')
         $rightController.setAttribute('type', 'button')
 
         $leftController.innerHTML = `
@@ -75,34 +79,33 @@ export const CustomImageExtension = Image.extend({
         `
 
         $leftController.addEventListener('click', () => {
-          $img.setAttribute('style', `${$img.style.cssText} margin: 0 auto 0 0;`)
+          $img.style.marginLeft = '0'
+          $img.style.marginRight = 'auto'
           dispatchNodeView()
         })
         $centerController.addEventListener('click', () => {
-          $img.setAttribute('style', `${$img.style.cssText} margin: 0 auto;`)
+          $img.style.marginLeft = 'auto'
+          $img.style.marginRight = 'auto'
           dispatchNodeView()
         })
         $rightController.addEventListener('click', () => {
-          $img.setAttribute('style', `${$img.style.cssText} margin: 0 0 0 auto;`)
+          $img.style.marginLeft = 'auto'
+          $img.style.marginRight = '0'
           dispatchNodeView()
         })
 
-        $imgAlignmentController.appendChild($leftController)
-        $imgAlignmentController.appendChild($centerController)
-        $imgAlignmentController.appendChild($rightController)
-
+        $imgAlignmentController.append($leftController, $centerController, $rightController)
         $container.appendChild($imgAlignmentController)
       }
 
       $wrapper.setAttribute('style', `display: flex;`)
       $wrapper.appendChild($container)
 
-      $container.setAttribute('id', 'image-resize-container')
+      $container.classList.add('image-resize-container')
       $container.setAttribute('style', `${style as string}`)
       $container.appendChild($img)
 
       Object.entries(node.attrs).forEach(([key, value]) => {
-        // console.log({ key, value })
         if (value === undefined || value === null) return
         $img.setAttribute(key, value as string)
       })
@@ -134,16 +137,14 @@ export const CustomImageExtension = Image.extend({
 
         $container.setAttribute('style', `${style as string}`)
 
+        // Add resize dots to the corners and resize functionality
         Array.from({ length: 4 }, (_, index) => {
-          const $dot = document.createElement('div')
-          $dot.setAttribute(
-            'style',
-            `position: absolute; width: ${isMobile ? 16 : 9}px; height: ${
-              isMobile ? 16 : 9
-            }px; border: 1.5px solid #6C6C6C; border-radius: 50%; ${dotsPosition[index]}`
-          )
+          const $resizeDot = document.createElement('div')
+          $resizeDot.classList.add('resize-dot')
+          isMobile && $resizeDot.classList.add('mobile')
+          $resizeDot.setAttribute('style', `position: absolute; ${dotsPosition[index]}`)
 
-          $dot.addEventListener('mousedown', (e) => {
+          $resizeDot.addEventListener('mousedown', (e) => {
             e.preventDefault()
             isResizing = true
             startX = e.clientX
@@ -174,7 +175,7 @@ export const CustomImageExtension = Image.extend({
             document.addEventListener('mouseup', onMouseUp)
           })
 
-          $dot.addEventListener(
+          $resizeDot.addEventListener(
             'touchstart',
             (e) => {
               e.cancelable && e.preventDefault()
@@ -209,20 +210,16 @@ export const CustomImageExtension = Image.extend({
             },
             { passive: false }
           )
-          $container.appendChild($dot)
+          $container.appendChild($resizeDot)
         })
       })
 
+      // Remove the image alignment controller and resize dots when clicking outside the container
       document.addEventListener('click', (e: MouseEvent) => {
         const $target = e.target as HTMLElement
-        // const isClickInside = $container.contains($target) || $target.style.cssText === iconStyle
-        const isClickInside = $container.contains($target) || $target.style.cssText === ''
+        const isClickInside = $container.contains($target)
 
         if (!isClickInside) {
-          const containerStyle = $container.getAttribute('style')
-          const newStyle = containerStyle?.replace('border: 1px dashed #6C6C6C;', '')
-          $container.setAttribute('style', newStyle as string)
-
           if ($container.childElementCount > 3) {
             for (let i = 0; i < 5; i++) {
               $container.removeChild($container.lastChild as Node)
