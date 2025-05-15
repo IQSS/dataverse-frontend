@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { Editor } from '@tiptap/react'
 import { ButtonGroup } from '../button-group/ButtonGroup'
 import { Button } from '../button/Button'
@@ -51,6 +51,11 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
     open: false,
     url: ''
   })
+  const [imageDialog, setImageDialog] = useState({
+    open: false,
+    url: '',
+    altText: ''
+  })
 
   const handleOpenLinkDialog = () => {
     const previousUrl = editor?.getAttributes('link')?.href as string | null
@@ -80,21 +85,31 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
     handleCloseLinkDialog()
   }
 
-  const onChangeLinkUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLinkDialog((prev) => ({
-      ...prev,
-      url: e.target.value
-    }))
+  const handleOpenImageDialog = () => {
+    console.log(editor?.getAttributes('image'))
+    const previousUrl = editor?.getAttributes('image')?.src as string | null
+    const previousAltText = editor?.getAttributes('image')?.alt as string | null
+
+    setImageDialog({
+      open: true,
+      url: previousUrl ?? '',
+      altText: previousAltText ?? ''
+    })
+  }
+  const handleCloseImageDialog = () => {
+    setImageDialog({
+      open: false,
+      url: '',
+      altText: ''
+    })
   }
 
-  const handleAddImage = useCallback(() => {
-    const url = window.prompt('URL')
-
-    // TODO:ME - Use a custom dialog, allow to add also an alt text
-    if (url) {
-      editor?.chain().focus().setImage({ src: url }).run()
+  const handleOKImageDialog = () => {
+    if (imageDialog.url) {
+      editor?.chain().focus().setImage({ src: imageDialog.url, alt: imageDialog.altText }).run()
     }
-  }, [editor])
+    handleCloseImageDialog()
+  }
 
   const handleToggleH1 = () => editor?.chain().focus().toggleHeading({ level: 1 }).run()
   const isActiveH1 = !disabled && editor?.isActive(EDITOR_FORMATS.heading, { level: 1 })
@@ -324,7 +339,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
           />
 
           <Button
-            onClick={handleAddImage}
+            onClick={handleOpenImageDialog}
             className={styles['editor-actions-button']}
             aria-label="Add image"
             title="Add image"
@@ -376,7 +391,16 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
               {locales?.linkDialog?.label ?? richTextEditorDefaultLocales.linkDialog?.label}
             </Form.Group.Label>
             <Col>
-              <Form.Group.Input type="text" value={linkDialog.url} onChange={onChangeLinkUrl} />
+              <Form.Group.Input
+                type="text"
+                value={linkDialog.url}
+                onChange={(e) =>
+                  setLinkDialog((prev) => ({
+                    ...prev,
+                    url: e.target.value
+                  }))
+                }
+              />
             </Col>
           </Form.Group>
         </Modal.Body>
@@ -386,6 +410,66 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
           </Button>
           <Button onClick={handleCloseLinkDialog} variant="secondary" type="button">
             {locales?.linkDialog?.cancel ?? richTextEditorDefaultLocales.linkDialog?.cancel}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Dialog for adding the url and alt text of the image  */}
+      <Modal show={imageDialog.open} onHide={handleCloseImageDialog} size="lg">
+        <Modal.Header>
+          <Modal.Title>
+            {locales?.imageDialog?.title ?? richTextEditorDefaultLocales.imageDialog?.title}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group controlId="image-url" as={Col}>
+            <Form.Group.Label column>
+              {locales?.imageDialog?.label ?? richTextEditorDefaultLocales.imageDialog?.label}
+            </Form.Group.Label>
+            <Col>
+              <Form.Group.Input
+                type="text"
+                placeholder="https://example.com/image.png"
+                value={imageDialog.url}
+                onChange={(e) =>
+                  setImageDialog((prev) => ({
+                    ...prev,
+                    url: e.target.value
+                  }))
+                }
+              />
+            </Col>
+          </Form.Group>
+
+          <Form.Group controlId="image-alt-text" as={Col}>
+            <Form.Group.Label column>
+              {locales?.imageDialog?.altTextLabel ??
+                richTextEditorDefaultLocales.imageDialog?.altTextLabel}
+            </Form.Group.Label>
+            <Col>
+              <Form.Group.Input
+                type="text"
+                value={imageDialog.altText}
+                placeholder={
+                  locales?.imageDialog?.altTextPlaceholder ??
+                  richTextEditorDefaultLocales.imageDialog?.altTextPlaceholder
+                }
+                onChange={(e) =>
+                  setImageDialog((prev) => ({
+                    ...prev,
+                    altText: e.target.value
+                  }))
+                }
+              />
+            </Col>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleOKImageDialog} variant="primary" type="button">
+            {locales?.imageDialog?.ok ?? richTextEditorDefaultLocales.imageDialog?.ok}
+          </Button>
+          <Button onClick={handleCloseImageDialog} variant="secondary" type="button">
+            {locales?.imageDialog?.cancel ?? richTextEditorDefaultLocales.imageDialog?.cancel}
           </Button>
         </Modal.Footer>
       </Modal>
