@@ -165,4 +165,31 @@ describe('FeaturedItemsFormHelper', () => {
       expect(withTwoDecimals).to.deep.equal('9.77 KB')
     })
   })
+
+  describe('getAspectRatioString', () => {
+    it('should return 1:1 when width and height are equal', () => {
+      const result = FeaturedItemsFormHelper.getAspectRatioString(400, 400)
+
+      expect(result).to.deep.equal('1:1')
+    })
+
+    it('should return 4:3 when width is 12 and height is 9', () => {
+      const result = FeaturedItemsFormHelper.getAspectRatioString(12, 9)
+
+      expect(result).to.deep.equal('4:3')
+    })
+
+    it('should return 1:4 when width is 2 and height is 8', () => {
+      const result = FeaturedItemsFormHelper.getAspectRatioString(2, 8)
+
+      expect(result).to.deep.equal('1:4')
+    })
+
+    it('should scale down the aspect ratio to a more user friendly value', () => {
+      // For example, an image with dimensions 800x537 will be scale down to 16:11
+      const result = FeaturedItemsFormHelper.getAspectRatioString(800, 537)
+
+      expect(result).to.deep.equal('16:11')
+    })
+  })
 })
