@@ -86,7 +86,6 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
   }
 
   const handleOpenImageDialog = () => {
-    console.log(editor?.getAttributes('image'))
     const previousUrl = editor?.getAttributes('image')?.src as string | null
     const previousAltText = editor?.getAttributes('image')?.alt as string | null
 
@@ -394,6 +393,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
               <Form.Group.Input
                 type="text"
                 value={linkDialog.url}
+                autoFocus
                 onChange={(e) =>
                   setLinkDialog((prev) => ({
                     ...prev,
@@ -429,6 +429,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             <Col>
               <Form.Group.Input
                 type="text"
+                autoFocus
                 placeholder="https://example.com/image.png"
                 value={imageDialog.url}
                 onChange={(e) =>
