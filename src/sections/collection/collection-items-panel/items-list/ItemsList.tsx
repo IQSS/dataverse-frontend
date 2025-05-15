@@ -5,11 +5,7 @@ import cn from 'classnames'
 import { type CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import {
-  FilterQuery,
-  SortType,
-  OrderType
-} from '@/collection/domain/models/CollectionSearchCriteria'
+import { SortType, OrderType } from '@/collection/domain/models/CollectionSearchCriteria'
 import { PaginationResultsInfo } from '@/sections/shared/pagination/PaginationResultsInfo'
 import { NO_COLLECTION_ITEMS } from '../useGetAccumulatedItems'
 import { ErrorItemsMessage } from './ErrorItemsMessage'
@@ -25,6 +21,7 @@ import { ItemsSortBy } from '@/sections/collection/collection-items-panel/items-
 interface ItemsListProps {
   items: CollectionItem[]
   error: string | null
+  translationFile: string
   accumulatedCount: number
   isLoadingItems: boolean
   areItemsAvailable: boolean
@@ -34,7 +31,7 @@ interface ItemsListProps {
   paginationInfo: CollectionItemsPaginationInfo
   onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
   itemsTypesSelected: CollectionItemType[]
-  filterQueriesSelected: FilterQuery[]
+  hasFilterQueries: boolean
   parentCollectionAlias?: string
   allowSorting?: boolean
   onSortChange?: (newSortType?: SortType, newOrderType?: OrderType) => void
@@ -48,6 +45,7 @@ export const ItemsList = forwardRef(
     {
       items,
       error,
+      translationFile,
       accumulatedCount,
       isLoadingItems,
       areItemsAvailable,
@@ -57,7 +55,7 @@ export const ItemsList = forwardRef(
       paginationInfo,
       onBottomReach,
       itemsTypesSelected,
-      filterQueriesSelected,
+      hasFilterQueries,
       parentCollectionAlias,
       allowSorting = true,
       onSortChange,
@@ -75,9 +73,9 @@ export const ItemsList = forwardRef(
     })
 
     const showNoItemsMessage =
-      !isLoadingItems && isEmptyItems && !hasSearchValue && filterQueriesSelected.length === 0
+      !isLoadingItems && isEmptyItems && !hasSearchValue && !hasFilterQueries
     const showNoSearchMatchesMessage =
-      !isLoadingItems && isEmptyItems && (hasSearchValue || filterQueriesSelected.length > 0)
+      !isLoadingItems && isEmptyItems && (hasSearchValue || hasFilterQueries)
 
     const showSentrySkeleton = hasNextPage && !error && !isEmptyItems
     const showNotSentrySkeleton = isLoadingItems && isEmptyItems
@@ -92,7 +90,12 @@ export const ItemsList = forwardRef(
           tabIndex={0}
           ref={ref as ForwardedRef<HTMLDivElement>}
           data-testid="items-list-scrollable-container">
-          {showNoItemsMessage && <NoItemsMessage itemsTypesSelected={itemsTypesSelected} />}
+          {showNoItemsMessage && (
+            <NoItemsMessage
+              translationFile={translationFile}
+              itemsTypesSelected={itemsTypesSelected}
+            />
+          )}
 
           {showNoSearchMatchesMessage && <NoSearchMatchesMessage />}
 

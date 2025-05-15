@@ -10,10 +10,11 @@ import styles from './ItemsList.module.scss'
 
 interface NoItemsMessageProps {
   itemsTypesSelected: CollectionItemType[]
+  translationFile: string
 }
 
-export function NoItemsMessage({ itemsTypesSelected }: NoItemsMessageProps) {
-  const { t } = useTranslation('collection')
+export function NoItemsMessage({ itemsTypesSelected, translationFile }: NoItemsMessageProps) {
+  const { t } = useTranslation(translationFile)
   const { user } = useSession()
   const { logIn: oidcLogin } = useContext(AuthContext)
   const { pathname, search } = useLocation()

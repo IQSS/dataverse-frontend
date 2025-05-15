@@ -47,7 +47,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
 
   const [currentSearchCriteria, setCurrentSearchCriteria] = useState<MyDataSearchCriteria>(
     new MyDataSearchCriteria(
-      [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
+      [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
       roleIds,
       AllPublicationStatuses,
       undefined
@@ -144,6 +144,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
       setPaginationInfo(paginationInfoUpdated)
     }
+    setCurrentSearchCriteria(newCollectionSearchCriteria)
   }
 
   const handleItemsTypeChange = async (itemTypeChange: ItemTypeChange) => {
@@ -254,6 +255,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
           <ItemsList
             items={accumulatedItems}
             error={error}
+            translationFile="account"
             accumulatedCount={accumulatedCount}
             isLoadingItems={isLoadingItems}
             areItemsAvailable={areItemsAvailable}
@@ -261,10 +263,9 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
             isEmptyItems={isEmptyItems}
             hasSearchValue={currentSearchCriteria.hasSearchText()}
             itemsTypesSelected={currentSearchCriteria.itemTypes}
-            filterQueriesSelected={
-              currentSearchCriteria.publicationStatuses?.map(
-                (status) => `publicationStatus:${status}` as `${string}:${string}`
-              ) ?? []
+            hasFilterQueries={
+              currentSearchCriteria.publicationStatuses.length != AllPublicationStatuses.length ||
+              currentSearchCriteria.roleIds.length != userRoles.length
             }
             paginationInfo={paginationInfo}
             onBottomReach={handleLoadMoreOnBottomReach}

@@ -41,16 +41,6 @@ export class CollectionItemsMother {
           { name: 'In Review', count: 1 },
           { name: 'Deaccessioned', count: 1 }
         ]
-      },
-      {
-        name: 'roles',
-        friendlyName: 'Roles',
-        labels: [
-          { name: 'Owner', count: 1 },
-          { name: 'Curator', count: 1 },
-          { name: 'Contributor', count: 2 },
-          { name: 'Admin', count: 0 }
-        ]
       }
     ]
   }

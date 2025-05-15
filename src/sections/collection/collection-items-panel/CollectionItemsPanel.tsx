@@ -335,6 +335,7 @@ export const CollectionItemsPanel = ({
             parentCollectionAlias={collectionId}
             items={accumulatedItems}
             error={error}
+            translationFile="collection"
             accumulatedCount={accumulatedCount}
             isLoadingItems={isLoadingItems}
             areItemsAvailable={areItemsAvailable}
@@ -342,7 +343,11 @@ export const CollectionItemsPanel = ({
             isEmptyItems={isEmptyItems}
             hasSearchValue={currentSearchCriteria.hasSearchText()}
             itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
-            filterQueriesSelected={currentSearchCriteria.filterQueries ?? []}
+            hasFilterQueries={
+              currentSearchCriteria.filterQueries
+                ? currentSearchCriteria.filterQueries.length > 0
+                : false
+            }
             sortSelected={currentSearchCriteria.sort}
             orderSelected={currentSearchCriteria.order}
             paginationInfo={paginationInfo}
