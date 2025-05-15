@@ -184,7 +184,7 @@ describe('MyDataItemsPanel', () => {
     collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
     cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
     cy.findByLabelText('Unpublished (0)').should('exist').click()
-
+    cy.findByLabelText('Contributor').should('exist').click()
     cy.findByText(/There are no collections, datasets, or files that match your search./).should(
       'exist'
     )
@@ -290,6 +290,18 @@ describe('MyDataItemsPanel', () => {
       cy.findByRole('checkbox', { name: /Files/ }).uncheck()
     })
 
+    it('changes the roles correctly', () => {
+      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+
+      cy.findByRole('checkbox', { name: /Contributor/ }).uncheck()
+      cy.findByRole('checkbox', { name: /Contributor/ }).check()
+    })
+    it('changes the publicationStatus correctory correctly', () => {
+      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+
+      cy.findByRole('checkbox', { name: /Draft/ }).uncheck()
+      cy.findByRole('checkbox', { name: /Draft/ }).check()
+    })
     it('it calls the loadItemsOnBackAndForwardNavigation on pop state event when navigating back and forward', () => {
       cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
