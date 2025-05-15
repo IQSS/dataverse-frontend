@@ -394,6 +394,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
                 type="text"
                 value={linkDialog.url}
                 autoFocus
+                autoComplete="off"
                 onChange={(e) =>
                   setLinkDialog((prev) => ({
                     ...prev,
@@ -430,6 +431,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
               <Form.Group.Input
                 type="text"
                 autoFocus
+                autoComplete="off"
                 placeholder="https://example.com/image.png"
                 value={imageDialog.url}
                 onChange={(e) =>
@@ -451,6 +453,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
               <Form.Group.Input
                 type="text"
                 value={imageDialog.altText}
+                autoComplete="off"
                 placeholder={
                   locales?.imageDialog?.altTextPlaceholder ??
                   richTextEditorDefaultLocales.imageDialog?.altTextPlaceholder

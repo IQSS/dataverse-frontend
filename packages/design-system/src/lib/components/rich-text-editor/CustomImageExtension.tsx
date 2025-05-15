@@ -4,7 +4,7 @@ import { RichTextEditorCustomClasses } from './RichTextEditor'
 /**
  * This file extends the default Image extension of TipTap to be able to adjust the size and align the image position.
  * It was inspired by this repository https://github.com/bae-sh/tiptap-extension-resize-image by https://github.com/bae-sh
- * and modified to fit our needs in terms of a11ty and styling.
+ * and modified to fit our needs in terms of a11ty and styling, using classes instead of inline styles.
  * See also documentation about Custom Extensions: https://tiptap.dev/docs/editor/extensions/custom-extensions/extend-existing
  */
 
@@ -12,11 +12,13 @@ export const CustomImageExtension = Image.extend({
   addAttributes() {
     return {
       ...this.parent?.(),
-      style: {
-        default: 'height: auto;',
-        parseHTML: (element) => {
-          const width = element.getAttribute('width')
-          return width ? `width: ${width}px; height: auto;` : `${element.style.cssText}`
+      class: {
+        default: RichTextEditorCustomClasses.IMAGE,
+        parseHTML: (element) => element.getAttribute('class'),
+        renderHTML: (attributes) => {
+          return {
+            class: attributes.class as string
+          }
         }
       }
     }
@@ -24,21 +26,21 @@ export const CustomImageExtension = Image.extend({
   addNodeView() {
     return ({ node, editor, getPos }) => {
       const { view } = editor
-      const { style } = node.attrs
+      const { class: nodeImgClass } = node.attrs
       const $wrapper = document.createElement('div')
       const $container = document.createElement('div')
       const $img = document.createElement('img')
-      $img.classList.add(RichTextEditorCustomClasses.IMAGE)
 
       const dispatchNodeView = () => {
         if (typeof getPos === 'function') {
           const newAttrs = {
             ...node.attrs,
-            style: `${$img.style.cssText}`
+            class: $img.className || null
           }
           view.dispatch(view.state.tr.setNodeMarkup(getPos(), null, newAttrs))
         }
       }
+
       const paintImageAlignmentController = () => {
         const $imgAlignmentController = document.createElement('div')
         $imgAlignmentController.classList.add('img-alignment-controller')
@@ -78,21 +80,26 @@ export const CustomImageExtension = Image.extend({
             </svg>
         `
 
-        $leftController.addEventListener('click', () => {
-          $img.style.marginLeft = '0'
-          $img.style.marginRight = 'auto'
+        const applyAlignment = (alignment: string) => {
+          // Remove all alignment classes first
+          alignmentsClasses.forEach((cls) => $img.classList.remove(cls))
+
+          // Add the selected alignment class
+          $img.classList.add(alignment)
+
+          // Persist changes
           dispatchNodeView()
-        })
-        $centerController.addEventListener('click', () => {
-          $img.style.marginLeft = 'auto'
-          $img.style.marginRight = 'auto'
-          dispatchNodeView()
-        })
-        $rightController.addEventListener('click', () => {
-          $img.style.marginLeft = 'auto'
-          $img.style.marginRight = '0'
-          dispatchNodeView()
-        })
+        }
+
+        $leftController.addEventListener('click', () =>
+          applyAlignment(RichTextEditorCustomClasses.IMAGE_ALIGN_LEFT)
+        )
+        $centerController.addEventListener('click', () =>
+          applyAlignment(RichTextEditorCustomClasses.IMAGE_ALIGN_CENTER)
+        )
+        $rightController.addEventListener('click', () =>
+          applyAlignment(RichTextEditorCustomClasses.IMAGE_ALIGN_RIGHT)
+        )
 
         $imgAlignmentController.append($leftController, $centerController, $rightController)
         $container.appendChild($imgAlignmentController)
@@ -102,7 +109,22 @@ export const CustomImageExtension = Image.extend({
       $wrapper.appendChild($container)
 
       $container.classList.add('image-resize-container')
-      $container.setAttribute('style', `${style as string}`)
+
+      const alignmentsClasses = [
+        RichTextEditorCustomClasses.IMAGE_ALIGN_LEFT,
+        RichTextEditorCustomClasses.IMAGE_ALIGN_CENTER,
+        RichTextEditorCustomClasses.IMAGE_ALIGN_RIGHT
+      ]
+
+      // Detect if the class from the img contains alignment class and add it to the container otherwise it wont be aligned inside the rich text editor content
+      const matchedAlignment = alignmentsClasses.find((alignment) =>
+        (nodeImgClass as string).includes(alignment)
+      )
+
+      if (matchedAlignment) {
+        $container.classList.add(matchedAlignment)
+      }
+
       $container.appendChild($img)
 
       Object.entries(node.attrs).forEach(([key, value]) => {
@@ -135,14 +157,27 @@ export const CustomImageExtension = Image.extend({
 
         paintImageAlignmentController()
 
-        $container.setAttribute('style', `${style as string}`)
-
         // Add resize dots to the corners and resize functionality
         Array.from({ length: 4 }, (_, index) => {
           const $resizeDot = document.createElement('div')
           $resizeDot.classList.add('resize-dot')
           isMobile && $resizeDot.classList.add('mobile')
           $resizeDot.setAttribute('style', `position: absolute; ${dotsPosition[index]}`)
+
+          const transformAndApplyWidthToClassname = (newWidth: number) => {
+            // Round the width to nearest 50px to match the CSS classes like w-50, w-100, etc.
+            const roundedWidth = Math.max(50, Math.round(newWidth / 50) * 50)
+            const className = `rte-w-${roundedWidth}`
+
+            // Remove previous width classes like w-50, w-100, etc.
+            $img.classList.forEach((cls) => {
+              if (/^rte-w-\d+$/.test(cls)) {
+                $img.classList.remove(cls)
+              }
+            })
+
+            $img.classList.add(className)
+          }
 
           $resizeDot.addEventListener('mousedown', (e) => {
             e.preventDefault()
@@ -156,9 +191,7 @@ export const CustomImageExtension = Image.extend({
 
               const newWidth = startWidth + deltaX
 
-              $container.style.width = `${newWidth}px`
-
-              $img.style.width = `${newWidth}px`
+              transformAndApplyWidthToClassname(newWidth)
             }
 
             const onMouseUp = () => {
@@ -190,9 +223,7 @@ export const CustomImageExtension = Image.extend({
 
                 const newWidth = startWidth + deltaX
 
-                $container.style.width = `${newWidth}px`
-
-                $img.style.width = `${newWidth}px`
+                transformAndApplyWidthToClassname(newWidth)
               }
 
               const onTouchEnd = () => {

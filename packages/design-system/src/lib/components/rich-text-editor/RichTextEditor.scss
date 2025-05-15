@@ -109,6 +109,21 @@
             height: 16px;
           }
         }
+
+        &.rte-img-left {
+          margin-right: auto;
+          margin-left: 0;
+        }
+
+        &.rte-img-center {
+          margin-right: auto;
+          margin-left: auto;
+        }
+
+        &.rte-img-right {
+          margin-right: 0;
+          margin-left: auto;
+        }
       }
     }
   }

@@ -58,4 +58,28 @@
   height: auto;
   margin-bottom: 1.5rem;
   border-radius: 6px;
+
+  &.rte-img-left {
+    margin-right: auto;
+    margin-left: 0;
+  }
+
+  &.rte-img-center {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  &.rte-img-right {
+    margin-right: 0;
+    margin-left: auto;
+  }
+}
+
+// Generates classes for widths from 50px to 3000px in increments of 50px
+@for $i from 50 through 3000 {
+  @if $i % 50 == 0 {
+    .rte-w-#{$i} {
+      width: #{$i}px;
+    }
+  }
 }

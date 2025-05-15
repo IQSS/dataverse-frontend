@@ -22,7 +22,10 @@ export enum RichTextEditorCustomClasses {
   BLOCKQUOTE = 'rte-blockquote',
   UNDERLINE = 'rte-underline',
   LINK = 'rte-link',
-  IMAGE = 'rte-img'
+  IMAGE = 'rte-img',
+  IMAGE_ALIGN_LEFT = 'rte-img-left',
+  IMAGE_ALIGN_CENTER = 'rte-img-center',
+  IMAGE_ALIGN_RIGHT = 'rte-img-right'
 }
 
 export interface RichTextEditorProps {
