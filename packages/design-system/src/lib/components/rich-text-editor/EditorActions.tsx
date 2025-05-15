@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Editor } from '@tiptap/react'
 import { ButtonGroup } from '../button-group/ButtonGroup'
 import { Button } from '../button/Button'
@@ -47,21 +47,44 @@ interface EditorActionsProps {
 }
 
 export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps) => {
-  const [linkDialogOpen, setLinkDialogOpen] = useState(false)
-  const linkTextfieldRef = useRef<HTMLInputElement>(null)
+  const [linkDialog, setLinkDialog] = useState({
+    open: false,
+    url: ''
+  })
 
-  const handleOpenLinkDialog = () => setLinkDialogOpen(true)
-  const handleCloseLinkDialog = () => setLinkDialogOpen(false)
+  const handleOpenLinkDialog = () => {
+    const previousUrl = editor?.getAttributes('link')?.href as string | null
+
+    setLinkDialog({
+      open: true,
+      url: previousUrl ?? ''
+    })
+  }
+  const handleCloseLinkDialog = () =>
+    setLinkDialog({
+      open: false,
+      url: ''
+    })
 
   const handleOKLinkDialog = () => {
-    const url = linkTextfieldRef.current?.value
-
-    if (url) {
-      editor?.chain().focus().extendMarkRange(EDITOR_FORMATS.link).setLink({ href: url }).run()
+    if (linkDialog.url) {
+      editor
+        ?.chain()
+        .focus()
+        .extendMarkRange(EDITOR_FORMATS.link)
+        .setLink({ href: linkDialog.url })
+        .run()
     } else {
       editor?.chain().focus().extendMarkRange(EDITOR_FORMATS.link).unsetLink().run()
     }
-    setLinkDialogOpen(false)
+    handleCloseLinkDialog()
+  }
+
+  const onChangeLinkUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLinkDialog((prev) => ({
+      ...prev,
+      url: e.target.value
+    }))
   }
 
   const handleAddImage = useCallback(() => {
@@ -341,7 +364,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
       </div>
 
       {/* Dialog for pasting a url to the link */}
-      <Modal show={linkDialogOpen} onHide={handleCloseLinkDialog} size="lg">
+      <Modal show={linkDialog.open} onHide={handleCloseLinkDialog} size="lg">
         <Modal.Header>
           <Modal.Title>
             {locales?.linkDialog?.title ?? richTextEditorDefaultLocales.linkDialog?.title}
@@ -353,7 +376,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
               {locales?.linkDialog?.label ?? richTextEditorDefaultLocales.linkDialog?.label}
             </Form.Group.Label>
             <Col>
-              <Form.Group.Input type="text" ref={linkTextfieldRef} />
+              <Form.Group.Input type="text" value={linkDialog.url} onChange={onChangeLinkUrl} />
             </Col>
           </Form.Group>
         </Modal.Body>

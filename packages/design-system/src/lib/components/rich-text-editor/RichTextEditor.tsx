@@ -38,7 +38,6 @@ export interface RichTextEditorProps {
 }
 
 // TODO:ME - Add tests for the image extension
-// TODO:ME - Check about clicking a link that has already a value, prepopulate the dialog with the current value https://tiptap.dev/docs/editor/extensions/marks/link#page-title
 
 export const RichTextEditor = forwardRef(
   (
