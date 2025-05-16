@@ -9,7 +9,7 @@
     "summary": "Summary",
     "contributors": "Contributors"
   },
-  "fileNotIncluded": "File is not included in this version",
+  "fileNotChange": "No changes associated with this version",
   "subtext": "This file is part of \"{{datasetTitle}}\".",
   "datasetCitationTitle": "Dataset Citation",
   "fileCitationTitle": "File Citation",

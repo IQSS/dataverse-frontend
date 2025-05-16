@@ -104,7 +104,7 @@ export const SummaryDescription = ({ summary }: { summary?: FileDifferenceSummar
     )
   }
 
-  const parts = Object.entries(summaryText).map(([key, value], index) => {
+  const summaryTextParts = Object.entries(summaryText).map(([key, value], index) => {
     const content =
       key === 'file' ? (
         <strong key={key}>{value}</strong>
@@ -122,5 +122,5 @@ export const SummaryDescription = ({ summary }: { summary?: FileDifferenceSummar
     )
   })
 
-  return <>{parts}</>
+  return <>{summaryTextParts}</>
 }

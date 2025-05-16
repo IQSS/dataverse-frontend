@@ -10,7 +10,7 @@ export const useFileVersionSummaryDescription = (
 ): Record<string, string> | string => {
   const { t } = useTranslation('file')
 
-  if (!summary) return t('fileNotIncluded')
+  if (!summary || !Object.entries(summary).length) return t('fileNotChange')
 
   const description: Record<string, string> = {}
 

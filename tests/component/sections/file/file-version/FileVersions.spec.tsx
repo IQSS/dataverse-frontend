@@ -49,7 +49,7 @@ describe('FileVersions', () => {
     cy.customMount(<FileVersions version={noSummaryFile} datasetVersionNumber={'2.0'} />)
 
     cy.get('button').contains('1.3').should('be.disabled')
-    cy.findAllByText('File is not included in this version').should('exist')
+    cy.findAllByText('No changes associated with this version').should('exist')
   })
 
   it('the version number should be disable and bold if it is the current version', () => {

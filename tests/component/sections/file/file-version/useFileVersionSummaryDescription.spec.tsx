@@ -35,4 +35,12 @@ describe('useFileVersionSummaryDescription', () => {
       .haveOwnProperty('Deaccessioned Reason')
       .equal('Removed at author request')
   })
+
+  it('returns correctly when summary is empty', () => {
+    const summary: FileDifferenceSummary = {}
+
+    const { result } = renderHook(() => useFileVersionSummaryDescription(summary))
+
+    expect(result.current).equal('No changes associated with this version')
+  })
 })
