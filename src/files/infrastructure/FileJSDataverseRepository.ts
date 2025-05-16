@@ -235,11 +235,8 @@ export class FileJSDataverseRepository implements FileRepository {
         throw new Error(error.message)
       })
   }
-
   getFileVersionSummaries(fileId: number | string): Promise<FileVersionSummaryInfo[]> {
-    return getFileVersionSummaries.execute(fileId).then((jsFileVersionSummaries) => {
-      return jsFileVersionSummaries
-    })
+    return getFileVersionSummaries.execute(fileId)
   }
 
   getById(id: number, datasetVersionNumber?: string): Promise<File> {
