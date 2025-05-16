@@ -11,7 +11,7 @@ on:
           - beta
           - qa
       basepath:
-        description: 'Server base path (without slashes) for serving the application (e.g., spa). If left empty, the base path will be set to /spa.'
+        description: 'Server base path (without slashes) for serving the application (e.g., spa).'
         type: string
         required: false
 
@@ -81,7 +81,7 @@ jobs:
         shell: bash
 
       - name: Build with base path
-        run: npm run build -- --base=/${{ github.event.inputs.basepath || 'spa' }}
+        run: npm run build -- --base=/${{ github.event.inputs.basepath }}
 
       - uses: actions/upload-artifact@v4
         with:
@@ -152,7 +152,7 @@ jobs:
             ASADMIN='/usr/local/payara6/bin/asadmin --user admin'
             DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
             $ASADMIN undeploy $DATAVERSE_FRONTEND
-            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /spa $APPLICATION_WAR_PATH
+            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /${{ github.event.inputs.basepath }} $APPLICATION_WAR_PATH
 
       # For QA environment
       - name: Execute payara war deployment remotely on QA
@@ -168,4 +168,4 @@ jobs:
             ASADMIN='/usr/local/payara6/bin/asadmin --user admin'
             DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
             $ASADMIN undeploy $DATAVERSE_FRONTEND
-            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /spa $APPLICATION_WAR_PATH
+            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /${{ github.event.inputs.basepath }} $APPLICATION_WAR_PATH
