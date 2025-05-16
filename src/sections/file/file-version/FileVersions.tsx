@@ -13,6 +13,7 @@ import {
   DatasetVersionNumber,
   DatasetNonNumericVersionSearchParam
 } from '@/dataset/domain/models/Dataset'
+import { DateHelper } from '@/shared/helpers/DateHelper'
 import styles from './FileVersion.module.scss'
 
 interface FileVersionProps {
@@ -73,7 +74,7 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
               <td>{fileVersion.contributors}</td>
               {fileVersion.publishedDate &&
               fileVersion.datasetVersion !== DatasetVersionState.DRAFT ? (
-                <td>{fileVersion.publishedDate}</td>
+                <td>{DateHelper.toISO8601Format(new Date(fileVersion.publishedDate))}</td>
               ) : (
                 <td></td>
               )}

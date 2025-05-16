@@ -26,6 +26,7 @@ describe('File', () => {
           cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
 
           cy.findByText('Metadata').should('exist')
+          cy.findByText('Verions').should('exist')
 
           cy.findByRole('button', { name: 'Access File' }).should('exist')
         })
@@ -50,6 +51,7 @@ describe('File', () => {
           cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist')
 
           cy.findByText('Metadata').should('exist')
+          cy.findByText('Versions').should('exist')
 
           cy.findByRole('button', { name: 'Access File' }).should('exist')
         })
