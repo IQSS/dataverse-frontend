@@ -26,9 +26,8 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
   const { t } = useTranslation('file')
   const fileId = version?.[0]?.datafileId
 
-  datasetVersionNumber == DatasetNonNumericVersion.DRAFT
-    ? (datasetVersionNumber = DatasetNonNumericVersionSearchParam.DRAFT)
-    : datasetVersionNumber
+  datasetVersionNumber == DatasetNonNumericVersion.DRAFT &&
+    (datasetVersionNumber = DatasetNonNumericVersionSearchParam.DRAFT)
 
   const navigateToVersion = (versionNumber: string) => {
     const searchParams = new URLSearchParams()
@@ -69,7 +68,7 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
               </td>
 
               <td style={{ textAlign: 'left' }}>
-                {SummaryDescription({ summary: fileVersion.fileDifferenceSummary })}
+                <SummaryDescription summary={fileVersion.fileDifferenceSummary} />
               </td>
               <td>{fileVersion.contributors}</td>
               {fileVersion.publishedDate &&
@@ -88,9 +87,6 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
 
 export const SummaryDescription = ({ summary }: { summary?: FileDifferenceSummary }) => {
   const summaryText: Record<string, string> | string = useFileVersionSummaryDescription(summary)
-  if (Object.keys(summaryText).length === 0) {
-    return null
-  }
 
   if (typeof summaryText === 'string') {
     return <span style={{ fontStyle: 'italic' }}>{summaryText}</span>

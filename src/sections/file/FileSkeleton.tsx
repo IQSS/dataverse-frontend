@@ -1,6 +1,6 @@
 import styles from './File.module.scss'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-import { Accordion, Col, Row, Tabs } from '@iqss/dataverse-design-system'
+import { Accordion, Col, Row, Table, Tabs } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { BreadcrumbsSkeleton } from '../shared/hierarchy/BreadcrumbsSkeleton'
 
@@ -60,6 +60,46 @@ export function FileSkeleton() {
                     </Accordion.Body>
                   </Accordion.Item>
                 </Accordion>
+              </div>
+            </Tabs.Tab>
+            <Tabs.Tab eventKey="fileVersion" title={t('tabs.fileVersion')}>
+              <div className={styles['tab-container']}>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>{t('fileVersion.version')}</th>
+                      <th>{t('fileVersion.summary')}</th>
+                      <th>{t('fileVersion.contributors')}</th>
+                      <th>{t('fileVersion.publishedOn')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.from({ length: 3 }).map((_, index) => (
+                      <tr key={index}>
+                        <SkeletonTheme>
+                          <td style={{ verticalAlign: 'middle' }}>
+                            <Skeleton height="18px" width="18px" />
+                          </td>
+                          <td>
+                            <Skeleton height="18px" width="100px" />
+                          </td>
+                          <td>
+                            <Skeleton height="18px" width="250px" />
+                          </td>
+                          <td>
+                            <Skeleton height="18px" width="150px" />
+                          </td>
+                          <td>
+                            <Skeleton height="18px" width="200px" />
+                          </td>
+                          <td>
+                            <Skeleton height="18px" width="120px" />
+                          </td>
+                        </SkeletonTheme>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
               </div>
             </Tabs.Tab>
           </Tabs>

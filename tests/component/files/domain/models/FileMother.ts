@@ -37,6 +37,7 @@ export class FileMother {
       access: FileAccessMother.createPublic(),
       permissions: FilePermissionsMother.createWithGrantedPermissions(),
       metadata: FileMetadataMother.createDefault(),
+      fileVersionSummaries: this.createFileVersionSummary(),
       ...props
     })
   }

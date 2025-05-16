@@ -56,6 +56,28 @@ describe('File', () => {
         })
     })
 
+    it('loads new file page when clicking on the version number', () => {
+      cy.wrap(
+        DatasetHelper.createWithFileAndPublish(FileHelper.create()).then(
+          (datasetResponse) => datasetResponse.file
+        ),
+        { timeout: 6000 }
+      )
+        .its('id')
+        .then((id: string) => {
+          cy.visit(`/spa/files?id=${id}`)
+
+          cy.findByRole('tab', { name: /versions/i })
+            .should('exist')
+            .click({ force: true })
+        })
+
+      cy.wait(1000)
+      cy.findByText('1.0').should('exist').click({ force: true })
+      cy.url().should('include', 'datasetVersion=1.0')
+      cy.findByText('Version 1.0').should('exist')
+    })
+
     it('loads page not found when the user is not authenticated and tries to access a draft', () => {
       cy.wrap(
         DatasetHelper.createWithFile(FileHelper.create()).then(

@@ -43,7 +43,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
     return <NotFoundPage dvObjectNotFoundType="file" />
   }
 
-  // TODO: if the file is deccessioned, we should show the format
+  // TODO: if the file is deaccessioned, we should show the file in deaccessioned format
 
   return (
     <>
