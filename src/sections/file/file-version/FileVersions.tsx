@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import {
   FileDifferenceSummary,
-  FileVersionSummaryInfo,
-  FileVersionState
+  FileVersionSummaryInfo
 } from '@/files/domain/models/FileVersionSummaryInfo'
+import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
 import { Table, Button } from '@iqss/dataverse-design-system'
 import { useFileVersionSummaryDescription } from './useFileVersionSummaryDescription'
 import {
@@ -20,7 +20,7 @@ interface FileVersionProps {
   datasetVersionNumber: DatasetNonNumericVersion | DatasetVersionNumber | string | undefined
 }
 
-export function FileVersion({ version, datasetVersionNumber }: FileVersionProps) {
+export function FileVersions({ version, datasetVersionNumber }: FileVersionProps) {
   const navigate = useNavigate()
   const { t } = useTranslation('file')
   const fileId = version?.[0]?.datafileId
@@ -60,7 +60,7 @@ export function FileVersion({ version, datasetVersionNumber }: FileVersionProps)
                     disabled={
                       !fileVersion.fileDifferenceSummary ||
                       fileVersion.datasetVersion === datasetVersionNumber ||
-                      fileVersion.versionState === FileVersionState.DEACCESSIONED
+                      fileVersion.versionState === DatasetVersionState.DEACCESSIONED
                     }>
                     {fileVersion.datasetVersion}
                   </Button>
@@ -71,7 +71,12 @@ export function FileVersion({ version, datasetVersionNumber }: FileVersionProps)
                 {SummaryDescription({ summary: fileVersion.fileDifferenceSummary })}
               </td>
               <td>{fileVersion.contributors}</td>
-              {fileVersion.publishedDate ? <td>{fileVersion.publishedDate}</td> : <td>{''}</td>}
+              {fileVersion.publishedDate &&
+              fileVersion.datasetVersion !== DatasetVersionState.DRAFT ? (
+                <td>{fileVersion.publishedDate}</td>
+              ) : (
+                <td></td>
+              )}
             </tr>
           ))}
         </tbody>

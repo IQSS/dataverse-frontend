@@ -1,33 +1,25 @@
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
+
 export interface FileVersionSummaryInfo {
   datasetVersion: string
   contributors?: string
-  datafileId: number
   publishedDate?: string
   fileDifferenceSummary?: FileDifferenceSummary
-  versionState?: FileVersionState
+  versionState?: DatasetVersionState
+  datafileId: number
+  persistentId?: string
   versionNote?: string
-}
-
-export enum FileVersionState {
-  RELEASED = 'RELEASED',
-  DEACCESSIONED = 'DEACCESSIONED',
-  DRAFT = 'DRAFT'
 }
 
 export type FileDifferenceSummary = {
   file?: FileChangeType
-  FileAccess?: string
-  FileMetadata?: FileMetadataChange[]
+  fileAccess?: 'Restricted' | 'Unrestricted'
+  fileMetadata?: FileMetadataChange[]
   deaccessionedReason?: string
-  FileTags?: FileTagChange
+  fileTags?: { [key in FileChangeType]?: number }
 }
 
 export type FileChangeType = 'Added' | 'Deleted' | 'Replaced' | 'Changed'
-
-export type FileTagChange = {
-  Added?: number
-  Deleted?: number
-}
 
 export interface FileMetadataChange {
   name: string

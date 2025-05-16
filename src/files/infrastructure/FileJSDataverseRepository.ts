@@ -43,7 +43,6 @@ import { FixityAlgorithm } from '../domain/models/FixityAlgorithm'
 import { RestrictFileDTO } from '../domain/useCases/restrictFileDTO'
 import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 import { FileVersionSummaryInfo } from '../domain/models/FileVersionSummaryInfo'
-import { JSFileVersionSummaryMapper } from './mappers/JSFileVersionSummaryMapper'
 
 const includeDeaccessioned = true
 
@@ -238,13 +237,9 @@ export class FileJSDataverseRepository implements FileRepository {
   }
 
   getFileVersionSummaries(fileId: number | string): Promise<FileVersionSummaryInfo[]> {
-    return getFileVersionSummaries
-      .execute(fileId)
-      .then((jsFileVersionSummaries: FileVersionSummaryInfo[]) => {
-        return jsFileVersionSummaries.map((jsFileVersionSummary) =>
-          JSFileVersionSummaryMapper.toFileVersionSummary(jsFileVersionSummary)
-        )
-      })
+    return getFileVersionSummaries.execute(fileId).then((jsFileVersionSummaries) => {
+      return jsFileVersionSummaries
+    })
   }
 
   getById(id: number, datasetVersionNumber?: string): Promise<File> {

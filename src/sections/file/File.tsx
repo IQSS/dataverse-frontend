@@ -17,7 +17,8 @@ import { DatasetPublishingStatus } from '../../dataset/domain/models/Dataset'
 import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
-import { FileVersion } from './file-version/FileVersion'
+import { FileVersions } from './file-version/FileVersions'
+import { FileVersionSummaryInfo } from '../../files/domain/models/FileVersionSummaryInfo'
 
 interface FileProps {
   repository: FileRepository
@@ -120,8 +121,8 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
             </Tabs.Tab>
             <Tabs.Tab eventKey="fileVersion" title={t('tabs.fileVersion')}>
               <div className={styles['tab-container']}>
-                <FileVersion
-                  version={file.fileVersionSummaries}
+                <FileVersions
+                  version={file.fileVersionSummaries as FileVersionSummaryInfo[]}
                   datasetVersionNumber={datasetVersionNumber}
                 />
               </div>
