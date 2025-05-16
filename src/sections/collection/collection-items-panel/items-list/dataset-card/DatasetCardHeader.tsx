@@ -16,8 +16,8 @@ interface DatasetCardHeaderProps {
 
 export function DatasetCardHeader({ persistentId, version, userRoles }: DatasetCardHeaderProps) {
   return (
-    <header className={styles['card-header-container']}>
-      <div className={styles['left-side-content']}>
+    <div className={styles['card-header-container']}>
+      <div className={styles['title-and-labels']}>
         <LinkToPage
           page={Route.DATASETS}
           type={DvObjectType.DATASET}
@@ -28,21 +28,17 @@ export function DatasetCardHeader({ persistentId, version, userRoles }: DatasetC
           {version.title}
         </LinkToPage>
         <DatasetLabels labels={version.labels} />
-        {userRoles && (
-          <div>
-            {userRoles.map((role, index) => (
-              <div key={index} className={styles['role-label']}>
-                <Badge key={index} variant="info">
-                  {role}
-                </Badge>
-              </div>
-            ))}
-          </div>
-        )}
+        {userRoles &&
+          userRoles.map((role, index) => (
+            <Badge key={index} variant="info">
+              {role}
+            </Badge>
+          ))}
       </div>
+
       <div className={styles['top-right-icon']}>
         <DatasetIcon />
       </div>
-    </header>
+    </div>
   )
 }

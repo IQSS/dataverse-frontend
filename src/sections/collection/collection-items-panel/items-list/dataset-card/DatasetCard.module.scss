@@ -27,8 +27,11 @@
     gap: 8px;
   }
 
-  .role-label {
-    gap: 4px;
+  .title-and-labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
   }
 
   .top-right-icon {

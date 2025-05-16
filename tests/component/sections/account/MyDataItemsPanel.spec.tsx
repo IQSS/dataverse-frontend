@@ -12,7 +12,8 @@ const totalItemCount = 200
 const items = CollectionItemsMother.createItems({
   numberOfCollections: 4,
   numberOfDatasets: 3,
-  numberOfFiles: 3
+  numberOfFiles: 3,
+  includeUserRoles: true
 })
 
 const facets = CollectionItemsMother.createMyDataItemsFacets()

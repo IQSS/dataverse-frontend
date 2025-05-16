@@ -28,30 +28,29 @@ export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
             canDownloadFile={filePreview.canDownloadFile}
           />
         </div>
-        <LinkToPage
-          page={Route.FILES}
-          type={DvObjectType.FILE}
-          searchParams={FileCardHelper.getFileSearchParams(
-            filePreview.id,
-            filePreview.publicationStatuses.includes(PublicationStatus.Draft)
-          )}>
-          {filePreview.name}
-        </LinkToPage>
-        <DatasetLabels
-          labels={FileCardHelper.getDatasetLabels(
-            filePreview.publicationStatuses,
-            !filePreview.publicationStatuses.includes(PublicationStatus.Unpublished)
-          )}
-        />
-        {filePreview.userRoles && (
-          <div>
-            {filePreview.userRoles.map((role, index) => (
+        <div className={styles['title-and-labels']}>
+          <LinkToPage
+            page={Route.FILES}
+            type={DvObjectType.FILE}
+            searchParams={FileCardHelper.getFileSearchParams(
+              filePreview.id,
+              filePreview.publicationStatuses.includes(PublicationStatus.Draft)
+            )}>
+            {filePreview.name}
+          </LinkToPage>
+          <DatasetLabels
+            labels={FileCardHelper.getDatasetLabels(
+              filePreview.publicationStatuses,
+              !filePreview.publicationStatuses.includes(PublicationStatus.Unpublished)
+            )}
+          />
+          {filePreview.userRoles &&
+            filePreview.userRoles.map((role, index) => (
               <Badge key={index} variant="info">
                 {role}
               </Badge>
             ))}
-          </div>
-        )}
+        </div>
       </div>
       <div className={styles['top-right-icon']}>
         <Icon name={iconName} />

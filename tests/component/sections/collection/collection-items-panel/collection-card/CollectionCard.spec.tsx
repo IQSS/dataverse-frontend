@@ -23,4 +23,14 @@ describe('CollectionCard', () => {
 
     cy.findByAltText(collectionPreview.name).should('exist')
   })
+  it('should render the card with user roles', () => {
+    const userRoles = ['Admin', 'Contributor', 'Curator']
+    const collectionPreview = CollectionItemTypePreviewMother.create({ userRoles: userRoles })
+
+    cy.customMount(<CollectionCard collectionPreview={collectionPreview} />)
+
+    userRoles.map((role) => {
+      cy.findByText(role).should('exist')
+    })
+  })
 })

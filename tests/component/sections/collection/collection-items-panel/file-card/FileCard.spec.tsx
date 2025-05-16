@@ -6,7 +6,8 @@ import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus
 
 describe('FileCard', () => {
   it('should render the card', () => {
-    const filePreview = FileItemTypePreviewMother.create()
+    const userRoles = ['Admin', 'Contributor']
+    const filePreview = FileItemTypePreviewMother.create({ userRoles: userRoles })
     cy.customMount(<FileCard filePreview={filePreview} />)
 
     filePreview.restricted
@@ -22,6 +23,9 @@ describe('FileCard', () => {
       filePreview.tags.forEach((tag) => {
         cy.findByText(tag.value).should('exist')
       })
+    userRoles.forEach((role) => {
+      cy.findByText(role).should('exist')
+    })
   })
 
   it('should render the card if file is tabular', () => {
@@ -44,7 +48,8 @@ describe('FileCard', () => {
 
   it('should render the card if dateset is draft version', () => {
     const filePreview = FileItemTypePreviewMother.create({
-      publicationStatuses: [PublicationStatus.Draft]
+      publicationStatuses: [PublicationStatus.Draft],
+      userRoles: ['Admin', 'Contributor', 'Curator']
     })
     cy.customMount(<FileCard filePreview={filePreview} />)
 
