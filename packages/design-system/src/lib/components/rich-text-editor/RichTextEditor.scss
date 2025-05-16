@@ -107,6 +107,7 @@
           &.mobile {
             width: 16px;
             height: 16px;
+            touch-action: none; // Prevents the default touch action (like pan and zoom) on mobile devices, need for the resize function to work properly
           }
         }
 

@@ -40,8 +40,6 @@ export interface RichTextEditorProps {
   ariaRequired?: boolean
 }
 
-// TODO:ME - Add tests for the image extension
-
 export const RichTextEditor = forwardRef(
   (
     {

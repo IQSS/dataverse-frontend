@@ -4,7 +4,7 @@ import { RichTextEditorCustomClasses } from './RichTextEditor'
 /**
  * This file extends the default Image extension of TipTap to be able to adjust the size and align the image position.
  * It was inspired by this repository https://github.com/bae-sh/tiptap-extension-resize-image by https://github.com/bae-sh
- * and modified to fit our needs in terms of a11ty and styling, using classes instead of inline styles.
+ * and modified to fit our needs in terms of a11ty, styling(using classes instead of inline styles) and pointer events instead of mouse and touch events.
  * See also documentation about Custom Extensions: https://tiptap.dev/docs/editor/extensions/custom-extensions/extend-existing
  */
 
@@ -14,7 +14,6 @@ export const CustomImageExtension = Image.extend({
       ...this.parent?.(),
       class: {
         default: RichTextEditorCustomClasses.IMAGE,
-        parseHTML: (element) => element.getAttribute('class'),
         renderHTML: (attributes) => {
           return {
             class: attributes.class as string
@@ -35,7 +34,7 @@ export const CustomImageExtension = Image.extend({
         if (typeof getPos === 'function') {
           const newAttrs = {
             ...node.attrs,
-            class: $img.className || null
+            class: $img.className
           }
           view.dispatch(view.state.tr.setNodeMarkup(getPos(), null, newAttrs))
         }
@@ -179,68 +178,39 @@ export const CustomImageExtension = Image.extend({
             $img.classList.add(className)
           }
 
-          $resizeDot.addEventListener('mousedown', (e) => {
-            e.preventDefault()
-            isResizing = true
-            startX = e.clientX
-            startWidth = $container.offsetWidth
-
-            const onMouseMove = (e: MouseEvent) => {
-              if (!isResizing) return
-              const deltaX = index % 2 === 0 ? -(e.clientX - startX) : e.clientX - startX
-
-              const newWidth = startWidth + deltaX
-
-              transformAndApplyWidthToClassname(newWidth)
-            }
-
-            const onMouseUp = () => {
-              if (isResizing) {
-                isResizing = false
-              }
-              dispatchNodeView()
-
-              document.removeEventListener('mousemove', onMouseMove)
-              document.removeEventListener('mouseup', onMouseUp)
-            }
-
-            document.addEventListener('mousemove', onMouseMove)
-            document.addEventListener('mouseup', onMouseUp)
-          })
-
           $resizeDot.addEventListener(
-            'touchstart',
-            (e) => {
-              e.cancelable && e.preventDefault()
+            'pointerdown',
+            (e: PointerEvent) => {
+              e.preventDefault() // Prevent unwanted scrolling or selection
               isResizing = true
-              startX = e.touches[0].clientX
+              startX = e.clientX
               startWidth = $container.offsetWidth
 
-              const onTouchMove = (e: TouchEvent) => {
+              const onPointerMove = (e: PointerEvent) => {
                 if (!isResizing) return
-                const deltaX =
-                  index % 2 === 0 ? -(e.touches[0].clientX - startX) : e.touches[0].clientX - startX
+                const deltaX = index % 2 === 0 ? -(e.clientX - startX) : e.clientX - startX
 
                 const newWidth = startWidth + deltaX
 
                 transformAndApplyWidthToClassname(newWidth)
               }
 
-              const onTouchEnd = () => {
+              const onPointerUp = () => {
                 if (isResizing) {
                   isResizing = false
                 }
                 dispatchNodeView()
 
-                document.removeEventListener('touchmove', onTouchMove)
-                document.removeEventListener('touchend', onTouchEnd)
+                document.removeEventListener('pointermove', onPointerMove)
+                document.removeEventListener('pointerup', onPointerUp)
               }
 
-              document.addEventListener('touchmove', onTouchMove)
-              document.addEventListener('touchend', onTouchEnd)
+              document.addEventListener('pointermove', onPointerMove)
+              document.addEventListener('pointerup', onPointerUp)
             },
             { passive: false }
           )
+
           $container.appendChild($resizeDot)
         })
       })
