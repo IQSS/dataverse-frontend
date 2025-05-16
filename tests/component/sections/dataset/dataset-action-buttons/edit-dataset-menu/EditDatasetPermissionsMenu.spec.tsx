@@ -3,11 +3,20 @@ import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../dataset/domain/models/DatasetMother'
-import { SettingRepository } from '../../../../../../src/settings/domain/repositories/SettingRepository'
+import { DataverseInfoRepository } from '../../../../../../src/info/domain/repositories/DataverseInfoRepository'
 import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { SettingsProvider } from '../../../../../../src/sections/settings/SettingsProvider'
 
+const dataverseInfoRepository = {} as DataverseInfoRepository
+
 describe('EditDatasetPermissionsMenu', () => {
+  beforeEach(() => {
+    dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
+    dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
+    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
+    dataverseInfoRepository.getZipDownloadLimit = cy.stub().resolves({})
+  })
+
   it('renders the EditDatasetPermissionsMenu if the user has  manage dataset permissions', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithManageDatasetPermissionsAllowed(),
@@ -38,11 +47,12 @@ describe('EditDatasetPermissionsMenu', () => {
       locks: []
     })
 
-    const settingRepository = {} as SettingRepository
-    settingRepository.getByName = cy.stub().resolves(SettingMother.createHasPublicStore(true))
+    dataverseInfoRepository.getHasPublicStore = cy
+      .stub()
+      .resolves(SettingMother.createHasPublicStore(true))
 
     cy.customMount(
-      <SettingsProvider repository={settingRepository}>
+      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
         <EditDatasetPermissionsMenu dataset={dataset} />
       </SettingsProvider>
     )

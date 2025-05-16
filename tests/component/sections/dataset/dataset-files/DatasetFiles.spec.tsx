@@ -18,10 +18,10 @@ import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { SettingMother } from '../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
-import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 
 const testFiles: FilePreview[] = FilePreviewMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -49,16 +49,22 @@ const testFilesCountInfo = FilesCountInfoMother.create({
   ]
 })
 const paginationInfo: FilePaginationInfo = new FilePaginationInfo(1, 10, 200)
-const settingsRepository = {} as SettingRepository
+const dataverseInfoRepository = {} as DataverseInfoRepository
+
 describe('DatasetFiles', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
 
-    settingsRepository.getByName = cy
+    dataverseInfoRepository.getZipDownloadLimit = cy
       .stub()
       .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(1, FileSizeUnit.BYTES)))
+    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy
+      .stub()
+      .resolves(SettingMother.createMaxEmbargoDurationInMonths(12))
+    dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
+    dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
   })
 
   it('renders the files table', () => {
@@ -322,7 +328,7 @@ describe('DatasetFiles', () => {
       })
 
       cy.customMount(
-        <SettingsProvider repository={settingsRepository}>
+        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
           <DatasetFiles
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
@@ -348,7 +354,7 @@ describe('DatasetFiles', () => {
 
     it('renders the zip download limit message when selecting all rows', () => {
       cy.customMount(
-        <SettingsProvider repository={settingsRepository}>
+        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
           <DatasetFiles
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
@@ -366,7 +372,7 @@ describe('DatasetFiles', () => {
 
     it('renders the zip download limit message when selecting all rows and then navigating to other page', () => {
       cy.customMount(
-        <SettingsProvider repository={settingsRepository}>
+        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
           <DatasetFiles
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
@@ -526,7 +532,7 @@ describe('DatasetFiles', () => {
 
     it('calls getFilesTotalDownloadSizeByDatasetPersistentId with the correct parameters when applying search file criteria', () => {
       cy.customMount(
-        <SettingsProvider repository={settingsRepository}>
+        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
           <DatasetFiles
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}

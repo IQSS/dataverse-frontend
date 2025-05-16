@@ -1,9 +1,9 @@
-import { Container, Row, Col } from '@iqss/dataverse-design-system'
-import styles from './Footer.module.scss'
-import dataverseProjectLogo from './dataverse-project-logo.svg'
 import { useTranslation } from 'react-i18next'
+import { Container, Row, Col } from '@iqss/dataverse-design-system'
+import dataverseProjectLogo from '@/assets/dataverse-project-logo.svg'
 import { DataverseInfoRepository } from '../../../info/domain/repositories/DataverseInfoRepository'
 import { useDataverseVersion } from './useDataverseVersion'
+import styles from './Footer.module.scss'
 
 interface FooterProps {
   dataverseInfoRepository: DataverseInfoRepository
@@ -19,15 +19,15 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
       <Container>
         <Row>
           <Col sm={8}>
-            <p className={styles.copyright}>
+            <em className={styles.copyright}>
               {t('copyright', { year: currentYear })}
               <a
-                href="https://dataverse.org/best-practices/harvard-dataverse-privacy-policy"
+                href="https://support.dataverse.harvard.edu/harvard-dataverse-privacy-policy"
                 rel="noreferrer"
                 target="_blank">
                 {t('privacyPolicy')}
               </a>
-            </p>
+            </em>
           </Col>
           <Col sm={4}>
             <div className={styles['powered-by-container']}>

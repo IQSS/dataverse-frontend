@@ -26,10 +26,6 @@
     }
 
     .show-less-more {
-      button {
-        text-decoration: none;
-      }
-
       :last-child {
         display: flex;
         justify-content: flex-end;

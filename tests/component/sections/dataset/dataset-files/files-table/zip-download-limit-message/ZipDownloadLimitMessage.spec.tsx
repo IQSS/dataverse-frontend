@@ -3,8 +3,9 @@ import { ZipDownloadLimitMessage } from '../../../../../../../src/sections/datas
 import { FileSize, FileSizeUnit } from '../../../../../../../src/files/domain/models/FileMetadata'
 import { SettingMother } from '../../../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../../../src/settings/domain/models/ZipDownloadLimit'
-import { SettingsContext } from '../../../../../../../src/sections/settings/SettingsContext'
+import { SettingsProvider } from '@/sections/settings/SettingsProvider'
 import { FilePreviewMother } from '../../../../../files/domain/models/FilePreviewMother'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 
 const fileSelection = {
   0: FilePreviewMother.create({
@@ -16,14 +17,22 @@ const fileSelection = {
 }
 const zipDownloadLimit = new ZipDownloadLimit(500, FileSizeUnit.BYTES)
 const filesTotalDownloadSize = 3072 // 3.0 KB
+
+const dataverseInfoRepository = {} as DataverseInfoRepository
+
 describe('ZipDownloadLimitMessage', () => {
-  it('should not render if there is less than 1 file selected', () => {
-    const getSettingByName = cy
+  beforeEach(() => {
+    dataverseInfoRepository.getZipDownloadLimit = cy
       .stub()
       .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
+    dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
+    dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
+    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
+  })
 
+  it('should not render if there is less than 1 file selected', () => {
     cy.customMount(
-      <SettingsContext.Provider value={{ getSettingByName }}>
+      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
         <ZipDownloadLimitMessage
           fileSelection={{
             0: FilePreviewMother.create({
@@ -33,19 +42,15 @@ describe('ZipDownloadLimitMessage', () => {
           visitedFiles={{}}
           filesTotalDownloadSize={filesTotalDownloadSize}
         />
-      </SettingsContext.Provider>
+      </SettingsProvider>
     )
 
     cy.findByText(/The overall size of the files selected/).should('not.exist')
   })
 
   it('should not render if the zipDownloadLimit is not exceeded', () => {
-    const getSettingByName = cy
-      .stub()
-      .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
-
     cy.customMount(
-      <SettingsContext.Provider value={{ getSettingByName }}>
+      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
         <ZipDownloadLimitMessage
           fileSelection={{
             0: FilePreviewMother.create({
@@ -58,24 +63,21 @@ describe('ZipDownloadLimitMessage', () => {
           visitedFiles={{}}
           filesTotalDownloadSize={filesTotalDownloadSize}
         />
-      </SettingsContext.Provider>
+      </SettingsProvider>
     )
 
     cy.findByText(/The overall size of the files selected/).should('not.exist')
   })
 
   it('should render if there is more than 1 file and they exceed the zipDownloadLimit', () => {
-    const getSettingByName = cy
-      .stub()
-      .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
     cy.customMount(
-      <SettingsContext.Provider value={{ getSettingByName }}>
+      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
         <ZipDownloadLimitMessage
           fileSelection={fileSelection}
           visitedFiles={{}}
           filesTotalDownloadSize={filesTotalDownloadSize}
         />
-      </SettingsContext.Provider>
+      </SettingsProvider>
     )
 
     cy.findByText(
@@ -84,11 +86,8 @@ describe('ZipDownloadLimitMessage', () => {
   })
 
   it('should show the more than 1024 PB message if the total size is too big', () => {
-    const getSettingByName = cy
-      .stub()
-      .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
     cy.customMount(
-      <SettingsContext.Provider value={{ getSettingByName }}>
+      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
         <ZipDownloadLimitMessage
           fileSelection={{
             0: FilePreviewMother.create({
@@ -105,7 +104,7 @@ describe('ZipDownloadLimitMessage', () => {
           visitedFiles={{}}
           filesTotalDownloadSize={filesTotalDownloadSize}
         />
-      </SettingsContext.Provider>
+      </SettingsProvider>
     )
 
     cy.findByText(
@@ -114,11 +113,8 @@ describe('ZipDownloadLimitMessage', () => {
   })
 
   it('should show the total size of the files selected when there is a unknown File in the fileSelection', () => {
-    const getSettingByName = cy
-      .stub()
-      .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
     cy.customMount(
-      <SettingsContext.Provider value={{ getSettingByName }}>
+      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
         <ZipDownloadLimitMessage
           fileSelection={{
             0: FilePreviewMother.create({
@@ -136,7 +132,7 @@ describe('ZipDownloadLimitMessage', () => {
           visitedFiles={{}}
           filesTotalDownloadSize={filesTotalDownloadSize}
         />
-      </SettingsContext.Provider>
+      </SettingsProvider>
     )
 
     cy.findByText(
@@ -146,13 +142,14 @@ describe('ZipDownloadLimitMessage', () => {
 
   it('should subtract the size of the files that are not in the fileSelection but they are in the visitedFiles when there is an unknown file', () => {
     const zipDownloadLimit = new ZipDownloadLimit(1, FileSizeUnit.BYTES)
-    const getSettingByName = cy
+
+    dataverseInfoRepository.getZipDownloadLimit = cy
       .stub()
       .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
 
     const filesTotalDownloadSize = 4
     cy.customMount(
-      <SettingsContext.Provider value={{ getSettingByName }}>
+      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
         <ZipDownloadLimitMessage
           fileSelection={{
             0: FilePreviewMother.create({
@@ -177,7 +174,7 @@ describe('ZipDownloadLimitMessage', () => {
           }}
           filesTotalDownloadSize={filesTotalDownloadSize}
         />
-      </SettingsContext.Provider>
+      </SettingsProvider>
     )
 
     cy.findByText(
@@ -187,13 +184,13 @@ describe('ZipDownloadLimitMessage', () => {
 
   it('should show the total size of files when there are more files in the fileSelection than in the visitedFiles', () => {
     const zipDownloadLimit = new ZipDownloadLimit(1, FileSizeUnit.BYTES)
-    const getSettingByName = cy
+    dataverseInfoRepository.getZipDownloadLimit = cy
       .stub()
       .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
 
     const filesTotalDownloadSize = 4
     cy.customMount(
-      <SettingsContext.Provider value={{ getSettingByName }}>
+      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
         <ZipDownloadLimitMessage
           fileSelection={{
             0: FilePreviewMother.create({
@@ -224,7 +221,7 @@ describe('ZipDownloadLimitMessage', () => {
           }}
           filesTotalDownloadSize={filesTotalDownloadSize}
         />
-      </SettingsContext.Provider>
+      </SettingsProvider>
     )
 
     cy.findByText(

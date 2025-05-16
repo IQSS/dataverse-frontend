@@ -6,12 +6,13 @@ import {
 import { FileSize, FileSizeUnit } from '../../../../../../src/files/domain/models/FileMetadata'
 import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../../src/settings/domain/models/ZipDownloadLimit'
-import { SettingsContext } from '../../../../../../src/sections/settings/SettingsContext'
+import { SettingsProvider } from '@/sections/settings/SettingsProvider'
 import styles from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 
 const fileRepository: FileRepository = {} as FileRepository
 const testFiles = FilePreviewMother.createMany(10)
@@ -187,12 +188,18 @@ describe('FilesTable', () => {
         metadata: FileMetadataMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
       })
     ]
-    const getSettingByName = cy
+
+    const dataverseInfoRepository = {} as DataverseInfoRepository
+
+    dataverseInfoRepository.getZipDownloadLimit = cy
       .stub()
       .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(500, FileSizeUnit.BYTES)))
+    dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
+    dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
+    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
 
     cy.customMount(
-      <SettingsContext.Provider value={{ getSettingByName }}>
+      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
         <FilesTable
           files={testFiles}
           paginationInfo={paginationInfo}
@@ -201,7 +208,7 @@ describe('FilesTable', () => {
           criteria={defaultCriteria}
           fileRepository={fileRepository}
         />
-      </SettingsContext.Provider>
+      </SettingsProvider>
     )
 
     cy.findByText(

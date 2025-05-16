@@ -12,6 +12,8 @@ import { DatasetDeleteFileButton } from '@/sections/dataset/dataset-files/files-
 import { RouteWithParams } from '@/sections/Route.enum'
 import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
+import { useSettings } from '@/sections/settings/SettingsContext'
+import { SettingName } from '@/settings/domain/models/Setting'
 
 type EditFilesOptionsProps =
   | {
@@ -51,7 +53,10 @@ export function EditFilesOptions({
   const { t } = useTranslation('files')
   const { t: tFile } = useTranslation('file')
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
-  const settingsEmbargoAllowed = false // TODO - Ask Guillermo if this is included in the settings endpoint
+  const { getSettingByName } = useSettings()
+  const maxEmbargoDurationInMonths =
+    getSettingByName<number>(SettingName.MAX_EMBARGO_DURATION_IN_MONTHS)?.value ?? 0
+  const settingsEmbargoAllowed = maxEmbargoDurationInMonths !== 0
   const provenanceEnabledByConfig = false // TODO - Ask Guillermo if this is included in the MVP and from which endpoint is coming from
   const { showModal } = useNotImplementedModal()
 

@@ -2,7 +2,12 @@ import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { Button, Col, Form, Stack, Tooltip } from '@iqss/dataverse-design-system'
-import { ArrowDownUp, ArrowCounterclockwise, XLg } from 'react-bootstrap-icons'
+import {
+  ArrowDownUp,
+  ArrowCounterclockwise,
+  XLg,
+  ExclamationCircleFill
+} from 'react-bootstrap-icons'
 import cn from 'classnames'
 import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
 import { appendTimestampToImageUrl } from '@/sections/collection/featured-items/custom-featured-item-card/CustomFeaturedItemCard'
@@ -19,16 +24,28 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   const { control, setValue } = useFormContext()
   const { t } = useTranslation('editCollectionFeaturedItems')
   const [selectedFileObjectURL, setSelectedFileObjectURL] = useState<string | null>(null)
+  const [imageAspectRatio, setImageAspectRatio] = useState<{
+    hasRecommendedAspectRatio: boolean
+    aspectRatioStringValue: string
+  } | null>(null)
 
   let fileInputRef: HTMLInputElement | null = null
 
-  const handleFileChange = (
+  const handleFileChange = async (
     e: ChangeEvent<HTMLInputElement>,
     formOnChange: (...event: unknown[]) => void
   ) => {
     const file = e.target.files?.[0]
 
     if (file) {
+      const { hasRecommendedAspectRatio, aspectRatioStringValue } =
+        await FeaturedItemsFormHelper.hasRecommendedAspectRatio(file)
+
+      setImageAspectRatio({
+        hasRecommendedAspectRatio,
+        aspectRatioStringValue
+      })
+
       setSelectedFileObjectURL(URL.createObjectURL(file))
     }
 
@@ -51,6 +68,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   const handleRemoveImage = () => {
     selectedFileObjectURL && URL.revokeObjectURL(selectedFileObjectURL)
     setSelectedFileObjectURL(null)
+    setImageAspectRatio(null)
 
     fileInputRef?.value && (fileInputRef.value = '')
 
@@ -63,6 +81,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   const handleRestoreInitialImage = () => {
     selectedFileObjectURL && URL.revokeObjectURL(selectedFileObjectURL)
     setSelectedFileObjectURL(null)
+    setImageAspectRatio(null)
 
     fileInputRef?.value && (fileInputRef.value = '')
 
@@ -71,6 +90,8 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
       shouldValidate: true
     })
   }
+
+  const showAspectRatioWarning = imageAspectRatio && !imageAspectRatio.hasRecommendedAspectRatio
 
   return (
     <Form.Group
@@ -173,8 +194,32 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                   </Tooltip>
                 </div>
               </div>
-
-              {invalid && <div className={styles['error-msg']}>{error?.message}</div>}
+              {invalid && (
+                <div
+                  className={styles['error-msg']}
+                  data-testid={`image-invalid-message-${itemIndex.toString()}`}>
+                  {error?.message}
+                </div>
+              )}
+              {!showAspectRatioWarning && !invalid && (
+                <div data-testid={`image-helper-text-${itemIndex.toString()}`}>
+                  <Form.Group.Text>{t('form.image.helperText')}</Form.Group.Text>
+                </div>
+              )}
+              {showAspectRatioWarning && !invalid && (
+                <div
+                  className={styles['aspect-ratio-warning']}
+                  data-testid={`aspect-ratio-warning-${itemIndex.toString()}`}>
+                  <div>
+                    <ExclamationCircleFill size={18} />
+                  </div>
+                  <span>
+                    {t('form.image.aspectRatioWarning', {
+                      aspectRatio: imageAspectRatio.aspectRatioStringValue
+                    })}
+                  </span>
+                </div>
+              )}
             </Col>
           )
         }}

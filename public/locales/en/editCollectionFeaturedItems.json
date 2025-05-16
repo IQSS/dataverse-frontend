@@ -10,13 +10,15 @@
   "form": {
     "image": {
       "label": "Image",
-      "description": "Upload an image to display with the item, accepted extensions are png, jpg, jpeg and webp, and the maximum file size is {{maxImageSize}}.",
+      "description": "Upload an image that will be used as the blog banner and thumbnail. Supported formats: PNG, JPG, JPEG, WEBP. Max file size: {{maxImageSize}}.",
       "invalid": {
         "size": "The file is too large. The maximum file size is {{maxImageSize}}"
       },
       "restoreInitial": "Restore initial image",
       "changeImage": "Change image",
-      "removeImage": "Remove image"
+      "removeImage": "Remove image",
+      "helperText": "For best results, use a landscape image (16:9, 4:3, or 5:3). Check the preview at the top of the page to see how it will look.",
+      "aspectRatioWarning": "Your image has approximately a {{aspectRatio}} aspect ratio and may not display well in the landscape banner.\nFor best results, use a landscape image (16:9, 4:3, or 5:3). You can still use it, but check the preview at the top of the page to see how it will look."
     },
     "content": {
       "label": "Content",
