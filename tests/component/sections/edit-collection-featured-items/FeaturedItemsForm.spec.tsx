@@ -325,6 +325,90 @@ describe('FeaturedItemsForm', () => {
           })
       })
     })
+
+    it('should show the aspect-ratio warning message if the selected image does not have the recommended aspect ratio', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
+        />
+      )
+
+      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
+
+      cy.findByTestId('aspect-ratio-warning-0').should('not.exist')
+      cy.findByTestId('image-helper-text-0').should('exist')
+
+      // Testing with this harvard_uni image as it has a dimension of 800x779 and will trigger the warning
+      cy.fixture('images/harvard_uni.png', null, { timeout: 10_0000 })
+        .then((harvardUniImage: ArrayBuffer) => {
+          cy.findByLabelText(/Image/).selectFile(
+            {
+              contents: harvardUniImage,
+              fileName: 'harvard_uni.png',
+              mimeType: 'image/png'
+            },
+            { action: 'select', force: true }
+          )
+        })
+        .then(() => {
+          cy.findByTestId('aspect-ratio-warning-0').should('exist')
+          cy.findByTestId('image-helper-text-0').should('not.exist')
+        })
+    })
+
+    it('neither helper text nor warning message should be shown if the image is invalid', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
+        />
+      )
+
+      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
+
+      cy.findByTestId('image-helper-text-0').should('exist')
+      cy.findByTestId('aspect-ratio-warning-0').should('not.exist')
+      cy.findByTestId('image-invalid-message-0').should('not.exist')
+
+      // Testing with this harvard_uni image as it has a dimension of 800x779 and will trigger the warning
+      cy.fixture('images/harvard_uni.png', null, { timeout: 10_0000 })
+        .then((harvardUniImage: ArrayBuffer) => {
+          cy.findByLabelText(/Image/).selectFile(
+            {
+              contents: harvardUniImage,
+              fileName: 'harvard_uni.png',
+              mimeType: 'image/png'
+            },
+            { action: 'select', force: true }
+          )
+        })
+        .then(() => {
+          cy.findByTestId('image-helper-text-0').should('not.exist')
+          cy.findByTestId('aspect-ratio-warning-0').should('exist')
+          cy.findByTestId('image-invalid-message-0').should('not.exist')
+        })
+
+      // We remove the image and select a big image to trigger the size validation error
+      cy.get(`[aria-label="Remove image"]`).should('exist').should('be.visible').click()
+
+      const twiceSupportedSize = 2 * FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED
+      const bigFile = Cypress.Buffer.alloc(twiceSupportedSize)
+      bigFile.write('big-file-test', twiceSupportedSize)
+
+      cy.findByLabelText(/Image/).selectFile({
+        contents: bigFile,
+        fileName: 'big-file-test.png',
+        mimeType: 'image/png'
+      })
+      cy.findByTestId('image-helper-text-0').should('not.exist')
+      cy.findByTestId('aspect-ratio-warning-0').should('not.exist')
+      cy.findByTestId('image-invalid-message-0').should('exist')
+    })
   })
 
   describe('Add and Remove Featured Items', () => {
