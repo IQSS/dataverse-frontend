@@ -24,9 +24,8 @@ describe('File', () => {
           cy.findByRole('heading', { name: 'blob' }).should('exist')
           cy.findByText(DatasetLabelValue.DRAFT).should('exist')
           cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
-
+          cy.findByRole('tab', { name: 'Versions' }).should('exist')
           cy.findByText('Metadata').should('exist')
-          cy.findByText('Verions').should('exist')
 
           cy.findByRole('button', { name: 'Access File' }).should('exist')
         })
