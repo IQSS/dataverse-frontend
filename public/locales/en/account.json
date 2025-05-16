@@ -29,20 +29,22 @@
     "noData": "You have not created or contributed to any datasets yet.",
     "roleFilterTitle": "Roles",
     "publicationStatusFilterTitle": "Publication Statuses",
+    "searchSubmitButtonLabel": "Search submit",
+    "searchThisCollectionPlaceholder": "Search my data...",
     "userNameSearchPlaceholder": "Search by username...",
-    "userNameSearchLabel": "Search by username"
-  },
-  "noItemsMessage": {
-    "otherUser": "No results found for user {{otherUserName}}.",
-    "authenticated": "You have not created or contributed to any {{typeOfEmptyItems}}. You can create data by using the Add Data menu option on this page.",
-    "itemTypeMessage": {
-      "all": "collections, datasets or files",
-      "collection": "collections",
-      "dataset": "datasets",
-      "file": "files",
-      "collectionAndDataset": "collections or datasets",
-      "collectionAndFile": "collections or files",
-      "datasetAndFile": "datasets or files"
+    "userNameSearchLabel": "Search by username",
+    "noItemsMessage": {
+      "otherUser": "No results found for user {{otherUserName}}.",
+      "authenticated": "You have not created or contributed to any {{typeOfEmptyItems}}. You can create data by using the Add Data menu option on this page.",
+      "itemTypeMessage": {
+        "all": "collections, datasets or files",
+        "collection": "collections",
+        "dataset": "datasets",
+        "file": "files",
+        "collectionAndDataset": "collections or datasets",
+        "collectionAndFile": "collections or files",
+        "datasetAndFile": "datasets or files"
+      }
     }
   }
 }

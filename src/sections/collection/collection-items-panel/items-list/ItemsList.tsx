@@ -18,10 +18,15 @@ import styles from './ItemsList.module.scss'
 import { Col, Row } from '@iqss/dataverse-design-system'
 import { ItemsSortBy } from '@/sections/collection/collection-items-panel/items-list/ItemsSortBy'
 
+export interface TranslationFile {
+  fileName: string
+  prefix?: string
+}
+
 interface ItemsListProps {
   items: CollectionItem[]
   error: string | null
-  translationFile: string
+  translationFile: TranslationFile
   accumulatedCount: number
   isLoadingItems: boolean
   areItemsAvailable: boolean
@@ -46,7 +51,7 @@ export const ItemsList = forwardRef(
     {
       items,
       error,
-      translationFile,
+      translationFile = { fileName: 'collection' },
       accumulatedCount,
       isLoadingItems,
       areItemsAvailable,

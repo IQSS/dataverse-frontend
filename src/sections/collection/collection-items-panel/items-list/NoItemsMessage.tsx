@@ -6,11 +6,12 @@ import { useSession } from '@/sections/session/SessionContext'
 import { Button } from '@iqss/dataverse-design-system'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
+import { TranslationFile } from '@/sections/collection/collection-items-panel/items-list/ItemsList'
 import styles from './ItemsList.module.scss'
 
 interface NoItemsMessageProps {
   itemsTypesSelected: CollectionItemType[]
-  translationFile: string
+  translationFile: TranslationFile
   otherUserName?: string
 }
 
@@ -19,7 +20,10 @@ export function NoItemsMessage({
   translationFile,
   otherUserName
 }: NoItemsMessageProps) {
-  const { t } = useTranslation(translationFile)
+  const { t } = useTranslation(
+    translationFile.fileName,
+    translationFile.prefix ? { keyPrefix: translationFile.prefix } : undefined
+  )
   const { user } = useSession()
   const { logIn: oidcLogin } = useContext(AuthContext)
   const { pathname, search } = useLocation()

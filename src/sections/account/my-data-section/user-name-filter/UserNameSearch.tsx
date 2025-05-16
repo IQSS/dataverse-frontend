@@ -41,7 +41,7 @@ export const UserNameSearch = ({
           <Form.Group.Input
             type="search"
             placeholder={t('myData.userNameSearchPlaceholder')}
-            aria-label="Search"
+            aria-label="Username"
             value={searchValue}
             onChange={handleSearchChange}
             disabled={isLoadingCollectionItems}

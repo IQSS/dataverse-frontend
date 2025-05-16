@@ -2,22 +2,26 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Form } from '@iqss/dataverse-design-system'
 import { Search } from 'react-bootstrap-icons'
+import { TranslationFile } from '@/sections/collection/collection-items-panel/items-list/ItemsList'
 import styles from './SearchPanel.module.scss'
 
 interface SearchPanelProps {
   currentSearchValue?: string
   isLoadingCollectionItems: boolean
   onSubmitSearch: (searchValue: string) => void
-  translationFile?: string
+  translationFile?: TranslationFile
 }
 
 export const SearchPanel = ({
   currentSearchValue = '',
   isLoadingCollectionItems,
   onSubmitSearch,
-  translationFile = 'collection'
+  translationFile = { fileName: 'collection' }
 }: SearchPanelProps) => {
-  const { t } = useTranslation(translationFile)
+  const { t } = useTranslation(
+    translationFile.fileName,
+    translationFile.prefix ? { keyPrefix: translationFile.prefix } : undefined
+  )
 
   const [searchValue, setSearchValue] = useState(currentSearchValue)
 

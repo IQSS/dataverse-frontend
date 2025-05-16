@@ -31,7 +31,34 @@ describe('MyDataItemsPanel', () => {
 
     cy.findByTestId('collection-items-list-infinite-scroll-skeleton').should('exist')
   })
+  describe('User Search', () => {
+    it('does not render the search input for non-superusers', () => {
+      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
+      cy.findByPlaceholderText('Search by username...').should('not.exist')
+    })
+
+    it('renders the search input for superusers', () => {
+      cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+
+      cy.findByPlaceholderText('Search by username...').should('exist')
+    })
+    it('shows the correct message when there are no results for user', () => {
+      const emptyItems: CollectionItem[] = []
+      const emptyItemsWithCount: CollectionItemSubset = {
+        items: emptyItems,
+        facets,
+        totalItemCount: 0
+      }
+      collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
+
+      cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+
+      cy.findByPlaceholderText('Search by username...').type('testUserName{enter}')
+
+      cy.findByText(/No results found for user testUserName./).should('exist')
+    })
+  })
   describe('NoItemsMessage', () => {
     it('renders correct no items message when there are no collection, dataset or files', () => {
       const emptyItems: CollectionItem[] = []
@@ -165,7 +192,7 @@ describe('MyDataItemsPanel', () => {
     collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
     cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
-    cy.findByLabelText('Search').type('example search text')
+    cy.findByPlaceholderText('Search my data...').type('example search text')
 
     cy.findByRole('button', { name: /Search submit/ }).click()
 
@@ -241,7 +268,7 @@ describe('MyDataItemsPanel', () => {
     cy.findByTestId('collection-items-list-infinite-scroll-skeleton').should('not.exist')
   })
 
-  it('sets Collections and Datasets as default selected when no types query param is passed', () => {
+  it('sets Collections and Datasets as default selected when page is rendered', () => {
     cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
     cy.findByRole('checkbox', { name: /Collections/ }).should('be.checked')
@@ -257,10 +284,10 @@ describe('MyDataItemsPanel', () => {
     it('submits the search correctly with a value and without a value', () => {
       cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
-      cy.findByPlaceholderText('Search this collection...').type('Some search')
+      cy.findByPlaceholderText('Search my data...').type('Some search')
       cy.findByRole('button', { name: /Search submit/ }).click()
 
-      cy.findByPlaceholderText('Search this collection...').clear()
+      cy.findByPlaceholderText('Search my data...').clear()
       cy.findByRole('button', { name: /Search submit/ }).click()
     })
 
@@ -278,7 +305,7 @@ describe('MyDataItemsPanel', () => {
 
     it('changes the types correctly with a search value', () => {
       cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
-      cy.findByPlaceholderText('Search this collection...').type('Some search')
+      cy.findByPlaceholderText('Search my data...').type('Some search')
       cy.findByRole('button', { name: /Search submit/ }).click()
 
       cy.findByRole('checkbox', { name: /Collections/ }).uncheck()

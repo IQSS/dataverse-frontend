@@ -265,6 +265,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
             onSubmitSearch={handleSearchSubmit}
             currentSearchValue={currentSearchCriteria.searchText}
             isLoadingCollectionItems={isLoadingItems}
+            translationFile={{ fileName: 'account', prefix: 'myData' }}
           />
           {user?.superuser && (
             <UserNameSearch
@@ -291,7 +292,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
             <ItemsList
               items={accumulatedItems}
               error={error}
-              translationFile="account"
+              translationFile={{ fileName: 'account', prefix: 'myData' }}
               accumulatedCount={accumulatedCount}
               isLoadingItems={isLoadingItems}
               areItemsAvailable={areItemsAvailable}
