@@ -146,7 +146,8 @@ async function loadNextItems(
       publicationStatuses,
       paginationInfo.pageSize,
       paginationInfo.page,
-      searchCriteria.searchText
+      searchCriteria.searchText,
+      searchCriteria.otherUserName
     )
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error'

@@ -33,6 +33,7 @@ interface ItemsListProps {
   itemsTypesSelected: CollectionItemType[]
   hasFilterQueries: boolean
   parentCollectionAlias?: string
+  otherUserName?: string
   allowSorting?: boolean
   onSortChange?: (newSortType?: SortType, newOrderType?: OrderType) => void
   sortSelected?: SortType
@@ -57,6 +58,7 @@ export const ItemsList = forwardRef(
       itemsTypesSelected,
       hasFilterQueries,
       parentCollectionAlias,
+      otherUserName,
       allowSorting = true,
       onSortChange,
       sortSelected,
@@ -94,6 +96,7 @@ export const ItemsList = forwardRef(
             <NoItemsMessage
               translationFile={translationFile}
               itemsTypesSelected={itemsTypesSelected}
+              otherUserName={otherUserName}
             />
           )}
 

@@ -25,12 +25,15 @@
   },
   "myData": {
     "title": "My Data",
-    "description": "This is a list of all the datasets you have created or contributed to. You can view, edit, or delete your datasets from here.",
+    "description": "Here are all the collections, datasets, and files you have access to. You can filter through them by publication status and roles.",
     "noData": "You have not created or contributed to any datasets yet.",
     "roleFilterTitle": "Roles",
-    "publicationStatusFilterTitle": "Publication Statuses"
+    "publicationStatusFilterTitle": "Publication Statuses",
+    "userNameSearchPlaceholder": "Search by username...",
+    "userNameSearchLabel": "Search by username"
   },
   "noItemsMessage": {
+    "otherUser": "No results found for user {{otherUserName}}.",
     "authenticated": "You have not created or contributed to any {{typeOfEmptyItems}}. You can create data by using the Add Data menu option on this page.",
     "itemTypeMessage": {
       "all": "collections, datasets or files",

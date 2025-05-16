@@ -6,7 +6,8 @@ export class MyDataSearchCriteria {
     public readonly itemTypes: CollectionItemType[],
     public readonly roleIds: number[],
     public readonly publicationStatuses: PublicationStatus[],
-    public readonly searchText?: string
+    public readonly searchText?: string,
+    public readonly otherUserName?: string
   ) {}
 
   withSearchText(searchText: string | undefined): MyDataSearchCriteria {
@@ -14,7 +15,8 @@ export class MyDataSearchCriteria {
       this.itemTypes,
       this.roleIds,
       this.publicationStatuses,
-      searchText
+      searchText,
+      this.otherUserName
     )
   }
   hasSearchText(): boolean {

@@ -1,23 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Form } from '@iqss/dataverse-design-system'
-import { Search } from 'react-bootstrap-icons'
-import styles from './SearchPanel.module.scss'
+import { Form } from '@iqss/dataverse-design-system'
+import styles from './UserNameSearch.module.scss'
 
-interface SearchPanelProps {
+interface UserNameSearchProps {
   currentSearchValue?: string
   isLoadingCollectionItems: boolean
   onSubmitSearch: (searchValue: string) => void
-  translationFile?: string
 }
 
-export const SearchPanel = ({
+export const UserNameSearch = ({
   currentSearchValue = '',
   isLoadingCollectionItems,
-  onSubmitSearch,
-  translationFile = 'collection'
-}: SearchPanelProps) => {
-  const { t } = useTranslation(translationFile)
+  onSubmitSearch
+}: UserNameSearchProps) => {
+  const { t } = useTranslation('account')
 
   const [searchValue, setSearchValue] = useState(currentSearchValue)
 
@@ -26,9 +23,7 @@ export const SearchPanel = ({
 
     const trimmedSearchValue = searchValue.trim()
 
-    const encodedSearchValue = encodeURIComponent(trimmedSearchValue)
-
-    onSubmitSearch(encodedSearchValue)
+    onSubmitSearch(trimmedSearchValue)
   }
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,23 +40,14 @@ export const SearchPanel = ({
         <Form.InputGroup className={styles['search-input-group']}>
           <Form.Group.Input
             type="search"
-            placeholder={t('searchThisCollectionPlaceholder')}
+            placeholder={t('myData.userNameSearchPlaceholder')}
             aria-label="Search"
             value={searchValue}
             onChange={handleSearchChange}
-          />
-          <Button
-            variant="secondary"
-            type="submit"
-            icon={<Search />}
-            aria-label={t('searchSubmitButtonLabel')}
             disabled={isLoadingCollectionItems}
           />
         </Form.InputGroup>
       </form>
-      {/* <Button variant="link" className={styles['advanced-search-btn']} disabled>
-        Advanced Search
-      </Button> */}
     </div>
   )
 }

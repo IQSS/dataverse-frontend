@@ -8,7 +8,8 @@ export async function getMyDataCollectionItems(
   publicationStatuses: string[],
   limit?: number,
   selectedPage?: number,
-  searchText?: string
+  searchText?: string,
+  otherUserName?: string
 ): Promise<CollectionItemSubset> {
   try {
     const result = await collectionRepository.getMyDataItems(
@@ -17,7 +18,8 @@ export async function getMyDataCollectionItems(
       publicationStatuses,
       limit,
       selectedPage,
-      searchText
+      searchText,
+      otherUserName
     )
     console.log('getMyDataCollectionItems result:', result)
     return result

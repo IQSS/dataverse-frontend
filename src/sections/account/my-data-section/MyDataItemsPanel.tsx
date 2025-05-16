@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
@@ -15,6 +16,9 @@ import { RoleChange } from '@/sections/account/my-data-section/my-data-filter-pa
 import { AllPublicationStatuses } from '@/shared/core/domain/models/PublicationStatus'
 import styles from './MyDataItemsPanel.module.scss'
 import { PublicationStatusChange } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
+import accountStyles from '@/sections/account/Account.module.scss'
+import { useSession } from '@/sections/session/SessionContext'
+import { UserNameSearch } from '@/sections/account/my-data-section/user-name-filter/UserNameSearch'
 
 interface MyDataItemsPanelProps {
   collectionRepository: CollectionRepository
@@ -35,6 +39,7 @@ interface MyDataItemsPanelProps {
 
 export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps) => {
   const { setIsLoading } = useLoading()
+  const { user } = useSession()
   // TODO: add roleIds from API
   const [userRoles] = useState([
     { roleId: 1, roleName: 'Admin' },
@@ -73,6 +78,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   } = useGetMyDataAccumulatedItems({
     collectionRepository
   })
+  const { t } = useTranslation('account')
 
   async function handleLoadMoreOnBottomReach(currentPagination: CollectionItemsPaginationInfo) {
     let paginationInfoToSend = currentPagination
@@ -113,7 +119,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       currentSearchCriteria.itemTypes,
       currentSearchCriteria.roleIds,
       newPublicationStatuses,
-      currentSearchCriteria.searchText
+      currentSearchCriteria.searchText,
+      currentSearchCriteria.otherUserName
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newMyDataSearchCriteria, true)
@@ -136,6 +143,28 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       roleIds,
       AllPublicationStatuses,
       searchValue === '' ? undefined : searchValue
+    )
+
+    const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
+
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
+      setPaginationInfo(paginationInfoUpdated)
+    }
+    setCurrentSearchCriteria(newCollectionSearchCriteria)
+  }
+
+  const handleUserNameSearchSubmit = async (otherUserName: string) => {
+    itemsListContainerRef.current?.scrollTo({ top: 0 })
+    const resetPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetPaginationInfo)
+
+    const newCollectionSearchCriteria = new MyDataSearchCriteria(
+      currentSearchCriteria.itemTypes,
+      currentSearchCriteria.roleIds,
+      currentSearchCriteria.publicationStatuses,
+      currentSearchCriteria.searchText,
+      otherUserName === '' ? undefined : otherUserName
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
@@ -209,12 +238,11 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
 
   async function loadItemsOnBackAndForwardNavigation() {
     const newPaginationInfo = new CollectionItemsPaginationInfo()
-    // WHEN SEARCHING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES!!
+    // WHEN NAVIGATING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES!!
     const newCollectionSearchCriteria = new MyDataSearchCriteria(
-      [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
+      [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
       roleIds,
-      currentSearchCriteria.publicationStatuses,
-      undefined
+      AllPublicationStatuses
     )
     const totalItemsCount = await loadMore(newPaginationInfo, newCollectionSearchCriteria, true)
 
@@ -229,50 +257,60 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   }, [isLoadingItems, setIsLoading])
 
   return (
-    <section className={styles['items-panel']}>
-      <header className={styles['top-wrapper']}>
-        <SearchPanel
-          onSubmitSearch={handleSearchSubmit}
-          currentSearchValue={currentSearchCriteria.searchText}
-          isLoadingCollectionItems={isLoadingItems}
-        />
-      </header>
-
-      <div className={styles['bottom-wrapper']}>
-        <MyDataFilterPanel
-          currentItemTypes={currentSearchCriteria.itemTypes}
-          onItemTypesChange={handleItemsTypeChange}
-          currentPublicationStatuses={currentSearchCriteria.publicationStatuses}
-          publicationStatusCounts={publicationStatusCounts}
-          onPublicationStatusesChange={handlePublicationStatusChange}
-          currentRoleIds={currentSearchCriteria.roleIds}
-          userRoles={userRoles}
-          onRolesChange={handleRoleChange}
-          isLoadingCollectionItems={isLoadingItems}
-        />
-
-        <Stack direction="vertical" gap={2}>
-          <ItemsList
-            items={accumulatedItems}
-            error={error}
-            translationFile="account"
-            accumulatedCount={accumulatedCount}
-            isLoadingItems={isLoadingItems}
-            areItemsAvailable={areItemsAvailable}
-            hasNextPage={hasNextPage}
-            isEmptyItems={isEmptyItems}
-            hasSearchValue={currentSearchCriteria.hasSearchText()}
-            itemsTypesSelected={currentSearchCriteria.itemTypes}
-            hasFilterQueries={
-              currentSearchCriteria.publicationStatuses.length != AllPublicationStatuses.length ||
-              currentSearchCriteria.roleIds.length != userRoles.length
-            }
-            paginationInfo={paginationInfo}
-            onBottomReach={handleLoadMoreOnBottomReach}
-            ref={itemsListContainerRef}
+    <>
+      <p className={accountStyles['helper-text']}>{t('myData.description')}</p>
+      <section className={styles['items-panel']}>
+        <header className={styles['top-wrapper']}>
+          <SearchPanel
+            onSubmitSearch={handleSearchSubmit}
+            currentSearchValue={currentSearchCriteria.searchText}
+            isLoadingCollectionItems={isLoadingItems}
           />
-        </Stack>
-      </div>
-    </section>
+          {user?.superuser && (
+            <UserNameSearch
+              isLoadingCollectionItems={isLoadingItems}
+              onSubmitSearch={handleUserNameSearchSubmit}
+            />
+          )}
+        </header>
+
+        <div className={styles['bottom-wrapper']}>
+          <MyDataFilterPanel
+            currentItemTypes={currentSearchCriteria.itemTypes}
+            onItemTypesChange={handleItemsTypeChange}
+            currentPublicationStatuses={currentSearchCriteria.publicationStatuses}
+            publicationStatusCounts={publicationStatusCounts}
+            onPublicationStatusesChange={handlePublicationStatusChange}
+            currentRoleIds={currentSearchCriteria.roleIds}
+            userRoles={userRoles}
+            onRolesChange={handleRoleChange}
+            isLoadingCollectionItems={isLoadingItems}
+          />
+
+          <Stack direction="vertical" gap={2}>
+            <ItemsList
+              items={accumulatedItems}
+              error={error}
+              translationFile="account"
+              accumulatedCount={accumulatedCount}
+              isLoadingItems={isLoadingItems}
+              areItemsAvailable={areItemsAvailable}
+              hasNextPage={hasNextPage}
+              isEmptyItems={isEmptyItems}
+              hasSearchValue={currentSearchCriteria.hasSearchText()}
+              itemsTypesSelected={currentSearchCriteria.itemTypes}
+              hasFilterQueries={
+                currentSearchCriteria.publicationStatuses.length != AllPublicationStatuses.length ||
+                currentSearchCriteria.roleIds.length != userRoles.length
+              }
+              paginationInfo={paginationInfo}
+              onBottomReach={handleLoadMoreOnBottomReach}
+              ref={itemsListContainerRef}
+              otherUserName={currentSearchCriteria.otherUserName}
+            />
+          </Stack>
+        </div>
+      </section>
+    </>
   )
 }

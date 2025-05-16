@@ -11,9 +11,14 @@ import styles from './ItemsList.module.scss'
 interface NoItemsMessageProps {
   itemsTypesSelected: CollectionItemType[]
   translationFile: string
+  otherUserName?: string
 }
 
-export function NoItemsMessage({ itemsTypesSelected, translationFile }: NoItemsMessageProps) {
+export function NoItemsMessage({
+  itemsTypesSelected,
+  translationFile,
+  otherUserName
+}: NoItemsMessageProps) {
   const { t } = useTranslation(translationFile)
   const { user } = useSession()
   const { logIn: oidcLogin } = useContext(AuthContext)
@@ -64,7 +69,9 @@ export function NoItemsMessage({ itemsTypesSelected, translationFile }: NoItemsM
 
   return (
     <div className={styles['custom-message-container']}>
-      {user ? (
+      {otherUserName ? (
+        <p>{t('noItemsMessage.otherUser', { otherUserName })}</p>
+      ) : user ? (
         <p>{t('noItemsMessage.authenticated', { typeOfEmptyItems: messageKey })}</p>
       ) : (
         <Trans
