@@ -30,11 +30,8 @@ interface MyDataItemsPanelProps {
  * 1. When the component mounts
  * 2. When the user scrolls to the bottom of the list and there are more items to load
  * 3. When the user submits a search query in the search panel
- * 4. When the user changes the item types in the filter panel
- * 5. When the user selects or removes a facet filter
- * 6. When the user navigates back and forward in the browser
- * 7. When the user changes the sort and order of the items
- *
+ * 4. When the user changes the item types, roles or publication statuses in the filter panel
+ * 5. When the user navigates back and forward in the browser
  */
 
 export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps) => {

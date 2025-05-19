@@ -1,9 +1,6 @@
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { MyDataFilterPanel } from '@/sections/account/my-data-section/my-data-filter-panel/MyDataFilterPanel'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
-
-const facets = CollectionItemsMother.createItemsFacets()
 
 describe('MyDataFilterPanel', () => {
   it('should open and close correctly the off canvas in mobile view', () => {
