@@ -8,9 +8,6 @@ const editorContentId = 'test-editor-content-id'
 const textToType = 'Hello Dataverse!'
 
 describe('RichTextEditor', () => {
-  beforeEach(() => {
-    cy.viewport('macbook-15')
-  })
   it('should render the component', () => {
     cy.mount(<RichTextEditor />)
 
@@ -359,6 +356,9 @@ describe('RichTextEditor', () => {
     })
 
     describe('Image functionalities', () => {
+      beforeEach(() => {
+        cy.viewport('macbook-15')
+      })
       it('should insert and image', () => {
         cy.mount(<RichTextEditor editorContentId={editorContentId} />)
 
@@ -450,7 +450,7 @@ describe('RichTextEditor', () => {
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-550">`
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
             )
           })
         })
@@ -482,7 +482,7 @@ describe('RichTextEditor', () => {
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-750">`
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-55">`
             )
           })
         })
@@ -514,40 +514,7 @@ describe('RichTextEditor', () => {
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-550">`
-            )
-          })
-        })
-
-        it('should insert an image and shrink its width on mobile screens', () => {
-          cy.viewport('iphone-7')
-          cy.mount(<RichTextEditor editorContentId={editorContentId} />)
-
-          cy.findByLabelText('Add image').click()
-
-          cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
-          cy.findByLabelText('Alternative text').type('A random image from loremflickr')
-
-          cy.findByRole('button', { name: 'OK' }).click()
-
-          cy.get(`#${editorContentId}`).then((el) => {
-            const html = el[0].innerHTML
-            expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
-            )
-          })
-
-          cy.findByAltText('A random image from loremflickr').click()
-          cy.get('.resize-dot')
-            .eq(1)
-            .trigger('pointerdown', { which: 1, force: true })
-            .trigger('pointermove', { x: -100, y: 0, force: true })
-            .trigger('pointerup')
-
-          cy.get(`#${editorContentId}`).then((el) => {
-            const html = el[0].innerHTML
-            expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-200">`
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
             )
           })
         })
@@ -579,7 +546,7 @@ describe('RichTextEditor', () => {
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-550">`
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
             )
           })
 
@@ -593,7 +560,7 @@ describe('RichTextEditor', () => {
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-450">`
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-30">`
             )
           })
         })

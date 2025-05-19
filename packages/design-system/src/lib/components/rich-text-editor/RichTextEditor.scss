@@ -103,12 +103,6 @@
           background-color: $dv-secondary-color;
           border-radius: 3px;
           outline: solid 2px $dv-primary-color;
-
-          &.mobile {
-            width: 16px;
-            height: 16px;
-            touch-action: none; // Prevents the default touch action (like pan and zoom) on mobile devices, need for the resize function to work properly
-          }
         }
 
         &.rte-img-left {
@@ -124,6 +118,15 @@
         &.rte-img-right {
           margin-right: 0;
           margin-left: auto;
+        }
+
+        /*
+          The purpose of this is to prevent the width percentage styles from (e.g: .w-rte-50 classes) from working in the `<img>` tag within the EDITOR itself.
+          Instead, these classes will only be applied to the resize container inside the editor. This allows the user to visually see how the image scales smaller or larger as they adjust the resize container.
+          Again, this is a CSS hack only for the visual representation of the image inside the editor. The Editor will output anyways the correct width percentage classes to the `<img>` tag to be rendered correctly in the final HTML.
+        */
+        img {
+          width: 100% !important;
         }
       }
     }

@@ -75,11 +75,14 @@
   }
 }
 
-// Generates classes for widths from 50px to 3000px in increments of 50px
-@for $i from 50 through 3000 {
-  @if $i % 50 == 0 {
-    .rte-w-#{$i} {
-      width: #{$i}px;
+// Generates classes for widths from 5% to 100% in increments of 5% - .rte-w-5 to .rte-w-100
+@for $i from 1 through 20 {
+  $percentage: $i * 5;
+  .rte-w-#{$percentage} {
+    width: #{'#{$percentage}%'};
+
+    @media (max-width: 992px) {
+      width: unset; // To avoid percentages widths on smaller screens - mobile, tablets
     }
   }
 }

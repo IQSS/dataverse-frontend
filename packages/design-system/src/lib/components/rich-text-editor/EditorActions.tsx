@@ -339,7 +339,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
 
           <Button
             onClick={handleOpenImageDialog}
-            className={styles['editor-actions-button']}
+            className={`${styles['editor-actions-button']} ${styles['editor-actions-button-image']}`}
             aria-label="Add image"
             title="Add image"
             type="button"

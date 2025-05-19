@@ -124,6 +124,13 @@ export const CustomImageExtension = Image.extend({
         $container.classList.add(matchedAlignment)
       }
 
+      // Detect if the class from the img contains width class and add it to the container to simulate the same width inside the rich text editor content
+      const matchedWidth = (nodeImgClass as string).match(/rte-w-(\d+)/)
+      if (matchedWidth) {
+        const widthClass = matchedWidth[0]
+        $container.classList.add(widthClass)
+      }
+
       $container.appendChild($img)
 
       Object.entries(node.attrs).forEach(([key, value]) => {
@@ -131,13 +138,11 @@ export const CustomImageExtension = Image.extend({
         $img.setAttribute(key, value as string)
       })
 
-      const isMobile = document.documentElement.clientWidth < 768
-      const dotPosition = isMobile ? '-8px' : '-4px'
       const dotsPosition = [
-        `top: ${dotPosition}; left: ${dotPosition}; cursor: nwse-resize;`,
-        `top: ${dotPosition}; right: ${dotPosition}; cursor: nesw-resize;`,
-        `bottom: ${dotPosition}; left: ${dotPosition}; cursor: nesw-resize;`,
-        `bottom: ${dotPosition}; right: ${dotPosition}; cursor: nwse-resize;`
+        `top: -4px; left: -4px; cursor: nwse-resize;`,
+        `top: -4px; right: -4px; cursor: nesw-resize;`,
+        `bottom: -4px; left: -4px; cursor: nesw-resize;`,
+        `bottom: -4px; right: -4px; cursor: nwse-resize;`
       ]
 
       let isResizing = false
@@ -145,8 +150,6 @@ export const CustomImageExtension = Image.extend({
 
       $container.addEventListener('click', () => {
         //remove remaining dots and position controller
-        const isMobile = document.documentElement.clientWidth < 768
-        isMobile && (document.querySelector('.ProseMirror-focused') as HTMLElement)?.blur()
 
         if ($container.childElementCount > 3) {
           for (let i = 0; i < 5; i++) {
@@ -160,21 +163,28 @@ export const CustomImageExtension = Image.extend({
         Array.from({ length: 4 }, (_, index) => {
           const $resizeDot = document.createElement('div')
           $resizeDot.classList.add('resize-dot')
-          isMobile && $resizeDot.classList.add('mobile')
           $resizeDot.setAttribute('style', `position: absolute; ${dotsPosition[index]}`)
 
           const transformAndApplyWidthToClassname = (newWidth: number) => {
-            // Round the width to nearest 50px to match the CSS classes like w-50, w-100, etc.
-            const roundedWidth = Math.max(50, Math.round(newWidth / 50) * 50)
-            const className = `rte-w-${roundedWidth}`
+            const parentWidth =
+              $container.parentElement?.offsetWidth || /* istanbul ignore next */ 1 // avoid division by zero
+            const percentage = Math.min(100, Math.max(5, (newWidth / parentWidth) * 100)) // clamp between 5% and 100%
+            const roundedPercentage = Math.round(percentage / 5) * 5 // round to nearest 5%
 
-            // Remove previous width classes like w-50, w-100, etc.
+            const className = `rte-w-${roundedPercentage}`
+
+            // Remove previous width classes like w-5, w-10, etc.
             $img.classList.forEach((cls) => {
               if (/^rte-w-\d+$/.test(cls)) {
                 $img.classList.remove(cls)
               }
             })
-
+            $container.classList.forEach((cls) => {
+              if (/^rte-w-\d+$/.test(cls)) {
+                $container.classList.remove(cls)
+              }
+            })
+            $container.classList.add(className)
             $img.classList.add(className)
           }
 
