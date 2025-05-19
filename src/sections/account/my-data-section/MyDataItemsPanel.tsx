@@ -38,10 +38,26 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   const { setIsLoading } = useLoading()
   const { user } = useSession()
   // TODO: add roleIds from API
+  /*
+
+Admin
+File Downloader
+Dataverse + Dataset Creator
+Dataverse Creator
+Dataset Creator
+Contributor
+Curator
+Member
+   */
   const [userRoles] = useState([
     { roleId: 1, roleName: 'Admin' },
+    { roleId: 2, roleName: 'File Downloader' },
+    { roleId: 3, roleName: 'Dataverse + Dataset Creator' },
+    { roleId: 4, roleName: 'Dataverse Creator' },
+    { roleId: 5, roleName: 'Dataset Creator' },
     { roleId: 6, roleName: 'Contributor' },
-    { roleId: 7, roleName: 'Curator' }
+    { roleId: 7, roleName: 'Curator' },
+    { roleId: 8, roleName: 'Member' }
   ])
   const roleIds = userRoles.map((role) => role.roleId)
 
