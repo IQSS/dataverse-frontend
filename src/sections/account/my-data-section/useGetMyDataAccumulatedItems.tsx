@@ -137,28 +137,15 @@ async function loadNextItems(
   paginationInfo: CollectionItemsPaginationInfo,
   searchCriteria: MyDataSearchCriteria
 ): Promise<CollectionItemSubset> {
-  try {
-    const publicationStatuses = (searchCriteria.publicationStatuses as string[]) ?? []
-    return await getMyDataCollectionItems(
-      collectionRepository,
-      searchCriteria.roleIds,
-      searchCriteria.itemTypes,
-      publicationStatuses,
-      paginationInfo.pageSize,
-      paginationInfo.page,
-      searchCriteria.searchText,
-      searchCriteria.otherUserName
-    )
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
-    // MYDATA_TODO: remove this when the API is fixed
-    if (errorMessage.includes('no results') || errorMessage.includes('nothing was found')) {
-      return {
-        items: [],
-        facets: [],
-        totalItemCount: 0
-      }
-    }
-    throw err
-  }
+  const publicationStatuses = (searchCriteria.publicationStatuses as string[]) ?? []
+  return await getMyDataCollectionItems(
+    collectionRepository,
+    searchCriteria.roleIds,
+    searchCriteria.itemTypes,
+    publicationStatuses,
+    paginationInfo.pageSize,
+    paginationInfo.page,
+    searchCriteria.searchText,
+    searchCriteria.otherUserName
+  )
 }

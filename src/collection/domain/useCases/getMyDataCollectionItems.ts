@@ -11,8 +11,8 @@ export async function getMyDataCollectionItems(
   searchText?: string,
   otherUserName?: string
 ): Promise<CollectionItemSubset> {
-  try {
-    const result = await collectionRepository.getMyDataItems(
+  return collectionRepository
+    .getMyDataItems(
       roleIds,
       collectionItemTypes,
       publicationStatuses,
@@ -21,9 +21,19 @@ export async function getMyDataCollectionItems(
       searchText,
       otherUserName
     )
-    console.log('getMyDataCollectionItems result:', result)
-    return result
-  } catch (error: Error | unknown) {
-    throw new Error(error instanceof Error ? error.message : 'Unknown error')
-  }
+    .catch((error) => {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      if (
+        errorMessage.includes('no results') ||
+        errorMessage.includes('nothing was found') ||
+        errorMessage.includes('No user found')
+      ) {
+        return {
+          items: [],
+          facets: [],
+          totalItemCount: 0
+        }
+      }
+      throw new Error(error instanceof Error ? error.message : 'Unknown error')
+    })
 }
