@@ -14,7 +14,7 @@ export class EditFileMetadataFactory {
 
 function EditFileMetadataWithParams() {
   const [searchParams] = useSearchParams()
-  const fileId = searchParams.get('id')
+  const fileId = searchParams.get(QueryParamKey.FILE_ID)
   const fileIdNumber = Number(fileId)
   const referrer = searchParams.get(QueryParamKey.REFERRER) as EditFileMetadataReferrer
 

@@ -26,6 +26,7 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
   const { t } = useTranslation('file')
   const fileId = version?.[0]?.datafileId
 
+  console.log('datasetVersionNumber', datasetVersionNumber)
   datasetVersionNumber == DatasetNonNumericVersion.DRAFT &&
     (datasetVersionNumber = DatasetNonNumericVersionSearchParam.DRAFT)
 
@@ -37,7 +38,7 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
   }
 
   return (
-    <div data-testid={`file-version`} className={styles['dataset-versions-table']}>
+    <div data-testid={`file-version`} className={styles['file-versions-table']}>
       <Table>
         <thead>
           <tr>
@@ -87,15 +88,16 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
 
 export const SummaryDescription = ({ summary }: { summary?: FileDifferenceSummary }) => {
   const summaryText: Record<string, string> | string = useFileVersionSummaryDescription(summary)
+  const { t } = useTranslation('file')
 
   if (typeof summaryText === 'string') {
     return <span style={{ fontStyle: 'italic' }}>{summaryText}</span>
   }
 
-  if (summaryText['Deaccessioned Reason']) {
+  if (summaryText[t('fileVersion.deaccessionedReason')]) {
     return (
       <span>
-        <strong>Deaccessioned Reason</strong>: {summaryText['Deaccessioned Reason']}
+        <strong>Deaccessioned Reason</strong>: {summaryText[t('fileVersion.deaccessionedReason')]}
       </span>
     )
   }

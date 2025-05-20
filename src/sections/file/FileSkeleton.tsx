@@ -62,7 +62,7 @@ export function FileSkeleton() {
                 </Accordion>
               </div>
             </Tabs.Tab>
-            <Tabs.Tab eventKey="fileVersion" title={t('tabs.fileVersion')}>
+            <Tabs.Tab eventKey="fileVersion" title={t('tabs.versions')}>
               <div className={styles['tab-container']}>
                 <Table>
                   <thead>

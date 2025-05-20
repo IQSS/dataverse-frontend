@@ -252,7 +252,7 @@ export class FileJSDataverseRepository implements FileRepository {
           FileJSDataverseRepository.getPermissionsById(jsFile.id),
           FileJSDataverseRepository.getThumbnailById(jsFile.id),
           FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData),
-          getFileVersionSummaries.execute(jsFile.id)
+          getFileVersionSummaries.execute(jsFile.id) //TODO: seperate this call from the getFileAndDataset call
         ])
       )
       .then(

@@ -1,9 +1,10 @@
-.dataset-versions-table {
+.file-versions-table {
   width: 100%;
   margin: auto;
   text-align: center;
   table-layout: fixed;
   border-collapse: collapse;
+  overflow-x: auto;
 
   th {
     font-weight: 600;
