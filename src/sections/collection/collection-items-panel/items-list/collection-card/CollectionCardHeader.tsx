@@ -29,7 +29,7 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
         )}
         {collectionPreview.userRoles &&
           collectionPreview.userRoles.map((role, index) => (
-            <Badge key={index} variant="info">
+            <Badge key={index} variant="success">
               {role}
             </Badge>
           ))}

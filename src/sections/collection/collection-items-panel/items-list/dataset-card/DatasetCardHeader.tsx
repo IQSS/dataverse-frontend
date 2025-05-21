@@ -30,7 +30,7 @@ export function DatasetCardHeader({ persistentId, version, userRoles }: DatasetC
         <DatasetLabels labels={version.labels} />
         {userRoles &&
           userRoles.map((role, index) => (
-            <Badge key={index} variant="info">
+            <Badge key={index} variant="success">
               {role}
             </Badge>
           ))}
