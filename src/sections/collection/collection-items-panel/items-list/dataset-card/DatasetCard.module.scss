@@ -21,6 +21,11 @@
   gap: 1rem;
   justify-content: space-between;
 
+  .role-label {
+    background: lightskyblue;
+    color: white;
+  }
+
   .left-side-content {
     display: flex;
     flex-wrap: wrap;
