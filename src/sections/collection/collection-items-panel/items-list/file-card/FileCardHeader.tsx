@@ -46,9 +46,9 @@ export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
           />
           {filePreview.userRoles &&
             filePreview.userRoles.map((role, index) => (
-              <Badge key={index} variant="success">
-                {role}
-              </Badge>
+              <div key={index}>
+                <Badge variant="success">{role}</Badge>
+              </div>
             ))}
         </div>
       </div>

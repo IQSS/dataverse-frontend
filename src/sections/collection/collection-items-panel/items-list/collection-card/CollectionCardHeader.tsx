@@ -29,9 +29,9 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
         )}
         {collectionPreview.userRoles &&
           collectionPreview.userRoles.map((role, index) => (
-            <Badge key={index} variant="success">
-              {role}
-            </Badge>
+            <div key={index}>
+              <Badge variant="success">{role}</Badge>
+            </div>
           ))}
       </div>
 
