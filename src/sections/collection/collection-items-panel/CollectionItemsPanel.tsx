@@ -18,7 +18,10 @@ import { useLoading } from '@/sections/loading/LoadingContext'
 import { CollectionHelper } from '../CollectionHelper'
 import { FilterPanel } from '@/sections/collection/collection-items-panel/filter-panel/FilterPanel'
 import { RemoveAddFacetFilter } from '@/sections/collection/collection-items-panel/filter-panel/facets-filters/FacetFilterGroup'
-import { ItemsList } from '@/sections/collection/collection-items-panel/items-list/ItemsList'
+import {
+  ItemsList,
+  ItemsListType
+} from '@/sections/collection/collection-items-panel/items-list/ItemsList'
 import { SearchPanel } from '@/sections/collection/collection-items-panel/search-panel/SearchPanel'
 import { ItemTypeChange } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
 import { SelectedFacets } from '@/sections/collection/collection-items-panel/selected-facets/SelectedFacets'
@@ -334,8 +337,8 @@ export const CollectionItemsPanel = ({
           <ItemsList
             parentCollectionAlias={collectionId}
             items={accumulatedItems}
+            itemsListType={ItemsListType.COLLECTION_LIST}
             error={error}
-            translationFile={{ fileName: 'collection' }}
             accumulatedCount={accumulatedCount}
             isLoadingItems={isLoadingItems}
             areItemsAvailable={areItemsAvailable}
