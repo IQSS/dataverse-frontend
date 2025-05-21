@@ -4,9 +4,11 @@ import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { useLoadMoreOnPopStateEvent } from '../../collection/collection-items-panel/useLoadMoreOnPopStateEvent'
 import { useLoading } from '@/sections/loading/LoadingContext'
-import { ItemsList } from '@/sections/collection/collection-items-panel/items-list/ItemsList'
+import {
+  ItemsList,
+  ItemsListType
+} from '@/sections/collection/collection-items-panel/items-list/ItemsList'
 import { MyDataFilterPanel } from '@/sections/account/my-data-section/my-data-filter-panel/MyDataFilterPanel'
 import { SearchPanel } from '@/sections/collection/collection-items-panel/search-panel/SearchPanel'
 import { ItemTypeChange } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
@@ -31,24 +33,13 @@ interface MyDataItemsPanelProps {
  * 2. When the user scrolls to the bottom of the list and there are more items to load
  * 3. When the user submits a search query in the search panel
  * 4. When the user changes the item types, roles or publication statuses in the filter panel
- * 5. When the user navigates back and forward in the browser
  */
 
 export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps) => {
   const { setIsLoading } = useLoading()
   const { user } = useSession()
-  // TODO: add roleIds from API
-  /*
+  const { t } = useTranslation('account')
 
-Admin
-File Downloader
-Dataverse + Dataset Creator
-Dataverse Creator
-Dataset Creator
-Contributor
-Curator
-Member
-   */
   const [userRoles] = useState([
     { roleId: 1, roleName: 'Admin' },
     { roleId: 2, roleName: 'File Downloader' },
@@ -60,8 +51,6 @@ Member
     { roleId: 8, roleName: 'Member' }
   ])
   const roleIds = userRoles.map((role) => role.roleId)
-
-  useLoadMoreOnPopStateEvent(loadItemsOnBackAndForwardNavigation)
 
   const [currentSearchCriteria, setCurrentSearchCriteria] = useState<MyDataSearchCriteria>(
     new MyDataSearchCriteria(
@@ -91,7 +80,6 @@ Member
   } = useGetMyDataAccumulatedItems({
     collectionRepository
   })
-  const { t } = useTranslation('account')
 
   async function handleLoadMoreOnBottomReach(currentPagination: CollectionItemsPaginationInfo) {
     let paginationInfoToSend = currentPagination
@@ -249,22 +237,6 @@ Member
     setCurrentSearchCriteria(newMyDataSearchCriteria)
   }
 
-  async function loadItemsOnBackAndForwardNavigation() {
-    const newPaginationInfo = new CollectionItemsPaginationInfo()
-    // WHEN NAVIGATING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES!!
-    const newCollectionSearchCriteria = new MyDataSearchCriteria(
-      [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
-      roleIds,
-      AllPublicationStatuses
-    )
-    const totalItemsCount = await loadMore(newPaginationInfo, newCollectionSearchCriteria, true)
-
-    if (totalItemsCount !== undefined) {
-      const paginationInfoUpdated = newPaginationInfo.withTotal(totalItemsCount)
-      setPaginationInfo(paginationInfoUpdated)
-    }
-  }
-
   useEffect(() => {
     setIsLoading(isLoadingItems)
   }, [isLoadingItems, setIsLoading])
@@ -278,7 +250,7 @@ Member
             onSubmitSearch={handleSearchSubmit}
             currentSearchValue={currentSearchCriteria.searchText}
             isLoadingCollectionItems={isLoadingItems}
-            translationFile={{ fileName: 'account', prefix: 'myData' }}
+            placeholderText={t('myData.searchThisCollectionPlaceholder')}
           />
           {user?.superuser && (
             <UserNameSearch
@@ -304,8 +276,8 @@ Member
           <Stack direction="vertical" gap={2}>
             <ItemsList
               items={accumulatedItems}
+              itemsListType={ItemsListType.MY_DATA_LIST}
               error={error}
-              translationFile={{ fileName: 'account', prefix: 'myData' }}
               accumulatedCount={accumulatedCount}
               isLoadingItems={isLoadingItems}
               areItemsAvailable={areItemsAvailable}

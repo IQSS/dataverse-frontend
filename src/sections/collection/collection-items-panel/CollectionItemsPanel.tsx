@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
+import { useTranslation } from 'react-i18next'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import {
@@ -58,7 +59,7 @@ export const CollectionItemsPanel = ({
 }: CollectionItemsPanelProps) => {
   const { setIsLoading } = useLoading()
   const [_, setSearchParams] = useSearchParams()
-
+  const { t } = useTranslation('collection')
   useLoadMoreOnPopStateEvent(loadItemsOnBackAndForwardNavigation)
 
   // This object will update every time we update a query param in the URL with the setSearchParams setter
@@ -309,6 +310,7 @@ export const CollectionItemsPanel = ({
           onSubmitSearch={handleSearchSubmit}
           currentSearchValue={currentSearchCriteria.searchText}
           isLoadingCollectionItems={isLoadingItems}
+          placeholderText={t('searchThisCollectionPlaceholder')}
         />
         <div className={styles['add-data-slot']}>{addDataSlot}</div>
       </header>
