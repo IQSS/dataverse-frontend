@@ -22,36 +22,60 @@ export interface TranslationFile {
   fileName: string
   prefix?: string
 }
-
-interface ItemsListProps {
-  items: CollectionItem[]
-  error: string | null
-  translationFile: TranslationFile
-  accumulatedCount: number
-  isLoadingItems: boolean
-  areItemsAvailable: boolean
-  hasNextPage: boolean
-  isEmptyItems: boolean
-  hasSearchValue: boolean
-  paginationInfo: CollectionItemsPaginationInfo
-  onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
-  itemsTypesSelected: CollectionItemType[]
-  hasFilterQueries: boolean
-  parentCollectionAlias?: string
-  otherUserName?: string
-  allowSorting?: boolean
-  onSortChange?: (newSortType?: SortType, newOrderType?: OrderType) => void
-  sortSelected?: SortType
-  orderSelected?: OrderType
-  searchText?: string
+export enum ItemsListType {
+  MY_DATA_LIST = 'my-data',
+  COLLECTION_LIST = 'collection-list'
 }
+type ItemsListProps =
+  | {
+      items: CollectionItem[]
+      itemsListType: ItemsListType.COLLECTION_LIST
+      error: string | null
+      accumulatedCount: number
+      isLoadingItems: boolean
+      areItemsAvailable: boolean
+      hasNextPage: boolean
+      isEmptyItems: boolean
+      hasSearchValue: boolean
+      paginationInfo: CollectionItemsPaginationInfo
+      onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
+      itemsTypesSelected: CollectionItemType[]
+      hasFilterQueries: boolean
+      parentCollectionAlias?: string
+      otherUserName?: never
+      onSortChange?: (newSortType?: SortType, newOrderType?: OrderType) => void
+      sortSelected?: SortType
+      orderSelected?: OrderType
+      searchText?: string
+    }
+  | {
+      items: CollectionItem[]
+      itemsListType: ItemsListType.MY_DATA_LIST
+      error: string | null
+      accumulatedCount: number
+      isLoadingItems: boolean
+      areItemsAvailable: boolean
+      hasNextPage: boolean
+      isEmptyItems: boolean
+      hasSearchValue: boolean
+      paginationInfo: CollectionItemsPaginationInfo
+      onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
+      itemsTypesSelected: CollectionItemType[]
+      hasFilterQueries: boolean
+      parentCollectionAlias?: never
+      otherUserName?: string
+      onSortChange?: never
+      sortSelected?: never
+      orderSelected?: never
+      searchText?: string
+    }
 
 export const ItemsList = forwardRef(
   (
     {
       items,
+      itemsListType,
       error,
-      translationFile = { fileName: 'collection' },
       accumulatedCount,
       isLoadingItems,
       areItemsAvailable,
@@ -64,7 +88,6 @@ export const ItemsList = forwardRef(
       hasFilterQueries,
       parentCollectionAlias,
       otherUserName,
-      allowSorting = true,
       onSortChange,
       sortSelected,
       orderSelected
@@ -86,7 +109,15 @@ export const ItemsList = forwardRef(
 
     const showSentrySkeleton = hasNextPage && !error && !isEmptyItems
     const showNotSentrySkeleton = isLoadingItems && isEmptyItems
-
+    const translationFile =
+      itemsListType == ItemsListType.COLLECTION_LIST
+        ? {
+            fileName: 'collection'
+          }
+        : {
+            fileName: 'account',
+            prefix: 'myData'
+          }
     return (
       <section ref={rootRef} className={styles['items-list-root-ref']}>
         <div
@@ -125,7 +156,7 @@ export const ItemsList = forwardRef(
                       />
                     )}
                   </Col>
-                  {allowSorting && onSortChange && (
+                  {onSortChange && (
                     <Col className={styles['sort-button']}>
                       <ItemsSortBy
                         isLoadingCollectionItems={isLoadingItems}
