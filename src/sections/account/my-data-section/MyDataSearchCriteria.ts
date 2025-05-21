@@ -10,15 +10,6 @@ export class MyDataSearchCriteria {
     public readonly otherUserName?: string
   ) {}
 
-  withSearchText(searchText: string | undefined): MyDataSearchCriteria {
-    return new MyDataSearchCriteria(
-      this.itemTypes,
-      this.roleIds,
-      this.publicationStatuses,
-      searchText,
-      this.otherUserName
-    )
-  }
   hasSearchText(): boolean {
     return !!this.searchText
   }
