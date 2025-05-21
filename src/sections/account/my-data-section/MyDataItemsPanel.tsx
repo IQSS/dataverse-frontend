@@ -101,7 +101,6 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     publicationStatusChange: PublicationStatusChange
   ) => {
     const { publicationStatus, checked } = publicationStatusChange
-    console.log('handlePublicationStatusChange', publicationStatus, checked)
     // These istanbul comments are only because checking if publicationStatuses is undefined is not possible is just a good defensive code to have
     const newPublicationStatuses = checked
       ? [
@@ -181,7 +180,6 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
 
   const handleItemsTypeChange = async (itemTypeChange: ItemTypeChange) => {
     const { type, checked } = itemTypeChange
-    console.log('handleItemsTypeChange', type, checked)
     // These istanbul comments are only because checking if itemTypes is undefined is not possible is just a good defensive code to have
     const newItemsTypes = checked
       ? [...new Set([...(currentSearchCriteria?.itemTypes ?? /* istanbul ignore next */ []), type])]
@@ -211,7 +209,6 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
 
   const handleRoleChange = async (roleChange: RoleChange) => {
     const { roleId, checked } = roleChange
-    console.log('handleRoleChange', roleId, checked)
     // These istanbul comments are only because checking if itemTypes is undefined is not possible is just a good defensive code to have
     const newRoleIds = checked
       ? [...new Set([...(currentSearchCriteria?.roleIds ?? /* istanbul ignore next */ []), roleId])]
@@ -240,7 +237,6 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   }
 
   const handleUncheckFileDownloader = async () => {
-    console.log('Uncheck File Downloader action triggered')
     const fileDownloaderRoleId = 2
     if (currentSearchCriteria.roleIds.includes(fileDownloaderRoleId)) {
       await handleRoleChange({ roleId: fileDownloaderRoleId, checked: false })
