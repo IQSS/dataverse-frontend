@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '@iqss/dataverse-design-system'
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
@@ -39,6 +41,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   const { setIsLoading } = useLoading()
   const { user } = useSession()
   const { t } = useTranslation('account')
+  const theme = useTheme()
 
   const [userRoles] = useState([
     { roleId: 1, roleName: 'Admin' },
@@ -80,7 +83,6 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   } = useGetMyDataAccumulatedItems({
     collectionRepository
   })
-
   async function handleLoadMoreOnBottomReach(currentPagination: CollectionItemsPaginationInfo) {
     let paginationInfoToSend = currentPagination
     if (totalAvailable !== undefined) {
@@ -237,6 +239,14 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     setCurrentSearchCriteria(newMyDataSearchCriteria)
   }
 
+  const handleUncheckFileDownloader = async () => {
+    console.log('Uncheck File Downloader action triggered')
+    const fileDownloaderRoleId = 2
+    if (currentSearchCriteria.roleIds.includes(fileDownloaderRoleId)) {
+      await handleRoleChange({ roleId: fileDownloaderRoleId, checked: false })
+    }
+  }
+
   useEffect(() => {
     setIsLoading(isLoadingItems)
   }, [isLoadingItems, setIsLoading])
@@ -244,6 +254,27 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   return (
     <>
       <p className={accountStyles['helper-text']}>{t('myData.description')}</p>
+      <p className={accountStyles['helper-text']}>
+        <Trans
+          i18nKey="myData.descriptionNote"
+          ns="account"
+          components={{
+            action: (
+              <button
+                type="button"
+                onClick={handleUncheckFileDownloader}
+                style={{
+                  color: theme.color.linkColor,
+                  textDecoration: 'underline',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+              />
+            )
+          }}
+        />
+      </p>
       <section className={styles['items-panel']}>
         <header className={styles['top-wrapper']}>
           <SearchPanel
