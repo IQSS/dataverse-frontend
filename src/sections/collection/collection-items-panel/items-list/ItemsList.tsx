@@ -163,7 +163,8 @@ export const ItemsList = forwardRef(
                         currentSortType={sortSelected}
                         currentSortOrder={orderSelected}
                         hasSearchValue={hasSearchValue}
-                        onSortChange={onSortChange}></ItemsSortBy>
+                        onSortChange={onSortChange}
+                      />
                     </Col>
                   )}
                 </Row>
