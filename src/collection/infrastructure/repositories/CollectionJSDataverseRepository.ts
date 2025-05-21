@@ -81,7 +81,6 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     searchText?: string,
     otherUserName?: string
   ): Promise<CollectionItemSubset> {
-    // get roleIds, collectionItemTypes and publicationStatuses from the searchCriteria
     return getMyDataCollectionItems
       .execute(
         roleIds,
