@@ -17,7 +17,11 @@ type Story = StoryObj<typeof DatasetVersions>
 
 export const Default: Story = {
   render: () => (
-    <DatasetVersions datasetRepository={new DatasetMockRepository()} datasetId="test-dataset-id" />
+    <DatasetVersions
+      datasetRepository={new DatasetMockRepository()}
+      datasetId="test-dataset-id"
+      isInView
+    />
   )
 }
 

@@ -42,8 +42,8 @@ export function DeaccessionDatasetModal({
 
   const publishedVersions =
     datasetVersionSummaries?.filter((version) => {
-      const summary = version.summary as { deaccessioned: Deaccessioned }
-      return version.publishedOn && !summary.deaccessioned
+      const summary = version?.summary as { deaccessioned: Deaccessioned }
+      return version.publishedOn && !summary?.deaccessioned
     }) || []
 
   const defaultVersions = publishedVersions.length === 1 ? [publishedVersions[0].versionNumber] : []
@@ -136,7 +136,7 @@ export function DeaccessionDatasetModal({
                 {publishedVersions.length > 1 && (
                   <Form.Group as={Col}>
                     <Form.Group.Label required>{t('deaccession.version.label')}</Form.Group.Label>
-                    <div>
+                    <div data-testid="published-versions">
                       <Controller
                         name="versions"
                         control={control}

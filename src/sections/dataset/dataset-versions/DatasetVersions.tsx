@@ -114,6 +114,7 @@ export function DatasetVersions({ datasetRepository, datasetId, isInView }: Data
                     <td style={{ verticalAlign: 'middle' }}>
                       <Form.Group.Checkbox
                         label=""
+                        aria-label="Select row"
                         id={`dataset-${dataset.id}`}
                         data-testid="select-checkbox"
                         checked={selectedVersions.some((item) => item.id === dataset.id)}
