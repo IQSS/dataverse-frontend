@@ -10,7 +10,7 @@ interface SearchPanelProps {
   onSubmitSearch: (searchValue: string) => void
   placeholderText: string
 }
-//TODO:me send placeholder text as a prop instead of translationFile
+
 export const SearchPanel = ({
   currentSearchValue = '',
   isLoadingCollectionItems,
@@ -45,7 +45,7 @@ export const SearchPanel = ({
         <Form.InputGroup className={styles['search-input-group']}>
           <Form.Group.Input
             type="search"
-            placeholder={t('searchThisCollectionPlaceholder')}
+            placeholder={placeholderText}
             aria-label="Search"
             value={searchValue}
             onChange={handleSearchChange}
