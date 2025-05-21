@@ -25,10 +25,12 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
   const navigate = useNavigate()
   const { t } = useTranslation('dataset')
   const [selectedVersions, setSelectedVersions] = useState<DatasetVersionSummaryInfo[]>([])
-  const { datasetVersionSummaries, error, isLoading } = useGetDatasetVersionsSummaries({
-    datasetRepository,
-    persistentId: datasetId
-  })
+  const { datasetVersionSummaries, error, isLoading, fetchSummaries } =
+    useGetDatasetVersionsSummaries({
+      datasetRepository,
+      persistentId: datasetId,
+      autoFetch: true
+    })
 
   const handleCheckboxChange = (datasetSummary: DatasetVersionSummaryInfo) => {
     setSelectedVersions((prevSelected) => {
