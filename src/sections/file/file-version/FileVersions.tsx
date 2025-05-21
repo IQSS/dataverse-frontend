@@ -10,7 +10,6 @@ import { Table, Button } from '@iqss/dataverse-design-system'
 import { useFileVersionSummaryDescription } from './useFileVersionSummaryDescription'
 import {
   DatasetNonNumericVersion,
-  DatasetVersionNumber,
   DatasetNonNumericVersionSearchParam
 } from '@/dataset/domain/models/Dataset'
 import { DateHelper } from '@/shared/helpers/DateHelper'
@@ -18,7 +17,7 @@ import styles from './FileVersion.module.scss'
 
 interface FileVersionProps {
   version: FileVersionSummaryInfo[] | undefined
-  datasetVersionNumber: DatasetNonNumericVersion | DatasetVersionNumber | string | undefined
+  datasetVersionNumber: string | undefined
 }
 
 export function FileVersions({ version, datasetVersionNumber }: FileVersionProps) {
@@ -26,9 +25,13 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
   const { t } = useTranslation('file')
   const fileId = version?.[0]?.datafileId
 
-  console.log('datasetVersionNumber', datasetVersionNumber)
-  datasetVersionNumber == DatasetNonNumericVersion.DRAFT &&
-    (datasetVersionNumber = DatasetNonNumericVersionSearchParam.DRAFT)
+  const datasetVersionDisplayMap: Record<string, string> = {
+    [DatasetNonNumericVersion.DRAFT]: DatasetNonNumericVersionSearchParam.DRAFT
+  }
+  const displayVersion =
+    typeof datasetVersionNumber === 'string' && datasetVersionDisplayMap[datasetVersionNumber]
+      ? datasetVersionDisplayMap[datasetVersionNumber]
+      : datasetVersionNumber
 
   const navigateToVersion = (versionNumber: string) => {
     const searchParams = new URLSearchParams()
@@ -52,7 +55,7 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
           {version?.map((fileVersion) => (
             <tr key={fileVersion.datasetVersion}>
               <td style={{ verticalAlign: 'middle' }}>
-                {fileVersion.datasetVersion === datasetVersionNumber ? (
+                {fileVersion.datasetVersion === displayVersion ? (
                   <strong>{fileVersion.datasetVersion}</strong>
                 ) : (
                   <Button
@@ -60,7 +63,7 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
                     onClick={() => navigateToVersion(fileVersion.datasetVersion)}
                     disabled={
                       !fileVersion.fileDifferenceSummary ||
-                      fileVersion.datasetVersion === datasetVersionNumber ||
+                      fileVersion.datasetVersion === displayVersion ||
                       fileVersion.versionState === DatasetVersionState.DEACCESSIONED
                     }>
                     {fileVersion.datasetVersion}

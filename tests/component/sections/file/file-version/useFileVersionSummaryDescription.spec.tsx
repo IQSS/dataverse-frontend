@@ -41,6 +41,6 @@ describe('useFileVersionSummaryDescription', () => {
 
     const { result } = renderHook(() => useFileVersionSummaryDescription(summary))
 
-    expect(result.current).equal('No changes associated with this version')
+    expect(result.current).equal('No changes associated with this version.')
   })
 })

@@ -17,7 +17,7 @@ export const useFileVersionSummaryDescription = (
   Object.entries(summary).forEach(([key, value]) => {
     switch (key) {
       case 'file': {
-        if (typeof value === 'string') {
+        if ((value as FileChangeType) && typeof value === 'string') {
           description[t('fileVersion.file')] = t('fileVersion.fileChanged', { name: value })
         }
         break

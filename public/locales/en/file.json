@@ -9,19 +9,19 @@
     "summary": "Summary",
     "contributors": "Contributors",
     "noChange": "No changes associated with this version.",
-    "file": "File",
-    "fileChanged": "File {{name}} changed",
+    "file": "file",
+    "fileChanged": "[File {{name}}]",
     "access": "File Access",
-    "accessChanged": "Access changed to {{access}}",
+    "accessChanged": "{{access}}",
     "metadata": "File Metadata",
     "metadataChange": "{{field}} {{action}}",
     "tags": "File Tags",
-    "tagsChange": "{{count}} tag(s) {{action}}",
+    "tagsChange": "{{count}} {{action}}",
     "deaccessionedReason": "Deaccessioned Reason",
     "actions": {
-      "added": "added",
-      "removed": "removed",
-      "changed": "changed"
+      "Added": "Added",
+      "Deleted": "Deleted",
+      "Changed": "Changed"
     }
   },
   "fileNotChange": "No changes associated with this version",
