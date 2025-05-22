@@ -1,6 +1,7 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 @import 'src/assets/variables';
+@import 'src/assets/mixins';
 
 .container {
   display: flex;
@@ -14,6 +15,10 @@
 .copyright {
   margin: 0 0 10px;
   font-size: $dv-font-size-sm;
+
+  a {
+    @include link-hover-underlined;
+  }
 }
 
 .powered-by-container {

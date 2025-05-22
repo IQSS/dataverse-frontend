@@ -34,9 +34,9 @@ export const Homepage = ({ collectionRepository, dataverseHubRepository }: Homep
 
   return (
     <section className={styles['section-wrapper']}>
-      <Usage collectionId={collection?.id as string} />
-
-      <div className={styles['separation-line']} />
+      <div className={styles['usage-wrapper']}>
+        <Usage collectionId={collection?.id as string} />
+      </div>
 
       <div className={styles['middle-search-cta-wrapper']}>
         <SearchInput />
@@ -44,8 +44,6 @@ export const Homepage = ({ collectionRepository, dataverseHubRepository }: Homep
           {t('browseCollections')}
         </Link>
       </div>
-
-      <div className={styles['separation-line']} />
 
       {collection && (
         <>
@@ -55,12 +53,13 @@ export const Homepage = ({ collectionRepository, dataverseHubRepository }: Homep
               collectionId={collection.id}
               withLoadingSkeleton={true}
             />
-            <div className={styles['separation-line']} />
           </div>
         </>
       )}
 
-      <Metrics dataverseHubRepository={dataverseHubRepository} />
+      <div className={styles['metrics-wrapper']}>
+        <Metrics dataverseHubRepository={dataverseHubRepository} />
+      </div>
     </section>
   )
 }

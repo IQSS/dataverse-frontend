@@ -16,7 +16,8 @@ export const ProtectedRoute = () => {
   const { token, loginInProgress: oidcLoginInProgress, logIn: oidcLogin } = useContext(AuthContext)
   const { user, isLoadingUser } = useSession()
 
-  const isSafeToRenderProtectedRoute = !oidcLoginInProgress && !isLoadingUser && token && user
+  // We only show the loader if we dont have a token neither a user and we are in the process of logging in or loading the user data.
+  const showLoader = !token && !user && (oidcLoginInProgress || isLoadingUser)
 
   useEffect(() => {
     if (oidcLoginInProgress || isLoadingUser) return
@@ -28,7 +29,7 @@ export const ProtectedRoute = () => {
     }
   }, [token, oidcLogin, oidcLoginInProgress, isLoadingUser, pathname, search])
 
-  if (!isSafeToRenderProtectedRoute) {
+  if (showLoader) {
     return <AppLoader />
   }
 

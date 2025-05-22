@@ -54,6 +54,23 @@
     font-size: 0.875em;
   }
 
+  .aspect-ratio-warning {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.25rem;
+    color: $dv-warning-color;
+    font-size: 0.875em;
+
+    svg {
+      margin-top: 3px;
+    }
+
+    @media (min-width: 992px) {
+      white-space: pre-line;
+    }
+  }
+
   .image-wrapper {
     position: relative;
     display: flex;

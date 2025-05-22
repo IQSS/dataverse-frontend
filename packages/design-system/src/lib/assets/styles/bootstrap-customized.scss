@@ -139,3 +139,11 @@ th {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+
+.btn-link {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

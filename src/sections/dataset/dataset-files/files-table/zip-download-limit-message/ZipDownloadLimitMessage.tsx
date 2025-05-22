@@ -22,16 +22,9 @@ export function ZipDownloadLimitMessage({
 }: ZipDownloadLimitMessageProps) {
   const { t } = useTranslation('files')
   const { getSettingByName } = useSettings()
-  const [zipDownloadLimitInBytes, setZipDownloadLimitInBytes] = useState<number>()
-  useEffect(() => {
-    getSettingByName<ZipDownloadLimit>(SettingName.ZIP_DOWNLOAD_LIMIT)
-      .then((zipDownloadLimit) => {
-        setZipDownloadLimitInBytes(zipDownloadLimit.value.toBytes())
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  }, [getSettingByName])
+  const zipDownloadLimitInBytes = getSettingByName<ZipDownloadLimit>(
+    SettingName.ZIP_DOWNLOAD_LIMIT
+  )?.value.toBytes()
 
   const [fileSelectionTotalSizeInInBytes, setFileSelectionTotalSizeInInBytes] = useState<number>(0)
   useEffect(() => {

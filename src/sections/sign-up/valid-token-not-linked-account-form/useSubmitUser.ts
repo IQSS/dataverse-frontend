@@ -69,7 +69,8 @@ export const useSubmitUser = (
       })
       .catch((err: WriteError) => {
         const error = new JSDataverseWriteErrorHandler(err)
-        const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
+        const formattedError =
+          error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
 
         setSubmitError(formattedError)
         setSubmissionStatus(SubmissionStatus.Errored)
