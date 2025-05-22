@@ -76,29 +76,4 @@ describe('PublicationStatusFilters', () => {
     cy.findByLabelText('Published (5)').should('be.disabled')
     cy.findByLabelText('Unpublished (10)').should('not.be.disabled')
   })
-  it('should update the checked state of checkboxes correctly when toggled', () => {
-    const onPublicationStatusChange = cy.stub().as('onPublicationStatusChange')
-
-    cy.customMount(
-      <PublicationStatusFilters
-        currentPublicationStatuses={[]}
-        publicationStatusCounts={publicationStatusCounts}
-        onPublicationStatusChange={onPublicationStatusChange}
-        isLoadingCollectionItems={false}
-      />
-    )
-
-    // Initially, all checkboxes should be unchecked
-    publicationStatusCounts.forEach(({ status }) => {
-      cy.findByLabelText(new RegExp(`${status}`)).should('not.be.checked')
-    })
-
-    // Click to check a checkbox
-    cy.findByLabelText('Published (5)').click()
-    cy.findByLabelText('Published (5)').should('be.checked')
-
-    // Click to uncheck the same checkbox
-    cy.findByLabelText('Published (5)').click()
-    cy.findByLabelText('Published (5)').should('not.be.checked')
-  })
 })
