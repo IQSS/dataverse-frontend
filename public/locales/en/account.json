@@ -26,7 +26,7 @@
   "myData": {
     "title": "My Data",
     "description": "Here are all the collections, datasets, and files you have access to. You can filter through them by publication status and roles.",
-    "descriptionNote": "Note: If you see unexpected dataverses or datasets in your My Data results, it might be because someone has assigned your account a role on those dataverses or datasets. For example, some institutions automatically assign the \"File Downloader\" role on their datasets to all accounts using their institutional login. To remove this data from the list,<action>uncheck</action> the File Downloader role in the filter.",
+    "descriptionNote": "Note: If you see unexpected dataverses or datasets in your My Data results, it might be because someone has assigned your account a role on those dataverses or datasets. For example, some institutions automatically assign the \"File Downloader\" role on their datasets to all accounts using their institutional login. To remove this data from the list, <action>uncheck</action> the File Downloader role in the filter.",
     "noData": "You have not created or contributed to any datasets yet.",
     "roleFilterTitle": "Roles",
     "publicationStatusFilterTitle": "Publication Statuses",

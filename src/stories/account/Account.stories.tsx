@@ -20,20 +20,10 @@ const meta: Meta<typeof Account> = {
 export default meta
 type Story = StoryObj<typeof Account>
 
-export const AccountInformation: Story = {
+export const Default: Story = {
   render: () => (
     <Account
-      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
-      userRepository={new UserMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-    />
-  )
-}
-
-export const ApiTokenTab: Story = {
-  render: () => (
-    <Account
-      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
+      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.myData}
       userRepository={new UserMockRepository()}
       collectionRepository={new CollectionMockRepository()}
     />

@@ -21,7 +21,7 @@ import { AllPublicationStatuses } from '@/shared/core/domain/models/PublicationS
 import { PublicationStatusChange } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
 import accountStyles from '@/sections/account/Account.module.scss'
 import { useSession } from '@/sections/session/SessionContext'
-import { UserNameSearch } from '@/sections/account/my-data-section/user-name-filter/UserNameSearch'
+import { UserNameSearch } from '@/sections/account/my-data-section/user-name-search/UserNameSearch'
 import styles from './MyDataItemsPanel.module.scss'
 
 interface MyDataItemsPanelProps {
@@ -264,7 +264,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
                   textDecoration: 'underline',
                   background: 'none',
                   border: 'none',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  padding: 0
                 }}
               />
             )

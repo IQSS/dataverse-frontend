@@ -21,12 +21,12 @@ export async function getMyDataCollectionItems(
       searchText,
       otherUserName
     )
-    .catch((error) => {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    .catch((error: Error | unknown) => {
       if (
-        errorMessage.includes('no results') ||
-        errorMessage.includes('nothing was found') ||
-        errorMessage.includes('No user found')
+        error instanceof Error &&
+        (error.message.includes('no results') ||
+          error.message.includes('nothing was found') ||
+          error.message.includes('No user found'))
       ) {
         return {
           items: [],
@@ -34,6 +34,7 @@ export async function getMyDataCollectionItems(
           totalItemCount: 0
         }
       }
-      throw new Error(error instanceof Error ? error.message : 'Unknown error')
+
+      throw error
     })
 }

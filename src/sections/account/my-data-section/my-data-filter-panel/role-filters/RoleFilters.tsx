@@ -28,8 +28,8 @@ export const RoleFilters = ({
   }
 
   return (
-    <Stack gap={1} className={styles['type-filters']}>
-      <div className={styles['role-title']}>{t('myData.roleFilterTitle')}</div>
+    <Stack gap={1} className={styles['role-filters']}>
+      <div className={styles['title']}>{t('myData.roleFilterTitle')}</div>
       {userRoles.map((role) => {
         const roleCheckDisabled =
           isLoadingCollectionItems ||

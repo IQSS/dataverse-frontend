@@ -15,6 +15,7 @@ import {
 } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 import styles from './MyDataFilterPanel.module.scss'
+import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 
 interface FilterPanelProps {
   currentItemTypes?: CollectionItemType[]
@@ -67,14 +68,14 @@ export const MyDataFilterPanel = ({
               currentItemTypes={currentItemTypes}
               isLoadingCollectionItems={isLoadingCollectionItems}
             />
-
+            <SeparationLine />
             <PublicationStatusFilters
               currentPublicationStatuses={currentPublicationStatuses}
               publicationStatusCounts={publicationStatusCounts}
               onPublicationStatusChange={onPublicationStatusesChange}
               isLoadingCollectionItems={isLoadingCollectionItems}
             />
-
+            <SeparationLine />
             <RoleFilters
               currentRoleIds={currentRoleIds}
               userRoles={userRoles}

@@ -35,19 +35,15 @@ export const UserNameSearch = ({
   }, [currentSearchValue])
 
   return (
-    <div className={styles['search-panel']}>
-      <form onSubmit={handleSubmit} className={styles['search-form']} role="search">
-        <Form.InputGroup className={styles['search-input-group']}>
-          <Form.Group.Input
-            type="search"
-            placeholder={t('myData.userNameSearchPlaceholder')}
-            aria-label="Username"
-            value={searchValue}
-            onChange={handleSearchChange}
-            disabled={isLoadingCollectionItems}
-          />
-        </Form.InputGroup>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className={styles['search-form']} role="search">
+      <Form.Group.Input
+        type="search"
+        placeholder={t('myData.userNameSearchPlaceholder')}
+        aria-label="Username"
+        value={searchValue}
+        onChange={handleSearchChange}
+        disabled={isLoadingCollectionItems}
+      />
+    </form>
   )
 }
