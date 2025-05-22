@@ -33,6 +33,18 @@ describe('RichTextEditor', () => {
     cy.get(`#${editorContentId}`).should('have.attr', 'aria-labelledby', ariaLabelledBy)
   })
 
+  it('should render the component with an aria-required attribute in the editor content', () => {
+    cy.mount(<RichTextEditor ariaRequired editorContentId={editorContentId} />)
+
+    cy.get(`#${editorContentId}`).should('have.attr', 'aria-required', 'true')
+  })
+
+  it('should render the component with an invalid class', () => {
+    cy.mount(<RichTextEditor invalid editorContentId={editorContentId} />)
+
+    cy.get('[data-testid="rich-text-editor-wrapper"]').should('have.class', 'invalid')
+  })
+
   it('should render the component with initial value', () => {
     const initialValue = `<p class="${RichTextEditorCustomClasses.PARAGRAPH}">Hello <strong class="${RichTextEditorCustomClasses.BOLD}">Dataverse</strong>!</p>`
 
@@ -308,6 +320,250 @@ describe('RichTextEditor', () => {
           'contain.html',
           `<p class="${RichTextEditorCustomClasses.PARAGRAPH}">Here goes a link</p>`
         )
+      })
+
+      it('should update an existing link', () => {
+        cy.mount(<RichTextEditor editorContentId={editorContentId} />)
+
+        cy.get(`#${editorContentId}`).type('Here goes a link')
+
+        cy.get(`#${editorContentId}`).type('{selectall}')
+
+        cy.findByLabelText('Add link').click()
+
+        cy.findByLabelText('Link').type('https://www.dataverse.com')
+
+        cy.findByRole('button', { name: 'OK' }).click()
+
+        cy.get(`#${editorContentId}`).should(
+          'contain.html',
+          `<p class="${RichTextEditorCustomClasses.PARAGRAPH}"><a target="_blank" rel="noopener noreferrer nofollow" class="${RichTextEditorCustomClasses.LINK}" href="https://www.dataverse.com">Here goes a link</a></p>`
+        )
+
+        cy.get(`#${editorContentId}`).type('{selectall}')
+
+        cy.findByLabelText('Add link').click()
+        cy.findByLabelText('Link').should('have.value', 'https://www.dataverse.com')
+        cy.findByLabelText('Link').clear().type('https://www.dataverse.com/another-link')
+
+        cy.findByRole('button', { name: 'OK' }).click()
+
+        cy.get(`#${editorContentId}`).should(
+          'contain.html',
+          `<p class="${RichTextEditorCustomClasses.PARAGRAPH}"><a target="_blank" rel="noopener noreferrer nofollow" class="${RichTextEditorCustomClasses.LINK}" href="https://www.dataverse.com/another-link">Here goes a link</a></p>`
+        )
+      })
+    })
+
+    describe('Image functionalities', () => {
+      beforeEach(() => {
+        cy.viewport('macbook-15')
+      })
+      it('should insert and image', () => {
+        cy.mount(<RichTextEditor editorContentId={editorContentId} />)
+
+        cy.findByLabelText('Add image').click()
+
+        cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
+        cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+
+        cy.findByRole('button', { name: 'OK' }).click()
+
+        cy.get(`#${editorContentId}`).then((el) => {
+          const html = el[0].innerHTML
+          expect(html).to.include(
+            `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+          )
+        })
+      })
+
+      it('should insert an image and align it to the left, center and right', () => {
+        cy.mount(<RichTextEditor editorContentId={editorContentId} />)
+
+        cy.findByLabelText('Add image').click()
+
+        cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
+        cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+
+        cy.findByRole('button', { name: 'OK' }).click()
+
+        cy.get(`#${editorContentId}`).then((el) => {
+          const html = el[0].innerHTML
+          expect(html).to.include(
+            `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+          )
+        })
+
+        cy.findByAltText('A random image from loremflickr').click()
+        cy.findByLabelText('Align left').click()
+        cy.get(`#${editorContentId}`).then((el) => {
+          const html = el[0].innerHTML
+          expect(html).to.include(
+            `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} ${RichTextEditorCustomClasses.IMAGE_ALIGN_LEFT}">`
+          )
+        })
+
+        cy.findByAltText('A random image from loremflickr').click()
+        cy.findByLabelText('Align center').click()
+        cy.get(`#${editorContentId}`).then((el) => {
+          const html = el[0].innerHTML
+          expect(html).to.include(
+            `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} ${RichTextEditorCustomClasses.IMAGE_ALIGN_CENTER}">`
+          )
+        })
+
+        cy.findByAltText('A random image from loremflickr').click()
+        cy.findByLabelText('Align right').click()
+        cy.get(`#${editorContentId}`).then((el) => {
+          const html = el[0].innerHTML
+          expect(html).to.include(
+            `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} ${RichTextEditorCustomClasses.IMAGE_ALIGN_RIGHT}">`
+          )
+        })
+      })
+
+      describe('Image resizing', () => {
+        it('should insert an image and shrink its width', () => {
+          cy.mount(<RichTextEditor editorContentId={editorContentId} />)
+
+          cy.findByLabelText('Add image').click()
+
+          cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
+          cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+
+          cy.findByRole('button', { name: 'OK' }).click()
+
+          cy.get(`#${editorContentId}`).then((el) => {
+            const html = el[0].innerHTML
+            expect(html).to.include(
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+            )
+          })
+
+          cy.findByAltText('A random image from loremflickr').click()
+          cy.get('.resize-dot')
+            .eq(1)
+            .trigger('pointerdown', { which: 1, force: true })
+            .trigger('pointermove', { x: -100, y: 0, force: true })
+            .trigger('pointerup')
+
+          cy.get(`#${editorContentId}`).then((el) => {
+            const html = el[0].innerHTML
+            expect(html).to.include(
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
+            )
+          })
+        })
+
+        it('should insert an image and expand its width', () => {
+          cy.mount(<RichTextEditor editorContentId={editorContentId} />)
+
+          cy.findByLabelText('Add image').click()
+
+          cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
+          cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+
+          cy.findByRole('button', { name: 'OK' }).click()
+
+          cy.get(`#${editorContentId}`).then((el) => {
+            const html = el[0].innerHTML
+            expect(html).to.include(
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+            )
+          })
+
+          cy.findByAltText('A random image from loremflickr').click()
+          cy.get('.resize-dot')
+            .eq(1)
+            .trigger('pointerdown', { which: 1, force: true })
+            .trigger('pointermove', { x: 100, y: 0, force: true })
+            .trigger('pointerup')
+
+          cy.get(`#${editorContentId}`).then((el) => {
+            const html = el[0].innerHTML
+            expect(html).to.include(
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-55">`
+            )
+          })
+        })
+
+        it('should insert an image and shrink its width from the top left resize dot handler', () => {
+          cy.mount(<RichTextEditor editorContentId={editorContentId} />)
+
+          cy.findByLabelText('Add image').click()
+
+          cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
+          cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+
+          cy.findByRole('button', { name: 'OK' }).click()
+
+          cy.get(`#${editorContentId}`).then((el) => {
+            const html = el[0].innerHTML
+            expect(html).to.include(
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+            )
+          })
+
+          cy.findByAltText('A random image from loremflickr').click()
+          cy.get('.resize-dot')
+            .eq(2)
+            .trigger('pointerdown', { which: 1, force: true })
+            .trigger('pointermove', { x: 100, y: 0, force: true })
+            .trigger('pointerup')
+
+          cy.get(`#${editorContentId}`).then((el) => {
+            const html = el[0].innerHTML
+            expect(html).to.include(
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
+            )
+          })
+        })
+
+        it('should only apply one width class and remove the others', () => {
+          cy.mount(<RichTextEditor editorContentId={editorContentId} />)
+
+          cy.findByLabelText('Add image').click()
+
+          cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
+          cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+
+          cy.findByRole('button', { name: 'OK' }).click()
+
+          cy.get(`#${editorContentId}`).then((el) => {
+            const html = el[0].innerHTML
+            expect(html).to.include(
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+            )
+          })
+
+          cy.findByAltText('A random image from loremflickr').click()
+          cy.get('.resize-dot')
+            .eq(1)
+            .trigger('pointerdown', { which: 1, force: true })
+            .trigger('pointermove', { x: -100, y: 0, force: true })
+            .trigger('pointerup')
+
+          cy.get(`#${editorContentId}`).then((el) => {
+            const html = el[0].innerHTML
+            expect(html).to.include(
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
+            )
+          })
+
+          cy.findByAltText('A random image from loremflickr').click()
+          cy.get('.resize-dot')
+            .eq(1)
+            .trigger('pointerdown', { which: 1, force: true })
+            .trigger('pointermove', { x: -100, y: 0, force: true })
+            .trigger('pointerup')
+
+          cy.get(`#${editorContentId}`).then((el) => {
+            const html = el[0].innerHTML
+            expect(html).to.include(
+              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-30">`
+            )
+          })
+        })
       })
     })
 

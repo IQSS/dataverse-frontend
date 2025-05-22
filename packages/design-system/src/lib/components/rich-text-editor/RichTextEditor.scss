@@ -48,6 +48,87 @@
         content: attr(data-placeholder);
         pointer-events: none;
       }
+
+      .image-resize-container {
+        position: relative;
+        cursor: pointer;
+
+        &:has(.img-alignment-controller) {
+          border: 2px dashed $dv-primary-color;
+        }
+
+        .img-alignment-controller {
+          position: absolute;
+          top: 0%;
+          left: 50%;
+          z-index: 999;
+          display: inline-flex;
+          vertical-align: middle;
+          transform: translateX(-50%);
+          cursor: pointer;
+
+          button {
+            background-color: $dv-secondary-color;
+            border: 1px solid #ccc;
+            outline: 0;
+            cursor: pointer;
+
+            &:hover {
+              background-color: color.adjust($dv-secondary-color, $lightness: 3%);
+            }
+
+            &:active {
+              background-color: color.adjust($dv-secondary-color, $lightness: -6%);
+            }
+
+            &:first-child {
+              border-right: 0;
+              border-radius: 0.25rem;
+              border-top-right-radius: 0;
+              border-bottom-right-radius: 0;
+            }
+
+            &:last-child {
+              border-left: 0;
+              border-radius: 0.25rem;
+              border-top-left-radius: 0;
+              border-bottom-left-radius: 0;
+            }
+          }
+        }
+
+        .resize-dot {
+          width: 12px;
+          height: 12px;
+          background-color: $dv-secondary-color;
+          border-radius: 3px;
+          outline: solid 2px $dv-primary-color;
+        }
+
+        &.rte-img-left {
+          margin-right: auto;
+          margin-left: 0;
+        }
+
+        &.rte-img-center {
+          margin-right: auto;
+          margin-left: auto;
+        }
+
+        &.rte-img-right {
+          margin-right: 0;
+          margin-left: auto;
+        }
+
+        /*
+          The purpose of this is to prevent the width percentage styles from (e.g: .w-rte-50 classes) from working in the `<img>` tag within the EDITOR itself.
+          Instead, these classes will only be applied to the resize container inside the editor. This allows the user to visually see how the image scales smaller or larger as they adjust the resize container.
+          Again, this is a CSS hack only for the visual representation of the image inside the editor. The Editor will output anyways the correct width percentage classes to the `<img>` tag to be rendered correctly in the final HTML.
+        */
+        img {
+          width: 100% !important;
+        }
+      }
     }
   }
 

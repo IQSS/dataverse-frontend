@@ -16,7 +16,8 @@ export const CustomFeaturedItemCard = ({
   collectionId
 }: CustomFeaturedItemCardProps) => {
   const sanitizedContent = DOMPurify.sanitize(featuredItem.content, {
-    USE_PROFILES: { html: true }
+    USE_PROFILES: { html: true },
+    FORBID_TAGS: ['img'] // To not render img tags in the card, it is too much for a card and also affects the controlled by css height of it
   })
 
   return (
