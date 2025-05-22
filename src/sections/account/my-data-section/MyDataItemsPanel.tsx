@@ -18,11 +18,11 @@ import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataS
 import { useGetMyDataAccumulatedItems } from '@/sections/account/my-data-section/useGetMyDataAccumulatedItems'
 import { RoleChange } from '@/sections/account/my-data-section/my-data-filter-panel/role-filters/RoleFilters'
 import { AllPublicationStatuses } from '@/shared/core/domain/models/PublicationStatus'
-import styles from './MyDataItemsPanel.module.scss'
 import { PublicationStatusChange } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
 import accountStyles from '@/sections/account/Account.module.scss'
 import { useSession } from '@/sections/session/SessionContext'
 import { UserNameSearch } from '@/sections/account/my-data-section/user-name-filter/UserNameSearch'
+import styles from './MyDataItemsPanel.module.scss'
 
 interface MyDataItemsPanelProps {
   collectionRepository: CollectionRepository
