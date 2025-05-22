@@ -128,22 +128,6 @@ export const AccountCreated: Story = {
   )
 }
 
-export const Edited: Story = {
-  decorators: [WithLoggedInUser],
-  render: () => (
-    <Collection
-      collectionRepository={new CollectionMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      collectionIdFromParams="collection"
-      created={false}
-      published={false}
-      edited={true}
-      accountCreated={false}
-      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
-    />
-  )
-}
-
 const collectionRepositoryWithFeaturedItems = new CollectionMockRepository()
 collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
   return new Promise((resolve) => {

@@ -29,7 +29,6 @@ interface CollectionProps {
   collectionIdFromParams: string | undefined
   created: boolean
   published: boolean
-  edited?: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
   accountCreated: boolean
   infiniteScrollEnabled?: boolean
@@ -41,7 +40,6 @@ export function Collection({
   collectionRepository,
   created,
   published,
-  edited,
   collectionQueryParams,
   contactRepository,
   accountCreated
@@ -89,11 +87,7 @@ export function Collection({
             <CollectionInfo collection={collection} />
 
             {created && <CreatedAlert />}
-            {edited && (
-              <Alert variant="success" dismissible={false}>
-                {t('editedAlert')}
-              </Alert>
-            )}
+
             {published && (
               <Alert variant="success" dismissible={false}>
                 {t('publishedAlert')}
