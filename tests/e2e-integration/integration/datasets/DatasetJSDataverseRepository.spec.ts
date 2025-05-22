@@ -140,15 +140,6 @@ const datasetData = (persistentId: string, versionId: number) => {
       termsOfAccess: termsOfUse,
       deaccessionNote: undefined
     },
-    versionsSummaries: [
-      {
-        id: versionId,
-        versionNumber: 'DRAFT',
-        publishedOn: '',
-        summary: 'firstDraft',
-        contributors: 'Dataverse Admin'
-      }
-    ],
     permissions: {
       canDownloadFiles: true,
       canUpdateDataset: true,
@@ -200,7 +191,6 @@ describe('Dataset JSDataverse Repository', () => {
         expect(dataset.locks).to.deep.equal(datasetExpected.locks)
         expect(dataset.downloadUrls).to.deep.equal(datasetExpected.downloadUrls)
         expect(dataset.fileDownloadSizes).to.deep.equal(datasetExpected.fileDownloadSizes)
-        expect(dataset.versionsSummaries).to.deep.equal(datasetExpected.versionsSummaries)
       })
   })
 

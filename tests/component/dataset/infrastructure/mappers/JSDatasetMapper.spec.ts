@@ -211,34 +211,7 @@ const jsDatasetVersionDiff = {
 }
 const jsDatasetFilesTotalOriginalDownloadSize = 5
 const jsDatasetFilesTotalArchivalDownloadSize = 7
-const jsDatasetVersionSummaries = [
-  {
-    id: 101,
-    versionNumber: '1.0',
-    summary: {
-      citation: {
-        added: 1,
-        deleted: 0,
-        changed: 1
-      }
-    },
-    contributors: 'John Doe',
-    publishedOn: '2023-01-01'
-  },
-  {
-    id: 102,
-    versionNumber: '2.0',
-    summary: {
-      citation: {
-        added: 1,
-        deleted: 0,
-        changed: 1
-      }
-    },
-    contributors: 'Jane Doe',
-    publishedOn: '2023-02-01'
-  }
-]
+
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
@@ -354,35 +327,7 @@ const expectedDataset = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false,
-  versionsSummaries: [
-    {
-      id: 101,
-      versionNumber: '1.0',
-      summary: {
-        citation: {
-          added: 1,
-          deleted: 0,
-          changed: 1
-        }
-      },
-      contributors: 'John Doe',
-      publishedOn: '2023-01-01'
-    },
-    {
-      id: 102,
-      versionNumber: '2.0',
-      summary: {
-        citation: {
-          added: 1,
-          deleted: 0,
-          changed: 1
-        }
-      },
-      contributors: 'Jane Doe',
-      publishedOn: '2023-02-01'
-    }
-  ]
+  requiresMajorVersionUpdate: false
 }
 const expectedDatasetWithPublicationDate = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -497,35 +442,7 @@ const expectedDatasetWithPublicationDate = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false,
-  versionsSummaries: [
-    {
-      id: 101,
-      versionNumber: '1.0',
-      summary: {
-        citation: {
-          added: 1,
-          deleted: 0,
-          changed: 1
-        }
-      },
-      contributors: 'John Doe',
-      publishedOn: '2023-01-01'
-    },
-    {
-      id: 102,
-      versionNumber: '2.0',
-      summary: {
-        citation: {
-          added: 1,
-          deleted: 0,
-          changed: 1
-        }
-      },
-      contributors: 'Jane Doe',
-      publishedOn: '2023-02-01'
-    }
-  ]
+  requiresMajorVersionUpdate: false
 }
 const expectedDatasetWithNextVersionNumbers = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -640,35 +557,7 @@ const expectedDatasetWithNextVersionNumbers = {
   ),
   nextMajorVersion: '2.0',
   nextMinorVersion: '1.3',
-  requiresMajorVersionUpdate: false,
-  versionsSummaries: [
-    {
-      id: 101,
-      versionNumber: '1.0',
-      summary: {
-        citation: {
-          added: 1,
-          deleted: 0,
-          changed: 1
-        }
-      },
-      contributors: 'John Doe',
-      publishedOn: '2023-01-01'
-    },
-    {
-      id: 102,
-      versionNumber: '2.0',
-      summary: {
-        citation: {
-          added: 1,
-          deleted: 0,
-          changed: 1
-        }
-      },
-      contributors: 'Jane Doe',
-      publishedOn: '2023-02-01'
-    }
-  ]
+  requiresMajorVersionUpdate: false
 }
 
 const expectedDatasetAlternateVersion = {
@@ -797,35 +686,7 @@ const expectedDatasetAlternateVersion = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false,
-  versionsSummaries: [
-    {
-      id: 101,
-      versionNumber: '1.0',
-      summary: {
-        citation: {
-          added: 1,
-          deleted: 0,
-          changed: 1
-        }
-      },
-      contributors: 'John Doe',
-      publishedOn: '2023-01-01'
-    },
-    {
-      id: 102,
-      versionNumber: '2.0',
-      summary: {
-        citation: {
-          added: 1,
-          deleted: 0,
-          changed: 1
-        }
-      },
-      contributors: 'Jane Doe',
-      publishedOn: '2023-02-01'
-    }
-  ]
+  requiresMajorVersionUpdate: false
 }
 
 describe('JS Dataset Mapper', () => {
@@ -837,8 +698,7 @@ describe('JS Dataset Mapper', () => {
       jsDatasetPermissions,
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
-      jsDatasetFilesTotalArchivalDownloadSize,
-      jsDatasetVersionSummaries
+      jsDatasetFilesTotalArchivalDownloadSize
     )
     expect(mapped).to.deep.equal(expectedDataset)
   })
@@ -852,7 +712,6 @@ describe('JS Dataset Mapper', () => {
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize,
-      jsDatasetVersionSummaries,
       '4.0'
     )
 
@@ -896,8 +755,7 @@ describe('JS Dataset Mapper', () => {
         jsDatasetPermissions,
         jsDatasetLocks,
         jsDatasetFilesTotalOriginalDownloadSize,
-        jsDatasetFilesTotalArchivalDownloadSize,
-        jsDatasetVersionSummaries
+        jsDatasetFilesTotalArchivalDownloadSize
       )
     )
   })
@@ -939,8 +797,7 @@ describe('JS Dataset Mapper', () => {
         jsDatasetPermissions,
         jsDatasetLocks,
         jsDatasetFilesTotalOriginalDownloadSize,
-        jsDatasetFilesTotalArchivalDownloadSize,
-        jsDatasetVersionSummaries
+        jsDatasetFilesTotalArchivalDownloadSize
       )
     )
   })
@@ -958,8 +815,7 @@ describe('JS Dataset Mapper', () => {
       jsDatasetPermissions,
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
-      jsDatasetFilesTotalArchivalDownloadSize,
-      jsDatasetVersionSummaries
+      jsDatasetFilesTotalArchivalDownloadSize
     )
 
     expect(expectedDatasetWithPublicationDate).to.deep.equal(actual)
@@ -981,7 +837,6 @@ describe('JS Dataset Mapper', () => {
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize,
-      jsDatasetVersionSummaries,
       undefined,
       undefined,
       latestPublishedVersionMajorNumber,
@@ -1005,7 +860,6 @@ describe('JS Dataset Mapper', () => {
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize,
-      jsDatasetVersionSummaries,
       undefined,
       undefined,
       latestPublishedVersionMajorNumber,
