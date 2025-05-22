@@ -30,7 +30,6 @@ export const Default: Story = {
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
       created={false}
-      published={false}
       accountCreated={false}
       collectionQueryParams={{
         pageQuery: 1,
@@ -48,7 +47,6 @@ export const Loading: Story = {
       collectionRepository={new CollectionLoadingMockRepository()}
       contactRepository={new ContactMockRepository()}
       created={false}
-      published={false}
       accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
@@ -63,7 +61,6 @@ export const LoggedIn: Story = {
       collectionRepository={new CollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       created={false}
-      published={false}
       accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
@@ -77,7 +74,6 @@ export const Unpublished: Story = {
       collectionRepository={new UnpublishedCollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       created={false}
-      published={false}
       accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
@@ -92,21 +88,6 @@ export const Created: Story = {
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
       created={true}
-      published={false}
-      accountCreated={false}
-      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
-    />
-  )
-}
-export const Published: Story = {
-  decorators: [WithLoggedInUser],
-  render: () => (
-    <Collection
-      collectionRepository={new CollectionMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      collectionIdFromParams="collection"
-      created={false}
-      published={true}
       accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
@@ -121,7 +102,6 @@ export const AccountCreated: Story = {
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
       created={false}
-      published={false}
       accountCreated={true}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
@@ -145,7 +125,6 @@ export const WithFeaturedItems: Story = {
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
       created={false}
-      published={false}
       accountCreated={false}
       collectionQueryParams={{
         pageQuery: 1,

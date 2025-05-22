@@ -22,13 +22,11 @@ function CollectionWithSearchParams() {
   const location = useLocation()
   const state = location.state as
     | {
-        published?: boolean
         created?: boolean
         accountCreated?: boolean
       }
     | undefined
   const created = state?.created ?? false
-  const published = state?.published ?? false
   const accountCreated =
     Boolean(sessionStorage.getItem(ACCOUNT_CREATED_SESSION_STORAGE_KEY)) ?? false
 
@@ -38,7 +36,6 @@ function CollectionWithSearchParams() {
       collectionIdFromParams={collectionId}
       created={created}
       collectionQueryParams={collectionQueryParams}
-      published={published}
       accountCreated={accountCreated}
       infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
       contactRepository={contactRepository}

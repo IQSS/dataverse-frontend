@@ -42,7 +42,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -69,7 +68,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -85,7 +83,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -101,7 +98,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -116,7 +112,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -131,7 +126,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -151,28 +145,12 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
 
     cy.findByRole('alert').should('exist').should('include.text', 'Success!')
-  })
-  it('shows the published alert when the collection was just published', () => {
-    cy.customMount(
-      <Collection
-        collectionRepository={collectionRepository}
-        contactRepository={contactRepository}
-        collectionIdFromParams="collection"
-        created={false}
-        published={true}
-        accountCreated={false}
-        collectionQueryParams={{ pageQuery: 1 }}
-      />
-    )
-
-    cy.findByRole('alert').should('exist').should('include.text', 'Your collection is now public')
   })
 
   it('hides the Add data dropdown button when user does not have permissions to create both a collection and a dataset', () => {
@@ -189,7 +167,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -210,7 +187,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -231,7 +207,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={true}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -251,7 +226,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -277,7 +251,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -295,7 +268,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -313,7 +285,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -335,7 +306,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
@@ -355,7 +325,6 @@ describe('Collection page', () => {
         contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
-        published={false}
         accountCreated={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
