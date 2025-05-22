@@ -117,14 +117,10 @@ const convertFacetsToPublicationStatusCounts = (
 ): PublicationStatusCount[] => {
   if (!facets[0]) {
     // Create a list of PublicationStatusCount with 0 counts
-    const publicationStatusCounts: PublicationStatusCount[] = []
-    for (const status of Object.values(AllPublicationStatuses)) {
-      publicationStatusCounts.push({
-        status: status,
-        count: 0
-      })
-    }
-    return publicationStatusCounts
+    return AllPublicationStatuses.map((status) => ({
+      status: status,
+      count: 0
+    }))
   } else
     return facets[0].labels.map((facetLabel) => ({
       status: facetLabel.name as PublicationStatus,
