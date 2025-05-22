@@ -57,7 +57,7 @@ describe('Edit Dataset metadata', () => {
 
       cy.findByRole('heading', { name: 'Edited title' }).should('exist')
       cy.findByText('Success!').should('exist')
-      cy.contains('The metadata for this dataset has been updated.').should('exist')
+      cy.findByText(/The metadata for this dataset has been updated successfully./).should('exist')
       cy.findByText(DatasetLabelValue.DRAFT).should('exist')
       cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
     })
