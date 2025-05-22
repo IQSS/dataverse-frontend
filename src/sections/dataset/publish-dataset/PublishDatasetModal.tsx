@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
+import { Button, Modal, Spinner, Stack } from '@iqss/dataverse-design-system'
 import { Form } from '@iqss/dataverse-design-system'
 import type { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { VersionUpdateType } from '@/dataset/domain/models/VersionUpdateType'
@@ -157,8 +157,14 @@ export function PublishDatasetModal({
               : selectedVersionUpdateType
             submitPublish(versionUpdateType)
           }}
-          type="submit">
-          {t('publish.continueButton')}
+          type="submit"
+          disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+          <Stack direction="horizontal" gap={1}>
+            {t('publish.continueButton')}
+            {submissionStatus === SubmissionStatus.IsSubmitting && (
+              <Spinner variant="light" animation="border" size="sm" />
+            )}
+          </Stack>
         </Button>
         <Button
           withSpacing
