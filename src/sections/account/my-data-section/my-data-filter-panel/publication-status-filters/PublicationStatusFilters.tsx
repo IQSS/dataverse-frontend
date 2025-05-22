@@ -38,7 +38,7 @@ export const PublicationStatusFilters = ({
 
   return (
     <Stack gap={1} className={styles['type-filters']}>
-      <div className={styles['role-title']}>{t('myData.publicationStatusFilterTitle')}</div>
+      <span className={styles['role-title']}>{t('myData.publicationStatusFilterTitle')}</span>
       {publicationStatusCounts?.map(({ status, count }) => {
         const statusCheckDisabled =
           isLoadingCollectionItems ||
