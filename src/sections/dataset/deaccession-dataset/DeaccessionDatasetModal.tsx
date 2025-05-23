@@ -61,7 +61,12 @@ export function DeaccessionDatasetModal({
     watch,
     reset
   } = useForm<DeaccessionFormData>({
-    defaultValues: { versions: defaultVersions, deaccessionForwardUrl: '' }
+    values: {
+      versions: defaultVersions,
+      deaccessionForwardUrl: '',
+      deaccessionReason: '',
+      deaccessionReasonOther: ''
+    }
   })
 
   function onDeaccessionSucceed() {
