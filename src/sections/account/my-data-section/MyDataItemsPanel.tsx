@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { Trans } from 'react-i18next'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@iqss/dataverse-design-system'
 import { Stack } from '@iqss/dataverse-design-system'
@@ -236,13 +235,6 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     setCurrentSearchCriteria(newMyDataSearchCriteria)
   }
 
-  const handleUncheckFileDownloader = async () => {
-    const fileDownloaderRoleId = 2
-    if (currentSearchCriteria.roleIds.includes(fileDownloaderRoleId)) {
-      await handleRoleChange({ roleId: fileDownloaderRoleId, checked: false })
-    }
-  }
-
   useEffect(() => {
     setIsLoading(isLoadingItems)
   }, [isLoadingItems, setIsLoading])
@@ -250,28 +242,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   return (
     <>
       <p className={accountStyles['helper-text']}>{t('myData.description')}</p>
-      <p className={accountStyles['helper-text']}>
-        <Trans
-          i18nKey="myData.descriptionNote"
-          ns="account"
-          components={{
-            action: (
-              <button
-                type="button"
-                onClick={handleUncheckFileDownloader}
-                style={{
-                  color: theme.color.linkColor,
-                  textDecoration: 'underline',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0
-                }}
-              />
-            )
-          }}
-        />
-      </p>
+
       <section className={styles['items-panel']}>
         <header className={styles['top-wrapper']}>
           <SearchPanel
