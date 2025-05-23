@@ -12,7 +12,6 @@ import {
   DatasetVersionState,
   FileDownloadSizeMode,
   DatasetVersionDiff as JSDatasetVersionDiff,
-  DatasetVersionSummaryInfo as JSDatasetVersionSummaryInfo,
   getAllDatasetPreviews,
   getDataset,
   getDatasetCitation,
@@ -57,7 +56,6 @@ interface IDatasetDetails {
   latestPublishedVersionMajorNumber?: number
   latestPublishedVersionMinorNumber?: number
   datasetVersionDiff?: JSDatasetVersionDiff
-  jsDatasetVersionsSummaries: JSDatasetVersionSummaryInfo[]
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
@@ -133,21 +131,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getDatasetSummaryFieldNames.execute(),
       getDatasetCitation.execute(jsDataset.id, version, includeDeaccessioned),
       getDatasetUserPermissions.execute(jsDataset.id),
-      getDatasetLocks.execute(jsDataset.id),
-      getDatasetVersionsSummaries.execute(jsDataset.id)
+      getDatasetLocks.execute(jsDataset.id)
     ]).then(
-      ([
-        summaryFieldsNames,
-        citation,
-        jsDatasetPermissions,
-        jsDatasetLocks,
-        jsDatasetVersionsSummaries
-      ]: [
+      ([summaryFieldsNames, citation, jsDatasetPermissions, jsDatasetLocks]: [
         string[],
         string,
         JSDatasetPermissions,
-        JSDatasetLock[],
-        JSDatasetVersionSummaryInfo[]
+        JSDatasetLock[]
       ]) => {
         return {
           jsDataset,
@@ -155,7 +145,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           citation,
           jsDatasetPermissions,
           jsDatasetLocks,
-          jsDatasetVersionsSummaries,
           jsDatasetFilesTotalOriginalDownloadSize: 0,
           jsDatasetFilesTotalArchivalDownloadSize: 0
         }
@@ -230,7 +219,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           datasetDetails.jsDatasetLocks,
           datasetDetails.jsDatasetFilesTotalOriginalDownloadSize,
           datasetDetails.jsDatasetFilesTotalArchivalDownloadSize,
-          datasetDetails.jsDatasetVersionsSummaries,
           requestedVersion,
           undefined,
           datasetDetails.latestPublishedVersionMajorNumber,
@@ -258,26 +246,24 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
     ])
       .then(async ([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) => {
-        const [permissions, locks, originalSize, archivalSize, versionsSummaries] =
-          await Promise.all([
-            getDatasetUserPermissions.execute(jsDataset.id),
-            getDatasetLocks.execute(jsDataset.id),
-            getDatasetFilesTotalDownloadSize.execute(
-              jsDataset.id,
-              DatasetNonNumericVersion.DRAFT,
-              FileDownloadSizeMode.ORIGINAL,
-              undefined,
-              includeDeaccessioned
-            ),
-            getDatasetFilesTotalDownloadSize.execute(
-              jsDataset.id,
-              DatasetNonNumericVersion.DRAFT,
-              FileDownloadSizeMode.ARCHIVAL,
-              undefined,
-              includeDeaccessioned
-            ),
-            getDatasetVersionsSummaries.execute(jsDataset.id)
-          ])
+        const [permissions, locks, originalSize, archivalSize] = await Promise.all([
+          getDatasetUserPermissions.execute(jsDataset.id),
+          getDatasetLocks.execute(jsDataset.id),
+          getDatasetFilesTotalDownloadSize.execute(
+            jsDataset.id,
+            DatasetNonNumericVersion.DRAFT,
+            FileDownloadSizeMode.ORIGINAL,
+            undefined,
+            includeDeaccessioned
+          ),
+          getDatasetFilesTotalDownloadSize.execute(
+            jsDataset.id,
+            DatasetNonNumericVersion.DRAFT,
+            FileDownloadSizeMode.ARCHIVAL,
+            undefined,
+            includeDeaccessioned
+          )
+        ])
 
         return JSDatasetMapper.toDataset(
           jsDataset,
@@ -286,8 +272,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           permissions,
           locks,
           originalSize,
-          archivalSize,
-          versionsSummaries
+          archivalSize
         )
       })
       .catch((error: ReadError) => {

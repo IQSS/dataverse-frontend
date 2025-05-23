@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -8,26 +8,33 @@ import {
   DatasetVersionSummaryInfo,
   DatasetVersionSummaryStringValues
 } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
-import { useGetDatasetVersionsSummaries } from './useGetDatasetVersionsSummaries'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
+import { useGetDatasetVersionsSummaries } from './useGetDatasetVersionsSummaries'
 import { DatasetVersionViewDifferenceButton } from './view-difference/DatasetVersionViewDifferenceButton'
 import { useDatasetVersionSummaryDescription } from './useDatasetVersionSummaryDescription'
 import { DatasetViewDetailButton } from './DatasetViewDetailButton'
 import styles from './DatasetVersions.module.scss'
-import { QueryParamKey, Route } from '@/sections/Route.enum'
 
 interface DatasetVersionsProps {
   datasetRepository: DatasetRepository
   datasetId: string
+  isInView: boolean
 }
 
-export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersionsProps) {
+export function DatasetVersions({ datasetRepository, datasetId, isInView }: DatasetVersionsProps) {
   const navigate = useNavigate()
   const { t } = useTranslation('dataset')
   const [selectedVersions, setSelectedVersions] = useState<DatasetVersionSummaryInfo[]>([])
-  const { datasetVersionSummaries, error, isLoading } = useGetDatasetVersionsSummaries({
+  const {
+    datasetVersionSummaries,
+    error,
+    isLoading: isLoadingDatasetVersionSummaries,
+    fetchSummaries
+  } = useGetDatasetVersionsSummaries({
     datasetRepository,
-    persistentId: datasetId
+    persistentId: datasetId,
+    autoFetch: false
   })
 
   const handleCheckboxChange = (datasetSummary: DatasetVersionSummaryInfo) => {
@@ -54,7 +61,13 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
   )
   const showViewDifferenceButton = datasetVersionSummaries && datasetVersionSummaries.length < 2
 
-  if (isLoading) {
+  useEffect(() => {
+    if (isInView && !datasetVersionSummaries) {
+      void fetchSummaries()
+    }
+  }, [isInView, fetchSummaries, datasetVersionSummaries])
+
+  if (isLoadingDatasetVersionSummaries || !datasetVersionSummaries) {
     return <DatasetVersionsLoadingSkeleton />
   }
 
@@ -101,6 +114,7 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
                     <td style={{ verticalAlign: 'middle' }}>
                       <Form.Group.Checkbox
                         label=""
+                        aria-label="Select row"
                         id={`dataset-${dataset.id}`}
                         data-testid="select-checkbox"
                         checked={selectedVersions.some((item) => item.id === dataset.id)}

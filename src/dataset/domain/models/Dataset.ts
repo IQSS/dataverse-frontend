@@ -1,7 +1,6 @@
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
 import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { FileDownloadSize } from '../../../files/domain/models/FileMetadata'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
@@ -424,7 +423,6 @@ export class Dataset {
     public readonly downloadUrls: DatasetDownloadUrls,
     public readonly fileDownloadSizes: FileDownloadSize[],
     public readonly hierarchy: UpwardHierarchyNode,
-    public readonly versionsSummaries: DatasetVersionSummaryInfo[],
     public readonly license?: DatasetLicense,
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
@@ -519,7 +517,6 @@ export class Dataset {
       public readonly downloadUrls: DatasetDownloadUrls,
       public readonly fileDownloadSizes: FileDownloadSize[],
       public readonly hierarchy: UpwardHierarchyNode,
-      public readonly versionsSummaries: DatasetVersionSummaryInfo[],
       public readonly license?: DatasetLicense,
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
@@ -589,7 +586,6 @@ export class Dataset {
         this.downloadUrls,
         this.fileDownloadSizes,
         this.hierarchy,
-        this.versionsSummaries,
         this.license,
         this.thumbnail,
         this.privateUrl,

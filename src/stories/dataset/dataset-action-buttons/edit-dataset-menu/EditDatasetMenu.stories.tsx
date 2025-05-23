@@ -45,7 +45,6 @@ export const WithAllPermissionsDraftVersionOnly: Story = {
           latestVersionPublishingStatus: DatasetPublishingStatus.DRAFT
         }),
         permissions: DatasetPermissionsMother.createWithAllAllowed(),
-        versionsSummaries: [],
         hasValidTermsOfAccess: true
       })}
     />
