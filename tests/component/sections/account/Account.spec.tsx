@@ -17,4 +17,15 @@ describe('Account', () => {
     cy.findByRole('tab', { name: 'Account Information' }).should('exist')
     cy.findByRole('tab', { name: 'API Token' }).should('be.enabled')
   })
+
+  it('clicks on the Account Information tab', () => {
+    cy.mountAuthenticated(
+      <Account
+        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
+        userRepository={new UserJSDataverseRepository()}
+      />
+    )
+
+    cy.findByRole('tab', { name: 'Account Information' }).click()
+  })
 })
