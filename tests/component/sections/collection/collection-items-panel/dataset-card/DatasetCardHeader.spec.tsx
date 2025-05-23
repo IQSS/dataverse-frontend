@@ -10,7 +10,14 @@ describe('DatasetCardHeader', () => {
 
     cy.findByText(dataset.version.title)
       .should('exist')
-      .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}`)
+      .should(
+        'have.attr',
+        'href',
+        `/datasets?persistentId=${
+          dataset.persistentId
+        }&version=${dataset.version.number.toString()}`
+      )
+
     dataset.version.labels.forEach((label) => {
       cy.findByText(label.value).should('exist')
     })
