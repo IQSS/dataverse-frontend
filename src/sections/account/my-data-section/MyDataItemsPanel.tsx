@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@iqss/dataverse-design-system'
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
@@ -40,7 +39,6 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   const { setIsLoading } = useLoading()
   const { user } = useSession()
   const { t } = useTranslation('account')
-  const theme = useTheme()
 
   const [userRoles] = useState([
     { roleId: 1, roleName: 'Admin' },
