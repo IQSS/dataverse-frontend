@@ -21,7 +21,8 @@ export function DatasetCardHeader({ persistentId, version }: DatasetCardHeaderPr
           type={DvObjectType.DATASET}
           searchParams={DatasetCardHelper.getDatasetSearchParams(
             persistentId,
-            version.publishingStatus
+            version.publishingStatus,
+            version.number.toString()
           )}>
           {version.title}
         </LinkToPage>

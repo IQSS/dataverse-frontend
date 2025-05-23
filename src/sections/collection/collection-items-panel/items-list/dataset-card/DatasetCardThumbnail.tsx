@@ -27,7 +27,8 @@ export function DatasetCardThumbnail({
         type={DvObjectType.DATASET}
         searchParams={DatasetCardHelper.getDatasetSearchParams(
           persistentId,
-          version.publishingStatus
+          version.publishingStatus,
+          version.number.toString()
         )}>
         <DatasetThumbnail
           title={version.title}

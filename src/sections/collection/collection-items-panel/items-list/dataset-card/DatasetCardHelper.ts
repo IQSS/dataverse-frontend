@@ -6,9 +6,14 @@ import {
 export class DatasetCardHelper {
   static getDatasetSearchParams(
     persistentId: string,
-    publishingStatus: DatasetPublishingStatus
+    publishingStatus: DatasetPublishingStatus,
+    versionNumber?: string
   ): Record<string, string> {
     const params: Record<string, string> = { persistentId: persistentId }
+
+    if (versionNumber) {
+      params.version = versionNumber
+    }
 
     if (publishingStatus === DatasetPublishingStatus.DRAFT) {
       params.version = DatasetNonNumericVersionSearchParam.DRAFT
