@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { Tabs } from '@iqss/dataverse-design-system'
@@ -5,6 +6,7 @@ import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { AccountInfoSection } from './account-info-section/AccountInfoSection'
+import { useLoading } from '../loading/LoadingContext'
 import styles from './Account.module.scss'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
@@ -17,6 +19,9 @@ interface AccountProps {
 export const Account = ({ defaultActiveTabKey, userRepository }: AccountProps) => {
   const { t } = useTranslation('account')
   const [_, setSearchParams] = useSearchParams()
+  const { setIsLoading } = useLoading()
+
+  useEffect(() => setIsLoading(false), [setIsLoading])
 
   const updateSearchParamTabKeyOnSelect = (keySelected: string | null) => {
     if (keySelected !== defaultActiveTabKey) {
