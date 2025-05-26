@@ -179,7 +179,7 @@ export class FileJSDataverseRepository implements FileRepository {
     return Promise.all(jsFiles.map((jsFile) => this.getThumbnailById(jsFile.id)))
   }
 
-  private static getThumbnailById(id: number): Promise<string | undefined> {
+  public static getThumbnailById(id: number): Promise<string | undefined> {
     return axiosInstance
       .get(`${this.DATAVERSE_BACKEND_URL}/api/access/datafile/${id}?imageThumb=400`, {
         responseType: 'blob'
