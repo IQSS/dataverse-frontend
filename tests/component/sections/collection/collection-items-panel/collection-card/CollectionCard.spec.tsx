@@ -6,7 +6,9 @@ describe('CollectionCard', () => {
   it('should render the card', () => {
     const collectionPreview = CollectionItemTypePreviewMother.createRealistic()
 
-    cy.customMount(<CollectionCard collectionPreview={collectionPreview} />)
+    cy.customMount(
+      <CollectionCard collectionPreview={collectionPreview} parentCollectionAlias="" />
+    )
 
     cy.contains(DateHelper.toDisplayFormat(collectionPreview.releaseOrCreateDate)).should('exist')
     collectionPreview.description && cy.findByText(collectionPreview.description).should('exist')
@@ -19,7 +21,9 @@ describe('CollectionCard', () => {
   it('should render the card with a thumbnail', () => {
     const collectionPreview = CollectionItemTypePreviewMother.createWithThumbnail()
 
-    cy.customMount(<CollectionCard collectionPreview={collectionPreview} />)
+    cy.customMount(
+      <CollectionCard collectionPreview={collectionPreview} parentCollectionAlias="" />
+    )
 
     cy.findByAltText(collectionPreview.name).should('exist')
   })
