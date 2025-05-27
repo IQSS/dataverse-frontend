@@ -6,10 +6,20 @@ import { CollectionItemType } from '../../../../../src/collection/domain/models/
 import { PublicationStatus } from '../../../../../src/shared/core/domain/models/PublicationStatus'
 
 export class DatasetItemTypePreviewMother {
-  static createMany(count: number): DatasetItemTypePreview[] {
-    return Array.from({ length: count }, () => this.create())
+  static createMany(
+    count: number,
+    includeUserRoles = false,
+    props?: Partial<DatasetItemTypePreview>
+  ): DatasetItemTypePreview[] {
+    return Array.from({ length: count }, () =>
+      this.create({
+        ...props,
+        userRoles: includeUserRoles
+          ? faker.helpers.arrayElements(['Admin', 'Curator', 'Contributor', 'Editor'])
+          : props?.userRoles
+      })
+    )
   }
-
   static createManyRealistic(count: number): DatasetItemTypePreview[] {
     return Array.from({ length: count }, () => this.createRealistic())
   }
@@ -35,7 +45,8 @@ export class DatasetItemTypePreviewMother {
       publicationStatuses: datasetPreview.publicationStatuses,
       parentCollectionName: datasetPreview.parentCollectionName,
       parentCollectionAlias: datasetPreview.parentCollectionAlias,
-      thumbnail: datasetPreview.thumbnail
+      thumbnail: datasetPreview.thumbnail,
+      userRoles: datasetPreview.userRoles
     }
   }
 

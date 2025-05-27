@@ -27,6 +27,12 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
             <Badge variant="warning">Unpublished</Badge>
           </div>
         )}
+        {collectionPreview.userRoles &&
+          collectionPreview.userRoles.map((role, index) => (
+            <div key={index}>
+              <Badge variant="success">{role}</Badge>
+            </div>
+          ))}
       </div>
 
       <div className={styles['top-right-icon']}>

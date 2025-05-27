@@ -5,6 +5,7 @@ import { WithLayout } from '@/stories/WithLayout'
 import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
 import { AccountHelper } from '@/sections/account/AccountHelper'
 import { UserMockRepository } from '../../shared-mock-repositories/user/UserMockRepository'
+import { CollectionMockRepository } from '../../collection/CollectionMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Sections/Account Page/AccountInfoSection',
@@ -24,6 +25,7 @@ export const Default: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
       userRepository={new UserMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
     />
   )
 }

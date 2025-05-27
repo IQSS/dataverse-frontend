@@ -7,6 +7,7 @@ import { AccountHelper } from '@/sections/account/AccountHelper'
 import { UserMockRepository } from '../../shared-mock-repositories/user/UserMockRepository'
 import { UserMockLoadingRepository } from '../../shared-mock-repositories/user/UserMockLoadingRepository'
 import { UserMockErrorRepository } from '../../shared-mock-repositories/user/UserMockErrorRepository'
+import { CollectionMockRepository } from '../../collection/CollectionMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Sections/Account Page/ApiTokenSection',
@@ -26,6 +27,7 @@ export const Default: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
       userRepository={new UserMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
     />
   )
 }
@@ -35,6 +37,7 @@ export const Loading: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
       userRepository={new UserMockLoadingRepository()}
+      collectionRepository={new CollectionMockRepository()}
     />
   )
 }
@@ -44,6 +47,7 @@ export const Error: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
       userRepository={new UserMockErrorRepository()}
+      collectionRepository={new CollectionMockRepository()}
     />
   )
 }
@@ -66,6 +70,7 @@ export const NoToken: Story = {
       <Account
         defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
         userRepository={noTokenRepository}
+        collectionRepository={new CollectionMockRepository()}
       />
     )
   }

@@ -5,3 +5,11 @@ export enum PublicationStatus {
   Deaccessioned = 'Deaccessioned',
   InReview = 'In Review'
 }
+
+export const AllPublicationStatuses: PublicationStatus[] = [
+  PublicationStatus.Published,
+  PublicationStatus.Unpublished,
+  PublicationStatus.Draft,
+  PublicationStatus.Deaccessioned,
+  PublicationStatus.InReview
+]

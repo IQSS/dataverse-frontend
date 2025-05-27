@@ -8,14 +8,16 @@ interface SearchPanelProps {
   currentSearchValue?: string
   isLoadingCollectionItems: boolean
   onSubmitSearch: (searchValue: string) => void
+  placeholderText: string
 }
 
 export const SearchPanel = ({
   currentSearchValue = '',
   isLoadingCollectionItems,
-  onSubmitSearch
+  onSubmitSearch,
+  placeholderText
 }: SearchPanelProps) => {
-  const { t } = useTranslation('collection')
+  const { t } = useTranslation('shared')
 
   const [searchValue, setSearchValue] = useState(currentSearchValue)
 
@@ -43,7 +45,7 @@ export const SearchPanel = ({
         <Form.InputGroup className={styles['search-input-group']}>
           <Form.Group.Input
             type="search"
-            placeholder={t('searchThisCollectionPlaceholder')}
+            placeholder={placeholderText}
             aria-label="Search"
             value={searchValue}
             onChange={handleSearchChange}

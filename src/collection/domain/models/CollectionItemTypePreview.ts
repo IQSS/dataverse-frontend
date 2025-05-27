@@ -11,4 +11,5 @@ export interface CollectionItemTypePreview {
   thumbnail?: string
   parentCollectionName: string
   parentCollectionAlias: string
+  userRoles?: string[]
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
+import { useTranslation } from 'react-i18next'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import {
@@ -16,12 +17,15 @@ import { UseCollectionQueryParamsReturnType } from '../useGetCollectionQueryPara
 import { useLoadMoreOnPopStateEvent } from './useLoadMoreOnPopStateEvent'
 import { useLoading } from '@/sections/loading/LoadingContext'
 import { CollectionHelper } from '../CollectionHelper'
-import { FilterPanel } from './filter-panel/FilterPanel'
-import { ItemsList } from './items-list/ItemsList'
-import { SearchPanel } from './search-panel/SearchPanel'
-import { ItemTypeChange } from './filter-panel/type-filters/TypeFilters'
-import { RemoveAddFacetFilter } from './filter-panel/facets-filters/FacetFilterGroup'
-import { SelectedFacets } from './selected-facets/SelectedFacets'
+import { FilterPanel } from '@/sections/collection/collection-items-panel/filter-panel/FilterPanel'
+import { RemoveAddFacetFilter } from '@/sections/collection/collection-items-panel/filter-panel/facets-filters/FacetFilterGroup'
+import {
+  ItemsList,
+  ItemsListType
+} from '@/sections/collection/collection-items-panel/items-list/ItemsList'
+import { SearchPanel } from '@/sections/collection/collection-items-panel/search-panel/SearchPanel'
+import { ItemTypeChange } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
+import { SelectedFacets } from '@/sections/collection/collection-items-panel/selected-facets/SelectedFacets'
 import styles from './CollectionItemsPanel.module.scss'
 
 interface CollectionItemsPanelProps {
@@ -55,7 +59,7 @@ export const CollectionItemsPanel = ({
 }: CollectionItemsPanelProps) => {
   const { setIsLoading } = useLoading()
   const [_, setSearchParams] = useSearchParams()
-
+  const { t } = useTranslation('collection')
   useLoadMoreOnPopStateEvent(loadItemsOnBackAndForwardNavigation)
 
   // This object will update every time we update a query param in the URL with the setSearchParams setter
@@ -306,6 +310,7 @@ export const CollectionItemsPanel = ({
           onSubmitSearch={handleSearchSubmit}
           currentSearchValue={currentSearchCriteria.searchText}
           isLoadingCollectionItems={isLoadingItems}
+          placeholderText={t('searchThisCollectionPlaceholder')}
         />
         <div className={styles['add-data-slot']}>{addDataSlot}</div>
       </header>
@@ -334,6 +339,7 @@ export const CollectionItemsPanel = ({
           <ItemsList
             parentCollectionAlias={collectionId}
             items={accumulatedItems}
+            itemsListType={ItemsListType.COLLECTION_LIST}
             error={error}
             accumulatedCount={accumulatedCount}
             isLoadingItems={isLoadingItems}
@@ -342,7 +348,11 @@ export const CollectionItemsPanel = ({
             isEmptyItems={isEmptyItems}
             hasSearchValue={currentSearchCriteria.hasSearchText()}
             itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
-            filterQueriesSelected={currentSearchCriteria.filterQueries ?? []}
+            hasFilterQueries={
+              currentSearchCriteria.filterQueries
+                ? currentSearchCriteria.filterQueries.length > 0
+                : false
+            }
             sortSelected={currentSearchCriteria.sort}
             orderSelected={currentSearchCriteria.order}
             paginationInfo={paginationInfo}

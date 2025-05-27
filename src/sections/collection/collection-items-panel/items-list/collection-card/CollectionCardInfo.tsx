@@ -8,7 +8,7 @@ import styles from './CollectionCard.module.scss'
 
 interface CollectionCardInfoProps {
   collectionPreview: CollectionItemTypePreview
-  parentCollectionAlias: string
+  parentCollectionAlias?: string
 }
 
 export function CollectionCardInfo({
@@ -16,7 +16,7 @@ export function CollectionCardInfo({
   parentCollectionAlias
 }: CollectionCardInfoProps) {
   const isStandingOnParentCollectionPage =
-    collectionPreview.parentCollectionAlias === parentCollectionAlias
+    !!parentCollectionAlias && collectionPreview.parentCollectionAlias === parentCollectionAlias
 
   return (
     <div className={styles['card-info-container']}>
