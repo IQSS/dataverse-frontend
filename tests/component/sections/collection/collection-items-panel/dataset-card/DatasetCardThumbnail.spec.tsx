@@ -15,7 +15,13 @@ describe('DatasetCardThumbnail', () => {
     cy.findByRole('img', { name: dataset.version.title })
       .should('exist')
       .parent('a')
-      .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}`)
+      .should(
+        'have.attr',
+        'href',
+        `/datasets?persistentId=${
+          dataset.persistentId
+        }&version=${dataset.version.number.toString()}`
+      )
   })
 
   it('should render the placeholder if the dataset has no thumbnail', () => {
@@ -32,6 +38,12 @@ describe('DatasetCardThumbnail', () => {
       .should('exist')
       .parent()
       .parent('a')
-      .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}`)
+      .should(
+        'have.attr',
+        'href',
+        `/datasets?persistentId=${
+          dataset.persistentId
+        }&version=${dataset.version.number.toString()}`
+      )
   })
 })
