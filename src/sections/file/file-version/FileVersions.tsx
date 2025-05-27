@@ -1,10 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
-import {
-  FileDifferenceSummary,
-  FileVersionSummaryInfo
-} from '@/files/domain/models/FileVersionSummaryInfo'
+import { FileDifferenceSummary } from '@/files/domain/models/FileVersionSummaryInfo'
 import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
 import { Table, Button } from '@iqss/dataverse-design-system'
 import { useFileVersionSummaryDescription } from './useFileVersionSummaryDescription'
@@ -12,18 +10,43 @@ import {
   DatasetNonNumericVersion,
   DatasetNonNumericVersionSearchParam
 } from '@/dataset/domain/models/Dataset'
+import { useGetFileVersionsSummaries } from './useGetFileVersionsSummaries'
 import { DateHelper } from '@/shared/helpers/DateHelper'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import styles from './FileVersion.module.scss'
+import { useEffect } from 'react'
 
 interface FileVersionProps {
-  version: FileVersionSummaryInfo[] | undefined
+  fileId: number
   datasetVersionNumber: string | undefined
+  fileRepository: FileRepository
+  isInView: boolean
 }
 
-export function FileVersions({ version, datasetVersionNumber }: FileVersionProps) {
+export function FileVersions({
+  fileId,
+  datasetVersionNumber,
+  fileRepository,
+  isInView
+}: FileVersionProps) {
   const navigate = useNavigate()
   const { t } = useTranslation('file')
-  const fileId = version?.[0]?.datafileId
+
+  const { fileVersionSummaries, isLoading, fetchSummaries } = useGetFileVersionsSummaries({
+    fileRepository,
+    fileId,
+    autoFetch: false
+  })
+
+  useEffect(() => {
+    if (isInView && !fileVersionSummaries) {
+      void fetchSummaries()
+    }
+  }, [isInView, fileVersionSummaries, fetchSummaries])
+
+  if (isLoading || !fileVersionSummaries) {
+    return <FileVersionsLoadingSkeleton />
+  }
 
   const datasetVersionDisplayMap: Record<string, string> = {
     [DatasetNonNumericVersion.DRAFT]: DatasetNonNumericVersionSearchParam.DRAFT
@@ -41,18 +64,18 @@ export function FileVersions({ version, datasetVersionNumber }: FileVersionProps
   }
 
   return (
-    <div data-testid={`file-version`} className={styles['file-versions-table']}>
+    <div data-testid={`file-file`} className={styles['file-versions-table']}>
       <Table>
         <thead>
           <tr>
-            <th>{t('fileVersion.version')}</th>
+            <th>{t('fileVersion.file')}</th>
             <th>{t('fileVersion.summary')}</th>
             <th>{t('fileVersion.contributors')}</th>
             <th>{t('fileVersion.publishedOn')}</th>
           </tr>
         </thead>
         <tbody>
-          {version?.map((fileVersion) => (
+          {fileVersionSummaries?.map((fileVersion) => (
             <tr key={fileVersion.datasetVersion}>
               <td style={{ verticalAlign: 'middle' }}>
                 {fileVersion.datasetVersion === displayVersion ? (
@@ -124,4 +147,46 @@ export const SummaryDescription = ({ summary }: { summary?: FileDifferenceSummar
   })
 
   return <>{summaryTextParts}</>
+}
+
+export const FileVersionsLoadingSkeleton = () => {
+  const { t } = useTranslation('file')
+
+  return (
+    <div data-testid={`file-loading-skeleton`}>
+      <Table>
+        <thead>
+          <tr>
+            <th>{t('fileVersion.file')}</th>
+            <th>{t('fileVersion.summary')}</th>
+            <th>{t('fileVersion.contributors')}</th>
+            <th>{t('fileVersion.publishedOn')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: 3 }).map((_, index) => (
+            <tr key={index}>
+              <SkeletonTheme>
+                <td style={{ verticalAlign: 'middle' }}>
+                  <Skeleton height="18px" width="18px" />
+                </td>
+                <td>
+                  <Skeleton height="18px" width="100px" />
+                </td>
+                <td>
+                  <Skeleton height="18px" width="250px" />
+                </td>
+                <td>
+                  <Skeleton height="18px" width="150px" />
+                </td>
+                <td>
+                  <Skeleton height="18px" width="200px" />
+                </td>
+              </SkeletonTheme>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </div>
+  )
 }

@@ -251,8 +251,7 @@ export class FileJSDataverseRepository implements FileRepository {
           FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
           FileJSDataverseRepository.getPermissionsById(jsFile.id),
           FileJSDataverseRepository.getThumbnailById(jsFile.id),
-          FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData),
-          getFileVersionSummaries.execute(jsFile.id) //TODO: seperate this call from the getFileAndDataset call
+          FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
         ])
       )
       .then(
@@ -264,8 +263,7 @@ export class FileJSDataverseRepository implements FileRepository {
           downloadsCount,
           permissions,
           thumbnail,
-          tabularData,
-          jsFileVersionSummaries
+          tabularData
         ]) =>
           JSFileMapper.toFile(
             jsFile,
@@ -274,7 +272,6 @@ export class FileJSDataverseRepository implements FileRepository {
             citation,
             downloadsCount,
             permissions,
-            jsFileVersionSummaries,
             thumbnail,
             tabularData
           )

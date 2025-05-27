@@ -3,7 +3,7 @@ import styles from './File.module.scss'
 import { ButtonGroup, Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useFile } from './useFile'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLoading } from '../loading/LoadingContext'
 import { FileSkeleton } from './FileSkeleton'
 import { DatasetCitation } from '../dataset/dataset-citation/DatasetCitation'
@@ -18,7 +18,6 @@ import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
 import { FileVersions } from './file-version/FileVersions'
-import { FileVersionSummaryInfo } from '../../files/domain/models/FileVersionSummaryInfo'
 
 interface FileProps {
   repository: FileRepository
@@ -30,6 +29,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
+  const [activeTab, setActiveTab] = useState<string>('metadata')
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -37,6 +37,12 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
 
   if (isLoading) {
     return <FileSkeleton />
+  }
+
+  const handleTabSelect = (key: string | null) => {
+    if (key) {
+      setActiveTab(key)
+    }
   }
 
   if (!file) {
@@ -108,7 +114,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
               </ButtonGroup>
             </Col>
           </Row>
-          <Tabs defaultActiveKey="metadata">
+          <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
             <Tabs.Tab eventKey="metadata" title={t('tabs.metadata')}>
               <div className={styles['tab-container']}>
                 <FileMetadata
@@ -122,8 +128,10 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
             <Tabs.Tab eventKey="fileVersion" title={t('tabs.versions')}>
               <div className={styles['tab-container']}>
                 <FileVersions
-                  version={file.fileVersionSummaries as FileVersionSummaryInfo[]}
+                  fileId={file.id}
                   datasetVersionNumber={datasetVersionNumber}
+                  fileRepository={repository}
+                  isInView={activeTab === 'fileVersion'}
                 />
               </div>
             </Tabs.Tab>
