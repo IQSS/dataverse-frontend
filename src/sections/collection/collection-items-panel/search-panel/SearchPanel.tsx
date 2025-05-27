@@ -26,9 +26,7 @@ export const SearchPanel = ({
 
     const trimmedSearchValue = searchValue.trim()
 
-    const encodedSearchValue = encodeURIComponent(trimmedSearchValue)
-
-    onSubmitSearch(encodedSearchValue)
+    onSubmitSearch(trimmedSearchValue)
   }
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
