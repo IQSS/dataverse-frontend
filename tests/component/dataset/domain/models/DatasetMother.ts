@@ -439,7 +439,6 @@ export class DatasetMother {
       dataset.downloadUrls,
       dataset.fileDownloadSizes,
       dataset.hierarchy,
-      dataset.versionsSummaries,
       dataset.license,
       dataset.thumbnail,
       dataset.privateUrl,

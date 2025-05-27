@@ -53,7 +53,7 @@ describe('DatasetVersions', () => {
 
   beforeEach(() => {
     cy.customMount(
-      <DatasetVersions datasetId={'datasetId'} datasetRepository={datasetsRepository} />
+      <DatasetVersions datasetId={'datasetId'} datasetRepository={datasetsRepository} isInView />
     )
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
     datasetsRepository.getVersionDiff = cy.stub().resolves(datasetVersionDiff)
@@ -131,21 +131,25 @@ describe('DatasetVersions', () => {
   })
 
   it('should not render the dataset version table if dataset is undefined', () => {
-    cy.customMount(<DatasetVersions datasetId={''} datasetRepository={datasetsRepository} />)
+    cy.customMount(
+      <DatasetVersions datasetId={''} datasetRepository={datasetsRepository} isInView />
+    )
     cy.findByTestId('dataset-versions-table').should('not.exist')
   })
 
   it('should render loading skeleton if the dataset version is loading', () => {
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().returns(new Promise(() => {}))
     cy.customMount(
-      <DatasetVersions datasetId={'datasetId'} datasetRepository={datasetsRepository} />
+      <DatasetVersions datasetId={'datasetId'} datasetRepository={datasetsRepository} isInView />
     )
     cy.findByTestId('dataset-loading-skeleton').should('exist')
     cy.findByTestId('dataset-versions-table').should('not.exist')
   })
 
   it('should render view differences button, open a modal if click', () => {
-    cy.customMount(<DatasetVersions datasetId={''} datasetRepository={datasetsRepository} />)
+    cy.customMount(
+      <DatasetVersions datasetId={''} datasetRepository={datasetsRepository} isInView />
+    )
 
     cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
     cy.findAllByTestId('select-checkbox').last().should('exist').check().should('be.checked')
@@ -155,7 +159,9 @@ describe('DatasetVersions', () => {
   })
 
   it('should render view differences button, close modal if cancel', () => {
-    cy.customMount(<DatasetVersions datasetId={''} datasetRepository={datasetsRepository} />)
+    cy.customMount(
+      <DatasetVersions datasetId={''} datasetRepository={datasetsRepository} isInView />
+    )
 
     cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
     cy.findAllByTestId('select-checkbox').last().should('exist').check().should('be.checked')
@@ -167,7 +173,9 @@ describe('DatasetVersions', () => {
   })
 
   it('should render view differences button, close modal if click outside', () => {
-    cy.customMount(<DatasetVersions datasetId={''} datasetRepository={datasetsRepository} />)
+    cy.customMount(
+      <DatasetVersions datasetId={''} datasetRepository={datasetsRepository} isInView />
+    )
     cy.get('input[type="checkbox"]').first().check()
     cy.get('input[type="checkbox"]').last().check()
     cy.findByRole('button', { name: 'View Differences' }).should('exist').click()

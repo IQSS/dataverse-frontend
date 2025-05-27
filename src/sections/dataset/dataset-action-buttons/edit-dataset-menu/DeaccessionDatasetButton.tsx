@@ -1,17 +1,9 @@
 import { useState } from 'react'
-import { toast } from 'react-toastify'
-import { useContext } from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form'
-import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { Dataset } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButtonItem, DropdownSeparator } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { DeaccessionDatasetModal } from '@/sections/dataset/deaccession-dataset/DeaccessionDatasetModal'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { DeaccessionFormData } from '@/sections/dataset/deaccession-dataset/DeaccessionFormData'
-import { useDeaccessionDataset } from '@/sections/dataset/deaccession-dataset/useDeaccessionDataset'
-import { ConfirmationModal } from '@/sections/dataset/deaccession-dataset/ConfirmationModal'
-import { Deaccessioned } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 interface DeaccessionDatasetButtonProps {
   dataset: Dataset
@@ -23,78 +15,34 @@ export function DeaccessionDatasetButton({
   datasetRepository
 }: DeaccessionDatasetButtonProps) {
   const { t } = useTranslation('dataset')
-  const datasetContext = useContext(DatasetContext)
   const [showDeaccessionModal, setShowDeaccessionModal] = useState(false)
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false)
-  const { submissionStatus, submitDeaccession, deaccessionError } = useDeaccessionDataset(
-    datasetRepository,
-    dataset.persistentId,
-    onDeaccessionSucceed
-  )
-  const publishedVersions =
-    dataset.versionsSummaries?.filter((version) => {
-      const summary = version.summary as { deaccessioned: Deaccessioned }
-      return version.publishedOn && !summary.deaccessioned
-    }) || []
-  const defaultVersions = publishedVersions.length === 1 ? [publishedVersions[0].versionNumber] : []
-  function onDeaccessionSucceed() {
-    setShowConfirmationModal(false)
-    datasetContext?.refreshDataset()
-    toast.success('Dataset deaccessioned successfully')
-  }
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    watch
-  } = useForm<DeaccessionFormData>({
-    defaultValues: { versions: defaultVersions, deaccessionForwardUrl: '' }
-  })
+
   if (
     !dataset.version.someDatasetVersionHasBeenReleased ||
-    !dataset.permissions.canPublishDataset ||
-    publishedVersions.length === 0
+    !dataset.permissions.canPublishDataset
   ) {
     return <></>
   }
-  const handleOpen = (e: React.MouseEvent) => {
+
+  const handleOpenDeaccessionModal = (e: React.MouseEvent) => {
     e.stopPropagation()
     setShowDeaccessionModal(true)
   }
-  const handleClose = () => setShowDeaccessionModal(false)
 
-  const handleCancelConfirmation = () => {
-    setShowConfirmationModal(false)
-  }
-  const handleSubmitForm: SubmitHandler<DeaccessionFormData> = () => {
-    setShowDeaccessionModal(false)
-    setShowConfirmationModal(true)
-  }
-  const handleConfirmDeaccession = () => {
-    const formData = watch()
-    submitDeaccession(formData)
-  }
+  const handleCloseDeaccessionModal = () => setShowDeaccessionModal(false)
 
   return (
     <>
       <DropdownSeparator />
-      <DropdownButtonItem onClick={handleOpen}>
+      <DropdownButtonItem onClick={handleOpenDeaccessionModal}>
         {t('datasetActionButtons.editDataset.deaccession')}
       </DropdownButtonItem>
       <DeaccessionDatasetModal
+        datasetRepository={datasetRepository}
+        datasetPersistentId={dataset.persistentId}
         show={showDeaccessionModal}
-        publishedVersions={publishedVersions}
-        handleClose={handleClose}
-        handleSubmitForm={handleSubmit(handleSubmitForm)}
-        control={control}
-        errors={errors}
-      />
-      <ConfirmationModal
-        submissionStatus={submissionStatus}
-        deaccessionError={deaccessionError}
-        show={showConfirmationModal}
-        onConfirm={handleConfirmDeaccession}
-        onCancel={handleCancelConfirmation}
+        handleCloseDeaccessionModal={handleCloseDeaccessionModal}
+        key={dataset.internalVersionNumber}
       />
     </>
   )

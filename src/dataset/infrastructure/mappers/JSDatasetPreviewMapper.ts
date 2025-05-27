@@ -19,7 +19,8 @@ export class JSDatasetPreviewMapper {
       thumbnail: jsDatasetPreview.imageUrl,
       publicationStatuses: jsDatasetPreview.publicationStatuses,
       parentCollectionName: jsDatasetPreview.parentCollectionName,
-      parentCollectionAlias: jsDatasetPreview.parentCollectionAlias
+      parentCollectionAlias: jsDatasetPreview.parentCollectionAlias,
+      userRoles: jsDatasetPreview.userRoles
     }
   }
 

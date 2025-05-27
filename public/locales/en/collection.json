@@ -33,7 +33,6 @@
   "datasetFilterTypeLabel": "Datasets",
   "fileFilterTypeLabel": "Files",
   "searchThisCollectionPlaceholder": "Search this collection...",
-  "searchSubmitButtonLabel": "Search submit",
   "publish": {
     "title": "Publish Collection",
     "button": "Publish",

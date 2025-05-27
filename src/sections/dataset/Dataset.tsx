@@ -107,6 +107,7 @@ export function Dataset({
       setActiveTab(key)
     }
   }
+
   return (
     <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
@@ -199,7 +200,8 @@ export function Dataset({
                   <DatasetVersions
                     datasetRepository={datasetRepository}
                     datasetId={dataset.persistentId}
-                    key={dataset.version.publishingStatus}
+                    isInView={activeTab === 'versions'}
+                    key={dataset.internalVersionNumber}
                   />
                 </div>
               </Tabs.Tab>

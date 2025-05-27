@@ -18,6 +18,7 @@
   "delete": "Delete",
   "saveChanges": "Save Changes",
   "search": "Search",
+  "searchSubmitButtonLabel": "Search submit",
   "clearSearch": "Clear Search",
   "submitSearch": "Submit Search",
   "dragHandleLabel": "press space to select and keys to drag",
