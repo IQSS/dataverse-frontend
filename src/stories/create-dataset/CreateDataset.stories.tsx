@@ -24,6 +24,9 @@ export default meta
 type Story = StoryObj<typeof CreateDataset>
 
 export const Default: Story = {
+  parameters: {
+    mockingDate: new Date(2024, 3, 1) // https://storybook.js.org/addons/storybook-addon-mock-date
+  },
   render: () => (
     <NotImplementedModalProvider>
       <CreateDataset
