@@ -3,12 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { Form } from '@iqss/dataverse-design-system'
 import { Validator } from '@/shared/helpers/Validator'
 
+const isChromaticBuild = import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true'
+
 export function Captcha() {
   const { t } = useTranslation('shared')
   const { control } = useFormContext()
 
-  const num1 = Math.floor(Math.random() * 10)
-  const num2 = Math.floor(Math.random() * 10)
+  const num1 = !isChromaticBuild ? Math.floor(Math.random() * 10) : 5 // Default value for Chromatic builds
+  const num2 = !isChromaticBuild ? Math.floor(Math.random() * 10) : 3 // Default value for Chromatic builds
 
   const captchaAnswer = num1 + num2
 
