@@ -19,7 +19,7 @@ export class UserMockRepository extends UserJSDataverseRepository {
       setTimeout(() => {
         resolve({
           apiToken: 'mock api token',
-          expirationDate: new Date()
+          expirationDate: FakerHelper.futureDate()
         })
       }, FakerHelper.loadingTimout())
     })
