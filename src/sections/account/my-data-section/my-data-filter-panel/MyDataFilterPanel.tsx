@@ -14,8 +14,9 @@ import {
   PublicationStatusFilters
 } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
-import styles from './MyDataFilterPanel.module.scss'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
+import { CountPerObjectType } from '@/collection/domain/models/CollectionItemSubset'
+import styles from './MyDataFilterPanel.module.scss'
 
 interface FilterPanelProps {
   currentItemTypes?: CollectionItemType[]
@@ -27,6 +28,7 @@ interface FilterPanelProps {
   currentRoleIds: number[]
   onRolesChange: (roleChange: RoleChange) => void
   isLoadingCollectionItems: boolean
+  countPerObjectType: CountPerObjectType
 }
 
 export const MyDataFilterPanel = ({
@@ -38,7 +40,8 @@ export const MyDataFilterPanel = ({
   userRoles,
   currentRoleIds,
   onRolesChange,
-  isLoadingCollectionItems
+  isLoadingCollectionItems,
+  countPerObjectType
 }: FilterPanelProps) => {
   const { t } = useTranslation('collection')
 
@@ -67,6 +70,7 @@ export const MyDataFilterPanel = ({
               onItemTypesChange={onItemTypesChange}
               currentItemTypes={currentItemTypes}
               isLoadingCollectionItems={isLoadingCollectionItems}
+              countPerObjectType={countPerObjectType}
             />
             <SeparationLine />
             <PublicationStatusFilters

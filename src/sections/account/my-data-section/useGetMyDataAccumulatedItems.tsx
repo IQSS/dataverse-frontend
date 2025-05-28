@@ -4,7 +4,8 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import {
   CollectionItem,
   CollectionItemsFacet,
-  CollectionItemSubset
+  CollectionItemSubset,
+  CountPerObjectType
 } from '@/collection/domain/models/CollectionItemSubset'
 import {
   AllPublicationStatuses,
@@ -20,6 +21,7 @@ type UseGetMyDataAccumulatedItemsReturnType = {
   isLoadingItems: boolean
   accumulatedItems: CollectionItem[]
   publicationStatusCounts: PublicationStatusCount[]
+  countPerObjectType: CountPerObjectType
   totalAvailable: number | undefined
   hasNextPage: boolean
   error: string | null
@@ -45,6 +47,11 @@ export const useGetMyDataAccumulatedItems = ({
   const [publicationStatusCounts, setPublicationStatusCounts] = useState<PublicationStatusCount[]>(
     []
   )
+  const [countPerObjectType, setCountPerObjectType] = useState<CountPerObjectType>({
+    collections: 0,
+    datasets: 0,
+    files: 0
+  })
   const [hasNextPage, setHasNextPage] = useState<boolean>(true)
   const [totalAvailable, setTotalAvailable] = useState<number | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
@@ -63,7 +70,7 @@ export const useGetMyDataAccumulatedItems = ({
     setIsLoadingItems(true)
 
     try {
-      const { items, facets, totalItemCount } = await loadNextItems(
+      const { items, facets, totalItemCount, countPerObjectType } = await loadNextItems(
         collectionRepository,
         pagination,
         searchCriteria
@@ -74,6 +81,8 @@ export const useGetMyDataAccumulatedItems = ({
       setAccumulatedItems(newAccumulatedItems)
 
       setPublicationStatusCounts(convertFacetsToPublicationStatusCounts(facets))
+
+      setCountPerObjectType(countPerObjectType)
 
       setTotalAvailable(totalItemCount)
 
@@ -103,6 +112,7 @@ export const useGetMyDataAccumulatedItems = ({
     isLoadingItems,
     accumulatedItems,
     publicationStatusCounts,
+    countPerObjectType,
     totalAvailable,
     hasNextPage,
     error,

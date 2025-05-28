@@ -1,7 +1,7 @@
 import { CollectionItemsPanel } from '@/sections/collection/collection-items-panel/CollectionItemsPanel'
 import {
-  CollectionItem,
-  CollectionItemSubset
+  CollectionItemSubset,
+  CountPerObjectType
 } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
@@ -17,9 +17,26 @@ const items = CollectionItemsMother.createItems({
   numberOfFiles: 3
 })
 
+const countPerObjectType: CountPerObjectType = {
+  collections: 20,
+  datasets: 40,
+  files: 140
+}
+
 const facets = CollectionItemsMother.createItemsFacets()
 
-const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount }
+const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount, countPerObjectType }
+
+const emptyItemsWithCount: CollectionItemSubset = {
+  items: [],
+  facets: [],
+  totalItemCount: 0,
+  countPerObjectType: {
+    collections: 0,
+    datasets: 0,
+    files: 0
+  }
+}
 
 describe('CollectionItemsPanel', () => {
   beforeEach(() => {
@@ -48,12 +65,6 @@ describe('CollectionItemsPanel', () => {
 
   describe('NoItemsMessage', () => {
     it('renders correct no items message when there are no collection, dataset or files', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -80,12 +91,6 @@ describe('CollectionItemsPanel', () => {
     })
 
     it('renders correct no items message when there are no collections', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -106,12 +111,6 @@ describe('CollectionItemsPanel', () => {
     })
 
     it('renders correct no items message when there are no datasets', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -132,12 +131,6 @@ describe('CollectionItemsPanel', () => {
     })
 
     it('renders correct no items message when there are no files', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -158,12 +151,6 @@ describe('CollectionItemsPanel', () => {
     })
 
     it('renders correct no items message when there are no collections and datasets', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -184,12 +171,6 @@ describe('CollectionItemsPanel', () => {
     })
 
     it('renders correct no items message when there are no collections and files', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -210,12 +191,6 @@ describe('CollectionItemsPanel', () => {
     })
 
     it('renders correct no items message when there are no datasets and files', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -237,12 +212,6 @@ describe('CollectionItemsPanel', () => {
   })
 
   it('renders the no search results message when there are no items matching the search query', () => {
-    const emptyItems: CollectionItem[] = []
-    const emptyItemsWithCount: CollectionItemSubset = {
-      items: emptyItems,
-      facets: [],
-      totalItemCount: 0
-    }
     collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
     cy.customMount(
@@ -265,12 +234,6 @@ describe('CollectionItemsPanel', () => {
   })
 
   it('renders the no search results message when there are no items matching the facet filters', () => {
-    const emptyItems: CollectionItem[] = []
-    const emptyItemsWithCount: CollectionItemSubset = {
-      items: emptyItems,
-      facets: [],
-      totalItemCount: 0
-    }
     collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
     cy.customMount(
@@ -380,7 +343,12 @@ describe('CollectionItemsPanel', () => {
     const first4ElementsWithCount: CollectionItemSubset = {
       items: first4Elements,
       facets,
-      totalItemCount: 4
+      totalItemCount: 4,
+      countPerObjectType: {
+        collections: 4,
+        datasets: 0,
+        files: 0
+      }
     }
     collectionRepository.getItems = cy.stub().resolves(first4ElementsWithCount)
 

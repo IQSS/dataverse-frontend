@@ -2,12 +2,14 @@ import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { CountPerObjectType } from '@/collection/domain/models/CollectionItemSubset'
 import styles from './TypeFilters.module.scss'
 
 interface TypeFiltersProps {
   currentItemTypes?: CollectionItemType[]
   onItemTypesChange: (itemTypeChange: ItemTypeChange) => void
   isLoadingCollectionItems: boolean
+  countPerObjectType: CountPerObjectType
 }
 
 export interface ItemTypeChange {
@@ -18,7 +20,8 @@ export interface ItemTypeChange {
 export const TypeFilters = ({
   currentItemTypes,
   onItemTypesChange,
-  isLoadingCollectionItems
+  isLoadingCollectionItems,
+  countPerObjectType
 }: TypeFiltersProps) => {
   const { t } = useTranslation('collection')
 
@@ -48,7 +51,11 @@ export const TypeFilters = ({
         label={
           <>
             <Icon name={IconName.COLLECTION} />
-            <span>{t('collectionFilterTypeLabel')}</span>
+
+            <span>
+              {t('collectionFilterTypeLabel')}{' '}
+              <small>{`(${Intl.NumberFormat().format(countPerObjectType.collections)})`}</small>
+            </span>
           </>
         }
         checked={Boolean(currentItemTypes?.includes(CollectionItemType.COLLECTION))}
@@ -62,7 +69,10 @@ export const TypeFilters = ({
         label={
           <>
             <Icon name={IconName.DATASET} />
-            <span>{t('datasetFilterTypeLabel')}</span>
+            <span>
+              {t('datasetFilterTypeLabel')}{' '}
+              <small>{`(${Intl.NumberFormat().format(countPerObjectType.datasets)})`}</small>
+            </span>
           </>
         }
         checked={Boolean(currentItemTypes?.includes(CollectionItemType.DATASET))}
@@ -76,7 +86,10 @@ export const TypeFilters = ({
         label={
           <>
             <Icon name={IconName.FILE} />
-            <span>{t('fileFilterTypeLabel')}</span>
+            <span>
+              {t('fileFilterTypeLabel')}{' '}
+              <small>{`(${Intl.NumberFormat().format(countPerObjectType.files)})`}</small>
+            </span>
           </>
         }
         checked={Boolean(currentItemTypes?.includes(CollectionItemType.FILE))}

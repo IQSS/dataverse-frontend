@@ -2,7 +2,10 @@ import { Collection } from '@/sections/collection/Collection'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
-import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
+import {
+  CollectionItemSubset,
+  CountPerObjectType
+} from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
@@ -19,7 +22,18 @@ const items = CollectionItemsMother.createItems({
 
 const facets = CollectionItemsMother.createItemsFacets()
 
-const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount: 200 }
+const countPerObjectType: CountPerObjectType = {
+  collections: 20,
+  datasets: 40,
+  files: 140
+}
+
+const itemsWithCount: CollectionItemSubset = {
+  items,
+  facets,
+  totalItemCount: 200,
+  countPerObjectType
+}
 
 describe('Collection page', () => {
   beforeEach(() => {

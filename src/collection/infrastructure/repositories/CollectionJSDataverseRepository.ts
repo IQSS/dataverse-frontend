@@ -67,7 +67,8 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
         return {
           items: collectionItemsPreviewsMapped,
           facets: jsCollectionItemSubset.facets,
-          totalItemCount: jsCollectionItemSubset.totalItemCount
+          totalItemCount: jsCollectionItemSubset.totalItemCount,
+          countPerObjectType: jsCollectionItemSubset.countPerObjectType
         }
       })
   }
@@ -99,7 +100,8 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
         return {
           items: collectionItemsPreviewsMapped,
           facets: jsCollectionItemSubset.facets,
-          totalItemCount: jsCollectionItemSubset.totalItemCount
+          totalItemCount: jsCollectionItemSubset.totalItemCount,
+          countPerObjectType: jsCollectionItemSubset.countPerObjectType
         }
       })
   }
