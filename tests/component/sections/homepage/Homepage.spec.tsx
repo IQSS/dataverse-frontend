@@ -3,6 +3,7 @@ import { CollectionFeaturedItemMother } from '@tests/component/collection/domain
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { DataverseHubMockRepository } from '@/stories/dataverse-hub/DataverseHubMockRepository'
 import Homepage from '@/sections/homepage/Homepage'
+import { SearchMockRepository } from '@/stories/shared-mock-repositories/search/SearchMockRepository'
 
 const testCollectionRepository = {} as CollectionRepository
 const testCollection = CollectionMother.create({ name: 'Collection Name' })
@@ -25,6 +26,7 @@ describe('Homepage', () => {
       <Homepage
         collectionRepository={testCollectionRepository}
         dataverseHubRepository={new DataverseHubMockRepository()}
+        searchRepository={new SearchMockRepository()}
       />
     )
     cy.findByTestId('app-loader').should('exist')
@@ -35,6 +37,7 @@ describe('Homepage', () => {
       <Homepage
         collectionRepository={testCollectionRepository}
         dataverseHubRepository={new DataverseHubMockRepository()}
+        searchRepository={new SearchMockRepository()}
       />
     )
     cy.findByTestId('featured-items').should('exist')
@@ -46,6 +49,7 @@ describe('Homepage', () => {
       <Homepage
         collectionRepository={testCollectionRepository}
         dataverseHubRepository={new DataverseHubMockRepository()}
+        searchRepository={new SearchMockRepository()}
       />
     )
     cy.findByTestId('featured-items').should('not.exist')

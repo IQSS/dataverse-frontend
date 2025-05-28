@@ -25,7 +25,7 @@ export const SearchInput = ({
   const { t } = useTranslation('shared')
   const inputSearchRef = useRef<HTMLInputElement>(null)
   const [searchValue, setSearchValue] = useState('')
-  const [searchEngineSelected, setSearchEngineSelected] = useState<string>(SOLR_SERVICE_NAME)
+  const [searchServiceSelected, setSearchServiceSelected] = useState<string>(SOLR_SERVICE_NAME)
 
   const hasMoreThanOneSearchService = searchServices.length > 1
 
@@ -47,6 +47,12 @@ export const SearchInput = ({
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(',')
     )
 
+    if (searchServiceSelected !== SOLR_SERVICE_NAME) {
+      // For now we set this search service selected in the session storage to use in only the first time we arrive to the collection page
+      // We could put this in the URL if we want to keep using it on subsequent searches within the collection page
+      sessionStorage.setItem(CollectionItemsQueryParams.SEARCH_SERVICE, searchServiceSelected)
+    }
+
     const collectionUrlWithQuery = `${Route.COLLECTIONS_BASE}?${searchParams.toString()}`
 
     navigate(collectionUrlWithQuery)
@@ -58,7 +64,7 @@ export const SearchInput = ({
   }
 
   const handleSearchEngineSelect = (eventKey: string | null) => {
-    setSearchEngineSelected(eventKey as string)
+    setSearchServiceSelected(eventKey as string)
     inputSearchRef.current?.focus()
   }
 
@@ -66,7 +72,7 @@ export const SearchInput = ({
     <form onSubmit={handleSubmit} className={styles['search-input-wrapper']} role="search">
       {hasMoreThanOneSearchService && searchDropdownPosition === 'left' && (
         <SearchDropdown
-          searchEngineSelected={searchEngineSelected}
+          searchServiceSelected={searchServiceSelected}
           handleSearchEngineSelect={handleSearchEngineSelect}
           searchServices={searchServices}
           position="left"
@@ -93,7 +99,7 @@ export const SearchInput = ({
       </div>
       {hasMoreThanOneSearchService && searchDropdownPosition === 'right' && (
         <SearchDropdown
-          searchEngineSelected={searchEngineSelected}
+          searchServiceSelected={searchServiceSelected}
           handleSearchEngineSelect={handleSearchEngineSelect}
           searchServices={searchServices}
           position="right"

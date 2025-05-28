@@ -9,6 +9,7 @@ import {
 } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 
 export const NO_COLLECTION_ITEMS = 0
 
@@ -64,12 +65,22 @@ export const useGetAccumulatedItems = ({
   ): Promise<number | undefined> => {
     setIsLoadingItems(true)
 
+    const selectedSearchServiceFromSessionStorage: string | null = sessionStorage.getItem(
+      CollectionItemsQueryParams.SEARCH_SERVICE
+    )
+
+    // To remove it after using it the first time
+    if (selectedSearchServiceFromSessionStorage) {
+      sessionStorage.removeItem(CollectionItemsQueryParams.SEARCH_SERVICE)
+    }
+
     try {
       const { items, facets, totalItemCount, countPerObjectType } = await loadNextItems(
         collectionRepository,
         collectionId,
         pagination,
-        searchCriteria
+        searchCriteria,
+        selectedSearchServiceFromSessionStorage ?? undefined
       )
 
       const newAccumulatedItems = !resetAccumulated ? [...accumulatedItems, ...items] : items
@@ -123,13 +134,15 @@ async function loadNextItems(
   collectionRepository: CollectionRepository,
   collectionId: string,
   paginationInfo: CollectionItemsPaginationInfo,
-  searchCriteria: CollectionSearchCriteria
+  searchCriteria: CollectionSearchCriteria,
+  searchService?: string
 ): Promise<CollectionItemSubset> {
   return getCollectionItems(
     collectionRepository,
     collectionId,
     paginationInfo,
-    searchCriteria
+    searchCriteria,
+    searchService
   ).catch((err: Error) => {
     throw new Error(err.message)
   })

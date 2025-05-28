@@ -15,16 +15,16 @@ import { Usage } from './usage/Usage'
 import styles from './Homepage.module.scss'
 
 // TODO:ME - Fetch the search services and show them in the list, possibly remove something from the list? Check slack discussion
-const searchServicesMock = [
-  {
-    name: 'postExternalSearch',
-    displayName: 'Natural Language Search'
-  },
-  {
-    name: 'solr',
-    displayName: 'Dataverse Standard Search'
-  }
-]
+// const searchServicesMock = [
+//   {
+//     name: 'postExternalSearch',
+//     displayName: 'Natural Language Search'
+//   },
+//   {
+//     name: 'solr',
+//     displayName: 'Dataverse Standard Search'
+//   }
+// ]
 
 interface HomepageProps {
   collectionRepository: CollectionRepository
@@ -62,7 +62,7 @@ export const Homepage = ({
       </div>
 
       <div className={styles['middle-search-cta-wrapper']}>
-        <SearchInput searchDropdownPosition="right" searchServices={searchServicesMock} />
+        <SearchInput searchDropdownPosition="right" searchServices={searchServices} />
         <Link to="/collections" className="btn btn-secondary">
           {t('browseCollections')}
         </Link>

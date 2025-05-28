@@ -10,14 +10,14 @@ import styles from './SearchInput.module.scss'
 
 interface SearchDropdownProps {
   searchServices: SearchService[]
-  searchEngineSelected: string
+  searchServiceSelected: string
   handleSearchEngineSelect: (eventKey: string | null) => void
   position?: 'left' | 'right'
 }
 
 export const SearchDropdown = ({
   searchServices,
-  searchEngineSelected,
+  searchServiceSelected,
   handleSearchEngineSelect,
   position
 }: SearchDropdownProps) => {
@@ -36,14 +36,14 @@ export const SearchDropdown = ({
       <Dropdown.Toggle as={CustomToggle} position={position} />
 
       <Dropdown.Menu className={styles['search-dropdown-menu']}>
-        <Dropdown.Header>Search Engines</Dropdown.Header>
+        <Dropdown.Header>Search Services</Dropdown.Header>
         {searchServicesWithSolrFirst.map((service) => {
           const isSolrService = service.name === SOLR_SERVICE_NAME
 
           return (
             <Dropdown.Item
               eventKey={service.name}
-              active={searchEngineSelected === service.name}
+              active={searchServiceSelected === service.name}
               className={styles['search-dropdown-item']}
               key={service.name}>
               {isSolrService ? <SearchIcon size={12} /> : <StarsIcon size={12} />}

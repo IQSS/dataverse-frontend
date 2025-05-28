@@ -6,6 +6,7 @@ import { CollectionMockRepository } from '../collection/CollectionMockRepository
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { DataverseHubMockRepository } from '../dataverse-hub/DataverseHubMockRepository'
+import { SearchMockRepository } from '../shared-mock-repositories/search/SearchMockRepository'
 
 const meta: Meta<typeof Homepage> = {
   title: 'Pages/Homepage',
@@ -25,6 +26,7 @@ export const Default: Story = {
     <Homepage
       collectionRepository={new CollectionMockRepository()}
       dataverseHubRepository={new DataverseHubMockRepository()}
+      searchRepository={new SearchMockRepository()}
     />
   )
 }
@@ -64,6 +66,7 @@ export const WithFeaturedItems: Story = {
     <Homepage
       collectionRepository={collectionRepositoryWithFeaturedItems}
       dataverseHubRepository={new DataverseHubMockRepository()}
+      searchRepository={new SearchMockRepository()}
     />
   )
 }

@@ -4,5 +4,6 @@ export enum CollectionItemsQueryParams {
   START = 'start',
   TYPES = 'types',
   QUERY = 'q',
-  FILTER_QUERIES = 'fqs'
+  FILTER_QUERIES = 'fqs',
+  SEARCH_SERVICE = 'search_service'
 }
