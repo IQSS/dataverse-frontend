@@ -161,7 +161,7 @@ export class FileMockRepository implements FileRepository {
   getFileVersionSummaries(_id: number | string): Promise<FileVersionSummaryInfo[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve([])
+        resolve(FileMother.createFileVersionSummary())
       }, FakerHelper.loadingTimout())
     })
   }

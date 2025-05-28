@@ -68,7 +68,7 @@ export function FileVersions({
       <Table>
         <thead>
           <tr>
-            <th>{t('fileVersion.file')}</th>
+            <th>{t('fileVersion.version')}</th>
             <th>{t('fileVersion.summary')}</th>
             <th>{t('fileVersion.contributors')}</th>
             <th>{t('fileVersion.publishedOn')}</th>
@@ -84,6 +84,7 @@ export function FileVersions({
                   <Button
                     variant="link"
                     onClick={() => navigateToVersion(fileVersion.datasetVersion)}
+                    dataset-testid={`file-version-button-${fileVersion.datasetVersion}`}
                     disabled={
                       !fileVersion.fileDifferenceSummary ||
                       fileVersion.datasetVersion === displayVersion ||
@@ -157,7 +158,7 @@ export const FileVersionsLoadingSkeleton = () => {
       <Table>
         <thead>
           <tr>
-            <th>{t('fileVersion.file')}</th>
+            <th>{t('fileVersion.version')}</th>
             <th>{t('fileVersion.summary')}</th>
             <th>{t('fileVersion.contributors')}</th>
             <th>{t('fileVersion.publishedOn')}</th>

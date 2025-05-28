@@ -1,7 +1,10 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
-import { FileVersions } from '../../../sections/file/file-version/FileVersions'
-import { FileMother } from '../../../../tests/component/files/domain/models/FileMother'
+import {
+  FileVersions,
+  FileVersionsLoadingSkeleton
+} from '../../../sections/file/file-version/FileVersions'
+import { FileMockRepository } from '../FileMockRepository'
 
 const meta: Meta<typeof FileVersions> = {
   title: 'Sections/File Page/FileVersions',
@@ -14,6 +17,15 @@ type Story = StoryObj<typeof FileVersions>
 
 export const Default: Story = {
   render: () => (
-    <FileVersions version={FileMother.createFileVersionSummary()} datasetVersionNumber={'2.0'} />
+    <FileVersions
+      fileId={4}
+      datasetVersionNumber={'2.0'}
+      fileRepository={new FileMockRepository()}
+      isInView={true}
+    />
   )
+}
+
+export const Loading: Story = {
+  render: () => <FileVersionsLoadingSkeleton />
 }

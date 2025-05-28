@@ -1,14 +1,24 @@
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { FileVersions } from '../../../../../src/sections/file/file-version/FileVersions'
 import { FileMother } from '../../../files/domain/models/FileMother'
 import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
 
-const file = FileMother.createFileVersionSummary()
+const fileVersionSummaries = FileMother.createFileVersionSummary()
+const fileRepository: FileRepository = {} as FileRepository
 
 describe('FileVersions', () => {
   it('renders version rows and metadata correctly', () => {
-    cy.customMount(<FileVersions version={file} datasetVersionNumber={'2.0'} />)
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummaries)
+    cy.customMount(
+      <FileVersions
+        fileId={1}
+        datasetVersionNumber={'2.0'}
+        fileRepository={fileRepository}
+        isInView
+      />
+    )
 
-    cy.contains('Version').should('exist')
+    cy.contains('Dataset Version').should('exist')
     cy.contains('Summary').should('exist')
     cy.contains('Contributors').should('exist')
     cy.contains('Published On').should('exist')
@@ -26,12 +36,20 @@ describe('FileVersions', () => {
   it('disables the button for deaccessioned versions', () => {
     const deaccessionedFile = [
       {
-        ...file[0],
+        ...fileVersionSummaries[0],
         datasetVersion: '1.2',
         versionState: DatasetVersionState.DEACCESSIONED
       }
     ]
-    cy.customMount(<FileVersions version={deaccessionedFile} datasetVersionNumber={'2.0'} />)
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(deaccessionedFile)
+    cy.customMount(
+      <FileVersions
+        fileId={1}
+        datasetVersionNumber={'2.0'}
+        fileRepository={fileRepository}
+        isInView
+      />
+    )
 
     cy.get('button').should('be.disabled')
   })
@@ -39,29 +57,39 @@ describe('FileVersions', () => {
   it('disables the button when fileDifferenceSummary is missing and shows correct message', () => {
     const noSummaryFile = [
       {
-        ...file[0],
+        ...fileVersionSummaries[0],
         datasetVersion: '1.3',
         fileDifferenceSummary: undefined,
         versionState: DatasetVersionState.RELEASED
       }
     ]
 
-    cy.customMount(<FileVersions version={noSummaryFile} datasetVersionNumber={'2.0'} />)
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(noSummaryFile)
+    cy.customMount(
+      <FileVersions
+        fileId={1}
+        datasetVersionNumber={'2.0'}
+        fileRepository={fileRepository}
+        isInView
+      />
+    )
 
     cy.get('button').contains('1.3').should('be.disabled')
     cy.findAllByText('No changes associated with this version.').should('exist')
   })
 
   it('the version number should be disable and bold if it is the current version', () => {
-    const currentFile = [
-      {
-        ...file[0],
-        datasetVersion: '2.0'
-      }
-    ]
+    const currentFile = [{ ...fileVersionSummaries[0], datasetVersion: '2.0' }]
 
-    cy.customMount(<FileVersions version={currentFile} datasetVersionNumber={'2.0'} />)
-
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(currentFile)
+    cy.customMount(
+      <FileVersions
+        fileId={1}
+        datasetVersionNumber={'2.0'}
+        fileRepository={fileRepository}
+        isInView
+      />
+    )
     cy.get('strong').contains('2.0')
   })
 })
