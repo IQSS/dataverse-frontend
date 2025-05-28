@@ -108,6 +108,7 @@ export const CollectionItemsPanel = ({
   }
 
   const handleSearchSubmit = async (searchValue: string) => {
+    const isSearchValueEmpty = searchValue === ''
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
@@ -115,7 +116,7 @@ export const CollectionItemsPanel = ({
 
     // When searching, we reset the item types to COLLECTION, DATASET and FILE. Other filters are cleared
     setSearchParams((currentSearchParams) => {
-      if (searchValue === '') {
+      if (isSearchValueEmpty) {
         currentSearchParams.delete(CollectionItemsQueryParams.QUERY)
       } else {
         currentSearchParams.set(CollectionItemsQueryParams.QUERY, searchValue)
@@ -133,12 +134,12 @@ export const CollectionItemsPanel = ({
       return currentSearchParams
     })
 
-    // WHEN SEARCHING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES!!
+    // WHEN SEARCHING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES AND SORT TYPE AS RELEVANCE ORDER DESC
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       searchValue === '' ? undefined : searchValue,
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
-      undefined,
-      undefined,
+      isSearchValueEmpty ? undefined : SortType.SCORE,
+      OrderType.DESC,
       undefined
     )
 
