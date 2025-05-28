@@ -71,7 +71,7 @@ describe('MyDataItemsPanel', () => {
       cy.findByText(/No results found for user testUserName./).should('exist')
     })
   })
-  describe.only('NoItemsMessage', () => {
+  describe('NoItemsMessage', () => {
     it('renders correct no items message when there are no collection, dataset or files', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
