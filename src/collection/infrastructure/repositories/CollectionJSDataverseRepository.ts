@@ -55,10 +55,17 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
   getItems(
     collectionId: string,
     paginationInfo: CollectionItemsPaginationInfo,
-    searchCriteria: CollectionSearchCriteria
+    searchCriteria: CollectionSearchCriteria,
+    searchService?: string
   ): Promise<CollectionItemSubset> {
     return getCollectionItems
-      .execute(collectionId, paginationInfo?.pageSize, paginationInfo?.offset, searchCriteria)
+      .execute(
+        collectionId,
+        paginationInfo?.pageSize,
+        paginationInfo?.offset,
+        searchCriteria,
+        searchService
+      )
       .then((jsCollectionItemSubset) => {
         const collectionItemsPreviewsMapped = JSCollectionItemsMapper.toCollectionItemsPreviews(
           jsCollectionItemSubset.items

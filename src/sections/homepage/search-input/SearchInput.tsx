@@ -4,15 +4,30 @@ import { useTranslation } from 'react-i18next'
 import { Form, CloseButton } from '@iqss/dataverse-design-system'
 import { Search as SearchIcon } from 'react-bootstrap-icons'
 import { Route } from '../../Route.enum'
-import { CollectionItemType } from '../../../collection/domain/models/CollectionItemType'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
+import { SearchService } from '@/search/domain/models/SearchService'
+import { SearchDropdown } from './SearchDropdown'
 import styles from './SearchInput.module.scss'
 
-export const SearchInput = () => {
+export const SOLR_SERVICE_NAME = 'solr'
+
+interface SearchInputProps {
+  searchServices: SearchService[]
+  searchDropdownPosition?: 'left' | 'right'
+}
+
+export const SearchInput = ({
+  searchServices,
+  searchDropdownPosition = 'right'
+}: SearchInputProps) => {
   const navigate = useNavigate()
   const { t } = useTranslation('shared')
   const inputSearchRef = useRef<HTMLInputElement>(null)
   const [searchValue, setSearchValue] = useState('')
+  const [searchEngineSelected, setSearchEngineSelected] = useState<string>(SOLR_SERVICE_NAME)
+
+  const hasMoreThanOneSearchService = searchServices.length > 1
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value)
@@ -42,8 +57,21 @@ export const SearchInput = () => {
     inputSearchRef.current?.focus()
   }
 
+  const handleSearchEngineSelect = (eventKey: string | null) => {
+    setSearchEngineSelected(eventKey as string)
+    inputSearchRef.current?.focus()
+  }
+
   return (
     <form onSubmit={handleSubmit} className={styles['search-input-wrapper']} role="search">
+      {hasMoreThanOneSearchService && searchDropdownPosition === 'left' && (
+        <SearchDropdown
+          searchEngineSelected={searchEngineSelected}
+          handleSearchEngineSelect={handleSearchEngineSelect}
+          searchServices={searchServices}
+          position="left"
+        />
+      )}
       <div className={styles['input-and-clear-wrapper']}>
         <Form.Group.Input
           type="text"
@@ -63,7 +91,14 @@ export const SearchInput = () => {
           />
         )}
       </div>
-
+      {hasMoreThanOneSearchService && searchDropdownPosition === 'right' && (
+        <SearchDropdown
+          searchEngineSelected={searchEngineSelected}
+          handleSearchEngineSelect={handleSearchEngineSelect}
+          searchServices={searchServices}
+          position="right"
+        />
+      )}
       <button type="submit" aria-label={t('submitSearch')} className={styles['search-btn']}>
         <SearchIcon size={22} />
       </button>

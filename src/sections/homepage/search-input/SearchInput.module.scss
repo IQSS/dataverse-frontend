@@ -7,6 +7,7 @@
   --search-input-gap: 4px;
   --search-input-transition: 0.15s ease-in-out;
   --search-icon-btn-width: 60px;
+  --search-engine-icon-btn-width: 35px;
 }
 
 .search-input-wrapper {
@@ -36,11 +37,14 @@
 }
 
 .text-input {
+  position: relative;
+  z-index: 2;
   height: 100%;
   border: 0;
   border-radius: 999px;
   caret-color: $dv-brand-color;
   padding-inline: 1.25rem;
+  outline: solid 4px $dv-brand-color;
 
   &:focus {
     box-shadow: none;
@@ -53,7 +57,9 @@
   margin-right: 1rem;
 }
 
-.search-btn {
+%search-btn {
+  position: relative;
+  z-index: 3;
   display: grid;
   place-items: center;
   min-width: var(--search-icon-btn-width);
@@ -81,5 +87,82 @@
 
   svg {
     color: $dv-primary-text-color;
+  }
+}
+
+.search-btn {
+  @extend %search-btn;
+}
+
+.search-dropdown {
+  height: 100%;
+
+  .search-dropdown-btn {
+    @extend %search-btn;
+
+    z-index: 2;
+    min-width: var(--search-engine-icon-btn-width);
+
+    &.on-the-left {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+
+      &::after {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        width: calc(
+          1.25rem + var(--search-input-gap)
+        ); // The padding inline the input has + flex gap of the search input
+
+        height: 100%;
+        background-color: transparent;
+        transition: var(--search-input-transition);
+        transition-property: background-color;
+        content: '';
+      }
+
+      &:hover::after {
+        background-color: color.adjust($dv-brand-color, $lightness: -10%);
+      }
+
+      &:active::after {
+        background-color: color.adjust($dv-brand-color, $lightness: -15%);
+      }
+
+      svg {
+        margin-left: 4px;
+      }
+    }
+
+    &.on-the-right {
+      aspect-ratio: 1;
+      height: 100%;
+    }
+  }
+
+  .search-dropdown-menu {
+    min-width: calc(var(--search-input-max-width) / 2);
+    margin-top: 10px;
+    padding-top: 0;
+
+    .search-dropdown-item {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+
+      svg {
+        color: $dv-text-color;
+      }
+
+      &[aria-selected='true'],
+      &:active {
+        background-color: $dv-brand-color;
+
+        svg {
+          color: #fff;
+        }
+      }
+    }
   }
 }

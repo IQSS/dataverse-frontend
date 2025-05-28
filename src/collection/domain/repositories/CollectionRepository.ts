@@ -18,7 +18,8 @@ export interface CollectionRepository {
   getItems(
     collectionId: string,
     paginationInfo: CollectionItemsPaginationInfo,
-    searchCriteria?: CollectionSearchCriteria
+    searchCriteria?: CollectionSearchCriteria,
+    searchService?: string
   ): Promise<CollectionItemSubset>
   getMyDataItems(
     roleIds: number[],
