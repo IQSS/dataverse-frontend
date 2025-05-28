@@ -50,7 +50,6 @@ describe('SearchPanel', () => {
   it('submits the search value whit the correct argument', () => {
     const onSubmitSearch = cy.stub().as('onSubmitSearch')
     const SEARCH_VALUE = 'John Doe'
-    const expectedCallWithValue = encodeURIComponent(SEARCH_VALUE)
 
     cy.customMount(
       <SearchPanel
@@ -63,6 +62,6 @@ describe('SearchPanel', () => {
     cy.findByPlaceholderText('Search this collection...').type(SEARCH_VALUE)
     cy.findByRole('button', { name: /Search submit/ }).click()
 
-    cy.wrap(onSubmitSearch).should('have.been.calledWith', expectedCallWithValue)
+    cy.wrap(onSubmitSearch).should('have.been.calledWith', SEARCH_VALUE)
   })
 })
