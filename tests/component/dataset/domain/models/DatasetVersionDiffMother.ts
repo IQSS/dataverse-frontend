@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import { DatasetVersionDiff } from '../../../../../src/dataset/domain/models/DatasetVersionDiff'
 import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
 
@@ -41,22 +40,22 @@ export class DatasetVersionDiffMother {
       filesAdded: [
         {
           fileName: 'file2',
-          MD5: faker.datatype.uuid(),
+          MD5: '07e75de3-1e55-49ef-a1cc-09eaff05c511',
           type: '',
-          fileId: faker.datatype.number(),
+          fileId: 1,
           description: 'file2 description',
-          isRestricted: faker.datatype.boolean(),
+          isRestricted: true,
           filePath: '',
           tags: [],
           categories: []
         },
         {
           fileName: 'file3',
-          MD5: faker.datatype.uuid(),
+          MD5: '07e75de3-1e55-49ef-a1cc-09eaff05c522',
           type: '',
-          fileId: faker.datatype.number(),
+          fileId: 2,
           description: 'file3 description',
-          isRestricted: faker.datatype.boolean(),
+          isRestricted: false,
           filePath: '',
           tags: [],
           categories: []
@@ -65,11 +64,11 @@ export class DatasetVersionDiffMother {
       filesRemoved: [
         {
           fileName: 'file10',
-          MD5: faker.datatype.uuid(),
+          MD5: '07e75de3-1e55-49ef-a1cc-09eaff05c533',
           type: '',
-          fileId: faker.datatype.number(),
+          fileId: 3,
           description: 'file1 description',
-          isRestricted: faker.datatype.boolean(),
+          isRestricted: true,
           filePath: '',
           tags: [],
           categories: []
@@ -78,8 +77,8 @@ export class DatasetVersionDiffMother {
       filesChanges: [
         {
           fileName: 'file4',
-          md5: faker.datatype.uuid(),
-          fileId: faker.datatype.number(),
+          md5: '07e75de3-1e55-49ef-a1cc-09eaff05c544',
+          fileId: 4,
           changed: [
             {
               fieldName: 'isRestricted',
@@ -93,22 +92,22 @@ export class DatasetVersionDiffMother {
         {
           oldFile: {
             fileName: 'file5',
-            MD5: faker.datatype.uuid(),
+            MD5: '07e75de3-1e55-49ef-a1cc-09eaff05c555',
             type: '',
-            fileId: faker.datatype.number(),
+            fileId: 5,
             description: 'file5 description',
-            isRestricted: faker.datatype.boolean(),
+            isRestricted: true,
             filePath: '',
             tags: [],
             categories: []
           },
           newFile: {
             fileName: 'file6',
-            MD5: faker.datatype.uuid(),
+            MD5: '07e75de3-1e55-49ef-a1cc-09eaff05c566',
             type: '',
-            fileId: faker.datatype.number(),
+            fileId: 6,
             description: 'file6 description',
-            isRestricted: faker.datatype.boolean(),
+            isRestricted: false,
             filePath: '',
             tags: [],
             categories: []
