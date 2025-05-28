@@ -1,6 +1,6 @@
 import {
-  CollectionItem,
-  CollectionItemSubset
+  CollectionItemSubset,
+  CountPerObjectType
 } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
@@ -16,9 +16,26 @@ const items = CollectionItemsMother.createItems({
   includeUserRoles: true
 })
 
+const countPerObjectType: CountPerObjectType = {
+  collections: 20,
+  datasets: 40,
+  files: 140
+}
+
 const facets = CollectionItemsMother.createMyDataItemsFacets()
 
-const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount }
+const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount, countPerObjectType }
+
+const emptyItemsWithCount: CollectionItemSubset = {
+  items: [],
+  facets: [],
+  totalItemCount: 0,
+  countPerObjectType: {
+    collections: 0,
+    datasets: 0,
+    files: 0
+  }
+}
 
 describe('MyDataItemsPanel', () => {
   beforeEach(() => {
@@ -45,12 +62,6 @@ describe('MyDataItemsPanel', () => {
       cy.findByPlaceholderText('Search by username...').should('exist')
     })
     it('shows the correct message when there are no results for user', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets,
-        totalItemCount: 0
-      }
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
@@ -62,33 +73,23 @@ describe('MyDataItemsPanel', () => {
   })
   describe('NoItemsMessage', () => {
     it('renders correct no items message when there are no collection, dataset or files', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
-      cy.findByLabelText('Files').should('exist').click()
+      cy.findByLabelText(/Files/).should('exist').click()
       cy.findByText(
         /You have not created or contributed to any collections, datasets or files. /
       ).should('exist')
     })
 
     it('renders correct no items message when there are no collections', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
-      cy.findByLabelText('Datasets').should('exist').click()
+      cy.findByLabelText(/Datasets/)
+        .should('exist')
+        .click()
 
       cy.findByText(
         /You have not created or contributed to any collections. You can create data by using the Add Data menu option on this page./
@@ -96,17 +97,13 @@ describe('MyDataItemsPanel', () => {
     })
 
     it('renders correct no items message when there are no datasets', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
-      cy.findByLabelText('Collections').should('exist').click()
+      cy.findByLabelText(/Collections/)
+        .should('exist')
+        .click()
 
       cy.findByText(
         /You have not created or contributed to any datasets. You can create data by using the Add Data menu option on this page./
@@ -114,18 +111,16 @@ describe('MyDataItemsPanel', () => {
     })
 
     it('renders correct no items message when there are no files', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
-      cy.findByLabelText('Files').should('exist').click()
-      cy.findByLabelText('Datasets').should('exist').click()
-      cy.findByLabelText('Collections').should('exist').click()
+      cy.findByLabelText(/Files/).should('exist').click()
+      cy.findByLabelText(/Datasets/)
+        .should('exist')
+        .click()
+      cy.findByLabelText(/Collections/)
+        .should('exist')
+        .click()
 
       cy.findByText(
         /You have not created or contributed to any files. You can create data by using the Add Data menu option on this page./
@@ -133,12 +128,6 @@ describe('MyDataItemsPanel', () => {
     })
 
     it('renders correct no items message when there are no collections and datasets', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
@@ -148,34 +137,26 @@ describe('MyDataItemsPanel', () => {
       ).should('exist')
     })
     it('renders correct no items message when there are no collections and files', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
-      cy.findByLabelText('Files').should('exist').click()
-      cy.findByLabelText('Datasets').should('exist').click()
+      cy.findByLabelText(/Files/).should('exist').click()
+      cy.findByLabelText(/Datasets/)
+        .should('exist')
+        .click()
 
       cy.findByText(
         /You have not created or contributed to any collections or files. You can create data by using the Add Data menu option on this page./
       ).should('exist')
     })
     it('renders correct no items message when there are no datasets and files', () => {
-      const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = {
-        items: emptyItems,
-        facets: [],
-        totalItemCount: 0
-      }
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
-      cy.findByLabelText('Files').should('exist').click()
-      cy.findByLabelText('Collections').should('exist').click()
+      cy.findByLabelText(/Files/).should('exist').click()
+      cy.findByLabelText(/Collections/)
+        .should('exist')
+        .click()
 
       cy.findByText(
         /You have not created or contributed to any datasets or files. You can create data by using the Add Data menu option on this page./
@@ -184,12 +165,6 @@ describe('MyDataItemsPanel', () => {
   })
 
   it('renders the no search results message when there are no items matching the search query', () => {
-    const emptyItems: CollectionItem[] = []
-    const emptyItemsWithCount: CollectionItemSubset = {
-      items: emptyItems,
-      facets: [],
-      totalItemCount: 0
-    }
     collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
     cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
@@ -203,12 +178,6 @@ describe('MyDataItemsPanel', () => {
   })
 
   it('renders the no search results message when there are no items matching the facet filters', () => {
-    const emptyItems: CollectionItem[] = []
-    const emptyItemsWithCount: CollectionItemSubset = {
-      items: emptyItems,
-      facets: [],
-      totalItemCount: 0
-    }
     collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
     cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
     cy.findByLabelText('Unpublished (0)').should('exist').click()
@@ -258,7 +227,12 @@ describe('MyDataItemsPanel', () => {
     const first4ElementsWithCount: CollectionItemSubset = {
       items: first4Elements,
       facets,
-      totalItemCount: 4
+      totalItemCount: 4,
+      countPerObjectType: {
+        collections: 4,
+        datasets: 0,
+        files: 0
+      }
     }
     collectionRepository.getMyDataItems = cy.stub().resolves(first4ElementsWithCount)
 

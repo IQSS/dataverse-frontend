@@ -32,6 +32,7 @@ describe('MyDataFilterPanel', () => {
           { roleId: 6, roleName: 'Contributor' },
           { roleId: 7, roleName: 'Curator' }
         ]}
+        countPerObjectType={{ collections: 10, datasets: 5, files: 2 }}
       />
     )
 

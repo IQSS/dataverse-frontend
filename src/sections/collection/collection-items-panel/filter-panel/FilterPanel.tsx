@@ -4,7 +4,10 @@ import { Button, Offcanvas } from '@iqss/dataverse-design-system'
 import { FunnelFill } from 'react-bootstrap-icons'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { ItemTypeChange, TypeFilters } from './type-filters/TypeFilters'
-import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
+import {
+  CollectionItemsFacet,
+  CountPerObjectType
+} from '@/collection/domain/models/CollectionItemSubset'
 import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { FacetsFilters } from './facets-filters/FacetsFilters'
 import { RemoveAddFacetFilter } from './facets-filters/FacetFilterGroup'
@@ -17,6 +20,7 @@ interface FilterPanelProps {
   currentFilterQueries?: FilterQuery[]
   onFacetChange: (filterQuery: FilterQuery, removeOrAdd: RemoveAddFacetFilter) => void
   isLoadingCollectionItems: boolean
+  countPerObjectType: CountPerObjectType
 }
 
 export const FilterPanel = ({
@@ -25,7 +29,8 @@ export const FilterPanel = ({
   facets,
   currentFilterQueries,
   onFacetChange,
-  isLoadingCollectionItems
+  isLoadingCollectionItems,
+  countPerObjectType
 }: FilterPanelProps) => {
   const { t } = useTranslation('collection')
 
@@ -54,6 +59,7 @@ export const FilterPanel = ({
               onItemTypesChange={onItemTypesChange}
               currentItemTypes={currentItemTypes}
               isLoadingCollectionItems={isLoadingCollectionItems}
+              countPerObjectType={countPerObjectType}
             />
 
             <FacetsFilters

@@ -70,6 +70,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     isLoadingItems,
     accumulatedItems,
     publicationStatusCounts,
+    countPerObjectType,
     totalAvailable,
     hasNextPage,
     error,
@@ -268,6 +269,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
             userRoles={userRoles}
             onRolesChange={handleRoleChange}
             isLoadingCollectionItems={isLoadingItems}
+            countPerObjectType={countPerObjectType}
           />
 
           <Stack direction="vertical" gap={2}>

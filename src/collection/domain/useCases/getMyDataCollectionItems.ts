@@ -31,7 +31,12 @@ export async function getMyDataCollectionItems(
         return {
           items: [],
           facets: [],
-          totalItemCount: 0
+          totalItemCount: 0,
+          countPerObjectType: {
+            collections: 0,
+            datasets: 0,
+            files: 0
+          }
         }
       }
 

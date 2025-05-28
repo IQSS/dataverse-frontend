@@ -25,10 +25,8 @@ export const SearchInput = () => {
 
     if (!trimmedSearchValue) return
 
-    const encodedSearchValue = encodeURIComponent(trimmedSearchValue)
-
     const searchParams = new URLSearchParams()
-    searchParams.set(CollectionItemsQueryParams.QUERY, encodedSearchValue)
+    searchParams.set(CollectionItemsQueryParams.QUERY, trimmedSearchValue)
     searchParams.set(
       CollectionItemsQueryParams.TYPES,
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(',')
