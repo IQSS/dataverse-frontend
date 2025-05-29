@@ -20,7 +20,7 @@ type Story = StoryObj<typeof DatasetTerms>
 
 const testDataset = DatasetMother.createRealistic()
 const license = LicenseMother.create()
-const termsOfUseWithoutCustomTerms = TermsOfUseMother.withoutCustomTerms()
+const termsOfUseWithoutCustomTerms = TermsOfUseMother.createRealistic({ customTerms: undefined })
 
 export const Default: Story = {
   render: () => (
@@ -73,7 +73,7 @@ export const CustomTerms: Story = {
   render: () => (
     <DatasetTerms
       license={undefined}
-      termsOfUse={TermsOfUseMother.create()}
+      termsOfUse={TermsOfUseMother.createRealistic()}
       filesRepository={new FileMockNoRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}

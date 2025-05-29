@@ -34,7 +34,12 @@ export class NoCollectionMockRepository extends CollectionMockRepository {
         resolve({
           items: [],
           facets: [],
-          totalItemCount: 0
+          totalItemCount: 0,
+          countPerObjectType: {
+            collections: 0,
+            datasets: 0,
+            files: 0
+          }
         })
       }, FakerHelper.loadingTimout())
     })

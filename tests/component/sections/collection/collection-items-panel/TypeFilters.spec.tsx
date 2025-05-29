@@ -9,6 +9,7 @@ describe('TypeFilters', () => {
         onItemTypesChange={onItemTypesChange}
         isLoadingCollectionItems={false}
         currentItemTypes={[CollectionItemType.COLLECTION, CollectionItemType.FILE]}
+        countPerObjectType={{ collections: 10, datasets: 5, files: 2 }}
       />
     )
 
@@ -25,6 +26,7 @@ describe('TypeFilters', () => {
         onItemTypesChange={onItemTypesChange}
         isLoadingCollectionItems={false}
         currentItemTypes={[CollectionItemType.COLLECTION]}
+        countPerObjectType={{ collections: 10, datasets: 5, files: 2 }}
       />
     )
 
@@ -45,6 +47,7 @@ describe('TypeFilters', () => {
         onItemTypesChange={onItemTypesChange}
         isLoadingCollectionItems={true}
         currentItemTypes={[CollectionItemType.COLLECTION, CollectionItemType.DATASET]}
+        countPerObjectType={{ collections: 10, datasets: 5, files: 2 }}
       />
     )
 
@@ -66,6 +69,7 @@ describe('TypeFilters', () => {
           onItemTypesChange={onItemTypesChange}
           isLoadingCollectionItems={false}
           currentItemTypes={[CollectionItemType.DATASET]}
+          countPerObjectType={{ collections: 10, datasets: 5, files: 2 }}
         />
       )
 
@@ -87,6 +91,7 @@ describe('TypeFilters', () => {
           onItemTypesChange={onItemTypesChange}
           isLoadingCollectionItems={false}
           currentItemTypes={[CollectionItemType.COLLECTION]}
+          countPerObjectType={{ collections: 10, datasets: 5, files: 2 }}
         />
       )
 
@@ -108,6 +113,7 @@ describe('TypeFilters', () => {
           onItemTypesChange={onItemTypesChange}
           isLoadingCollectionItems={false}
           currentItemTypes={[CollectionItemType.COLLECTION]}
+          countPerObjectType={{ collections: 10, datasets: 5, files: 2 }}
         />
       )
 

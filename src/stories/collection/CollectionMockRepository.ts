@@ -87,12 +87,63 @@ export class CollectionMockRepository implements CollectionRepository {
         resolve({
           items: filteredByTypeItems,
           facets: facets,
-          totalItemCount: isDefaultSelected ? 6 : 200 // This is a fake number, its big so we can always scroll to load more items for the story
+          totalItemCount: isDefaultSelected ? 6 : 200, // This is a fake number, its big so we can always scroll to load more items for the story
+          countPerObjectType: {
+            collections: numberOfCollections,
+            datasets: numberOfDatasets,
+            files: numberOfFiles
+          }
         })
       }, FakerHelper.loadingTimout())
     })
   }
+  getMyDataItems(
+    _roleIds: number[],
+    collectionItemTypes: CollectionItemType[],
+    _publicationStatuses: string[],
+    limit?: number,
+    _selectedPage?: number,
+    _searchText?: string,
+    _otherUserName?: string
+  ): Promise<CollectionItemSubset> {
+    if (!limit) {
+      limit = 10
+    }
+    const numberOfCollections = Math.floor(limit / 3)
+    const numberOfDatasets = Math.floor(limit / 3)
+    const numberOfFiles = limit - numberOfCollections - numberOfDatasets
 
+    const items = CollectionItemsMother.createItems({
+      numberOfCollections,
+      numberOfDatasets,
+      numberOfFiles,
+      includeUserRoles: true
+    })
+
+    const facets = CollectionItemsMother.createMyDataItemsFacets()
+
+    const isDefaultSelected =
+      collectionItemTypes?.length === 2 &&
+      collectionItemTypes?.includes(CollectionItemType.COLLECTION) &&
+      collectionItemTypes?.includes(CollectionItemType.DATASET)
+
+    const filteredByTypeItems = items.filter((item) => collectionItemTypes?.includes(item.type))
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          items: filteredByTypeItems,
+          facets: facets,
+          totalItemCount: isDefaultSelected ? 6 : 200, // This is a fake number, its big so we can always scroll to load more items for the story
+          countPerObjectType: {
+            collections: numberOfCollections,
+            datasets: numberOfDatasets,
+            files: numberOfFiles
+          }
+        })
+      }, FakerHelper.loadingTimout())
+    })
+  }
   publish(_persistentId: string): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {

@@ -48,7 +48,8 @@ export class JSCollectionItemsMapper {
       releaseOrCreateDate: jsCollectionPreview.releaseOrCreateDate,
       thumbnail: jsCollectionPreview.imageUrl,
       parentCollectionName: jsCollectionPreview.parentName,
-      parentCollectionAlias: jsCollectionPreview.parentAlias
+      parentCollectionAlias: jsCollectionPreview.parentAlias,
+      userRoles: jsCollectionPreview.userRoles
     }
   }
 

@@ -1,4 +1,4 @@
-import { Icon, IconName } from '@iqss/dataverse-design-system'
+import { Badge, Icon, IconName } from '@iqss/dataverse-design-system'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { FileItemTypePreview } from '@/files/domain/models/FileItemTypePreview'
@@ -28,21 +28,29 @@ export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
             canDownloadFile={filePreview.canDownloadFile}
           />
         </div>
-        <LinkToPage
-          page={Route.FILES}
-          type={DvObjectType.FILE}
-          searchParams={FileCardHelper.getFileSearchParams(
-            filePreview.id,
-            filePreview.publicationStatuses.includes(PublicationStatus.Draft)
-          )}>
-          {filePreview.name}
-        </LinkToPage>
-        <DatasetLabels
-          labels={FileCardHelper.getDatasetLabels(
-            filePreview.publicationStatuses,
-            !filePreview.publicationStatuses.includes(PublicationStatus.Unpublished)
-          )}
-        />
+        <div className={styles['title-and-labels']}>
+          <LinkToPage
+            page={Route.FILES}
+            type={DvObjectType.FILE}
+            searchParams={FileCardHelper.getFileSearchParams(
+              filePreview.id,
+              filePreview.publicationStatuses.includes(PublicationStatus.Draft)
+            )}>
+            {filePreview.name}
+          </LinkToPage>
+          <DatasetLabels
+            labels={FileCardHelper.getDatasetLabels(
+              filePreview.publicationStatuses,
+              !filePreview.publicationStatuses.includes(PublicationStatus.Unpublished)
+            )}
+          />
+          {filePreview.userRoles &&
+            filePreview.userRoles.map((role, index) => (
+              <div key={index}>
+                <Badge variant="success">{role}</Badge>
+              </div>
+            ))}
+        </div>
       </div>
       <div className={styles['top-right-icon']}>
         <Icon name={iconName} />

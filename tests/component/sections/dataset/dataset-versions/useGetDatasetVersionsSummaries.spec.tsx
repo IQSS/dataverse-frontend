@@ -16,7 +16,8 @@ describe('useGetDatasetVersionsSummaries', () => {
     const { result } = renderHook(() =>
       useGetDatasetVersionsSummaries({
         datasetRepository,
-        persistentId: 'doi:10.5072/FK2/ABC123'
+        persistentId: 'doi:10.5072/FK2/ABC123',
+        autoFetch: true
       })
     )
 
@@ -37,7 +38,8 @@ describe('useGetDatasetVersionsSummaries', () => {
     const { result } = renderHook(() =>
       useGetDatasetVersionsSummaries({
         datasetRepository,
-        persistentId: 'doi:10.5072/FK2/ABC123'
+        persistentId: 'doi:10.5072/FK2/ABC123',
+        autoFetch: true
       })
     )
     await act(() => {
@@ -56,7 +58,8 @@ describe('useGetDatasetVersionsSummaries', () => {
     const { result } = renderHook(() =>
       useGetDatasetVersionsSummaries({
         datasetRepository,
-        persistentId: 'doi:10.5072/FK2/ABC123'
+        persistentId: 'doi:10.5072/FK2/ABC123',
+        autoFetch: true
       })
     )
 
@@ -71,6 +74,62 @@ describe('useGetDatasetVersionsSummaries', () => {
       return expect(result.current.error).to.deep.equal(
         'Something went wrong getting the information from the dataset versions summaries. Try again later.'
       )
+    })
+  })
+
+  it('should fetch summaries when fetchSummaries is called', () => {
+    datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(datasetVersionsSummariesMock)
+
+    const { result } = renderHook(() =>
+      useGetDatasetVersionsSummaries({
+        datasetRepository,
+        persistentId: 'doi:10.5072/FK2/ABC123',
+        autoFetch: false
+      })
+    )
+
+    expect(result.current.isLoading).to.equal(false)
+    expect(result.current.datasetVersionSummaries).to.be.undefined
+    expect(result.current.error).to.be.null
+
+    act(() => {
+      return void result.current.fetchSummaries()
+    })
+
+    cy.wrap(null).should(() => {
+      expect(result.current.isLoading).to.equal(true)
+    })
+
+    cy.wrap(null).should(() => {
+      expect(result.current.isLoading).to.equal(false)
+      expect(result.current.datasetVersionSummaries).to.deep.equal(datasetVersionsSummariesMock)
+      expect(datasetRepository.getDatasetVersionsSummaries).to.have.been.calledOnce
+    })
+  })
+
+  it('should not fetch summaries if autoFetch is false', async () => {
+    datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(datasetVersionsSummariesMock)
+
+    const { result } = renderHook(() =>
+      useGetDatasetVersionsSummaries({
+        datasetRepository,
+        persistentId: 'doi:10.5072/FK2/ABC123',
+        autoFetch: false
+      })
+    )
+
+    await act(() => {
+      expect(result.current.isLoading).to.deep.equal(false)
+      expect(result.current.error).to.deep.equal(null)
+      expect(result.current.datasetVersionSummaries).to.deep.equal(undefined)
+      return expect(datasetRepository.getDatasetVersionsSummaries).not.to.have.been.called
+    })
+
+    await act(() => {
+      expect(result.current.isLoading).to.deep.equal(false)
+      expect(result.current.error).to.deep.equal(null)
+      expect(result.current.datasetVersionSummaries).to.deep.equal(undefined)
+      return expect(datasetRepository.getDatasetVersionsSummaries).not.to.have.been.called
     })
   })
 })

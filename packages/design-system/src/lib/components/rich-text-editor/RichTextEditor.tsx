@@ -4,6 +4,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
+import { CustomImageExtension } from './CustomImageExtension'
 import { EditorActions } from './EditorActions'
 import { richTextEditorDefaultLocales, RichTextEditorLocales } from './defaultLocales'
 import './RichTextEditor.scss'
@@ -20,7 +21,11 @@ export enum RichTextEditorCustomClasses {
   CODE_BLOCK = 'rte-code-block',
   BLOCKQUOTE = 'rte-blockquote',
   UNDERLINE = 'rte-underline',
-  LINK = 'rte-link'
+  LINK = 'rte-link',
+  IMAGE = 'rte-img',
+  IMAGE_ALIGN_LEFT = 'rte-img-left',
+  IMAGE_ALIGN_CENTER = 'rte-img-center',
+  IMAGE_ALIGN_RIGHT = 'rte-img-right'
 }
 
 export interface RichTextEditorProps {
@@ -119,6 +124,11 @@ export const RichTextEditor = forwardRef(
         }),
         Placeholder.configure({
           placeholder: locales?.placeholder ?? richTextEditorDefaultLocales.placeholder
+        }),
+        CustomImageExtension.configure({
+          HTMLAttributes: {
+            class: RichTextEditorCustomClasses.IMAGE
+          }
         })
       ],
       content: initialValue,

@@ -18,6 +18,7 @@ describe('FilterPanel', () => {
         currentItemTypes={[CollectionItemType.COLLECTION, CollectionItemType.DATASET]}
         facets={facets}
         onFacetChange={onFacetChange}
+        countPerObjectType={{ collections: 10, datasets: 5, files: 2 }}
       />
     )
 

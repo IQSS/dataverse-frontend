@@ -85,6 +85,7 @@
       max-height: 175px;
       object-fit: contain;
       border-radius: 4px;
+      pointer-events: none;
     }
 
     &.hide {

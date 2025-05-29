@@ -5,11 +5,7 @@ import cn from 'classnames'
 import { type CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import {
-  FilterQuery,
-  SortType,
-  OrderType
-} from '@/collection/domain/models/CollectionSearchCriteria'
+import { SortType, OrderType } from '@/collection/domain/models/CollectionSearchCriteria'
 import { PaginationResultsInfo } from '@/sections/shared/pagination/PaginationResultsInfo'
 import { NO_COLLECTION_ITEMS } from '../useGetAccumulatedItems'
 import { ErrorItemsMessage } from './ErrorItemsMessage'
@@ -22,31 +18,63 @@ import styles from './ItemsList.module.scss'
 import { Col, Row } from '@iqss/dataverse-design-system'
 import { ItemsSortBy } from '@/sections/collection/collection-items-panel/items-list/ItemsSortBy'
 
-interface ItemsListProps {
-  parentCollectionAlias: string
-  items: CollectionItem[]
-  error: string | null
-  accumulatedCount: number
-  isLoadingItems: boolean
-  areItemsAvailable: boolean
-  hasNextPage: boolean
-  isEmptyItems: boolean
-  hasSearchValue: boolean
-  paginationInfo: CollectionItemsPaginationInfo
-  onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
-  onSortChange: (newSortType?: SortType, newOrderType?: OrderType) => void
-  itemsTypesSelected: CollectionItemType[]
-  filterQueriesSelected: FilterQuery[]
-  sortSelected?: SortType
-  orderSelected?: OrderType
-  searchText?: string
+export interface TranslationFile {
+  fileName: string
+  prefix?: string
 }
+export enum ItemsListType {
+  MY_DATA_LIST = 'my-data',
+  COLLECTION_LIST = 'collection-list'
+}
+type ItemsListProps =
+  | {
+      items: CollectionItem[]
+      itemsListType: ItemsListType.COLLECTION_LIST
+      error: string | null
+      accumulatedCount: number
+      isLoadingItems: boolean
+      areItemsAvailable: boolean
+      hasNextPage: boolean
+      isEmptyItems: boolean
+      hasSearchValue: boolean
+      paginationInfo: CollectionItemsPaginationInfo
+      onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
+      itemsTypesSelected: CollectionItemType[]
+      hasFilterQueries: boolean
+      parentCollectionAlias?: string
+      otherUserName?: never
+      onSortChange?: (newSortType?: SortType, newOrderType?: OrderType) => void
+      sortSelected?: SortType
+      orderSelected?: OrderType
+      searchText?: string
+    }
+  | {
+      items: CollectionItem[]
+      itemsListType: ItemsListType.MY_DATA_LIST
+      error: string | null
+      accumulatedCount: number
+      isLoadingItems: boolean
+      areItemsAvailable: boolean
+      hasNextPage: boolean
+      isEmptyItems: boolean
+      hasSearchValue: boolean
+      paginationInfo: CollectionItemsPaginationInfo
+      onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
+      itemsTypesSelected: CollectionItemType[]
+      hasFilterQueries: boolean
+      parentCollectionAlias?: never
+      otherUserName?: string
+      onSortChange?: never
+      sortSelected?: never
+      orderSelected?: never
+      searchText?: string
+    }
 
 export const ItemsList = forwardRef(
   (
     {
-      parentCollectionAlias,
       items,
+      itemsListType,
       error,
       accumulatedCount,
       isLoadingItems,
@@ -56,9 +84,11 @@ export const ItemsList = forwardRef(
       hasSearchValue,
       paginationInfo,
       onBottomReach,
-      onSortChange,
       itemsTypesSelected,
-      filterQueriesSelected,
+      hasFilterQueries,
+      parentCollectionAlias,
+      otherUserName,
+      onSortChange,
       sortSelected,
       orderSelected
     }: ItemsListProps,
@@ -73,13 +103,21 @@ export const ItemsList = forwardRef(
     })
 
     const showNoItemsMessage =
-      !isLoadingItems && isEmptyItems && !hasSearchValue && filterQueriesSelected.length === 0
+      !isLoadingItems && isEmptyItems && !hasSearchValue && !hasFilterQueries
     const showNoSearchMatchesMessage =
-      !isLoadingItems && isEmptyItems && (hasSearchValue || filterQueriesSelected.length > 0)
+      !isLoadingItems && isEmptyItems && (hasSearchValue || hasFilterQueries)
 
     const showSentrySkeleton = hasNextPage && !error && !isEmptyItems
     const showNotSentrySkeleton = isLoadingItems && isEmptyItems
-
+    const translationFile =
+      itemsListType == ItemsListType.COLLECTION_LIST
+        ? {
+            fileName: 'collection'
+          }
+        : {
+            fileName: 'account',
+            prefix: 'myData'
+          }
     return (
       <section ref={rootRef} className={styles['items-list-root-ref']}>
         <div
@@ -90,7 +128,13 @@ export const ItemsList = forwardRef(
           tabIndex={0}
           ref={ref as ForwardedRef<HTMLDivElement>}
           data-testid="items-list-scrollable-container">
-          {showNoItemsMessage && <NoItemsMessage itemsTypesSelected={itemsTypesSelected} />}
+          {showNoItemsMessage && (
+            <NoItemsMessage
+              translationFile={translationFile}
+              itemsTypesSelected={itemsTypesSelected}
+              otherUserName={otherUserName}
+            />
+          )}
 
           {showNoSearchMatchesMessage && <NoSearchMatchesMessage />}
 
@@ -112,14 +156,17 @@ export const ItemsList = forwardRef(
                       />
                     )}
                   </Col>
-                  <Col className={styles['sort-button']}>
-                    <ItemsSortBy
-                      isLoadingCollectionItems={isLoadingItems}
-                      currentSortType={sortSelected}
-                      currentSortOrder={orderSelected}
-                      hasSearchValue={hasSearchValue}
-                      onSortChange={onSortChange}></ItemsSortBy>
-                  </Col>
+                  {onSortChange && (
+                    <Col className={styles['sort-button']}>
+                      <ItemsSortBy
+                        isLoadingCollectionItems={isLoadingItems}
+                        currentSortType={sortSelected}
+                        currentSortOrder={orderSelected}
+                        hasSearchValue={hasSearchValue}
+                        onSortChange={onSortChange}
+                      />
+                    </Col>
+                  )}
                 </Row>
               </header>
 

@@ -6,6 +6,7 @@ import {
   getCollectionFacets,
   getCollectionUserPermissions,
   getCollectionItems,
+  getMyDataCollectionItems,
   publishCollection,
   updateCollection,
   getCollectionFeaturedItems,
@@ -66,7 +67,41 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
         return {
           items: collectionItemsPreviewsMapped,
           facets: jsCollectionItemSubset.facets,
-          totalItemCount: jsCollectionItemSubset.totalItemCount
+          totalItemCount: jsCollectionItemSubset.totalItemCount,
+          countPerObjectType: jsCollectionItemSubset.countPerObjectType
+        }
+      })
+  }
+
+  getMyDataItems(
+    roleIds: number[],
+    collectionItemTypes: string[],
+    publicationStatuses: string[],
+    limit?: number,
+    selectedPage?: number,
+    searchText?: string,
+    otherUserName?: string
+  ): Promise<CollectionItemSubset> {
+    return getMyDataCollectionItems
+      .execute(
+        roleIds,
+        collectionItemTypes,
+        publicationStatuses,
+        limit,
+        selectedPage,
+        searchText,
+        otherUserName
+      )
+      .then((jsCollectionItemSubset) => {
+        const collectionItemsPreviewsMapped = JSCollectionItemsMapper.toCollectionItemsPreviews(
+          jsCollectionItemSubset.items
+        )
+
+        return {
+          items: collectionItemsPreviewsMapped,
+          facets: jsCollectionItemSubset.facets,
+          totalItemCount: jsCollectionItemSubset.totalItemCount,
+          countPerObjectType: jsCollectionItemSubset.countPerObjectType
         }
       })
   }

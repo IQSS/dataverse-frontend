@@ -17,6 +17,10 @@ export const collectionNameToAlias = (name: string) => {
     .slice(0, 60) // Limit to 60 characters
 }
 
+// This is only to avoid difference snapshots in Chromatic builds, the real display origin will be the current window location
+const locationOrigin =
+  import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true' ? 'https://foo.com' : window.location.origin
+
 interface IdentifierFieldProps {
   rules: UseControllerProps['rules']
 }
@@ -44,7 +48,7 @@ export const IdentifierField = ({ rules }: IdentifierFieldProps) => {
         render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
           <Col>
             <Form.InputGroup hasValidation>
-              <Form.InputGroup.Text>{window.location.origin}/spa/collections/</Form.InputGroup.Text>
+              <Form.InputGroup.Text>{locationOrigin}/spa/collections/</Form.InputGroup.Text>
               <Form.Group.Input
                 type="text"
                 aria-label="identifier"

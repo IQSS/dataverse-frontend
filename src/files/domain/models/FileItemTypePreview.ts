@@ -27,6 +27,7 @@ export interface FileItemTypePreview {
   tags?: FileLabel[]
   restricted: boolean
   canDownloadFile: boolean
+  userRoles?: string[]
 }
 
 export interface FilePreviewChecksum {
