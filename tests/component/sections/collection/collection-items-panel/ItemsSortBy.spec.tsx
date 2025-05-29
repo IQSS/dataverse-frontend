@@ -33,7 +33,7 @@ describe('ItemsSortBy', () => {
     cy.findByRole('button', { name: /Name \(Z-A\)/ }).click({ force: true })
     cy.wrap(onSortChange).should('be.calledWith', 'name', 'desc')
   })
-  it('should set sort type and order to undefined when Relevance is selected', () => {
+  it('should set sort type and order correctly when Relevance is selected', () => {
     const onSortChange = cy.stub().as('onSortChange')
 
     cy.customMount(
@@ -48,7 +48,7 @@ describe('ItemsSortBy', () => {
     cy.findByRole('button', { name: /Relevance/ }).should('exist')
 
     cy.findByText(/Relevance/).click()
-    cy.wrap(onSortChange).should('be.calledWith', undefined, undefined)
+    cy.wrap(onSortChange).should('be.calledWith', SortType.SCORE, OrderType.DESC)
   })
   it('should set sort type and order correctly  when Newest is selected', () => {
     const onSortChange = cy.stub().as('onSortChange')
