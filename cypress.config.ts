@@ -5,7 +5,7 @@ import path from 'path'
 export default defineConfig({
   video: false,
   e2e: {
-    baseUrl: 'https://localhost',
+    baseUrl: 'http://localhost:8000',
     specPattern: 'tests/e2e-integration/**/*.spec.{js,jsx,ts,tsx}',
     fixturesFolder: 'tests/e2e-integration/fixtures',
     screenshotOnRunFailure: false,

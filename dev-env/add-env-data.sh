@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DATAVERSE_API_BASE_URL=https://localhost/api
+DATAVERSE_API_BASE_URL=http://localhost:8000/api
 
 echo "INFO - Cloning Dataverse sample data repository..."
 git clone https://github.com/IQSS/dataverse-sample-data.git

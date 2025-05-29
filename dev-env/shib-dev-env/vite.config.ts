@@ -19,7 +19,7 @@ export default defineConfig({
     host: true,
     port: 5173,
     hmr: {
-      clientPort: 8000 // nginx reverse proxy port
+      clientPort: 443 // nginx reverse proxy port
     }
   },
   resolve: {

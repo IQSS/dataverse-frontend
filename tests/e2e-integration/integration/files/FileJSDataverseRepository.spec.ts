@@ -410,7 +410,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    // TODO: Skipping because https://localhost/api/v1/datasets/:persistentId/versions/:draft/files?persistentId=doi:10.5072/FK2/XRSQV4 is bringing dataFile.tabularData as false
+    // TODO: Skipping because http://localhost:8000/api/v1/datasets/:persistentId/versions/:draft/files?persistentId=doi:10.5072/FK2/XRSQV4 is bringing dataFile.tabularData as false
     it.skip('gets all the files by dataset persistentId when files are tabular data', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1, 'csv'))
       if (!datasetResponse.files) throw new Error('Files not found')

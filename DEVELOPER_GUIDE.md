@@ -241,8 +241,8 @@ project files and shut down any running containers.
 
 Once the script has finished, you will be able to access Dataverse via:
 
-- Dataverse SPA Frontend: [https://localhost/spa][dv_app_localhost_spa_url]
-- Dataverse JSF Application: [https://localhost][dv_app_localhost_legacy_url]
+- Dataverse SPA Frontend: [http://localhost:8000/spa][dv_app_localhost_spa_url]
+- Dataverse JSF Application: [http://localhost:8000][dv_app_localhost_legacy_url]
 
 Note: The Dataverse configbaker takes some time to start the application, so the application will not be accessible until
 the bootstrapping is complete.
@@ -1121,8 +1121,8 @@ The Design System is published to the npm Package Registry. To publish a new ver
 [dv_app_localhost_build_url]: http://localhost:5173
 [dv_app_localhost_storybook_url]: http://localhost:6006/
 [dv_app_localhost_designsystem_url]: http://localhost:6007/
-[dv_app_localhost_spa_url]: https://localhost/spa
-[dv_app_localhost_legacy_url]: https://localhost/
+[dv_app_localhost_spa_url]: http://localhost:8000/spa
+[dv_app_localhost_legacy_url]: http://localhost:8000
 
 <!-- @gdcc/dataverse -->
 

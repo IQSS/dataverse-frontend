@@ -35,11 +35,11 @@ jobs:
 
       - name: Create and populate .env file
         env:
-          DATAVERSE_BACKEND_URL: 'https://localhost'
+          DATAVERSE_BACKEND_URL: 'http://localhost:8000'
           OIDC_CLIENT_ID: 'test'
-          OIDC_AUTHORIZATION_ENDPOINT: 'https://localhost/realms/test/protocol/openid-connect/auth'
-          OIDC_TOKEN_ENDPOINT: 'https://localhost/realms/test/protocol/openid-connect/token'
-          OIDC_LOGOUT_ENDPOINT: 'https://localhost/realms/test/protocol/openid-connect/logout'
+          OIDC_AUTHORIZATION_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/auth'
+          OIDC_TOKEN_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/token'
+          OIDC_LOGOUT_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/logout'
           OIDC_STORAGE_KEY_PREFIX: 'DV_'
         run: |
           touch .env
@@ -115,11 +115,11 @@ jobs:
 
       - name: Create and populate .env file
         env:
-          DATAVERSE_BACKEND_URL: 'https://localhost'
+          DATAVERSE_BACKEND_URL: 'http://localhost:8000'
           OIDC_CLIENT_ID: 'test'
-          OIDC_AUTHORIZATION_ENDPOINT: 'https://localhost/realms/test/protocol/openid-connect/auth'
-          OIDC_TOKEN_ENDPOINT: 'https://localhost/realms/test/protocol/openid-connect/token'
-          OIDC_LOGOUT_ENDPOINT: 'https://localhost/realms/test/protocol/openid-connect/logout'
+          OIDC_AUTHORIZATION_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/auth'
+          OIDC_TOKEN_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/token'
+          OIDC_LOGOUT_ENDPOINT: 'http://localhost:8000/realms/test/protocol/openid-connect/logout'
           OIDC_STORAGE_KEY_PREFIX: 'DV_'
         run: |
           touch .env

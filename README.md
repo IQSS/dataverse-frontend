@@ -363,8 +363,8 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 [dv_app_localhost_build_url]: http://localhost:5173
 [dv_app_localhost_storybook_url]: http://localhost:6006/
 [dv_app_localhost_designsystem_url]: http://localhost:6007/
-[dv_app_localhost_spa_url]: https://localhost/spa
-[dv_app_localhost_legacy_url]: https://localhost
+[dv_app_localhost_spa_url]: http://localhost:8000/spa
+[dv_app_localhost_legacy_url]: http://localhost:8000
 
 <!-- @gdcc/dataverse -->
 
