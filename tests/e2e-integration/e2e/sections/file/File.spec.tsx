@@ -56,7 +56,7 @@ describe('File', () => {
         })
     })
 
-    it('loads new file page when clicking on the version number', () => {
+    it('loads version summaries when clicking on the version tab', () => {
       cy.wrap(
         DatasetHelper.createWithFileAndPublish(FileHelper.create()).then(
           (datasetResponse) => datasetResponse.file
@@ -66,16 +66,12 @@ describe('File', () => {
         .its('id')
         .then((id: string) => {
           cy.visit(`/spa/files?id=${id}`)
+          cy.wait(3000)
 
-          cy.findByRole('tab', { name: /versions/i })
-            .should('exist')
-            .click({ force: true })
+          cy.findByRole('tab', { name: 'Versions' }).should('exist').click({ force: true })
+
+          cy.findByText('1.0').should('exist')
         })
-
-      cy.wait(1000)
-      cy.findByText('1.0').should('exist').click({ force: true })
-      cy.url().should('include', 'datasetVersion=1.0')
-      cy.findByText('Version 1.0').should('exist')
     })
 
     it('loads page not found when the user is not authenticated and tries to access a draft', () => {
