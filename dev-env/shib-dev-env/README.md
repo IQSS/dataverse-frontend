@@ -14,6 +14,10 @@ To use this environment, follow these steps:
 
 1. Replace the `.env` file at the project root with the contents of `.env.example.shib`.
 2. Fill in the `.env` variables inside the `shib-dev-env/` folder, similarly to how it's done in the standard `dev-env/` folder.
+3. To run the environment, use the `run-env.sh` script with the Dataverse backend image tag as a parameter. For example:
+
+   ```bash
+   ./run-env.sh unstable
 
 Ensure that all required environment variables are correctly set before launching the environment.
 
