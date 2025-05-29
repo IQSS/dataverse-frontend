@@ -31,3 +31,9 @@ Use this setup **only if** your work involves:
 - Extending Keycloak's SAML capabilities.
 
 For all other development and testing, please use the regular `dev-env`.
+
+## Demo
+
+A demonstration of the enhanced authentication flow integrating Shibboleth and LDAP is available in the following video:
+
+👉 [Watch the demo video](https://github.com/user-attachments/assets/4e700593-2356-472e-843d-4e2775ff7314)
