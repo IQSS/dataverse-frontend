@@ -89,6 +89,50 @@ export class CollectionItemsMother {
             count: 4
           }
         ]
+      },
+      {
+        name: 'publicationDate',
+        friendlyName: 'Publication Year',
+        labels: [
+          {
+            name: '2025',
+            count: 27
+          },
+          {
+            name: '2023',
+            count: 28
+          },
+          {
+            name: '2024',
+            count: 25
+          },
+          {
+            name: '2022',
+            count: 34
+          }
+        ]
+      },
+      {
+        name: 'dateOfDeposit',
+        friendlyName: 'Date of Deposit',
+        labels: [
+          {
+            name: '2025',
+            count: 1
+          },
+          {
+            name: '2024',
+            count: 4
+          },
+          {
+            name: '2023',
+            count: 2
+          },
+          {
+            name: '2022',
+            count: 7
+          }
+        ]
       }
     ]
   }
