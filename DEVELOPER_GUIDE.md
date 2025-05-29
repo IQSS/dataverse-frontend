@@ -1122,7 +1122,7 @@ The Design System is published to the npm Package Registry. To publish a new ver
 [dv_app_localhost_storybook_url]: http://localhost:6006/
 [dv_app_localhost_designsystem_url]: http://localhost:6007/
 [dv_app_localhost_spa_url]: http://localhost:8000/spa
-[dv_app_localhost_legacy_url]: http://localhost:8000
+[dv_app_localhost_legacy_url]: http://localhost:8000/
 
 <!-- @gdcc/dataverse -->
 
