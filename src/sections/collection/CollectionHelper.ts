@@ -36,9 +36,13 @@ export class CollectionHelper {
           .filter((decodedFilter) => /^[^:]+:[^:]+$/.test(decodedFilter)) as FilterQuery[])
       : undefined
 
-    const sortQuery = (searchParams.get(CollectionItemsQueryParams.SORT) as SortType) ?? undefined
+    // If we don't have a sort query parameter, we default to RELEVANCE if there is a search query or DATE otherwise.
+    const sortQuery =
+      (searchParams.get(CollectionItemsQueryParams.SORT) as SortType) ??
+      (searchQuery && searchQuery.length > 0 ? SortType.SCORE : SortType.DATE)
+
     const orderQuery =
-      (searchParams.get(CollectionItemsQueryParams.ORDER) as OrderType) ?? undefined
+      (searchParams.get(CollectionItemsQueryParams.ORDER) as OrderType) ?? OrderType.DESC
 
     return { pageQuery, searchQuery, typesQuery, filtersQuery, sortQuery, orderQuery }
   }
