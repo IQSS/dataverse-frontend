@@ -12,11 +12,6 @@
   border-radius: 4px;
 }
 
-.thumbnail-and-info-wrapper {
-  display: flex;
-  gap: 1rem;
-}
-
 .card-header-container {
   display: flex;
   gap: 1rem;
@@ -68,48 +63,45 @@
   }
 }
 
-.card-info-container {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-self: flex-start;
-  width: 100%;
+.release-or-create-date {
+  color: $dv-subtext-color;
   font-size: $dv-font-size-sm;
+}
 
-  .date {
-    color: $dv-subtext-color;
+.citation-box {
+  display: -webkit-box;
+  padding: 4px;
+  overflow: hidden;
+  font-size: $dv-font-size-sm;
+  background-color: color.adjust($dv-primary-color, $lightness: 51%);
+  border: solid 1px color.adjust($dv-primary-color, $lightness: 20%);
+  border-radius: 4px;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+
+  a {
+    word-break: break-all;
   }
 
-  .citation-box {
-    display: -webkit-box;
-    padding: 4px;
-    overflow: hidden;
-    background-color: color.adjust($dv-primary-color, $lightness: 51%);
-    border-radius: 4px;
-    -webkit-line-clamp: 5;
-    line-clamp: 5;
-    -webkit-box-orient: vertical;
-
-    a {
-      word-break: break-all;
-    }
-
-    &.deaccesioned {
-      background-color: color.adjust($dv-danger-box-color, $lightness: 6%);
-    }
-
-    & > div {
-      margin-bottom: 0;
-    }
+  &.deaccesioned {
+    background-color: color.adjust($dv-danger-box-color, $lightness: 6%);
+    border: solid 1px color.adjust($dv-danger-color, $lightness: 20%);
   }
 
-  .description {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    width: 100%;
-    overflow: hidden;
-    color: #000;
+  & > div {
+    margin-bottom: 0;
   }
+}
+
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: #000;
+  font-size: $dv-font-size-sm;
 }

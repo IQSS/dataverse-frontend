@@ -57,7 +57,8 @@ export class DatasetItemTypePreviewMother {
   static createDraft(): DatasetItemTypePreview {
     return this.create({
       version: DatasetVersionMother.createDraft(),
-      publicationStatuses: [PublicationStatus.Draft]
+      publicationStatuses: [PublicationStatus.Draft],
+      thumbnail: undefined
     })
   }
 

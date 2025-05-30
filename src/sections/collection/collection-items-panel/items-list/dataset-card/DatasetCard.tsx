@@ -1,7 +1,6 @@
 import { DatasetItemTypePreview } from '@/dataset/domain/models/DatasetItemTypePreview'
 import { DatasetCardHeader } from './DatasetCardHeader'
-import { DatasetCardThumbnail } from './DatasetCardThumbnail'
-import { DatasetCardInfo } from './DatasetCardInfo'
+import { DatasetCardBody } from './DatasetCardBody'
 import styles from './DatasetCard.module.scss'
 
 interface DatasetCardProps {
@@ -16,18 +15,7 @@ export function DatasetCard({ datasetPreview }: DatasetCardProps) {
         version={datasetPreview.version}
         userRoles={datasetPreview.userRoles}
       />
-      <div className={styles['thumbnail-and-info-wrapper']}>
-        <DatasetCardThumbnail
-          persistentId={datasetPreview.persistentId}
-          version={datasetPreview.version}
-          thumbnail={datasetPreview.thumbnail}
-        />
-        <DatasetCardInfo
-          version={datasetPreview.version}
-          releaseOrCreateDate={datasetPreview.releaseOrCreateDate}
-          description={datasetPreview.description}
-        />
-      </div>
+      <DatasetCardBody datasetPreview={datasetPreview} />
     </article>
   )
 }
