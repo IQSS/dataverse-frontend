@@ -250,7 +250,8 @@
     "viewDetails": "View Details",
     "replace": "File Replace",
     "termsOfUseandAccess": "Terms of Use/Access",
-    "deaccessionedReason": "Deaccessioned Reason"
+    "deaccessionedReason": "Deaccessioned Reason",
+    "error": "Error on loading dataset versions"
   },
   "getDatasetVersionDiffError": "Error Fetching Dataset Version Differences",
   "datasetVersionSummary": {

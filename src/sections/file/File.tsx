@@ -131,6 +131,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                   fileId={file.id}
                   datasetVersionNumber={datasetVersionNumber}
                   fileRepository={repository}
+                  canEditOwnerDataset={file.permissions.canEditOwnerDataset}
                   isInView={activeTab === 'fileVersion'}
                 />
               </div>

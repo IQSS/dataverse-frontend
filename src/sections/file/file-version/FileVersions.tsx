@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { FileDifferenceSummary } from '@/files/domain/models/FileVersionSummaryInfo'
 import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
-import { Table, Button } from '@iqss/dataverse-design-system'
+import { Table, Alert } from '@iqss/dataverse-design-system'
 import { useFileVersionSummaryDescription } from './useFileVersionSummaryDescription'
 import {
   DatasetNonNumericVersion,
@@ -13,13 +13,14 @@ import {
 import { useGetFileVersionsSummaries } from './useGetFileVersionsSummaries'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import styles from './FileVersion.module.scss'
 import { useEffect } from 'react'
+import styles from './FileVersion.module.scss'
 
 interface FileVersionProps {
   fileId: number
   datasetVersionNumber: string | undefined
   fileRepository: FileRepository
+  canEditOwnerDataset: boolean
   isInView: boolean
 }
 
@@ -27,12 +28,12 @@ export function FileVersions({
   fileId,
   datasetVersionNumber,
   fileRepository,
+  canEditOwnerDataset,
   isInView
 }: FileVersionProps) {
-  const navigate = useNavigate()
   const { t } = useTranslation('file')
 
-  const { fileVersionSummaries, isLoading, fetchSummaries } = useGetFileVersionsSummaries({
+  const { fileVersionSummaries, isLoading, fetchSummaries, error } = useGetFileVersionsSummaries({
     fileRepository,
     fileId,
     autoFetch: false
@@ -48,6 +49,10 @@ export function FileVersions({
     return <FileVersionsLoadingSkeleton />
   }
 
+  if (error) {
+    return <Alert variant="danger">{t('fileVersion.error')}</Alert>
+  }
+
   const datasetVersionDisplayMap: Record<string, string> = {
     [DatasetNonNumericVersion.DRAFT]: DatasetNonNumericVersionSearchParam.DRAFT
   }
@@ -55,13 +60,6 @@ export function FileVersions({
     typeof datasetVersionNumber === 'string' && datasetVersionDisplayMap[datasetVersionNumber]
       ? datasetVersionDisplayMap[datasetVersionNumber]
       : datasetVersionNumber
-
-  const navigateToVersion = (versionNumber: string) => {
-    const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.FILE_ID, String(fileId))
-    searchParams.set(QueryParamKey.DATASET_VERSION, versionNumber)
-    navigate(`${Route.FILES}?${searchParams.toString()}`)
-  }
 
   return (
     <div data-testid={`file-file`} className={styles['file-versions-table']}>
@@ -80,18 +78,16 @@ export function FileVersions({
               <td style={{ verticalAlign: 'middle' }}>
                 {fileVersion.datasetVersion === displayVersion ? (
                   <strong>{fileVersion.datasetVersion}</strong>
-                ) : (
-                  <Button
-                    variant="link"
-                    onClick={() => navigateToVersion(fileVersion.datasetVersion)}
-                    dataset-testid={`file-version-button-${fileVersion.datasetVersion}`}
-                    disabled={
-                      !fileVersion.fileDifferenceSummary ||
-                      fileVersion.datasetVersion === displayVersion ||
-                      fileVersion.versionState === DatasetVersionState.DEACCESSIONED
-                    }>
+                ) : fileVersion.versionState == DatasetVersionState.RELEASED ||
+                  fileVersion.versionState == DatasetVersionState.DEACCESSIONED ||
+                  (fileVersion.versionState == DatasetVersionState.DRAFT && canEditOwnerDataset) ? (
+                  <Link
+                    to={`${Route.FILES}?${QueryParamKey.FILE_ID}=${fileId}&${QueryParamKey.DATASET_VERSION}=${fileVersion.datasetVersion}`}
+                    data-testid={`file-version-link-${fileVersion.datasetVersion}`}>
                     {fileVersion.datasetVersion}
-                  </Button>
+                  </Link>
+                ) : (
+                  <span>{fileVersion.datasetVersion}</span>
                 )}
               </td>
 

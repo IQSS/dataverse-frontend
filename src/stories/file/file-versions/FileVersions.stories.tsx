@@ -21,6 +21,7 @@ export const Default: Story = {
       fileId={4}
       datasetVersionNumber={'2.0'}
       fileRepository={new FileMockRepository()}
+      canEditOwnerDataset={true}
       isInView={true}
     />
   )

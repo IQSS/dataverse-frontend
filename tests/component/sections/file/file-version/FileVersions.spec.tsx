@@ -14,6 +14,7 @@ describe('FileVersions', () => {
         fileId={1}
         datasetVersionNumber={'2.0'}
         fileRepository={fileRepository}
+        canEditOwnerDataset={true}
         isInView
       />
     )
@@ -24,7 +25,7 @@ describe('FileVersions', () => {
     cy.contains('Published On').should('exist')
 
     cy.get('strong').contains('2.0')
-    cy.get('button').contains('1.0')
+    cy.findByTestId('file-version-link-1.0').should('exist')
 
     cy.contains('File Added')
     cy.contains('Unrestricted')
@@ -33,7 +34,7 @@ describe('FileVersions', () => {
     cy.contains('1 Deleted')
   })
 
-  it('disables the button for deaccessioned versions', () => {
+  it('should show the link button for deaccessioned versions', () => {
     const deaccessionedFile = [
       {
         ...fileVersionSummaries[0],
@@ -47,35 +48,34 @@ describe('FileVersions', () => {
         fileId={1}
         datasetVersionNumber={'2.0'}
         fileRepository={fileRepository}
+        canEditOwnerDataset={true}
         isInView
       />
     )
 
-    cy.get('button').should('be.disabled')
+    cy.findByTestId('file-version-link-1.2').should('exist')
   })
 
-  it('disables the button when fileDifferenceSummary is missing and shows correct message', () => {
-    const noSummaryFile = [
+  it('disables the link button for draft version without permission', () => {
+    const draftFile = [
       {
         ...fileVersionSummaries[0],
-        datasetVersion: '1.3',
-        fileDifferenceSummary: undefined,
-        versionState: DatasetVersionState.RELEASED
+        datasetVersion: 'DRAFT',
+        versionState: DatasetVersionState.DRAFT
       }
     ]
-
-    fileRepository.getFileVersionSummaries = cy.stub().resolves(noSummaryFile)
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(draftFile)
     cy.customMount(
       <FileVersions
         fileId={1}
         datasetVersionNumber={'2.0'}
         fileRepository={fileRepository}
+        canEditOwnerDataset={false}
         isInView
       />
     )
 
-    cy.get('button').contains('1.3').should('be.disabled')
-    cy.findAllByText('No changes associated with this version.').should('exist')
+    cy.get('span').contains('DRAFT').should('exist')
   })
 
   it('the version number should be disable and bold if it is the current version', () => {
@@ -87,6 +87,7 @@ describe('FileVersions', () => {
         fileId={1}
         datasetVersionNumber={'2.0'}
         fileRepository={fileRepository}
+        canEditOwnerDataset={true}
         isInView
       />
     )
