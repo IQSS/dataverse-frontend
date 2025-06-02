@@ -1,4 +1,4 @@
-import { Badge, Icon, IconName } from '@iqss/dataverse-design-system'
+import { Badge, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
 import { Route } from '@/sections/Route.enum'
 import { CollectionItemTypePreview } from '@/collection/domain/models/CollectionItemTypePreview'
 import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
@@ -22,17 +22,20 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
         {collectionPreview.affiliation && (
           <p className={styles.affiliation}>({collectionPreview.affiliation})</p>
         )}
-        {!collectionPreview.isReleased && (
-          <div>
-            <Badge variant="warning">Unpublished</Badge>
-          </div>
-        )}
-        {collectionPreview.userRoles &&
-          collectionPreview.userRoles.map((role, index) => (
-            <div key={index}>
-              <Badge variant="success">{role}</Badge>
-            </div>
-          ))}
+
+        <Stack direction="horizontal" gap={1} className="flex-wrap">
+          {!collectionPreview.isReleased && <Badge variant="warning">Unpublished</Badge>}
+
+          {collectionPreview.userRoles && (
+            <Stack direction="horizontal" gap={1} className="flex-wrap">
+              {collectionPreview.userRoles.map((role, index) => (
+                <Badge key={index} variant="info">
+                  {role}
+                </Badge>
+              ))}
+            </Stack>
+          )}
+        </Stack>
       </div>
 
       <div className={styles['top-right-icon']}>
