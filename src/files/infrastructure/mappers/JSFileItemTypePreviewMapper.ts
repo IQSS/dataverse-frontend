@@ -39,7 +39,8 @@ export class JSFileItemTypePreviewMapper {
       variables: jsFilePreview.variables,
       observations: jsFilePreview.observations,
       restricted: jsFilePreview.restricted,
-      canDownloadFile: jsFilePreview.canDownloadFile
+      canDownloadFile: jsFilePreview.canDownloadFile,
+      userRoles: jsFilePreview.userRoles
     }
   }
 }

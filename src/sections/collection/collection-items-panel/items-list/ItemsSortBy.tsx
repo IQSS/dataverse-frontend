@@ -1,10 +1,10 @@
 import { ArrowDownUp } from 'react-bootstrap-icons'
-import styles from './ItemsList.module.scss'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
 import { SortType } from '@/collection/domain/models/CollectionSearchCriteria'
 import { OrderType } from '@/collection/domain/models/CollectionSearchCriteria'
+import styles from './ItemsList.module.scss'
 
 export enum SortOption {
   NAME_ASC = 'nameAsc',
@@ -31,14 +31,14 @@ export function ItemsSortBy({
 }: ItemsSortByProps) {
   const { t } = useTranslation('collection')
   const [selectedOption, setSelectedOption] = useState<SortOption>(
-    convertToSortOption(currentSortType, currentSortOrder, hasSearchValue)
+    convertToSortOption(currentSortType, currentSortOrder)
   )
   useEffect(() => {
-    const newSortOption = convertToSortOption(currentSortType, currentSortOrder, hasSearchValue)
+    const newSortOption = convertToSortOption(currentSortType, currentSortOrder)
     if (newSortOption !== selectedOption) {
       setSelectedOption(newSortOption)
     }
-  }, [currentSortType, currentSortOrder, hasSearchValue, selectedOption])
+  }, [currentSortType, currentSortOrder, selectedOption])
 
   const handleSortChange = (eventKey: string | null) => {
     const newSortOption = eventKey as SortOption
@@ -75,22 +75,18 @@ export function ItemsSortBy({
     </DropdownButton>
   )
 }
-function convertToSortOption(
-  sortType?: SortType,
-  orderType?: OrderType,
-  hasSearchValue?: boolean
-): SortOption {
-  let sortOption: SortOption
+function convertToSortOption(sortType?: SortType, orderType?: OrderType): SortOption {
   if (sortType === SortType.NAME) {
-    sortOption = orderType === OrderType.ASC ? SortOption.NAME_ASC : SortOption.NAME_DESC
-  } else if (sortType === SortType.DATE) {
-    sortOption = orderType === OrderType.ASC ? SortOption.DATE_ASC : SortOption.DATE_DESC
-  } else if (hasSearchValue) {
-    sortOption = SortOption.RELEVANCE
-  } else {
-    sortOption = SortOption.DATE_DESC
+    return orderType === OrderType.ASC ? SortOption.NAME_ASC : SortOption.NAME_DESC
   }
-  return sortOption
+  if (sortType === SortType.DATE) {
+    return orderType === OrderType.ASC ? SortOption.DATE_ASC : SortOption.DATE_DESC
+  }
+  if (sortType === SortType.SCORE) {
+    return SortOption.RELEVANCE
+  }
+
+  return SortOption.NAME_DESC
 }
 function convertFromSortOption(sortOption: SortOption): {
   sortType?: SortType
@@ -106,6 +102,6 @@ function convertFromSortOption(sortOption: SortOption): {
     case SortOption.DATE_DESC:
       return { sortType: SortType.DATE, orderType: OrderType.DESC }
     case SortOption.RELEVANCE:
-      return { sortType: undefined, orderType: undefined }
+      return { sortType: SortType.SCORE, orderType: OrderType.DESC }
   }
 }

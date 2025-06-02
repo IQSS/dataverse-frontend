@@ -32,6 +32,13 @@
     gap: 8px;
   }
 
+  .title-and-labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
   .top-right-icon {
     height: fit-content;
     font-size: 1.3em;

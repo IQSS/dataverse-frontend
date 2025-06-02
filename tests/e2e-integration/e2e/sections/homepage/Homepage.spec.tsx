@@ -8,10 +8,8 @@ describe('Homepage', () => {
     cy.get('[aria-label="Search"]').type(searchValue)
     cy.get('[aria-label="Submit Search"]').click()
 
-    const encodedSearchValue = encodeURIComponent(searchValue)
-
     const searchParams = new URLSearchParams()
-    searchParams.set(CollectionItemsQueryParams.QUERY, encodedSearchValue)
+    searchParams.set(CollectionItemsQueryParams.QUERY, searchValue)
     searchParams.set(
       CollectionItemsQueryParams.TYPES,
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(',')

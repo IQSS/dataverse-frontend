@@ -30,7 +30,7 @@ export class FileItemTypePreviewMother {
       datasetPersistentId: faker.datatype.uuid(),
       datasetCitation: faker.lorem.paragraph(),
       publicationStatuses: [PublicationStatus.Published],
-      releaseOrCreateDate: faker.date.past(),
+      releaseOrCreateDate: FakerHelper.pastDate(),
       tags: [
         FileLabelMother.create({ type: FileLabelType.TAG }),
         FileLabelMother.create({ type: FileLabelType.CATEGORY })
@@ -43,12 +43,24 @@ export class FileItemTypePreviewMother {
     }
   }
 
-  static createMany(amount: number, props?: Partial<FileItemTypePreview>): FileItemTypePreview[] {
-    return Array.from({ length: amount }).map(() => this.create(props))
+  static createMany(
+    amount: number,
+    includeUserRoles = false,
+    props?: Partial<FileItemTypePreview>
+  ): FileItemTypePreview[] {
+    return Array.from({ length: amount }).map(() =>
+      this.create({
+        ...props,
+        userRoles: includeUserRoles
+          ? faker.helpers.arrayElements(['Admin', 'Curator', 'Contributor', 'Editor'])
+          : props?.userRoles
+      })
+    )
   }
 
   static createRealistic(props?: Partial<FileItemTypePreview>): FileItemTypePreview {
     return this.create({
+      type: CollectionItemType.FILE,
       id: 2,
       name: 'test file',
       persistentId: 'test pid2',
@@ -72,19 +84,11 @@ export class FileItemTypePreviewMother {
       releaseOrCreateDate: new Date('2023-05-15T08:21:01Z'),
       restricted: false,
       canDownloadFile: true,
+      tags: [
+        { type: FileLabelType.TAG, value: 'Tag 1' },
+        { type: FileLabelType.CATEGORY, value: 'Category 1' }
+      ],
       ...props
-    })
-  }
-
-  static createWithDraft(): FileItemTypePreview {
-    return this.create({
-      publicationStatuses: [PublicationStatus.Draft]
-    })
-  }
-
-  static createUnpublishedWithDraft(): FileItemTypePreview {
-    return this.create({
-      publicationStatuses: [PublicationStatus.Draft, PublicationStatus.Unpublished]
     })
   }
 }

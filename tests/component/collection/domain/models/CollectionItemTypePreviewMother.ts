@@ -10,7 +10,7 @@ export class CollectionItemTypePreviewMother {
       alias: faker.datatype.string(10),
       name: faker.lorem.words(3),
       isReleased: faker.datatype.boolean(),
-      releaseOrCreateDate: faker.date.recent(),
+      releaseOrCreateDate: FakerHelper.pastDate(),
       parentCollectionAlias: faker.datatype.string(10),
       parentCollectionName: faker.lorem.words(3),
       description: faker.datatype.boolean()
@@ -23,11 +23,18 @@ export class CollectionItemTypePreviewMother {
 
   static createMany(
     amount: number,
+    includeUserRoles = false,
     props?: Partial<CollectionItemTypePreview>
   ): CollectionItemTypePreview[] {
-    return Array.from({ length: amount }).map(() => this.create(props))
+    return Array.from({ length: amount }).map(() =>
+      this.create({
+        ...props,
+        userRoles: includeUserRoles
+          ? faker.helpers.arrayElements(['Admin', 'Curator', 'Contributor', 'FileUploader'])
+          : props?.userRoles
+      })
+    )
   }
-
   static createRealistic(): CollectionItemTypePreview {
     return CollectionItemTypePreviewMother.create({
       isReleased: true,
@@ -37,7 +44,9 @@ export class CollectionItemTypePreviewMother {
       parentCollectionAlias: 'parent-alias',
       parentCollectionName: 'University Parent Collection',
       description: 'We do all the science.',
-      affiliation: 'Scientific Research University'
+      affiliation: 'Scientific Research University',
+      thumbnail: undefined,
+      type: CollectionItemType.COLLECTION
     })
   }
 

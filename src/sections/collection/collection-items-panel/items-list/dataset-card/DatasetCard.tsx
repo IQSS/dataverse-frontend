@@ -14,6 +14,7 @@ export function DatasetCard({ datasetPreview }: DatasetCardProps) {
       <DatasetCardHeader
         persistentId={datasetPreview.persistentId}
         version={datasetPreview.version}
+        userRoles={datasetPreview.userRoles}
       />
       <div className={styles['thumbnail-and-info-wrapper']}>
         <DatasetCardThumbnail

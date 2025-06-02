@@ -495,6 +495,7 @@ describe('DatasetFilesScrollable', () => {
           expect(count).to.be.gte(10)
         })
       cy.findByTestId('header-checkbox').should('be.visible').uncheck({ force: true })
+      cy.wait(300)
       cy.findByText('10 files are currently selected.').should('not.exist')
     })
 

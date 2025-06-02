@@ -7,6 +7,7 @@ describe('SearchPanel', () => {
     const SEARCH_VALUE = 'some search'
     cy.customMount(
       <SearchPanel
+        placeholderText={'Search this collection...'}
         onSubmitSearch={onSubmitSearch}
         isLoadingCollectionItems={false}
         currentSearchValue={SEARCH_VALUE}
@@ -18,7 +19,13 @@ describe('SearchPanel', () => {
 
   it('search submit button is disabled while loading items', () => {
     const onSubmitSearch = cy.stub().as('onSubmitSearch')
-    cy.customMount(<SearchPanel onSubmitSearch={onSubmitSearch} isLoadingCollectionItems={true} />)
+    cy.customMount(
+      <SearchPanel
+        placeholderText={'Search this collection...'}
+        onSubmitSearch={onSubmitSearch}
+        isLoadingCollectionItems={true}
+      />
+    )
 
     cy.findByLabelText(/Search submit/)
       .should('exist')
@@ -27,7 +34,13 @@ describe('SearchPanel', () => {
 
   it('updates the search value while typing something', () => {
     const onSubmitSearch = cy.stub().as('onSubmitSearch')
-    cy.customMount(<SearchPanel onSubmitSearch={onSubmitSearch} isLoadingCollectionItems={false} />)
+    cy.customMount(
+      <SearchPanel
+        placeholderText={'Search this collection...'}
+        onSubmitSearch={onSubmitSearch}
+        isLoadingCollectionItems={false}
+      />
+    )
 
     cy.findByPlaceholderText('Search this collection...').type('John Doe')
 
@@ -37,13 +50,18 @@ describe('SearchPanel', () => {
   it('submits the search value whit the correct argument', () => {
     const onSubmitSearch = cy.stub().as('onSubmitSearch')
     const SEARCH_VALUE = 'John Doe'
-    const expectedCallWithValue = encodeURIComponent(SEARCH_VALUE)
 
-    cy.customMount(<SearchPanel onSubmitSearch={onSubmitSearch} isLoadingCollectionItems={false} />)
+    cy.customMount(
+      <SearchPanel
+        placeholderText={'Search this collection...'}
+        onSubmitSearch={onSubmitSearch}
+        isLoadingCollectionItems={false}
+      />
+    )
 
     cy.findByPlaceholderText('Search this collection...').type(SEARCH_VALUE)
     cy.findByRole('button', { name: /Search submit/ }).click()
 
-    cy.wrap(onSubmitSearch).should('have.been.calledWith', expectedCallWithValue)
+    cy.wrap(onSubmitSearch).should('have.been.calledWith', SEARCH_VALUE)
   })
 })

@@ -31,6 +31,13 @@
     }
   }
 
+  .title-and-labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
   .top-right-icon {
     height: fit-content;
     color: $dv-collection-border-color;

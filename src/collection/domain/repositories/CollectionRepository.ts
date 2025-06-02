@@ -20,6 +20,15 @@ export interface CollectionRepository {
     paginationInfo: CollectionItemsPaginationInfo,
     searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset>
+  getMyDataItems(
+    roleIds: number[],
+    collectionItemTypes: string[],
+    publicationStatuses: string[],
+    limit?: number,
+    selectedPage?: number,
+    searchText?: string,
+    otherUserName?: string
+  ): Promise<CollectionItemSubset>
   edit(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void>
   getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]>
   updateFeaturedItems(
