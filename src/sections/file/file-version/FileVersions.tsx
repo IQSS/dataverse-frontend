@@ -73,36 +73,42 @@ export function FileVersions({
           </tr>
         </thead>
         <tbody>
-          {fileVersionSummaries?.map((fileVersion) => (
-            <tr key={fileVersion.datasetVersion}>
-              <td style={{ verticalAlign: 'middle' }}>
-                {fileVersion.datasetVersion === displayVersion ? (
-                  <strong>{fileVersion.datasetVersion}</strong>
-                ) : fileVersion.versionState == DatasetVersionState.RELEASED ||
-                  fileVersion.versionState == DatasetVersionState.DEACCESSIONED ||
-                  (fileVersion.versionState == DatasetVersionState.DRAFT && canEditOwnerDataset) ? (
-                  <Link
-                    to={`${Route.FILES}?${QueryParamKey.FILE_ID}=${fileId}&${QueryParamKey.DATASET_VERSION}=${fileVersion.datasetVersion}`}
-                    data-testid={`file-version-link-${fileVersion.datasetVersion}`}>
-                    {fileVersion.datasetVersion}
-                  </Link>
-                ) : (
-                  <span>{fileVersion.datasetVersion}</span>
-                )}
-              </td>
+          {fileVersionSummaries?.map((fileVersion) => {
+            const isCurrentVersion = fileVersion.datasetVersion === displayVersion
+            const isLinkable =
+              fileVersion.versionState === DatasetVersionState.RELEASED ||
+              fileVersion.versionState === DatasetVersionState.DEACCESSIONED ||
+              (fileVersion.versionState === DatasetVersionState.DRAFT && canEditOwnerDataset)
 
-              <td style={{ textAlign: 'left' }}>
-                <SummaryDescription summary={fileVersion.fileDifferenceSummary} />
-              </td>
-              <td>{fileVersion.contributors}</td>
-              {fileVersion.publishedDate &&
-              fileVersion.datasetVersion !== DatasetVersionState.DRAFT ? (
-                <td>{DateHelper.toISO8601Format(new Date(fileVersion.publishedDate))}</td>
-              ) : (
-                <td></td>
-              )}
-            </tr>
-          ))}
+            return (
+              <tr key={fileVersion.datasetVersion}>
+                <td style={{ verticalAlign: 'middle' }}>
+                  {isCurrentVersion ? (
+                    <strong>{fileVersion.datasetVersion}</strong>
+                  ) : isLinkable ? (
+                    <Link
+                      to={`${Route.FILES}?${QueryParamKey.FILE_ID}=${fileId}&${QueryParamKey.DATASET_VERSION}=${fileVersion.datasetVersion}`}
+                      data-testid={`file-version-link-${fileVersion.datasetVersion}`}>
+                      {fileVersion.datasetVersion}
+                    </Link>
+                  ) : (
+                    <span>{fileVersion.datasetVersion}</span>
+                  )}
+                </td>
+
+                <td style={{ textAlign: 'left' }}>
+                  <SummaryDescription summary={fileVersion.fileDifferenceSummary} />
+                </td>
+                <td>{fileVersion.contributors}</td>
+                {fileVersion.publishedDate &&
+                fileVersion.datasetVersion !== DatasetVersionState.DRAFT ? (
+                  <td>{DateHelper.toISO8601Format(new Date(fileVersion.publishedDate))}</td>
+                ) : (
+                  <td></td>
+                )}
+              </tr>
+            )
+          })}
         </tbody>
       </Table>
     </div>

@@ -2,6 +2,7 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { FileVersions } from '../../../../../src/sections/file/file-version/FileVersions'
 import { FileMother } from '../../../files/domain/models/FileMother'
 import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
 
 const fileVersionSummaries = FileMother.createFileVersionSummary()
 const fileRepository: FileRepository = {} as FileRepository
@@ -25,7 +26,12 @@ describe('FileVersions', () => {
     cy.contains('Published On').should('exist')
 
     cy.get('strong').contains('2.0')
-    cy.findByTestId('file-version-link-1.0').should('exist')
+    cy.findByTestId('file-version-link-1.0')
+      .should('have.attr', 'href')
+      .and(
+        'include',
+        `${Route.FILES}?${QueryParamKey.FILE_ID}=1&${QueryParamKey.DATASET_VERSION}=1.0`
+      )
 
     cy.contains('File Added')
     cy.contains('Unrestricted')
@@ -53,7 +59,12 @@ describe('FileVersions', () => {
       />
     )
 
-    cy.findByTestId('file-version-link-1.2').should('exist')
+    cy.findByTestId('file-version-link-1.2')
+      .should('have.attr', 'href')
+      .and(
+        'include',
+        `${Route.FILES}?${QueryParamKey.FILE_ID}=1&${QueryParamKey.DATASET_VERSION}=1.2`
+      )
   })
 
   it('disables the link button for draft version without permission', () => {
