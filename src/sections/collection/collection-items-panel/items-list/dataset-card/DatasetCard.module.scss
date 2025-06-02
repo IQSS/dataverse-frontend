@@ -71,6 +71,10 @@
     color: $dv-subtext-color;
   }
 
+  .link-to-collection-wrapper a {
+    @include link-hover-underlined;
+  }
+
   .citation-box {
     display: -webkit-box;
     padding: 4px;

@@ -5,9 +5,10 @@ import styles from './DatasetCard.module.scss'
 
 interface DatasetCardProps {
   datasetPreview: DatasetItemTypePreview
+  parentCollectionAlias?: string
 }
 
-export function DatasetCard({ datasetPreview }: DatasetCardProps) {
+export function DatasetCard({ datasetPreview, parentCollectionAlias }: DatasetCardProps) {
   return (
     <article className={styles['card-main-container']} data-testid="dataset-card">
       <DatasetCardHeader
@@ -16,7 +17,10 @@ export function DatasetCard({ datasetPreview }: DatasetCardProps) {
         userRoles={datasetPreview.userRoles}
         publicationStatuses={datasetPreview.publicationStatuses}
       />
-      <DatasetCardBody datasetPreview={datasetPreview} />
+      <DatasetCardBody
+        datasetPreview={datasetPreview}
+        parentCollectionAlias={parentCollectionAlias}
+      />
     </article>
   )
 }
