@@ -12,16 +12,18 @@ interface CollectionCardHeaderProps {
 export function CollectionCardHeader({ collectionPreview }: CollectionCardHeaderProps) {
   return (
     <header className={styles['card-header-container']}>
-      <div className={styles['left-side-content']}>
-        <LinkToPage
-          type={DvObjectType.COLLECTION}
-          page={Route.COLLECTIONS}
-          searchParams={{ id: collectionPreview.alias.toString() }}>
-          {collectionPreview.name}
-        </LinkToPage>
-        {collectionPreview.affiliation && (
-          <p className={styles.affiliation}>({collectionPreview.affiliation})</p>
-        )}
+      <Stack direction="horizontal" gap={2} className="flex-wrap">
+        <span>
+          <LinkToPage
+            type={DvObjectType.COLLECTION}
+            page={Route.COLLECTIONS}
+            searchParams={{ id: collectionPreview.alias.toString() }}>
+            {collectionPreview.name}
+          </LinkToPage>
+          {collectionPreview.affiliation && (
+            <span className={styles.affiliation}>({collectionPreview.affiliation})</span>
+          )}
+        </span>
 
         <Stack direction="horizontal" gap={1} className="flex-wrap">
           {!collectionPreview.isReleased && <Badge variant="warning">Unpublished</Badge>}
@@ -36,7 +38,7 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
             </Stack>
           )}
         </Stack>
-      </div>
+      </Stack>
 
       <div className={styles['top-right-icon']}>
         <Icon name={IconName.COLLECTION} />

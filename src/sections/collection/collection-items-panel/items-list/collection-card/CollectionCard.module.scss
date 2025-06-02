@@ -20,15 +20,9 @@
     @include link-hover-underlined;
   }
 
-  .left-side-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-
-    .affiliation {
-      margin: 0;
-      color: $dv-subtext-color;
-    }
+  .affiliation {
+    margin-left: 6px;
+    color: $dv-subtext-color;
   }
 
   .title-and-labels {
