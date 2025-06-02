@@ -16,7 +16,7 @@ export const DatasetCardBody = ({ datasetPreview }: DatasetCardBodyProps) => {
 
   return (
     <Stack direction="vertical" gap={2} className={styles['card-body-container']}>
-      <Stack direction="horizontal" gap={3}>
+      <Stack direction="horizontal" gap={3} style={{ alignItems: 'flex-start' }}>
         <DatasetCardThumbnail
           persistentId={datasetPreview.persistentId}
           version={datasetPreview.version}
