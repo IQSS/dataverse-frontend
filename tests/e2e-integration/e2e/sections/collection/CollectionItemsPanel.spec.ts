@@ -2,6 +2,7 @@ import { CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import { DatasetHelper } from '@tests/e2e-integration/shared/datasets/DatasetHelper'
+import { CollectionHelper } from '@tests/e2e-integration/shared/collection/CollectionHelper'
 import { FileHelper } from '@tests/e2e-integration/shared/files/FileHelper'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { Interception } from 'cypress/types/net-stubbing'
@@ -49,11 +50,14 @@ describe('Collection Items Panel', () => {
 
         cy.intercept(SEARCH_ENDPOINT_REGEX).as('getCollectionItems')
 
+        const collectionName = 'ItemsTestCollection'
+        const collection = await CollectionHelper.create(`${collectionName}-${Date.now()}`)
         // Creates 8 datasets with 1 file each
         for (const _number of numbersOfDatasetsToCreate) {
           await DatasetHelper.createWithFileAndTitle(
             FileHelper.create(),
-            datasetTitles[_number - 1]
+            datasetTitles[_number - 1],
+            collection.id
           )
         }
       })
