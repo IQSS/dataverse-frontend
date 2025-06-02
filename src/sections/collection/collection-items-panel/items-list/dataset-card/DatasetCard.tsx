@@ -14,6 +14,7 @@ export function DatasetCard({ datasetPreview }: DatasetCardProps) {
         persistentId={datasetPreview.persistentId}
         version={datasetPreview.version}
         userRoles={datasetPreview.userRoles}
+        publicationStatuses={datasetPreview.publicationStatuses}
       />
       <DatasetCardBody datasetPreview={datasetPreview} />
     </article>
