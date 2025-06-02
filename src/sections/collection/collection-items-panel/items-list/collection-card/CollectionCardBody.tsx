@@ -1,30 +1,31 @@
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionItemTypePreview } from '@/collection/domain/models/CollectionItemTypePreview'
-import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { DateHelper } from '@/shared/helpers/DateHelper'
-import { Route } from '@/sections/Route.enum'
 import { LinkToPage } from '@/sections/shared/link-to-page/LinkToPage'
+import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { Route } from '@/sections/Route.enum'
+import { CollectionCardThumbnail } from './CollectionCardThumbnail'
+import { DateHelper } from '@/shared/helpers/DateHelper'
 import styles from './CollectionCard.module.scss'
 
-interface CollectionCardInfoProps {
+interface CollectionCardBodyProps {
   collectionPreview: CollectionItemTypePreview
   parentCollectionAlias?: string
 }
 
-export function CollectionCardInfo({
+export const CollectionCardBody = ({
   collectionPreview,
   parentCollectionAlias
-}: CollectionCardInfoProps) {
+}: CollectionCardBodyProps) => {
   const isStandingOnParentCollectionPage =
     !!parentCollectionAlias && collectionPreview.parentCollectionAlias === parentCollectionAlias
-
   return (
-    <div className={styles['card-info-container']}>
-      <Stack gap={1}>
-        <div className={styles['date-link-wrapper']}>
+    <Stack direction="vertical" gap={2} className={styles['card-body-container']}>
+      <Stack direction="horizontal" gap={3}>
+        <CollectionCardThumbnail collectionPreview={collectionPreview} />
+        <Stack direction="vertical" gap={1}>
           <time
             dateTime={collectionPreview.releaseOrCreateDate.toLocaleDateString()}
-            className={styles.date}>
+            className={styles['release-or-create-date']}>
             {DateHelper.toDisplayFormat(collectionPreview.releaseOrCreateDate)}
           </time>
           {!isStandingOnParentCollectionPage && (
@@ -35,12 +36,11 @@ export function CollectionCardInfo({
               {collectionPreview.parentCollectionName}
             </LinkToPage>
           )}
-        </div>
-
-        {collectionPreview.description && (
-          <p className={styles.description}>{collectionPreview.description}</p>
-        )}
+        </Stack>
       </Stack>
-    </div>
+      {collectionPreview.description && (
+        <p className={styles.description}>{collectionPreview.description}</p>
+      )}
+    </Stack>
   )
 }

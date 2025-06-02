@@ -50,11 +50,6 @@
   }
 }
 
-.thumbnail-and-info-wrapper {
-  display: flex;
-  gap: 1rem;
-}
-
 .card-thumbnail-container {
   padding-block: 0.25rem;
 
@@ -78,22 +73,16 @@
   }
 }
 
-.card-info-container {
+.card-body-container {
   align-self: flex-start;
   font-size: $dv-font-size-sm;
 
-  .date-link-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 0.5rem;
+  .release-or-create-date {
+    color: $dv-subtext-color;
+  }
 
-    .date {
-      color: $dv-subtext-color;
-    }
-
-    a {
-      @include link-hover-underlined;
-    }
+  a {
+    @include link-hover-underlined;
   }
 
   .description {
@@ -102,7 +91,8 @@
     line-clamp: 3;
     -webkit-box-orient: vertical;
     width: 100%;
+    margin: 0;
     overflow: hidden;
-    color: black;
+    color: #000;
   }
 }
