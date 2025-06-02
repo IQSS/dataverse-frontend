@@ -10,8 +10,8 @@ const datasetRepository: DatasetRepository = {} as DatasetRepository
 const datasetVersionsSummariesMock: DatasetVersionSummary[] =
   DatasetVersionsSummariesMother.create() as unknown as DatasetVersionSummary[]
 
-describe('useGetDatasetVersionDiff', () => {
-  it('should return dataset version differences correctly', async () => {
+describe('useGetDatasetVersionsSummaries', () => {
+  it('should return dataset version summaries correctly', async () => {
     datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(datasetVersionsSummariesMock)
     const { result } = renderHook(() =>
       useGetDatasetVersionsSummaries({

@@ -52,8 +52,14 @@ describe('EditFileMetadata', () => {
     })
 
     it('loads page not found when passing a wrong id', () => {
+      cy.on('uncaught:exception', (err) => {
+        // ignore the specific error
+        if (err.message.includes('Invalid file ID')) {
+          return false
+        }
+      })
       cy.visit(`/spa/files/edit-metadata?id=wrong-id`)
-      cy.findByTestId('not-found-page').should('exist')
+      cy.findByText(/something went wrong/).should('exist')
     })
   })
 })

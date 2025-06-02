@@ -4,6 +4,7 @@ import { FileAccess } from './FileAccess'
 import { FilePermissions } from './FilePermissions'
 import { FileIngest } from './FileIngest'
 import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { FileVersionSummaryInfo } from './FileVersionSummaryInfo'
 
 export interface File {
   id: number
@@ -16,4 +17,5 @@ export interface File {
   permissions: FilePermissions
   metadata: FileMetadata
   ingest: FileIngest
+  fileVersionSummaries?: FileVersionSummaryInfo[]
 }

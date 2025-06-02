@@ -22,7 +22,8 @@ import {
   deleteFile,
   replaceFile,
   restrictFile,
-  updateFileMetadata
+  updateFileMetadata,
+  getFileVersionSummaries
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -41,6 +42,7 @@ import { FileHolder } from '../domain/models/FileHolder'
 import { FixityAlgorithm } from '../domain/models/FixityAlgorithm'
 import { RestrictFileDTO } from '../domain/useCases/restrictFileDTO'
 import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
+import { FileVersionSummaryInfo } from '../domain/models/FileVersionSummaryInfo'
 
 const includeDeaccessioned = true
 
@@ -232,6 +234,9 @@ export class FileJSDataverseRepository implements FileRepository {
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
+  }
+  getFileVersionSummaries(fileId: number | string): Promise<FileVersionSummaryInfo[]> {
+    return getFileVersionSummaries.execute(fileId)
   }
 
   getById(id: number, datasetVersionNumber?: string): Promise<File> {

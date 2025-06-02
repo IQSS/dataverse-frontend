@@ -24,7 +24,7 @@ describe('File', () => {
           cy.findByRole('heading', { name: 'blob' }).should('exist')
           cy.findByText(DatasetLabelValue.DRAFT).should('exist')
           cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
-
+          cy.findByRole('tab', { name: 'Versions' }).should('exist')
           cy.findByText('Metadata').should('exist')
 
           cy.findByRole('button', { name: 'Access File' }).should('exist')
@@ -50,8 +50,27 @@ describe('File', () => {
           cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist')
 
           cy.findByText('Metadata').should('exist')
+          cy.findByText('Versions').should('exist')
 
           cy.findByRole('button', { name: 'Access File' }).should('exist')
+        })
+    })
+
+    it('loads version summaries when clicking on the version tab', () => {
+      cy.wrap(
+        DatasetHelper.createWithFileAndPublish(FileHelper.create()).then(
+          (datasetResponse) => datasetResponse.file
+        ),
+        { timeout: 6000 }
+      )
+        .its('id')
+        .then((id: string) => {
+          cy.visit(`/spa/files?id=${id}`)
+          cy.wait(3000)
+
+          cy.findByRole('tab', { name: 'Versions' }).should('exist').click({ force: true })
+
+          cy.findByText('1.0').should('exist')
         })
     })
 

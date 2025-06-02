@@ -3,7 +3,7 @@ import styles from './File.module.scss'
 import { ButtonGroup, Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useFile } from './useFile'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLoading } from '../loading/LoadingContext'
 import { FileSkeleton } from './FileSkeleton'
 import { DatasetCitation } from '../dataset/dataset-citation/DatasetCitation'
@@ -17,16 +17,19 @@ import { DatasetPublishingStatus } from '../../dataset/domain/models/Dataset'
 import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
+import { FileVersions } from './file-version/FileVersions'
 
 interface FileProps {
   repository: FileRepository
   id: number
   datasetVersionNumber?: string
 }
+
 export function File({ repository, id, datasetVersionNumber }: FileProps) {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
+  const [activeTab, setActiveTab] = useState<string>('metadata')
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -36,9 +39,17 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
     return <FileSkeleton />
   }
 
+  const handleTabSelect = (key: string | null) => {
+    if (key) {
+      setActiveTab(key)
+    }
+  }
+
   if (!file) {
     return <NotFoundPage dvObjectNotFoundType="file" />
   }
+
+  // TODO: if the file is deaccessioned, we should show the file in deaccessioned format
 
   return (
     <>
@@ -103,7 +114,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
               </ButtonGroup>
             </Col>
           </Row>
-          <Tabs defaultActiveKey="metadata">
+          <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
             <Tabs.Tab eventKey="metadata" title={t('tabs.metadata')}>
               <div className={styles['tab-container']}>
                 <FileMetadata
@@ -111,6 +122,17 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                   metadata={file.metadata}
                   permissions={file.permissions}
                   datasetPublishingStatus={file.datasetVersion.publishingStatus}
+                />
+              </div>
+            </Tabs.Tab>
+            <Tabs.Tab eventKey="fileVersion" title={t('tabs.versions')}>
+              <div className={styles['tab-container']}>
+                <FileVersions
+                  fileId={file.id}
+                  datasetVersionNumber={datasetVersionNumber}
+                  fileRepository={repository}
+                  canEditOwnerDataset={file.permissions.canEditOwnerDataset}
+                  isInView={activeTab === 'fileVersion'}
                 />
               </div>
             </Tabs.Tab>
