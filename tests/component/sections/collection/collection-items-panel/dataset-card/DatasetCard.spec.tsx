@@ -2,6 +2,7 @@ import { DatasetCard } from '@/sections/collection/collection-items-panel/items-
 import { DatasetItemTypePreviewMother } from '@tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import styles from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard.module.scss'
+import { Route } from '@/sections/Route.enum'
 
 describe('DatasetCard', () => {
   it('should render the card', () => {
@@ -54,5 +55,33 @@ describe('DatasetCard', () => {
       .parent()
       .parent()
       .should('have.class', styles['deaccesioned'])
+  })
+
+  describe('Parent Collection Link', () => {
+    it('should render it if parentCollectionAlias is not the one where the dataset card is being shown', () => {
+      const dataset = DatasetItemTypePreviewMother.create({
+        parentCollectionAlias: 'parent-collection-alias',
+        parentCollectionName: 'Parent Collection Name'
+      })
+      cy.customMount(
+        <DatasetCard datasetPreview={dataset} parentCollectionAlias="another-collection-alias" />
+      )
+
+      cy.findByText('Parent Collection Name')
+        .should('exist')
+        .should('have.attr', 'href', `${Route.COLLECTIONS_BASE}/parent-collection-alias`)
+    })
+
+    it('should not render it if parentCollectionAlias is the same as the one where the dataset card is being shown', () => {
+      const dataset = DatasetItemTypePreviewMother.create({
+        parentCollectionAlias: 'parent-collection-alias',
+        parentCollectionName: 'Parent Collection Name'
+      })
+      cy.customMount(
+        <DatasetCard datasetPreview={dataset} parentCollectionAlias="parent-collection-alias" />
+      )
+
+      cy.findByText('Parent Collection Name').should('not.exist')
+    })
   })
 })

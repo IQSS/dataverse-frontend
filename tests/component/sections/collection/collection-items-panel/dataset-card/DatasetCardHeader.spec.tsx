@@ -39,4 +39,44 @@ describe('DatasetCardHeader', () => {
       .should('exist')
       .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}&version=DRAFT`)
   })
+
+  it('should sort the publication statuses by name', () => {
+    const dataset = DatasetItemTypePreviewMother.create({
+      publicationStatuses: [
+        PublicationStatus.Unpublished,
+        PublicationStatus.Draft,
+        PublicationStatus.InReview
+      ]
+    })
+    cy.customMount(
+      <DatasetCardHeader
+        persistentId={dataset.persistentId}
+        version={dataset.version}
+        publicationStatuses={dataset.publicationStatuses}
+      />
+    )
+
+    cy.findAllByText(PublicationStatus.Draft).should('exist')
+    cy.findAllByText(PublicationStatus.InReview).should('exist')
+    cy.findAllByText(PublicationStatus.Unpublished).should('exist')
+
+    cy.get('.badge').then((badges) => {
+      expect(badges[0].textContent).to.equal(PublicationStatus.Draft)
+      expect(badges[1].textContent).to.equal(PublicationStatus.InReview)
+      expect(badges[2].textContent).to.equal(PublicationStatus.Unpublished)
+    })
+  })
+
+  it('should filter out and dont render the Published status badge', () => {
+    const dataset = DatasetItemTypePreviewMother.create()
+    cy.customMount(
+      <DatasetCardHeader
+        persistentId={dataset.persistentId}
+        version={dataset.version}
+        publicationStatuses={[PublicationStatus.Published]}
+      />
+    )
+
+    cy.findByText(PublicationStatus.Published).should('not.exist')
+  })
 })

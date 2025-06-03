@@ -67,4 +67,20 @@ describe('FileCard', () => {
       .should('have.attr', 'href')
       .and('include', 'version=DRAFT')
   })
+
+  it('should not show any tag if the file has no tags', () => {
+    const filePreview = FileItemTypePreviewMother.create({ tags: [] })
+    cy.customMount(<FileCard filePreview={filePreview} />)
+    cy.findByTestId('file-labels').children().should('have.length', 0)
+  })
+
+  it('should default to 0 variables and 0 observations if file is tabular and they are not present', () => {
+    const filePreview = FileItemTypePreviewMother.create({
+      fileType: 'Tab-Delimited',
+      variables: undefined,
+      observations: undefined
+    })
+    cy.customMount(<FileCard filePreview={filePreview} />)
+    cy.contains('0 variables, 0 observations').should('exist')
+  })
 })
