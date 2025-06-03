@@ -75,6 +75,7 @@ export class CollectionItemTypePreviewMother {
   }
   static createUnpublished(): CollectionItemTypePreview {
     return CollectionItemTypePreviewMother.createWithOnlyRequiredFields({
+      name: 'Scientific Research Collection',
       isReleased: false,
       affiliation: FakerHelper.affiliation()
     })
@@ -93,6 +94,7 @@ export class CollectionItemTypePreviewMother {
 
   static createWithThumbnail(): CollectionItemTypePreview {
     return CollectionItemTypePreviewMother.create({
+      name: 'Scientific Research Collection',
       thumbnail: FakerHelper.getImageUrl()
     })
   }
