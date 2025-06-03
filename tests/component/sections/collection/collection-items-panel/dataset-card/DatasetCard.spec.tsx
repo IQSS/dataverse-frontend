@@ -1,8 +1,8 @@
+import { Route } from '@/sections/Route.enum'
 import { DatasetCard } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard'
 import { DatasetItemTypePreviewMother } from '@tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import styles from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard.module.scss'
-import { Route } from '@/sections/Route.enum'
 
 describe('DatasetCard', () => {
   it('should render the card', () => {

@@ -71,6 +71,7 @@ describe('FileCard', () => {
   it('should not show any tag if the file has no tags', () => {
     const filePreview = FileItemTypePreviewMother.create({ tags: [] })
     cy.customMount(<FileCard filePreview={filePreview} />)
+
     cy.findByTestId('file-labels').children().should('have.length', 0)
   })
 
@@ -81,6 +82,7 @@ describe('FileCard', () => {
       observations: undefined
     })
     cy.customMount(<FileCard filePreview={filePreview} />)
+
     cy.contains('0 variables, 0 observations').should('exist')
   })
 })
