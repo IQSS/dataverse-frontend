@@ -12,6 +12,8 @@ interface CollectionCardBodyProps {
   parentCollectionAlias?: string
 }
 
+// TODO:ME - Add unit test for dataset card parent collection link.
+
 export const CollectionCardBody = ({
   collectionPreview,
   parentCollectionAlias
@@ -20,28 +22,32 @@ export const CollectionCardBody = ({
     !!parentCollectionAlias && collectionPreview.parentCollectionAlias === parentCollectionAlias
 
   return (
-    <Stack direction="vertical" gap={2} className={styles['card-body-container']}>
-      <Stack direction="horizontal" gap={3}>
-        <CollectionCardThumbnail collectionPreview={collectionPreview} />
-        <Stack direction="vertical" gap={1}>
+    <Stack direction="horizontal" gap={3} className={styles['card-body-container']}>
+      <CollectionCardThumbnail collectionPreview={collectionPreview} />
+      <Stack direction="vertical" gap={1}>
+        <Stack direction="horizontal" gap={1}>
           <time
             dateTime={collectionPreview.releaseOrCreateDate.toLocaleDateString()}
             className={styles['release-or-create-date']}>
             {DateHelper.toDisplayFormat(collectionPreview.releaseOrCreateDate)}
           </time>
           {!isStandingOnParentCollectionPage && (
-            <LinkToPage
-              type={DvObjectType.COLLECTION}
-              page={Route.COLLECTIONS}
-              searchParams={{ id: collectionPreview.parentCollectionAlias?.toString() }}>
-              {collectionPreview.parentCollectionName}
-            </LinkToPage>
+            <span className={styles['link-to-collection-wrapper']}>
+              <span>- </span>
+              <LinkToPage
+                type={DvObjectType.COLLECTION}
+                page={Route.COLLECTIONS}
+                searchParams={{ id: collectionPreview.parentCollectionAlias?.toString() }}>
+                {collectionPreview.parentCollectionName}
+              </LinkToPage>
+            </span>
           )}
         </Stack>
+
+        {collectionPreview.description && (
+          <p className={styles.description}>{collectionPreview.description}</p>
+        )}
       </Stack>
-      {collectionPreview.description && (
-        <p className={styles.description}>{collectionPreview.description}</p>
-      )}
     </Stack>
   )
 }

@@ -25,21 +25,24 @@ export const FileCardBody = ({ filePreview }: FileCardBodyProps) => {
       <Stack direction="horizontal" gap={3} style={{ alignItems: 'flex-start' }}>
         <FileCardThumbnail filePreview={filePreview} />
         <Stack direction="vertical" gap={1}>
-          <Stack direction="vertical" gap={1}>
+          <Stack direction="horizontal" gap={1}>
             <time
               dateTime={filePreview.releaseOrCreateDate.toLocaleDateString()}
               className={styles['release-or-create-date']}>
               {DateHelper.toDisplayFormat(filePreview.releaseOrCreateDate)}
             </time>
-            <LinkToPage
-              page={Route.DATASETS}
-              type={DvObjectType.DATASET}
-              searchParams={FileCardHelper.getDatasetSearchParams(
-                filePreview.datasetPersistentId,
-                filePreview.publicationStatuses.includes(PublicationStatus.Draft)
-              )}>
-              {filePreview.datasetName}
-            </LinkToPage>
+            <span className={styles['link-to-collection-wrapper']}>
+              <span>- </span>
+              <LinkToPage
+                page={Route.DATASETS}
+                type={DvObjectType.DATASET}
+                searchParams={FileCardHelper.getDatasetSearchParams(
+                  filePreview.datasetPersistentId,
+                  filePreview.publicationStatuses.includes(PublicationStatus.Draft)
+                )}>
+                {filePreview.datasetName}
+              </LinkToPage>
+            </span>
           </Stack>
           <div className={styles.info}>
             <span>{filePreview.fileType}</span>
