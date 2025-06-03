@@ -59,34 +59,6 @@ export const WithNormalPagination: Story = {
   )
 }
 
-export const Created: Story = {
-  decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
-  render: () => (
-    <Dataset
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      created={true}
-      filesTabInfiniteScrollEnabled
-    />
-  )
-}
-
-export const MetadataUpdated: Story = {
-  decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
-  render: () => (
-    <Dataset
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      metadataUpdated={true}
-    />
-  )
-}
 export const DraftWithAllDatasetPermissions: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
   render: () => (

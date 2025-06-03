@@ -53,12 +53,8 @@ function DatasetWithSearchParams() {
   const tab = searchParams.get('tab') ?? undefined
   const version = searchParamVersionToDomainVersion(searchParamVersion)
   const location = useLocation()
-  const state = location.state as
-    | { created: boolean; metadataUpdated: boolean; publishInProgress: boolean }
-    | undefined
-  const created = state?.created ?? false
+  const state = location.state as { publishInProgress: boolean } | undefined
   const publishInProgress = state?.publishInProgress ?? false
-  const metadataUpdated = state?.metadataUpdated ?? false
   const datasetContext = useContext(DatasetContext)
 
   useEffect(() => {
@@ -101,9 +97,7 @@ function DatasetWithSearchParams() {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
-        created={created}
         publishInProgress={publishInProgress}
-        metadataUpdated={metadataUpdated}
         filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
         tab={tab}
       />
