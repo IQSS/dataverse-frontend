@@ -3,6 +3,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
+import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 
@@ -31,7 +32,28 @@ const itemsWithCount: MyDataCollectionItemSubset = {
 
 const emptyItemsWithCount: MyDataCollectionItemSubset = {
   items: [],
-  publicationStatusCounts: [],
+  publicationStatusCounts: [
+    {
+      publicationStatus: PublicationStatus.Unpublished,
+      count: 0
+    },
+    {
+      publicationStatus: PublicationStatus.Published,
+      count: 0
+    },
+    {
+      publicationStatus: PublicationStatus.Draft,
+      count: 0
+    },
+    {
+      publicationStatus: PublicationStatus.InReview,
+      count: 0
+    },
+    {
+      publicationStatus: PublicationStatus.Deaccessioned,
+      count: 0
+    }
+  ],
   totalItemCount: 0,
   countPerObjectType: {
     collections: 0,

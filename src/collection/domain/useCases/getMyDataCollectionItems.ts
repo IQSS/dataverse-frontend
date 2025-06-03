@@ -1,5 +1,6 @@
 import { CollectionRepository } from '../repositories/CollectionRepository'
 import { MyDataCollectionItemSubset } from '../models/MyDataCollectionItemSubset'
+import { PublicationStatus } from '../../../shared/core/domain/models/PublicationStatus'
 
 export async function getMyDataCollectionItems(
   collectionRepository: CollectionRepository,
@@ -30,7 +31,28 @@ export async function getMyDataCollectionItems(
       ) {
         return {
           items: [],
-          publicationStatusCounts: [],
+          publicationStatusCounts: [
+            {
+              publicationStatus: PublicationStatus.Unpublished,
+              count: 0
+            },
+            {
+              publicationStatus: PublicationStatus.Published,
+              count: 0
+            },
+            {
+              publicationStatus: PublicationStatus.Draft,
+              count: 0
+            },
+            {
+              publicationStatus: PublicationStatus.InReview,
+              count: 0
+            },
+            {
+              publicationStatus: PublicationStatus.Deaccessioned,
+              count: 0
+            }
+          ],
           totalItemCount: 0,
           countPerObjectType: {
             collections: 0,

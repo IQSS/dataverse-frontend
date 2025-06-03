@@ -24,7 +24,7 @@ export const PublicationStatusFilters = ({
   isLoadingCollectionItems
 }: PublicationStatusFiltersProps) => {
   const { t } = useTranslation('account')
-
+  console.log('publicationStatusCounts', publicationStatusCounts)
   const handlePublicationStatusChange = (
     publicationStatus: PublicationStatus,
     checked: boolean
@@ -50,7 +50,7 @@ export const PublicationStatusFilters = ({
             }
             label={
               <>
-                <span>{t(`${status}`)}</span> <span>({count})</span>
+                <span>{t(`${publicationStatus}`)}</span> <span>({count})</span>
               </>
             }
             checked={currentPublicationStatuses?.includes(publicationStatus) ?? false}

@@ -25,6 +25,8 @@ import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -76,8 +78,8 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
 
   getMyDataItems(
     roleIds: number[],
-    collectionItemTypes: string[],
-    publicationStatuses: string[],
+    collectionItemTypes: CollectionItemType[],
+    publicationStatuses: PublicationStatus[],
     limit?: number,
     selectedPage?: number,
     searchText?: string,
