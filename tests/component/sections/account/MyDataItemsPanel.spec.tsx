@@ -1,10 +1,8 @@
-import {
-  CollectionItemSubset,
-  CountPerObjectType
-} from '@/collection/domain/models/CollectionItemSubset'
+import { CountPerObjectType } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
+import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 
@@ -22,13 +20,18 @@ const countPerObjectType: CountPerObjectType = {
   files: 140
 }
 
-const facets = CollectionItemsMother.createMyDataItemsFacets()
+const publicationStatusCounts = CollectionItemsMother.createMyDataPublicationCounts()
 
-const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount, countPerObjectType }
+const itemsWithCount: MyDataCollectionItemSubset = {
+  items,
+  publicationStatusCounts,
+  totalItemCount,
+  countPerObjectType
+}
 
-const emptyItemsWithCount: CollectionItemSubset = {
+const emptyItemsWithCount: MyDataCollectionItemSubset = {
   items: [],
-  facets: [],
+  publicationStatusCounts: [],
   totalItemCount: 0,
   countPerObjectType: {
     collections: 0,
@@ -224,9 +227,9 @@ describe('MyDataItemsPanel', () => {
 
   it('renders 4 items with no more to load, correct results in header, and no bottom skeleton loader', () => {
     const first4Elements = items.slice(0, 4)
-    const first4ElementsWithCount: CollectionItemSubset = {
+    const first4ElementsWithCount: MyDataCollectionItemSubset = {
       items: first4Elements,
-      facets,
+      publicationStatusCounts,
       totalItemCount: 4,
       countPerObjectType: {
         collections: 4,

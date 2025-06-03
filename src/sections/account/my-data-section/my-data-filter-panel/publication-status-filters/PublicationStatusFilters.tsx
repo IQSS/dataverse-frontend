@@ -2,12 +2,8 @@ import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, Stack } from '@iqss/dataverse-design-system'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import { PublicationStatusCount } from '@/collection/domain/models/MyDataCollectionItemSubset'
 import styles from './PublicationStatusFilters.module.scss'
-
-export interface PublicationStatusCount {
-  status: PublicationStatus
-  count: number
-}
 
 interface PublicationStatusFiltersProps {
   currentPublicationStatuses: PublicationStatus[]
@@ -39,24 +35,25 @@ export const PublicationStatusFilters = ({
   return (
     <Stack gap={1} className={styles['publication-status-filters']}>
       <div className={styles['title']}>{t('myData.publicationStatusFilterTitle')}</div>
-      {publicationStatusCounts?.map(({ status, count }) => {
+      {publicationStatusCounts?.map(({ publicationStatus, count }) => {
         const statusCheckDisabled =
           isLoadingCollectionItems ||
-          (currentPublicationStatuses?.length === 1 && currentPublicationStatuses.includes(status))
+          (currentPublicationStatuses?.length === 1 &&
+            currentPublicationStatuses.includes(publicationStatus))
 
         return (
           <Form.Group.Checkbox
-            key={status}
-            id={`${status}-check`}
+            key={publicationStatus}
+            id={`${publicationStatus}-check`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handlePublicationStatusChange(status, e.target.checked)
+              handlePublicationStatusChange(publicationStatus, e.target.checked)
             }
             label={
               <>
                 <span>{t(`${status}`)}</span> <span>({count})</span>
               </>
             }
-            checked={currentPublicationStatuses?.includes(status) ?? false}
+            checked={currentPublicationStatuses?.includes(publicationStatus) ?? false}
             disabled={statusCheckDisabled}
           />
         )

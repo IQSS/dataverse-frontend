@@ -1,5 +1,5 @@
 import { CollectionRepository } from '../repositories/CollectionRepository'
-import { CollectionItemSubset } from '../models/CollectionItemSubset'
+import { MyDataCollectionItemSubset } from '../models/MyDataCollectionItemSubset'
 
 export async function getMyDataCollectionItems(
   collectionRepository: CollectionRepository,
@@ -10,7 +10,7 @@ export async function getMyDataCollectionItems(
   selectedPage?: number,
   searchText?: string,
   otherUserName?: string
-): Promise<CollectionItemSubset> {
+): Promise<MyDataCollectionItemSubset> {
   return collectionRepository
     .getMyDataItems(
       roleIds,
@@ -30,7 +30,7 @@ export async function getMyDataCollectionItems(
       ) {
         return {
           items: [],
-          facets: [],
+          publicationStatusCounts: [],
           totalItemCount: 0,
           countPerObjectType: {
             collections: 0,

@@ -24,6 +24,7 @@ import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCr
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -81,7 +82,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     selectedPage?: number,
     searchText?: string,
     otherUserName?: string
-  ): Promise<CollectionItemSubset> {
+  ): Promise<MyDataCollectionItemSubset> {
     return getMyDataCollectionItems
       .execute(
         roleIds,
@@ -99,7 +100,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
 
         return {
           items: collectionItemsPreviewsMapped,
-          facets: jsCollectionItemSubset.facets,
+          publicationStatusCounts: jsCollectionItemSubset.publicationStatusCounts,
           totalItemCount: jsCollectionItemSubset.totalItemCount,
           countPerObjectType: jsCollectionItemSubset.countPerObjectType
         }
