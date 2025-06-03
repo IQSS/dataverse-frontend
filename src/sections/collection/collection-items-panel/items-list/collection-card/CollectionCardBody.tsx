@@ -12,8 +12,6 @@ interface CollectionCardBodyProps {
   parentCollectionAlias?: string
 }
 
-// TODO:ME - Add unit test for dataset card parent collection link.
-
 export const CollectionCardBody = ({
   collectionPreview,
   parentCollectionAlias
