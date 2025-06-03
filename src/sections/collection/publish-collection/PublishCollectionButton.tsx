@@ -9,10 +9,12 @@ import styles from '../../shared/add-data-actions/AddDataActionsButton.module.sc
 interface PublishCollectionButtonProps {
   repository: CollectionRepository
   collectionId: string
+  refetchCollection: () => void
 }
 export function PublishCollectionButton({
   repository,
-  collectionId
+  collectionId,
+  refetchCollection
 }: PublishCollectionButtonProps) {
   const { t } = useTranslation('collection')
   const [showModal, setShowModal] = useState(false)
@@ -24,6 +26,7 @@ export function PublishCollectionButton({
         repository={repository}
         collectionId={collectionId}
         handleClose={() => setShowModal(false)}
+        refetchCollection={refetchCollection}
       />
       <Button
         icon={<GlobeAmericas className={styles.icon} />}

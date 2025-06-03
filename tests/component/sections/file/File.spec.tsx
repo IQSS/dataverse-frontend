@@ -25,6 +25,7 @@ describe('File', () => {
     )
     cy.findByText('Version 1.0').should('exist')
     cy.findByRole('tab', { name: 'Metadata' }).should('exist')
+    cy.findByRole('tab', { name: 'Versions' }).should('exist')
     cy.findByRole('button', { name: 'File Metadata' }).should('exist')
     cy.findByRole('group', { name: 'File Action Buttons' }).should('exist')
   })
@@ -55,5 +56,21 @@ describe('File', () => {
     cy.customMount(<File repository={fileRepository} id={19} />)
 
     cy.findByText('Restricted File Icon').should('exist')
+  })
+
+  it('renders the FileVersions component', () => {
+    const testFile = FileMother.createRealistic()
+    fileRepository.getById = cy.stub().resolves(testFile)
+
+    cy.customMount(<File repository={fileRepository} id={19} datasetVersionNumber={'2.0'} />)
+
+    cy.findByText('Version 1.0').should('exist')
+    cy.findByRole('tab', { name: 'Metadata' }).should('exist')
+    cy.findByRole('tab', { name: 'Versions' }).should('exist').click()
+
+    cy.contains('Version').should('exist')
+    cy.contains('Summary').should('exist')
+    cy.contains('Contributors').should('exist')
+    cy.contains('Published On').should('exist')
   })
 })

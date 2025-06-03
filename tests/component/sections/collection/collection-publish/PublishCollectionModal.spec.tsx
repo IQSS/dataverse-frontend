@@ -4,6 +4,7 @@ import { PublishCollectionModal } from '../../../../../src/sections/collection/p
 describe('PublishCollectionModal', () => {
   it('displays an error message when publishCollection fails', () => {
     const handleClose = cy.stub()
+    const refetchCollection = cy.stub()
     const repository = {} as CollectionRepository // Mock the repository as needed
     const errorMessage = 'Publishing failed'
     repository.publish = cy.stub().as('repositoryPublish').rejects(new Error(errorMessage))
@@ -14,6 +15,7 @@ describe('PublishCollectionModal', () => {
         repository={repository}
         collectionId="testCollectionId"
         handleClose={handleClose}
+        refetchCollection={refetchCollection}
       />
     )
 
@@ -26,6 +28,7 @@ describe('PublishCollectionModal', () => {
 
   it('displays the fallback error message when publishCollection fails without an error message', () => {
     const handleClose = cy.stub()
+    const refetchCollection = cy.stub()
     const repository = {} as CollectionRepository // Mock the repository as needed
     repository.publish = cy.stub().as('repositoryPublish').rejects('Unknown error')
 
@@ -35,6 +38,7 @@ describe('PublishCollectionModal', () => {
         repository={repository}
         collectionId="testCollectionId"
         handleClose={handleClose}
+        refetchCollection={refetchCollection}
       />
     )
 
@@ -49,6 +53,7 @@ describe('PublishCollectionModal', () => {
 
   it('renders the PublishDatasetModal and triggers submitPublish on button click', () => {
     const handleClose = cy.stub()
+    const refetchCollection = cy.stub()
     const repository = {} as CollectionRepository // Mock the repository as needed
     repository.publish = cy.stub().as('repositoryPublish').resolves()
     cy.customMount(
@@ -57,6 +62,7 @@ describe('PublishCollectionModal', () => {
         repository={repository}
         collectionId="testCollectionId"
         handleClose={handleClose}
+        refetchCollection={refetchCollection}
       />
     )
 
@@ -65,5 +71,6 @@ describe('PublishCollectionModal', () => {
     cy.contains('Are you sure you want to publish your collection?').should('exist')
     cy.findByRole('button', { name: 'Continue' }).click()
     cy.get('@repositoryPublish').should('have.been.calledWith', 'testCollectionId')
+    cy.findByText(/Your collection is now public/).should('exist')
   })
 })

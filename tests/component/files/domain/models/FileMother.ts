@@ -6,6 +6,8 @@ import { faker } from '@faker-js/faker'
 import { FileIngestMother } from './FileIngestMother'
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { FilePermissionsMother } from './FilePermissionsMother'
+import { FileVersionSummaryInfo } from '@/files/domain/models/FileVersionSummaryInfo'
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 
 export class FileMother {
   static create(props?: Partial<File>): File {
@@ -20,6 +22,7 @@ export class FileMother {
       metadata: FileMetadataMother.create(),
       permissions: FilePermissionsMother.create(),
       ingest: FileIngestMother.create(),
+      fileVersionSummaries: [],
       ...props
     }
   }
@@ -34,6 +37,7 @@ export class FileMother {
       access: FileAccessMother.createPublic(),
       permissions: FilePermissionsMother.createWithGrantedPermissions(),
       metadata: FileMetadataMother.createDefault(),
+      fileVersionSummaries: this.createFileVersionSummary(),
       ...props
     })
   }
@@ -87,6 +91,53 @@ export class FileMother {
       metadata: FileMetadataMother.createTabular(),
       ...props
     })
+  }
+
+  static createFileVersionSummary(
+    props?: Partial<FileVersionSummaryInfo[]>
+  ): FileVersionSummaryInfo[] {
+    return [
+      {
+        datasetVersion: '2.0',
+        contributors: 'Bennet, Elizabeth; Darcy, Fitzwilliam',
+        publishedDate: '2023-10-01',
+        fileDifferenceSummary: {
+          file: 'Added',
+          fileAccess: 'Unrestricted',
+          fileMetadata: [
+            {
+              name: 'File Title',
+              action: 'Added'
+            }
+          ],
+          fileTags: {
+            Added: 1,
+            Deleted: 1
+          }
+        },
+        versionState: DatasetVersionState.RELEASED,
+        datafileId: 1,
+        persistentId: '',
+        versionNote: '',
+        ...props
+      },
+      {
+        datasetVersion: '1.0',
+        contributors: 'Bennet, Elizabeth; Darcy, Fitzwilliam',
+        publishedDate: '2023-10-02',
+        fileDifferenceSummary: {
+          file: 'Changed',
+          fileAccess: 'Restricted',
+          fileMetadata: [],
+          fileTags: {}
+        },
+        versionState: DatasetVersionState.RELEASED,
+        datafileId: 2,
+        persistentId: '',
+        versionNote: '',
+        ...props
+      }
+    ]
   }
 }
 

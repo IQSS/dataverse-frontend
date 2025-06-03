@@ -1,30 +1,32 @@
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { usePublishCollection } from './usePublishCollection'
-
-import styles from './PublishCollectionModal.module.scss'
-import { useNavigate } from 'react-router-dom'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
-import { RouteWithParams } from '../../Route.enum'
+import { RouteWithParams } from '@/sections/Route.enum'
+import styles from './PublishCollectionModal.module.scss'
 
 interface PublishCollectionModalProps {
   show: boolean
   repository: CollectionRepository
   collectionId: string
   handleClose: () => void
+  refetchCollection: () => void
 }
 
 export function PublishCollectionModal({
   show,
   repository,
   collectionId,
-  handleClose
+  handleClose,
+  refetchCollection
 }: PublishCollectionModalProps) {
   const { t: tShared } = useTranslation('shared')
   const { t: tCollection } = useTranslation('collection')
-
   const navigate = useNavigate()
+
   const { submissionStatus, submitPublish, publishError } = usePublishCollection(
     repository,
     collectionId,
@@ -32,9 +34,9 @@ export function PublishCollectionModal({
   )
 
   function onPublishSucceed() {
-    navigate(RouteWithParams.COLLECTIONS(collectionId), {
-      state: { published: true }
-    })
+    toast.success(tCollection('publishedAlert'))
+    navigate(RouteWithParams.COLLECTIONS(collectionId))
+    refetchCollection()
     handleClose()
   }
 

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
@@ -42,6 +43,7 @@ export function useSubmitDataset(
 ): UseSubmitDatasetReturnType {
   const navigate = useNavigate()
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
+  const { t: tDataset } = useTranslation('dataset')
 
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
@@ -63,11 +65,9 @@ export function useSubmitDataset(
         .then(({ persistentId }) => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
+          toast.success(tDataset('alerts.datasetCreated.alertText'))
           navigate(
-            `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
-            {
-              state: { created: true }
-            }
+            `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
           )
           return
         })
@@ -94,11 +94,9 @@ export function useSubmitDataset(
         .then(() => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
+          toast.success(tDataset('alerts.metadataUpdated.alertText'))
           navigate(
-            `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${currentEditedDatasetPersistentID}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
-            {
-              state: { metadataUpdated: true }
-            }
+            `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${currentEditedDatasetPersistentID}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
           )
 
           return

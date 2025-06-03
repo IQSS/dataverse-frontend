@@ -190,6 +190,7 @@ export const FileTypeToFileIconMap: Record<string, IconName> = {
   'application/photoshop': IconName.IMAGE,
   'image/vnd.adobe.photoshop': IconName.IMAGE,
   'application/x-photoshop': IconName.IMAGE,
+  'image/webp': IconName.IMAGE,
   'audio/x-aiff': IconName.AUDIO,
   'audio/mp3': IconName.AUDIO,
   'audio/mpeg': IconName.AUDIO,

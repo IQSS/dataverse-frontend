@@ -1,17 +1,16 @@
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { Collection } from '../../collection/domain/models/Collection'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getCollectionById } from '../../collection/domain/useCases/getCollectionById'
 
 export function useCollection(
   collectionRepository: CollectionRepository,
-  collectionId?: string | undefined,
-  published?: boolean
+  collectionId?: string | undefined
 ) {
   const [isLoading, setIsLoading] = useState(true)
   const [collection, setCollection] = useState<Collection>()
 
-  useEffect(() => {
+  const getCollection = useCallback(() => {
     setIsLoading(true)
     setCollection(undefined)
     getCollectionById(collectionRepository, collectionId)
@@ -24,7 +23,11 @@ export function useCollection(
       .finally(() => {
         setIsLoading(false)
       })
-  }, [collectionRepository, collectionId, published])
+  }, [collectionRepository, collectionId])
 
-  return { collection, isLoading }
+  useEffect(() => {
+    getCollection()
+  }, [getCollection])
+
+  return { collection, isLoading, refetchCollection: getCollection }
 }

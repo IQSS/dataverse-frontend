@@ -1,10 +1,10 @@
 import { ArrowDownUp } from 'react-bootstrap-icons'
-import styles from './ItemsList.module.scss'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
 import { SortType } from '@/collection/domain/models/CollectionSearchCriteria'
 import { OrderType } from '@/collection/domain/models/CollectionSearchCriteria'
+import styles from './ItemsList.module.scss'
 
 export enum SortOption {
   NAME_ASC = 'nameAsc',
