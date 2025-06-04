@@ -84,14 +84,17 @@ describe('MyDataItemsPanel', () => {
     it('renders the search input for superusers', () => {
       cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
-      cy.findByPlaceholderText('Search by username...').should('exist')
+      cy.findByPlaceholderText('Search by username...')
+        .should('exist')
+        .invoke('val')
+        .should('equal', 'jamespotts')
     })
     it('shows the correct message when there are no results for user', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
-      cy.findByPlaceholderText('Search by username...').type('testUserName{enter}')
+      cy.findByPlaceholderText('Search by username...').clear().type('testUserName{enter}')
 
       cy.findByText(/No results found for user testUserName./).should('exist')
     })
