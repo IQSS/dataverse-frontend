@@ -57,7 +57,16 @@ export class DatasetItemTypePreviewMother {
   static createDraft(): DatasetItemTypePreview {
     return this.create({
       version: DatasetVersionMother.createDraft(),
-      publicationStatuses: [PublicationStatus.Draft]
+      publicationStatuses: [PublicationStatus.Draft],
+      thumbnail: undefined
+    })
+  }
+
+  static createDraftAndUnpublished(): DatasetItemTypePreview {
+    return this.create({
+      version: DatasetVersionMother.createNotReleased(),
+      publicationStatuses: [PublicationStatus.Unpublished, PublicationStatus.Draft],
+      thumbnail: undefined
     })
   }
 
@@ -71,7 +80,16 @@ export class DatasetItemTypePreviewMother {
 
   static createDeaccessioned(): DatasetItemTypePreview {
     return this.create({
-      version: DatasetVersionMother.createDeaccessioned()
+      version: DatasetVersionMother.createDeaccessioned(),
+      publicationStatuses: [PublicationStatus.Deaccessioned]
+    })
+  }
+
+  static createInReview(): DatasetItemTypePreview {
+    return this.create({
+      version: DatasetVersionMother.createDraft(),
+      publicationStatuses: [PublicationStatus.Draft, PublicationStatus.InReview],
+      thumbnail: undefined
     })
   }
 }
