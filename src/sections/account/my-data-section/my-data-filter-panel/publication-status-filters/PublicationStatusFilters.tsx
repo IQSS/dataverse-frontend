@@ -24,7 +24,6 @@ export const PublicationStatusFilters = ({
   isLoadingCollectionItems
 }: PublicationStatusFiltersProps) => {
   const { t } = useTranslation('account')
-  console.log('publicationStatusCounts', publicationStatusCounts)
   const handlePublicationStatusChange = (
     publicationStatus: PublicationStatus,
     checked: boolean
