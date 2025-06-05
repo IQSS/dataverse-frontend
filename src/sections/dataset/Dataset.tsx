@@ -37,8 +37,6 @@ interface DatasetProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionRepository: CollectionRepository
   contactRepository: ContactRepository
-  created?: boolean
-  metadataUpdated?: boolean
   filesTabInfiniteScrollEnabled?: boolean
   publishInProgress?: boolean
   tab?: string
@@ -50,8 +48,6 @@ export function Dataset({
   metadataBlockInfoRepository,
   collectionRepository,
   contactRepository,
-  created,
-  metadataUpdated,
   filesTabInfiniteScrollEnabled,
   publishInProgress,
   tab = 'files'
@@ -67,8 +63,6 @@ export function Dataset({
   const termsTabRef = useRef<HTMLDivElement>(null)
   useUpdateDatasetAlerts({
     dataset,
-    created,
-    metadataUpdated,
     publishInProgress
   })
 

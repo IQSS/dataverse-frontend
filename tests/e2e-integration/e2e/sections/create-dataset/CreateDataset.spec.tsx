@@ -38,8 +38,7 @@ describe('Create Dataset', () => {
     cy.findByText(/Save Dataset/i).click()
 
     cy.findByRole('heading', { name: 'Test Dataset Title' }).should('exist')
-    cy.findByText('Success!').should('exist')
-    cy.contains('This dataset has been created.').should('exist')
+    cy.findByText(/Dataset created successfully./).should('exist')
     cy.findByText(DatasetLabelValue.DRAFT).should('exist')
     cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
     cy.contains('Agricultural Sciences; Arts and Humanities').should('exist')

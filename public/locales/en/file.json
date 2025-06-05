@@ -1,7 +1,31 @@
 {
   "tabs": {
-    "metadata": "Metadata"
+    "metadata": "Metadata",
+    "versions": "Versions"
   },
+  "fileVersion": {
+    "version": "Dataset Version",
+    "publishedOn": "Published On",
+    "summary": "Summary",
+    "contributors": "Contributors",
+    "noChange": "No changes associated with this version.",
+    "file": "file",
+    "fileChanged": "[File {{name}}]",
+    "access": "File Access",
+    "accessChanged": "{{access}}",
+    "metadata": "File Metadata",
+    "metadataChange": "{{field}} {{action}}",
+    "tags": "File Tags",
+    "tagsChange": "{{count}} {{action}}",
+    "deaccessionedReason": "Deaccessioned Reason",
+    "actions": {
+      "Added": "Added",
+      "Deleted": "Deleted",
+      "Changed": "Changed"
+    },
+    "error": "Error on loading file versions"
+  },
+  "fileNotChange": "No changes associated with this version",
   "subtext": "This file is part of \"{{datasetTitle}}\".",
   "datasetCitationTitle": "Dataset Citation",
   "fileCitationTitle": "File Citation",

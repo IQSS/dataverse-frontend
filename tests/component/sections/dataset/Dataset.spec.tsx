@@ -153,29 +153,12 @@ describe('Dataset', () => {
 
     cy.findByTestId('not-found-page').should('exist')
   })
-  it('renders Success alert when dataset is created', () => {
-    const dataset = DatasetMother.create()
 
-    mountWithDataset(
-      <Dataset
-        created={true}
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        collectionRepository={collectionRepository}
-        contactRepository={contactRepository}
-      />,
-      dataset
-    )
-
-    cy.findByText('Success!').should('exist')
-  })
   it('renders In Progress alert when dataset publish is inProgress', () => {
     const dataset = DatasetMother.create()
 
     mountWithDataset(
       <Dataset
-        created={false}
         publishInProgress={true}
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
@@ -354,48 +337,6 @@ describe('Dataset', () => {
     cy.findByText('10 of 200 Files displayed').should('exist')
   })
 
-  it('renders the dataset created alert correctly', () => {
-    const testDataset = DatasetMother.create()
-    mountWithDataset(
-      <AlertProvider>
-        <Dataset
-          datasetRepository={datasetRepository}
-          fileRepository={fileRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          collectionRepository={collectionRepository}
-          created={true}
-          contactRepository={contactRepository}
-        />
-      </AlertProvider>,
-      testDataset
-    )
-
-    cy.findAllByText(testDataset.version.title).should('exist')
-
-    cy.findByText(/This dataset has been created./).should('exist')
-  })
-
-  it('renders the dataset updated metadata alert correctly', () => {
-    const testDataset = DatasetMother.create()
-    mountWithDataset(
-      <AlertProvider>
-        <Dataset
-          datasetRepository={datasetRepository}
-          fileRepository={fileRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          collectionRepository={collectionRepository}
-          metadataUpdated={true}
-          contactRepository={contactRepository}
-        />
-      </AlertProvider>,
-      testDataset
-    )
-
-    cy.findAllByText(testDataset.version.title).should('exist')
-
-    cy.findByText(/The metadata for this dataset has been updated./).should('exist')
-  })
-
   it('shows the toast when the information was sent to contact successfully', () => {
     const testDataset = DatasetMother.create()
     mountWithDataset(
@@ -405,7 +346,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        metadataUpdated={true}
       />,
       testDataset
     )
@@ -441,7 +381,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        metadataUpdated={true}
       />,
       testDataset
     )

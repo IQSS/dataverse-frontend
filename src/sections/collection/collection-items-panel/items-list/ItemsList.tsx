@@ -175,12 +175,15 @@ export const ItemsList = forwardRef(
                   <li key={`${collectionItem.type}-${index}`}>
                     {collectionItem?.type === CollectionItemType.COLLECTION && (
                       <CollectionCard
-                        parentCollectionAlias={parentCollectionAlias}
                         collectionPreview={collectionItem}
+                        parentCollectionAlias={parentCollectionAlias}
                       />
                     )}
                     {collectionItem?.type === CollectionItemType.DATASET && (
-                      <DatasetCard datasetPreview={collectionItem} />
+                      <DatasetCard
+                        datasetPreview={collectionItem}
+                        parentCollectionAlias={parentCollectionAlias}
+                      />
                     )}
                     {collectionItem?.type === CollectionItemType.FILE && (
                       <FileCard filePreview={collectionItem} />

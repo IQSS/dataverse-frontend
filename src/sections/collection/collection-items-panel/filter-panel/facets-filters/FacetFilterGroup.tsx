@@ -58,30 +58,37 @@ export const FacetFilterGroup = ({
     <li key={facet.name} className={styles['facet-filter-group']}>
       <span className={styles['facet-name']}>{facet.friendlyName}</span>
       <ul className={styles['labels-list']}>
-        {facet.labels.slice(0, visibleCount).map((label) => {
-          const isFacetLabelSelected = Boolean(facetSelectedLabels?.includes(label.name))
-
-          return (
-            <li key={label.name}>
-              <Button
-                onClick={() => handleClickFacetLabel(facet.name, label.name)}
-                className={cn(styles['facet-label-button'], {
-                  [styles['selected']]: isFacetLabelSelected
-                })}
-                aria-label={
-                  isFacetLabelSelected
-                    ? t('removeSelectedFacet', { labelName: label.name })
-                    : t('addFacetFilter', { labelName: label.name })
-                }
-                disabled={isLoadingCollectionItems}
-                variant="link"
-                size="sm">
-                <span>{`${label.name} (${label.count})`}</span>
-                {isFacetLabelSelected && <CloseIcon size={22} />}
-              </Button>
-            </li>
+        {[...facet.labels]
+          .sort((a, b) =>
+            facet.name === 'publicationDate' || facet.name === 'dateOfDeposit'
+              ? parseFloat(b.name) - parseFloat(a.name)
+              : 0
           )
-        })}
+          .slice(0, visibleCount)
+          .map((label) => {
+            const isFacetLabelSelected = Boolean(facetSelectedLabels?.includes(label.name))
+
+            return (
+              <li key={label.name}>
+                <Button
+                  onClick={() => handleClickFacetLabel(facet.name, label.name)}
+                  className={cn(styles['facet-label-button'], {
+                    [styles['selected']]: isFacetLabelSelected
+                  })}
+                  aria-label={
+                    isFacetLabelSelected
+                      ? t('removeSelectedFacet', { labelName: label.name })
+                      : t('addFacetFilter', { labelName: label.name })
+                  }
+                  disabled={isLoadingCollectionItems}
+                  variant="link"
+                  size="sm">
+                  <span>{`${label.name} (${label.count})`}</span>
+                  {isFacetLabelSelected && <CloseIcon size={22} />}
+                </Button>
+              </li>
+            )
+          })}
       </ul>
 
       {showMoreLessButtons && (
