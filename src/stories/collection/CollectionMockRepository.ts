@@ -88,12 +88,7 @@ export class CollectionMockRepository implements CollectionRepository {
         resolve({
           items: filteredByTypeItems,
           facets: facets,
-          totalItemCount: isDefaultSelected ? 6 : 200, // This is a fake number, its big so we can always scroll to load more items for the story
-          countPerObjectType: {
-            collections: numberOfCollections,
-            datasets: numberOfDatasets,
-            files: numberOfFiles
-          }
+          totalItemCount: isDefaultSelected ? 6 : 200 // This is a fake number, its big so we can always scroll to load more items for the story
         })
       }, FakerHelper.loadingTimout())
     })

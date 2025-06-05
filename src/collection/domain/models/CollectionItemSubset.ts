@@ -6,7 +6,6 @@ export interface CollectionItemSubset {
   items: CollectionItem[]
   facets: CollectionItemsFacet[]
   totalItemCount: number
-  countPerObjectType: CountPerObjectType
 }
 
 export type CollectionItem =
@@ -26,7 +25,7 @@ interface CollectionItemsFacetLabel {
 }
 
 export interface CountPerObjectType {
-  collections: number
-  datasets: number
-  files: number
+  collections?: number
+  datasets?: number
+  files?: number
 }

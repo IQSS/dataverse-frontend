@@ -80,7 +80,6 @@ export const CollectionItemsPanel = ({
     isLoadingItems,
     accumulatedItems,
     facets,
-    countPerObjectType,
     totalAvailable,
     hasNextPage,
     error,
@@ -326,7 +325,6 @@ export const CollectionItemsPanel = ({
           facets={facets}
           onFacetChange={handleFacetChange}
           isLoadingCollectionItems={isLoadingItems}
-          countPerObjectType={countPerObjectType}
         />
 
         <Stack direction="vertical" gap={2}>
