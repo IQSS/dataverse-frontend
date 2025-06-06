@@ -16,8 +16,22 @@ export const Default: Story = {
   render: () => <DatasetCard datasetPreview={DatasetItemTypePreviewMother.createDraft()} />
 }
 
+export const Published: Story = {
+  render: () => <DatasetCard datasetPreview={DatasetItemTypePreviewMother.create()} />
+}
+
+export const DraftAndUnpublished: Story = {
+  render: () => (
+    <DatasetCard datasetPreview={DatasetItemTypePreviewMother.createDraftAndUnpublished()} />
+  )
+}
+
 export const Deaccessioned: Story = {
   render: () => <DatasetCard datasetPreview={DatasetItemTypePreviewMother.createDeaccessioned()} />
+}
+
+export const InReview: Story = {
+  render: () => <DatasetCard datasetPreview={DatasetItemTypePreviewMother.createInReview()} />
 }
 
 export const WithThumbnail: Story = {

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import {
   CollectionFormData,
@@ -51,6 +53,7 @@ export function useSubmitCollection(
   dirtyFields: CollectionFormDirtyFields
 ): UseSubmitCollectionReturnType {
   const navigate = useNavigate()
+  const { t } = useTranslation('collection')
 
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
@@ -125,9 +128,8 @@ export function useSubmitCollection(
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
 
-          navigate(RouteWithParams.COLLECTIONS(newOrUpdatedCollection.alias), {
-            state: { edited: true }
-          })
+          toast.success(t('editedAlert'))
+          navigate(RouteWithParams.COLLECTIONS(newOrUpdatedCollection.alias))
           return
         })
         .catch((err: WriteError) => {

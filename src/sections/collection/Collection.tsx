@@ -1,5 +1,4 @@
-import { useTranslation } from 'react-i18next'
-import { Alert, ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
+import { ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
@@ -28,8 +27,6 @@ interface CollectionProps {
   collectionRepository: CollectionRepository
   collectionIdFromParams: string | undefined
   created: boolean
-  published: boolean
-  edited?: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
   accountCreated: boolean
   infiniteScrollEnabled?: boolean
@@ -40,22 +37,19 @@ export function Collection({
   collectionIdFromParams,
   collectionRepository,
   created,
-  published,
-  edited,
   collectionQueryParams,
   contactRepository,
   accountCreated
 }: CollectionProps) {
   useScrollTop()
-  const { t } = useTranslation('collection')
   const { previousPath } = useHistoryTracker()
   const previousPathIsHomepage = previousPath === Route.HOME
 
-  const { collection, isLoading: isLoadingCollection } = useCollection(
-    collectionRepository,
-    collectionIdFromParams,
-    published
-  )
+  const {
+    collection,
+    isLoading: isLoadingCollection,
+    refetchCollection
+  } = useCollection(collectionRepository, collectionIdFromParams)
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: collectionIdFromParams,
     collectionRepository
@@ -89,16 +83,7 @@ export function Collection({
             <CollectionInfo collection={collection} />
 
             {created && <CreatedAlert />}
-            {edited && (
-              <Alert variant="success" dismissible={false}>
-                {t('editedAlert')}
-              </Alert>
-            )}
-            {published && (
-              <Alert variant="success" dismissible={false}>
-                {t('publishedAlert')}
-              </Alert>
-            )}
+
             {accountCreated && <AccountCreatedAlert />}
 
             {previousPathIsHomepage &&
@@ -131,6 +116,7 @@ export function Collection({
                       <PublishCollectionButton
                         repository={collectionRepository}
                         collectionId={collection.id}
+                        refetchCollection={refetchCollection}
                       />
                     )}
                     {showEditButton && (

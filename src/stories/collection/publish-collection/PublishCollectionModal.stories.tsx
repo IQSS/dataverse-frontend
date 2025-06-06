@@ -22,6 +22,7 @@ export const Default: Story = {
       repository={new CollectionMockRepository()}
       collectionId={'testAlias'}
       handleClose={() => {}}
+      refetchCollection={() => {}}
     />
   )
 }

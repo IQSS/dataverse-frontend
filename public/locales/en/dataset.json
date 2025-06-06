@@ -100,11 +100,11 @@
     },
     "datasetCreated": {
       "heading": "Success!",
-      "alertText": "This dataset has been created."
+      "alertText": "Dataset created successfully."
     },
     "metadataUpdated": {
       "heading": "Success!",
-      "alertText": "The metadata for this dataset has been updated."
+      "alertText": "The metadata for this dataset has been updated successfully."
     },
     "draftVersion": {
       "heading": "This draft version needs to be published",
