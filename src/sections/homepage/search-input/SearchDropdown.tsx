@@ -6,7 +6,6 @@ import { SearchService } from '@/search/domain/models/SearchService'
 import { SOLR_SERVICE_NAME } from './SearchInput'
 import styles from './SearchInput.module.scss'
 
-// TODO:ME - Add z-index to clear button to avoid it being hidden
 // TODO:ME - Don't use react-boostrap, move to dataverse-design-system and first check a11ty
 // TODO:ME - Persistir hover focus style de boton mientras el dropdown está abierto
 

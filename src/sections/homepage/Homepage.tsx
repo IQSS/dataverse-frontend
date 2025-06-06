@@ -14,7 +14,6 @@ import { Metrics } from './metrics/Metrics'
 import { Usage } from './usage/Usage'
 import styles from './Homepage.module.scss'
 
-// TODO:ME - Fetch the search services and show them in the list, possibly remove something from the list? Check slack discussion
 // const searchServicesMock = [
 //   {
 //     name: 'postExternalSearch',
