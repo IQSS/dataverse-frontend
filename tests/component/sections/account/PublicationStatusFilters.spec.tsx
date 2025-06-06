@@ -3,9 +3,9 @@ import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus
 
 describe('PublicationStatusFilters', () => {
   const publicationStatusCounts = [
-    { status: PublicationStatus.Published, count: 5 },
-    { status: PublicationStatus.Unpublished, count: 10 },
-    { status: PublicationStatus.Draft, count: 2 }
+    { publicationStatus: PublicationStatus.Published, count: 5 },
+    { publicationStatus: PublicationStatus.Unpublished, count: 10 },
+    { publicationStatus: PublicationStatus.Draft, count: 2 }
   ]
 
   const currentPublicationStatuses = [PublicationStatus.Unpublished, PublicationStatus.Draft]
@@ -20,8 +20,8 @@ describe('PublicationStatusFilters', () => {
       />
     )
 
-    publicationStatusCounts.forEach(({ status, count }) => {
-      cy.findByLabelText(`${status} (${count})`).should('exist')
+    publicationStatusCounts.forEach(({ publicationStatus, count }) => {
+      cy.findByLabelText(`${publicationStatus} (${count})`).should('exist')
     })
   })
 
@@ -60,8 +60,8 @@ describe('PublicationStatusFilters', () => {
       />
     )
 
-    publicationStatusCounts.forEach(({ status }) => {
-      cy.findByLabelText(new RegExp(`${status}`)).should('be.disabled')
+    publicationStatusCounts.forEach(({ publicationStatus }) => {
+      cy.findByLabelText(new RegExp(`${publicationStatus}`)).should('be.disabled')
     })
 
     cy.customMount(

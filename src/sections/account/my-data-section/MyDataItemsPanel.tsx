@@ -254,6 +254,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
             <UserNameSearch
               isLoadingCollectionItems={isLoadingItems}
               onSubmitSearch={handleUserNameSearchSubmit}
+              currentSearchValue={user.identifier}
             />
           )}
         </header>

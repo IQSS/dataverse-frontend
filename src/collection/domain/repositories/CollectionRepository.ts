@@ -3,6 +3,7 @@ import { CollectionFacet } from '../models/CollectionFacet'
 import { CollectionFeaturedItem } from '../models/CollectionFeaturedItem'
 import { CollectionItemsPaginationInfo } from '../models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '../models/CollectionItemSubset'
+import { MyDataCollectionItemSubset } from '../models/MyDataCollectionItemSubset'
 import { CollectionSearchCriteria } from '../models/CollectionSearchCriteria'
 import { CollectionUserPermissions } from '../models/CollectionUserPermissions'
 import { CollectionDTO } from '../useCases/DTOs/CollectionDTO'
@@ -29,7 +30,7 @@ export interface CollectionRepository {
     selectedPage?: number,
     searchText?: string,
     otherUserName?: string
-  ): Promise<CollectionItemSubset>
+  ): Promise<MyDataCollectionItemSubset>
   edit(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void>
   getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]>
   updateFeaturedItems(

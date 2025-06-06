@@ -1,10 +1,4 @@
-import {
-  DatasetLabel,
-  DatasetLabelSemanticMeaning,
-  DatasetLabelValue,
-  DatasetNonNumericVersionSearchParam
-} from '@/dataset/domain/models/Dataset'
-import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 
 export class FileCardHelper {
   static getDatasetSearchParams(persistentId: string, isDraft: boolean): Record<string, string> {
@@ -20,22 +14,6 @@ export class FileCardHelper {
       params.datasetVersion = DatasetNonNumericVersionSearchParam.DRAFT
     }
     return params
-  }
-
-  static getDatasetLabels(
-    publicationStatuses: PublicationStatus[],
-    someDatasetVersionHasBeenReleased: boolean
-  ) {
-    const labels: DatasetLabel[] = []
-    if (publicationStatuses.includes(PublicationStatus.Draft)) {
-      labels.push(new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT))
-    }
-    if (!someDatasetVersionHasBeenReleased) {
-      labels.push(
-        new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
-      )
-    }
-    return labels
   }
 
   static formatBytesToCompactNumber(bytes: number): string {

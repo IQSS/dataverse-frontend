@@ -14,6 +14,7 @@ import { CollectionItemType } from '@/collection/domain/models/CollectionItemTyp
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id?: string): Promise<Collection> {
@@ -87,12 +88,7 @@ export class CollectionMockRepository implements CollectionRepository {
         resolve({
           items: filteredByTypeItems,
           facets: facets,
-          totalItemCount: isDefaultSelected ? 6 : 200, // This is a fake number, its big so we can always scroll to load more items for the story
-          countPerObjectType: {
-            collections: numberOfCollections,
-            datasets: numberOfDatasets,
-            files: numberOfFiles
-          }
+          totalItemCount: isDefaultSelected ? 6 : 200 // This is a fake number, its big so we can always scroll to load more items for the story
         })
       }, FakerHelper.loadingTimout())
     })
@@ -105,7 +101,7 @@ export class CollectionMockRepository implements CollectionRepository {
     _selectedPage?: number,
     _searchText?: string,
     _otherUserName?: string
-  ): Promise<CollectionItemSubset> {
+  ): Promise<MyDataCollectionItemSubset> {
     if (!limit) {
       limit = 10
     }
@@ -120,7 +116,7 @@ export class CollectionMockRepository implements CollectionRepository {
       includeUserRoles: true
     })
 
-    const facets = CollectionItemsMother.createMyDataItemsFacets()
+    const publicationStatusCounts = CollectionItemsMother.createMyDataPublicationCounts()
 
     const isDefaultSelected =
       collectionItemTypes?.length === 2 &&
@@ -133,7 +129,7 @@ export class CollectionMockRepository implements CollectionRepository {
       setTimeout(() => {
         resolve({
           items: filteredByTypeItems,
-          facets: facets,
+          publicationStatusCounts: publicationStatusCounts,
           totalItemCount: isDefaultSelected ? 6 : 200, // This is a fake number, its big so we can always scroll to load more items for the story
           countPerObjectType: {
             collections: numberOfCollections,

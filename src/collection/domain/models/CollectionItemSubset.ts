@@ -6,7 +6,6 @@ export interface CollectionItemSubset {
   items: CollectionItem[]
   facets: CollectionItemsFacet[]
   totalItemCount: number
-  countPerObjectType: CountPerObjectType
 }
 
 export type CollectionItem =

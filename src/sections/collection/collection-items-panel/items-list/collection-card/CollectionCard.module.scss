@@ -20,15 +20,9 @@
     @include link-hover-underlined;
   }
 
-  .left-side-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-
-    .affiliation {
-      margin: 0;
-      color: $dv-subtext-color;
-    }
+  .affiliation {
+    margin-left: 6px;
+    color: $dv-subtext-color;
   }
 
   .title-and-labels {
@@ -48,11 +42,6 @@
       margin-right: 0;
     }
   }
-}
-
-.thumbnail-and-info-wrapper {
-  display: flex;
-  gap: 1rem;
 }
 
 .card-thumbnail-container {
@@ -78,22 +67,16 @@
   }
 }
 
-.card-info-container {
-  align-self: flex-start;
+.card-body-container {
+  align-items: flex-start;
   font-size: $dv-font-size-sm;
 
-  .date-link-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 0.5rem;
+  .release-or-create-date {
+    color: $dv-subtext-color;
+  }
 
-    .date {
-      color: $dv-subtext-color;
-    }
-
-    a {
-      @include link-hover-underlined;
-    }
+  a {
+    @include link-hover-underlined;
   }
 
   .description {
@@ -102,7 +85,8 @@
     line-clamp: 3;
     -webkit-box-orient: vertical;
     width: 100%;
+    margin: 0;
     overflow: hidden;
-    color: black;
+    color: #000;
   }
 }
