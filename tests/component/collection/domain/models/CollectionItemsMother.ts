@@ -5,6 +5,8 @@ import {
 import { FileItemTypePreviewMother } from '../../../files/domain/models/FileItemTypePreviewMother'
 import { CollectionItemTypePreviewMother } from './CollectionItemTypePreviewMother'
 import { DatasetItemTypePreviewMother } from '../../../dataset/domain/models/DatasetItemTypePreviewMother'
+import { PublicationStatusCount } from '@/collection/domain/models/MyDataCollectionItemSubset'
+import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 interface CreateItemsProps {
   numberOfCollections?: number
@@ -29,19 +31,13 @@ export class CollectionItemsMother {
 
     return [...collections, ...datasets, ...files]
   }
-  static createMyDataItemsFacets(): CollectionItemsFacet[] {
+  static createMyDataPublicationCounts(): PublicationStatusCount[] {
     return [
-      {
-        name: 'PublicationStatus',
-        friendlyName: 'Publication Status',
-        labels: [
-          { name: 'Published', count: 1 },
-          { name: 'Unpublished', count: 1 },
-          { name: 'Draft', count: 0 },
-          { name: 'In Review', count: 1 },
-          { name: 'Deaccessioned', count: 1 }
-        ]
-      }
+      { publicationStatus: PublicationStatus.Published, count: 1 },
+      { publicationStatus: PublicationStatus.Unpublished, count: 1 },
+      { publicationStatus: PublicationStatus.Draft, count: 0 },
+      { publicationStatus: PublicationStatus.InReview, count: 1 },
+      { publicationStatus: PublicationStatus.Deaccessioned, count: 1 }
     ]
   }
   static createItemsFacets(): CollectionItemsFacet[] {

@@ -9,7 +9,7 @@ interface TypeFiltersProps {
   currentItemTypes?: CollectionItemType[]
   onItemTypesChange: (itemTypeChange: ItemTypeChange) => void
   isLoadingCollectionItems: boolean
-  countPerObjectType: CountPerObjectType
+  countPerObjectType?: CountPerObjectType
 }
 
 export interface ItemTypeChange {
@@ -51,10 +51,12 @@ export const TypeFilters = ({
         label={
           <>
             <Icon name={IconName.COLLECTION} />
-
             <span>
               {t('collectionFilterTypeLabel')}{' '}
-              <small>{`(${Intl.NumberFormat().format(countPerObjectType.collections)})`}</small>
+              {countPerObjectType?.collections !== undefined &&
+                currentItemTypes?.includes(CollectionItemType.COLLECTION) && (
+                  <small>{`(${Intl.NumberFormat().format(countPerObjectType.collections)})`}</small>
+                )}
             </span>
           </>
         }
@@ -71,7 +73,10 @@ export const TypeFilters = ({
             <Icon name={IconName.DATASET} />
             <span>
               {t('datasetFilterTypeLabel')}{' '}
-              <small>{`(${Intl.NumberFormat().format(countPerObjectType.datasets)})`}</small>
+              {countPerObjectType?.datasets !== undefined &&
+                currentItemTypes?.includes(CollectionItemType.DATASET) && (
+                  <small>{`(${Intl.NumberFormat().format(countPerObjectType.datasets)})`}</small>
+                )}
             </span>
           </>
         }
@@ -88,7 +93,10 @@ export const TypeFilters = ({
             <Icon name={IconName.FILE} />
             <span>
               {t('fileFilterTypeLabel')}{' '}
-              <small>{`(${Intl.NumberFormat().format(countPerObjectType.files)})`}</small>
+              {countPerObjectType?.files !== undefined &&
+                currentItemTypes?.includes(CollectionItemType.FILE) && (
+                  <small>{`(${Intl.NumberFormat().format(countPerObjectType.files)})`}</small>
+                )}
             </span>
           </>
         }

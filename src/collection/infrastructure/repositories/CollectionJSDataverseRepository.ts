@@ -24,6 +24,9 @@ import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCr
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -67,21 +70,20 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
         return {
           items: collectionItemsPreviewsMapped,
           facets: jsCollectionItemSubset.facets,
-          totalItemCount: jsCollectionItemSubset.totalItemCount,
-          countPerObjectType: jsCollectionItemSubset.countPerObjectType
+          totalItemCount: jsCollectionItemSubset.totalItemCount
         }
       })
   }
 
   getMyDataItems(
     roleIds: number[],
-    collectionItemTypes: string[],
-    publicationStatuses: string[],
+    collectionItemTypes: CollectionItemType[],
+    publicationStatuses: PublicationStatus[],
     limit?: number,
     selectedPage?: number,
     searchText?: string,
     otherUserName?: string
-  ): Promise<CollectionItemSubset> {
+  ): Promise<MyDataCollectionItemSubset> {
     return getMyDataCollectionItems
       .execute(
         roleIds,
@@ -99,7 +101,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
 
         return {
           items: collectionItemsPreviewsMapped,
-          facets: jsCollectionItemSubset.facets,
+          publicationStatusCounts: jsCollectionItemSubset.publicationStatusCounts,
           totalItemCount: jsCollectionItemSubset.totalItemCount,
           countPerObjectType: jsCollectionItemSubset.countPerObjectType
         }

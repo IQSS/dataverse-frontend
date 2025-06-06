@@ -4,8 +4,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import {
   CollectionItem,
   CollectionItemsFacet,
-  CollectionItemSubset,
-  CountPerObjectType
+  CollectionItemSubset
 } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
@@ -16,7 +15,6 @@ type UseGetAccumulatedItemsReturnType = {
   isLoadingItems: boolean
   accumulatedItems: CollectionItem[]
   facets: CollectionItemsFacet[]
-  countPerObjectType: CountPerObjectType
   totalAvailable: number | undefined
   hasNextPage: boolean
   error: string | null
@@ -42,11 +40,7 @@ export const useGetAccumulatedItems = ({
   const [isLoadingItems, setIsLoadingItems] = useState(false)
   const [accumulatedItems, setAccumulatedItems] = useState<CollectionItem[]>([])
   const [facets, setFacets] = useState<CollectionItemsFacet[]>([])
-  const [countPerObjectType, setCountPerObjectType] = useState<CountPerObjectType>({
-    collections: 0,
-    datasets: 0,
-    files: 0
-  })
+
   const [hasNextPage, setHasNextPage] = useState<boolean>(true)
   const [totalAvailable, setTotalAvailable] = useState<number | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
@@ -65,7 +59,7 @@ export const useGetAccumulatedItems = ({
     setIsLoadingItems(true)
 
     try {
-      const { items, facets, totalItemCount, countPerObjectType } = await loadNextItems(
+      const { items, facets, totalItemCount } = await loadNextItems(
         collectionRepository,
         collectionId,
         pagination,
@@ -77,8 +71,6 @@ export const useGetAccumulatedItems = ({
       setAccumulatedItems(newAccumulatedItems)
 
       setFacets(facets)
-
-      setCountPerObjectType(countPerObjectType)
 
       setTotalAvailable(totalItemCount)
 
@@ -108,7 +100,6 @@ export const useGetAccumulatedItems = ({
     isLoadingItems,
     accumulatedItems,
     facets,
-    countPerObjectType,
     totalAvailable,
     hasNextPage,
     error,
