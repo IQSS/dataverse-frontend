@@ -23,6 +23,7 @@ describe('Account', () => {
   it('clicks on the Account Information tab', () => {
     cy.mountAuthenticated(
       <Account
+        collectionRepository={new CollectionMockRepository()}
         defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
         userRepository={new UserJSDataverseRepository()}
       />

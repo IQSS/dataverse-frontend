@@ -1,4 +1,4 @@
-import { Badge, Icon, IconName } from '@iqss/dataverse-design-system'
+import { Badge, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
 import { Route } from '@/sections/Route.enum'
 import { CollectionItemTypePreview } from '@/collection/domain/models/CollectionItemTypePreview'
 import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
@@ -12,28 +12,33 @@ interface CollectionCardHeaderProps {
 export function CollectionCardHeader({ collectionPreview }: CollectionCardHeaderProps) {
   return (
     <header className={styles['card-header-container']}>
-      <div className={styles['left-side-content']}>
-        <LinkToPage
-          type={DvObjectType.COLLECTION}
-          page={Route.COLLECTIONS}
-          searchParams={{ id: collectionPreview.alias.toString() }}>
-          {collectionPreview.name}
-        </LinkToPage>
-        {collectionPreview.affiliation && (
-          <p className={styles.affiliation}>({collectionPreview.affiliation})</p>
-        )}
-        {!collectionPreview.isReleased && (
-          <div>
-            <Badge variant="warning">Unpublished</Badge>
-          </div>
-        )}
-        {collectionPreview.userRoles &&
-          collectionPreview.userRoles.map((role, index) => (
-            <div key={index}>
-              <Badge variant="success">{role}</Badge>
-            </div>
-          ))}
-      </div>
+      <Stack direction="horizontal" gap={2} className="flex-wrap">
+        <span>
+          <LinkToPage
+            type={DvObjectType.COLLECTION}
+            page={Route.COLLECTIONS}
+            searchParams={{ id: collectionPreview.alias.toString() }}>
+            {collectionPreview.name}
+          </LinkToPage>
+          {collectionPreview.affiliation && (
+            <span className={styles.affiliation}>({collectionPreview.affiliation})</span>
+          )}
+        </span>
+
+        <Stack direction="horizontal" gap={1} className="flex-wrap">
+          {!collectionPreview.isReleased && <Badge variant="warning">Unpublished</Badge>}
+
+          {collectionPreview.userRoles && (
+            <Stack direction="horizontal" gap={1} className="flex-wrap">
+              {collectionPreview.userRoles.map((role, index) => (
+                <Badge key={index} variant="info">
+                  {role}
+                </Badge>
+              ))}
+            </Stack>
+          )}
+        </Stack>
+      </Stack>
 
       <div className={styles['top-right-icon']}>
         <Icon name={IconName.COLLECTION} />

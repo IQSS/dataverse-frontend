@@ -1,19 +1,13 @@
 import { useMemo, useState } from 'react'
 import { getMyDataCollectionItems } from '@/collection/domain/useCases/getMyDataCollectionItems'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import {
-  CollectionItem,
-  CollectionItemsFacet,
-  CollectionItemSubset,
-  CountPerObjectType
-} from '@/collection/domain/models/CollectionItemSubset'
-import {
-  AllPublicationStatuses,
-  PublicationStatus
-} from '@/shared/core/domain/models/PublicationStatus'
+import { CollectionItem, CountPerObjectType } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataSearchCriteria'
-import { PublicationStatusCount } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
+import {
+  MyDataCollectionItemSubset,
+  PublicationStatusCount
+} from '@/collection/domain/models/MyDataCollectionItemSubset'
 
 export const NO_COLLECTION_ITEMS = 0
 
@@ -70,17 +64,14 @@ export const useGetMyDataAccumulatedItems = ({
     setIsLoadingItems(true)
 
     try {
-      const { items, facets, totalItemCount, countPerObjectType } = await loadNextItems(
-        collectionRepository,
-        pagination,
-        searchCriteria
-      )
+      const { items, publicationStatusCounts, totalItemCount, countPerObjectType } =
+        await loadNextItems(collectionRepository, pagination, searchCriteria)
 
       const newAccumulatedItems = !resetAccumulated ? [...accumulatedItems, ...items] : items
 
       setAccumulatedItems(newAccumulatedItems)
 
-      setPublicationStatusCounts(convertFacetsToPublicationStatusCounts(facets))
+      setPublicationStatusCounts(publicationStatusCounts)
 
       setCountPerObjectType(countPerObjectType)
 
@@ -122,27 +113,12 @@ export const useGetMyDataAccumulatedItems = ({
     accumulatedCount
   }
 }
-const convertFacetsToPublicationStatusCounts = (
-  facets: CollectionItemsFacet[]
-): PublicationStatusCount[] => {
-  if (!facets[0]) {
-    // Create a list of PublicationStatusCount with 0 counts
-    return AllPublicationStatuses.map((status) => ({
-      status: status,
-      count: 0
-    }))
-  } else
-    return facets[0].labels.map((facetLabel) => ({
-      status: facetLabel.name as PublicationStatus,
-      count: facetLabel.count
-    }))
-}
 
 async function loadNextItems(
   collectionRepository: CollectionRepository,
   paginationInfo: CollectionItemsPaginationInfo,
   searchCriteria: MyDataSearchCriteria
-): Promise<CollectionItemSubset> {
+): Promise<MyDataCollectionItemSubset> {
   const publicationStatuses = (searchCriteria.publicationStatuses as string[]) ?? []
   return await getMyDataCollectionItems(
     collectionRepository,

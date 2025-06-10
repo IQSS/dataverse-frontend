@@ -9,7 +9,7 @@ const VARIANT_BY_LABEL_TYPE: Record<FileLabelType, 'secondary' | 'info'> = {
 
 export function FileLabels({ labels }: { labels: FileLabel[] }) {
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-testid="file-labels">
       {labels.map((label, index) => (
         <Badge key={`${label.value}-${index}`} variant={VARIANT_BY_LABEL_TYPE[label.type]}>
           {label.value}

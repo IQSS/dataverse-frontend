@@ -25,6 +25,7 @@ export const Default: Story = {
 export const WithLongDescription: Story = {
   render: () => {
     const collectionPreview = CollectionItemTypePreviewMother.create({
+      name: 'Scientific Research Collection',
       description: FakerHelper.paragraph(20)
     })
     return (

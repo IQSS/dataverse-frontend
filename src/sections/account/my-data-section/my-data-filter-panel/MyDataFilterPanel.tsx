@@ -9,10 +9,8 @@ import { PublicationStatusChange } from '@/sections/account/my-data-section/my-d
 import { RoleChange } from '@/sections/account/my-data-section/my-data-filter-panel/role-filters/RoleFilters'
 import { TypeFilters } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
 import { RoleFilters } from '@/sections/account/my-data-section/my-data-filter-panel/role-filters/RoleFilters'
-import {
-  PublicationStatusCount,
-  PublicationStatusFilters
-} from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
+import { PublicationStatusFilters } from '@/sections/account/my-data-section/my-data-filter-panel/publication-status-filters/PublicationStatusFilters'
+import { PublicationStatusCount } from '@/collection/domain/models/MyDataCollectionItemSubset'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { CountPerObjectType } from '@/collection/domain/models/CollectionItemSubset'

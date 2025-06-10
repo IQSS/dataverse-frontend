@@ -17,9 +17,9 @@ describe('MyDataFilterPanel', () => {
         currentRoleIds={[1, 6, 7]}
         onRolesChange={onRolesChange}
         publicationStatusCounts={[
-          { status: PublicationStatus.Unpublished, count: 10 },
-          { status: PublicationStatus.Published, count: 5 },
-          { status: PublicationStatus.Draft, count: 2 }
+          { publicationStatus: PublicationStatus.Unpublished, count: 10 },
+          { publicationStatus: PublicationStatus.Published, count: 5 },
+          { publicationStatus: PublicationStatus.Draft, count: 2 }
         ]}
         onPublicationStatusesChange={cy.stub().as('onPublicationStatusesChange')}
         currentPublicationStatuses={[

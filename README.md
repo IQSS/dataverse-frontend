@@ -215,6 +215,11 @@ The environment is accessible through the following URLs:
 > We have implemented infinite scrolling in this list, replacing the normal paging buttons, but the goal would be to be
 > able to toggle between normal paging and infinite scrolling via a toggle setting or button.
 >
+> #### Collection Items Count
+>
+> To avoid potential performance issues we agree on hiding the counts of collections, datasets and files in the
+> Collection Page Items List.
+>
 > #### Create/Edit Collection Page Identifier Field
 >
 > A feature has been added to suggest an identifier to the user based on the collection name entered.

@@ -42,6 +42,7 @@ import { FileHolder } from '../domain/models/FileHolder'
 import { FixityAlgorithm } from '../domain/models/FixityAlgorithm'
 import { RestrictFileDTO } from '../domain/useCases/restrictFileDTO'
 import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
+import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { FileVersionSummaryInfo } from '../domain/models/FileVersionSummaryInfo'
 
 const includeDeaccessioned = true
@@ -146,12 +147,20 @@ export class FileJSDataverseRepository implements FileRepository {
   private static getTabularDataById(
     id: number,
     isTabular: boolean
-  ): Promise<FileTabularData> | undefined {
+  ): Promise<FileTabularData | undefined> {
     return isTabular
       ? getFileDataTables
           .execute(id)
           .then((jsTabularData) => JSFileMetadataMapper.toFileTabularData(jsTabularData))
-      : undefined
+          .catch((readError: ReadError) => {
+            if (readError instanceof ReadError) {
+              const errorHandler = new JSDataverseReadErrorHandler(readError)
+              if (errorHandler.getStatusCode() === 403) {
+                return undefined // return undefine if users don't have permission to access tabular data
+              }
+            }
+          })
+      : Promise.resolve(undefined)
   }
 
   private static getAllDownloadCount(jsFiles: JSFile[]): Promise<number[]> {

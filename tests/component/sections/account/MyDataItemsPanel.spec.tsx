@@ -1,10 +1,9 @@
-import {
-  CollectionItemSubset,
-  CountPerObjectType
-} from '@/collection/domain/models/CollectionItemSubset'
+import { CountPerObjectType } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
+import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
+import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 
@@ -22,13 +21,39 @@ const countPerObjectType: CountPerObjectType = {
   files: 140
 }
 
-const facets = CollectionItemsMother.createMyDataItemsFacets()
+const publicationStatusCounts = CollectionItemsMother.createMyDataPublicationCounts()
 
-const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount, countPerObjectType }
+const itemsWithCount: MyDataCollectionItemSubset = {
+  items,
+  publicationStatusCounts,
+  totalItemCount,
+  countPerObjectType
+}
 
-const emptyItemsWithCount: CollectionItemSubset = {
+const emptyItemsWithCount: MyDataCollectionItemSubset = {
   items: [],
-  facets: [],
+  publicationStatusCounts: [
+    {
+      publicationStatus: PublicationStatus.Unpublished,
+      count: 0
+    },
+    {
+      publicationStatus: PublicationStatus.Published,
+      count: 0
+    },
+    {
+      publicationStatus: PublicationStatus.Draft,
+      count: 0
+    },
+    {
+      publicationStatus: PublicationStatus.InReview,
+      count: 0
+    },
+    {
+      publicationStatus: PublicationStatus.Deaccessioned,
+      count: 0
+    }
+  ],
   totalItemCount: 0,
   countPerObjectType: {
     collections: 0,
@@ -59,14 +84,17 @@ describe('MyDataItemsPanel', () => {
     it('renders the search input for superusers', () => {
       cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
-      cy.findByPlaceholderText('Search by username...').should('exist')
+      cy.findByPlaceholderText('Search by username...')
+        .should('exist')
+        .invoke('val')
+        .should('equal', 'jamespotts')
     })
     it('shows the correct message when there are no results for user', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
-      cy.findByPlaceholderText('Search by username...').type('testUserName{enter}')
+      cy.findByPlaceholderText('Search by username...').clear().type('testUserName{enter}')
 
       cy.findByText(/No results found for user testUserName./).should('exist')
     })
@@ -224,9 +252,9 @@ describe('MyDataItemsPanel', () => {
 
   it('renders 4 items with no more to load, correct results in header, and no bottom skeleton loader', () => {
     const first4Elements = items.slice(0, 4)
-    const first4ElementsWithCount: CollectionItemSubset = {
+    const first4ElementsWithCount: MyDataCollectionItemSubset = {
       items: first4Elements,
-      facets,
+      publicationStatusCounts,
       totalItemCount: 4,
       countPerObjectType: {
         collections: 4,
