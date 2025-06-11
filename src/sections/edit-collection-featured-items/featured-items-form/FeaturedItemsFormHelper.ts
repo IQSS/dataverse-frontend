@@ -4,7 +4,7 @@ import {
 } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemField, FeaturedItemsFormData } from '../types'
 import {
-  CollectionFeaturedItemDTO,
+  CustomFeaturedItemDTO,
   CollectionFeaturedItemsDTO
 } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
@@ -73,7 +73,8 @@ export class FeaturedItemsFormHelper {
     const itemsMapped: CollectionFeaturedItemsDTO = formFeaturedItems.map((item, index) => {
       const { content, image, itemId } = item
 
-      const itemDTO: CollectionFeaturedItemDTO = {
+      const itemDTO: CustomFeaturedItemDTO = {
+        type: 'custom',
         content,
         displayOrder: index,
         keepFile: false

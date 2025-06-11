@@ -6,41 +6,11 @@ import { CollectionFeaturedItemMother } from '@tests/component/collection/domain
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
 const collectionRepositoryWithFeaturedItems = new CollectionMockRepository()
-const customFeaturedItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
-  id: 1,
-  displayOrder: 1
-})
-const customFeaturedItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
-  id: 2,
-  displayOrder: 4
-})
-
-const dvObjectCollectionFeaturedItem =
-  CollectionFeaturedItemMother.createDvObjectCollectionFeaturedItem({
-    id: 3,
-    displayOrder: 2
-  })
-
-const dvObjectDatasetFeaturedItem = CollectionFeaturedItemMother.createDvObjectDatasetFeaturedItem({
-  id: 4,
-  displayOrder: 3
-})
-
-const dvObjectFileFeaturedItem = CollectionFeaturedItemMother.createDvObjectFileFeaturedItem({
-  id: 5,
-  displayOrder: 5
-})
 
 collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve([
-        customFeaturedItemOne,
-        dvObjectCollectionFeaturedItem,
-        dvObjectDatasetFeaturedItem,
-        customFeaturedItemTwo,
-        dvObjectFileFeaturedItem
-      ])
+      resolve(CollectionFeaturedItemMother.createFeaturedItems())
     }, FakerHelper.loadingTimout())
   })
 }

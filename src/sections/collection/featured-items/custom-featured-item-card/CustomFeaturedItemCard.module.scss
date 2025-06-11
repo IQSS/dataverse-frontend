@@ -21,9 +21,16 @@
     box-shadow: 2px 2px 4px 0 color.adjust($dv-brand-color, $alpha: -0.75);
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover .image {
+      transform: scale(1.1);
+    }
+  }
+
   .image {
     max-height: 100px;
     object-fit: cover;
+    transition: all 0.4s ease-in-out;
   }
 
   .content {
