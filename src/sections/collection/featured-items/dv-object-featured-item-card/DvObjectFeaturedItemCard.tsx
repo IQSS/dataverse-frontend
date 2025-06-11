@@ -3,7 +3,7 @@ import { Card, Icon, IconName } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
 import {
   DvObjectFeaturedItem,
-  DvObjectFeaturedItemType
+  FeaturedItemType
 } from '@/collection/domain/models/CollectionFeaturedItem'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import styles from './DvObjectFeaturedItemCard.module.scss'
@@ -17,11 +17,11 @@ export const DvObjectFeaturedItemCard = ({ featuredItem }: DvObjectFeaturedItemC
 
   const createDvObjectURL = (type: DvObjectFeaturedItem['type'], identifier: string): string => {
     switch (type) {
-      case DvObjectFeaturedItemType.COLLECTION:
+      case FeaturedItemType.COLLECTION:
         return `${Route.COLLECTIONS_BASE}/${identifier}`
-      case DvObjectFeaturedItemType.DATASET:
+      case FeaturedItemType.DATASET:
         return `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${identifier}`
-      case DvObjectFeaturedItemType.FILE:
+      case FeaturedItemType.FILE:
         return `${Route.FILES}?${QueryParamKey.FILE_ID}=${identifier}`
       default:
         return '#' // Fallback URL if type is unknown
@@ -52,16 +52,16 @@ export const DvObjectFeaturedItemCard = ({ featuredItem }: DvObjectFeaturedItemC
             {featuredItem.type === 'dataset' && <Icon name={IconName.DATASET} />}
             {featuredItem.type === 'file' && <Icon name={IconName.FILE} />}
           </div>
-          {featuredItem.type === DvObjectFeaturedItemType.COLLECTION && (
+          {featuredItem.type === FeaturedItemType.COLLECTION && (
             <h4 className={styles.title}>Collection That Contains Information</h4>
           )}
-          {featuredItem.type === DvObjectFeaturedItemType.DATASET && (
+          {featuredItem.type === FeaturedItemType.DATASET && (
             <h4 className={styles.title}>
               Evaluation of Intradural Stimulation Efficiency and Selectivity in a Computational
               Model of Spinal Cord Stimulation
             </h4>
           )}
-          {featuredItem.type === DvObjectFeaturedItemType.FILE && (
+          {featuredItem.type === FeaturedItemType.FILE && (
             <h4 className={styles.title}>Screenshot 2023-09-07 at 12.32.23.png</h4>
           )}
         </Card.Body>

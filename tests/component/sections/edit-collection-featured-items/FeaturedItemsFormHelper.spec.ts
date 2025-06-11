@@ -1,9 +1,14 @@
 import {
   CollectionFeaturedItem,
-  CustomFeaturedItem
+  CustomFeaturedItem,
+  FeaturedItemType
 } from '@/collection/domain/models/CollectionFeaturedItem'
+import { CustomFeaturedItemDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 import { FeaturedItemsFormHelper } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsFormHelper'
-import { FeaturedItemField } from '@/sections/edit-collection-featured-items/types'
+import {
+  CustomFeaturedItemField,
+  FeaturedItemField
+} from '@/sections/edit-collection-featured-items/types'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
 const testFeaturedItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
@@ -24,24 +29,29 @@ const testCollectionFeaturedItems = [testFeaturedItemOne, testFeaturedItemTwo]
 
 const testFormFields: FeaturedItemField[] = [
   {
+    itemId: 1,
+    type: FeaturedItemType.CUSTOM,
     content: '<h1 class="rte-heading">Featured Item One</h1>',
-    image: 'https://via.placeholder.com/400x400',
-    itemId: 1
+    image: 'https://via.placeholder.com/400x400'
   },
   {
+    itemId: 2,
+    type: FeaturedItemType.CUSTOM,
     content: '<h1 class="rte-heading">Featured Item Two</h1>',
-    image: null,
-    itemId: 2
+    image: null
   },
   {
+    type: FeaturedItemType.CUSTOM,
     content: '<h1 class="rte-heading">Featured Item Three</h1>',
     image: new File([''], 'image.jpg')
   },
   {
+    type: FeaturedItemType.CUSTOM,
     content: '<h1 class="rte-heading">Featured Item Four</h1>',
     image: null
   },
   {
+    type: FeaturedItemType.CUSTOM,
     content: '<h1 class="rte-heading">Featured Item Five</h1>',
     image: new File([''], 'image.jpg'),
     itemId: 3
@@ -84,58 +94,68 @@ describe('FeaturedItemsFormHelper', () => {
   })
 
   it('should transform form fields mapped to collection featured items', () => {
-    const result = FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(
-      testFormFields
-    ) as CustomFeaturedItem[]
+    const result = FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(testFormFields)
 
-    expect(result[0].id).to.deep.equal(testFormFields[0].itemId)
-    expect(result[0].content).to.deep.equal(testFormFields[0].content)
-    expect(result[0].imageFileUrl).to.deep.equal(testFormFields[0].image)
-    expect(result[0].displayOrder).to.deep.equal(1)
+    const firstItem = result[0] as CustomFeaturedItem
+    const secondItem = result[1] as CustomFeaturedItem
+    const thirdItem = result[2] as CustomFeaturedItem
 
-    expect(result[1].id).to.deep.equal(testFormFields[1].itemId)
-    expect(result[1].content).to.deep.equal(testFormFields[1].content)
-    expect(result[1].imageFileUrl).to.deep.equal(undefined)
-    expect(result[1].displayOrder).to.deep.equal(2)
+    expect(firstItem.id).to.deep.equal(testFormFields[0].itemId)
+    expect(firstItem.content).to.deep.equal((testFormFields[0] as CustomFeaturedItemField).content)
+    expect(firstItem.imageFileUrl).to.deep.equal(
+      (testFormFields[0] as CustomFeaturedItemField).image
+    )
+    expect(firstItem.displayOrder).to.deep.equal(1)
 
-    expect(result[2].id).to.not.deep.equal(testFormFields[2].itemId)
-    expect(result[2].content).to.deep.equal(testFormFields[2].content)
-    expect(result[2].imageFileUrl).to.include('blob:')
-    expect(result[2].displayOrder).to.deep.equal(3)
+    expect(secondItem.id).to.deep.equal(testFormFields[1].itemId)
+    expect(secondItem.content).to.deep.equal((testFormFields[1] as CustomFeaturedItemField).content)
+    expect(secondItem.imageFileUrl).to.deep.equal(undefined)
+    expect(secondItem.displayOrder).to.deep.equal(2)
+
+    expect(thirdItem.id).to.not.deep.equal(testFormFields[2].itemId)
+    expect(thirdItem.content).to.deep.equal((testFormFields[2] as CustomFeaturedItemField).content)
+    expect(thirdItem.imageFileUrl).to.include('blob:')
+    expect(thirdItem.displayOrder).to.deep.equal(3)
   })
 
   it('should define featured items DTO based on form data', () => {
     const result = FeaturedItemsFormHelper.defineFeaturedItemsDTO(testFormFields)
 
-    expect(result[0].id).to.deep.equal(testFormFields[0].itemId)
-    expect(result[0].content).to.deep.equal(testFormFields[0].content)
-    expect(result[0].file).to.deep.equal(undefined)
-    expect(result[0].keepFile).to.deep.equal(true)
-    expect(result[0].displayOrder).to.deep.equal(0)
+    const firstItem = result[0] as CustomFeaturedItemDTO
+    const secondItem = result[1] as CustomFeaturedItemDTO
+    const thirdItem = result[2] as CustomFeaturedItemDTO
+    const fourthItem = result[3] as CustomFeaturedItemDTO
+    const fifthItem = result[4] as CustomFeaturedItemDTO
+
+    expect(firstItem.id).to.deep.equal(testFormFields[0].itemId)
+    expect(firstItem.content).to.deep.equal((testFormFields[0] as CustomFeaturedItemField).content)
+    expect(firstItem.file).to.deep.equal(undefined)
+    expect(firstItem.keepFile).to.deep.equal(true)
+    expect(firstItem.displayOrder).to.deep.equal(0)
 
     expect(result[1].id).to.deep.equal(testFormFields[1].itemId)
-    expect(result[1].content).to.deep.equal(testFormFields[1].content)
-    expect(result[1].file).to.deep.equal(undefined)
-    expect(result[1].keepFile).to.deep.equal(false)
-    expect(result[1].displayOrder).to.deep.equal(1)
+    expect(secondItem.content).to.deep.equal((testFormFields[1] as CustomFeaturedItemField).content)
+    expect(secondItem.file).to.deep.equal(undefined)
+    expect(secondItem.keepFile).to.deep.equal(false)
+    expect(secondItem.displayOrder).to.deep.equal(1)
 
-    expect(result[2].id).to.deep.equal(undefined)
-    expect(result[2].content).to.deep.equal(testFormFields[2].content)
-    expect(result[2].file).to.deep.equal(testFormFields[2].image)
-    expect(result[2].keepFile).to.deep.equal(false)
-    expect(result[2].displayOrder).to.deep.equal(2)
+    expect(thirdItem.id).to.deep.equal(undefined)
+    expect(thirdItem.content).to.deep.equal((testFormFields[2] as CustomFeaturedItemField).content)
+    expect(thirdItem.file).to.deep.equal((testFormFields[2] as CustomFeaturedItemField).image)
+    expect(thirdItem.keepFile).to.deep.equal(false)
+    expect(thirdItem.displayOrder).to.deep.equal(2)
 
-    expect(result[3].id).to.deep.equal(undefined)
-    expect(result[3].content).to.deep.equal(testFormFields[3].content)
-    expect(result[3].file).to.deep.equal(undefined)
-    expect(result[3].keepFile).to.deep.equal(false)
-    expect(result[3].displayOrder).to.deep.equal(3)
+    expect(fourthItem.id).to.deep.equal(undefined)
+    expect(fourthItem.content).to.deep.equal((testFormFields[3] as CustomFeaturedItemField).content)
+    expect(fourthItem.file).to.deep.equal(undefined)
+    expect(fourthItem.keepFile).to.deep.equal(false)
+    expect(fourthItem.displayOrder).to.deep.equal(3)
 
-    expect(result[4].id).to.deep.equal(testFormFields[4].itemId)
-    expect(result[4].content).to.deep.equal(testFormFields[4].content)
-    expect(result[4].file).to.deep.equal(testFormFields[4].image)
-    expect(result[4].keepFile).to.deep.equal(false)
-    expect(result[4].displayOrder).to.deep.equal(4)
+    expect(fifthItem.id).to.deep.equal(testFormFields[4].itemId)
+    expect(fifthItem.content).to.deep.equal((testFormFields[4] as CustomFeaturedItemField).content)
+    expect(fifthItem.file).to.deep.equal((testFormFields[4] as CustomFeaturedItemField).image)
+    expect(fifthItem.keepFile).to.deep.equal(false)
+    expect(fifthItem.displayOrder).to.deep.equal(4)
   })
 
   describe('formatBytes', () => {

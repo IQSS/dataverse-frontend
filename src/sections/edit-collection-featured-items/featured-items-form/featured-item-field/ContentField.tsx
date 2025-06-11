@@ -5,11 +5,12 @@ import styles from './FeaturedItemField.module.scss'
 
 interface ContentFieldProps {
   itemIndex: number
+  editEnabled: boolean
 }
 
 export const FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED = 15_000
 
-const ContentField = ({ itemIndex }: ContentFieldProps) => {
+const ContentField = ({ itemIndex, editEnabled }: ContentFieldProps) => {
   const { control } = useFormContext()
   const { t } = useTranslation('editCollectionFeaturedItems')
 
@@ -44,7 +45,7 @@ const ContentField = ({ itemIndex }: ContentFieldProps) => {
         rules={rules}
         render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => {
           return (
-            <Col>
+            <Col className={styles['editor-wrapper']}>
               <RichTextEditor
                 initialValue={value as string}
                 editorContentAriaLabelledBy={`featuredItems.${itemIndex}.content`}
@@ -53,6 +54,7 @@ const ContentField = ({ itemIndex }: ContentFieldProps) => {
                 ariaRequired
                 ref={ref}
                 editorContentId={`featuredItems.${itemIndex}.editorContent`}
+                disabled={!editEnabled}
               />
 
               {invalid && <div className={styles['error-msg']}>{error?.message}</div>}

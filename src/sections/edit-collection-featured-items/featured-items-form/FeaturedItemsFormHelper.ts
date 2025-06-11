@@ -1,11 +1,19 @@
 import {
   CollectionFeaturedItem,
-  CustomFeaturedItem
+  CustomFeaturedItem,
+  DvObjectFeaturedItem,
+  FeaturedItemType
 } from '@/collection/domain/models/CollectionFeaturedItem'
-import { FeaturedItemField, FeaturedItemsFormData } from '../types'
+import {
+  CustomFeaturedItemField,
+  DvObjectFeaturedItemField,
+  FeaturedItemField,
+  FeaturedItemsFormData
+} from '../types'
 import {
   CustomFeaturedItemDTO,
-  CollectionFeaturedItemsDTO
+  CollectionFeaturedItemsDTO,
+  DvObjectFeaturedItemDTO
 } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class FeaturedItemsFormHelper {
@@ -16,21 +24,31 @@ export class FeaturedItemsFormHelper {
     collectionFeaturedItems: CollectionFeaturedItem[]
   ): FeaturedItemsFormData['featuredItems'] {
     if (!collectionFeaturedItems.length) {
-      return [
-        {
-          content: '',
-          image: null
-        }
-      ]
+      return [{ type: 'base' }]
     }
 
     return collectionFeaturedItems.map((collectionFeaturedItem) => {
-      const { id, content, imageFileUrl } = collectionFeaturedItem as CustomFeaturedItem
+      if (collectionFeaturedItem.type === FeaturedItemType.CUSTOM) {
+        const { id, content, imageFileUrl } = collectionFeaturedItem
 
-      return {
-        content,
-        image: imageFileUrl ? imageFileUrl : null,
-        itemId: id
+        const customFeaturedItemFormFieldData: CustomFeaturedItemField = {
+          itemId: id,
+          type: FeaturedItemType.CUSTOM,
+          content,
+          image: imageFileUrl ? imageFileUrl : null
+        }
+
+        return customFeaturedItemFormFieldData
+      } else {
+        const { id, type, dvObjectIdentifier } = collectionFeaturedItem
+
+        const dvObjectFeaturedItemFormFieldData: DvObjectFeaturedItemField = {
+          itemId: id,
+          type,
+          dvObjectIdentifier
+        }
+
+        return dvObjectFeaturedItemFormFieldData
       }
     })
   }
@@ -42,25 +60,39 @@ export class FeaturedItemsFormHelper {
     featuredItemsFieldValues: FeaturedItemField[]
   ): CollectionFeaturedItem[] {
     return featuredItemsFieldValues.map((field, index) => {
-      const { content, image, itemId } = field
+      if (field.type === FeaturedItemType.CUSTOM) {
+        const { content, image, itemId } = field
 
-      const currentFeaturedItem: CollectionFeaturedItem = {
-        id: itemId ?? this.generateFakeNumberId(),
-        displayOrder: index + 1,
-        content
+        const currentFeaturedItem: CustomFeaturedItem = {
+          id: itemId ?? this.generateFakeNumberId(),
+          type: FeaturedItemType.CUSTOM,
+          displayOrder: index + 1,
+          content
+        }
+
+        if (image && image instanceof File) {
+          const objectUrl = URL.createObjectURL(image)
+
+          currentFeaturedItem.imageFileUrl = objectUrl
+        }
+
+        if (image && typeof image === 'string') {
+          currentFeaturedItem.imageFileUrl = image
+        }
+
+        return currentFeaturedItem
+      } else {
+        const { itemId, type, dvObjectIdentifier } = field as DvObjectFeaturedItemField
+
+        const currentFeaturedItem: DvObjectFeaturedItem = {
+          id: itemId ?? this.generateFakeNumberId(),
+          type,
+          dvObjectIdentifier,
+          displayOrder: index + 1
+        }
+
+        return currentFeaturedItem
       }
-
-      if (image && image instanceof File) {
-        const objectUrl = URL.createObjectURL(image)
-
-        currentFeaturedItem.imageFileUrl = objectUrl
-      }
-
-      if (image && typeof image === 'string') {
-        currentFeaturedItem.imageFileUrl = image
-      }
-
-      return currentFeaturedItem
     })
   }
 
@@ -71,37 +103,50 @@ export class FeaturedItemsFormHelper {
     formFeaturedItems: FeaturedItemsFormData['featuredItems']
   ): CollectionFeaturedItemsDTO {
     const itemsMapped: CollectionFeaturedItemsDTO = formFeaturedItems.map((item, index) => {
-      const { content, image, itemId } = item
+      if (item.type === FeaturedItemType.CUSTOM) {
+        const { content, image, itemId } = item
 
-      const itemDTO: CustomFeaturedItemDTO = {
-        type: 'custom',
-        content,
-        displayOrder: index,
-        keepFile: false
+        const itemDTO: CustomFeaturedItemDTO = {
+          type: FeaturedItemType.CUSTOM,
+          content,
+          displayOrder: index,
+          keepFile: false
+        }
+
+        const isNewItem = itemId === undefined
+        const imageIsFile = image instanceof File
+        const imageRemainsOriginal = typeof image === 'string' && image !== ''
+
+        // Add itemId of existing item
+        if (itemId) {
+          itemDTO.id = itemId
+        }
+
+        // New item
+        if (isNewItem) {
+          itemDTO.file = imageIsFile ? image : undefined
+          itemDTO.keepFile = false
+        }
+
+        // Existing item
+        if (!isNewItem) {
+          itemDTO.file = imageIsFile ? image : undefined
+          itemDTO.keepFile = imageRemainsOriginal && !imageIsFile ? true : false
+        }
+
+        return itemDTO
+      } else {
+        const { itemId, type, dvObjectIdentifier } = item as DvObjectFeaturedItemField
+
+        const itemDTO: DvObjectFeaturedItemDTO = {
+          id: itemId ?? this.generateFakeNumberId(),
+          type,
+          dvObjectIdentifier,
+          displayOrder: index + 1
+        }
+
+        return itemDTO
       }
-
-      const isNewItem = itemId === undefined
-      const imageIsFile = image instanceof File
-      const imageRemainsOriginal = typeof image === 'string' && image !== ''
-
-      // Add itemId of existing item
-      if (itemId) {
-        itemDTO.id = itemId
-      }
-
-      // New item
-      if (isNewItem) {
-        itemDTO.file = imageIsFile ? image : undefined
-        itemDTO.keepFile = false
-      }
-
-      // Existing item
-      if (!isNewItem) {
-        itemDTO.file = imageIsFile ? image : undefined
-        itemDTO.keepFile = imageRemainsOriginal && !imageIsFile ? true : false
-      }
-
-      return itemDTO
     })
 
     return itemsMapped

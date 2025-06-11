@@ -57,7 +57,7 @@ export const FeaturedItem = ({
   }
 
   // TODO: Add in next iteration when we actually have featured items differentiated by type
-  //   if (featuredItemFoundById.type !== 'custom') {
+  //   if (featuredItemFoundById.type !== FeaturedItemType.CUSTOM) {
   //     return (
   //       <Alert variant="danger" dismissible={false}>
   //         This page is only for custom featured items.

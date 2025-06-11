@@ -50,8 +50,9 @@
     width: $arrowSize;
     height: $arrowSize;
     border-radius: 50%;
-    transform: translateY(-50%);
     margin-inline: $arrowMarginX;
+
+    // transform: translateY(-50%);
 
     @media screen and (min-width: 768px) {
       display: flex;

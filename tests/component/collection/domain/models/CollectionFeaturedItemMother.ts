@@ -2,7 +2,7 @@ import {
   CollectionFeaturedItem,
   CustomFeaturedItem,
   DvObjectFeaturedItem,
-  DvObjectFeaturedItemType
+  FeaturedItemType
 } from '@/collection/domain/models/CollectionFeaturedItem'
 
 export class CollectionFeaturedItemMother {
@@ -10,7 +10,7 @@ export class CollectionFeaturedItemMother {
     return [
       {
         id: 1,
-        type: 'custom',
+        type: FeaturedItemType.CUSTOM,
         imageFileUrl: '/storybook/css.webp',
         displayOrder: 1,
         content:
@@ -18,13 +18,13 @@ export class CollectionFeaturedItemMother {
       },
       {
         id: 2,
-        type: DvObjectFeaturedItemType.COLLECTION,
+        type: FeaturedItemType.COLLECTION,
         dvObjectIdentifier: 'some-collection-alias',
         displayOrder: 2
       },
       {
         id: 3,
-        type: 'custom',
+        type: FeaturedItemType.CUSTOM,
         imageFileUrl: '/storybook/books.webp',
         displayOrder: 3,
         content:
@@ -32,13 +32,13 @@ export class CollectionFeaturedItemMother {
       },
       {
         id: 4,
-        type: DvObjectFeaturedItemType.DATASET,
+        type: FeaturedItemType.DATASET,
         dvObjectIdentifier: 'doi:10.5072/FK2/ABC123',
         displayOrder: 4
       },
       {
         id: 5,
-        type: DvObjectFeaturedItemType.FILE,
+        type: FeaturedItemType.FILE,
         dvObjectIdentifier: '45',
         displayOrder: 5
       }
@@ -51,7 +51,7 @@ export class CollectionFeaturedItemMother {
   ): CustomFeaturedItem {
     return {
       id: 1,
-      type: 'custom',
+      type: FeaturedItemType.CUSTOM,
       imageFileUrl: `/storybook/${img}.webp`,
       displayOrder: 1,
       content:
@@ -66,7 +66,7 @@ export class CollectionFeaturedItemMother {
     return {
       id: 1,
       displayOrder: 1,
-      type: DvObjectFeaturedItemType.COLLECTION,
+      type: FeaturedItemType.COLLECTION,
       dvObjectIdentifier: 'some-collection-alias',
       ...props
     }
@@ -78,7 +78,7 @@ export class CollectionFeaturedItemMother {
     return {
       id: 1,
       displayOrder: 1,
-      type: DvObjectFeaturedItemType.DATASET,
+      type: FeaturedItemType.DATASET,
       dvObjectIdentifier: 'doi:10.5072/FK2/ABC123',
       ...props
     }
@@ -90,7 +90,7 @@ export class CollectionFeaturedItemMother {
     return {
       id: 1,
       displayOrder: 1,
-      type: DvObjectFeaturedItemType.FILE,
+      type: FeaturedItemType.FILE,
       dvObjectIdentifier: '45',
       ...props
     }

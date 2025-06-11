@@ -4,6 +4,7 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { Button, useTheme } from '@iqss/dataverse-design-system'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
 import { useGetCollectionFeaturedItems } from '../useGetCollectionFeaturedItems'
 import { CustomFeaturedItemCard } from './custom-featured-item-card/CustomFeaturedItemCard'
 import { DvObjectFeaturedItemCard } from './dv-object-featured-item-card/DvObjectFeaturedItemCard'
@@ -154,7 +155,7 @@ export const FeaturedItems = ({
           tabIndex={0}>
           {collectionFeaturedItems.map((item, index) => (
             <div key={index} className={styles['slider-item']} data-index={index}>
-              {item.type === 'custom' ? (
+              {item.type === FeaturedItemType.CUSTOM ? (
                 <CustomFeaturedItemCard
                   featuredItem={item}
                   collectionId={collectionId}

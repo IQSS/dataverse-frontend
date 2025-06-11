@@ -8,7 +8,8 @@ import { toast } from 'react-toastify'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import {
   CollectionFeaturedItem,
-  CustomFeaturedItem
+  CustomFeaturedItem,
+  FeaturedItemType
 } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemField } from './featured-item-field/FeaturedItemField'
 import { PreviewCarousel } from './preview-carousel/PreviewCarousel'
@@ -55,6 +56,7 @@ export const FeaturedItemsForm = ({
     fields: fieldsArray,
     insert,
     remove,
+    update,
     move
   } = useFieldArray({
     name: 'featuredItems',
@@ -69,7 +71,7 @@ export const FeaturedItemsForm = ({
 
     insert(
       index + 1,
-      { content: '', image: null },
+      { type: 'base' },
       {
         shouldFocus: false
       }
@@ -85,6 +87,27 @@ export const FeaturedItemsForm = ({
       const newField = document.querySelector(`[data-featured-item="featured-item-${index + 1}"]`)
       newField?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }, 100)
+  }
+
+  const handleSelectType = (index: number, type: FeaturedItemType | 'base') => {
+    if (type === FeaturedItemType.CUSTOM) {
+      update(index, { type, content: '', image: null })
+      setTimeout(() => {
+        const newFieldEditor = document.getElementById(`featuredItems.${index}.editorContent`)
+        newFieldEditor?.focus()
+      }, 150)
+    } else if (
+      type === FeaturedItemType.COLLECTION ||
+      type === FeaturedItemType.DATASET ||
+      type === FeaturedItemType.FILE
+    ) {
+      update(index, { type, dvObjectIdentifier: '' })
+      setTimeout(() => {
+        form.setFocus(`featuredItems.${index}.type`, { shouldSelect: false })
+      }, 300)
+    } else {
+      update(index, { type: 'base' })
+    }
   }
 
   const handleOnRemoveField = (index: number) => remove(index)
@@ -162,11 +185,14 @@ export const FeaturedItemsForm = ({
                   disableDragWhenOnlyOneItem={fieldsArray.length === 1}
                   onAddField={handleOnAddField}
                   onRemoveField={handleOnRemoveField}
+                  onSelectType={handleSelectType}
                   initialImageUrl={
                     (collectionFeaturedItems as CustomFeaturedItem[]).find(
                       (item) => item.id === field.itemId
                     )?.imageFileUrl
                   }
+                  featuredItemType={form.watch(`featuredItems.${index}.type`) as FeaturedItemType}
+                  isExistingItem={form.watch(`featuredItems.${index}.itemId`) !== undefined}
                   key={field.id}
                 />
               ))}
