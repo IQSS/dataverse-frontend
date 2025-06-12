@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { Col, Form, RichTextEditor } from '@iqss/dataverse-design-system'
-import styles from './FeaturedItemField.module.scss'
+import styles from '../FeaturedItemField.module.scss'
 
 interface ContentFieldProps {
   itemIndex: number
@@ -10,7 +10,7 @@ interface ContentFieldProps {
 
 export const FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED = 15_000
 
-const ContentField = ({ itemIndex, editEnabled }: ContentFieldProps) => {
+export const ContentField = ({ itemIndex, editEnabled }: ContentFieldProps) => {
   const { control } = useFormContext()
   const { t } = useTranslation('editCollectionFeaturedItems')
 
@@ -65,5 +65,3 @@ const ContentField = ({ itemIndex, editEnabled }: ContentFieldProps) => {
     </Form.Group>
   )
 }
-
-export default ContentField

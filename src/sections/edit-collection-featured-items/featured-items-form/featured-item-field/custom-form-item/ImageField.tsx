@@ -9,9 +9,9 @@ import {
   ExclamationCircleFill
 } from 'react-bootstrap-icons'
 import cn from 'classnames'
-import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
+import { FeaturedItemsFormHelper } from '../../FeaturedItemsFormHelper'
 import { appendTimestampToImageUrl } from '@/sections/collection/featured-items/custom-featured-item-card/CustomFeaturedItemCard'
-import styles from './FeaturedItemField.module.scss'
+import styles from '../FeaturedItemField.module.scss'
 
 interface ImageFieldProps {
   itemIndex: number

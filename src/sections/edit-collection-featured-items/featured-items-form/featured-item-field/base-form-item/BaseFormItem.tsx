@@ -12,7 +12,7 @@ import styles from './BaseFormItem.module.scss'
 
 interface BaseFormItemProps {
   itemIndex: number
-  onSelectType: (index: number, type: FeaturedItemType) => void
+  onSelectType: (index: number, type: FeaturedItemType.CUSTOM | '' | 'base') => void
 }
 
 export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => {
@@ -63,11 +63,11 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
                     </Card.Body>
                   </Card>
                 </li>
-                {/* TODO:ME - Probably we want to avoid feature dv objects if the collection is not published yet? See https://guides.dataverse.org/en/latest/user/dataverse-management.html#featured-dataverse-collection */}
+
                 <li>
                   <Card
                     className={styles['card-option']}
-                    onClick={() => onSelectType(itemIndex, FeaturedItemType.COLLECTION)}>
+                    onClick={() => onSelectType(itemIndex, '')}>
                     <Card.Body>
                       <span>
                         <strong>Dataverse Object</strong>

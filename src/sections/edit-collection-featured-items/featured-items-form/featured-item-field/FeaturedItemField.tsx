@@ -7,19 +7,18 @@ import cn from 'classnames'
 import { Badge, Button, Col, Row, Tooltip } from '@iqss/dataverse-design-system'
 import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
 import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
-import { ImageField } from './ImageField'
-import ContentField from './ContentField'
 import { FeaturedItemTypeBadge } from './FeaturedItemTypeBadge'
 import { BaseFormItem } from './base-form-item/BaseFormItem'
-import styles from './FeaturedItemField.module.scss'
 import { DvObjectFormItem } from './dv-object-form-item/DvObjectFormItem'
+import { CustomFormItem } from './custom-form-item/CustomFormItem'
+import styles from './FeaturedItemField.module.scss'
 
 interface FeaturedItemFieldProps {
   id: string
   itemIndex: number
   onAddField: (index: number) => void
   onRemoveField: (index: number) => void
-  onSelectType: (index: number, type: FeaturedItemType | 'base') => void
+  onSelectType: (index: number, type: FeaturedItemType.CUSTOM | '' | 'base') => void
   disableDragWhenOnlyOneItem: boolean
   initialImageUrl?: string
   featuredItemType: FeaturedItemType | 'base' | ''
@@ -160,24 +159,19 @@ export const FeaturedItemField = ({
                 <BaseFormItem itemIndex={itemIndex} onSelectType={onSelectType} />
               )}
 
-              {/* TODO:ME - Prob good to move this to a folder to keep things organized */}
               {showCustomFeaturedItemFields && (
-                <>
-                  {/* CONTENT FIELD */}
-                  <ContentField itemIndex={itemIndex} editEnabled={editEnabled} />
-                  {/* IMAGE FIELD */}
-                  <ImageField
-                    itemIndex={itemIndex}
-                    editEnabled={editEnabled}
-                    initialImageUrl={initialImageUrl}
-                  />
-                </>
+                <CustomFormItem
+                  itemIndex={itemIndex}
+                  editEnabled={editEnabled}
+                  initialImageUrl={initialImageUrl}
+                />
               )}
               {showDvObjectFeaturedItemFields && (
                 <DvObjectFormItem
                   itemIndex={itemIndex}
                   featuredItemType={featuredItemType}
                   editEnabled={editEnabled}
+                  isExistingItem={isExistingItem}
                 />
               )}
             </Col>

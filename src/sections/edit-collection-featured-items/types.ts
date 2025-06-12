@@ -25,8 +25,9 @@ export type CustomFeaturedItemField = {
 
 export type DvObjectFeaturedItemField = {
   itemId?: CollectionFeaturedItem['id']
-  type: FeaturedItemType.COLLECTION | FeaturedItemType.DATASET | FeaturedItemType.FILE
+  type: FeaturedItemType.COLLECTION | FeaturedItemType.DATASET | FeaturedItemType.FILE | ''
   dvObjectIdentifier: string
+  dvObjectUrl: string
 }
 
 // This will be the data of a form field when just adding it, then the user will select which type of featured item wants, custom or dvObject.

@@ -27,6 +27,12 @@
         "maxLength": "Content must be {{maxLength}} characters or less."
       }
     },
+    "dvObjectUrl": {
+      "label": "Dataverse Object URL",
+      "helperText": "Paste the Collection, Dataset or File URL you want to feature. You can also paste a Dataset DOI URL directly.",
+      "required": "Dataverse Object URL is required",
+      "invalid": "The URL must have the correct format for a Dataverse Collection, Dataset, File, or Dataset DOI URL."
+    },
     "submitStatus": {
       "success": "Featured items have been updated successfully."
     },

@@ -89,19 +89,15 @@ export const FeaturedItemsForm = ({
     }, 100)
   }
 
-  const handleSelectType = (index: number, type: FeaturedItemType | 'base') => {
+  const handleSelectType = (index: number, type: FeaturedItemType.CUSTOM | '' | 'base') => {
     if (type === FeaturedItemType.CUSTOM) {
       update(index, { type, content: '', image: null })
       setTimeout(() => {
         const newFieldEditor = document.getElementById(`featuredItems.${index}.editorContent`)
         newFieldEditor?.focus()
       }, 150)
-    } else if (
-      type === FeaturedItemType.COLLECTION ||
-      type === FeaturedItemType.DATASET ||
-      type === FeaturedItemType.FILE
-    ) {
-      update(index, { type, dvObjectIdentifier: '' })
+    } else if (type === '') {
+      update(index, { type: '', dvObjectIdentifier: '', dvObjectUrl: '' })
       setTimeout(() => {
         form.setFocus(`featuredItems.${index}.type`, { shouldSelect: false })
       }, 300)

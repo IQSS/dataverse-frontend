@@ -1,12 +1,12 @@
 import {
   CollectionFeaturedItem,
-  CustomFeaturedItem,
   FeaturedItemType
 } from '@/collection/domain/models/CollectionFeaturedItem'
 import { CustomFeaturedItemDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 import { FeaturedItemsFormHelper } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsFormHelper'
 import {
   CustomFeaturedItemField,
+  DvObjectFeaturedItemField,
   FeaturedItemField
 } from '@/sections/edit-collection-featured-items/types'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
@@ -25,7 +25,29 @@ const testFeaturedItemTwo = CollectionFeaturedItemMother.createCustomFeaturedIte
   imageFileUrl: undefined
 })
 
-const testCollectionFeaturedItems = [testFeaturedItemOne, testFeaturedItemTwo]
+const testFeaturedItemThree = CollectionFeaturedItemMother.createDvObjectCollectionFeaturedItem({
+  id: 3,
+  dvObjectIdentifier: 'sample-collection-id',
+  displayOrder: 3
+})
+const testFeaturedItemFour = CollectionFeaturedItemMother.createDvObjectDatasetFeaturedItem({
+  id: 4,
+  dvObjectIdentifier: 'doi:10.5072/FK2/ABC123',
+  displayOrder: 4
+})
+const testFeaturedItemFive = CollectionFeaturedItemMother.createDvObjectFileFeaturedItem({
+  id: 5,
+  dvObjectIdentifier: '44',
+  displayOrder: 5
+})
+
+const testCollectionFeaturedItems = [
+  testFeaturedItemOne,
+  testFeaturedItemTwo,
+  testFeaturedItemThree,
+  testFeaturedItemFour,
+  testFeaturedItemFive
+]
 
 const testFormFields: FeaturedItemField[] = [
   {
@@ -55,6 +77,23 @@ const testFormFields: FeaturedItemField[] = [
     content: '<h1 class="rte-heading">Featured Item Five</h1>',
     image: new File([''], 'image.jpg'),
     itemId: 3
+  },
+  {
+    type: FeaturedItemType.COLLECTION,
+    dvObjectIdentifier: 'sample-collection-id',
+    dvObjectUrl: 'http://localhost:8000/spa/collections/sample-collection-id',
+    itemId: 4
+  },
+  {
+    type: FeaturedItemType.DATASET,
+    dvObjectIdentifier: 'doi:10.5072/FK2/ABC123',
+    dvObjectUrl: 'http://localhost:8000/spa/datasets?persistentId=doi:10.5072/FK2/ABC123'
+  },
+  {
+    type: FeaturedItemType.FILE,
+    dvObjectIdentifier: '44',
+    dvObjectUrl: 'http://localhost:8000/spa/files?id=44&datasetVersion=2.0',
+    itemId: 6
   }
 ]
 
@@ -67,8 +106,7 @@ describe('FeaturedItemsFormHelper', () => {
 
       expect(result).to.deep.equal([
         {
-          content: '',
-          image: null
+          type: 'base'
         }
       ])
     })
@@ -78,27 +116,56 @@ describe('FeaturedItemsFormHelper', () => {
         testCollectionFeaturedItems
       )
 
-      expect(result).to.deep.equal([
-        {
-          content: '<h1 class="rte-heading">Featured Item One</h1>',
-          image: 'https://via.placeholder.com/400x400',
-          itemId: 1
-        },
-        {
-          content: '<h1 class="rte-heading">Featured Item Two</h1>',
-          image: null,
-          itemId: 2
-        }
-      ])
+      const firstItem = result[0] as CustomFeaturedItemField
+      const secondItem = result[1] as CustomFeaturedItemField
+      const thirdItem = result[2] as DvObjectFeaturedItemField
+      const fourthItem = result[3] as DvObjectFeaturedItemField
+      const fifthItem = result[4] as DvObjectFeaturedItemField
+
+      expect(firstItem.itemId).to.deep.equal(testFeaturedItemOne.id)
+      expect(firstItem.type).to.deep.equal(FeaturedItemType.CUSTOM)
+      expect(firstItem.content).to.deep.equal('<h1 class="rte-heading">Featured Item One</h1>')
+      expect(firstItem.image).to.deep.equal(testFeaturedItemOne.imageFileUrl)
+
+      expect(secondItem.itemId).to.deep.equal(testFeaturedItemTwo.id)
+      expect(secondItem.type).to.deep.equal(FeaturedItemType.CUSTOM)
+      expect(secondItem.content).to.deep.equal('<h1 class="rte-heading">Featured Item Two</h1>')
+      expect(secondItem.image).to.deep.equal(null)
+
+      expect(thirdItem.type).to.deep.equal(FeaturedItemType.COLLECTION)
+      expect(thirdItem.dvObjectIdentifier).to.deep.equal('sample-collection-id')
+      expect(thirdItem.dvObjectUrl).to.include(
+        `collections/${testFeaturedItemThree.dvObjectIdentifier}`
+      )
+      expect(thirdItem.itemId).to.deep.equal(testFeaturedItemThree.id)
+      expect(fourthItem.type).to.deep.equal(FeaturedItemType.DATASET)
+      expect(fourthItem.dvObjectIdentifier).to.deep.equal('doi:10.5072/FK2/ABC123')
+      expect(fourthItem.dvObjectUrl).to.include(
+        `datasets?persistentId=${testFeaturedItemFour.dvObjectIdentifier}`
+      )
+      expect(fourthItem.itemId).to.deep.equal(testFeaturedItemFour.id)
+      expect(fifthItem.type).to.deep.equal(FeaturedItemType.FILE)
+      expect(fifthItem.dvObjectIdentifier).to.deep.equal('44')
+      expect(fifthItem.dvObjectUrl).to.include(
+        `files?id=${testFeaturedItemFive.dvObjectIdentifier}`
+      )
+      expect(fifthItem.itemId).to.deep.equal(testFeaturedItemFive.id)
+      expect(result.length).to.deep.equal(5)
     })
   })
 
   it('should transform form fields mapped to collection featured items', () => {
-    const result = FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(testFormFields)
+    const customFeaturedItemsFields = testFormFields.filter(
+      (field): field is CustomFeaturedItemField => field.type === FeaturedItemType.CUSTOM
+    )
+    const result =
+      FeaturedItemsFormHelper.transformCustomFormFieldsToFeaturedItems(customFeaturedItemsFields)
 
-    const firstItem = result[0] as CustomFeaturedItem
-    const secondItem = result[1] as CustomFeaturedItem
-    const thirdItem = result[2] as CustomFeaturedItem
+    const firstItem = result[0]
+    const secondItem = result[1]
+    const thirdItem = result[2]
+    const fourthItem = result[3]
+    const fifthItem = result[4]
 
     expect(firstItem.id).to.deep.equal(testFormFields[0].itemId)
     expect(firstItem.content).to.deep.equal((testFormFields[0] as CustomFeaturedItemField).content)
@@ -116,6 +183,16 @@ describe('FeaturedItemsFormHelper', () => {
     expect(thirdItem.content).to.deep.equal((testFormFields[2] as CustomFeaturedItemField).content)
     expect(thirdItem.imageFileUrl).to.include('blob:')
     expect(thirdItem.displayOrder).to.deep.equal(3)
+
+    expect(fourthItem.id).to.not.deep.equal(testFormFields[3].itemId)
+    expect(fourthItem.content).to.deep.equal((testFormFields[3] as CustomFeaturedItemField).content)
+    expect(fourthItem.imageFileUrl).to.deep.equal(undefined)
+    expect(fourthItem.displayOrder).to.deep.equal(4)
+
+    expect(fifthItem.id).to.deep.equal(testFormFields[4].itemId)
+    expect(fifthItem.content).to.deep.equal((testFormFields[4] as CustomFeaturedItemField).content)
+    expect(fifthItem.imageFileUrl).to.include('blob:')
+    expect(fifthItem.displayOrder).to.deep.equal(5)
   })
 
   it('should define featured items DTO based on form data', () => {
@@ -156,6 +233,91 @@ describe('FeaturedItemsFormHelper', () => {
     expect(fifthItem.file).to.deep.equal((testFormFields[4] as CustomFeaturedItemField).image)
     expect(fifthItem.keepFile).to.deep.equal(false)
     expect(fifthItem.displayOrder).to.deep.equal(4)
+  })
+
+  describe('extractDvObjectTypeAndIdentiferFromUrlValue', () => {
+    it('should return null when url is empty', () => {
+      const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue('')
+
+      expect(result).to.deep.equal({ type: null, identifier: null })
+    })
+
+    it('should return dataset type and identifier from DOI pasted directly', () => {
+      const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue(
+        'https://doi.org/10.70122/DVN/Q3ZSNA'
+      )
+
+      expect(result).to.deep.equal({
+        type: FeaturedItemType.DATASET,
+        identifier: 'https://doi.org/10.70122/DVN/Q3ZSNA'
+      })
+    })
+
+    it('should return collection type and identifier from SPA URL', () => {
+      const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue(
+        'http://localhost:8000/spa/collections/dataverse-admin-collection'
+      )
+
+      expect(result).to.deep.equal({
+        type: FeaturedItemType.COLLECTION,
+        identifier: 'dataverse-admin-collection'
+      })
+    })
+
+    it('should return collection type and identifier from JSF URL', () => {
+      const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue(
+        'http://localhost:8000/dataverse/dataverse-admin-collection'
+      )
+
+      expect(result).to.deep.equal({
+        type: FeaturedItemType.COLLECTION,
+        identifier: 'dataverse-admin-collection'
+      })
+    })
+
+    it('should return dataset type and identifier from SPA URL', () => {
+      const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue(
+        'http://localhost:8000/spa/datasets?persistentId=doi:10.5072/FK2/HIS9DO'
+      )
+
+      expect(result).to.deep.equal({
+        type: FeaturedItemType.DATASET,
+        identifier: 'doi:10.5072/FK2/HIS9DO'
+      })
+    })
+
+    it('should return dataset type and identifier from JSF URL', () => {
+      const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue(
+        'http://localhost:8000/dataset.xhtml?persistentId=doi:10.5072/FK2/HIS9DO'
+      )
+
+      expect(result).to.deep.equal({
+        type: FeaturedItemType.DATASET,
+        identifier: 'doi:10.5072/FK2/HIS9DO'
+      })
+    })
+
+    it('should return file type and identifier from SPA URL', () => {
+      const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue(
+        'http://localhost:8000/spa/files?id=4&datasetVersion=2.0'
+      )
+
+      expect(result).to.deep.equal({
+        type: FeaturedItemType.FILE,
+        identifier: '4'
+      })
+    })
+
+    it('should return file type and identifier from JSF URL', () => {
+      const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue(
+        'http://localhost:8000/file.xhtml?fileId=4&version=2.0'
+      )
+
+      expect(result).to.deep.equal({
+        type: FeaturedItemType.FILE,
+        identifier: '4'
+      })
+    })
   })
 
   describe('formatBytes', () => {
