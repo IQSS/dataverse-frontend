@@ -13,6 +13,7 @@ export type DvObjectFeaturedItem = {
   id: number
   type: FeaturedItemType.COLLECTION | FeaturedItemType.DATASET | FeaturedItemType.FILE
   dvObjectIdentifier: string
+  dvObjectDisplayName: string
   displayOrder: number
 }
 

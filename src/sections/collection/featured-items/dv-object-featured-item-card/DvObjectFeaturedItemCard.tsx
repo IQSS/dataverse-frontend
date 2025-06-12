@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { Card, Icon, IconName } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
 import {
@@ -7,6 +6,7 @@ import {
 } from '@/collection/domain/models/CollectionFeaturedItem'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import styles from './DvObjectFeaturedItemCard.module.scss'
+import { Link } from 'react-router-dom'
 
 interface DvObjectFeaturedItemCardProps {
   featuredItem: DvObjectFeaturedItem
@@ -28,18 +28,10 @@ export const DvObjectFeaturedItemCard = ({ featuredItem }: DvObjectFeaturedItemC
     }
   }
 
-  // TODO:ME - Do we want target blank links or in same tab links? <a /> or <Link />?
-  const dvObjectURL = useMemo(() => {
-    return createDvObjectURL(featuredItem.type, featuredItem.dvObjectIdentifier)
-  }, [featuredItem.type, featuredItem.dvObjectIdentifier])
+  const dvObjectURL = createDvObjectURL(featuredItem.type, featuredItem.dvObjectIdentifier)
 
   return (
-    <a
-      href={dvObjectURL}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`View ${featuredItem.type}`}
-      className={styles.link_wrapper}>
+    <Link to={dvObjectURL} aria-label={`View ${featuredItem.type}`} className={styles.link_wrapper}>
       <Card className={styles.custom_featured_item_card}>
         <Card.Body className={styles.body}>
           <div
@@ -52,20 +44,9 @@ export const DvObjectFeaturedItemCard = ({ featuredItem }: DvObjectFeaturedItemC
             {featuredItem.type === 'dataset' && <Icon name={IconName.DATASET} />}
             {featuredItem.type === 'file' && <Icon name={IconName.FILE} />}
           </div>
-          {featuredItem.type === FeaturedItemType.COLLECTION && (
-            <h4 className={styles.title}>Collection That Contains Information</h4>
-          )}
-          {featuredItem.type === FeaturedItemType.DATASET && (
-            <h4 className={styles.title}>
-              Evaluation of Intradural Stimulation Efficiency and Selectivity in a Computational
-              Model of Spinal Cord Stimulation
-            </h4>
-          )}
-          {featuredItem.type === FeaturedItemType.FILE && (
-            <h4 className={styles.title}>Screenshot 2023-09-07 at 12.32.23.png</h4>
-          )}
+          <h4 className={styles.title}>{featuredItem.dvObjectDisplayName}</h4>
         </Card.Body>
       </Card>
-    </a>
+    </Link>
   )
 }

@@ -20,6 +20,7 @@ export class CollectionFeaturedItemMother {
         id: 2,
         type: FeaturedItemType.COLLECTION,
         dvObjectIdentifier: 'some-collection-alias',
+        dvObjectDisplayName: 'Sample Collection',
         displayOrder: 2
       },
       {
@@ -34,12 +35,14 @@ export class CollectionFeaturedItemMother {
         id: 4,
         type: FeaturedItemType.DATASET,
         dvObjectIdentifier: 'doi:10.5072/FK2/ABC123',
+        dvObjectDisplayName: 'Sample Dataset',
         displayOrder: 4
       },
       {
         id: 5,
         type: FeaturedItemType.FILE,
         dvObjectIdentifier: '45',
+        dvObjectDisplayName: 'Sample-File.txt',
         displayOrder: 5
       }
     ]
@@ -68,6 +71,7 @@ export class CollectionFeaturedItemMother {
       displayOrder: 1,
       type: FeaturedItemType.COLLECTION,
       dvObjectIdentifier: 'some-collection-alias',
+      dvObjectDisplayName: 'Sample Collection',
       ...props
     }
   }
@@ -80,6 +84,7 @@ export class CollectionFeaturedItemMother {
       displayOrder: 1,
       type: FeaturedItemType.DATASET,
       dvObjectIdentifier: 'doi:10.5072/FK2/ABC123',
+      dvObjectDisplayName: 'Sample Dataset',
       ...props
     }
   }
@@ -92,6 +97,7 @@ export class CollectionFeaturedItemMother {
       displayOrder: 1,
       type: FeaturedItemType.FILE,
       dvObjectIdentifier: '45',
+      dvObjectDisplayName: 'Sample-File.txt',
       ...props
     }
   }
