@@ -63,7 +63,7 @@ export function useSubmitFeaturedItems(
         setSubmitError(formattedError)
         setSubmissionStatus(SubmissionStatus.Errored)
 
-        toast.error(formattedError, { autoClose: false })
+        toast.error(formattedError, { autoClose: 10_000 })
       })
   }
 

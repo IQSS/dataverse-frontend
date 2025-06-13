@@ -127,13 +127,16 @@ export class FeaturedItemsFormHelper {
         const { itemId, type, dvObjectIdentifier } = item as DvObjectFeaturedItemField
 
         const itemDTO: DvObjectFeaturedItemDTO = {
-          id: itemId ?? this.generateFakeNumberId(),
           type: type as
             | FeaturedItemType.COLLECTION
             | FeaturedItemType.DATASET
             | FeaturedItemType.FILE,
           dvObjectIdentifier,
           displayOrder: index + 1
+        }
+
+        if (itemId) {
+          itemDTO.id = itemId
         }
 
         return itemDTO
