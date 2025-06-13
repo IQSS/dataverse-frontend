@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { useWatch } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { Button, Tooltip } from '@iqss/dataverse-design-system'
 import { ArrowLeft, ExclamationTriangle } from 'react-bootstrap-icons'
 import styles from './FeaturedItemField.module.scss'
@@ -14,6 +14,7 @@ interface BackToTypeSelectionButtonProps {
 export const BackToTypeSelectionButton = memo(
   ({ itemIndex, backToTypeSelection }: BackToTypeSelectionButtonProps) => {
     const { t } = useTranslation('shared')
+    const { clearErrors } = useFormContext()
 
     // All of this logic is to determine if we should show a "Back" confirmation dialog when the user tries to go back
     const [dvObjectUrlValue, customContentValue, customImageValue] = useWatch({
@@ -60,6 +61,14 @@ export const BackToTypeSelectionButton = memo(
         if (!shouldGoBack) return
       }
 
+      // Clear errors when going back in case there was any
+      clearErrors([
+        `featuredItems.${itemIndex}.dvObjectUrl`,
+        `featuredItems.${itemIndex}.content`,
+        `featuredItems.${itemIndex}.image`
+      ])
+
+      // Go back to type selection
       backToTypeSelection()
     }
 
