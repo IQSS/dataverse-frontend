@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   DropdownButton,
@@ -28,15 +28,6 @@ export const EditCollectionDropdown = ({
   canUserDeleteCollection
 }: EditCollectionDropdownProps) => {
   const { t } = useTranslation('collection')
-  const navigate = useNavigate()
-
-  const onClickEditGeneralInformation = () => {
-    navigate(RouteWithParams.EDIT_COLLECTION(collection.id))
-  }
-
-  const onClickEditFeaturedItems = () => {
-    navigate(RouteWithParams.EDIT_COLLECTION_FEATURED_ITEMS(collection.id))
-  }
 
   const canCollectionBeDeleted =
     canUserDeleteCollection &&
@@ -63,10 +54,12 @@ export const EditCollectionDropdown = ({
         </div>
       </DropdownHeader>
       <DropdownSeparator />
-      <DropdownButtonItem onClick={onClickEditGeneralInformation}>
+      <DropdownButtonItem as={Link} to={RouteWithParams.EDIT_COLLECTION(collection.id)}>
         {t('editCollection.generalInfo')}
       </DropdownButtonItem>
-      <DropdownButtonItem onClick={onClickEditFeaturedItems}>
+      <DropdownButtonItem
+        as={Link}
+        to={RouteWithParams.EDIT_COLLECTION_FEATURED_ITEMS(collection.id)}>
         {t('featuredItems.title')}
       </DropdownButtonItem>
 
