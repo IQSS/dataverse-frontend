@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useTranslation } from 'react-i18next'
-import { ArrowLeft, Pencil } from 'react-bootstrap-icons'
+import { Pencil } from 'react-bootstrap-icons'
 import cn from 'classnames'
 import { Badge, Button, Col, Row, Tooltip } from '@iqss/dataverse-design-system'
 import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
@@ -10,6 +10,7 @@ import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButton
 import { BaseFormItem } from './base-form-item/BaseFormItem'
 import { DvObjectFormItem } from './dv-object-form-item/DvObjectFormItem'
 import { CustomFormItem } from './custom-form-item/CustomFormItem'
+import { BackToTypeSelectionButton } from './BackToTypeSelectionButton'
 import styles from './FeaturedItemField.module.scss'
 
 interface FeaturedItemFieldProps {
@@ -68,6 +69,11 @@ export const FeaturedItemField = ({
 
   const isBaseFeaturedItemField = featuredItemType === 'base'
 
+  const backToTypeSelection = useCallback(
+    () => onSelectType(itemIndex, 'base'),
+    [itemIndex, onSelectType]
+  )
+
   return (
     <div
       id={id}
@@ -109,19 +115,10 @@ export const FeaturedItemField = ({
             <Col md={8} lg={9}>
               <div>
                 {!isBaseFeaturedItemField && !isExistingItem && (
-                  // TODO:ME - When going back we need to make the user confirm if they want to discard the changes
-                  // As this is only shown when the user is editing a new item we can detect the content property and thats it. Check maybe we have a util to do that already in the content rules
-                  <Tooltip overlay="Back to featured item type selection" placement="top">
-                    <Button
-                      onClick={() => onSelectType(itemIndex, 'base')}
-                      icon={<ArrowLeft size={16} />}
-                      className={styles['back-btn']}
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      aria-label="Go back to featured item type selection"
-                    />
-                  </Tooltip>
+                  <BackToTypeSelectionButton
+                    backToTypeSelection={backToTypeSelection}
+                    itemIndex={itemIndex}
+                  />
                 )}
               </div>
             </Col>
@@ -132,7 +129,7 @@ export const FeaturedItemField = ({
         </Col>
         <Col xs={12}>
           <Row>
-            <Col md={1} className={styles['drag-edit-btn-column']}>
+            <Col md={1} className="mb-2">
               {!isBaseFeaturedItemField && (
                 <div>
                   <Tooltip
@@ -177,7 +174,7 @@ export const FeaturedItemField = ({
                 />
               )}
             </Col>
-            <Col md={3} lg={2} style={{ marginTop: '2rem' }}>
+            <Col md={3} lg={2}>
               <DynamicFieldsButtons
                 fieldName="Featured Item"
                 onAddButtonClick={() => onAddField(itemIndex)}
