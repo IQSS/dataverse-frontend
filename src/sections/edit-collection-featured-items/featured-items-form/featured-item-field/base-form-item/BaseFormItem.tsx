@@ -41,11 +41,19 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
           return (
             <>
               {invalid && <div className="text-danger small mb-1">{error?.message}</div>}
+              {/* This hidden input is needed for scrolling this field into view if the user submits the form and didn't select an option */}
+              <input
+                type="text"
+                className="visually-hidden"
+                ref={ref}
+                aria-hidden="true"
+                tabIndex={-1}
+              />
+
               <ul
                 className={cn(styles['types-list'], {
                   [styles['is-invalid']]: invalid
                 })}>
-                <input type="text" className="visually-hidden" ref={ref} />
                 <li>
                   <Card
                     className={styles['card-option']}

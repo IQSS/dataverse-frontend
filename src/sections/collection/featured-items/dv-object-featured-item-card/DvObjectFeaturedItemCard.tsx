@@ -13,8 +13,6 @@ interface DvObjectFeaturedItemCardProps {
 }
 
 export const DvObjectFeaturedItemCard = ({ featuredItem }: DvObjectFeaturedItemCardProps) => {
-  // TODO:ME - Extend dv objects to have the title of collection, dataset, or name of file.
-
   const createDvObjectURL = (type: DvObjectFeaturedItem['type'], identifier: string): string => {
     switch (type) {
       case FeaturedItemType.COLLECTION:

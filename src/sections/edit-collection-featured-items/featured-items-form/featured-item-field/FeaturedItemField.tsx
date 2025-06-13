@@ -7,7 +7,6 @@ import cn from 'classnames'
 import { Badge, Button, Col, Row, Tooltip } from '@iqss/dataverse-design-system'
 import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
 import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
-import { FeaturedItemTypeBadge } from './FeaturedItemTypeBadge'
 import { BaseFormItem } from './base-form-item/BaseFormItem'
 import { DvObjectFormItem } from './dv-object-form-item/DvObjectFormItem'
 import { CustomFormItem } from './custom-form-item/CustomFormItem'
@@ -84,7 +83,29 @@ export const FeaturedItemField = ({
       <Row>
         <Col xs={12}>
           <Row className={styles['featured-item-header']}>
-            <Col md={1}>{''}</Col>
+            <Col md={1} lg={1}>
+              {!isBaseFeaturedItemField && (
+                <button
+                  type="button"
+                  ref={setActivatorNodeRef}
+                  {...attributesCheckingDisabled}
+                  {...listeners}
+                  className={cn(styles['drag-handle'], {
+                    [styles['disabled']]: disableDragWhenOnlyOneItem
+                  })}
+                  aria-label={tShared('dragHandleLabel')}
+                  disabled={disableDragWhenOnlyOneItem}>
+                  <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="9" cy="6" r="1.5" fill="#777" />
+                    <circle cx="15" cy="6" r="1.5" fill="#777" />
+                    <circle cx="9" cy="12" r="1.5" fill="#777" />
+                    <circle cx="15" cy="12" r="1.5" fill="#777" />
+                    <circle cx="9" cy="18" r="1.5" fill="#777" />
+                    <circle cx="15" cy="18" r="1.5" fill="#777" />
+                  </svg>
+                </button>
+              )}
+            </Col>
             <Col md={8} lg={9}>
               <div>
                 {!isBaseFeaturedItemField && !isExistingItem && (
@@ -94,6 +115,7 @@ export const FeaturedItemField = ({
                     <Button
                       onClick={() => onSelectType(itemIndex, 'base')}
                       icon={<ArrowLeft size={16} />}
+                      className={styles['back-btn']}
                       type="button"
                       variant="secondary"
                       size="sm"
@@ -103,14 +125,8 @@ export const FeaturedItemField = ({
                 )}
               </div>
             </Col>
-            <Col md={3} lg={2}>
-              <div className={styles['badges-column']}>
-                {featuredItemType !== 'base' && featuredItemType !== '' && (
-                  <FeaturedItemTypeBadge type={featuredItemType} />
-                )}
-
-                <Badge variant="secondary">Order {itemIndex + 1}</Badge>
-              </div>
+            <Col md={3} lg={2} className="text-end">
+              <Badge variant="secondary">Order {itemIndex + 1}</Badge>
             </Col>
           </Row>
         </Col>
@@ -119,46 +135,30 @@ export const FeaturedItemField = ({
             <Col md={1} className={styles['drag-edit-btn-column']}>
               {!isBaseFeaturedItemField && (
                 <div>
-                  <Tooltip overlay="Toggle edit mode" placement="right">
+                  <Tooltip
+                    overlay={editEnabled ? 'Disable editing' : 'Enable editing'}
+                    placement="right">
                     <Button
                       onClick={() => setEditEnabled(!editEnabled)}
-                      className={cn(styles['edit-button'], {
+                      className={cn(styles['edit-btn'], {
                         [styles['edit-disabled']]: !editEnabled
                       })}
                       icon={<Pencil size={18} />}
                       type="button"
                       variant="primary"
-                      aria-label="Toggle edit mode"
+                      aria-label={editEnabled ? 'Disable editing' : 'Enable editing'}
                     />
                   </Tooltip>
                 </div>
               )}
-
-              <button
-                type="button"
-                ref={setActivatorNodeRef}
-                {...attributesCheckingDisabled}
-                {...listeners}
-                className={cn(styles['drag-handle'], {
-                  [styles['disabled']]: disableDragWhenOnlyOneItem
-                })}
-                aria-label={tShared('dragHandleLabel')}
-                disabled={disableDragWhenOnlyOneItem || isBaseFeaturedItemField}>
-                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="9" cy="6" r="1.5" fill="#777" />
-                  <circle cx="15" cy="6" r="1.5" fill="#777" />
-                  <circle cx="9" cy="12" r="1.5" fill="#777" />
-                  <circle cx="15" cy="12" r="1.5" fill="#777" />
-                  <circle cx="9" cy="18" r="1.5" fill="#777" />
-                  <circle cx="15" cy="18" r="1.5" fill="#777" />
-                </svg>
-              </button>
             </Col>
             <Col md={8} lg={9}>
+              {/* Allows the user to select to create a CUSTOM or Dataverse Object featured item  */}
               {isBaseFeaturedItemField && (
                 <BaseFormItem itemIndex={itemIndex} onSelectType={onSelectType} />
               )}
 
+              {/* Shows the form fields for adding a custom featured item */}
               {showCustomFeaturedItemFields && (
                 <CustomFormItem
                   itemIndex={itemIndex}
@@ -166,6 +166,8 @@ export const FeaturedItemField = ({
                   initialImageUrl={initialImageUrl}
                 />
               )}
+
+              {/* Shows the form fields for adding a Dataverse Object featured item */}
               {showDvObjectFeaturedItemFields && (
                 <DvObjectFormItem
                   itemIndex={itemIndex}

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
-import { Badge, Col, Form, Stack } from '@iqss/dataverse-design-system'
+import { Badge, Col, Form } from '@iqss/dataverse-design-system'
 import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemsFormHelper } from '../../FeaturedItemsFormHelper'
 import styles from './DvObjectFormItem.module.scss'
@@ -87,17 +87,7 @@ export const DvObjectFormItem = ({
         <Form.Group.Label required sm={3}>
           {t('form.dvObjectUrl.label')}
         </Form.Group.Label>
-        <Stack direction="horizontal" gap={2} className="mb-2">
-          <Badge variant="info">
-            <i>Type: </i>
-            <span>{featuredItemType || '?'}</span>
-          </Badge>
 
-          <Badge variant="info">
-            <i>Identifier: </i>
-            <span>{dvObjectIdentifierValue || '?'}</span>
-          </Badge>
-        </Stack>
         <Controller
           name={`featuredItems.${itemIndex}.dvObjectUrl`}
           control={control}
@@ -125,6 +115,19 @@ export const DvObjectFormItem = ({
             )
           }}
         />
+        {featuredItemType && dvObjectIdentifierValue && (
+          <div className="d-flex flex-wrap gap-2">
+            <Badge variant="primary">
+              Type:
+              <span> {featuredItemType}</span>
+            </Badge>
+
+            <Badge variant="primary">
+              Identifier:
+              <span> {dvObjectIdentifierValue}</span>
+            </Badge>
+          </div>
+        )}
       </Form.Group>
     </div>
   )
