@@ -2,15 +2,16 @@ import { useCallback, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useTranslation } from 'react-i18next'
-import { Pencil } from 'react-bootstrap-icons'
+import { ExclamationTriangle, Pencil, Plus, Trash } from 'react-bootstrap-icons'
 import cn from 'classnames'
-import { Badge, Button, Col, Row, Tooltip } from '@iqss/dataverse-design-system'
+import { Badge, Button, Col, Row, Tooltip, useTheme } from '@iqss/dataverse-design-system'
 import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
-import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
 import { BaseFormItem } from './base-form-item/BaseFormItem'
 import { DvObjectFormItem } from './dv-object-form-item/DvObjectFormItem'
 import { CustomFormItem } from './custom-form-item/CustomFormItem'
 import { BackToTypeSelectionButton } from './BackToTypeSelectionButton'
+import { SwalModalWithModifiedCustomClass } from '@/sections/shared/swal-modal/SwalModal'
+import { useShowConfirmDialog } from './useShowConfirmDialog'
 import styles from './FeaturedItemField.module.scss'
 
 interface FeaturedItemFieldProps {
@@ -23,6 +24,7 @@ interface FeaturedItemFieldProps {
   initialImageUrl?: string
   featuredItemType: FeaturedItemType | 'base' | ''
   isExistingItem: boolean
+  itemsLength: number
 }
 
 export const FeaturedItemField = ({
@@ -34,10 +36,13 @@ export const FeaturedItemField = ({
   disableDragWhenOnlyOneItem,
   initialImageUrl,
   featuredItemType,
-  isExistingItem
+  isExistingItem,
+  itemsLength
 }: FeaturedItemFieldProps) => {
   const { t: tShared } = useTranslation('shared')
   const [editEnabled, setEditEnabled] = useState(!isExistingItem)
+  const shouldShowConfirmRemoveDialog = useShowConfirmDialog({ itemIndex })
+  const { color } = useTheme()
 
   const {
     attributes,
@@ -73,6 +78,46 @@ export const FeaturedItemField = ({
     () => onSelectType(itemIndex, 'base'),
     [itemIndex, onSelectType]
   )
+
+  const isFirstAndOnlyOneItem = itemsLength === 1 && itemIndex === 0
+
+  const requestDeleteConfirmation = async (): Promise<boolean> => {
+    const result = await SwalModalWithModifiedCustomClass({
+      confirmButton: 'btn btn-danger'
+    }).fire({
+      title: 'Delete Featured Item',
+      showDenyButton: true,
+      denyButtonText: tShared('cancel'),
+      confirmButtonText: tShared('delete'),
+      html: (
+        <div className="d-flex align-items-center gap-2 text-warning py-2">
+          <ExclamationTriangle size={20} />
+          <span>Are you sure you want to delete this featured item?</span>
+        </div>
+      )
+    })
+
+    return result.isConfirmed
+  }
+
+  // This is to remove the featured item from the database
+  const handleDeleteSingleFeaturedItem = async () => {
+    const shouldDelete = await requestDeleteConfirmation()
+
+    if (!shouldDelete) return
+
+    // Call the use case to delete the featured item from the database
+  }
+
+  // This is to remove the featured item only from the form data state
+  const handleRemoveFeaturedItem = async () => {
+    if (shouldShowConfirmRemoveDialog) {
+      const shouldRemove = await requestDeleteConfirmation()
+      if (shouldRemove) {
+        onRemoveField(itemIndex)
+      }
+    }
+  }
 
   return (
     <div
@@ -175,13 +220,48 @@ export const FeaturedItemField = ({
               )}
             </Col>
             <Col md={3} lg={2}>
-              <DynamicFieldsButtons
-                fieldName="Featured Item"
-                onAddButtonClick={() => onAddField(itemIndex)}
-                onRemoveButtonClick={() => onRemoveField(itemIndex)}
-                originalField={itemIndex === 0}
-                hideAddButton={isBaseFeaturedItemField}
-              />
+              <div className="d-flex flex-wrap gap-3">
+                {!isBaseFeaturedItemField && (
+                  <Tooltip placement="top" overlay={tShared('add')}>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() => onAddField(itemIndex)}
+                      className="px-2"
+                      aria-label={`${tShared('add')} Featured Item`}>
+                      <Plus title={tShared('add')} size={24} />
+                    </Button>
+                  </Tooltip>
+                )}
+
+                {/* If is an existing item we should prompt a confirmation dialog before deleting the featured item from the DB */}
+                {isExistingItem && (
+                  <Tooltip placement="top" overlay={'Delete'}>
+                    <Button
+                      type="button"
+                      variant="danger"
+                      onClick={handleDeleteSingleFeaturedItem}
+                      className="px-2"
+                      aria-label={`Delete Featured Item`}>
+                      <Trash title={'Delete'} size={24} />
+                    </Button>
+                  </Tooltip>
+                )}
+
+                {/* If is not an existing item we should prompt a confirmation dialog before removing the featured item from the form data state  */}
+                {!isExistingItem && !isFirstAndOnlyOneItem && (
+                  <Tooltip placement="top" overlay={tShared('remove')}>
+                    <Button
+                      type="button"
+                      variant="danger"
+                      onClick={() => onRemoveField(itemIndex)}
+                      className="px-2"
+                      aria-label={`${tShared('remove')} Featured Item`}>
+                      <Trash title={tShared('remove')} size={24} />
+                    </Button>
+                  </Tooltip>
+                )}
+              </div>
             </Col>
           </Row>
         </Col>

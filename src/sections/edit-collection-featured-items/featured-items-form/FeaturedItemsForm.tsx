@@ -189,6 +189,7 @@ export const FeaturedItemsForm = ({
                   }
                   featuredItemType={form.watch(`featuredItems.${index}.type`) as FeaturedItemType}
                   isExistingItem={form.watch(`featuredItems.${index}.itemId`) !== undefined}
+                  itemsLength={fieldsArray.length}
                   key={field.id}
                 />
               ))}

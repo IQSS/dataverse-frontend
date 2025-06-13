@@ -36,17 +36,3 @@
   padding: 12px;
   border-top: solid 1px $dv-border-color;
 }
-
-.swal-button-custom {
-  &.confirm {
-    order: 3;
-  }
-
-  &.cancel {
-    order: 2;
-  }
-
-  &.deny {
-    order: 1;
-  }
-}
