@@ -262,7 +262,6 @@ export const FeaturedItemField = ({
                   itemIndex={itemIndex}
                   featuredItemType={featuredItemType}
                   editEnabled={editEnabled}
-                  isExistingItem={isExistingItem}
                 />
               )}
             </Col>
