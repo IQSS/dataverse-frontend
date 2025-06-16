@@ -1,48 +1,57 @@
 import { useCallback, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
+import { useFormContext } from 'react-hook-form'
 import { CSS } from '@dnd-kit/utilities'
+import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import { ExclamationTriangle, Pencil, Plus, Trash } from 'react-bootstrap-icons'
 import cn from 'classnames'
-import { Badge, Button, Col, Row, Tooltip, useTheme } from '@iqss/dataverse-design-system'
+import { Badge, Button, Col, Row, Tooltip } from '@iqss/dataverse-design-system'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
 import { BaseFormItem } from './base-form-item/BaseFormItem'
 import { DvObjectFormItem } from './dv-object-form-item/DvObjectFormItem'
 import { CustomFormItem } from './custom-form-item/CustomFormItem'
 import { BackToTypeSelectionButton } from './BackToTypeSelectionButton'
-import { SwalModalWithModifiedCustomClass } from '@/sections/shared/swal-modal/SwalModal'
+import { SwalModalWithModifiedCustomClass, SwalModal } from '@/sections/shared/swal-modal/SwalModal'
 import { useShowConfirmDialog } from './useShowConfirmDialog'
+import { deleteCollectionFeaturedItem } from '@/collection/domain/useCases/deleteCollectionFeaturedItem'
+import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
+import { WriteError } from '@iqss/dataverse-client-javascript'
 import styles from './FeaturedItemField.module.scss'
 
 interface FeaturedItemFieldProps {
-  id: string
+  sortableId: string
+  itemId: number | undefined // The existing item database id. Used for deletion. Is undefined when creating a new item.
   itemIndex: number
   onAddField: (index: number) => void
   onRemoveField: (index: number) => void
   onSelectType: (index: number, type: FeaturedItemType.CUSTOM | '' | 'base') => void
+  collectionRepository: CollectionRepository
   disableDragWhenOnlyOneItem: boolean
   initialImageUrl?: string
   featuredItemType: FeaturedItemType | 'base' | ''
-  isExistingItem: boolean
   itemsLength: number
 }
 
 export const FeaturedItemField = ({
-  id,
+  sortableId,
+  itemId,
   itemIndex,
   onAddField,
   onRemoveField,
   onSelectType,
+  collectionRepository,
   disableDragWhenOnlyOneItem,
   initialImageUrl,
   featuredItemType,
-  isExistingItem,
   itemsLength
 }: FeaturedItemFieldProps) => {
+  const isExistingItem = itemId !== undefined && itemId !== null
   const { t: tShared } = useTranslation('shared')
+  const { reset: resetForm } = useFormContext()
   const [editEnabled, setEditEnabled] = useState(!isExistingItem)
   const shouldShowConfirmRemoveDialog = useShowConfirmDialog({ itemIndex })
-  const { color } = useTheme()
 
   const {
     attributes,
@@ -53,7 +62,7 @@ export const FeaturedItemField = ({
     setActivatorNodeRef,
     isSorting,
     active
-  } = useSortable({ id })
+  } = useSortable({ id: sortableId })
 
   const attributesCheckingDisabled = disableDragWhenOnlyOneItem
     ? { ...attributes, ['aria-disabled']: true, tabIndex: -1 }
@@ -81,8 +90,9 @@ export const FeaturedItemField = ({
 
   const isFirstAndOnlyOneItem = itemsLength === 1 && itemIndex === 0
 
-  const requestDeleteConfirmation = async (): Promise<boolean> => {
-    const result = await SwalModalWithModifiedCustomClass({
+  // This is to remove the featured item from the database
+  const handleDeleteExistingFeaturedItem = async (featuredItemId: number): Promise<void> => {
+    await SwalModalWithModifiedCustomClass({
       confirmButton: 'btn btn-danger'
     }).fire({
       title: 'Delete Featured Item',
@@ -94,41 +104,70 @@ export const FeaturedItemField = ({
           <ExclamationTriangle size={20} />
           <span>Are you sure you want to delete this featured item?</span>
         </div>
-      )
+      ),
+      preConfirm: async () => {
+        try {
+          await deleteCollectionFeaturedItem(collectionRepository, featuredItemId)
+
+          toast.success('Featured Item deleted successfully')
+          onRemoveField(itemIndex)
+          // TODO:ME - Reset form state to get new items after deletion and set default values again to get a fresh state
+        } catch (error) {
+          if (error instanceof WriteError) {
+            const writeError = new JSDataverseWriteErrorHandler(error)
+            const formattedError =
+              writeError.getReasonWithoutStatusCode() ?? writeError.getErrorMessage()
+            SwalModal.showValidationMessage(formattedError)
+          } else {
+            SwalModal.showValidationMessage(
+              'An error occurred while deleting the featured item. Please try again later.'
+            )
+          }
+        }
+      },
+      allowOutsideClick: () => !SwalModal.isLoading(),
+      allowEscapeKey: () => !SwalModal.isLoading()
+    })
+  }
+
+  const requestRemoveConfirmation = async (): Promise<boolean> => {
+    const result = await SwalModal.fire({
+      showDenyButton: true,
+      denyButtonText: tShared('cancel'),
+      confirmButtonText: tShared('continue'),
+      html: (
+        <div className="d-flex align-items-center gap-2 text-warning py-2">
+          <ExclamationTriangle size={20} />
+          <span>If you continue, your changes will be discarded.</span>
+        </div>
+      ),
+      width: 450
     })
 
     return result.isConfirmed
   }
 
-  // This is to remove the featured item from the database
-  const handleDeleteSingleFeaturedItem = async () => {
-    const shouldDelete = await requestDeleteConfirmation()
-
-    if (!shouldDelete) return
-
-    // Call the use case to delete the featured item from the database
-  }
-
   // This is to remove the featured item only from the form data state
-  const handleRemoveFeaturedItem = async () => {
+  const handleRemoveFeaturedItem = async (itemIndex: number) => {
     if (shouldShowConfirmRemoveDialog) {
-      const shouldRemove = await requestDeleteConfirmation()
-      if (shouldRemove) {
-        onRemoveField(itemIndex)
-      }
+      const shouldRemove = await requestRemoveConfirmation()
+
+      if (!shouldRemove) return
     }
+
+    onRemoveField(itemIndex)
   }
 
   return (
     <div
-      id={id}
+      id={sortableId}
       data-featured-item={`featured-item-${itemIndex}`}
       ref={setNodeRef}
       style={style}
       data-testid={`featured-item-${itemIndex.toString()}`}
       className={cn(styles['featured-item-fields-wrapper'], {
         [styles['sorting']]: isSorting,
-        [styles['active']]: active?.id === id,
+        [styles['active']]: active?.id === sortableId,
         [styles['edit-disabled']]: !editEnabled
       })}>
       <Row>
@@ -225,7 +264,7 @@ export const FeaturedItemField = ({
                   <Tooltip placement="top" overlay={tShared('add')}>
                     <Button
                       type="button"
-                      variant="secondary"
+                      variant="primary"
                       onClick={() => onAddField(itemIndex)}
                       className="px-2"
                       aria-label={`${tShared('add')} Featured Item`}>
@@ -240,7 +279,8 @@ export const FeaturedItemField = ({
                     <Button
                       type="button"
                       variant="danger"
-                      onClick={handleDeleteSingleFeaturedItem}
+                      onClick={() => handleDeleteExistingFeaturedItem(itemId)}
+                      disabled={!editEnabled}
                       className="px-2"
                       aria-label={`Delete Featured Item`}>
                       <Trash title={'Delete'} size={24} />
@@ -254,7 +294,8 @@ export const FeaturedItemField = ({
                     <Button
                       type="button"
                       variant="danger"
-                      onClick={() => onRemoveField(itemIndex)}
+                      onClick={() => handleRemoveFeaturedItem(itemIndex)}
+                      disabled={!editEnabled}
                       className="px-2"
                       aria-label={`${tShared('remove')} Featured Item`}>
                       <Trash title={tShared('remove')} size={24} />

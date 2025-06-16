@@ -37,4 +37,5 @@ export interface CollectionRepository {
     featuredItemsDTO: CollectionFeaturedItemsDTO
   ): Promise<CollectionFeaturedItem[]>
   deleteFeaturedItems(collectionIdOrAlias: number | string): Promise<void>
+  deleteFeaturedItem(featuredItemId: number): Promise<void>
 }

@@ -52,6 +52,8 @@ export const FeaturedItemsForm = ({
     defaultValues
   })
 
+  console.log(form.getValues())
+
   const {
     fields: fieldsArray,
     insert,
@@ -176,20 +178,21 @@ export const FeaturedItemsForm = ({
             <SortableContext items={fieldsArray}>
               {(fieldsArray as FeaturedItemFieldWithSortId[]).map((field, index) => (
                 <FeaturedItemField
-                  id={field.id}
+                  sortableId={field.id}
+                  itemId={form.watch(`featuredItems.${index}.itemId`)}
+                  itemsLength={fieldsArray.length}
                   itemIndex={index}
                   disableDragWhenOnlyOneItem={fieldsArray.length === 1}
                   onAddField={handleOnAddField}
                   onRemoveField={handleOnRemoveField}
                   onSelectType={handleSelectType}
+                  collectionRepository={collectionRepository}
                   initialImageUrl={
                     (collectionFeaturedItems as CustomFeaturedItem[]).find(
                       (item) => item.id === field.itemId
                     )?.imageFileUrl
                   }
                   featuredItemType={form.watch(`featuredItems.${index}.type`) as FeaturedItemType}
-                  isExistingItem={form.watch(`featuredItems.${index}.itemId`) !== undefined}
-                  itemsLength={fieldsArray.length}
                   key={field.id}
                 />
               ))}

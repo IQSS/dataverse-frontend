@@ -56,4 +56,8 @@ export class CollectionLoadingMockRepository extends CollectionMockRepository {
   deleteFeaturedItems(_collectionIdOrAlias: number | string): Promise<void> {
     return new Promise(() => {})
   }
+
+  deleteFeaturedItem(_featuredItemId: number): Promise<void> {
+    return new Promise(() => {})
+  }
 }
