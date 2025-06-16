@@ -21,30 +21,18 @@ interface DvObjectFormItemProps {
     | FeaturedItemType.FILE
     | ''
   editEnabled: boolean
-  isExistingItem: boolean
 }
 
 export const DvObjectFormItem = ({
   itemIndex,
   featuredItemType,
-  editEnabled,
-  isExistingItem
+  editEnabled
 }: DvObjectFormItemProps) => {
   const { control, setValue } = useFormContext()
   const dvObjectIdentifierValue = useWatch({
     name: `featuredItems.${itemIndex}.dvObjectIdentifier`
   }) as string
   const { t } = useTranslation('editCollectionFeaturedItems')
-  /*
-  - Detect the featured item type based on the url identifiers.
-  - After getting the identifier and type of it we can search for the object and see if it exists.
-  - If it doesn't exist we show an error message to the user.
-  - If it exists but it is outside the collection we show a warning message to the user like:
-    - "This object is not part of this collection."
-  - Then to the API we will just show the identifier and type of it.
-  - A collection alias could be confused with a file identifier.
-  - The url type and indentifier detector should handle both JSF and SPA urls for every object type.
-  */
 
   const rules: UseControllerProps['rules'] = {
     required: t('form.dvObjectUrl.required'),
@@ -83,7 +71,7 @@ export const DvObjectFormItem = ({
 
   return (
     <div>
-      <Form.Group controlId={`dv-object-id-${itemIndex}`}>
+      <Form.Group controlId={`featuredItems.${itemIndex}.dvObjectUrl`}>
         <Form.Group.Label required sm={3}>
           {t('form.dvObjectUrl.label')}
         </Form.Group.Label>

@@ -4,7 +4,7 @@ import { KcPage } from './keycloak-theme/kc.gen'
 const AppEntrypoint = lazy(() => import('./index.app'))
 
 createRoot(document.getElementById('root') as HTMLElement).render(
-  <>
+  <StrictMode>
     {window.kcContext ? (
       <KcPage kcContext={window.kcContext} />
     ) : (
@@ -12,5 +12,5 @@ createRoot(document.getElementById('root') as HTMLElement).render(
         <AppEntrypoint />
       </Suspense>
     )}
-  </>
+  </StrictMode>
 )

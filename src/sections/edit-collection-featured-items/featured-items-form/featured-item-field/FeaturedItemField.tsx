@@ -1,10 +1,11 @@
 import { useCallback, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
-import { useFormContext } from 'react-hook-form'
 import { CSS } from '@dnd-kit/utilities'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
+import { useFormContext } from 'react-hook-form'
 import { ExclamationTriangle, Pencil, Plus, Trash } from 'react-bootstrap-icons'
+import { WriteError } from '@iqss/dataverse-client-javascript'
 import cn from 'classnames'
 import { Badge, Button, Col, Row, Tooltip } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
@@ -17,7 +18,7 @@ import { SwalModalWithModifiedCustomClass, SwalModal } from '@/sections/shared/s
 import { useShowConfirmDialog } from './useShowConfirmDialog'
 import { deleteCollectionFeaturedItem } from '@/collection/domain/useCases/deleteCollectionFeaturedItem'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
-import { WriteError } from '@iqss/dataverse-client-javascript'
+import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
 import styles from './FeaturedItemField.module.scss'
 
 interface FeaturedItemFieldProps {
@@ -49,9 +50,9 @@ export const FeaturedItemField = ({
 }: FeaturedItemFieldProps) => {
   const isExistingItem = itemId !== undefined && itemId !== null
   const { t: tShared } = useTranslation('shared')
-  const { reset: resetForm } = useFormContext()
   const [editEnabled, setEditEnabled] = useState(!isExistingItem)
   const shouldShowConfirmRemoveDialog = useShowConfirmDialog({ itemIndex })
+  const formMethods = useFormContext()
 
   const {
     attributes,
@@ -110,8 +111,15 @@ export const FeaturedItemField = ({
           await deleteCollectionFeaturedItem(collectionRepository, featuredItemId)
 
           toast.success('Featured Item deleted successfully')
-          onRemoveField(itemIndex)
-          // TODO:ME - Reset form state to get new items after deletion and set default values again to get a fresh state
+
+          // If we are deleting the last item, we should reset the form
+          if (itemsLength === 1) {
+            formMethods.reset({
+              featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems([])
+            })
+          } else {
+            onRemoveField(itemIndex)
+          }
         } catch (error) {
           if (error instanceof WriteError) {
             const writeError = new JSDataverseWriteErrorHandler(error)
@@ -150,9 +158,9 @@ export const FeaturedItemField = ({
   // This is to remove the featured item only from the form data state
   const handleRemoveFeaturedItem = async (itemIndex: number) => {
     if (shouldShowConfirmRemoveDialog) {
-      const shouldRemove = await requestRemoveConfirmation()
+      const removalConfirmedByUser = await requestRemoveConfirmation()
 
-      if (!shouldRemove) return
+      if (!removalConfirmedByUser) return
     }
 
     onRemoveField(itemIndex)

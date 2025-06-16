@@ -35,7 +35,6 @@ export const FeaturedItemsForm = ({
 }: FeaturedItemsFormProps) => {
   const { t } = useTranslation('editCollectionFeaturedItems')
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
-  const hasInitialFeaturedItems = collectionFeaturedItems.length > 0
 
   const { submitForm, submissionStatus } = useSubmitFeaturedItems(
     collectionId,
@@ -51,8 +50,6 @@ export const FeaturedItemsForm = ({
     mode: 'onChange',
     defaultValues
   })
-
-  console.log(form.getValues())
 
   const {
     fields: fieldsArray,
@@ -79,12 +76,7 @@ export const FeaturedItemsForm = ({
       }
     )
 
-    // These two timeouts are necessary to ensure the new field is focused and scrolled into view
-    setTimeout(() => {
-      const newFieldEditor = document.getElementById(`featuredItems.${index + 1}.editorContent`)
-      newFieldEditor?.focus()
-    }, 0)
-
+    // Scroll the view to the newly added field
     setTimeout(() => {
       const newField = document.querySelector(`[data-featured-item="featured-item-${index + 1}"]`)
       newField?.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -94,15 +86,17 @@ export const FeaturedItemsForm = ({
   const handleSelectType = (index: number, type: FeaturedItemType.CUSTOM | '' | 'base') => {
     if (type === FeaturedItemType.CUSTOM) {
       update(index, { type, content: '', image: null })
+
       setTimeout(() => {
         const newFieldEditor = document.getElementById(`featuredItems.${index}.editorContent`)
         newFieldEditor?.focus()
       }, 150)
     } else if (type === '') {
       update(index, { type: '', dvObjectIdentifier: '', dvObjectUrl: '' })
+
       setTimeout(() => {
-        form.setFocus(`featuredItems.${index}.type`, { shouldSelect: false })
-      }, 300)
+        form.setFocus(`featuredItems.${index}.dvObjectUrl`)
+      }, 150)
     } else {
       update(index, { type: 'base' })
     }
@@ -151,6 +145,10 @@ export const FeaturedItemsForm = ({
 
   const showActionButtonsOnTop = fieldsArray.length >= 3
 
+  // We show the delete all button only if there is more than one item with their database IDs
+  const showDeleteAllButton =
+    fieldsArray.length > 0 && fieldsArray.filter((item) => item.itemId).length > 1
+
   return (
     <>
       <FormProvider {...form}>
@@ -167,9 +165,7 @@ export const FeaturedItemsForm = ({
                 isSubmitting={submissionStatus === SubmissionStatus.IsSubmitting}
                 isDeletingFeaturedItems={isDeletingFeaturedItems}
                 isFormDirty={form.formState.isDirty}
-                hasInitialFeaturedItems={hasInitialFeaturedItems}
                 onClickDelete={handleOpenDeleteConfirmationModal}
-                position="top"
               />
             </div>
           )}
@@ -203,9 +199,8 @@ export const FeaturedItemsForm = ({
               isSubmitting={submissionStatus === SubmissionStatus.IsSubmitting}
               isDeletingFeaturedItems={isDeletingFeaturedItems}
               isFormDirty={form.formState.isDirty}
-              hasInitialFeaturedItems={hasInitialFeaturedItems}
               onClickDelete={handleOpenDeleteConfirmationModal}
-              position="bottom"
+              showDeleteAllButton={showDeleteAllButton}
             />
           </div>
         </form>

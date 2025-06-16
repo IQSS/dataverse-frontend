@@ -46,7 +46,7 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
                 type="text"
                 className="visually-hidden"
                 ref={ref}
-                aria-hidden="true"
+                aria-label={`Please select a type of featured item or remove the item.`}
                 tabIndex={-1}
               />
 
