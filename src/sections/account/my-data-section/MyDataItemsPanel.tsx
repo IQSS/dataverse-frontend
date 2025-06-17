@@ -57,7 +57,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
       roleIds,
       AllPublicationStatuses,
-      undefined
+      undefined,
+      user?.superuser ? user.identifier : undefined
     )
   )
 

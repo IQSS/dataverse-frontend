@@ -119,7 +119,7 @@ async function loadNextItems(
   paginationInfo: CollectionItemsPaginationInfo,
   searchCriteria: MyDataSearchCriteria
 ): Promise<MyDataCollectionItemSubset> {
-  const publicationStatuses = (searchCriteria.publicationStatuses as string[]) ?? []
+  const publicationStatuses = searchCriteria.publicationStatuses ?? []
   return await getMyDataCollectionItems(
     collectionRepository,
     searchCriteria.roleIds,

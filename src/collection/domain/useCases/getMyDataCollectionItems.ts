@@ -1,12 +1,13 @@
 import { CollectionRepository } from '../repositories/CollectionRepository'
 import { MyDataCollectionItemSubset } from '../models/MyDataCollectionItemSubset'
 import { PublicationStatus } from '../../../shared/core/domain/models/PublicationStatus'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 
 export async function getMyDataCollectionItems(
   collectionRepository: CollectionRepository,
   roleIds: number[],
-  collectionItemTypes: string[],
-  publicationStatuses: string[],
+  collectionItemTypes: CollectionItemType[],
+  publicationStatuses: PublicationStatus[],
   limit?: number,
   selectedPage?: number,
   searchText?: string,
