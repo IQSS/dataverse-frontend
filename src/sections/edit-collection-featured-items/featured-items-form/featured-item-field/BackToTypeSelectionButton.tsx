@@ -14,7 +14,8 @@ interface BackToTypeSelectionButtonProps {
 
 export const BackToTypeSelectionButton = memo(
   ({ itemIndex, backToTypeSelection }: BackToTypeSelectionButtonProps) => {
-    const { t } = useTranslation('shared')
+    const { t: tShared } = useTranslation('shared')
+    const { t } = useTranslation('editCollectionFeaturedItems')
     const { clearErrors } = useFormContext()
 
     const shouldShowConfirmBackDialog = useShowConfirmDialog({ itemIndex })
@@ -22,12 +23,12 @@ export const BackToTypeSelectionButton = memo(
     const requestGoBackConfirmation = async (): Promise<boolean> => {
       const result = await SwalModal.fire({
         showDenyButton: true,
-        denyButtonText: t('cancel'),
-        confirmButtonText: 'Discard changes',
+        denyButtonText: tShared('cancel'),
+        confirmButtonText: t('backToTypeSelectionButton.dialogConfirm'),
         html: (
           <div className="d-flex align-items-center gap-2 text-warning py-2">
             <ExclamationTriangle size={20} />
-            <span>If you go back, your changes will be discarded.</span>
+            <span>{t('backToTypeSelectionButton.dialogText')}</span>
           </div>
         ),
         width: 450
@@ -56,7 +57,7 @@ export const BackToTypeSelectionButton = memo(
 
     return (
       <>
-        <Tooltip overlay="Back to featured item type selection" placement="top">
+        <Tooltip overlay={t('backToTypeSelectionButton.label')} placement="top">
           <Button
             onClick={handleBack}
             icon={<ArrowLeft size={16} />}
@@ -64,7 +65,7 @@ export const BackToTypeSelectionButton = memo(
             type="button"
             variant="secondary"
             size="sm"
-            aria-label="Go back to featured item type selection"
+            aria-label={t('backToTypeSelectionButton.label')}
           />
         </Tooltip>
       </>

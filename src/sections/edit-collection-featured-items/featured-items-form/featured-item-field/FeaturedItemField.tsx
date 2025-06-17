@@ -50,6 +50,7 @@ export const FeaturedItemField = ({
 }: FeaturedItemFieldProps) => {
   const isExistingItem = itemId !== undefined && itemId !== null
   const { t: tShared } = useTranslation('shared')
+  const { t } = useTranslation('editCollectionFeaturedItems')
   const [editEnabled, setEditEnabled] = useState(!isExistingItem)
   const shouldShowConfirmRemoveDialog = useShowConfirmDialog({ itemIndex })
   const formMethods = useFormContext()
@@ -96,21 +97,21 @@ export const FeaturedItemField = ({
     await SwalModalWithModifiedCustomClass({
       confirmButton: 'btn btn-danger'
     }).fire({
-      title: 'Delete Featured Item',
+      title: t('deleteSingleFeaturedItem.dialog.title'),
       showDenyButton: true,
       denyButtonText: tShared('cancel'),
       confirmButtonText: tShared('delete'),
       html: (
         <div className="d-flex align-items-center gap-2 text-warning py-2">
           <ExclamationTriangle size={20} />
-          <span>Are you sure you want to delete this featured item?</span>
+          <span>{t('deleteSingleFeaturedItem.dialog.text')}</span>
         </div>
       ),
       preConfirm: async () => {
         try {
           await deleteCollectionFeaturedItem(collectionRepository, featuredItemId)
 
-          toast.success('Featured Item deleted successfully')
+          toast.success(t('deleteSingleFeaturedItem.success'))
 
           // If we are deleting the last item, we should reset the form
           if (itemsLength === 1) {
@@ -127,9 +128,7 @@ export const FeaturedItemField = ({
               writeError.getReasonWithoutStatusCode() ?? writeError.getErrorMessage()
             SwalModal.showValidationMessage(formattedError)
           } else {
-            SwalModal.showValidationMessage(
-              'An error occurred while deleting the featured item. Please try again later.'
-            )
+            SwalModal.showValidationMessage(t('deleteSingleFeaturedItem.defaultError'))
           }
         }
       },
@@ -146,7 +145,7 @@ export const FeaturedItemField = ({
       html: (
         <div className="d-flex align-items-center gap-2 text-warning py-2">
           <ExclamationTriangle size={20} />
-          <span>If you continue, your changes will be discarded.</span>
+          <span>{t('removeConfirmation')}</span>
         </div>
       ),
       width: 450
@@ -215,7 +214,9 @@ export const FeaturedItemField = ({
               </div>
             </Col>
             <Col md={3} lg={2} className="text-end">
-              <Badge variant="secondary">Order {itemIndex + 1}</Badge>
+              <Badge variant="secondary">
+                {t('order')} {itemIndex + 1}
+              </Badge>
             </Col>
           </Row>
         </Col>
@@ -225,7 +226,7 @@ export const FeaturedItemField = ({
               {!isBaseFeaturedItemField && (
                 <div>
                   <Tooltip
-                    overlay={editEnabled ? 'Disable editing' : 'Enable editing'}
+                    overlay={editEnabled ? t('disableEditing') : t('enableEditing')}
                     placement="right">
                     <Button
                       onClick={() => setEditEnabled(!editEnabled)}
@@ -235,7 +236,7 @@ export const FeaturedItemField = ({
                       icon={<Pencil size={18} />}
                       type="button"
                       variant="primary"
-                      aria-label={editEnabled ? 'Disable editing' : 'Enable editing'}
+                      aria-label={editEnabled ? t('disableEditing') : t('enableEditing')}
                     />
                   </Tooltip>
                 </div>
@@ -268,44 +269,44 @@ export const FeaturedItemField = ({
             <Col md={3} lg={2}>
               <div className="d-flex flex-wrap gap-3">
                 {!isBaseFeaturedItemField && (
-                  <Tooltip placement="top" overlay={tShared('add')}>
+                  <Tooltip placement="top" overlay={t('addFeaturedItem')}>
                     <Button
                       type="button"
                       variant="primary"
                       onClick={() => onAddField(itemIndex)}
                       className="px-2"
-                      aria-label={`${tShared('add')} Featured Item`}>
-                      <Plus title={tShared('add')} size={24} />
+                      aria-label={t('addFeaturedItem')}>
+                      <Plus size={24} aria-hidden="true" />
                     </Button>
                   </Tooltip>
                 )}
 
                 {/* If is an existing item we should prompt a confirmation dialog before deleting the featured item from the DB */}
                 {isExistingItem && (
-                  <Tooltip placement="top" overlay={'Delete'}>
+                  <Tooltip placement="top" overlay={t('deleteFeaturedItem')}>
                     <Button
                       type="button"
                       variant="danger"
                       onClick={() => handleDeleteExistingFeaturedItem(itemId)}
                       disabled={!editEnabled}
                       className="px-2"
-                      aria-label={`Delete Featured Item`}>
-                      <Trash title={'Delete'} size={24} />
+                      aria-label={t('deleteFeaturedItem')}>
+                      <Trash size={24} aria-hidden="true" />
                     </Button>
                   </Tooltip>
                 )}
 
                 {/* If is not an existing item we should prompt a confirmation dialog before removing the featured item from the form data state  */}
                 {!isExistingItem && !isFirstAndOnlyOneItem && (
-                  <Tooltip placement="top" overlay={tShared('remove')}>
+                  <Tooltip placement="top" overlay={t('removeFeaturedItem')}>
                     <Button
                       type="button"
                       variant="danger"
                       onClick={() => handleRemoveFeaturedItem(itemIndex)}
                       disabled={!editEnabled}
                       className="px-2"
-                      aria-label={`${tShared('remove')} Featured Item`}>
-                      <Trash title={tShared('remove')} size={24} />
+                      aria-label={t('removeFeaturedItem')}>
+                      <Trash size={24} aria-hidden="true" />
                     </Button>
                   </Tooltip>
                 )}

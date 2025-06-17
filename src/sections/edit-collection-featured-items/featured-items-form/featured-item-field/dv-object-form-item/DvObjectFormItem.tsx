@@ -32,6 +32,7 @@ export const DvObjectFormItem = ({
   const dvObjectIdentifierValue = useWatch({
     name: `featuredItems.${itemIndex}.dvObjectIdentifier`
   }) as string
+
   const { t } = useTranslation('editCollectionFeaturedItems')
 
   const rules: UseControllerProps['rules'] = {
@@ -104,15 +105,13 @@ export const DvObjectFormItem = ({
           }}
         />
         {featuredItemType && dvObjectIdentifierValue && (
-          <div className="d-flex flex-wrap gap-2">
+          <div className="d-flex flex-wrap gap-2 mt-1">
             <Badge variant="primary">
-              Type:
-              <span> {featuredItemType}</span>
+              {t('type')}: <span>{featuredItemType}</span>
             </Badge>
 
             <Badge variant="primary">
-              Identifier:
-              <span> {dvObjectIdentifierValue}</span>
+              {t('identifier')}: <span>{dvObjectIdentifierValue}</span>
             </Badge>
           </div>
         )}

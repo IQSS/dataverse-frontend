@@ -1,4 +1,5 @@
 import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
+import { Trans, useTranslation } from 'react-i18next'
 import { Card } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
 import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
@@ -17,11 +18,12 @@ interface BaseFormItemProps {
 
 export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => {
   const { control } = useFormContext()
+  const { t } = useTranslation('editCollectionFeaturedItems')
 
   const rules: UseControllerProps['rules'] = {
     validate: (value) => {
       if (value === 'base') {
-        return `Please select a type of featured item or remove the item.`
+        return t('baseItem.required')
       }
       return true
     }
@@ -30,7 +32,7 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
   return (
     <div>
       <p>
-        <strong>Select a type of featured item 👇</strong>
+        <strong>{t('baseItem.label')} 👇</strong>
       </p>
 
       <Controller
@@ -46,7 +48,7 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
                 type="text"
                 className="visually-hidden"
                 ref={ref}
-                aria-label={`Please select a type of featured item or remove the item.`}
+                aria-label={t('baseItem.required')}
                 tabIndex={-1}
               />
 
@@ -60,14 +62,10 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
                     onClick={() => onSelectType(itemIndex, FeaturedItemType.CUSTOM)}>
                     <Card.Body>
                       <span>
-                        <strong>Custom</strong>
+                        <strong>{t('baseItem.custom.label')}</strong>
                       </span>
                       <br />
-                      <span className="small text-muted">
-                        This type of featured item allows you to create blog posts, news, or any
-                        other type of content you want to feature in the collection. It can include
-                        rich content and an optional image as a banner.
-                      </span>
+                      <span className="small text-muted">{t('baseItem.custom.description')}</span>
                     </Card.Body>
                   </Card>
                 </li>
@@ -78,12 +76,14 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
                     onClick={() => onSelectType(itemIndex, '')}>
                     <Card.Body>
                       <span>
-                        <strong>Dataverse Object</strong>
+                        <strong>{t('baseItem.dvObject.label')}</strong>
                         <br />
                         <span className="small text-muted">
-                          This type of featured item allows you to feature a{' '}
-                          <strong>collection</strong>, <strong>dataset</strong>, or{' '}
-                          <strong>file</strong>.
+                          <Trans
+                            t={t}
+                            i18nKey="baseItem.dvObject.description"
+                            components={{ bold: <strong /> }}
+                          />
                         </span>
                       </span>
                     </Card.Body>
