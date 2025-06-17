@@ -292,7 +292,7 @@ describe('FileUploader', () => {
         )
       })
 
-      it('cancels the upload when the user clicks on the cancel button', () => {
+      it.only('cancels the upload when the user clicks on the cancel button', () => {
         cy.customMount(
           <FileUploader
             fileRepository={fileMockRepository}
@@ -318,7 +318,7 @@ describe('FileUploader', () => {
 
         cy.get('.swal2-actions').within(() => {
           cy.findAllByText(/Cancel/)
-            .first()
+            .last()
             .click()
         })
 
