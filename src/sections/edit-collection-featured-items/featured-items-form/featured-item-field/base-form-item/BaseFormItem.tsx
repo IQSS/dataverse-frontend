@@ -30,7 +30,7 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
   }
 
   return (
-    <div>
+    <div data-testid={`base-form-item-${itemIndex}`}>
       <p>
         <strong>{t('baseItem.label')} 👇</strong>
       </p>
@@ -59,7 +59,8 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
                 <li>
                   <Card
                     className={styles['card-option']}
-                    onClick={() => onSelectType(itemIndex, FeaturedItemType.CUSTOM)}>
+                    onClick={() => onSelectType(itemIndex, FeaturedItemType.CUSTOM)}
+                    data-testid="base-form-item-custom-option">
                     <Card.Body>
                       <span>
                         <strong>{t('baseItem.custom.label')}</strong>
@@ -73,7 +74,8 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
                 <li>
                   <Card
                     className={styles['card-option']}
-                    onClick={() => onSelectType(itemIndex, '')}>
+                    onClick={() => onSelectType(itemIndex, '')}
+                    data-testid="base-form-item-dvobject-option">
                     <Card.Body>
                       <span>
                         <strong>{t('baseItem.dvObject.label')}</strong>

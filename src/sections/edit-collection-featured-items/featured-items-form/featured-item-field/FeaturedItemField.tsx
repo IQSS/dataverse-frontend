@@ -236,6 +236,7 @@ export const FeaturedItemField = ({
                       icon={<Pencil size={18} />}
                       type="button"
                       variant="primary"
+                      data-testid="toggle-edit"
                       aria-label={editEnabled ? t('disableEditing') : t('enableEditing')}
                     />
                   </Tooltip>

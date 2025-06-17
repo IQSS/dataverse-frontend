@@ -105,7 +105,7 @@ export const DvObjectFormItem = ({
           }}
         />
         {featuredItemType && dvObjectIdentifierValue && (
-          <div className="d-flex flex-wrap gap-2 mt-1">
+          <div className="d-flex flex-wrap gap-2 mt-1" data-testid="dv-object-info">
             <Badge variant="primary">
               {t('type')}: <span>{featuredItemType}</span>
             </Badge>

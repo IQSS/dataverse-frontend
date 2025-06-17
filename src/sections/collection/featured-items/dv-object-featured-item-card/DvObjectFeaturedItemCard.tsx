@@ -37,7 +37,8 @@ export const DvObjectFeaturedItemCard = ({ featuredItem }: DvObjectFeaturedItemC
               [styles.collection]: featuredItem.type === 'collection',
               [styles.dataset]: featuredItem.type === 'dataset',
               [styles.file]: featuredItem.type === 'file'
-            })}>
+            })}
+            data-testid={`${featuredItem.type}-icon`}>
             {featuredItem.type === 'collection' && <Icon name={IconName.COLLECTION} />}
             {featuredItem.type === 'dataset' && <Icon name={IconName.DATASET} />}
             {featuredItem.type === 'file' && <Icon name={IconName.FILE} />}

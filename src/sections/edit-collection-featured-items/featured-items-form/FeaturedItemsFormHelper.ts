@@ -132,7 +132,7 @@ export class FeaturedItemsFormHelper {
             | FeaturedItemType.DATASET
             | FeaturedItemType.FILE,
           dvObjectIdentifier,
-          displayOrder: index + 1
+          displayOrder: index
         }
 
         if (itemId) {

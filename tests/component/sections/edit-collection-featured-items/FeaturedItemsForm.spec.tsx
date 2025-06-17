@@ -1,5 +1,9 @@
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import {
+  CollectionFeaturedItemsDTO,
+  CustomFeaturedItemDTO,
+  DvObjectFeaturedItemDTO
+} from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 import { FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED } from '@/sections/edit-collection-featured-items/featured-items-form/featured-item-field/custom-form-item/ContentField'
 import { FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED } from '@/sections/edit-collection-featured-items/featured-items-form/featured-item-field/custom-form-item/ImageField'
 import { FeaturedItemsForm } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsForm'
@@ -35,31 +39,28 @@ const formDefaultValues: FeaturedItemsFormData = {
   featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(testFeaturedItems)
 }
 
+const toggleEditButton = () => cy.findByTestId('toggle-edit').click()
+const selectCustomFeaturedItemType = () => cy.findByTestId('base-form-item-custom-option').click()
+
+const selectDvObjectFeaturedItemType = () =>
+  cy.findByTestId('base-form-item-dvobject-option').click()
+
 describe('FeaturedItemsForm', () => {
   beforeEach(() => {
     cy.viewport(1440, 824)
   })
-  it('renders the default form correctly', () => {
+
+  it('renders the Select Featured Item Type UI initally if collection has no featured items', () => {
     cy.mountAuthenticated(
       <FeaturedItemsForm
         collectionId={testCollection.id}
         collectionRepository={collectionRepository}
         defaultValues={emptyFeaturedItems}
-        collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        collectionFeaturedItems={[]}
       />
     )
 
-    cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
-
-    cy.get('@first-item').within(() => {
-      cy.findByLabelText(/Content/)
-        .should('exist')
-        .should('be.visible')
-
-      cy.findByLabelText(/Image/).should('exist').should('be.visible')
-    })
-
-    cy.findByTestId('featured-item-1').should('not.exist')
+    cy.findByTestId('base-form-item-0').as('base-item').should('exist').should('be.visible')
   })
 
   it('renders the form with the default values correctly', () => {
@@ -123,6 +124,9 @@ describe('FeaturedItemsForm', () => {
       cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
 
       cy.get('@second-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
         cy.fixture('images/harvard_uni.png', null, { timeout: 10_0000 })
           .then((harvardUniImage: ArrayBuffer) => {
             cy.findByLabelText(/Image/).selectFile(
@@ -163,6 +167,9 @@ describe('FeaturedItemsForm', () => {
       cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
 
       cy.get('@first-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
         cy.get(`[aria-label="Change image"]`).should('exist').should('be.visible').click()
 
         cy.fixture('images/harvard_building.png', null, { timeout: 10_0000 })
@@ -205,6 +212,9 @@ describe('FeaturedItemsForm', () => {
       cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
 
       cy.get('@first-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
         // Asserting that the existing image is shown
         cy.findByTestId('existing-file-img-0')
           .should('exist')
@@ -242,6 +252,9 @@ describe('FeaturedItemsForm', () => {
       cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
 
       cy.get('@first-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
         cy.get(`[aria-label="Change image"]`).should('exist').should('be.visible').click()
 
         cy.fixture('images/harvard_building.png', null, { timeout: 10_0000 })
@@ -294,6 +307,9 @@ describe('FeaturedItemsForm', () => {
       cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
 
       cy.get('@second-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
         cy.fixture('images/harvard_uni.png', null, { timeout: 10_0000 })
           .then((harvardUniImage: ArrayBuffer) => {
             cy.findByLabelText(/Image/).selectFile(
@@ -336,7 +352,10 @@ describe('FeaturedItemsForm', () => {
         />
       )
 
-      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectCustomFeaturedItemType()
+      })
 
       cy.findByTestId('aspect-ratio-warning-0').should('not.exist')
       cy.findByTestId('image-helper-text-0').should('exist')
@@ -368,6 +387,11 @@ describe('FeaturedItemsForm', () => {
           collectionFeaturedItems={[]}
         />
       )
+
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectCustomFeaturedItemType()
+      })
 
       cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
 
@@ -411,85 +435,190 @@ describe('FeaturedItemsForm', () => {
     })
   })
 
-  describe('Add and Remove Featured Items', () => {
-    it('should add a new item when clicking the add button', () => {
-      cy.mountAuthenticated(
-        <FeaturedItemsForm
-          collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
-          defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
-        />
-      )
+  it('should add a new item when clicking the add button', () => {
+    cy.mountAuthenticated(
+      <FeaturedItemsForm
+        collectionId={testCollection.id}
+        collectionRepository={collectionRepository}
+        defaultValues={formDefaultValues}
+        collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+      />
+    )
 
-      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
-      cy.get('[data-testid="featured-item-1"]').should('not.exist')
+    cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
+    cy.get('[data-testid="featured-item-2"]').should('not.exist')
 
-      cy.get('@first-item').within(() => {
-        cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
-      })
-
-      cy.get('[data-testid="featured-item-1"]').should('exist').should('be.visible')
+    cy.get('@second-item').within(() => {
+      cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
     })
 
+    cy.findByTestId('featured-item-2').should('exist').should('be.visible')
+    cy.findByTestId('base-form-item-2').should('exist').should('be.visible')
+  })
+
+  describe('Remove Featured Item Button', () => {
     it('should remove an item when clicking the remove button', () => {
       cy.mountAuthenticated(
         <FeaturedItemsForm
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          collectionFeaturedItems={[]}
         />
       )
 
-      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
-      cy.get('[data-testid="featured-item-1"]').should('not.exist')
-
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
       cy.get('@first-item').within(() => {
+        selectCustomFeaturedItemType()
+      })
+
+      cy.findByTestId('featured-item-1').should('not.exist')
+
+      // This item should not have the remove button as it is the first and only item
+      cy.findByTestId('featured-item-0').within(() => {
         cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
       })
 
-      cy.get('[data-testid="featured-item-1"]').should('exist').should('be.visible')
+      cy.findByTestId('featured-item-1').should('exist')
 
-      cy.get('[data-testid="featured-item-1"]').within(() => {
+      cy.findByTestId('featured-item-1').within(() => {
         cy.get(`[aria-label="Remove Featured Item"]`).should('exist').should('be.visible').click()
       })
 
-      cy.get('[data-testid="featured-item-1"]').should('not.exist')
+      cy.findByTestId('featured-item-1').should('not.exist')
     })
 
-    it('should show the top save button when there are at least 3 items', () => {
-      const localTestFeaturedItemThree = CollectionFeaturedItemMother.createCustomFeaturedItem(
-        'css',
-        {
-          id: 3,
-          displayOrder: 3,
-          content: '<h1 class="rte-heading">Featured Item Three</h1>',
-          imageFileUrl: undefined
-        }
-      )
-
-      const testFeaturedItems = [featuredItemOne, featuredItemTwo, localTestFeaturedItemThree]
-
-      const formDefaultValuesWith4Items: FeaturedItemsFormData = {
-        featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(testFeaturedItems)
-      }
-
+    it('should show remove confirmation dialog if user has entered some data in the fields and confirm removal', () => {
       cy.mountAuthenticated(
         <FeaturedItemsForm
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
-          defaultValues={formDefaultValuesWith4Items}
-          collectionFeaturedItems={testFeaturedItems}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
         />
       )
 
-      cy.get('[data-testid="featured-item-0"]').should('exist').should('be.visible')
-      cy.get('[data-testid="featured-item-1"]').should('exist').should('be.visible')
-      cy.get('[data-testid="featured-item-2"]').should('exist').should('be.visible')
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectCustomFeaturedItemType()
+      })
 
-      cy.findAllByRole('button', { name: /Save Changes/ }).should('have.length', 2)
+      cy.findByTestId('featured-item-1').should('not.exist')
+
+      // This item should not have the remove button as it is the first and only item
+      cy.findByTestId('featured-item-0').within(() => {
+        cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByTestId('featured-item-1').should('exist')
+
+      cy.findByTestId('featured-item-1').within(() => {
+        selectCustomFeaturedItemType()
+
+        // First enter some data in the content field
+        cy.findByLabelText(/Content/).type('Some content for the featured item')
+
+        cy.get(`[aria-label="Remove Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/If you continue, your changes will be discarded./).should('exist')
+
+        cy.findByRole('button', { name: /Continue/ }).click()
+      })
+
+      cy.findByTestId('featured-item-1').should('not.exist')
     })
+
+    it('should show remove confirmation dialog if user has entered some data in the fields and cancel removal', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
+        />
+      )
+
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectCustomFeaturedItemType()
+      })
+
+      cy.findByTestId('featured-item-1').should('not.exist')
+
+      // This item should not have the remove button as it is the first and only item
+      cy.findByTestId('featured-item-0').within(() => {
+        cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByTestId('featured-item-1').should('exist')
+
+      cy.findByTestId('featured-item-1').within(() => {
+        selectCustomFeaturedItemType()
+
+        // First enter some data in the content field
+        cy.findByLabelText(/Content/).type('Some content for the featured item')
+
+        cy.get(`[aria-label="Remove Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/If you continue, your changes will be discarded./).should('exist')
+
+        cy.findByRole('button', { name: /Cancel/ }).click()
+      })
+
+      cy.findByTestId('featured-item-1').should('exist')
+    })
+  })
+
+  // TODO:ME
+  describe('Back To Type Selection button', () => {
+    // it should go back to the Select Featured Item Type UI when clicking the back button
+    // also should clear any errors in the form
+    // it should show the confirm discard changes dialog when trying to go back to the Select Featured Item Type UI with unsaved changes
+  })
+
+  // TODO:ME
+  describe('Delete Single Featured Item', () => {
+    // it should delete a single featured item when clicking the delete button and confirming the action
+    // it should not delete a single featured item when clicking the delete button and canceling the action
+    // it should show WriteError when trying to delete a single featured item and receiving a WriteError from JS-dataverse
+    // it should show fallback error when trying to delete a single featured item and receiving an unknown error from JS-dataverse
+  })
+
+  it('should show the top save button when there are at least 3 items', () => {
+    const localTestFeaturedItemThree = CollectionFeaturedItemMother.createCustomFeaturedItem(
+      'css',
+      {
+        id: 3,
+        displayOrder: 3,
+        content: '<h1 class="rte-heading">Featured Item Three</h1>',
+        imageFileUrl: undefined
+      }
+    )
+
+    const testFeaturedItems = [featuredItemOne, featuredItemTwo, localTestFeaturedItemThree]
+
+    const formDefaultValuesWith4Items: FeaturedItemsFormData = {
+      featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(testFeaturedItems)
+    }
+
+    cy.mountAuthenticated(
+      <FeaturedItemsForm
+        collectionId={testCollection.id}
+        collectionRepository={collectionRepository}
+        defaultValues={formDefaultValuesWith4Items}
+        collectionFeaturedItems={testFeaturedItems}
+      />
+    )
+
+    cy.get('[data-testid="featured-item-0"]').should('exist').should('be.visible')
+    cy.get('[data-testid="featured-item-1"]').should('exist').should('be.visible')
+    cy.get('[data-testid="featured-item-2"]').should('exist').should('be.visible')
+
+    cy.findAllByRole('button', { name: /Save Changes/ }).should('have.length', 2)
   })
 
   describe('Form Validations', () => {
@@ -506,6 +635,9 @@ describe('FeaturedItemsForm', () => {
       cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
 
       cy.get('@second-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
         const twiceSupportedSize = 2 * FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED
         const bigFile = Cypress.Buffer.alloc(twiceSupportedSize)
         bigFile.write('big-file-test', twiceSupportedSize)
@@ -553,6 +685,8 @@ describe('FeaturedItemsForm', () => {
 
       // Type one more letter to enable the submit button because the initial value changed
       cy.get('@first-item').within(() => {
+        // Enable edition
+        toggleEditButton()
         cy.findByLabelText(/Content/).type('a')
       })
 
@@ -590,6 +724,9 @@ describe('FeaturedItemsForm', () => {
       cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
 
       cy.get('@second-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
         cy.findByLabelText(/Content/).clear()
 
         cy.findByText(/Content is required/)
@@ -624,6 +761,8 @@ describe('FeaturedItemsForm', () => {
       cy.findByTestId('featured-item-9').as('last-item').should('exist').should('be.visible')
 
       cy.get('@last-item').within(() => {
+        // Enable edition
+        toggleEditButton()
         cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
       })
 
@@ -631,6 +770,8 @@ describe('FeaturedItemsForm', () => {
         .should('exist')
         .should('be.visible')
     })
+    // TODO:ME
+    // it should show an error message when submitting the form with a base form item without selecting a type
   })
 
   // TODO: This test is failing in CI sometimes, we need to investigate why and fix it
@@ -718,13 +859,22 @@ describe('FeaturedItemsForm', () => {
         />
       )
 
-      // Add content to the default empy first item
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectCustomFeaturedItemType()
+      })
+
+      // Create a custom featured item
       cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
 
       cy.get('@first-item').within(() => {
         cy.findByLabelText(/Content/).type('New Content')
 
         cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByTestId('base-form-item-1').within(() => {
+        selectCustomFeaturedItemType()
       })
 
       // Add a second item with content and image
@@ -745,10 +895,30 @@ describe('FeaturedItemsForm', () => {
             )
           }
         )
+
+        cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByTestId('base-form-item-2').within(() => {
+        selectDvObjectFeaturedItemType()
+      })
+
+      // Add a second item with content and image
+      cy.findByTestId('featured-item-2').as('third-item').should('exist').should('be.visible')
+
+      cy.get('@third-item').within(() => {
+        cy.findByLabelText(/Dataverse Object URL/).type(
+          'http://localhost:8000/spa/collections/dataverse-admin-collection'
+        )
+        cy.findByTestId('dv-object-info').within(() => {
+          cy.contains('Type: collection').should('exist').should('be.visible')
+          cy.contains('Identifier: dataverse-admin-collection').should('exist').should('be.visible')
+        })
       })
 
       // Submit the form
-      cy.findByRole('button', { name: /Save Changes/ })
+      cy.findAllByRole('button', { name: /Save Changes/ })
+        .eq(0)
         .should('be.visible')
         .should('be.enabled')
         .click()
@@ -760,24 +930,30 @@ describe('FeaturedItemsForm', () => {
 
         expect(updateFeaturedItemsSpy).to.be.calledOnce
 
+        const firstItem = collectionFeaturedItemsDTO[0] as CustomFeaturedItemDTO
+        const secondItem = collectionFeaturedItemsDTO[1] as CustomFeaturedItemDTO
+        const thirdItem = collectionFeaturedItemsDTO[2] as DvObjectFeaturedItemDTO
+
         // First item, content only
-        expect(collectionFeaturedItemsDTO[0].id).to.eq(undefined)
-        expect(collectionFeaturedItemsDTO[0].displayOrder).to.eq(0)
-        expect(collectionFeaturedItemsDTO[0].content).to.eq(
-          '<p class="rte-paragraph">New Content</p>'
-        )
-        expect(collectionFeaturedItemsDTO[0].file).to.eq(undefined)
-        expect(collectionFeaturedItemsDTO[0].keepFile).to.eq(false)
+        expect(firstItem.id).to.eq(undefined)
+        expect(firstItem.displayOrder).to.eq(0)
+        expect(firstItem.content).to.eq('<p class="rte-paragraph">New Content</p>')
+        expect(firstItem.file).to.eq(undefined)
+        expect(firstItem.keepFile).to.eq(false)
 
         // Second item with content and image
-        expect(collectionFeaturedItemsDTO[1].id).to.eq(undefined)
-        expect(collectionFeaturedItemsDTO[1].displayOrder).to.eq(1)
-        expect(collectionFeaturedItemsDTO[1].content).to.eq(
-          '<p class="rte-paragraph">New Content 2</p>'
-        )
-        expect(collectionFeaturedItemsDTO[1].file).to.not.eq(undefined)
-        expect(collectionFeaturedItemsDTO[1].file?.name).to.eq('harvard_uni.png')
-        expect(collectionFeaturedItemsDTO[1].keepFile).to.eq(false)
+        expect(secondItem.id).to.eq(undefined)
+        expect(secondItem.displayOrder).to.eq(1)
+        expect(secondItem.content).to.eq('<p class="rte-paragraph">New Content 2</p>')
+        expect(secondItem.file).to.not.eq(undefined)
+        expect(secondItem.file?.name).to.eq('harvard_uni.png')
+        expect(secondItem.keepFile).to.eq(false)
+
+        // Third item, dv object
+        expect(thirdItem.id).to.eq(undefined)
+        expect(thirdItem.displayOrder).to.eq(2)
+        expect(thirdItem.dvObjectIdentifier).to.eq('dataverse-admin-collection')
+        expect(thirdItem.type).to.eq('collection')
       })
 
       cy.findByText(/Featured items have been updated successfully./)
@@ -817,12 +993,18 @@ describe('FeaturedItemsForm', () => {
       // Change the content of the first item
 
       cy.get('@first-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
         cy.findByLabelText(/Content/)
           .clear()
           .type('New Content')
       })
 
       cy.get('@third-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
         // Change the image of the third item
         cy.fixture('images/harvard_uni.png', null, { timeout: 10_0000 }).then(
           (harvardUniImage: ArrayBuffer) => {
@@ -838,6 +1020,10 @@ describe('FeaturedItemsForm', () => {
         )
         // Add a fourth item with content and image
         cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByTestId('base-form-item-3').within(() => {
+        selectCustomFeaturedItemType()
       })
 
       cy.findByTestId('featured-item-3').as('fourth-item').should('exist').should('be.visible')
@@ -871,41 +1057,42 @@ describe('FeaturedItemsForm', () => {
         const collectionFeaturedItemsDTO = updateFeaturedItemsSpy.getCall(0)
           .args[1] as CollectionFeaturedItemsDTO
 
+        const firstItem = collectionFeaturedItemsDTO[0] as CustomFeaturedItemDTO
+        const secondItem = collectionFeaturedItemsDTO[1] as CustomFeaturedItemDTO
+        const thirdItem = collectionFeaturedItemsDTO[2] as CustomFeaturedItemDTO
+        const fourthItem = collectionFeaturedItemsDTO[3] as CustomFeaturedItemDTO
+
         expect(updateFeaturedItemsSpy).to.be.calledOnce
 
         // First item, content changed
-        expect(collectionFeaturedItemsDTO[0].id).to.eq(1)
-        expect(collectionFeaturedItemsDTO[0].displayOrder).to.eq(0)
-        expect(collectionFeaturedItemsDTO[0].content).to.eq(
-          '<p class="rte-paragraph">New Content</p>'
-        )
-        expect(collectionFeaturedItemsDTO[0].file).to.eq(undefined)
-        expect(collectionFeaturedItemsDTO[0].keepFile).to.eq(true)
+        expect(firstItem.id).to.eq(1)
+        expect(firstItem.displayOrder).to.eq(0)
+        expect(firstItem.content).to.eq('<p class="rte-paragraph">New Content</p>')
+        expect(firstItem.file).to.eq(undefined)
+        expect(firstItem.keepFile).to.eq(true)
 
         // Second item, untouched
-        expect(collectionFeaturedItemsDTO[1].id).to.eq(2)
-        expect(collectionFeaturedItemsDTO[1].displayOrder).to.eq(1)
-        expect(collectionFeaturedItemsDTO[1].content).to.eq(featuredItemTwo.content)
-        expect(collectionFeaturedItemsDTO[1].file).to.eq(undefined)
-        expect(collectionFeaturedItemsDTO[1].keepFile).to.eq(false)
+        expect(secondItem.id).to.eq(2)
+        expect(secondItem.displayOrder).to.eq(1)
+        expect(secondItem.content).to.eq(featuredItemTwo.content)
+        expect(secondItem.file).to.eq(undefined)
+        expect(secondItem.keepFile).to.eq(false)
 
         // Third item, image changed
-        expect(collectionFeaturedItemsDTO[2].id).to.eq(3)
-        expect(collectionFeaturedItemsDTO[2].displayOrder).to.eq(2)
-        expect(collectionFeaturedItemsDTO[2].content).to.eq(featuredItemThree.content)
-        expect(collectionFeaturedItemsDTO[2].file).to.not.eq(undefined)
-        expect(collectionFeaturedItemsDTO[2].file?.name).to.eq('harvard_uni.png')
-        expect(collectionFeaturedItemsDTO[2].keepFile).to.eq(false)
+        expect(thirdItem.id).to.eq(3)
+        expect(thirdItem.displayOrder).to.eq(2)
+        expect(thirdItem.content).to.eq(featuredItemThree.content)
+        expect(thirdItem.file).to.not.eq(undefined)
+        expect(thirdItem.file?.name).to.eq('harvard_uni.png')
+        expect(thirdItem.keepFile).to.eq(false)
 
         // New fourth item with content and image
-        expect(collectionFeaturedItemsDTO[3].id).to.eq(undefined)
-        expect(collectionFeaturedItemsDTO[3].displayOrder).to.eq(3)
-        expect(collectionFeaturedItemsDTO[3].content).to.eq(
-          '<p class="rte-paragraph">New Content 4</p>'
-        )
-        expect(collectionFeaturedItemsDTO[3].file).to.not.eq(undefined)
-        expect(collectionFeaturedItemsDTO[3].file?.name).to.eq('harvard_uni.png')
-        expect(collectionFeaturedItemsDTO[3].keepFile).to.eq(false)
+        expect(fourthItem.id).to.eq(undefined)
+        expect(fourthItem.displayOrder).to.eq(3)
+        expect(fourthItem.content).to.eq('<p class="rte-paragraph">New Content 4</p>')
+        expect(fourthItem.file).to.not.eq(undefined)
+        expect(fourthItem.file?.name).to.eq('harvard_uni.png')
+        expect(fourthItem.keepFile).to.eq(false)
       })
 
       cy.findByText(/Featured items have been updated successfully./)
@@ -927,6 +1114,11 @@ describe('FeaturedItemsForm', () => {
           collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
+
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectCustomFeaturedItemType()
+      })
 
       // Add content to the default empy first item
       cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')

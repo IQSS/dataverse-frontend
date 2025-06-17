@@ -16,15 +16,15 @@ const featuredItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('c
 
 const collectionDvObjectFeaturedItem =
   CollectionFeaturedItemMother.createDvObjectCollectionFeaturedItem({
-    title: 'Collection Title'
+    dvObjectDisplayName: 'Collection Title'
   })
 
 const datasetDvObjectFeaturedItem = CollectionFeaturedItemMother.createDvObjectDatasetFeaturedItem({
-  title: 'Dataset Title'
+  dvObjectDisplayName: 'Dataset Title'
 })
 
 const fileDvObjectFeaturedItem = CollectionFeaturedItemMother.createDvObjectFileFeaturedItem({
-  title: 'File Title'
+  dvObjectDisplayName: 'File Title'
 })
 
 const tenTestFeaturedItems = Array.from({ length: 10 }, (_, i) =>
