@@ -156,13 +156,9 @@ export const FeaturedItems = ({
           {collectionFeaturedItems.map((item, index) => (
             <div key={index} className={styles['slider-item']} data-index={index}>
               {item.type === FeaturedItemType.CUSTOM ? (
-                <CustomFeaturedItemCard
-                  featuredItem={item}
-                  collectionId={collectionId}
-                  key={item.id}
-                />
+                <CustomFeaturedItemCard featuredItem={item} collectionId={collectionId} />
               ) : (
-                <DvObjectFeaturedItemCard featuredItem={item} key={item.id} />
+                <DvObjectFeaturedItemCard featuredItem={item} />
               )}
             </div>
           ))}
