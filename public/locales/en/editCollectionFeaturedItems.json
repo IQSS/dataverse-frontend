@@ -1,7 +1,7 @@
 {
   "pageTitle": "Featured Items",
   "featuredItem": "Featured Item",
-  "infoMessage": "Add Featured Items to showcase key content in your collection. These items will appear as cards in a carousel, each including a rich text content with an optional image.",
+  "infoMessage": "Add Featured Items to highlight key content in your collection. These items will be displayed as cards on the collection page, allowing users to browse them and access each one for more details.",
   "previewCarouselHeader": "Live preview of your custom featured items",
   "deleteAll": {
     "action": "Delete all featured items",
