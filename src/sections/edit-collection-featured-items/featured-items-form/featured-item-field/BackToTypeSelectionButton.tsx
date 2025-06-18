@@ -24,7 +24,7 @@ export const BackToTypeSelectionButton = memo(
       const result = await SwalModal.fire({
         showDenyButton: true,
         denyButtonText: tShared('cancel'),
-        confirmButtonText: t('backToTypeSelectionButton.dialogConfirm'),
+        confirmButtonText: tShared('continue'),
         html: (
           <div className="d-flex align-items-center gap-2 text-warning py-2">
             <ExclamationTriangle size={20} />
@@ -66,6 +66,7 @@ export const BackToTypeSelectionButton = memo(
             variant="secondary"
             size="sm"
             aria-label={t('backToTypeSelectionButton.label')}
+            data-testid="back-to-type-selection-button"
           />
         </Tooltip>
       </>

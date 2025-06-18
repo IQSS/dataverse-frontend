@@ -132,8 +132,8 @@ export const FeaturedItemField = ({
           }
         }
       },
-      allowOutsideClick: () => !SwalModal.isLoading(),
-      allowEscapeKey: () => !SwalModal.isLoading()
+      allowOutsideClick: false,
+      allowEscapeKey: false
     })
   }
 

@@ -10,8 +10,7 @@
   },
   "backToTypeSelectionButton": {
     "label": "Back to featured item type selection",
-    "dialogText": "If you go back, your changes will be discarded.",
-    "dialogConfirm": "Discard changes"
+    "dialogText": "If you go back, your changes will be discarded."
   },
   "deleteSingleFeaturedItem": {
     "dialog": {

@@ -9,6 +9,7 @@ import { FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED } from '@/sections/edit-collectio
 import { FeaturedItemsForm } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsForm'
 import { FeaturedItemsFormHelper } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsFormHelper'
 import { FeaturedItemsFormData } from '@/sections/edit-collection-featured-items/types'
+import { WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 
@@ -435,6 +436,113 @@ describe('FeaturedItemsForm', () => {
     })
   })
 
+  describe('Dataverse Object URL Field', () => {
+    it('should show the correct type and identifier when entering a valid Dataverse object URL', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
+        />
+      )
+
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectDvObjectFeaturedItemType()
+      })
+
+      cy.findByTestId('dvobject-form-item-0').should('exist').should('be.visible')
+
+      cy.findByLabelText(/Dataverse Object URL/)
+        .should('exist')
+        .should('be.visible')
+        .type('https://foo.com/spa/collections/foo')
+
+      cy.findByTestId('dv-object-info').within(() => {
+        cy.contains('Type: collection').should('exist').should('be.visible')
+        cy.contains('Identifier: foo').should('exist').should('be.visible')
+      })
+
+      cy.findByLabelText(/Dataverse Object URL/)
+        .clear()
+        .type('https://foo.com/spa/datasets?persistentId=doi:10.5072/FK2/HIS9DO')
+
+      cy.findByTestId('dv-object-info').within(() => {
+        cy.contains('Type: dataset').should('exist').should('be.visible')
+        cy.contains('Identifier: doi:10.5072/FK2/HIS9DO').should('exist').should('be.visible')
+      })
+
+      cy.findByLabelText(/Dataverse Object URL/)
+        .clear()
+        .type('https://foo.com/spa/files?id=4')
+
+      cy.findByTestId('dv-object-info').within(() => {
+        cy.contains('Type: file').should('exist').should('be.visible')
+        cy.contains('Identifier: 4').should('exist').should('be.visible')
+      })
+
+      cy.findByLabelText(/Dataverse Object URL/).clear()
+
+      cy.findByTestId('dv-object-info').should('not.exist')
+    })
+
+    it('should show required error when leaving the field empty', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
+        />
+      )
+
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectDvObjectFeaturedItemType()
+      })
+
+      cy.findByTestId('dvobject-form-item-0').should('exist').should('be.visible')
+
+      cy.findByLabelText(/Dataverse Object URL/)
+        .should('exist')
+        .should('be.visible')
+        .type('foo')
+        .clear()
+
+      cy.findByText(/Dataverse Object URL is required/)
+        .should('exist')
+        .should('be.visible')
+    })
+
+    it('should show invalid URL error when entering an invalid Dataverse object URL', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
+        />
+      )
+
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectDvObjectFeaturedItemType()
+      })
+
+      cy.findByTestId('dvobject-form-item-0').should('exist').should('be.visible')
+
+      cy.findByLabelText(/Dataverse Object URL/)
+        .should('exist')
+        .should('be.visible')
+        .type('invalid-url')
+
+      cy.findByText(/The URL must have the correct format/)
+        .should('exist')
+        .should('be.visible')
+    })
+  })
+
   it('should add a new item when clicking the add button', () => {
     cy.mountAuthenticated(
       <FeaturedItemsForm
@@ -573,19 +681,310 @@ describe('FeaturedItemsForm', () => {
     })
   })
 
-  // TODO:ME
   describe('Back To Type Selection button', () => {
-    // it should go back to the Select Featured Item Type UI when clicking the back button
-    // also should clear any errors in the form
-    // it should show the confirm discard changes dialog when trying to go back to the Select Featured Item Type UI with unsaved changes
+    it('should go back to the Select Featured Item Type UI when clicking the back button', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
+        />
+      )
+
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('[data-testid="custom-form-item-0"]').should('not.exist')
+      cy.get('@first-item').within(() => {
+        selectCustomFeaturedItemType()
+      })
+      cy.findByTestId('custom-form-item-0').should('exist').should('be.visible')
+      cy.findByTestId('back-to-type-selection-button').should('exist').should('be.visible')
+      cy.findByTestId('back-to-type-selection-button').click()
+      cy.findByTestId('base-form-item-0').should('exist').should('be.visible')
+      cy.get('[data-testid="custom-form-item-0"]').should('not.exist')
+    })
+
+    it('should show the confirm discard changes dialog when trying to go back to the Select Featured Item Type UI with unsaved changes and clear errors from the form', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
+        />
+      )
+
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectDvObjectFeaturedItemType()
+      })
+
+      // Generate an error in the form by entering an incorrect dataverse object URL
+      cy.findByLabelText(/Dataverse Object URL/)
+        .should('exist')
+        .should('be.visible')
+        .type('invalid-url')
+
+      cy.findByText(/The URL must have the correct format/)
+        .should('exist')
+        .should('be.visible')
+
+      // We now click the back button and as we have entered some new data the confirm discard changes dialog should be shown
+      cy.findByTestId('back-to-type-selection-button').click()
+
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/If you go back, your changes will be discarded./).should('exist')
+
+        cy.findByRole('button', { name: /Continue/ }).click()
+      })
+
+      cy.findByTestId('base-form-item-0').should('exist')
+
+      // We now select again the dv object type and validate that the error is cleared
+      cy.get('@first-item').within(() => {
+        selectDvObjectFeaturedItemType()
+      })
+      cy.findByTestId('dvobject-form-item-0').should('exist').should('be.visible')
+      cy.findByLabelText(/Dataverse Object URL/)
+        .should('exist')
+        .should('be.visible')
+        .should('have.value', '') // The input should be cleared
+
+      cy.findByText(/The URL must have the correct format/).should('not.exist')
+    })
+
+    it('should show the confirm discard changes dialog and stay if users cancels going back', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
+        />
+      )
+
+      cy.findByTestId('base-form-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        selectDvObjectFeaturedItemType()
+      })
+
+      cy.findByTestId('dvobject-form-item-0').should('exist').should('be.visible')
+
+      cy.findByLabelText(/Dataverse Object URL/)
+        .should('exist')
+        .should('be.visible')
+        .type('https://foo.com/collections/foo')
+
+      cy.findByTestId('back-to-type-selection-button').click()
+
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/If you go back, your changes will be discarded./).should('exist')
+
+        cy.findByRole('button', { name: /Cancel/ }).click()
+      })
+      cy.findByTestId('dvobject-form-item-0').should('exist').should('be.visible')
+      cy.get('[data-testid="base-form-item-0"]').should('not.exist')
+    })
   })
 
-  // TODO:ME
   describe('Delete Single Featured Item', () => {
-    // it should delete a single featured item when clicking the delete button and confirming the action
-    // it should not delete a single featured item when clicking the delete button and canceling the action
-    // it should show WriteError when trying to delete a single featured item and receiving a WriteError from JS-dataverse
-    // it should show fallback error when trying to delete a single featured item and receiving an unknown error from JS-dataverse
+    it('should delete a single featured item when clicking the delete button and confirming the action', () => {
+      collectionRepository.deleteFeaturedItem = cy.stub().as('deleteFeaturedItem').resolves()
+
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
+      cy.get('@second-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
+        cy.get(`[aria-label="Delete Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/Are you sure you want to delete this featured item?/).should('exist')
+
+        cy.findByRole('button', { name: /Delete/ }).click()
+      })
+
+      cy.get('@deleteFeaturedItem').should((spy) => {
+        const deleteFeaturedItemsSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+        const deletedFeaturedItemIdNumber = deleteFeaturedItemsSpy.getCall(0).args[0] as number
+
+        expect(deleteFeaturedItemsSpy).to.be.calledOnce
+        expect(deletedFeaturedItemIdNumber).to.equal(featuredItemTwo.id)
+      })
+
+      cy.get('[data-testid="featured-item-1"]').should('not.exist')
+
+      cy.findByText(/Featured item has been deleted successfully./)
+        .should('exist')
+        .should('be.visible')
+    })
+
+    it('should not delete a single featured item when clicking the delete button and canceling the action', () => {
+      collectionRepository.deleteFeaturedItem = cy.stub().as('deleteFeaturedItem').resolves()
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+      cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
+      cy.get('@second-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
+        cy.get(`[aria-label="Delete Featured Item"]`).should('exist').should('be.visible').click()
+      })
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/Are you sure you want to delete this featured item?/).should('exist')
+        cy.findByRole('button', { name: /Cancel/ }).click()
+      })
+      cy.get('@deleteFeaturedItem').should('not.be.called')
+      cy.findByTestId('featured-item-1').should('exist').should('be.visible')
+    })
+
+    it('should show WriteError when trying to delete a single featured item and receiving a WriteError from JS-dataverse', () => {
+      const errorMessage = 'Error deleting featured item'
+      collectionRepository.deleteFeaturedItem = cy
+        .stub()
+        .as('deleteFeaturedItem')
+        .rejects(new WriteError(errorMessage))
+
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
+      cy.get('@second-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
+        cy.get(`[aria-label="Delete Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/Are you sure you want to delete this featured item?/).should('exist')
+
+        cy.findByRole('button', { name: /Delete/ }).click()
+      })
+
+      cy.get('@deleteFeaturedItem').should((spy) => {
+        const deleteFeaturedItemsSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+        const deletedFeaturedItemIdNumber = deleteFeaturedItemsSpy.getCall(0).args[0] as number
+
+        expect(deleteFeaturedItemsSpy).to.be.calledOnce
+        expect(deletedFeaturedItemIdNumber).to.equal(featuredItemTwo.id)
+      })
+
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(errorMessage).should('exist').should('be.visible')
+        // Close dialog for next test
+        cy.findByRole('button', { name: /Cancel/ }).click()
+      })
+    })
+
+    it('should show fallback error when trying to delete a single featured item and not receiving an instance of WriteError from JS-dataverse', () => {
+      collectionRepository.deleteFeaturedItem = cy.stub().as('deleteFeaturedItem').rejects()
+
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
+      cy.get('@second-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
+        cy.get(`[aria-label="Delete Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/Are you sure you want to delete this featured item?/).should('exist')
+
+        cy.findByRole('button', { name: /Delete/ }).click()
+      })
+
+      cy.get('@deleteFeaturedItem').should((spy) => {
+        const deleteFeaturedItemsSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+        const deletedFeaturedItemIdNumber = deleteFeaturedItemsSpy.getCall(0).args[0] as number
+
+        expect(deleteFeaturedItemsSpy).to.be.calledOnce
+        expect(deletedFeaturedItemIdNumber).to.equal(featuredItemTwo.id)
+      })
+
+      cy.findByRole('dialog').within(() => {
+        cy.findByText('An error occurred while deleting the featured item. Please try again later.')
+          .should('exist')
+          .should('be.visible')
+        // Close dialog for next test
+        cy.findByRole('button', { name: /Cancel/ }).click()
+      })
+    })
+
+    it('resets the form and show the select featured item type UI when deleting the last featured item', () => {
+      collectionRepository.deleteFeaturedItem = cy.stub().as('deleteFeaturedItem').resolves()
+
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      // Delete first item
+      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
+        cy.get(`[aria-label="Delete Featured Item"]`).should('exist').should('be.visible').click()
+      })
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/Are you sure you want to delete this featured item?/).should('exist')
+
+        cy.findByRole('button', { name: /Delete/ }).click()
+      })
+
+      // Now we have only one item left, so we delete it too
+      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
+      cy.get('@first-item').within(() => {
+        // Enable edition
+        toggleEditButton()
+
+        cy.get(`[aria-label="Delete Featured Item"]`).should('exist').should('be.visible').click()
+      })
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/Are you sure you want to delete this featured item?/).should('exist')
+
+        cy.findByRole('button', { name: /Delete/ }).click()
+      })
+
+      // We should see the Select Featured Item Type UI again
+      cy.findByTestId('base-form-item-0').should('exist').should('be.visible')
+    })
   })
 
   it('should show the top save button when there are at least 3 items', () => {
@@ -770,8 +1169,37 @@ describe('FeaturedItemsForm', () => {
         .should('exist')
         .should('be.visible')
     })
-    // TODO:ME
-    // it should show an error message when submitting the form with a base form item without selecting a type
+
+    it('should show an error message when submitting the form with a base form item without selecting a type', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      // Add a new item and do not select a type
+      cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
+
+      cy.get('@second-item').within(() => {
+        cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByTestId('base-form-item-2').should('exist').should('be.visible')
+
+      // Submit the form without selecting a type
+      cy.findAllByRole('button', { name: /Save Changes/ })
+        .eq(0)
+        .should('be.visible')
+        .should('be.enabled')
+        .click()
+
+      cy.findByText(/Please select a type of featured item or remove the item./)
+        .should('exist')
+        .should('be.visible')
+    })
   })
 
   // TODO: This test is failing in CI sometimes, we need to investigate why and fix it
@@ -846,7 +1274,7 @@ describe('FeaturedItemsForm', () => {
     })
   })
 
-  describe('Form Submition', () => {
+  describe('Form Submission', () => {
     it('should submit the form with the new values and show toast - case when collection dont have initial items', () => {
       collectionRepository.updateFeaturedItems = cy.stub().as('updateFeaturedItems').resolves()
 

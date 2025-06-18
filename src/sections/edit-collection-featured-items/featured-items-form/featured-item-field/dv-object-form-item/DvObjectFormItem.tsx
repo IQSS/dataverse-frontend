@@ -71,7 +71,7 @@ export const DvObjectFormItem = ({
   }
 
   return (
-    <div>
+    <div data-testid={`dvobject-form-item-${itemIndex}`}>
       <Form.Group controlId={`featuredItems.${itemIndex}.dvObjectUrl`}>
         <Form.Group.Label required sm={3}>
           {t('form.dvObjectUrl.label')}

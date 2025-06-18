@@ -11,9 +11,6 @@ import {
 } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 
-const locationOrigin =
-  import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true' ? 'https://foo.com' : window.location.origin
-
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 
 export class FeaturedItemsFormHelper {
@@ -228,11 +225,11 @@ export class FeaturedItemsFormHelper {
   ): string => {
     switch (type) {
       case FeaturedItemType.COLLECTION:
-        return `${locationOrigin}${BASENAME_URL}${Route.COLLECTIONS_BASE}/${identifier}`
+        return `${window.location.origin}${BASENAME_URL}${Route.COLLECTIONS_BASE}/${identifier}`
       case FeaturedItemType.DATASET:
-        return `${locationOrigin}${BASENAME_URL}${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${identifier}`
+        return `${window.location.origin}${BASENAME_URL}${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${identifier}`
       case FeaturedItemType.FILE:
-        return `${locationOrigin}${BASENAME_URL}${Route.FILES}?${QueryParamKey.FILE_ID}=${identifier}`
+        return `${window.location.origin}${BASENAME_URL}${Route.FILES}?${QueryParamKey.FILE_ID}=${identifier}`
       default:
         return '#' // Fallback URL if type is unknown
     }

@@ -13,7 +13,7 @@ export const CustomFormItem = ({
   initialImageUrl
 }: CustomFormItemProps) => {
   return (
-    <>
+    <div data-testid={`custom-form-item-${itemIndex}`}>
       {/* CONTENT FIELD */}
       <ContentField itemIndex={itemIndex} editEnabled={editEnabled} />
       {/* IMAGE FIELD */}
@@ -22,6 +22,6 @@ export const CustomFormItem = ({
         editEnabled={editEnabled}
         initialImageUrl={initialImageUrl}
       />
-    </>
+    </div>
   )
 }
