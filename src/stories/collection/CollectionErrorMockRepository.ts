@@ -5,7 +5,7 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { Collection } from '../../collection/domain/models/Collection'
 import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
 import { CollectionMockRepository } from './CollectionMockRepository'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class CollectionErrorMockRepository extends CollectionMockRepository {
@@ -45,7 +45,7 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
     })
   }
 
-  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<FeaturedItem[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Something went wrong')
@@ -56,7 +56,7 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
   updateFeaturedItems(
     _collectionId: string,
     _featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<CollectionFeaturedItem[]> {
+  ): Promise<FeaturedItem[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Something went wrong')

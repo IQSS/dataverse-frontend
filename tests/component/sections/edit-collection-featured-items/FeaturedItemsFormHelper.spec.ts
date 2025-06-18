@@ -1,7 +1,4 @@
-import {
-  CollectionFeaturedItem,
-  FeaturedItemType
-} from '@/collection/domain/models/CollectionFeaturedItem'
+import { FeaturedItem, FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
 import { CustomFeaturedItemDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 import { FeaturedItemsFormHelper } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsFormHelper'
 import {
@@ -100,7 +97,7 @@ const testFormFields: FeaturedItemField[] = [
 describe('FeaturedItemsFormHelper', () => {
   describe('defineFormDefaultFeaturedItems', () => {
     it('should return default featured items when collection featured items is empty', () => {
-      const collectionFeaturedItems: CollectionFeaturedItem[] = []
+      const collectionFeaturedItems: FeaturedItem[] = []
 
       const result = FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(collectionFeaturedItems)
 

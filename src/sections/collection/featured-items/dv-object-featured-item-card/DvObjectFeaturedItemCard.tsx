@@ -1,9 +1,6 @@
 import { Card, Icon, IconName } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
-import {
-  DvObjectFeaturedItem,
-  FeaturedItemType
-} from '@/collection/domain/models/CollectionFeaturedItem'
+import { DvObjectFeaturedItem, FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import styles from './DvObjectFeaturedItemCard.module.scss'
 import { Link } from 'react-router-dom'

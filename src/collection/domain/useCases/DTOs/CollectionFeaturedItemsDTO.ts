@@ -1,4 +1,4 @@
-import { CustomFeaturedItem, DvObjectFeaturedItem } from '../../models/CollectionFeaturedItem'
+import { CustomFeaturedItem, DvObjectFeaturedItem } from '../../models/FeaturedItem'
 
 export type CollectionFeaturedItemsDTO = (CustomFeaturedItemDTO | DvObjectFeaturedItemDTO)[]
 

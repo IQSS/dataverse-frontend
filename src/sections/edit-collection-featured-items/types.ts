@@ -1,7 +1,4 @@
-import {
-  CollectionFeaturedItem,
-  FeaturedItemType
-} from '@/collection/domain/models/CollectionFeaturedItem'
+import { FeaturedItem, FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
 
 export type FeaturedItemsFormData = {
   featuredItems: FeaturedItemField[]
@@ -17,14 +14,14 @@ export type FeaturedItemFieldWithSortId = FeaturedItemField & {
 }
 
 export type CustomFeaturedItemField = {
-  itemId?: CollectionFeaturedItem['id']
+  itemId?: FeaturedItem['id']
   type: FeaturedItemType.CUSTOM
   content: string
   image: File | string | null
 }
 
 export type DvObjectFeaturedItemField = {
-  itemId?: CollectionFeaturedItem['id']
+  itemId?: FeaturedItem['id']
   type: FeaturedItemType.COLLECTION | FeaturedItemType.DATASET | FeaturedItemType.FILE | ''
   dvObjectIdentifier: string
   dvObjectUrl: string
@@ -32,6 +29,6 @@ export type DvObjectFeaturedItemField = {
 
 // This will be the data of a form field when just adding it, then the user will select which type of featured item wants, custom or dvObject.
 export type BaseFeaturedItemField = {
-  itemId?: CollectionFeaturedItem['id']
+  itemId?: FeaturedItem['id']
   type: 'base'
 }

@@ -1,8 +1,8 @@
 import {
-  CollectionFeaturedItem,
+  FeaturedItem,
   CustomFeaturedItem,
   FeaturedItemType
-} from '@/collection/domain/models/CollectionFeaturedItem'
+} from '@/collection/domain/models/FeaturedItem'
 import { CustomFeaturedItemField, DvObjectFeaturedItemField, FeaturedItemsFormData } from '../types'
 import {
   CustomFeaturedItemDTO,
@@ -21,7 +21,7 @@ export class FeaturedItemsFormHelper {
    * @description To define the default form featured items values
    */
   static defineFormDefaultFeaturedItems(
-    collectionFeaturedItems: CollectionFeaturedItem[]
+    collectionFeaturedItems: FeaturedItem[]
   ): FeaturedItemsFormData['featuredItems'] {
     if (!collectionFeaturedItems.length) {
       return [{ type: 'base' }]

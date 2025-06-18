@@ -1,10 +1,7 @@
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Accordion } from '@iqss/dataverse-design-system'
-import {
-  CustomFeaturedItem,
-  FeaturedItemType
-} from '@/collection/domain/models/CollectionFeaturedItem'
+import { CustomFeaturedItem, FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
 import { FeaturedItemView } from '@/sections/featured-item/featured-item-view/FeaturedItemView'
 import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
 import { CustomFeaturedItemField, FeaturedItemField } from '../../types'

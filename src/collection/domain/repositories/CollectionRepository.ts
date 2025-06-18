@@ -1,6 +1,6 @@
 import { Collection } from '../models/Collection'
 import { CollectionFacet } from '../models/CollectionFacet'
-import { CollectionFeaturedItem } from '../models/CollectionFeaturedItem'
+import { FeaturedItem } from '../models/FeaturedItem'
 import { CollectionItemsPaginationInfo } from '../models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '../models/CollectionItemSubset'
 import { MyDataCollectionItemSubset } from '../models/MyDataCollectionItemSubset'
@@ -31,11 +31,11 @@ export interface CollectionRepository {
     otherUserName?: string
   ): Promise<MyDataCollectionItemSubset>
   edit(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void>
-  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]>
+  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<FeaturedItem[]>
   updateFeaturedItems(
     collectionIdOrAlias: number | string,
     featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<CollectionFeaturedItem[]>
+  ): Promise<FeaturedItem[]>
   deleteFeaturedItems(collectionIdOrAlias: number | string): Promise<void>
   deleteFeaturedItem(featuredItemId: number): Promise<void>
 }

@@ -2,7 +2,7 @@ import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
 import { Card } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
-import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
+import { FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
 import styles from './BaseFormItem.module.scss'
 
 /**

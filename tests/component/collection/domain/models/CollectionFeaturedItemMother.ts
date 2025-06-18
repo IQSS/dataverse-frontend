@@ -1,12 +1,12 @@
 import {
-  CollectionFeaturedItem,
+  FeaturedItem,
   CustomFeaturedItem,
   DvObjectFeaturedItem,
   FeaturedItemType
-} from '@/collection/domain/models/CollectionFeaturedItem'
+} from '@/collection/domain/models/FeaturedItem'
 
 export class CollectionFeaturedItemMother {
-  static createFeaturedItems(): CollectionFeaturedItem[] {
+  static createFeaturedItems(): FeaturedItem[] {
     return [
       {
         id: 1,

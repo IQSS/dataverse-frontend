@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { getCollectionFeaturedItems } from '@/collection/domain/useCases/getCollectionFeaturedItems'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
 
 interface UseGetCollectionFeaturedItemsReturnType {
-  collectionFeaturedItems: CollectionFeaturedItem[]
+  collectionFeaturedItems: FeaturedItem[]
   error: string | null
   isLoading: boolean
 }
@@ -13,9 +13,7 @@ export const useGetCollectionFeaturedItems = (
   collectionRepository: CollectionRepository,
   collectionIdOrAlias?: string | number
 ): UseGetCollectionFeaturedItemsReturnType => {
-  const [collectionFeaturedItems, setCollectionFeaturedItems] = useState<CollectionFeaturedItem[]>(
-    []
-  )
+  const [collectionFeaturedItems, setCollectionFeaturedItems] = useState<FeaturedItem[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -23,7 +21,7 @@ export const useGetCollectionFeaturedItems = (
     const handleGetCollectionFeaturedItems = async () => {
       setIsLoading(true)
       try {
-        const featuredItems: CollectionFeaturedItem[] = await getCollectionFeaturedItems(
+        const featuredItems: FeaturedItem[] = await getCollectionFeaturedItems(
           collectionRepository,
           collectionIdOrAlias
         )

@@ -23,7 +23,7 @@ import { CollectionItemsPaginationInfo } from '../../domain/models/CollectionIte
 import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
@@ -117,14 +117,14 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return updateCollection.execute(collectionIdOrAlias, updatedCollection)
   }
 
-  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<FeaturedItem[]> {
     return getCollectionFeaturedItems.execute(collectionIdOrAlias)
   }
 
   updateFeaturedItems(
     collectionIdOrAlias: number | string,
     featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<CollectionFeaturedItem[]> {
+  ): Promise<FeaturedItem[]> {
     return updateCollectionFeaturedItems.execute(collectionIdOrAlias, featuredItemsDTO)
   }
 

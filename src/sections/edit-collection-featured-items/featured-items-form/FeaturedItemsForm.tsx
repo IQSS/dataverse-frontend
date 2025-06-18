@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import {
-  CollectionFeaturedItem,
+  FeaturedItem,
   CustomFeaturedItem,
   FeaturedItemType
-} from '@/collection/domain/models/CollectionFeaturedItem'
+} from '@/collection/domain/models/FeaturedItem'
 import { FeaturedItemField } from './featured-item-field/FeaturedItemField'
 import { PreviewCarousel } from './preview-carousel/PreviewCarousel'
 import { FeaturedItemFieldWithSortId, FeaturedItemsFormData } from '../types'
@@ -24,7 +24,7 @@ interface FeaturedItemsFormProps {
   collectionId: string
   collectionRepository: CollectionRepository
   defaultValues: FeaturedItemsFormData
-  collectionFeaturedItems: CollectionFeaturedItem[]
+  collectionFeaturedItems: FeaturedItem[]
 }
 
 export const FeaturedItemsForm = ({

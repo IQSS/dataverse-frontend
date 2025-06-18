@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Badge, Col, Form } from '@iqss/dataverse-design-system'
-import { FeaturedItemType } from '@/collection/domain/models/CollectionFeaturedItem'
+import { FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
 import { FeaturedItemsFormHelper } from '../../FeaturedItemsFormHelper'
 import styles from './DvObjectFormItem.module.scss'
 
