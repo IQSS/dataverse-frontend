@@ -292,7 +292,7 @@ describe('FileUploader', () => {
         )
       })
 
-      it.only('cancels the upload when the user clicks on the cancel button', () => {
+      it('cancels the upload when the user clicks on the cancel button', () => {
         cy.customMount(
           <FileUploader
             fileRepository={fileMockRepository}

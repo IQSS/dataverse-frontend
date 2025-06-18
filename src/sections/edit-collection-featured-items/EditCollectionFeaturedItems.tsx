@@ -18,9 +18,6 @@ interface EditCollectionFeaturedItemsProps {
   collectionIdFromParams: string | undefined
 }
 
-// TODO:ME - Fix unit tests
-// TODO:ME - Write more unit tests to cover all the cases
-
 export const EditCollectionFeaturedItems = ({
   collectionRepository,
   collectionIdFromParams
