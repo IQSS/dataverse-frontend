@@ -25,7 +25,6 @@ export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => 
       if (value === 'base') {
         return t('baseItem.required')
       }
-      return true
     }
   }
 

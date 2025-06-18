@@ -6,6 +6,7 @@ import {
   DvObjectFeaturedItemField,
   FeaturedItemField
 } from '@/sections/edit-collection-featured-items/types'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
 const testFeaturedItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
@@ -369,6 +370,49 @@ describe('FeaturedItemsFormHelper', () => {
       const result = FeaturedItemsFormHelper.getAspectRatioString(800, 537)
 
       expect(result).to.deep.equal('16:11')
+    })
+  })
+
+  describe('transformDvObjectTypeAndIdentifierToSpaURL', () => {
+    it('should return collection page URL when type is collection', () => {
+      const identifier = 'sample-collection-id'
+      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToSpaURL(
+        FeaturedItemType.COLLECTION,
+        identifier
+      )
+
+      expect(result).to.contain(`${Route.COLLECTIONS_BASE}/${identifier}`)
+    })
+
+    it('should return dataset page URL when type is dataset', () => {
+      const identifier = 'doi:10.5072/FK2/ABC123'
+      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToSpaURL(
+        FeaturedItemType.DATASET,
+        identifier
+      )
+
+      expect(result).to.contain(`${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${identifier}`)
+    })
+
+    it('should return file page URL when type is file', () => {
+      const identifier = '44'
+      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToSpaURL(
+        FeaturedItemType.FILE,
+        identifier
+      )
+
+      expect(result).to.contain(`${Route.FILES}?${QueryParamKey.FILE_ID}=${identifier}`)
+    })
+
+    it('should return # when type does not match any known type', () => {
+      const identifier = 'unknown-id'
+
+      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToSpaURL(
+        'unknown-type' as FeaturedItemType.COLLECTION, // This cast is to simulate an unknown type and prevent TypeScript to complain
+        identifier
+      )
+
+      expect(result).to.deep.equal('#')
     })
   })
 })
