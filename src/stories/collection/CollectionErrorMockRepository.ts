@@ -6,7 +6,7 @@ import { Collection } from '../../collection/domain/models/Collection'
 import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
 import { CollectionMockRepository } from './CollectionMockRepository'
 import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
-import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 
 export class CollectionErrorMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
@@ -55,7 +55,7 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
 
   updateFeaturedItems(
     _collectionId: string,
-    _featuredItemsDTO: CollectionFeaturedItemsDTO
+    _featuredItemsDTO: FeaturedItemsDTO
   ): Promise<FeaturedItem[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {

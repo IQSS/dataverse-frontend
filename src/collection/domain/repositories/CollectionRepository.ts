@@ -7,7 +7,7 @@ import { MyDataCollectionItemSubset } from '../models/MyDataCollectionItemSubset
 import { CollectionSearchCriteria } from '../models/CollectionSearchCriteria'
 import { CollectionUserPermissions } from '../models/CollectionUserPermissions'
 import { CollectionDTO } from '../useCases/DTOs/CollectionDTO'
-import { CollectionFeaturedItemsDTO } from '../useCases/DTOs/CollectionFeaturedItemsDTO'
+import { FeaturedItemsDTO } from '../useCases/DTOs/FeaturedItemsDTO'
 
 export interface CollectionRepository {
   getById: (id?: string) => Promise<Collection>
@@ -34,7 +34,7 @@ export interface CollectionRepository {
   getFeaturedItems(collectionIdOrAlias?: number | string): Promise<FeaturedItem[]>
   updateFeaturedItems(
     collectionIdOrAlias: number | string,
-    featuredItemsDTO: CollectionFeaturedItemsDTO
+    featuredItemsDTO: FeaturedItemsDTO
   ): Promise<FeaturedItem[]>
   deleteFeaturedItems(collectionIdOrAlias: number | string): Promise<void>
   deleteFeaturedItem(featuredItemId: number): Promise<void>

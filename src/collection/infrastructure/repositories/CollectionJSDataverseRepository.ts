@@ -24,7 +24,7 @@ import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
-import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
@@ -123,7 +123,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
 
   updateFeaturedItems(
     collectionIdOrAlias: number | string,
-    featuredItemsDTO: CollectionFeaturedItemsDTO
+    featuredItemsDTO: FeaturedItemsDTO
   ): Promise<FeaturedItem[]> {
     return updateCollectionFeaturedItems.execute(collectionIdOrAlias, featuredItemsDTO)
   }

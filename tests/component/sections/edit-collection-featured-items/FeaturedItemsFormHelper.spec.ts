@@ -1,5 +1,5 @@
 import { FeaturedItem, FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
-import { CustomFeaturedItemDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { CustomFeaturedItemDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 import { FeaturedItemsFormHelper } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsFormHelper'
 import {
   CustomFeaturedItemField,

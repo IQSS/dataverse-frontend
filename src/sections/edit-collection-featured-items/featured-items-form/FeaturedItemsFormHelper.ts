@@ -6,9 +6,9 @@ import {
 import { CustomFeaturedItemField, DvObjectFeaturedItemField, FeaturedItemsFormData } from '../types'
 import {
   CustomFeaturedItemDTO,
-  CollectionFeaturedItemsDTO,
+  FeaturedItemsDTO,
   DvObjectFeaturedItemDTO
-} from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+} from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
@@ -86,8 +86,8 @@ export class FeaturedItemsFormHelper {
    */
   static defineFeaturedItemsDTO(
     formFeaturedItems: FeaturedItemsFormData['featuredItems']
-  ): CollectionFeaturedItemsDTO {
-    const itemsMapped: CollectionFeaturedItemsDTO = formFeaturedItems.map((item, index) => {
+  ): FeaturedItemsDTO {
+    const itemsMapped: FeaturedItemsDTO = formFeaturedItems.map((item, index) => {
       if (item.type === FeaturedItemType.CUSTOM) {
         const { content, image, itemId } = item
 

@@ -1,6 +1,6 @@
 import { CustomFeaturedItem, DvObjectFeaturedItem } from '../../models/FeaturedItem'
 
-export type CollectionFeaturedItemsDTO = (CustomFeaturedItemDTO | DvObjectFeaturedItemDTO)[]
+export type FeaturedItemsDTO = (CustomFeaturedItemDTO | DvObjectFeaturedItemDTO)[]
 
 export interface CustomFeaturedItemDTO {
   id?: number

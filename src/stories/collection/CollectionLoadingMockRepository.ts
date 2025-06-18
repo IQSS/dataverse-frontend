@@ -7,7 +7,7 @@ import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemS
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
-import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 
 export class CollectionLoadingMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
@@ -48,7 +48,7 @@ export class CollectionLoadingMockRepository extends CollectionMockRepository {
 
   updateFeaturedItems(
     _collectionId: string,
-    _featuredItemsDTO: CollectionFeaturedItemsDTO
+    _featuredItemsDTO: FeaturedItemsDTO
   ): Promise<FeaturedItem[]> {
     return new Promise(() => {})
   }

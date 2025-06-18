@@ -1,9 +1,9 @@
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import {
-  CollectionFeaturedItemsDTO,
+  FeaturedItemsDTO,
   CustomFeaturedItemDTO,
   DvObjectFeaturedItemDTO
-} from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+} from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 import { FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED } from '@/sections/edit-collection-featured-items/featured-items-form/featured-item-field/custom-form-item/ContentField'
 import { FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED } from '@/sections/edit-collection-featured-items/featured-items-form/featured-item-field/custom-form-item/ImageField'
 import { FeaturedItemsForm } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsForm'
@@ -1353,14 +1353,13 @@ describe('FeaturedItemsForm', () => {
 
       cy.get('@updateFeaturedItems').should((spy) => {
         const updateFeaturedItemsSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
-        const collectionFeaturedItemsDTO = updateFeaturedItemsSpy.getCall(0)
-          .args[1] as CollectionFeaturedItemsDTO
+        const featuredItemsDTO = updateFeaturedItemsSpy.getCall(0).args[1] as FeaturedItemsDTO
 
         expect(updateFeaturedItemsSpy).to.be.calledOnce
 
-        const firstItem = collectionFeaturedItemsDTO[0] as CustomFeaturedItemDTO
-        const secondItem = collectionFeaturedItemsDTO[1] as CustomFeaturedItemDTO
-        const thirdItem = collectionFeaturedItemsDTO[2] as DvObjectFeaturedItemDTO
+        const firstItem = featuredItemsDTO[0] as CustomFeaturedItemDTO
+        const secondItem = featuredItemsDTO[1] as CustomFeaturedItemDTO
+        const thirdItem = featuredItemsDTO[2] as DvObjectFeaturedItemDTO
 
         // First item, content only
         expect(firstItem.id).to.eq(undefined)
@@ -1482,13 +1481,12 @@ describe('FeaturedItemsForm', () => {
 
       cy.get('@updateFeaturedItems').should((spy) => {
         const updateFeaturedItemsSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
-        const collectionFeaturedItemsDTO = updateFeaturedItemsSpy.getCall(0)
-          .args[1] as CollectionFeaturedItemsDTO
+        const featuredItemsDTO = updateFeaturedItemsSpy.getCall(0).args[1] as FeaturedItemsDTO
 
-        const firstItem = collectionFeaturedItemsDTO[0] as CustomFeaturedItemDTO
-        const secondItem = collectionFeaturedItemsDTO[1] as CustomFeaturedItemDTO
-        const thirdItem = collectionFeaturedItemsDTO[2] as CustomFeaturedItemDTO
-        const fourthItem = collectionFeaturedItemsDTO[3] as CustomFeaturedItemDTO
+        const firstItem = featuredItemsDTO[0] as CustomFeaturedItemDTO
+        const secondItem = featuredItemsDTO[1] as CustomFeaturedItemDTO
+        const thirdItem = featuredItemsDTO[2] as CustomFeaturedItemDTO
+        const fourthItem = featuredItemsDTO[3] as CustomFeaturedItemDTO
 
         expect(updateFeaturedItemsSpy).to.be.calledOnce
 

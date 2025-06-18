@@ -12,7 +12,7 @@ import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionS
 import { CollectionItemsMother } from '../../../tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
-import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 
@@ -166,7 +166,7 @@ export class CollectionMockRepository implements CollectionRepository {
 
   updateFeaturedItems(
     _collectionId: string,
-    _featuredItemsDTO: CollectionFeaturedItemsDTO
+    _featuredItemsDTO: FeaturedItemsDTO
   ): Promise<FeaturedItem[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
