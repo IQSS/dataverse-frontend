@@ -143,7 +143,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
       roleIds,
       AllPublicationStatuses,
-      searchValue === '' ? undefined : searchValue
+      searchValue === '' ? undefined : searchValue,
+      currentSearchCriteria.otherUserName
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
@@ -194,7 +195,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       newItemsTypes,
       currentSearchCriteria.roleIds,
       currentSearchCriteria.publicationStatuses,
-      currentSearchCriteria.searchText
+      currentSearchCriteria.searchText,
+      currentSearchCriteria.otherUserName
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newMyDataSearchCriteria, true)
@@ -223,7 +225,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       currentSearchCriteria.itemTypes,
       newRoleIds,
       currentSearchCriteria.publicationStatuses,
-      currentSearchCriteria.searchText
+      currentSearchCriteria.searchText,
+      currentSearchCriteria.otherUserName
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newMyDataSearchCriteria, true)

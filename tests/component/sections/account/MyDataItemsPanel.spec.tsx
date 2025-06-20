@@ -110,9 +110,8 @@ describe('MyDataItemsPanel', () => {
       )
     })
     it('calls the repository with the correct username when searching', () => {
-      collectionRepository.getMyDataItems = cy.stub().callsFake((...args) => {
-        return Cypress.Promise.resolve(itemsWithCount)
-      })
+      collectionRepository.getMyDataItems = cy.stub().resolves(itemsWithCount)
+
       cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
 
       cy.findByPlaceholderText('Search by username...')
