@@ -6,5 +6,5 @@ legacy-peer-deps=true
 
 # js-dataverse registry
 //npm.pkg.github.com/:_authToken=<YOUR_GITHUB_AUTH_TOKEN>
-# IMPORTANT: comment out the following line to avoid publishing the Design System to GitHub Packages
+# IMPORTANT: when publishing the Design System, comment out the following line to avoid publishing to GitHub Packages
 @iqss:registry=https://npm.pkg.github.com/
