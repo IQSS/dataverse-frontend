@@ -89,6 +89,47 @@ describe('MyDataItemsPanel', () => {
         .invoke('val')
         .should('equal', 'jamespotts')
     })
+
+    it('calls the repository with the default username when rendering', () => {
+      cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      const otherUsername = 'jamespotts'
+      cy.findByPlaceholderText('Search by username...')
+        .should('exist')
+        .invoke('val')
+        .should('equal', otherUsername)
+
+      cy.wrap(collectionRepository.getMyDataItems).should(
+        'be.calledWithMatch',
+        Cypress.sinon.match.any,
+        Cypress.sinon.match.any,
+        Cypress.sinon.match.any,
+        10,
+        1,
+        undefined,
+        otherUsername
+      )
+    })
+    it('calls the repository with the correct username when searching', () => {
+      collectionRepository.getMyDataItems = cy.stub().resolves(itemsWithCount)
+
+      cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+
+      cy.findByPlaceholderText('Search by username...')
+        .should('exist')
+        .clear()
+        .type('testUserName{enter}')
+
+      cy.wrap(collectionRepository.getMyDataItems).should(
+        'be.calledWithMatch',
+        Cypress.sinon.match.any,
+        Cypress.sinon.match.any,
+        Cypress.sinon.match.any,
+        10,
+        1,
+        undefined,
+        'testUserName'
+      )
+    })
     it('shows the correct message when there are no results for user', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
