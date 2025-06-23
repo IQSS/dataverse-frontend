@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.2](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.0.1...@iqss/dataverse-design-system@2.0.2) (2024-06-23)
+
+### Bug Fixes
+
+- Update package.json to properly expose TypeScript types via the exports field.
+
+# [2.0.1](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.0.0...@iqss/dataverse-design-system@2.0.1) (2024-06-21)
+
+- Update Storybook link in README.md.
+
 # [2.0.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.1.0...@iqss/dataverse-design-system@2.0.0) (2024-06-20)
 
 ### Features
