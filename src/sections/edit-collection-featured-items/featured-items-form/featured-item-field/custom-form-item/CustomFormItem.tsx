@@ -14,9 +14,7 @@ export const CustomFormItem = ({
 }: CustomFormItemProps) => {
   return (
     <div data-testid={`custom-form-item-${itemIndex}`}>
-      {/* CONTENT FIELD */}
       <ContentField itemIndex={itemIndex} editEnabled={editEnabled} />
-      {/* IMAGE FIELD */}
       <ImageField
         itemIndex={itemIndex}
         editEnabled={editEnabled}
