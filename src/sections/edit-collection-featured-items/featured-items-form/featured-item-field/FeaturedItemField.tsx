@@ -16,7 +16,7 @@ import { CustomFormItem } from './custom-form-item/CustomFormItem'
 import { BackToTypeSelectionButton } from './BackToTypeSelectionButton'
 import { SwalModalWithModifiedCustomClass, SwalModal } from '@/sections/shared/swal-modal/SwalModal'
 import { useShowConfirmDialog } from './useShowConfirmDialog'
-import { deleteCollectionFeaturedItem } from '@/collection/domain/useCases/deleteCollectionFeaturedItem'
+import { deleteFeaturedItem } from '@/collection/domain/useCases/deleteFeaturedItem'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
 import styles from './FeaturedItemField.module.scss'
@@ -50,7 +50,7 @@ export const FeaturedItemField = ({
 }: FeaturedItemFieldProps) => {
   const isExistingItem = itemId !== undefined && itemId !== null
   const { t: tShared } = useTranslation('shared')
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
   const [editEnabled, setEditEnabled] = useState(!isExistingItem)
   const shouldShowConfirmRemoveDialog = useShowConfirmDialog({ itemIndex })
   const formMethods = useFormContext()
@@ -109,7 +109,7 @@ export const FeaturedItemField = ({
       ),
       preConfirm: async () => {
         try {
-          await deleteCollectionFeaturedItem(collectionRepository, featuredItemId)
+          await deleteFeaturedItem(collectionRepository, featuredItemId)
 
           toast.success(t('deleteSingleFeaturedItem.success'))
 

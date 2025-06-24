@@ -1,13 +1,12 @@
 import { DvObjectFeaturedItemCard } from '@/sections/collection/featured-items/dv-object-featured-item-card/DvObjectFeaturedItemCard'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 
 describe('DvObjectFeaturedItemCard', () => {
   it('should render correctly a featured item card type collection', () => {
-    const featuredItemTypeCollection =
-      CollectionFeaturedItemMother.createDvObjectCollectionFeaturedItem({
-        dvObjectDisplayName: 'Collection Test'
-      })
+    const featuredItemTypeCollection = FeaturedItemMother.createDvObjectCollectionFeaturedItem({
+      dvObjectDisplayName: 'Collection Test'
+    })
     cy.customMount(<DvObjectFeaturedItemCard featuredItem={featuredItemTypeCollection} />)
 
     cy.findByText('Collection Test').should('exist')
@@ -20,7 +19,7 @@ describe('DvObjectFeaturedItemCard', () => {
   })
 
   it('should render correctly a featured item card type dataset', () => {
-    const featuredItemTypeDataset = CollectionFeaturedItemMother.createDvObjectDatasetFeaturedItem({
+    const featuredItemTypeDataset = FeaturedItemMother.createDvObjectDatasetFeaturedItem({
       dvObjectDisplayName: 'Dataset Test'
     })
 
@@ -36,7 +35,7 @@ describe('DvObjectFeaturedItemCard', () => {
   })
 
   it('should render correctly a featured item card type file', () => {
-    const featuredItemTypeFile = CollectionFeaturedItemMother.createDvObjectFileFeaturedItem({
+    const featuredItemTypeFile = FeaturedItemMother.createDvObjectFileFeaturedItem({
       dvObjectDisplayName: 'File Test'
     })
 
@@ -53,7 +52,7 @@ describe('DvObjectFeaturedItemCard', () => {
 
   // Should never happen, but if does, we render an empty link.
   it('should render link with # when type is unknown', () => {
-    const featuredItemTypeFile = CollectionFeaturedItemMother.createDvObjectFileFeaturedItem({
+    const featuredItemTypeFile = FeaturedItemMother.createDvObjectFileFeaturedItem({
       dvObjectDisplayName: 'File Test',
       type: undefined
     })

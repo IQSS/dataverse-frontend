@@ -1,34 +1,33 @@
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { FeaturedItems } from '@/sections/collection/featured-items/FeaturedItems'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 
 const collectionRepository = {} as CollectionRepository
 const testCollectionId = 'root'
 
-const featuredItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+const featuredItemOne = FeaturedItemMother.createCustomFeaturedItem('css', {
   content: '<h1 class="rte-heading">Title One</h1>',
   imageFileUrl: undefined
 })
-const featuredItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+const featuredItemTwo = FeaturedItemMother.createCustomFeaturedItem('css', {
   content: '<h1 class="rte-heading">Title Two</h1>',
   imageFileUrl: undefined
 })
 
-const collectionDvObjectFeaturedItem =
-  CollectionFeaturedItemMother.createDvObjectCollectionFeaturedItem({
-    dvObjectDisplayName: 'Collection Title'
-  })
+const collectionDvObjectFeaturedItem = FeaturedItemMother.createDvObjectCollectionFeaturedItem({
+  dvObjectDisplayName: 'Collection Title'
+})
 
-const datasetDvObjectFeaturedItem = CollectionFeaturedItemMother.createDvObjectDatasetFeaturedItem({
+const datasetDvObjectFeaturedItem = FeaturedItemMother.createDvObjectDatasetFeaturedItem({
   dvObjectDisplayName: 'Dataset Title'
 })
 
-const fileDvObjectFeaturedItem = CollectionFeaturedItemMother.createDvObjectFileFeaturedItem({
+const fileDvObjectFeaturedItem = FeaturedItemMother.createDvObjectFileFeaturedItem({
   dvObjectDisplayName: 'File Title'
 })
 
 const tenTestFeaturedItems = Array.from({ length: 10 }, (_, i) =>
-  CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
+  FeaturedItemMother.createCustomFeaturedItem('books', {
     id: i + 1,
     content: `<h1 class="rte-heading">Title ${i}</h1>`,
     imageFileUrl: undefined

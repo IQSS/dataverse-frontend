@@ -1,6 +1,6 @@
 import { CollectionRepository } from '../repositories/CollectionRepository'
 
-export async function deleteCollectionFeaturedItem(
+export async function deleteFeaturedItem(
   collectionRepository: CollectionRepository,
   featuredItemId: number
 ): Promise<void> {

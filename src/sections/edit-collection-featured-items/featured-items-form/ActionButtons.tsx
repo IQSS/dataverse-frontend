@@ -17,7 +17,7 @@ export const ActionButtons = ({
   showDeleteAllButton = false
 }: ActionButtonsProps) => {
   const { t: tShared } = useTranslation('shared')
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
 
   return (
     <Stack direction="horizontal" gap={3}>

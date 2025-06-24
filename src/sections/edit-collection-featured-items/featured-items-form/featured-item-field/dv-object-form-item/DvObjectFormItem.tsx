@@ -33,7 +33,7 @@ export const DvObjectFormItem = ({
     name: `featuredItems.${itemIndex}.dvObjectIdentifier`
   }) as string
 
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
 
   const rules: UseControllerProps['rules'] = {
     required: t('form.dvObjectUrl.required'),

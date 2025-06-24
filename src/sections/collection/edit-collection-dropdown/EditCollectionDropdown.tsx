@@ -57,9 +57,7 @@ export const EditCollectionDropdown = ({
       <DropdownButtonItem as={Link} to={RouteWithParams.EDIT_COLLECTION(collection.id)}>
         {t('editCollection.generalInfo')}
       </DropdownButtonItem>
-      <DropdownButtonItem
-        as={Link}
-        to={RouteWithParams.EDIT_COLLECTION_FEATURED_ITEMS(collection.id)}>
+      <DropdownButtonItem as={Link} to={RouteWithParams.EDIT_FEATURED_ITEMS(collection.id)}>
         {t('featuredItems.title')}
       </DropdownButtonItem>
 

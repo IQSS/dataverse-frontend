@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CustomFeaturedItem } from '@/collection/domain/models/FeaturedItem'
-import { useGetCollectionFeaturedItems } from '../collection/useGetCollectionFeaturedItems'
+import { useGetFeaturedItems } from '../collection/useGetFeaturedItems'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { useLoading } from '../loading/LoadingContext'
 import { FeaturedItemView } from './featured-item-view/FeaturedItemView'
@@ -24,10 +24,10 @@ export const FeaturedItem = ({
   const { t } = useTranslation('featuredItem')
 
   const {
-    collectionFeaturedItems,
+    featuredItems,
     isLoading: isLoadingFeaturedItems,
     error
-  } = useGetCollectionFeaturedItems(collectionRepository, parentCollectionIdFromParams)
+  } = useGetFeaturedItems(collectionRepository, parentCollectionIdFromParams)
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
@@ -44,11 +44,11 @@ export const FeaturedItem = ({
     return <AppLoader />
   }
 
-  const featuredItemFoundById = collectionFeaturedItems?.find(
+  const featuredItemFoundById = featuredItems?.find(
     (featuredItem) => featuredItem.id === Number(featuredItemId)
   )
 
-  if (error || !collectionFeaturedItems || !featuredItemFoundById || !collection) {
+  if (error || !featuredItems || !featuredItemFoundById || !collection) {
     return (
       <Alert variant="danger" dismissible={false}>
         {t('error')}

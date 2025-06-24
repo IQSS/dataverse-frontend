@@ -3,7 +3,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 const collectionRepository = {} as CollectionRepository
@@ -246,7 +246,7 @@ describe('Collection page', () => {
   })
 
   it('shows the collection featured items carousel when there are featured items', () => {
-    const featuredItems = CollectionFeaturedItemMother.createFeaturedItems()
+    const featuredItems = FeaturedItemMother.createFeaturedItems()
     collectionRepository.getFeaturedItems = cy.stub().resolves(featuredItems)
 
     cy.customMount(

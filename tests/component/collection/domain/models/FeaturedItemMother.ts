@@ -5,7 +5,7 @@ import {
   FeaturedItemType
 } from '@/collection/domain/models/FeaturedItem'
 
-export class CollectionFeaturedItemMother {
+export class FeaturedItemMother {
   static createFeaturedItems(): FeaturedItem[] {
     return [
       {

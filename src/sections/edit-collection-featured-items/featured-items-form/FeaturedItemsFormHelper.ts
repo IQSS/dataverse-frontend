@@ -18,15 +18,15 @@ export class FeaturedItemsFormHelper {
    * @description To define the default form featured items values
    */
   static defineFormDefaultFeaturedItems(
-    collectionFeaturedItems: FeaturedItem[]
+    existingFeaturedItems: FeaturedItem[]
   ): FeaturedItemsFormData['featuredItems'] {
-    if (!collectionFeaturedItems.length) {
+    if (!existingFeaturedItems.length) {
       return [{ type: 'base' }]
     }
 
-    return collectionFeaturedItems.map((collectionFeaturedItem) => {
-      if (collectionFeaturedItem.type === FeaturedItemType.CUSTOM) {
-        const { id, content, imageFileUrl } = collectionFeaturedItem
+    return existingFeaturedItems.map((featuredItem) => {
+      if (featuredItem.type === FeaturedItemType.CUSTOM) {
+        const { id, content, imageFileUrl } = featuredItem
 
         const customFeaturedItemFormFieldData: CustomFeaturedItemField = {
           itemId: id,
@@ -37,7 +37,7 @@ export class FeaturedItemsFormHelper {
 
         return customFeaturedItemFormFieldData
       } else {
-        const { id, type, dvObjectIdentifier } = collectionFeaturedItem
+        const { id, type, dvObjectIdentifier } = featuredItem
 
         const dvObjectFeaturedItemFormFieldData: DvObjectFeaturedItemField = {
           itemId: id,

@@ -9,7 +9,7 @@ import { Slider } from './slider/Slider'
 import styles from './PreviewCarousel.module.scss'
 
 export const PreviewCarousel = () => {
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
   const { t: tCollection } = useTranslation('collection')
   const featuredItemFieldValues = useWatch({ name: 'featuredItems' }) as FeaturedItemField[]
 

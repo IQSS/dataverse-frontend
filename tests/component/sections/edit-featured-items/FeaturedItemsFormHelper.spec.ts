@@ -7,39 +7,39 @@ import {
   FeaturedItemField
 } from '@/sections/edit-collection-featured-items/types'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 
-const testFeaturedItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+const testFeaturedItemOne = FeaturedItemMother.createCustomFeaturedItem('css', {
   id: 1,
   imageFileUrl: 'https://via.placeholder.com/400x400',
   displayOrder: 1,
   content: '<h1 class="rte-heading">Featured Item One</h1>'
 })
 
-const testFeaturedItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+const testFeaturedItemTwo = FeaturedItemMother.createCustomFeaturedItem('css', {
   id: 2,
   displayOrder: 2,
   content: '<h1 class="rte-heading">Featured Item Two</h1>',
   imageFileUrl: undefined
 })
 
-const testFeaturedItemThree = CollectionFeaturedItemMother.createDvObjectCollectionFeaturedItem({
+const testFeaturedItemThree = FeaturedItemMother.createDvObjectCollectionFeaturedItem({
   id: 3,
   dvObjectIdentifier: 'sample-collection-id',
   displayOrder: 3
 })
-const testFeaturedItemFour = CollectionFeaturedItemMother.createDvObjectDatasetFeaturedItem({
+const testFeaturedItemFour = FeaturedItemMother.createDvObjectDatasetFeaturedItem({
   id: 4,
   dvObjectIdentifier: 'doi:10.5072/FK2/ABC123',
   displayOrder: 4
 })
-const testFeaturedItemFive = CollectionFeaturedItemMother.createDvObjectFileFeaturedItem({
+const testFeaturedItemFive = FeaturedItemMother.createDvObjectFileFeaturedItem({
   id: 5,
   dvObjectIdentifier: '44',
   displayOrder: 5
 })
 
-const testCollectionFeaturedItems = [
+const testFeaturedItems = [
   testFeaturedItemOne,
   testFeaturedItemTwo,
   testFeaturedItemThree,
@@ -98,9 +98,9 @@ const testFormFields: FeaturedItemField[] = [
 describe('FeaturedItemsFormHelper', () => {
   describe('defineFormDefaultFeaturedItems', () => {
     it('should return default featured items when collection featured items is empty', () => {
-      const collectionFeaturedItems: FeaturedItem[] = []
+      const featuredItems: FeaturedItem[] = []
 
-      const result = FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(collectionFeaturedItems)
+      const result = FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(featuredItems)
 
       expect(result).to.deep.equal([
         {
@@ -110,9 +110,7 @@ describe('FeaturedItemsFormHelper', () => {
     })
 
     it('should return collection featured items mapped to form data', () => {
-      const result = FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(
-        testCollectionFeaturedItems
-      )
+      const result = FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(testFeaturedItems)
 
       const firstItem = result[0] as CustomFeaturedItemField
       const secondItem = result[1] as CustomFeaturedItemField

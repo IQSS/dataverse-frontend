@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '@/stories/WithI18next'
 import { FeaturedItems } from '@/sections/collection/featured-items/FeaturedItems'
 import { CollectionMockRepository } from '../CollectionMockRepository'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
 const collectionRepositoryWithFeaturedItems = new CollectionMockRepository()
@@ -10,7 +10,7 @@ const collectionRepositoryWithFeaturedItems = new CollectionMockRepository()
 collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(CollectionFeaturedItemMother.createFeaturedItems())
+      resolve(FeaturedItemMother.createFeaturedItems())
     }, FakerHelper.loadingTimout())
   })
 }

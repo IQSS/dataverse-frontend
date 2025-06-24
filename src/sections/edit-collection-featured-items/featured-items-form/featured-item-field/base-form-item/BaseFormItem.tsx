@@ -18,7 +18,7 @@ interface BaseFormItemProps {
 
 export const BaseFormItem = ({ itemIndex, onSelectType }: BaseFormItemProps) => {
   const { control } = useFormContext()
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
 
   const rules: UseControllerProps['rules'] = {
     validate: (value) => {

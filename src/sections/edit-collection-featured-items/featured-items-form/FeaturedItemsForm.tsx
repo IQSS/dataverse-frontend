@@ -24,16 +24,16 @@ interface FeaturedItemsFormProps {
   collectionId: string
   collectionRepository: CollectionRepository
   defaultValues: FeaturedItemsFormData
-  collectionFeaturedItems: FeaturedItem[]
+  initialExistingFeaturedItems: FeaturedItem[]
 }
 
 export const FeaturedItemsForm = ({
   collectionId,
   collectionRepository,
   defaultValues,
-  collectionFeaturedItems
+  initialExistingFeaturedItems
 }: FeaturedItemsFormProps) => {
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
 
   const { submitForm, submissionStatus } = useSubmitFeaturedItems(
@@ -184,7 +184,7 @@ export const FeaturedItemsForm = ({
                   onSelectType={handleSelectType}
                   collectionRepository={collectionRepository}
                   initialImageUrl={
-                    (collectionFeaturedItems as CustomFeaturedItem[]).find(
+                    (initialExistingFeaturedItems as CustomFeaturedItem[]).find(
                       (item) => item.id === field.itemId
                     )?.imageFileUrl
                   }

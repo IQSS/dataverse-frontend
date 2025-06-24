@@ -12,7 +12,7 @@ export const FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED = 15_000
 
 export const ContentField = ({ itemIndex, editEnabled }: ContentFieldProps) => {
   const { control } = useFormContext()
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
 
   const rules: UseControllerProps['rules'] = {
     required: t('form.content.required'),

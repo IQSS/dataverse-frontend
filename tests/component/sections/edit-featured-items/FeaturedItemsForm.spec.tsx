@@ -10,20 +10,20 @@ import { FeaturedItemsForm } from '@/sections/edit-collection-featured-items/fea
 import { FeaturedItemsFormHelper } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsFormHelper'
 import { FeaturedItemsFormData } from '@/sections/edit-collection-featured-items/types'
 import { WriteError } from '@iqss/dataverse-client-javascript'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 
 const collectionRepository = {} as CollectionRepository
 const testCollection = CollectionMother.create({ name: 'Collection Name' })
 
-const featuredItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+const featuredItemOne = FeaturedItemMother.createCustomFeaturedItem('css', {
   id: 1,
   imageFileUrl: 'https://loremflickr.com/320/240',
   displayOrder: 1,
   content: '<h1 class="rte-heading">Featured Item One</h1>'
 })
 
-const featuredItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
+const featuredItemTwo = FeaturedItemMother.createCustomFeaturedItem('books', {
   id: 2,
   displayOrder: 2,
   content: '<h1 class="rte-heading">Featured Item Two</h1>',
@@ -57,7 +57,7 @@ describe('FeaturedItemsForm', () => {
         collectionId={testCollection.id}
         collectionRepository={collectionRepository}
         defaultValues={emptyFeaturedItems}
-        collectionFeaturedItems={[]}
+        initialExistingFeaturedItems={[]}
       />
     )
 
@@ -70,7 +70,7 @@ describe('FeaturedItemsForm', () => {
         collectionId={testCollection.id}
         collectionRepository={collectionRepository}
         defaultValues={formDefaultValues}
-        collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
       />
     )
 
@@ -118,7 +118,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -161,7 +161,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -206,7 +206,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -246,7 +246,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -301,7 +301,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -349,7 +349,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -385,7 +385,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -443,7 +443,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -493,7 +493,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -521,7 +521,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -549,7 +549,7 @@ describe('FeaturedItemsForm', () => {
         collectionId={testCollection.id}
         collectionRepository={collectionRepository}
         defaultValues={formDefaultValues}
-        collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
       />
     )
 
@@ -571,7 +571,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -602,7 +602,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -644,7 +644,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -688,7 +688,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -710,7 +710,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -759,7 +759,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -796,7 +796,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -836,7 +836,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
       cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
@@ -866,7 +866,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -907,7 +907,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -950,7 +950,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -988,15 +988,12 @@ describe('FeaturedItemsForm', () => {
   })
 
   it('should show the top save button when there are at least 3 items', () => {
-    const localTestFeaturedItemThree = CollectionFeaturedItemMother.createCustomFeaturedItem(
-      'css',
-      {
-        id: 3,
-        displayOrder: 3,
-        content: '<h1 class="rte-heading">Featured Item Three</h1>',
-        imageFileUrl: undefined
-      }
-    )
+    const localTestFeaturedItemThree = FeaturedItemMother.createCustomFeaturedItem('css', {
+      id: 3,
+      displayOrder: 3,
+      content: '<h1 class="rte-heading">Featured Item Three</h1>',
+      imageFileUrl: undefined
+    })
 
     const testFeaturedItems = [featuredItemOne, featuredItemTwo, localTestFeaturedItemThree]
 
@@ -1009,7 +1006,7 @@ describe('FeaturedItemsForm', () => {
         collectionId={testCollection.id}
         collectionRepository={collectionRepository}
         defaultValues={formDefaultValuesWith4Items}
-        collectionFeaturedItems={testFeaturedItems}
+        initialExistingFeaturedItems={testFeaturedItems}
       />
     )
 
@@ -1027,7 +1024,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -1054,7 +1051,7 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show an error message when the content is larger than max length accepted', () => {
-      const featuredItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+      const featuredItemOne = FeaturedItemMother.createCustomFeaturedItem('css', {
         id: 1,
         imageFileUrl: 'https://loremflickr.com/320/240',
         displayOrder: 1,
@@ -1076,7 +1073,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -1116,7 +1113,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -1136,7 +1133,7 @@ describe('FeaturedItemsForm', () => {
 
     it('should show toast error message when trying to add more than 10 featured items', () => {
       const testFeaturedItems = Array.from({ length: 10 }, (_, index) =>
-        CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+        FeaturedItemMother.createCustomFeaturedItem('css', {
           id: index,
           displayOrder: index,
           content: `<h1 class="rte-heading">Featured Item ${index}</h1>`,
@@ -1153,7 +1150,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={testFeaturedItems}
+          initialExistingFeaturedItems={testFeaturedItems}
         />
       )
 
@@ -1176,7 +1173,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -1209,7 +1206,7 @@ describe('FeaturedItemsForm', () => {
         collectionId={testCollection.id}
         collectionRepository={collectionRepository}
         defaultValues={formDefaultValues}
-        collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
       />
     )
 
@@ -1283,7 +1280,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -1391,7 +1388,7 @@ describe('FeaturedItemsForm', () => {
     it('should submit the form with the new values and show toast - case when collection has initial items', () => {
       collectionRepository.updateFeaturedItems = cy.stub().as('updateFeaturedItems').resolves()
 
-      const featuredItemThree = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+      const featuredItemThree = FeaturedItemMother.createCustomFeaturedItem('css', {
         id: 3,
         displayOrder: 3,
         content: '<h1 class="rte-heading">Featured Item Two</h1>',
@@ -1411,7 +1408,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo, featuredItemThree]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo, featuredItemThree]}
         />
       )
       cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
@@ -1537,7 +1534,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -1574,7 +1571,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[]}
+          initialExistingFeaturedItems={[]}
         />
       )
 
@@ -1587,7 +1584,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -1602,7 +1599,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -1620,7 +1617,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -1644,7 +1641,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 
@@ -1681,7 +1678,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
       )
 

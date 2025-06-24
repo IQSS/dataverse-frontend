@@ -15,7 +15,7 @@ interface BackToTypeSelectionButtonProps {
 export const BackToTypeSelectionButton = memo(
   ({ itemIndex, backToTypeSelection }: BackToTypeSelectionButtonProps) => {
     const { t: tShared } = useTranslation('shared')
-    const { t } = useTranslation('editCollectionFeaturedItems')
+    const { t } = useTranslation('editFeaturedItems')
     const { clearErrors } = useFormContext()
 
     const shouldShowConfirmBackDialog = useShowConfirmDialog({ itemIndex })

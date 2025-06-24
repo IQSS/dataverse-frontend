@@ -23,7 +23,7 @@ export const FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED = 1_000_000 // 1MB
 
 export const ImageField = ({ itemIndex, editEnabled, initialImageUrl }: ImageFieldProps) => {
   const { control, setValue } = useFormContext()
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
   const [selectedFileObjectURL, setSelectedFileObjectURL] = useState<string | null>(null)
   const [imageAspectRatio, setImageAspectRatio] = useState<{
     hasRecommendedAspectRatio: boolean
