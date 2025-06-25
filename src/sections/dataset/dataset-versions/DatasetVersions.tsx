@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Alert, Table, Form, Button } from '@iqss/dataverse-design-system'
+import { Alert, Table, Form } from '@iqss/dataverse-design-system'
 import {
   DatasetVersionSummary,
   DatasetVersionSummaryInfo,
@@ -14,16 +14,26 @@ import { useGetDatasetVersionsSummaries } from './useGetDatasetVersionsSummaries
 import { DatasetVersionViewDifferenceButton } from './view-difference/DatasetVersionViewDifferenceButton'
 import { useDatasetVersionSummaryDescription } from './useDatasetVersionSummaryDescription'
 import { DatasetViewDetailButton } from './DatasetViewDetailButton'
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 import styles from './DatasetVersions.module.scss'
 
 interface DatasetVersionsProps {
   datasetRepository: DatasetRepository
   datasetId: string
+  currentVersionNumber: string
+  canUpdateDataset: boolean
   isInView: boolean
+  isCurrentVersionDeaccessioned?: boolean
 }
 
-export function DatasetVersions({ datasetRepository, datasetId, isInView }: DatasetVersionsProps) {
-  const navigate = useNavigate()
+export function DatasetVersions({
+  datasetRepository,
+  datasetId,
+  currentVersionNumber,
+  canUpdateDataset,
+  isInView,
+  isCurrentVersionDeaccessioned
+}: DatasetVersionsProps) {
   const { t } = useTranslation('dataset')
   const [selectedVersions, setSelectedVersions] = useState<DatasetVersionSummaryInfo[]>([])
   const {
@@ -34,7 +44,7 @@ export function DatasetVersions({ datasetRepository, datasetId, isInView }: Data
   } = useGetDatasetVersionsSummaries({
     datasetRepository,
     persistentId: datasetId,
-    autoFetch: false
+    autoFetch: isCurrentVersionDeaccessioned ? true : false
   })
 
   const handleCheckboxChange = (datasetSummary: DatasetVersionSummaryInfo) => {
@@ -49,17 +59,15 @@ export function DatasetVersions({ datasetRepository, datasetId, isInView }: Data
     })
   }
 
-  const navigateToVersion = (versionNumber: string) => {
-    const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.PERSISTENT_ID, datasetId)
-    searchParams.set(QueryParamKey.VERSION, versionNumber)
-    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
-  }
-
-  const isDeaccession = datasetVersionSummaries?.some(
-    (dataset) => dataset.summary === 'versionDeaccessioned'
-  )
-  const showViewDifferenceButton = datasetVersionSummaries && datasetVersionSummaries.length < 2
+  const selectableVersions =
+    datasetVersionSummaries &&
+    datasetVersionSummaries.filter((version) => {
+      const summary = version.summary
+      const isDeaccessioned =
+        typeof summary === 'object' && summary !== null && 'deaccessioned' in summary
+      return !isDeaccessioned
+    })
+  const isCheckBoxValid = (selectableVersions?.length ?? 0) > 2
 
   useEffect(() => {
     if (isInView && !datasetVersionSummaries) {
@@ -77,7 +85,7 @@ export function DatasetVersions({ datasetRepository, datasetId, isInView }: Data
 
   return (
     <>
-      {!showViewDifferenceButton && selectedVersions.length === 2 && (
+      {selectedVersions.length === 2 && (
         <DatasetVersionViewDifferenceButton
           datasetRepository={datasetRepository}
           persistentId={datasetId}
@@ -89,7 +97,7 @@ export function DatasetVersions({ datasetRepository, datasetId, isInView }: Data
         <Table>
           <thead>
             <tr>
-              {!showViewDifferenceButton && (
+              {isCheckBoxValid && (
                 <th>
                   <span className={styles['visually-hidden']}>{t('versions.select')}</span>
                 </th>
@@ -108,12 +116,39 @@ export function DatasetVersions({ datasetRepository, datasetId, isInView }: Data
                   ? datasetVersionSummaries[index + 1]
                   : null
 
+              const isPreviousVersionDeaccessioned =
+                previousDataset &&
+                typeof previousDataset.summary === 'object' &&
+                previousDataset.summary !== null &&
+                'deaccessioned' in previousDataset.summary
+
+              const isCurrentVersion = dataset.versionNumber === currentVersionNumber
+
+              const isCurrentVersionDeaccessioned =
+                typeof dataset.summary === 'object' &&
+                dataset.summary !== null &&
+                'deaccessioned' in dataset.summary
+
+              const isLinkable =
+                (dataset.versionNumber !== DatasetVersionState.DRAFT &&
+                  !isCurrentVersionDeaccessioned) ||
+                ((dataset.versionNumber === DatasetVersionState.DRAFT ||
+                  isCurrentVersionDeaccessioned) &&
+                  canUpdateDataset)
+
+              const showViewDetails =
+                previousDataset &&
+                typeof dataset.summary !== 'string' &&
+                !isCurrentVersionDeaccessioned &&
+                !isPreviousVersionDeaccessioned
+
               return (
                 <tr key={dataset.id}>
-                  {!showViewDifferenceButton && !isDeaccession && (
+                  {isCheckBoxValid && (
                     <td style={{ verticalAlign: 'middle' }}>
                       <Form.Group.Checkbox
                         label=""
+                        disabled={isCurrentVersionDeaccessioned}
                         aria-label="Select row"
                         id={`dataset-${dataset.id}`}
                         data-testid="select-checkbox"
@@ -123,14 +158,22 @@ export function DatasetVersions({ datasetRepository, datasetId, isInView }: Data
                     </td>
                   )}
                   <td>
-                    <Button variant="link" onClick={() => navigateToVersion(dataset.versionNumber)}>
-                      {dataset.versionNumber}
-                    </Button>
+                    {isCurrentVersion ? (
+                      <strong>{dataset.versionNumber}</strong>
+                    ) : isLinkable ? (
+                      <Link
+                        to={`${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetId}&${QueryParamKey.VERSION}=${dataset.versionNumber}`}
+                        data-testid={`dataset-version-link-${dataset.versionNumber}`}>
+                        {dataset.versionNumber}
+                      </Link>
+                    ) : (
+                      <span>{dataset.versionNumber}</span>
+                    )}
                   </td>
                   <td>
                     <p style={{ display: 'flex', flexWrap: 'wrap', margin: 0, textAlign: 'left' }}>
                       <SummaryDescription summary={dataset.summary} />
-                      {previousDataset && typeof dataset.summary !== 'string' && (
+                      {showViewDetails && (
                         <DatasetViewDetailButton
                           datasetRepository={datasetRepository}
                           oldVersionNumber={previousDataset.versionNumber}
