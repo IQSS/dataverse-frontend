@@ -114,6 +114,8 @@ export function Dataset({
         )}`
       : DatasetVersionState.DRAFT
 
+  const canUpdateDataset = dataset.permissions.canUpdateDataset
+
   return (
     <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
@@ -184,6 +186,7 @@ export function Dataset({
                         filesRepository={fileRepository}
                         datasetPersistentId={dataset.persistentId}
                         datasetVersion={dataset.version}
+                        canUpdateDataset={canUpdateDataset}
                         key={dataset.version.publishingStatus}
                       />
                     ) : (
@@ -214,6 +217,7 @@ export function Dataset({
                       filesRepository={fileRepository}
                       datasetPersistentId={dataset.persistentId}
                       datasetVersion={dataset.version}
+                      canUpdateDataset={canUpdateDataset}
                     />
                   </div>
                 </Tabs.Tab>

@@ -154,7 +154,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   private async fetchDownloadSizes(
     persistentId: string,
-    version?: string
+    version?: string,
+    includeDeaccessioned?: boolean
   ): Promise<[number, number]> {
     return Promise.all([
       getDatasetFilesTotalDownloadSize.execute(
@@ -173,6 +174,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       )
     ])
   }
+
   getLocks(persistentId: string): Promise<DatasetLock[]> {
     return getDatasetLocks.execute(persistentId).then((jsDatasetLocks) => {
       return JSDatasetMapper.toLocks(jsDatasetLocks)
@@ -183,13 +185,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     persistentId: string,
     version: string = DatasetNonNumericVersion.LATEST_PUBLISHED,
     requestedVersion?: string,
-    keepRawFields?: boolean
+    keepRawFields?: boolean,
+    fetchDownloadSizesIncludeDeaccessioned?: boolean
   ): Promise<Dataset | undefined> {
     return getDataset
       .execute(persistentId, version, includeDeaccessioned, keepRawFields)
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
       .then((datasetDetails) => {
-        return this.fetchDownloadSizes(persistentId, version).then((downloadSizes) => {
+        return this.fetchDownloadSizes(
+          persistentId,
+          version,
+          fetchDownloadSizesIncludeDeaccessioned
+        ).then((downloadSizes) => {
           datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
           datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
           return datasetDetails
@@ -239,6 +246,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         )
       })
   }
+
   getByPrivateUrlToken(privateUrlToken: string): Promise<Dataset | undefined> {
     return Promise.all([
       getPrivateUrlDataset.execute(privateUrlToken),

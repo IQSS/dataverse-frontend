@@ -23,12 +23,14 @@ export interface FileRepository {
   getFilesCountInfoByDatasetPersistentId: (
     datasetPersistentId: string,
     datasetVersionNumber: DatasetVersionNumber,
-    criteria: FileCriteria
+    criteria: FileCriteria,
+    includeDeaccessioned?: boolean
   ) => Promise<FilesCountInfo>
   getFilesTotalDownloadSizeByDatasetPersistentId: (
     datasetPersistentId: string,
     datasetVersionNumber: DatasetVersionNumber,
-    criteria?: FileCriteria
+    criteria?: FileCriteria,
+    includeDeaccessioned?: boolean
   ) => Promise<number>
   getFileVersionSummaries: (fileId: number | string) => Promise<FileVersionSummaryInfo[]>
   getById: (id: number, datasetVersionNumber?: string) => Promise<File | undefined>
@@ -38,7 +40,8 @@ export interface FileRepository {
     datasetPersistentId: string,
     datasetVersion: DatasetVersion,
     paginationInfo?: FilePaginationInfo,
-    criteria?: FileCriteria
+    criteria?: FileCriteria,
+    includeDeaccessioned?: boolean
   ) => Promise<FilesWithCount>
   uploadFile: (
     datasetId: number | string,

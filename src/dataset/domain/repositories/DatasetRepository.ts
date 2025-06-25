@@ -13,7 +13,8 @@ export interface DatasetRepository {
     persistentId: string,
     version?: string,
     requestedVersion?: string,
-    keepRawFields?: boolean
+    keepRawFields?: boolean,
+    fetchDownloadSizesIncludeDeaccessioned?: boolean
   ) => Promise<Dataset | undefined>
   getLocks(persistentId: string): Promise<DatasetLock[]>
   getByPrivateUrlToken: (privateUrlToken: string) => Promise<Dataset | undefined>
