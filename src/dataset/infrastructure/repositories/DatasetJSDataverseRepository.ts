@@ -202,8 +202,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
             return datasetDetails
           })
-          .catch((error: ReadError) => {
-            console.error(error)
+          .catch(() => {
             return datasetDetails
           })
       })

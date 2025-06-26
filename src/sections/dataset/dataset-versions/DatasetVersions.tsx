@@ -111,16 +111,16 @@ export function DatasetVersions({
           </thead>
           <tbody>
             {datasetVersionSummaries?.map((dataset, index) => {
-              const previousDataset =
+              const previousVersion =
                 index < datasetVersionSummaries.length - 1
                   ? datasetVersionSummaries[index + 1]
                   : null
 
               const isPreviousVersionDeaccessioned =
-                previousDataset &&
-                typeof previousDataset.summary === 'object' &&
-                previousDataset.summary !== null &&
-                'deaccessioned' in previousDataset.summary
+                previousVersion &&
+                typeof previousVersion.summary === 'object' &&
+                previousVersion.summary !== null &&
+                'deaccessioned' in previousVersion.summary
 
               const isCurrentVersion = dataset.versionNumber === currentVersionNumber
 
@@ -137,7 +137,7 @@ export function DatasetVersions({
                   canUpdateDataset)
 
               const showViewDetails =
-                previousDataset &&
+                previousVersion &&
                 typeof dataset.summary !== 'string' &&
                 !isCurrentVersionDeaccessioned &&
                 !isPreviousVersionDeaccessioned
@@ -176,7 +176,7 @@ export function DatasetVersions({
                       {showViewDetails && (
                         <DatasetViewDetailButton
                           datasetRepository={datasetRepository}
-                          oldVersionNumber={previousDataset.versionNumber}
+                          oldVersionNumber={previousVersion.versionNumber}
                           newVersionNumber={dataset.versionNumber}
                           datasetId={datasetId}
                         />

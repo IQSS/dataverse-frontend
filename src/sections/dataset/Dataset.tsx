@@ -30,7 +30,7 @@ import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
 import { DatasetVersions } from './dataset-versions/DatasetVersions'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { DatasetMetrics } from './dataset-metrics/DatasetMetrics'
-import { DatasetVersionState, DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
+import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -106,14 +106,7 @@ export function Dataset({
     }
   }
 
-  const currentVersionNumber =
-    dataset.version.number?.majorNumber !== undefined &&
-    dataset.version.number?.minorNumber !== undefined
-      ? `${String(dataset.version.number.majorNumber)}.${String(
-          dataset.version.number.minorNumber
-        )}`
-      : DatasetVersionState.DRAFT
-
+  const currentVersionNumber = dataset.version.number.toString()
   const canUpdateDataset = dataset.permissions.canUpdateDataset
 
   return (
@@ -161,7 +154,7 @@ export function Dataset({
           {publishInProgress && <TabsSkeleton />}
 
           {(!publishInProgress || !isDatasetLoading) &&
-            (isCurrentVersionDeaccessioned && !dataset.permissions.canUpdateDataset ? (
+            (isCurrentVersionDeaccessioned && !canUpdateDataset ? (
               <Tabs defaultActiveKey="versions" onSelect={handleTabSelect}>
                 <Tabs.Tab eventKey="versions" title={t('Versions')}>
                   <div className={styles['tab-container']}>
@@ -169,7 +162,7 @@ export function Dataset({
                       datasetRepository={datasetRepository}
                       datasetId={dataset.persistentId}
                       currentVersionNumber={currentVersionNumber}
-                      canUpdateDataset={dataset.permissions.canUpdateDataset}
+                      canUpdateDataset={canUpdateDataset}
                       isInView={activeTab === 'versions'}
                       key={dataset.internalVersionNumber}
                       isCurrentVersionDeaccessioned={isCurrentVersionDeaccessioned}
@@ -228,7 +221,7 @@ export function Dataset({
                       datasetRepository={datasetRepository}
                       datasetId={dataset.persistentId}
                       currentVersionNumber={currentVersionNumber}
-                      canUpdateDataset={dataset.permissions.canUpdateDataset}
+                      canUpdateDataset={canUpdateDataset}
                       isInView={activeTab === 'versions'}
                       key={dataset.internalVersionNumber}
                     />

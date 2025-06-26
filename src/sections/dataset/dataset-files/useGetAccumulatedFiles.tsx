@@ -129,7 +129,7 @@ async function loadNextFiles(
     datasetVersion,
     paginationInfo,
     criteria,
-    false
+    includeDeaccessioned
   ).catch((error: Error) => {
     throw new Error(error.message)
   })
