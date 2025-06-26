@@ -5,7 +5,8 @@ import {
 import { FeaturedItemField, FeaturedItemsFormData } from '../types'
 import {
   CollectionFeaturedItemDTO,
-  CollectionFeaturedItemsDTO
+  CollectionFeaturedItemsDTO,
+  FeaturedItemType
 } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class FeaturedItemsFormHelper {
@@ -75,6 +76,8 @@ export class FeaturedItemsFormHelper {
 
       const itemDTO: CollectionFeaturedItemDTO = {
         content,
+        type: FeaturedItemType.COLLECTION,
+        dvObjectIdentifier: '',
         displayOrder: index,
         keepFile: false
       }

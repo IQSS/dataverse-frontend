@@ -36,6 +36,7 @@ export class CollectionFeaturedItemMother {
   ): CustomFeaturedItem {
     return {
       id: 1,
+      type: 'custom',
       imageFileUrl: `/storybook/${img}.webp`,
       displayOrder: 1,
       content:

@@ -21,9 +21,12 @@ import accountStyles from '@/sections/account/Account.module.scss'
 import { useSession } from '@/sections/session/SessionContext'
 import { UserNameSearch } from '@/sections/account/my-data-section/user-name-search/UserNameSearch'
 import styles from './MyDataItemsPanel.module.scss'
+import { RoleRepository } from '@/roles/domain/repositories/RoleRepository'
+import { useSelectableRoles } from '@/sections/account/my-data-section/useSelectableRoles'
 
 interface MyDataItemsPanelProps {
   collectionRepository: CollectionRepository
+  roleRepository: RoleRepository
 }
 
 /**
@@ -35,23 +38,22 @@ interface MyDataItemsPanelProps {
  * 4. When the user changes the item types, roles or publication statuses in the filter panel
  */
 
-export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps) => {
-  const { setIsLoading } = useLoading()
+export const MyDataItemsPanel = ({
+  collectionRepository,
+  roleRepository
+}: MyDataItemsPanelProps) => {
+  const { isLoading, setIsLoading } = useLoading()
   const { user } = useSession()
   const { t } = useTranslation('account')
-
-  const [userRoles] = useState([
-    { roleId: 1, roleName: 'Admin' },
-    { roleId: 2, roleName: 'File Downloader' },
-    { roleId: 3, roleName: 'Dataverse + Dataset Creator' },
-    { roleId: 4, roleName: 'Dataverse Creator' },
-    { roleId: 5, roleName: 'Dataset Creator' },
-    { roleId: 6, roleName: 'Contributor' },
-    { roleId: 7, roleName: 'Curator' },
-    { roleId: 8, roleName: 'Member' }
-  ])
-  const roleIds = userRoles.map((role) => role.roleId)
-
+  const [roleIds, setRoleIds] = useState<number[]>([])
+  const {
+    roles: userRoles,
+    isLoading: isLoadingRoles,
+    error: rolesError
+  } = useSelectableRoles(roleRepository)
+  const [paginationInfo, setPaginationInfo] = useState<CollectionItemsPaginationInfo>(
+    new CollectionItemsPaginationInfo()
+  )
   const [currentSearchCriteria, setCurrentSearchCriteria] = useState<MyDataSearchCriteria>(
     new MyDataSearchCriteria(
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
@@ -61,10 +63,35 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       user?.superuser ? user.identifier : undefined
     )
   )
+  useEffect(() => {
+    if (!isLoadingRoles && userRoles.length > 0) {
+      const updatedRoleIds = userRoles.map((role) => role.id)
+      setRoleIds(updatedRoleIds)
+    }
+  }, [userRoles, isLoadingRoles])
 
-  const [paginationInfo, setPaginationInfo] = useState<CollectionItemsPaginationInfo>(
-    new CollectionItemsPaginationInfo()
-  )
+  useEffect(() => {
+    if (!isLoadingRoles && roleIds.length > 0) {
+      const updatedCriteria = new MyDataSearchCriteria(
+        [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
+        roleIds,
+        AllPublicationStatuses,
+        undefined,
+        user?.superuser ? user.identifier : undefined
+      )
+
+      setCurrentSearchCriteria(updatedCriteria)
+
+      const initialPagination = new CollectionItemsPaginationInfo()
+      void loadMore(initialPagination, updatedCriteria, true).then((totalItemsCount) => {
+        if (totalItemsCount !== undefined) {
+          const paginationInfoUpdated = initialPagination.withTotal(totalItemsCount)
+          setPaginationInfo(paginationInfoUpdated)
+        }
+      })
+    }
+  }, [isLoadingRoles, roleIds])
+
   const itemsListContainerRef = useRef<HTMLDivElement | null>(null)
 
   const {
@@ -239,8 +266,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   }
 
   useEffect(() => {
-    setIsLoading(isLoadingItems)
-  }, [isLoadingItems, setIsLoading])
+    setIsLoading(isLoadingItems || isLoadingRoles)
+  }, [isLoadingItems, isLoadingRoles, setIsLoading])
 
   return (
     <>
@@ -251,12 +278,12 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
           <SearchPanel
             onSubmitSearch={handleSearchSubmit}
             currentSearchValue={currentSearchCriteria.searchText}
-            isLoadingCollectionItems={isLoadingItems}
+            isLoadingCollectionItems={isLoading}
             placeholderText={t('myData.searchThisCollectionPlaceholder')}
           />
           {user?.superuser && (
             <UserNameSearch
-              isLoadingCollectionItems={isLoadingItems}
+              isLoadingCollectionItems={isLoading}
               onSubmitSearch={handleUserNameSearchSubmit}
               currentSearchValue={user.identifier}
             />
@@ -273,7 +300,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
             currentRoleIds={currentSearchCriteria.roleIds}
             userRoles={userRoles}
             onRolesChange={handleRoleChange}
-            isLoadingCollectionItems={isLoadingItems}
+            isLoadingCollectionItems={isLoading}
             countPerObjectType={countPerObjectType}
           />
 
@@ -283,7 +310,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
               itemsListType={ItemsListType.MY_DATA_LIST}
               error={error}
               accumulatedCount={accumulatedCount}
-              isLoadingItems={isLoadingItems}
+              isLoadingItems={isLoading}
               areItemsAvailable={areItemsAvailable}
               hasNextPage={hasNextPage}
               isEmptyItems={isEmptyItems}
