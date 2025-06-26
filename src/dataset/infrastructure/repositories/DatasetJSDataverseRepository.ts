@@ -196,11 +196,16 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           persistentId,
           version,
           fetchDownloadSizesIncludeDeaccessioned
-        ).then((downloadSizes) => {
-          datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
-          datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
-          return datasetDetails
-        })
+        )
+          .then((downloadSizes) => {
+            datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
+            datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
+            return datasetDetails
+          })
+          .catch((error: ReadError) => {
+            console.error(error)
+            return datasetDetails
+          })
       })
       .then((datasetDetails) => {
         if (
