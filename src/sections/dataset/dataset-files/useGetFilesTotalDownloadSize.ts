@@ -46,7 +46,14 @@ export const useGetFilesTotalDownloadSize = ({
     } finally {
       setIsLoading(false)
     }
-  }, [filesRepository, datasetPersistentId, datasetVersion.number, criteria, t])
+  }, [
+    filesRepository,
+    datasetPersistentId,
+    datasetVersion.number,
+    criteria,
+    t,
+    includeDeaccessioned
+  ])
 
   useEffect(() => {
     void getTotalDownloadSize()

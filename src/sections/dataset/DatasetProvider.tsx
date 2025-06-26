@@ -32,15 +32,14 @@ export function DatasetProvider({
         searchParams.persistentId,
         searchParams.version,
         undefined,
-        true,
-        dataset?.permissions.canUpdateDataset
+        true
       )
     }
     if (searchParams.privateUrlToken) {
       return getDatasetByPrivateUrlToken(repository, searchParams.privateUrlToken)
     }
     return Promise.resolve(undefined)
-  }, [repository, searchParams, dataset?.permissions.canUpdateDataset])
+  }, [repository, searchParams])
 
   const fetchDataset = useCallback(() => {
     if (isPublishing) return

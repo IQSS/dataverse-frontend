@@ -185,18 +185,16 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     persistentId: string,
     version: string = DatasetNonNumericVersion.LATEST_PUBLISHED,
     requestedVersion?: string,
-    keepRawFields?: boolean,
-    fetchDownloadSizesIncludeDeaccessioned?: boolean
+    keepRawFields?: boolean
   ): Promise<Dataset | undefined> {
     return getDataset
       .execute(persistentId, version, includeDeaccessioned, keepRawFields)
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
       .then((datasetDetails) => {
-        return this.fetchDownloadSizes(
-          persistentId,
-          version,
-          fetchDownloadSizesIncludeDeaccessioned
-        )
+        // This could be a temp fix, but we are only going to fetch the download sizes with includeDeaccessioned to true if user has edit permissions.
+        const includeDeaccessioned = datasetDetails.jsDatasetPermissions.canEditDataset
+
+        return this.fetchDownloadSizes(persistentId, version, includeDeaccessioned)
           .then((downloadSizes) => {
             datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
             datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
