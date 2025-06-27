@@ -70,6 +70,23 @@ export const MyDataItemsPanel = ({
     }
   }, [userRoles, isLoadingRoles])
 
+  const itemsListContainerRef = useRef<HTMLDivElement | null>(null)
+
+  const {
+    isLoadingItems,
+    accumulatedItems,
+    publicationStatusCounts,
+    countPerObjectType,
+    totalAvailable,
+    hasNextPage,
+    error,
+    loadMore,
+    isEmptyItems,
+    areItemsAvailable,
+    accumulatedCount
+  } = useGetMyDataAccumulatedItems({
+    collectionRepository
+  })
   useEffect(() => {
     if (!isLoadingRoles && roleIds.length > 0) {
       const updatedCriteria = new MyDataSearchCriteria(
@@ -90,25 +107,8 @@ export const MyDataItemsPanel = ({
         }
       })
     }
-  }, [isLoadingRoles, roleIds])
+  }, [isLoadingRoles, roleIds, user])
 
-  const itemsListContainerRef = useRef<HTMLDivElement | null>(null)
-
-  const {
-    isLoadingItems,
-    accumulatedItems,
-    publicationStatusCounts,
-    countPerObjectType,
-    totalAvailable,
-    hasNextPage,
-    error,
-    loadMore,
-    isEmptyItems,
-    areItemsAvailable,
-    accumulatedCount
-  } = useGetMyDataAccumulatedItems({
-    collectionRepository
-  })
   async function handleLoadMoreOnBottomReach(currentPagination: CollectionItemsPaginationInfo) {
     let paginationInfoToSend = currentPagination
     if (totalAvailable !== undefined) {
