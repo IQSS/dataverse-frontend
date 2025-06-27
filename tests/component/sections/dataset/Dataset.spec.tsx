@@ -282,7 +282,7 @@ describe('Dataset', () => {
     cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
   })
 
-  it('should only render Versions tab if the dataset is in deaccessioned version, and user user has noedit permission', () => {
+  it('should only render Versions tab if the dataset is in deaccessioned version, and user user has no edit permission', () => {
     const testDataset = DatasetMother.createDeaccessionedwithNoEditPermission()
 
     mountWithDataset(
