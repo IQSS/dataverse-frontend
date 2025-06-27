@@ -96,7 +96,7 @@ describe('DatasetFilesScrollable', () => {
     cy.findByRole('columnheader', { name: /Files/ }).should('exist')
   })
 
-  it('renders the scrollable files table when user has no edit permission', () => {
+  it('check that the files sections are rendered even without edit permissions', () => {
     cy.customMount(
       <DatasetFilesScrollable
         filesRepository={fileRepository}
