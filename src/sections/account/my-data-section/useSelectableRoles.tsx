@@ -5,16 +5,19 @@ import { Role } from '@/roles/domain/models/Role'
 export const useSelectableRoles = (roleRepository: RoleRepository) => {
   const [roles, setRoles] = useState<Role[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [error, setError] = useState<Error | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchRoles = async () => {
       try {
         const fetchedRoles = await roleRepository.getUserSelectableRoles()
         setRoles(fetchedRoles)
-        console.log('Fetched roles:', fetchedRoles)
       } catch (err) {
-        setError(err as Error)
+        const errorMessage =
+          err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong getting selectable roles for filtering. Try again later.'
+        setError(errorMessage)
       } finally {
         setIsLoading(false)
       }

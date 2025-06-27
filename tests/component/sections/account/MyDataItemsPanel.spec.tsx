@@ -83,6 +83,18 @@ describe('MyDataItemsPanel', () => {
 
     cy.findByTestId('collection-items-list-infinite-scroll-skeleton').should('exist')
   })
+  it('renders the error message when there is an error', () => {
+    roleRepository.getUserSelectableRoles = cy.stub().rejects(new Error('some roles error'))
+
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
+
+    cy.findByRole('alert').should('exist').should('contain.text', 'some roles error')
+  })
   describe('User Search', () => {
     it('does not render the search input for non-superusers', () => {
       cy.mountAuthenticated(

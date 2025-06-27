@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Stack } from '@iqss/dataverse-design-system'
+import { Alert, Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
@@ -269,6 +269,15 @@ export const MyDataItemsPanel = ({
     setIsLoading(isLoadingItems || isLoadingRoles)
   }, [isLoadingItems, isLoadingRoles, setIsLoading])
 
+  if (rolesError !== null) {
+    return (
+      <>
+        <Alert variant="danger" dismissible={false}>
+          {rolesError}
+        </Alert>
+      </>
+    )
+  }
   return (
     <>
       <p className={accountStyles['helper-text']}>{t('myData.description')}</p>
