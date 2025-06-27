@@ -84,7 +84,7 @@ describe('MyDataItemsPanel', () => {
     cy.findByTestId('collection-items-list-infinite-scroll-skeleton').should('exist')
   })
   describe('User Search', () => {
-    it.only('does not render the search input for non-superusers', () => {
+    it('does not render the search input for non-superusers', () => {
       cy.mountAuthenticated(
         <MyDataItemsPanel
           roleRepository={roleRepository}

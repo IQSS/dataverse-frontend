@@ -42,7 +42,7 @@ export const MyDataItemsPanel = ({
   collectionRepository,
   roleRepository
 }: MyDataItemsPanelProps) => {
-  const { isLoading, setIsLoading } = useLoading()
+  const { setIsLoading } = useLoading()
   const { user } = useSession()
   const { t } = useTranslation('account')
   const [roleIds, setRoleIds] = useState<number[]>([])
@@ -278,12 +278,12 @@ export const MyDataItemsPanel = ({
           <SearchPanel
             onSubmitSearch={handleSearchSubmit}
             currentSearchValue={currentSearchCriteria.searchText}
-            isLoadingCollectionItems={isLoading}
+            isLoadingCollectionItems={isLoadingItems}
             placeholderText={t('myData.searchThisCollectionPlaceholder')}
           />
           {user?.superuser && (
             <UserNameSearch
-              isLoadingCollectionItems={isLoading}
+              isLoadingCollectionItems={isLoadingItems}
               onSubmitSearch={handleUserNameSearchSubmit}
               currentSearchValue={user.identifier}
             />
@@ -300,7 +300,7 @@ export const MyDataItemsPanel = ({
             currentRoleIds={currentSearchCriteria.roleIds}
             userRoles={userRoles}
             onRolesChange={handleRoleChange}
-            isLoadingCollectionItems={isLoading}
+            isLoadingCollectionItems={isLoadingItems}
             countPerObjectType={countPerObjectType}
           />
 
@@ -310,7 +310,7 @@ export const MyDataItemsPanel = ({
               itemsListType={ItemsListType.MY_DATA_LIST}
               error={error}
               accumulatedCount={accumulatedCount}
-              isLoadingItems={isLoading}
+              isLoadingItems={isLoadingItems}
               areItemsAvailable={areItemsAvailable}
               hasNextPage={hasNextPage}
               isEmptyItems={isEmptyItems}
