@@ -100,12 +100,6 @@ export const MyDataItemsPanel = ({
       setCurrentSearchCriteria(updatedCriteria)
 
       const initialPagination = new CollectionItemsPaginationInfo()
-      void loadMore(initialPagination, updatedCriteria, true).then((totalItemsCount) => {
-        if (totalItemsCount !== undefined) {
-          const paginationInfoUpdated = initialPagination.withTotal(totalItemsCount)
-          setPaginationInfo(paginationInfoUpdated)
-        }
-      })
     }
   }, [isLoadingRoles, roleIds, user])
 
