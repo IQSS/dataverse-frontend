@@ -38,6 +38,12 @@
   height: fit-content;
 }
 
+.composed-field-title {
+  @media (max-width: 575px) {
+    font-size: 18px;
+  }
+}
+
 .may-become-required-help-text {
   margin-bottom: 0.5rem;
 }
