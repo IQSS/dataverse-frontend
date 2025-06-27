@@ -184,6 +184,7 @@ describe('MyDataItemsPanel', () => {
           collectionRepository={collectionRepository}
         />
       )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
       cy.findByLabelText(/Files/).should('exist').click()
       cy.findByText(
         /You have not created or contributed to any collections, datasets or files. /
