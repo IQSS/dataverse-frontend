@@ -96,10 +96,7 @@ export const MyDataItemsPanel = ({
         undefined,
         user?.superuser ? user.identifier : undefined
       )
-
       setCurrentSearchCriteria(updatedCriteria)
-
-      const initialPagination = new CollectionItemsPaginationInfo()
     }
   }, [isLoadingRoles, roleIds, user])
 
