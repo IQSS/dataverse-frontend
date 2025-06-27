@@ -96,6 +96,21 @@ describe('DatasetFilesScrollable', () => {
     cy.findByRole('columnheader', { name: /Files/ }).should('exist')
   })
 
+  it('renders the scrollable files table when user has no edit permission', () => {
+    cy.customMount(
+      <DatasetFilesScrollable
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+        canUpdateDataset={false}
+      />
+    )
+
+    cy.wait(1000)
+    cy.findByRole('table').should('exist')
+    cy.findByRole('columnheader', { name: /Files/ }).should('exist')
+  })
+
   it('renders the first 10 files', () => {
     cy.customMount(
       <DatasetFilesScrollable

@@ -68,6 +68,21 @@ describe('DatasetTerms', () => {
     cy.findByText('Restricted Files + Terms of Access').should('exist')
   })
 
+  it('renders the license information when the user has no edit permission', () => {
+    cy.customMount(
+      <DatasetTerms
+        license={license}
+        termsOfUse={termsOfUse}
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+        canUpdateDataset={false}
+      />
+    )
+    cy.findByText('Dataset Terms').should('exist')
+    cy.findByText('Restricted Files + Terms of Access').should('exist')
+  })
+
   it('renders the correct number of restricted files', () => {
     cy.customMount(
       <DatasetTerms

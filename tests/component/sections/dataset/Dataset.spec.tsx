@@ -282,8 +282,8 @@ describe('Dataset', () => {
     cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
   })
 
-  it('should only render Versions tab if the dataset is in deaccessioned version, and user is not allowed to update', () => {
-    const testDataset = DatasetMother.createDeaccessioned()
+  it('should only render Versions tab if the dataset is in deaccessioned version, and user user has noedit permission', () => {
+    const testDataset = DatasetMother.createDeaccessionedwithNoEditPermission()
 
     mountWithDataset(
       <Dataset
@@ -300,6 +300,27 @@ describe('Dataset', () => {
     cy.findByRole('tab', { name: 'Files' }).should('not.exist')
     cy.findByRole('tab', { name: 'Terms' }).should('not.exist')
     cy.findByRole('tab', { name: 'Metadata' }).should('not.exist')
+    cy.findByRole('tab', { name: 'Versions' }).should('exist')
+  })
+
+  it('should render all tabs if the dataset is in deaccessioned version, and user has edit permission', () => {
+    const testDataset = DatasetMother.createDeaccessionedwithEditPermission()
+
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+      />,
+      testDataset
+    )
+
+    cy.findAllByText(testDataset.version.title).should('exist')
+    cy.findByRole('tab', { name: 'Files' }).should('exist')
+    cy.findByRole('tab', { name: 'Terms' }).should('exist')
+    cy.findByRole('tab', { name: 'Metadata' }).should('exist')
     cy.findByRole('tab', { name: 'Versions' }).should('exist')
   })
 

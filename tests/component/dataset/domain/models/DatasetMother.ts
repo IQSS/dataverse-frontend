@@ -47,7 +47,7 @@ export class DatasetVersionMother {
   static createDeaccessioned(props?: Partial<DatasetVersion>): DatasetVersion {
     return this.create({
       publishingStatus: DatasetPublishingStatus.DEACCESSIONED,
-      isLatest: false,
+      isLatest: faker.datatype.boolean(),
       citation:
         'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1 DEACCESSIONED VERSION',
       someDatasetVersionHasBeenReleased: true,
@@ -606,7 +606,7 @@ export class DatasetMother {
     })
   }
 
-  static createDeaccessioned(props?: Partial<Dataset>): Dataset {
+  static createDeaccessionedwithNoEditPermission(props?: Partial<Dataset>): Dataset {
     return this.create({
       version: DatasetVersionMother.createDeaccessioned(),
       permissions: {
@@ -616,6 +616,21 @@ export class DatasetMother {
         canManageDatasetPermissions: false,
         canManageFilesPermissions: false,
         canDeleteDataset: false
+      },
+      ...props
+    })
+  }
+
+  static createDeaccessionedwithEditPermission(props?: Partial<Dataset>): Dataset {
+    return this.create({
+      version: DatasetVersionMother.createDeaccessioned(),
+      permissions: {
+        canDownloadFiles: true,
+        canUpdateDataset: true,
+        canPublishDataset: true,
+        canManageDatasetPermissions: true,
+        canManageFilesPermissions: true,
+        canDeleteDataset: true
       },
       ...props
     })
