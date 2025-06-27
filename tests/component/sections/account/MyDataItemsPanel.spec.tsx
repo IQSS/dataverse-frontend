@@ -200,6 +200,7 @@ describe('MyDataItemsPanel', () => {
           collectionRepository={collectionRepository}
         />
       )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
 
       cy.findByLabelText(/Datasets/)
         .should('exist')
@@ -219,6 +220,7 @@ describe('MyDataItemsPanel', () => {
           collectionRepository={collectionRepository}
         />
       )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
 
       cy.findByLabelText(/Collections/)
         .should('exist')
@@ -238,6 +240,8 @@ describe('MyDataItemsPanel', () => {
           collectionRepository={collectionRepository}
         />
       )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
+
       cy.findByLabelText(/Files/).should('exist').click()
       cy.findByLabelText(/Datasets/)
         .should('exist')
@@ -260,6 +264,7 @@ describe('MyDataItemsPanel', () => {
           collectionRepository={collectionRepository}
         />
       )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
 
       cy.findByText(
         /You have not created or contributed to any collections or datasets. You can create data by using the Add Data menu option on this page./
@@ -274,6 +279,8 @@ describe('MyDataItemsPanel', () => {
           collectionRepository={collectionRepository}
         />
       )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
+
       cy.findByLabelText(/Files/).should('exist').click()
       cy.findByLabelText(/Datasets/)
         .should('exist')
@@ -292,6 +299,8 @@ describe('MyDataItemsPanel', () => {
           collectionRepository={collectionRepository}
         />
       )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
+
       cy.findByLabelText(/Files/).should('exist').click()
       cy.findByLabelText(/Collections/)
         .should('exist')
