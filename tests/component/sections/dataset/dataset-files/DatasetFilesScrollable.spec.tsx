@@ -69,8 +69,14 @@ describe('DatasetFilesScrollable', () => {
   beforeEach(() => {
     cy.viewport(1280, 720)
     fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(testFiles)
-    fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
-    fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy
+      .stub()
+      .as('getFilesCountInfo')
+      .resolves(testFilesCountInfo)
+    fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy
+      .stub()
+      .as('getFilesTotalDownloadSize')
+      .resolves(19900)
 
     dataverseInfoRepository.getZipDownloadLimit = cy
       .stub()
@@ -109,6 +115,22 @@ describe('DatasetFilesScrollable', () => {
     cy.wait(1000)
     cy.findByRole('table').should('exist')
     cy.findByRole('columnheader', { name: /Files/ }).should('exist')
+
+    cy.get('@getFilesCountInfo').should(
+      'have.been.calledWithMatch',
+      'test-dataset-persistent-id',
+      datasetVersion.number,
+      Cypress.sinon.match.any,
+      false
+    )
+
+    cy.get('@getFilesTotalDownloadSize').should(
+      'have.been.calledWithMatch',
+      'test-dataset-persistent-id',
+      datasetVersion.number,
+      Cypress.sinon.match.any,
+      false
+    )
   })
 
   it('renders the first 10 files', () => {
