@@ -2,11 +2,8 @@ import { Collection } from '@/sections/collection/Collection'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
-import {
-  CollectionItemSubset,
-  CountPerObjectType
-} from '@/collection/domain/models/CollectionItemSubset'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 const collectionRepository = {} as CollectionRepository
@@ -22,17 +19,10 @@ const items = CollectionItemsMother.createItems({
 
 const facets = CollectionItemsMother.createItemsFacets()
 
-const countPerObjectType: CountPerObjectType = {
-  collections: 20,
-  datasets: 40,
-  files: 140
-}
-
 const itemsWithCount: CollectionItemSubset = {
   items,
   facets,
-  totalItemCount: 200,
-  countPerObjectType
+  totalItemCount: 200
 }
 
 describe('Collection page', () => {
@@ -256,7 +246,7 @@ describe('Collection page', () => {
   })
 
   it('shows the collection featured items carousel when there are featured items', () => {
-    const featuredItems = CollectionFeaturedItemMother.createFeaturedItems()
+    const featuredItems = FeaturedItemMother.createFeaturedItems()
     collectionRepository.getFeaturedItems = cy.stub().resolves(featuredItems)
 
     cy.customMount(

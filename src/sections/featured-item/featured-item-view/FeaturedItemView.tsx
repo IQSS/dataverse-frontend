@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import DOMPurify from 'dompurify'
-import { CustomFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { CustomFeaturedItem } from '@/collection/domain/models/FeaturedItem'
 import { BreadcrumbsGenerator } from '@/sections/shared/hierarchy/BreadcrumbsGenerator'
 import { Collection } from '@/collection/domain/models/Collection'
 import styles from './FeaturedItemView.module.scss'

@@ -12,7 +12,8 @@ import {
   getCollectionFeaturedItems,
   updateCollectionFeaturedItems,
   deleteCollectionFeaturedItems,
-  deleteCollection
+  deleteCollection,
+  deleteCollectionFeaturedItem
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
@@ -22,8 +23,8 @@ import { CollectionItemsPaginationInfo } from '../../domain/models/CollectionIte
 import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
+import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
@@ -116,18 +117,22 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return updateCollection.execute(collectionIdOrAlias, updatedCollection)
   }
 
-  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<FeaturedItem[]> {
     return getCollectionFeaturedItems.execute(collectionIdOrAlias)
   }
 
   updateFeaturedItems(
     collectionIdOrAlias: number | string,
-    featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<CollectionFeaturedItem[]> {
+    featuredItemsDTO: FeaturedItemsDTO
+  ): Promise<FeaturedItem[]> {
     return updateCollectionFeaturedItems.execute(collectionIdOrAlias, featuredItemsDTO)
   }
 
   deleteFeaturedItems(collectionIdOrAlias: number | string): Promise<void> {
     return deleteCollectionFeaturedItems.execute(collectionIdOrAlias)
+  }
+
+  deleteFeaturedItem(featuredItemId: number): Promise<void> {
+    return deleteCollectionFeaturedItem.execute(featuredItemId)
   }
 }

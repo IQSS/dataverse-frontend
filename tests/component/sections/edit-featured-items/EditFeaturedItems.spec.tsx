@@ -1,26 +1,26 @@
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { EditCollectionFeaturedItems } from '@/sections/edit-collection-featured-items/EditCollectionFeaturedItems'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { EditFeaturedItems } from '@/sections/edit-collection-featured-items/EditFeaturedItems'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 
 const collectionRepository = {} as CollectionRepository
 const collection = CollectionMother.create({ name: 'Collection Name' })
 
-const featuredItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+const featuredItemOne = FeaturedItemMother.createCustomFeaturedItem('css', {
   id: 1,
   imageFileUrl: 'https://via.placeholder.com/400x400',
   displayOrder: 1,
   content: '<h1 class="rte-heading">Featured Item One</h1>'
 })
 
-const featuredItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
+const featuredItemTwo = FeaturedItemMother.createCustomFeaturedItem('books', {
   id: 2,
   displayOrder: 2,
   content: '<h1 class="rte-heading">Featured Item Two</h1>',
   imageFileUrl: undefined
 })
 
-describe('EditCollectionFeaturedItems', () => {
+describe('EditFeaturedItems', () => {
   beforeEach(() => {
     collectionRepository.getById = cy.stub().resolves(collection)
     collectionRepository.getFeaturedItems = cy.stub().resolves([featuredItemOne, featuredItemTwo])
@@ -30,7 +30,7 @@ describe('EditCollectionFeaturedItems', () => {
     collectionRepository.getById = cy.stub().resolves(undefined)
 
     cy.mountAuthenticated(
-      <EditCollectionFeaturedItems
+      <EditFeaturedItems
         collectionIdFromParams="root"
         collectionRepository={collectionRepository}
       />
@@ -46,7 +46,7 @@ describe('EditCollectionFeaturedItems', () => {
     })
 
     cy.mountAuthenticated(
-      <EditCollectionFeaturedItems
+      <EditFeaturedItems
         collectionIdFromParams="root"
         collectionRepository={collectionRepository}
       />
@@ -65,7 +65,7 @@ describe('EditCollectionFeaturedItems', () => {
       .rejects('Error loading collection featured items')
 
     cy.mountAuthenticated(
-      <EditCollectionFeaturedItems
+      <EditFeaturedItems
         collectionIdFromParams="root"
         collectionRepository={collectionRepository}
       />
@@ -76,7 +76,7 @@ describe('EditCollectionFeaturedItems', () => {
 
   it('renders the correct breadcrumbs', () => {
     cy.mountAuthenticated(
-      <EditCollectionFeaturedItems
+      <EditFeaturedItems
         collectionIdFromParams="root"
         collectionRepository={collectionRepository}
       />

@@ -11,9 +11,9 @@ import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemS
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemsMother } from '../../../tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
+import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 
 export class CollectionMockRepository implements CollectionRepository {
@@ -156,7 +156,7 @@ export class CollectionMockRepository implements CollectionRepository {
     })
   }
 
-  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<FeaturedItem[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([])
@@ -166,16 +166,24 @@ export class CollectionMockRepository implements CollectionRepository {
 
   updateFeaturedItems(
     _collectionId: string,
-    _featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<CollectionFeaturedItem[]> {
+    _featuredItemsDTO: FeaturedItemsDTO
+  ): Promise<FeaturedItem[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(CollectionFeaturedItemMother.createFeaturedItems())
+        resolve(FeaturedItemMother.createFeaturedItems())
       }, FakerHelper.loadingTimout())
     })
   }
 
   deleteFeaturedItems(_collectionIdOrAlias: number | string): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  deleteFeaturedItem(_featuredItemId: number): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()

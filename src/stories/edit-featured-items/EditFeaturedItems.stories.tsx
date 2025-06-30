@@ -1,15 +1,15 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { EditCollectionFeaturedItems } from '@/sections/edit-collection-featured-items/EditCollectionFeaturedItems'
+import { EditFeaturedItems } from '@/sections/edit-collection-featured-items/EditFeaturedItems'
 import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 
-const meta: Meta<typeof EditCollectionFeaturedItems> = {
-  title: 'Pages/Edit Collection Featured Items',
-  component: EditCollectionFeaturedItems,
+const meta: Meta<typeof EditFeaturedItems> = {
+  title: 'Pages/Edit Featured Items',
+  component: EditFeaturedItems,
   decorators: [WithI18next, WithLayout, WithLoggedInUser],
   parameters: {
     // Sets the delay for all stories.
@@ -18,11 +18,11 @@ const meta: Meta<typeof EditCollectionFeaturedItems> = {
 }
 export default meta
 
-type Story = StoryObj<typeof EditCollectionFeaturedItems>
+type Story = StoryObj<typeof EditFeaturedItems>
 
 export const Default: Story = {
   render: () => (
-    <EditCollectionFeaturedItems
+    <EditFeaturedItems
       collectionRepository={new CollectionMockRepository()}
       collectionIdFromParams="root"
     />
@@ -33,14 +33,14 @@ const collectionRepositoryWithFeaturedItems = new CollectionMockRepository()
 collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(CollectionFeaturedItemMother.createFeaturedItems())
+      resolve(FeaturedItemMother.createFeaturedItems())
     }, FakerHelper.loadingTimout())
   })
 }
 
 export const WithInitialFeaturedItems: Story = {
   render: () => (
-    <EditCollectionFeaturedItems
+    <EditFeaturedItems
       collectionRepository={collectionRepositoryWithFeaturedItems}
       collectionIdFromParams="root"
     />

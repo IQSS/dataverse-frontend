@@ -1,5 +1,5 @@
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { FeaturedItem } from '@/sections/featured-item/FeaturedItem'
 
@@ -8,10 +8,10 @@ const testCollectionId = 'root'
 
 const collection = CollectionMother.create({ name: 'Collection Name' })
 
-const featuredItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+const featuredItemOne = FeaturedItemMother.createCustomFeaturedItem('css', {
   content: '<h1 class="rte-heading">Title One</h1>'
 })
-const featuredItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
+const featuredItemTwo = FeaturedItemMother.createCustomFeaturedItem('books', {
   content: '<h1 class="rte-heading">Title Two</h1>'
 })
 

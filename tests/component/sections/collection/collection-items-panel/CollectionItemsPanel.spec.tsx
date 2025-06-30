@@ -1,8 +1,5 @@
 import { CollectionItemsPanel } from '@/sections/collection/collection-items-panel/CollectionItemsPanel'
-import {
-  CollectionItemSubset,
-  CountPerObjectType
-} from '@/collection/domain/models/CollectionItemSubset'
+import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
@@ -17,25 +14,14 @@ const items = CollectionItemsMother.createItems({
   numberOfFiles: 3
 })
 
-const countPerObjectType: CountPerObjectType = {
-  collections: 20,
-  datasets: 40,
-  files: 140
-}
-
 const facets = CollectionItemsMother.createItemsFacets()
 
-const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount, countPerObjectType }
+const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount }
 
 const emptyItemsWithCount: CollectionItemSubset = {
   items: [],
   facets: [],
-  totalItemCount: 0,
-  countPerObjectType: {
-    collections: 0,
-    datasets: 0,
-    files: 0
-  }
+  totalItemCount: 0
 }
 
 describe('CollectionItemsPanel', () => {
@@ -343,12 +329,7 @@ describe('CollectionItemsPanel', () => {
     const first4ElementsWithCount: CollectionItemSubset = {
       items: first4Elements,
       facets,
-      totalItemCount: 4,
-      countPerObjectType: {
-        collections: 4,
-        datasets: 0,
-        files: 0
-      }
+      totalItemCount: 4
     }
     collectionRepository.getItems = cy.stub().resolves(first4ElementsWithCount)
 

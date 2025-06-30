@@ -30,6 +30,7 @@ export const DynamicFieldsButtons = ({
           <Plus title={t('add')} size={24} />
         </Button>
       </Tooltip>
+
       {!originalField && (
         <Tooltip placement="top" overlay={t('remove')}>
           <Button

@@ -1,4 +1,4 @@
-import Swal from 'sweetalert2'
+import Swal, { SweetAlertOptions } from 'sweetalert2'
 import withReactContent, { ReactSweetAlert, SweetAlert2 } from 'sweetalert2-react-content'
 
 /**
@@ -10,15 +10,29 @@ import withReactContent, { ReactSweetAlert, SweetAlert2 } from 'sweetalert2-reac
 
 const SwalWithReactContent = withReactContent(Swal)
 
-export const SwalModal = SwalWithReactContent.mixin({
+const defaultSwalOptions: SweetAlertOptions = {
   buttonsStyling: false,
+  reverseButtons: true,
   customClass: {
     popup: 'swal-popup-custom',
     title: 'swal-title-custom',
     htmlContainer: 'swal-html-container-custom',
     actions: 'swal-actions-custom',
-    confirmButton: 'btn btn-primary swal-button-custom confirm',
-    denyButton: 'btn btn-secondary swal-button-custom deny',
-    cancelButton: 'btn btn-secondary swal-button-custom cancel'
+    confirmButton: 'btn btn-primary',
+    denyButton: 'btn btn-secondary',
+    cancelButton: 'btn btn-secondary'
   }
-}) as SweetAlert2 & ReactSweetAlert
+}
+
+export const SwalModal = SwalWithReactContent.mixin(defaultSwalOptions) as SweetAlert2 &
+  ReactSweetAlert
+
+export const SwalModalWithModifiedCustomClass = (customClass: SweetAlertOptions['customClass']) => {
+  return SwalWithReactContent.mixin({
+    ...defaultSwalOptions,
+    customClass: {
+      ...defaultSwalOptions.customClass,
+      ...customClass
+    }
+  }) as SweetAlert2 & ReactSweetAlert
+}

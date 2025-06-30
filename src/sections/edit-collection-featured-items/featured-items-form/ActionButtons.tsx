@@ -5,25 +5,23 @@ interface ActionButtonsProps {
   isSubmitting: boolean
   isDeletingFeaturedItems: boolean
   isFormDirty: boolean
-  hasInitialFeaturedItems: boolean
   onClickDelete: () => void
-  position: 'top' | 'bottom'
+  showDeleteAllButton?: boolean
 }
 
 export const ActionButtons = ({
   isSubmitting,
   isDeletingFeaturedItems,
   isFormDirty,
-  hasInitialFeaturedItems,
   onClickDelete,
-  position
+  showDeleteAllButton = false
 }: ActionButtonsProps) => {
   const { t: tShared } = useTranslation('shared')
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
 
   return (
     <Stack direction="horizontal" gap={3}>
-      {hasInitialFeaturedItems && position === 'bottom' && (
+      {showDeleteAllButton && (
         <Button
           onClick={onClickDelete}
           type="button"

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { useGetCollectionFeaturedItems } from '../collection/useGetCollectionFeaturedItems'
+import { useGetFeaturedItems } from '../collection/useGetFeaturedItems'
 import { useCollection } from '../collection/useCollection'
 import { useLoading } from '../loading/LoadingContext'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
@@ -13,25 +13,25 @@ import { FeaturedItemsFormHelper } from './featured-items-form/FeaturedItemsForm
 import { FeaturedItemsFormData } from './types'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 
-interface EditCollectionFeaturedItemsProps {
+interface EditFeaturedItemsProps {
   collectionRepository: CollectionRepository
   collectionIdFromParams: string | undefined
 }
 
-export const EditCollectionFeaturedItems = ({
+export const EditFeaturedItems = ({
   collectionRepository,
   collectionIdFromParams
-}: EditCollectionFeaturedItemsProps) => {
-  const { t } = useTranslation('editCollectionFeaturedItems')
+}: EditFeaturedItemsProps) => {
+  const { t } = useTranslation('editFeaturedItems')
   const { setIsLoading } = useLoading()
   const { collection, isLoading } = useCollection(collectionRepository, collectionIdFromParams)
   const {
-    collectionFeaturedItems,
-    isLoading: isLoadingCollectionFeaturedItems,
-    error: errorCollectionFeaturedItems
-  } = useGetCollectionFeaturedItems(collectionRepository, collectionIdFromParams)
+    featuredItems,
+    isLoading: isLoadingFeaturedItems,
+    error: errorFeaturedItems
+  } = useGetFeaturedItems(collectionRepository, collectionIdFromParams)
 
-  const isLoadingData = isLoading || isLoadingCollectionFeaturedItems
+  const isLoadingData = isLoading || isLoadingFeaturedItems
 
   useEffect(() => {
     if (!isLoadingData) {
@@ -47,12 +47,12 @@ export const EditCollectionFeaturedItems = ({
     return <AppLoader />
   }
 
-  if (errorCollectionFeaturedItems) {
-    return <Alert variant="danger">{errorCollectionFeaturedItems}</Alert>
+  if (errorFeaturedItems) {
+    return <Alert variant="danger">{errorFeaturedItems}</Alert>
   }
 
   const formDefaultValues: FeaturedItemsFormData = {
-    featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(collectionFeaturedItems)
+    featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(featuredItems)
   }
 
   return (
@@ -68,12 +68,12 @@ export const EditCollectionFeaturedItems = ({
 
       <SeparationLine />
 
-      {collectionFeaturedItems.length === 0 && <Alert variant="info">{t('infoMessage')}</Alert>}
+      {featuredItems.length === 0 && <Alert variant="info">{t('infoMessage')}</Alert>}
 
       <FeaturedItemsForm
         collectionId={collection.id}
         defaultValues={formDefaultValues}
-        collectionFeaturedItems={collectionFeaturedItems}
+        initialExistingFeaturedItems={featuredItems}
         collectionRepository={collectionRepository}
       />
     </section>

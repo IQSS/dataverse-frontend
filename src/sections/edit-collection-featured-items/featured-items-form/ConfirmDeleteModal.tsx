@@ -13,7 +13,7 @@ export const ConfirmDeleteModal = ({
   handleContinue
 }: ConfirmDeleteModalProps) => {
   const { t: tShared } = useTranslation('shared')
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
 
   return (
     <Modal show={show} onHide={handleClose} centered>

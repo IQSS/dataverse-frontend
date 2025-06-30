@@ -1,13 +1,13 @@
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { FeaturedItemView } from '@/sections/featured-item/featured-item-view/FeaturedItemView'
 
 const collection = CollectionMother.create({ name: 'Collection Name' })
 
-const featuredItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+const featuredItemOne = FeaturedItemMother.createCustomFeaturedItem('css', {
   content: '<h1 class="rte-heading">Title One</h1>'
 })
-const featuredItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
+const featuredItemTwo = FeaturedItemMother.createCustomFeaturedItem('books', {
   content: '<h1 class="rte-heading">Title Two</h1>',
   imageFileUrl: undefined,
   imageFileName: undefined
@@ -80,7 +80,7 @@ describe('FeaturedItemView', () => {
   })
 
   it('shows img with blob url', () => {
-    const featuredItem = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+    const featuredItem = FeaturedItemMother.createCustomFeaturedItem('css', {
       content: '<h1 class="rte-heading">Title One</h1>',
       imageFileUrl: 'blob:http://localhost:3000/1234'
     })
@@ -94,7 +94,7 @@ describe('FeaturedItemView', () => {
   })
 
   it('sanitizes a script tag in content correctly', () => {
-    const featuredItem = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+    const featuredItem = FeaturedItemMother.createCustomFeaturedItem('css', {
       content: '<h1>This content contained a script tag<script>alert("hello")</script></h1>'
     })
 
@@ -105,7 +105,7 @@ describe('FeaturedItemView', () => {
   })
 
   it('sanitizes an onclick attribute in content correctly', () => {
-    const featuredItem = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+    const featuredItem = FeaturedItemMother.createCustomFeaturedItem('css', {
       content: '<h1 onclick="alert(\'hello\')">This content contained an onclick attribute</h1>'
     })
 

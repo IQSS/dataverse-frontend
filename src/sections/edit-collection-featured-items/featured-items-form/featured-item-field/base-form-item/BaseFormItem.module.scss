@@ -1,0 +1,32 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.types-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-left: 0;
+  list-style: none;
+
+  &.is-invalid {
+    padding: 6px;
+    border: solid 1px $dv-danger-color;
+    border-color: color.adjust($dv-danger-color, $alpha: -0.4);
+    border-radius: 8px;
+    box-shadow: 0 0 0 0.25rem color.adjust($dv-danger-color, $alpha: -0.75);
+  }
+
+  .card-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: color.adjust($dv-brand-color, $alpha: -0.9);
+      border: solid 1px $dv-brand-color;
+    }
+
+    &:active {
+      background: color.adjust($dv-brand-color, $alpha: -0.6);
+    }
+  }
+}

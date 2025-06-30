@@ -2,7 +2,7 @@ import DOMPurify from 'dompurify'
 import { Link } from 'react-router-dom'
 import cn from 'classnames'
 import { Card } from '@iqss/dataverse-design-system'
-import { CustomFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { CustomFeaturedItem } from '@/collection/domain/models/FeaturedItem'
 import { RouteWithParams } from '@/sections/Route.enum'
 import styles from './CustomFeaturedItemCard.module.scss'
 

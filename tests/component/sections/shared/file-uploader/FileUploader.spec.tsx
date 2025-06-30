@@ -318,7 +318,7 @@ describe('FileUploader', () => {
 
         cy.get('.swal2-actions').within(() => {
           cy.findAllByText(/Cancel/)
-            .first()
+            .last()
             .click()
         })
 
