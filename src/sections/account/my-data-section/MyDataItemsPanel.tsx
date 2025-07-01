@@ -42,7 +42,7 @@ export const MyDataItemsPanel = ({
   collectionRepository,
   roleRepository
 }: MyDataItemsPanelProps) => {
-  const { setIsLoading } = useLoading()
+  const { isLoading, setIsLoading } = useLoading()
   const { user } = useSession()
   const { t } = useTranslation('account')
   const [roleIds, setRoleIds] = useState<number[]>([])
@@ -310,7 +310,7 @@ export const MyDataItemsPanel = ({
               itemsListType={ItemsListType.MY_DATA_LIST}
               error={error}
               accumulatedCount={accumulatedCount}
-              isLoadingItems={isLoadingItems}
+              isLoadingItems={isLoading}
               areItemsAvailable={areItemsAvailable}
               hasNextPage={hasNextPage}
               isEmptyItems={isEmptyItems}
