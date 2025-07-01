@@ -1,23 +1,24 @@
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Accordion } from '@iqss/dataverse-design-system'
-import {
-  CollectionFeaturedItem,
-  CustomFeaturedItem
-} from '@/collection/domain/models/CollectionFeaturedItem'
+import { CustomFeaturedItem, FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
 import { FeaturedItemView } from '@/sections/featured-item/featured-item-view/FeaturedItemView'
 import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
-import { FeaturedItemField } from '../../types'
+import { CustomFeaturedItemField, FeaturedItemField } from '../../types'
 import { Slider } from './slider/Slider'
 import styles from './PreviewCarousel.module.scss'
 
 export const PreviewCarousel = () => {
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
   const { t: tCollection } = useTranslation('collection')
   const featuredItemFieldValues = useWatch({ name: 'featuredItems' }) as FeaturedItemField[]
 
-  const formFieldsToFeaturedItems: CollectionFeaturedItem[] =
-    FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(featuredItemFieldValues)
+  const customFeaturedItems: CustomFeaturedItemField[] = featuredItemFieldValues.filter(
+    (featuredItem) => featuredItem.type === FeaturedItemType.CUSTOM
+  )
+
+  const featuredItems: CustomFeaturedItem[] =
+    FeaturedItemsFormHelper.transformCustomFormFieldsToFeaturedItems(customFeaturedItems)
 
   return (
     <Accordion className={styles['preview-carousel-accordion']}>
@@ -29,11 +30,8 @@ export const PreviewCarousel = () => {
             nextLabel={tCollection('featuredItems.slider.nextLabel')}
             dotLabel={tCollection('featuredItems.slider.dotLabel')}
             dataTestId="featured-items-slider"
-            items={formFieldsToFeaturedItems.map((featuredItem) => (
-              <FeaturedItemView
-                key={featuredItem.id}
-                featuredItem={featuredItem as CustomFeaturedItem}
-              />
+            items={featuredItems.map((featuredItem) => (
+              <FeaturedItemView key={featuredItem.id} featuredItem={featuredItem} />
             ))}
           />
         </Accordion.Body>

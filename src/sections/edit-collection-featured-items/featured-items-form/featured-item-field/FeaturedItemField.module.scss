@@ -12,9 +12,8 @@
   .drag-handle {
     width: 38px;
     height: 38px;
-    margin-bottom: 0.5rem;
     padding: 0;
-    background-color: transparent;
+    background-color: #fff;
     border: 0;
     border: solid 1px $dv-secondary-color;
     border-radius: 4px;
@@ -38,6 +37,50 @@
     }
   }
 
+  .edit-btn {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 4px;
+
+    &.edit-disabled::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: block;
+      width: 70%;
+      height: 2px;
+      background: white;
+      border-top: solid 1px $dv-primary-color;
+      transform: translate(-50%, -50%) rotate(45deg);
+      content: '';
+    }
+  }
+
+  .back-btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 4px;
+  }
+
+  .featured-item-header {
+    padding-bottom: 0.75rem;
+
+    @media (max-width: 768px) {
+      display: flex;
+
+      > * {
+        width: auto;
+
+        &:last-child {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+
   .form-group-content,
   .form-group-image {
     margin-bottom: 1rem;
@@ -54,29 +97,13 @@
     font-size: 0.875em;
   }
 
-  .aspect-ratio-warning {
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
-    margin-top: 0.25rem;
-    color: $dv-warning-color;
-    font-size: 0.875em;
-
-    svg {
-      margin-top: 3px;
-    }
-
-    @media (min-width: 992px) {
-      white-space: pre-line;
-    }
-  }
-
   .image-wrapper {
     position: relative;
     display: flex;
     justify-content: center;
     min-height: 38px;
     padding: 4px;
+    background-color: #fff;
     border: solid 1px $dv-border-color;
     border-radius: 6px;
 
@@ -85,7 +112,6 @@
       max-height: 175px;
       object-fit: contain;
       border-radius: 4px;
-      pointer-events: none;
     }
 
     &.hide {
@@ -110,13 +136,8 @@
     }
   }
 
-  .order-value {
-    position: absolute;
-    top: 0.75rem;
-    right: 1rem;
-    padding: 0.25rem 0.5rem;
-    font-size: $dv-font-size-sm;
-    background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
+  .editor-wrapper {
+    background-color: #fff;
     border-radius: 6px;
   }
 
@@ -132,6 +153,27 @@
     &.active {
       z-index: 999;
       background-color: color.adjust($dv-primary-color, $alpha: -0.4);
+    }
+  }
+
+  &.edit-disabled {
+    background: repeating-linear-gradient(
+        -315deg,
+        $dv-secondary-color 0,
+        $dv-secondary-color 1px,
+        transparent 1px,
+        transparent 4px
+      ),
+      color.adjust($dv-secondary-color, $alpha: -0.6);
+
+    .editor-wrapper {
+      :global .image-resize-container {
+        pointer-events: none;
+      }
+    }
+
+    .back-btn {
+      background: #fff;
     }
   }
 }

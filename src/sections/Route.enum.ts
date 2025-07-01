@@ -18,7 +18,7 @@ export enum Route {
   CREATE_COLLECTION = '/collections/:parentCollectionId/create',
   ACCOUNT = '/account',
   EDIT_COLLECTION = '/collections/:collectionId/edit',
-  EDIT_COLLECTION_FEATURED_ITEMS = '/collections/:collectionId/edit-featured-items',
+  EDIT_FEATURED_ITEMS = '/collections/:collectionId/edit-featured-items',
   FEATURED_ITEM = '/featured-item/:parentCollectionId/:featuredItemId',
   NOT_FOUND_PAGE = '/404',
   AUTH_CALLBACK = '/auth-callback',
@@ -31,8 +31,7 @@ export const RouteWithParams = {
   CREATE_COLLECTION: (parentCollectionId: string) => `/collections/${parentCollectionId}/create`,
   CREATE_DATASET: (collectionId: string) => `/datasets/${collectionId}/create`,
   EDIT_COLLECTION: (collectionId: string) => `/collections/${collectionId}/edit`,
-  EDIT_COLLECTION_FEATURED_ITEMS: (collectionId: string) =>
-    `/collections/${collectionId}/edit-featured-items`,
+  EDIT_FEATURED_ITEMS: (collectionId: string) => `/collections/${collectionId}/edit-featured-items`,
   EDIT_FILE_METADATA: (
     datasetPersistentId: string,
     datasetVersion: string,

@@ -1,5 +1,5 @@
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { DataverseHubMockRepository } from '@/stories/dataverse-hub/DataverseHubMockRepository'
 import Homepage from '@/sections/homepage/Homepage'
@@ -7,7 +7,7 @@ import Homepage from '@/sections/homepage/Homepage'
 const testCollectionRepository = {} as CollectionRepository
 const testCollection = CollectionMother.create({ name: 'Collection Name' })
 
-const testCustomFeaturedItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+const testCustomFeaturedItemOne = FeaturedItemMother.createCustomFeaturedItem('css', {
   id: 1,
   displayOrder: 1
 })

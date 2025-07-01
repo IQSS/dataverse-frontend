@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { FeaturedItemsFormHelper } from './FeaturedItemsFormHelper'
-import { updateCollectionFeaturedItems } from '@/collection/domain/useCases/updateCollectionFeaturedItems'
+import { updateFeaturedItems } from '@/collection/domain/useCases/updateFeaturedItems'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { FeaturedItemsFormData } from '../types'
@@ -37,7 +37,7 @@ export function useSubmitFeaturedItems(
   collectionRepository: CollectionRepository
 ): UseSubmitFeaturedItemsReturnType {
   const navigate = useNavigate()
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
 
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
@@ -49,7 +49,7 @@ export function useSubmitFeaturedItems(
 
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    updateCollectionFeaturedItems(collectionRepository, itemsDTO, collectionId)
+    updateFeaturedItems(collectionRepository, itemsDTO, collectionId)
       .then(() => {
         setSubmitError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
@@ -63,7 +63,7 @@ export function useSubmitFeaturedItems(
         setSubmitError(formattedError)
         setSubmissionStatus(SubmissionStatus.Errored)
 
-        toast.error(formattedError, { autoClose: false })
+        toast.error(formattedError, { autoClose: 10_000 })
       })
   }
 

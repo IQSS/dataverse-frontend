@@ -1,14 +1,16 @@
 import {
-  CollectionFeaturedItem,
+  FeaturedItem,
   CustomFeaturedItem,
-  DvObjectFeaturedItem
-} from '@/collection/domain/models/CollectionFeaturedItem'
+  DvObjectFeaturedItem,
+  FeaturedItemType
+} from '@/collection/domain/models/FeaturedItem'
 
-export class CollectionFeaturedItemMother {
-  static createFeaturedItems(): CollectionFeaturedItem[] {
+export class FeaturedItemMother {
+  static createFeaturedItems(): FeaturedItem[] {
     return [
       {
         id: 1,
+        type: FeaturedItemType.CUSTOM,
         imageFileUrl: '/storybook/css.webp',
         displayOrder: 1,
         content:
@@ -16,16 +18,32 @@ export class CollectionFeaturedItemMother {
       },
       {
         id: 2,
-        displayOrder: 2,
-        content:
-          '<h1 class="rte-heading">Some Title</h1><p class="rte-paragraph">Hello <strong class="rte-bold">Dataverse</strong> <em class="rte-italic">new </em><s class="rte-strike">rick</s> <strong class="rte-bold">rich</strong> <em class="rte-italic">text</em> <code class="rte-code">editor</code>! This is a <a target="_blank" rel="noopener noreferrer nofollow" class="rte-link" href="https://beta.dataverse.org/spa/">link</a>.</p><ul class="rte-bullet-list"><li><p class="rte-paragraph">Item</p></li><li><p class="rte-paragraph">Item</p></li></ul><ol class="rte-ordered-list"><li><p class="rte-paragraph">Item 1</p></li><li><p class="rte-paragraph">Item 2</p></li></ol><pre class="rte-code-block"><code class="language-typescriptreact">onUpdate: ({ editor }) =&gt; onChange &amp;&amp; onChange(editor.getHTML())</code></pre><blockquote class="rte-blockquote"><p class="rte-paragraph">This is a blockquoute</p></blockquote><p class="rte-paragraph"></p><p class="rte-paragraph"></p>'
+        type: FeaturedItemType.COLLECTION,
+        dvObjectIdentifier: 'some-collection-alias',
+        dvObjectDisplayName: 'Sample Collection',
+        displayOrder: 2
       },
       {
         id: 3,
+        type: FeaturedItemType.CUSTOM,
         imageFileUrl: '/storybook/books.webp',
         displayOrder: 3,
         content:
           '<h1 class="rte-heading">Some Title</h1><p>Join a growing community of Harvard and worldwide researchers who share data in the Harvard Dataverse Repository</p>'
+      },
+      {
+        id: 4,
+        type: FeaturedItemType.DATASET,
+        dvObjectIdentifier: 'doi:10.5072/FK2/ABC123',
+        dvObjectDisplayName: 'Sample Dataset',
+        displayOrder: 4
+      },
+      {
+        id: 5,
+        type: FeaturedItemType.FILE,
+        dvObjectIdentifier: '45',
+        dvObjectDisplayName: 'Sample-File.txt',
+        displayOrder: 5
       }
     ]
   }
@@ -36,7 +54,7 @@ export class CollectionFeaturedItemMother {
   ): CustomFeaturedItem {
     return {
       id: 1,
-      type: 'custom',
+      type: FeaturedItemType.CUSTOM,
       imageFileUrl: `/storybook/${img}.webp`,
       displayOrder: 1,
       content:
@@ -51,11 +69,9 @@ export class CollectionFeaturedItemMother {
     return {
       id: 1,
       displayOrder: 1,
-      type: 'collection',
-      title: 'Collection Title',
-      description:
-        'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo impedit perferendis expedita fuga harum quis excepturi porro accusantium earum quos. ',
-      linkUrl: 'https://dataverse.harvard.edu/',
+      type: FeaturedItemType.COLLECTION,
+      dvObjectIdentifier: 'some-collection-alias',
+      dvObjectDisplayName: 'Sample Collection',
       ...props
     }
   }
@@ -66,11 +82,9 @@ export class CollectionFeaturedItemMother {
     return {
       id: 1,
       displayOrder: 1,
-      type: 'dataset',
-      title: 'Dataset Title',
-      description:
-        'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo impedit perferendis expedita fuga harum quis excepturi porro accusantium earum quos. ',
-      linkUrl: 'https://dataverse.harvard.edu/',
+      type: FeaturedItemType.DATASET,
+      dvObjectIdentifier: 'doi:10.5072/FK2/ABC123',
+      dvObjectDisplayName: 'Sample Dataset',
       ...props
     }
   }
@@ -81,11 +95,9 @@ export class CollectionFeaturedItemMother {
     return {
       id: 1,
       displayOrder: 1,
-      type: 'file',
-      title: 'File Title',
-      description:
-        'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo impedit perferendis expedita fuga harum quis excepturi porro accusantium earum quos. ',
-      linkUrl: 'https://dataverse.harvard.edu/',
+      type: FeaturedItemType.FILE,
+      dvObjectIdentifier: '45',
+      dvObjectDisplayName: 'Sample-File.txt',
       ...props
     }
   }

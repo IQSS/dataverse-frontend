@@ -5,7 +5,7 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { Collection } from '../../collection/domain/models/Collection'
 import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
 import { CollectionMockRepository } from './CollectionMockRepository'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
 
 export class NoCollectionMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
@@ -40,7 +40,7 @@ export class NoCollectionMockRepository extends CollectionMockRepository {
     })
   }
 
-  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<FeaturedItem[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([])

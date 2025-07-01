@@ -1,34 +1,32 @@
 import { useEffect, useState } from 'react'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { getCollectionFeaturedItems } from '@/collection/domain/useCases/getCollectionFeaturedItems'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { getFeaturedItems } from '@/collection/domain/useCases/getFeaturedItems'
+import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
 
-interface UseGetCollectionFeaturedItemsReturnType {
-  collectionFeaturedItems: CollectionFeaturedItem[]
+interface UseGetFeaturedItemsReturnType {
+  featuredItems: FeaturedItem[]
   error: string | null
   isLoading: boolean
 }
 
-export const useGetCollectionFeaturedItems = (
+export const useGetFeaturedItems = (
   collectionRepository: CollectionRepository,
   collectionIdOrAlias?: string | number
-): UseGetCollectionFeaturedItemsReturnType => {
-  const [collectionFeaturedItems, setCollectionFeaturedItems] = useState<CollectionFeaturedItem[]>(
-    []
-  )
+): UseGetFeaturedItemsReturnType => {
+  const [featuredItems, setFeaturedItems] = useState<FeaturedItem[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const handleGetCollectionFeaturedItems = async () => {
+    const handleGetFeaturedItems = async () => {
       setIsLoading(true)
       try {
-        const featuredItems: CollectionFeaturedItem[] = await getCollectionFeaturedItems(
+        const featuredItems: FeaturedItem[] = await getFeaturedItems(
           collectionRepository,
           collectionIdOrAlias
         )
 
-        setCollectionFeaturedItems(featuredItems)
+        setFeaturedItems(featuredItems)
       } catch (err) {
         const errorMessage =
           err instanceof Error && err.message
@@ -40,11 +38,11 @@ export const useGetCollectionFeaturedItems = (
       }
     }
 
-    void handleGetCollectionFeaturedItems()
+    void handleGetFeaturedItems()
   }, [collectionIdOrAlias, collectionRepository])
 
   return {
-    collectionFeaturedItems,
+    featuredItems,
     error,
     isLoading
   }

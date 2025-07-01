@@ -1,21 +1,21 @@
 import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
-import { EditCollectionFeaturedItems } from './EditCollectionFeaturedItems'
+import { EditFeaturedItems } from './EditFeaturedItems'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 
-export class EditCollectionFeaturedItemsFactory {
+export class EditFeaturedItemsFactory {
   static create(): ReactElement {
-    return <EditCollectionFeaturedItemsWithSearchParams />
+    return <EditFeaturedItemsWithSearchParams />
   }
 }
 
-function EditCollectionFeaturedItemsWithSearchParams() {
+function EditFeaturedItemsWithSearchParams() {
   const { collectionId } = useParams<{ collectionId: string }>()
 
   return (
-    <EditCollectionFeaturedItems
+    <EditFeaturedItems
       collectionRepository={collectionRepository}
       collectionIdFromParams={collectionId}
     />

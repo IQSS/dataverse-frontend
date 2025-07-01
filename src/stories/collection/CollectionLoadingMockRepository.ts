@@ -6,8 +6,8 @@ import { CollectionItemsPaginationInfo } from '@/collection/domain/models/Collec
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
+import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 
 export class CollectionLoadingMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
@@ -42,18 +42,22 @@ export class CollectionLoadingMockRepository extends CollectionMockRepository {
     return new Promise(() => {})
   }
 
-  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<FeaturedItem[]> {
     return new Promise(() => {})
   }
 
   updateFeaturedItems(
     _collectionId: string,
-    _featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<CollectionFeaturedItem[]> {
+    _featuredItemsDTO: FeaturedItemsDTO
+  ): Promise<FeaturedItem[]> {
     return new Promise(() => {})
   }
 
   deleteFeaturedItems(_collectionIdOrAlias: number | string): Promise<void> {
+    return new Promise(() => {})
+  }
+
+  deleteFeaturedItem(_featuredItemId: number): Promise<void> {
     return new Promise(() => {})
   }
 }
