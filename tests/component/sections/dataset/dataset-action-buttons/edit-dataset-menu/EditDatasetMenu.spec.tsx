@@ -191,6 +191,22 @@ describe('EditDatasetMenu', () => {
     cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
   })
 
+  it('hides Deaccession button if current version is draft', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraft(),
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true
+    })
+
+    cy.mountAuthenticated(
+      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+    )
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
+  })
+
   it('clicks on the Delete button', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createNotReleased(),
