@@ -97,6 +97,24 @@ describe('MyDataItemsPanel', () => {
     cy.findByRole('alert').should('exist').should('contain.text', 'some roles error')
   })
 
+  it('renders the correct role checkboxes', () => {
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
+
+    cy.findByRole('checkbox', { name: 'Admin' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Contributor' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Curator' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Member' }).should('exist')
+    cy.findByRole('checkbox', { name: 'File Downloader' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Dataverse + Dataset Creator' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Dataverse Creator' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Dataset Creator' }).should('exist')
+  })
+
   describe('User Search', () => {
     it('does not render the search input for non-superusers', () => {
       cy.mountAuthenticated(
