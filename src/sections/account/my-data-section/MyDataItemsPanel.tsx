@@ -4,7 +4,6 @@ import { Alert, Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { useLoading } from '@/sections/loading/LoadingContext'
 import {
   ItemsList,
   ItemsListType
@@ -42,7 +41,6 @@ export const MyDataItemsPanel = ({
   collectionRepository,
   roleRepository
 }: MyDataItemsPanelProps) => {
-  const { isLoading, setIsLoading } = useLoading()
   const { user } = useSession()
   const { t } = useTranslation('account')
   const [roleIds, setRoleIds] = useState<number[]>([])
@@ -256,10 +254,6 @@ export const MyDataItemsPanel = ({
     setCurrentSearchCriteria(newMyDataSearchCriteria)
   }
 
-  useEffect(() => {
-    setIsLoading(isLoadingItems || isLoadingRoles)
-  }, [isLoadingItems, isLoadingRoles, setIsLoading])
-
   if (rolesError !== null) {
     return (
       <>
@@ -310,7 +304,7 @@ export const MyDataItemsPanel = ({
               itemsListType={ItemsListType.MY_DATA_LIST}
               error={error}
               accumulatedCount={accumulatedCount}
-              isLoadingItems={isLoading}
+              isLoadingItems={isLoadingItems || isLoadingRoles}
               areItemsAvailable={areItemsAvailable}
               hasNextPage={hasNextPage}
               isEmptyItems={isEmptyItems}
