@@ -48,7 +48,8 @@ export const ComposedField = ({
     <Form.GroupWithMultipleFields
       title={title}
       message={description}
-      required={Boolean(rulesToApply?.required)}>
+      required={Boolean(rulesToApply?.required)}
+      titleClassName={styles['composed-field-title']}>
       {notRequiredWithChildFieldsRequired && (
         <Col sm={9} className={styles['may-become-required-help-text']}>
           <Form.Group.Text>{t('mayBecomeRequired')}</Form.Group.Text>
