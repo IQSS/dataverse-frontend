@@ -9,9 +9,8 @@ import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { AccountInfoSection } from './account-info-section/AccountInfoSection'
 import { useLoading } from '../loading/LoadingContext'
 import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
-
-import styles from './Account.module.scss'
 import { RoleJSDataverseRepository } from '@/roles/infrastructure/repositories/RoleJSDataverseRepository'
+import styles from './Account.module.scss'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 
