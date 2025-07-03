@@ -123,3 +123,82 @@ curl -k -X POST "https://localhost:443/admin/realms/<REALM_NAME>/components" \
 
 echo "Keycloak SPI configured in realm."
 ```
+
+Now you have to register the provider within the Realm you created in Keycloak. 
+
+To do this, go to **User Federation** and click on **Add custom provider**. The option **Add dv-builtin-users-authenticator provider** should appear.
+
+![Alt text](img/keycloak_deployment_add_spi.png)
+
+Remember to set the datasource name **user-store**, which is the one specified in **quarkus.properties**.
+
+### Create a Keycloak client for the Dataverse SPA
+
+To allow the SPA to authenticate with Keycloak using PKCE, we need to create a public OIDC client in the Keycloak Realm.  
+
+You can create a JSON file based on the following example file, replacing the value of the dataverse domain name with that of your installation, and use the **Import Client** option in Keycloak to create the client from a JSON file.
+
+```json
+{
+  "clientId": "spa",
+  "name": "",
+  "description": "",
+  "rootUrl": "",
+  "adminUrl": "",
+  "baseUrl": "",
+  "surrogateAuthRequired": false,
+  "enabled": true,
+  "alwaysDisplayInConsole": false,
+  "clientAuthenticatorType": "client-secret",
+  "redirectUris": [
+    "https://<INSTALLATION_DOMAIN_NAME>/spa/*"
+  ],
+  "webOrigins": [
+    "+"
+  ],
+  "notBefore": 0,
+  "bearerOnly": false,
+  "consentRequired": false,
+  "standardFlowEnabled": true,
+  "implicitFlowEnabled": false,
+  "directAccessGrantsEnabled": true,
+  "serviceAccountsEnabled": false,
+  "publicClient": true,
+  "frontchannelLogout": true,
+  "protocol": "openid-connect",
+  "attributes": {
+    "realm_client": "false",
+    "oidc.ciba.grant.enabled": "false",
+    "backchannel.logout.session.required": "true",
+    "post.logout.redirect.uris": "+",
+    "oauth2.device.authorization.grant.enabled": "false",
+    "backchannel.logout.revoke.offline.tokens": "false"
+  },
+  "authenticationFlowBindingOverrides": {},
+  "fullScopeAllowed": true,
+  "nodeReRegistrationTimeout": -1,
+  "defaultClientScopes": [
+    "web-origins",
+    "acr",
+    "roles",
+    "profile",
+    "basic",
+    "email"
+  ],
+  "optionalClientScopes": [
+    "address",
+    "phone",
+    "offline_access",
+    "microprofile-jwt"
+  ],
+  "access": {
+    "view": true,
+    "configure": true,
+    "manage": true
+  }
+}
+```
+
+You can also create the client from scratch using the Keycloak UI.
+
+### Create a Keycloak client for the Dataverse Backend
