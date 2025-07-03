@@ -128,7 +128,7 @@ Now you have to register the provider within the Realm you created in Keycloak.
 
 To do this, go to **User Federation** and click on **Add custom provider**. The option **Add dv-builtin-users-authenticator provider** should appear.
 
-![Alt text](img/keycloak_deployment_add_spi.png)
+![Deployment Img Add SPI](img/keycloak_deployment_add_spi.png)
 
 Remember to set the datasource name **user-store**, which is the one specified in **quarkus.properties**.
 
@@ -202,3 +202,109 @@ You can create a JSON file based on the following example file, replacing the va
 You can also create the client from scratch using the Keycloak UI.
 
 ### Create a Keycloak client for the Dataverse Backend
+
+In the case of the backend client, you will need to create a Keycloak OIDC confidential client.
+
+Below is a JSON file that you can import to set up the client.
+
+```json
+{
+  "clientId": "backend",
+  "name": "",
+  "description": "",
+  "rootUrl": "",
+  "adminUrl": "",
+  "baseUrl": "",
+  "surrogateAuthRequired": false,
+  "enabled": true,
+  "alwaysDisplayInConsole": false,
+  "clientAuthenticatorType": "client-secret",
+  "redirectUris": [
+    "*"
+  ],
+  "webOrigins": [],
+  "notBefore": 0,
+  "bearerOnly": false,
+  "consentRequired": false,
+  "standardFlowEnabled": true,
+  "implicitFlowEnabled": false,
+  "directAccessGrantsEnabled": true,
+  "serviceAccountsEnabled": false,
+  "publicClient": false,
+  "frontchannelLogout": true,
+  "protocol": "openid-connect",
+  "attributes": {
+    "realm_client": "false",
+    "oidc.ciba.grant.enabled": "false",
+    "client.secret.creation.time": "1747655394",
+    "backchannel.logout.session.required": "true",
+    "post.logout.redirect.uris": "+",
+    "oauth2.device.authorization.grant.enabled": "false",
+    "backchannel.logout.revoke.offline.tokens": "false"
+  },
+  "authenticationFlowBindingOverrides": {},
+  "fullScopeAllowed": true,
+  "nodeReRegistrationTimeout": -1,
+  "defaultClientScopes": [
+    "web-origins",
+    "acr",
+    "profile",
+    "roles",
+    "basic",
+    "email"
+  ],
+  "optionalClientScopes": [
+    "address",
+    "phone",
+    "organization",
+    "offline_access",
+    "microprofile-jwt"
+  ],
+  "access": {
+    "view": true,
+    "configure": true,
+    "manage": true
+  }
+}
+```
+
+You can also create the client from scratch using the Keycloak UI.
+
+Once the client is created, you need to generate a client secret, which you will need to keep and use in the next installation step to register the OIDC provider in Dataverse.
+
+![Deployment Img Add Secret](img/keycloak_deployment_add_backend_client_secret.png)
+
+You can test logging in with the newly created OIDC client, interacting with the Builtin Users SPI, using the following command:
+
+```bash
+curl -X POST \
+  http://<KEYCLOAK_DOMAIN>/realms/<REALM_NAME>/protocol/openid-connect/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "client_id=<CLIENT_ID>" \
+  -d "client_secret=<CLIENT_SECRET>" \
+  -d "grant_type=password" \
+  -d "username=<DATAVERSE_USERNAME>" \
+  -d "password=<DATAVERSE_PASSWORD>" \
+  -d "scope=openid"
+```
+
+### Register the Keycloak Dataverse Backend OIDC client in Dataverse
+
+Both the JVM options from this step and the next must be registered within the instance where your Dataverse installation is hosted.
+
+For Keycloak OIDC client to work, we need to add the following options:
+
+- `dataverse.auth.oidc.auth-server-url`
+- `dataverse.auth.oidc.client-id`
+- `dataverse.auth.oidc.client-secret`
+- `dataverse.auth.oidc.enabled`
+
+These variables must be set according to the data of the previously configured Keycloak client.
+
+### Enable Dataverse OIDC Feature Flags
+
+In the Dataverse instance, you need to enable different OIDC-related feature flags by setting the following JVM options:
+
+- `dataverse.feature.api-bearer-auth`
+- `dataverse.feature.api-bearer-auth-provide-missing-claims`
+- `dataverse.feature.api-bearer-auth-use-builtin-user-on-id-match`
