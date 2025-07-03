@@ -6,14 +6,16 @@ This guide walks you through the process of deploying and configuring a Keycloak
 
 Install [Keycloak](https://www.keycloak.org/downloads.html) from the official website. Download a ZIP file that you'll need to place and unzip into the target instance.
 
-### Download JDBC Drivers
+### Download Required Oracle JDBC Libraries
 
-Download the following Java Database Connectivity (JDBC) drivers from the URLs below, and place the downloaded `.jar` files in the `keycloak-26.X.X/providers` directory:
+Download the following `.jar` files from the URLs below, and place them in the `keycloak-26.X.X/providers` directory:
 
 - [ojdbc11-23.7.0.25.01.jar](https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.7.0.25.01/ojdbc11-23.7.0.25.01.jar)
 - [orai18n-23.7.0.25.01.jar](https://repo1.maven.org/maven2/com/oracle/database/nls/orai18n/23.7.0.25.01/orai18n-23.7.0.25.01.jar)
 
-These drivers are required for the Keycloak SPI that you are going to install.
+The `ojdbc11` JAR provides the actual JDBC driver required for database connectivity. The `orai18n` JAR provides additional character-set and localization support required by the driver in certain environments.
+
+Both libraries are required for the Keycloak SPI you are going to install.
 
 ### Add Builtin Users SPI
 
