@@ -96,8 +96,7 @@ export class FileJSDataverseRepository implements FileRepository {
     datasetPersistentId: string,
     datasetVersion: DatasetVersion,
     paginationInfo: FilePaginationInfo = new FilePaginationInfo(),
-    criteria: FileCriteria = new FileCriteria(),
-    includeDeaccessioned?: boolean
+    criteria: FileCriteria = new FileCriteria()
   ): Promise<FilesWithCount> {
     return getDatasetFiles
       .execute(
@@ -211,8 +210,7 @@ export class FileJSDataverseRepository implements FileRepository {
   getFilesCountInfoByDatasetPersistentId(
     datasetPersistentId: string,
     datasetVersionNumber: DatasetVersionNumber,
-    criteria: FileCriteria,
-    includeDeaccessioned?: boolean
+    criteria: FileCriteria
   ): Promise<FilesCountInfo> {
     return getDatasetFileCounts
       .execute(
@@ -232,8 +230,7 @@ export class FileJSDataverseRepository implements FileRepository {
   getFilesTotalDownloadSizeByDatasetPersistentId(
     datasetPersistentId: string,
     datasetVersionNumber: DatasetVersionNumber,
-    criteria: FileCriteria = new FileCriteria(),
-    includeDeaccessioned?: boolean
+    criteria: FileCriteria = new FileCriteria()
   ): Promise<number> {
     return getDatasetFilesTotalDownloadSize
       .execute(
@@ -255,6 +252,7 @@ export class FileJSDataverseRepository implements FileRepository {
     return FileJSDataverseRepository.getPermissionsById(id)
       .then((permissions) => {
         const includeDeaccessioned = permissions?.canEditOwnerDataset
+
         return getFileAndDataset
           .execute(id, datasetVersionNumber, includeDeaccessioned)
           .then(([jsFile, jsDataset]) => {
