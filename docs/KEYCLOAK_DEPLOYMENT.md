@@ -8,7 +8,7 @@ Install [Keycloak](https://www.keycloak.org/downloads.html) from the official we
 
 ### Download Required Oracle JDBC Libraries
 
-Download the following `.jar` files from the URLs below, and place them in the `keycloak-26.X.X/providers` directory:
+Download the following JAR files from the URLs below, and place them in the `keycloak-26.X.X/providers` directory:
 
 - [ojdbc11-23.7.0.25.01.jar](https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.7.0.25.01/ojdbc11-23.7.0.25.01.jar)
 - [orai18n-23.7.0.25.01.jar](https://repo1.maven.org/maven2/com/oracle/database/nls/orai18n/23.7.0.25.01/orai18n-23.7.0.25.01.jar)
@@ -23,7 +23,7 @@ Download the JAR file from [this link](https://github.com/IQSS/dataverse-fronten
 
 ### Add Keycloak Custom Theme
 
-Make sure you have **Maven** installed on your localhost.
+Make sure you have Maven installed on your localhost.
 
 Within the ``dataverse-frontend`` repository, run the following command to build the custom Keycloak theme:
 
@@ -92,14 +92,14 @@ Note that the output logs of the command are saved in a file named ``keycloak.lo
 
 ### Create a Keycloak Realm
 
-Create a Realm in Keycloak from the Keycloak Admin Console:  
+Create a realm in Keycloak from the Keycloak Admin Console:  
 `https://<KEYCLOAK_DOMAIN>/admin/master/console/`. 
 
 Give it a descriptive name for the environment you are deploying, since this name will appear in the different URLs used for OIDC and other purposes.
 
 ### Enable Builtin Users SPI
 
-Once you have created the Realm, you need to enable the Builtin Users SPI within it. To do this, you can edit the following script with the admin credentials and realm name, and execute it.
+Once you have created the realm, you need to enable the Builtin Users SPI within it. To do this, you can edit the following script with the admin credentials and realm name, and execute it.
 
 ```bash
 #!/bin/sh
@@ -126,17 +126,17 @@ curl -k -X POST "https://localhost:443/admin/realms/<REALM_NAME>/components" \
 echo "Keycloak SPI configured in realm."
 ```
 
-Now you have to register the provider within the Realm you created in Keycloak. 
+Now you have to register the provider within the realm you created in Keycloak. 
 
 To do this, go to **User Federation** and click on **Add custom provider**. The option **Add dv-builtin-users-authenticator provider** should appear.
 
 ![Deployment Img Add SPI](img/keycloak_deployment_add_spi.png)
 
-Remember to set the datasource name **user-store**, which is the one specified in **quarkus.properties**.
+Remember to set the datasource name ``user-store``, which is the one specified in ``quarkus.properties``.
 
 ### Create a Keycloak client for the Dataverse SPA
 
-To allow the SPA to authenticate with Keycloak using PKCE, we need to create a public OIDC client in the Keycloak Realm.  
+To allow the SPA to authenticate with Keycloak using PKCE, we need to create a public OIDC client in the Keycloak realm.  
 
 You can create a JSON file based on the following example file, replacing the value of the dataverse domain name with that of your installation, and use the **Import Client** option in Keycloak to create the client from a JSON file.
 
