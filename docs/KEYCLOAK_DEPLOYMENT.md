@@ -86,13 +86,18 @@ For subsequent executions of Keycloak, you can use the following command omittin
 nohup ./bin/kc.sh start --hostname https://beta-keycloak.dataverse.org > keycloak.log 2>&1 &2>&1 &
 ```
 
+Note that the output logs of the command are saved in a file named ``keycloak.log``.
+
 ### Create a Keycloak Realm
 
-TODO
+Create a Realm in Keycloak from the Keycloak Admin Console:  
+[https://beta-keycloak.dataverse.org/admin/master/console/](https://beta-keycloak.dataverse.org/admin/master/console/). 
+
+Give it a descriptive name for the environment you are deploying, since this name will appear in the different URLs used for OIDC and other purposes.
 
 ### Enable Builtin Users SPI
 
-TODO
+Once you have created the Realm, you need to enable the Builtin Users SPI within it. To do this, you can edit the following script with the admin credentials and realm name, and execute it.
 
 ```bash
 #!/bin/sh
