@@ -250,7 +250,7 @@ export class FileJSDataverseRepository implements FileRepository {
 
   getById(id: number, datasetVersionNumber?: string): Promise<File> {
     return getFileAndDataset
-      .execute(id, datasetVersionNumber)
+      .execute(id, datasetVersionNumber, includeDeaccessioned)
       .then(([jsFile, jsDataset]) =>
         Promise.all([
           jsFile,
