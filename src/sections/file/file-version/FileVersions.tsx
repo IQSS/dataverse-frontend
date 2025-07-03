@@ -77,7 +77,8 @@ export function FileVersions({
             const isCurrentVersion = fileVersion.datasetVersion === displayVersion
             const isLinkable =
               fileVersion.versionState === DatasetVersionState.RELEASED ||
-              fileVersion.versionState === DatasetVersionState.DEACCESSIONED ||
+              (fileVersion.versionState === DatasetVersionState.DEACCESSIONED &&
+                canEditOwnerDataset) ||
               (fileVersion.versionState === DatasetVersionState.DRAFT && canEditOwnerDataset)
 
             return (
