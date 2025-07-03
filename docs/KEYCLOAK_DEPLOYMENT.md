@@ -74,16 +74,16 @@ Once the certificate and key have been uploaded to the instance, you need to con
 Run Keycloak for the first time on the instance using the following command. 
 
 ```bash
-nohup ./bin/kc.sh start --bootstrap-admin-username tmpadm --bootstrap-admin-password pass --hostname https://beta-keycloak.dataverse.org > keycloak.log 2>&1 &
+nohup ./bin/kc.sh start --bootstrap-admin-username tmpadm --bootstrap-admin-password pass --hostname https://<KEYCLOAK_DOMAIN> > keycloak.log 2>&1 &
 ```
 
 This command will set up an admin user so you can log in and create a permanent one from the Keycloak Admin Console:  
-[https://beta-keycloak.dataverse.org/admin/master/console/](https://beta-keycloak.dataverse.org/admin/master/console/).
+`https://<KEYCLOAK_DOMAIN>/admin/master/console/`.
 
 For subsequent executions of Keycloak, you can use the following command omitting the admin user bootstrapping parameters:
 
 ```bash
-nohup ./bin/kc.sh start --hostname https://beta-keycloak.dataverse.org > keycloak.log 2>&1 &2>&1 &
+nohup ./bin/kc.sh start --hostname https://<KEYCLOAK_DOMAIN> > keycloak.log 2>&1 &2>&1 &
 ```
 
 Note that the output logs of the command are saved in a file named ``keycloak.log``.
@@ -91,7 +91,7 @@ Note that the output logs of the command are saved in a file named ``keycloak.lo
 ### Create a Keycloak Realm
 
 Create a Realm in Keycloak from the Keycloak Admin Console:  
-[https://beta-keycloak.dataverse.org/admin/master/console/](https://beta-keycloak.dataverse.org/admin/master/console/). 
+`https://<KEYCLOAK_DOMAIN>/admin/master/console/`. 
 
 Give it a descriptive name for the environment you are deploying, since this name will appear in the different URLs used for OIDC and other purposes.
 
