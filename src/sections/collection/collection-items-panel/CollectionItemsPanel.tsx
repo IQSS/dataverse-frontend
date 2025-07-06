@@ -23,7 +23,7 @@ import {
   ItemsList,
   ItemsListType
 } from '@/sections/collection/collection-items-panel/items-list/ItemsList'
-import { SearchPanel } from '@/sections/collection/collection-items-panel/search-panel/SearchPanel'
+import { SearchInput } from '@/sections/collection/collection-items-panel/search-input/SearchInput'
 import { ItemTypeChange } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
 import { SelectedFacets } from '@/sections/collection/collection-items-panel/selected-facets/SelectedFacets'
 import styles from './CollectionItemsPanel.module.scss'
@@ -308,7 +308,7 @@ export const CollectionItemsPanel = ({
   return (
     <section className={styles['items-panel']}>
       <header className={styles['top-wrapper']}>
-        <SearchPanel
+        <SearchInput
           onSubmitSearch={handleSearchSubmit}
           currentSearchValue={currentSearchCriteria.searchText}
           isLoadingCollectionItems={isLoadingItems}
