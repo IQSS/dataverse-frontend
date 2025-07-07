@@ -1,6 +1,8 @@
 {
   "collection": "Collection",
+  "collections": "Collections",
   "dataset": "Dataset",
+  "datasets": "Datasets",
   "file": "File",
   "files": "Files",
   "page": "Page",
