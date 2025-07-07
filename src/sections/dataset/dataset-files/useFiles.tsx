@@ -21,6 +21,7 @@ export function useFiles(
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>()
   const [filesTotalDownloadSize, setFilesTotalDownloadSize] = useState<number>(0)
+
   const getFilesCountInfo = () => {
     return getFilesCountInfoByDatasetPersistentId(
       filesRepository,

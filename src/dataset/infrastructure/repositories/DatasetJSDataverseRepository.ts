@@ -154,7 +154,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   private async fetchDownloadSizes(
     persistentId: string,
-    version?: string
+    version?: string,
+    includeDeaccessioned?: boolean
   ): Promise<[number, number]> {
     return Promise.all([
       getDatasetFilesTotalDownloadSize.execute(
@@ -173,6 +174,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       )
     ])
   }
+
   getLocks(persistentId: string): Promise<DatasetLock[]> {
     return getDatasetLocks.execute(persistentId).then((jsDatasetLocks) => {
       return JSDatasetMapper.toLocks(jsDatasetLocks)
@@ -189,11 +191,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .execute(persistentId, version, includeDeaccessioned, keepRawFields)
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
       .then((datasetDetails) => {
-        return this.fetchDownloadSizes(persistentId, version).then((downloadSizes) => {
-          datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
-          datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
-          return datasetDetails
-        })
+        // This could be a temp fix, but we are only going to fetch the download sizes with includeDeaccessioned to true if user has edit permissions.
+        const includeDeaccessioned = datasetDetails.jsDatasetPermissions.canEditDataset
+
+        return this.fetchDownloadSizes(persistentId, version, includeDeaccessioned)
+          .then((downloadSizes) => {
+            datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
+            datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
+            return datasetDetails
+          })
+          .catch(() => {
+            return datasetDetails
+          })
       })
       .then((datasetDetails) => {
         if (
@@ -239,6 +248,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         )
       })
   }
+
   getByPrivateUrlToken(privateUrlToken: string): Promise<Dataset | undefined> {
     return Promise.all([
       getPrivateUrlDataset.execute(privateUrlToken),

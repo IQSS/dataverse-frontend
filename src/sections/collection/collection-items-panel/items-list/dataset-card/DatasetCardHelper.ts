@@ -1,4 +1,5 @@
 import {
+  DatasetNonNumericVersion,
   DatasetNonNumericVersionSearchParam,
   DatasetPublishingStatus
 } from '@/dataset/domain/models/Dataset'
@@ -13,6 +14,13 @@ export class DatasetCardHelper {
 
     if (versionNumber) {
       params.version = versionNumber
+    }
+
+    if (
+      versionNumber === DatasetNonNumericVersion.DRAFT &&
+      publishingStatus === DatasetPublishingStatus.DEACCESSIONED
+    ) {
+      params.version = DatasetNonNumericVersion.LATEST_PUBLISHED
     }
 
     if (publishingStatus === DatasetPublishingStatus.DRAFT) {

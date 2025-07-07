@@ -10,13 +10,15 @@ type UseGetFilesTotalDownloadSizeParams = {
   datasetPersistentId: string
   datasetVersion: DatasetVersion
   criteria?: FileCriteria
+  includeDeaccessioned?: boolean
 }
 
 export const useGetFilesTotalDownloadSize = ({
   filesRepository,
   datasetPersistentId,
   datasetVersion,
-  criteria
+  criteria,
+  includeDeaccessioned
 }: UseGetFilesTotalDownloadSizeParams) => {
   const { t } = useTranslation('files')
   const [filesTotalDownloadSize, setFilesTotalDownloadSize] = useState<number>(0)
@@ -31,7 +33,8 @@ export const useGetFilesTotalDownloadSize = ({
         filesRepository,
         datasetPersistentId,
         datasetVersion.number,
-        criteria
+        criteria,
+        includeDeaccessioned
       )
       setFilesTotalDownloadSize(totalDownloadSize)
     } catch (err) {
@@ -43,7 +46,14 @@ export const useGetFilesTotalDownloadSize = ({
     } finally {
       setIsLoading(false)
     }
-  }, [filesRepository, datasetPersistentId, datasetVersion.number, criteria, t])
+  }, [
+    filesRepository,
+    datasetPersistentId,
+    datasetVersion.number,
+    criteria,
+    t,
+    includeDeaccessioned
+  ])
 
   useEffect(() => {
     void getTotalDownloadSize()

@@ -44,6 +44,7 @@ export const useGetDatasetVersionDiff = ({
           true
         )
         setDifferences(response)
+        setError(null)
       } catch (err) {
         const errorMessage =
           err instanceof Error && err.message
