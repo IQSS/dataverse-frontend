@@ -1,0 +1,33 @@
+{
+  "pageTitle": "Advanced Search",
+  "collections": {
+    "name": {
+      "label": "Name",
+      "description": "The project, department, university, professor, or journal this collection will contain data for.",
+      "invalid": {
+        "maxLength": "Name must be at most {{maxLength}} characters."
+      }
+    },
+    "affiliation": {
+      "label": "Affiliation",
+      "description": "The organization with which this collection is affiliated.",
+      "invalid": {
+        "maxLength": "Affiliation must be at most {{maxLength}} characters."
+      }
+    },
+    "alias": {
+      "label": "Identifier",
+      "description": "Short name used for the URL of this collection.",
+      "invalid": {
+        "maxLength": "Identifier must be at most {{maxLength}} characters."
+      }
+    },
+    "description": {
+      "label": "Description",
+      "description": "A summary describing the purpose, nature or scope of this collection.",
+      "invalid": {
+        "maxLength": "Description must be at most {{maxLength}} characters."
+      }
+    }
+  }
+}
