@@ -4,9 +4,11 @@ import { AccountHelper } from './AccountHelper'
 import { Account } from './Account'
 import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import { RoleJSDataverseRepository } from '@/roles/infrastructure/repositories/RoleJSDataverseRepository'
 
 const userRepository = new UserJSDataverseRepository()
 const collectionRepository = new CollectionJSDataverseRepository()
+const roleRepository = new RoleJSDataverseRepository()
 
 export class AccountFactory {
   static create(): ReactElement {
@@ -23,6 +25,7 @@ function AccountWithSearchParams() {
       defaultActiveTabKey={defaultActiveTabKey}
       userRepository={userRepository}
       collectionRepository={collectionRepository}
+      roleRepository={roleRepository}
     />
   )
 }
