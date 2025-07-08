@@ -61,9 +61,11 @@ export const AdvancedSearch = ({
     )
   }
 
-  if (isLoadingData || !collection || errorCollectionMetadataBlocks?.length === 0) {
+  if (isLoadingData || isLoadingCollectionMetadataBlocks || !collection) {
     return <AppLoader />
   }
+
+  console.log(metadataBlocksInfo)
 
   // TODO:ME - Encapsulate form to define defaultValues based on metadata blocks and collectionPageQuery, follow JSF convention for URL
 

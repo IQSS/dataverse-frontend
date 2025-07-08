@@ -6,8 +6,10 @@ import {
   MetadataBlockInfo,
   MetadataBlockName
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { SearchFields } from '@/search/domain/models/SearchFields'
 import { CollectionsSearchFields } from './CollectionsSearchFields'
 import { FilesSearchFields } from './FilesSearchFields'
+import { DatasetsMetadataSearchFields } from './DatasetsMetadataSearchFields'
 
 interface AdvancedSearchFormProps {
   metadataBlocks: MetadataBlockInfo[]
@@ -22,20 +24,20 @@ export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) 
     mode: 'onChange',
     defaultValues: {
       collections: {
-        name: '',
-        alias: '',
-        affiliation: '',
-        description: '',
-        subject: []
+        [SearchFields.DATAVERSE_NAME]: '',
+        [SearchFields.DATAVERSE_ALIAS]: '',
+        [SearchFields.DATAVERSE_AFFILIATION]: '',
+        [SearchFields.DATAVERSE_DESCRIPTION]: '',
+        [SearchFields.DATAVERSE_SUBJECT]: []
       },
       files: {
-        name: '',
-        description: '',
-        fileType: '',
-        dataFilePersistentId: '',
-        variableName: '',
-        variableLabel: '',
-        fileTags: ''
+        [SearchFields.FILE_NAME]: '',
+        [SearchFields.FILE_DESCRIPTION]: '',
+        [SearchFields.FILE_TYPE_SEARCHABLE]: '',
+        [SearchFields.FILE_PERSISTENT_ID]: '',
+        [SearchFields.VARIABLE_NAME]: '',
+        [SearchFields.VARIABLE_LABEL]: '',
+        [SearchFields.FILE_TAG_SEARCHABLE]: ''
       }
     }
   })
@@ -74,10 +76,12 @@ export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) 
           {metadataBlocks.map((metadataBlock) => {
             return (
               <Accordion.Item eventKey={metadataBlock.name} key={metadataBlock.name}>
-                <Accordion.Header>{`${t('datasets')}: ${
-                  metadataBlock.displayName
-                }`}</Accordion.Header>
-                <Accordion.Body>{/* Map fields here */} holo</Accordion.Body>
+                <Accordion.Header>
+                  {`${t('datasets')}: ${metadataBlock.displayName}`}
+                </Accordion.Header>
+                <Accordion.Body>
+                  <DatasetsMetadataSearchFields />
+                </Accordion.Body>
               </Accordion.Item>
             )
           })}
