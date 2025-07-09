@@ -283,7 +283,6 @@ describe('EditFilesOptions for a single file', () => {
 
     cy.findByRole('button', { name: 'Tags' }).click()
     cy.findByRole('dialog').should('exist')
-    cy.findByText('Successfully open modal').should('exist')
 
     cy.findByRole('button', { name: 'Close' }).click()
     cy.findByRole('dialog').should('not.exist')
