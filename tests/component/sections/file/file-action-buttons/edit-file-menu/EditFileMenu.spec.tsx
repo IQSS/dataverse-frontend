@@ -20,6 +20,7 @@ describe('EditFileMenu', () => {
           releasedVersionExists: false,
           requestAccess: false
         }}
+        isTabularFile={true}
       />
     )
 
@@ -56,6 +57,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -80,6 +82,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: true,
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -104,6 +107,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -137,6 +141,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -164,6 +169,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -190,6 +196,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          isTabularFile={true}
         />
       )
 
@@ -217,6 +224,7 @@ describe('EditFileMenu', () => {
             termsOfAccessForRestrictedFiles: 'test terms of access',
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -244,6 +252,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -268,6 +277,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -294,6 +304,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          isTabularFile={true}
         />
       )
 
@@ -326,6 +337,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          isTabularFile={true}
         />
       )
 
@@ -353,6 +365,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          isTabularFile={true}
         />
       )
 
@@ -377,6 +390,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -407,6 +421,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          isTabularFile={true}
         />
       )
 
@@ -431,6 +446,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: true,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          isTabularFile={true}
         />
       )
 
@@ -453,6 +469,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          isTabularFile={true}
         />
       )
 
@@ -484,6 +501,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          isTabularFile={true}
         />
       )
 
@@ -510,6 +528,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          isTabularFile={true}
         />
       )
 
@@ -542,6 +561,7 @@ describe('EditFileMenu', () => {
             { value: 'Survey', type: FileLabelType.TAG },
             { value: 'Panel', type: FileLabelType.TAG }
           ]}
+          isTabularFile={true}
         />
       )
     })
