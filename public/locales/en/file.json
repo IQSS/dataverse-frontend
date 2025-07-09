@@ -76,6 +76,7 @@
       "title": "Edit File",
       "options": {
         "metadata": "Metadata",
+        "tags": "Tags",
         "restrict": "Restrict",
         "unrestrict": "Unrestrict",
         "replace": "Replace",
@@ -88,6 +89,25 @@
     "message": "The file will be deleted after you click on the Delete button.",
     "messagePublishedDataset": "Files will not be removed from previously published versions of the dataset.",
     "delete": "Delete"
+  },
+  "editFileTagsModal": {
+    "title": "Edit Tags",
+    "selectedTagsLabel": "Selected Tags",
+    "noTagsSelected": "No tags selected",
+    "fileTagsLabel": "File Tags",
+    "fileTagsPlaceholder": "Select...",
+    "customFileTagLabel": "Custom File Tag",
+    "customFileTagPlaceholder": "Add new file tag...",
+    "customFileTagApply": "Apply",
+    "customFileTagHelp": "Creating a new tag will add it as a tag option for all files in this dataset.",
+    "tabularTagsLabel": "Tabular Data Tags",
+    "tabularTagsPlaceholder": "Select...",
+    "tabularTagsHelp": "Select a tag to describe the type(s) of data this is (survey, time series, geospatial, etc).",
+    "deleteTagsLabel": "Delete Tags",
+    "deleteTagsHelp": "Select to delete Custom File Tags not used by the files in the dataset.",
+    "deleteTagsCheckboxLabel": "Delete tags not being used",
+    "removeTagAria": "Remove tag",
+    "intro": "Select existing file tags or create new tags to describe your files. Each file can have more than one tag."
   },
   "fileDeletedSuccess": "The file has been deleted.",
   "defaultFileDeleteError": "Something went wrong deleting the file. Try again later.",

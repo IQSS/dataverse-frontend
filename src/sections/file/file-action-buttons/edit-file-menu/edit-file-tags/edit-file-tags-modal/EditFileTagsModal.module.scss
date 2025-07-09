@@ -1,0 +1,48 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.message {
+  color: $dv-warning-color;
+
+  &.error {
+    color: $dv-danger-color;
+  }
+
+  svg {
+    min-width: fit-content;
+  }
+}
+
+.helper_text {
+  margin-bottom: 0;
+  color: $dv-subtext-color;
+  font-size: 14px;
+}
+
+.custom_tag_input {
+  height: 38px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid $dv-border-color;
+  border-radius: 6px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &:focus {
+    border-color: color.adjust($dv-primary-color, $alpha: -0.4);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem color.adjust($dv-primary-color, $alpha: -0.75);
+  }
+
+  &::placeholder {
+    color: $dv-subtext-color;
+  }
+}
+
+.stack_container {
+  margin: 16px 0;
+}
+
+.stack_item {
+  margin: 8px 0;
+}

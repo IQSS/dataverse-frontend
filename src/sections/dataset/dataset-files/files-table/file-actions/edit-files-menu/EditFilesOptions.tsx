@@ -14,6 +14,7 @@ import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
 import { useSettings } from '@/sections/settings/SettingsContext'
 import { SettingName } from '@/settings/domain/models/Setting'
+import { DatasetEditFileTagsButton } from './DatasetEditFileTagsButton'
 
 type EditFilesOptionsProps =
   | {
@@ -91,7 +92,13 @@ export function EditFilesOptions({
           )}>
           {tFile('actionButtons.editFileMenu.options.replace')}
         </DropdownButtonItem>
-
+        <DatasetEditFileTagsButton
+          fileId={file.id}
+          fileRepository={fileRepository}
+          datasetPersistentId={datasetInfo.persistentId}
+          existingLabels={file.metadata.labels}
+          isTabularFile={file.metadata.isTabular}
+        />
         <DatasetDeleteFileButton
           fileId={file.id}
           fileRepository={fileRepository}

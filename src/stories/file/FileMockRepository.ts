@@ -165,4 +165,20 @@ export class FileMockRepository implements FileRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  UpdateFileCategories(_fileId: number | string, _categories: string[]): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  UpdateFileTabularTags(_fileId: number | string, _tabularTags: string[]): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

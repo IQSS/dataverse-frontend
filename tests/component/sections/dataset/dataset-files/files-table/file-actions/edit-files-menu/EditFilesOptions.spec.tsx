@@ -269,4 +269,23 @@ describe('EditFilesOptions for a single file', () => {
     cy.findByRole('dialog').should('not.exist')
     cy.findByText(/The file has been unrestricted./).should('exist')
   })
+
+  it('opens and closes the edit file tags modal', () => {
+    const fileUnrestricted = FilePreviewMother.createDefault()
+    cy.customMount(
+      <EditFilesOptions
+        file={fileUnrestricted}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Tags' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByText('Successfully open modal').should('exist')
+
+    cy.findByRole('button', { name: 'Close' }).click()
+    cy.findByRole('dialog').should('not.exist')
+  })
 })
