@@ -10,8 +10,8 @@ export interface UseUpdateFileTabularTags {
 }
 
 interface UseUpdateFileTabularTagsReturn {
-  isUpdatingTabularTags: boolean
-  errorUpdatingTabularTags: string | null
+  isLoading: boolean
+  error: string | null
   handleUpdateTabularTags: (
     fileId: number | string,
     TabularTags: string[],
@@ -24,15 +24,15 @@ export const useUpdateFileTabularTags = ({
   onSuccessfulUpdateTabularTags
 }: UseUpdateFileTabularTags): UseUpdateFileTabularTagsReturn => {
   const { t } = useTranslation('file')
-  const [isUpdatingTabularTags, setIsUpdatingTabularTags] = useState(false)
-  const [errorUpdatingTabularTags, setErrorUpdatingTabularTags] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleUpdateTabularTags = async (
     fileId: number | string,
     TabularTags: string[],
     replace?: boolean
   ) => {
-    setIsUpdatingTabularTags(true)
+    setIsLoading(true)
 
     try {
       await fileRepository.UpdateFileTabularTags(fileId, TabularTags, replace)
@@ -49,19 +49,18 @@ export const useUpdateFileTabularTags = ({
         const error = new JSDataverseWriteErrorHandler(err)
         const formattedError =
           error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
-        setErrorUpdatingTabularTags(formattedError)
+        setError(formattedError)
       } else {
-        setErrorUpdatingTabularTags(t('defaultFileDeleteError'))
+        setError(t('defaultFileDeleteError'))
       }
     } finally {
-      setIsUpdatingTabularTags(false)
-      setErrorUpdatingTabularTags(null)
+      setIsLoading(false)
     }
   }
 
   return {
     handleUpdateTabularTags,
-    isUpdatingTabularTags,
-    errorUpdatingTabularTags
+    isLoading,
+    error
   }
 }

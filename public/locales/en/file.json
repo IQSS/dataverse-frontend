@@ -110,7 +110,9 @@
     "intro": "Select existing file tags or create new tags to describe your files. Each file can have more than one tag."
   },
   "fileDeletedSuccess": "The file has been deleted.",
+  "fileTagsUpdatedSuccess": "The file tags have been updated.",
   "defaultFileDeleteError": "Something went wrong deleting the file. Try again later.",
+  "defaultFileUpdateError": "Something went wrong updating the file. Try again later.",
   "alerts": {
     "draftVersion": {
       "heading": "This draft version needs to be published",

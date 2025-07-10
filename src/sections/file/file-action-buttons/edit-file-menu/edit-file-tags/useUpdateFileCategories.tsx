@@ -10,8 +10,8 @@ export interface UseUpdateFileCategories {
 }
 
 interface UseUpdateFileCategoriesReturn {
-  isUpdatingCategories: boolean
-  errorUpdatingCategories: string | null
+  isLoading: boolean
+  error: string | null
   handleUpdateCategories: (
     fileId: number | string,
     categories: string[],
@@ -24,38 +24,36 @@ export const useUpdateFileCategories = ({
   onSuccessfulUpdateCategories
 }: UseUpdateFileCategories): UseUpdateFileCategoriesReturn => {
   const { t } = useTranslation('file')
-  const [isUpdatingCategories, setIsUpdatingCategories] = useState(false)
-  const [errorUpdatingCategories, setErrorUpdatingCategories] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleUpdateCategories = async (
     fileId: number | string,
     categories: string[],
     replace?: boolean
   ) => {
-    setIsUpdatingCategories(true)
+    setIsLoading(true)
 
     try {
       await fileRepository.UpdateFileCategories(fileId, categories, replace)
-
       onSuccessfulUpdateCategories()
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {
         const error = new JSDataverseWriteErrorHandler(err)
         const formattedError =
           error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
-        setErrorUpdatingCategories(formattedError)
+        setError(formattedError)
       } else {
-        setErrorUpdatingCategories(t('defaultFileDeleteError'))
+        setError(t('defaultFileUpdateError'))
       }
     } finally {
-      setIsUpdatingCategories(false)
-      setErrorUpdatingCategories(null)
+      setIsLoading(false)
     }
   }
 
   return {
     handleUpdateCategories,
-    isUpdatingCategories,
-    errorUpdatingCategories
+    isLoading,
+    error
   }
 }

@@ -50,20 +50,26 @@ export const EditFileTagsButton = ({
       navigate(`${Route.DATASETS}?${searchParams.toString()}`)
     }
 
-    toast.success(t('fileDeletedSuccess'))
+    toast.success(t('fileTagsUpdatedSuccess'))
   }
 
-  const { handleUpdateCategories, isUpdatingCategories, errorUpdatingCategories } =
-    useUpdateFileCategories({
-      fileRepository,
-      onSuccessfulUpdateCategories: closeModalAndNavigateToDataset
-    })
+  const {
+    handleUpdateCategories,
+    isLoading: isUpdatingCategories,
+    error: errorUpdatingCategories
+  } = useUpdateFileCategories({
+    fileRepository,
+    onSuccessfulUpdateCategories: closeModalAndNavigateToDataset
+  })
 
-  const { handleUpdateTabularTags, isUpdatingTabularTags, errorUpdatingTabularTags } =
-    useUpdateFileTabularTags({
-      fileRepository,
-      onSuccessfulUpdateTabularTags: closeModalAndNavigateToDataset
-    })
+  const {
+    handleUpdateTabularTags,
+    isLoading: isUpdatingTabularTags,
+    error: errorUpdatingTabularTags
+  } = useUpdateFileTabularTags({
+    fileRepository,
+    onSuccessfulUpdateTabularTags: closeModalAndNavigateToDataset
+  })
 
   return (
     <>
