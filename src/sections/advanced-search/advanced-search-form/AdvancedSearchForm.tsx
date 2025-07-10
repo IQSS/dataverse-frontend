@@ -13,55 +13,45 @@ import { FilesSearchFields } from './FilesSearchFields'
 import { AdvancedSearchHelper } from '../AdvancedSearchHelper'
 
 interface AdvancedSearchFormProps {
+  formDefaultValues: AdvancedSearchFormData
   metadataBlocks: MetadataBlockInfo[]
 }
 
 export interface AdvancedSearchFormData {
-  collections: {
-    [SearchFields.DATAVERSE_NAME]: string
-    [SearchFields.DATAVERSE_ALIAS]: string
-    [SearchFields.DATAVERSE_AFFILIATION]: string
-    [SearchFields.DATAVERSE_DESCRIPTION]: string
-    [SearchFields.DATAVERSE_SUBJECT]: string[]
-  }
-  datasets: Record<string, string | string[]>
-  files: {
-    [SearchFields.FILE_NAME]: string
-    [SearchFields.FILE_DESCRIPTION]: string
-    [SearchFields.FILE_TYPE_SEARCHABLE]: string
-    [SearchFields.FILE_PERSISTENT_ID]: string
-    [SearchFields.VARIABLE_NAME]: string
-    [SearchFields.VARIABLE_LABEL]: string
-    [SearchFields.FILE_TAG_SEARCHABLE]: string
-  }
+  collections: CollectionsFields
+  datasets: DatasetsFields
+  files: FilesFields
 }
 
-export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) => {
+export interface CollectionsFields {
+  [SearchFields.DATAVERSE_NAME]: string
+  [SearchFields.DATAVERSE_ALIAS]: string
+  [SearchFields.DATAVERSE_AFFILIATION]: string
+  [SearchFields.DATAVERSE_DESCRIPTION]: string
+  [SearchFields.DATAVERSE_SUBJECT]: string[]
+}
+
+export type DatasetsFields = Record<string, string | string[]>
+
+export type FilesFields = {
+  [SearchFields.FILE_NAME]: string
+  [SearchFields.FILE_DESCRIPTION]: string
+  [SearchFields.FILE_TYPE_SEARCHABLE]: string
+  [SearchFields.FILE_PERSISTENT_ID]: string
+  [SearchFields.VARIABLE_NAME]: string
+  [SearchFields.VARIABLE_LABEL]: string
+  [SearchFields.FILE_TAG_SEARCHABLE]: string
+}
+
+export const AdvancedSearchForm = ({
+  formDefaultValues,
+  metadataBlocks
+}: AdvancedSearchFormProps) => {
   const { t } = useTranslation('shared')
 
   const formMethods = useForm<AdvancedSearchFormData>({
     mode: 'onChange',
-    defaultValues: {
-      collections: {
-        [SearchFields.DATAVERSE_NAME]: '',
-        [SearchFields.DATAVERSE_ALIAS]: '',
-        [SearchFields.DATAVERSE_AFFILIATION]: '',
-        [SearchFields.DATAVERSE_DESCRIPTION]: '',
-        [SearchFields.DATAVERSE_SUBJECT]: []
-      },
-      datasets: {
-        astroFacility: ''
-      },
-      files: {
-        [SearchFields.FILE_NAME]: '',
-        [SearchFields.FILE_DESCRIPTION]: '',
-        [SearchFields.FILE_TYPE_SEARCHABLE]: '',
-        [SearchFields.FILE_PERSISTENT_ID]: '',
-        [SearchFields.VARIABLE_NAME]: '',
-        [SearchFields.VARIABLE_LABEL]: '',
-        [SearchFields.FILE_TAG_SEARCHABLE]: ''
-      }
-    }
+    defaultValues: formDefaultValues
   })
 
   const subjectFieldControlledVocab: string[] = useMemo(

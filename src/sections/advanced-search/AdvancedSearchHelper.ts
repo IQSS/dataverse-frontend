@@ -1,8 +1,13 @@
 import {
   MetadataBlockInfo,
-  MetadataField
+  MetadataField,
+  TypeClassMetadataFieldOptions
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
-import { AdvancedSearchFormData } from './advanced-search-form/AdvancedSearchForm'
+import {
+  AdvancedSearchFormData,
+  CollectionsFields,
+  FilesFields
+} from './advanced-search-form/AdvancedSearchForm'
 import { SearchFields } from '@/search/domain/models/SearchFields'
 import { MetadataFieldsHelper } from '../shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 
@@ -42,11 +47,20 @@ export class AdvancedSearchHelper {
     })
   }
 
-  public static getFormDefaultValues(
-    metadataBlocks: MetadataBlockInfo[],
-    collectionPageQuery: string | null
-  ): AdvancedSearchFormData {
-    // console.log('collectionPageQuery: ', collectionPageQuery)
+  public static getFormDefaultValues(metadataBlocks: MetadataBlockInfo[]): AdvancedSearchFormData {
+    const searchableMetadataBlockFields = this.filterSearchableMetadataBlockFields(metadataBlocks)
+
+    const flattenedMetadataFields: Record<string, string | string[]> = {}
+
+    for (const block of searchableMetadataBlockFields) {
+      for (const field of Object.values(block.metadataFields)) {
+        const isControlledVocabulary =
+          field.typeClass === TypeClassMetadataFieldOptions.ControlledVocabulary
+
+        flattenedMetadataFields[field.name] = isControlledVocabulary ? [] : ''
+      }
+    }
+
     return {
       collections: {
         [SearchFields.DATAVERSE_NAME]: '',
@@ -56,7 +70,7 @@ export class AdvancedSearchHelper {
         [SearchFields.DATAVERSE_SUBJECT]: []
       },
       datasets: {
-        astroFacility: 'Something here'
+        ...flattenedMetadataFields
       },
       files: {
         [SearchFields.FILE_NAME]: '',
@@ -94,13 +108,7 @@ export class AdvancedSearchHelper {
     return query
   }
 
-  private static constructCollectionQuery(fields: {
-    [SearchFields.DATAVERSE_NAME]: string
-    [SearchFields.DATAVERSE_ALIAS]: string
-    [SearchFields.DATAVERSE_AFFILIATION]: string
-    [SearchFields.DATAVERSE_DESCRIPTION]: string
-    [SearchFields.DATAVERSE_SUBJECT]: string[]
-  }): string {
+  private static constructCollectionQuery(fields: CollectionsFields): string {
     const queryStrings: string[] = []
 
     if (fields[SearchFields.DATAVERSE_NAME]?.trim()) {
@@ -149,15 +157,7 @@ export class AdvancedSearchHelper {
     return this.constructQuery(queryStrings, true)
   }
 
-  private static constructFileQuery(fields: {
-    [SearchFields.FILE_NAME]: string
-    [SearchFields.FILE_DESCRIPTION]: string
-    [SearchFields.FILE_TYPE_SEARCHABLE]: string
-    [SearchFields.FILE_PERSISTENT_ID]: string
-    [SearchFields.VARIABLE_NAME]: string
-    [SearchFields.VARIABLE_LABEL]: string
-    [SearchFields.FILE_TAG_SEARCHABLE]: string
-  }): string {
+  private static constructFileQuery(fields: FilesFields): string {
     const queryStrings: string[] = []
 
     if (fields[SearchFields.FILE_NAME]?.trim()) {
