@@ -16,12 +16,30 @@ interface AdvancedSearchFormProps {
   metadataBlocks: MetadataBlockInfo[]
 }
 
+export interface AdvancedSearchFormData {
+  collections: {
+    [SearchFields.DATAVERSE_NAME]: string
+    [SearchFields.DATAVERSE_ALIAS]: string
+    [SearchFields.DATAVERSE_AFFILIATION]: string
+    [SearchFields.DATAVERSE_DESCRIPTION]: string
+    [SearchFields.DATAVERSE_SUBJECT]: string[]
+  }
+  datasets: Record<string, string | string[]>
+  files: {
+    [SearchFields.FILE_NAME]: string
+    [SearchFields.FILE_DESCRIPTION]: string
+    [SearchFields.FILE_TYPE_SEARCHABLE]: string
+    [SearchFields.FILE_PERSISTENT_ID]: string
+    [SearchFields.VARIABLE_NAME]: string
+    [SearchFields.VARIABLE_LABEL]: string
+    [SearchFields.FILE_TAG_SEARCHABLE]: string
+  }
+}
+
 export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) => {
   const { t } = useTranslation('shared')
-  {
-    /* <CollectionFormData> */
-  }
-  const formMethods = useForm({
+
+  const formMethods = useForm<AdvancedSearchFormData>({
     mode: 'onChange',
     defaultValues: {
       collections: {
@@ -63,8 +81,7 @@ export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) 
     <FormProvider {...formMethods}>
       <form
         onSubmit={formMethods.handleSubmit((data) => {
-          console.log(data)
-          console.log(Object.keys(data.datasets).length)
+          AdvancedSearchHelper.constructSearchQuery(data)
         })}
         noValidate={true}>
         <Button variant="primary" type="submit">

@@ -11,7 +11,6 @@ interface MetadataBlockSearchFieldsProps {
 }
 
 export const MetadataBlockSearchFields = ({ metadataFields }: MetadataBlockSearchFieldsProps) => {
-  console.log(metadataFields)
   return (
     <>
       {Object.entries(metadataFields).map(([fieldKey, fieldInfo]) => {
