@@ -50,7 +50,7 @@ export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) 
         [SearchFields.DATAVERSE_SUBJECT]: []
       },
       datasets: {
-        astroFacility: 'Something here'
+        astroFacility: ''
       },
       files: {
         [SearchFields.FILE_NAME]: '',
@@ -84,8 +84,8 @@ export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) 
           AdvancedSearchHelper.constructSearchQuery(data)
         })}
         noValidate={true}>
-        <Button variant="primary" type="submit">
-          Find
+        <Button variant="primary" type="submit" className="mb-3 px-3">
+          {t('find')}
         </Button>
 
         <Accordion
@@ -125,8 +125,8 @@ export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) 
           </Accordion.Item>
         </Accordion>
 
-        <Button variant="primary" type="submit">
-          Find
+        <Button variant="primary" type="submit" className="mt-3 px-3">
+          {t('find')}
         </Button>
       </form>
     </FormProvider>

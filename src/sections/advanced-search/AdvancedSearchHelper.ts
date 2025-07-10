@@ -4,8 +4,8 @@ import {
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { AdvancedSearchFormData } from './advanced-search-form/AdvancedSearchForm'
 import { SearchFields } from '@/search/domain/models/SearchFields'
+import { MetadataFieldsHelper } from '../shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 
-// TODO:ME - create constructDatasetQuery
 // TODO:ME - create function to transform collectionPageQuery to AdvancedSearchFormData
 
 export class AdvancedSearchHelper {
@@ -72,13 +72,17 @@ export class AdvancedSearchHelper {
 
   public static constructSearchQuery(formData: AdvancedSearchFormData): string {
     const collectionQuery = this.constructCollectionQuery(formData.collections)
-
+    const datasetQuery = this.constructDatasetQuery(formData.datasets)
     const fileQuery = this.constructFileQuery(formData.files)
 
     const queries: string[] = []
 
     if (collectionQuery) {
       queries.push(collectionQuery)
+    }
+
+    if (datasetQuery) {
+      queries.push(datasetQuery)
     }
 
     if (fileQuery) {
@@ -214,6 +218,24 @@ export class AdvancedSearchHelper {
           fields[SearchFields.FILE_TAG_SEARCHABLE].trim()
         )
       )
+    }
+
+    return this.constructQuery(queryStrings, true)
+  }
+
+  private static constructDatasetQuery(fields: Record<string, string | string[]>) {
+    const queryStrings: string[] = []
+
+    for (const [field, value] of Object.entries(fields)) {
+      // Replace back again slashes with dots
+      const originalField = MetadataFieldsHelper.replaceSlashWithDot(field)
+
+      if (Array.isArray(value) && value.length > 0) {
+        const arrayQueries = value.map((value) => `${originalField}:"${value}"`)
+        queryStrings.push(this.constructQuery(arrayQueries, false))
+      } else if (typeof value === 'string' && value.trim()) {
+        queryStrings.push(this.constructFieldQuery(originalField, value.trim()))
+      }
     }
 
     return this.constructQuery(queryStrings, true)

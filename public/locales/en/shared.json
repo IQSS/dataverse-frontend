@@ -25,6 +25,7 @@
   "submitSearch": "Submit Search",
   "dragHandleLabel": "press space to select and keys to drag",
   "unknown": "Unknown",
+  "find": "Find",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
