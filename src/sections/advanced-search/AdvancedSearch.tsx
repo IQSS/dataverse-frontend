@@ -86,6 +86,7 @@ export const AdvancedSearch = ({
       <SeparationLine />
 
       <AdvancedSearchForm
+        collectionId={collectionId}
         formDefaultValues={formDefaultValues}
         metadataBlocks={normalizedMetadataBlocksInfo}
       />

@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Accordion, Button } from '@iqss/dataverse-design-system'
 import {
@@ -7,12 +8,16 @@ import {
   MetadataBlockName
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { SearchFields } from '@/search/domain/models/SearchFields'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
+import { Route } from '@/sections/Route.enum'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionsSearchFields } from './CollectionsSearchFields'
 import { MetadataBlockSearchFields } from './MetadataBlockSearchFields'
 import { FilesSearchFields } from './FilesSearchFields'
 import { AdvancedSearchHelper } from '../AdvancedSearchHelper'
 
 interface AdvancedSearchFormProps {
+  collectionId: string
   formDefaultValues: AdvancedSearchFormData
   metadataBlocks: MetadataBlockInfo[]
 }
@@ -44,10 +49,12 @@ export type FilesFields = {
 }
 
 export const AdvancedSearchForm = ({
+  collectionId,
   formDefaultValues,
   metadataBlocks
 }: AdvancedSearchFormProps) => {
   const { t } = useTranslation('shared')
+  const navigate = useNavigate()
 
   const formMethods = useForm<AdvancedSearchFormData>({
     mode: 'onChange',
@@ -71,7 +78,23 @@ export const AdvancedSearchForm = ({
     <FormProvider {...formMethods}>
       <form
         onSubmit={formMethods.handleSubmit((data) => {
-          AdvancedSearchHelper.constructSearchQuery(data)
+          const advancedSearchQuery = AdvancedSearchHelper.constructSearchQuery(data)
+          const searchParams = new URLSearchParams()
+          searchParams.set(CollectionItemsQueryParams.QUERY, advancedSearchQuery)
+          searchParams.set(
+            CollectionItemsQueryParams.TYPES,
+            [
+              CollectionItemType.COLLECTION,
+              CollectionItemType.DATASET,
+              CollectionItemType.FILE
+            ].join(',')
+          )
+
+          const collectionUrlWithQuery = `${
+            Route.COLLECTIONS_BASE
+          }/${collectionId}?${searchParams.toString()}`
+
+          navigate(collectionUrlWithQuery)
         })}
         noValidate={true}>
         <Button variant="primary" type="submit" className="mb-3 px-3">
