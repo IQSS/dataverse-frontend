@@ -35,6 +35,7 @@ export interface MetadataField {
   isControlledVocabulary: boolean
   displayFormat: string
   isRequired: boolean
+  isAdvancedSearchFieldType: boolean
   displayOrder: number
   controlledVocabularyValues?: string[]
   childMetadataFields?: Record<string, MetadataField>

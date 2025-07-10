@@ -87,5 +87,10 @@
         "maxLength": "File Tags must be at most {{maxLength}} characters."
       }
     }
+  },
+  "datasets": {
+    "invalid": {
+      "maxLength": "{{fieldName}} must be at most {{maxLength}} characters."
+    }
   }
 }

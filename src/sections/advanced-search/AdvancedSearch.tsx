@@ -11,6 +11,7 @@ import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { AdvancedSearchForm } from './advanced-search-form/AdvancedSearchForm'
+import { MetadataFieldsHelper } from '../shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 
 interface AdvancedSearchProps {
   collectionId: string
@@ -65,7 +66,8 @@ export const AdvancedSearch = ({
     return <AppLoader />
   }
 
-  console.log(metadataBlocksInfo)
+  const normalizedMetadataBlocksInfo =
+    MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(metadataBlocksInfo)
 
   // TODO:ME - Encapsulate form to define defaultValues based on metadata blocks and collectionPageQuery, follow JSF convention for URL
 
@@ -82,7 +84,7 @@ export const AdvancedSearch = ({
 
       <SeparationLine />
 
-      <AdvancedSearchForm metadataBlocks={metadataBlocksInfo} />
+      <AdvancedSearchForm metadataBlocks={normalizedMetadataBlocksInfo} />
     </section>
   )
 }

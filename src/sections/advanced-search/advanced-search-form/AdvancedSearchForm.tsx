@@ -1,15 +1,16 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Accordion } from '@iqss/dataverse-design-system'
+import { Accordion, Button } from '@iqss/dataverse-design-system'
 import {
   MetadataBlockInfo,
   MetadataBlockName
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { SearchFields } from '@/search/domain/models/SearchFields'
 import { CollectionsSearchFields } from './CollectionsSearchFields'
+import { MetadataBlockSearchFields } from './MetadataBlockSearchFields'
 import { FilesSearchFields } from './FilesSearchFields'
-import { DatasetsMetadataSearchFields } from './DatasetsMetadataSearchFields'
+import { AdvancedSearchHelper } from '../AdvancedSearchHelper'
 
 interface AdvancedSearchFormProps {
   metadataBlocks: MetadataBlockInfo[]
@@ -30,6 +31,9 @@ export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) 
         [SearchFields.DATAVERSE_DESCRIPTION]: '',
         [SearchFields.DATAVERSE_SUBJECT]: []
       },
+      datasets: {
+        astroFacility: 'Something here'
+      },
       files: {
         [SearchFields.FILE_NAME]: '',
         [SearchFields.FILE_DESCRIPTION]: '',
@@ -42,26 +46,31 @@ export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) 
     }
   })
 
-  const citationBlock: MetadataBlockInfo = useMemo(
-    () =>
-      metadataBlocks.find(
-        (block) => block.name === MetadataBlockName.CITATION
-      ) as MetadataBlockInfo,
-    [metadataBlocks]
-  )
-
   const subjectFieldControlledVocab: string[] = useMemo(
-    () => citationBlock.metadataFields['subject'].controlledVocabularyValues as string[],
-    [citationBlock]
+    () =>
+      metadataBlocks.find((block) => block.name === MetadataBlockName.CITATION)?.metadataFields[
+        'subject'
+      ].controlledVocabularyValues as string[],
+    [metadataBlocks]
   )
 
   const metadataBlockNames: string[] = metadataBlocks.map((block) => block.name)
 
+  const searchableMetadataBlockFields =
+    AdvancedSearchHelper.filterSearchableMetadataBlockFields(metadataBlocks)
+
   return (
     <FormProvider {...formMethods}>
       <form
-        // onSubmit={formMethods.handleSubmit(submitForm)}
+        onSubmit={formMethods.handleSubmit((data) => {
+          console.log(data)
+          console.log(Object.keys(data.datasets).length)
+        })}
         noValidate={true}>
+        <Button variant="primary" type="submit">
+          Find
+        </Button>
+
         <Accordion
           defaultActiveKey={['collections', 'files', ...metadataBlockNames]}
           alwaysOpen={true}>
@@ -73,14 +82,18 @@ export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) 
           </Accordion.Item>
 
           {/*  Datasets Metadata blocks  */}
-          {metadataBlocks.map((metadataBlock) => {
+          {searchableMetadataBlockFields.map((metadataBlock) => {
+            if (Object.keys(metadataBlock.metadataFields).length === 0) {
+              return null // Skip empty metadata blocks
+            }
+
             return (
               <Accordion.Item eventKey={metadataBlock.name} key={metadataBlock.name}>
                 <Accordion.Header>
                   {`${t('datasets')}: ${metadataBlock.displayName}`}
                 </Accordion.Header>
                 <Accordion.Body>
-                  <DatasetsMetadataSearchFields />
+                  <MetadataBlockSearchFields metadataFields={metadataBlock.metadataFields} />
                 </Accordion.Body>
               </Accordion.Item>
             )
@@ -94,6 +107,10 @@ export const AdvancedSearchForm = ({ metadataBlocks }: AdvancedSearchFormProps) 
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
+
+        <Button variant="primary" type="submit">
+          Find
+        </Button>
       </form>
     </FormProvider>
   )
