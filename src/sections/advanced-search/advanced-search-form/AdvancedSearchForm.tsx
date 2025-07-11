@@ -117,7 +117,7 @@ export const AdvancedSearchForm = ({
           alwaysOpen={true}>
           <Accordion.Item eventKey="collections">
             <Accordion.Header>{t('collections')}</Accordion.Header>
-            <Accordion.Body>
+            <Accordion.Body data-testid="advanced-search-collections">
               <CollectionsSearchFields subjectControlledVocabulary={subjectFieldControlledVocab} />
             </Accordion.Body>
           </Accordion.Item>
@@ -133,7 +133,8 @@ export const AdvancedSearchForm = ({
                 <Accordion.Header>
                   {`${t('datasets')}: ${metadataBlock.displayName}`}
                 </Accordion.Header>
-                <Accordion.Body>
+                <Accordion.Body
+                  data-testid={`advanced-search-metadata-block-${metadataBlock.name}`}>
                   <MetadataBlockSearchFields metadataFields={metadataBlock.metadataFields} />
                 </Accordion.Body>
               </Accordion.Item>
@@ -143,7 +144,7 @@ export const AdvancedSearchForm = ({
           {/* Files  */}
           <Accordion.Item eventKey="files">
             <Accordion.Header>{t('files')}</Accordion.Header>
-            <Accordion.Body>
+            <Accordion.Body data-testid="advanced-search-files">
               <FilesSearchFields />
             </Accordion.Body>
           </Accordion.Item>

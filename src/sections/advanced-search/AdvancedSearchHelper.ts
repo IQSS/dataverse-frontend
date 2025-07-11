@@ -274,7 +274,6 @@ export class AdvancedSearchHelper {
   }
 
   private static constructFieldQuery(field: string, value: string): string {
-    if (!value.trim()) return ''
     const words = value.trim().split(' ')
 
     if (words.length === 1) {
