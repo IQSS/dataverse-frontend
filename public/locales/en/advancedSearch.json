@@ -1,5 +1,6 @@
 {
   "pageTitle": "Advanced Search",
+  "clearForm": "Clear Form",
   "collections": {
     "name": {
       "label": "Name",

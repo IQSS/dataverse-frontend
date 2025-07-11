@@ -3,6 +3,7 @@ import {
   MetadataField,
   TypeClassMetadataFieldOptions
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { Utils } from '@/shared/helpers/Utils'
 import {
   AdvancedSearchFormData,
   CollectionsFields,
@@ -10,9 +11,6 @@ import {
 } from './advanced-search-form/AdvancedSearchForm'
 import { SearchFields } from '@/search/domain/models/SearchFields'
 import { MetadataFieldsHelper } from '../shared/form/DatasetMetadataForm/MetadataFieldsHelper'
-import { Utils } from '@/shared/helpers/Utils'
-
-// TODO:ME - Add clear all values button to the form
 
 export class AdvancedSearchHelper {
   public static previousAdvancedSearchQueryLSKey = 'previousAdvancedSearchQuery'

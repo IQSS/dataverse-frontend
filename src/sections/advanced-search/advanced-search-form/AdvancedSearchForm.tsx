@@ -1,7 +1,8 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { FormProvider, useForm } from 'react-hook-form'
+import { ArrowClockwise } from 'react-bootstrap-icons'
 import { Accordion, Button } from '@iqss/dataverse-design-system'
 import {
   MetadataBlockInfo,
@@ -54,6 +55,8 @@ export const AdvancedSearchForm = ({
   metadataBlocks
 }: AdvancedSearchFormProps) => {
   const { t } = useTranslation('shared')
+  const { t: tAdvancedSearch } = useTranslation('advancedSearch')
+  const [resetKey, setResetKey] = useState(0)
   const navigate = useNavigate()
 
   const formMethods = useForm<AdvancedSearchFormData>({
@@ -75,6 +78,12 @@ export const AdvancedSearchForm = ({
     AdvancedSearchHelper.saveAdvancedSearchQueryToLocalStorage(collectionId, data)
   }
 
+  const handleClearForm = () => {
+    formMethods.reset(AdvancedSearchHelper.getFormDefaultValues(metadataBlocks, null))
+    AdvancedSearchHelper.clearPreviousAdvancedSearchQueryFromLocalStorage() // Clear local storage in case there was a previous search saved.
+    setResetKey((prev) => prev + 1) // This is a workaround to force re-render components that depend on the form values.
+  }
+
   const subjectFieldControlledVocab: string[] = useMemo(
     () =>
       metadataBlocks.find((block) => block.name === MetadataBlockName.CITATION)?.metadataFields[
@@ -89,11 +98,19 @@ export const AdvancedSearchForm = ({
     AdvancedSearchHelper.filterSearchableMetadataBlockFields(metadataBlocks)
 
   return (
-    <FormProvider {...formMethods}>
+    <FormProvider {...formMethods} key={resetKey}>
       <form onSubmit={formMethods.handleSubmit(handleSubmit)} noValidate={true}>
-        <Button variant="primary" type="submit" className="mb-3 px-3">
-          {t('find')}
-        </Button>
+        <div className="d-flex align-items-center justify-content-between mb-3">
+          <Button variant="primary" type="submit" className="px-3">
+            {t('find')}
+          </Button>
+          <Button variant="secondary" type="button" onClick={handleClearForm}>
+            <div className="d-flex align-items-center gap-2">
+              <ArrowClockwise />
+              {tAdvancedSearch('clearForm')}
+            </div>
+          </Button>
+        </div>
 
         <Accordion
           defaultActiveKey={['collections', 'files', ...metadataBlockNames]}
