@@ -1,7 +1,6 @@
 import { ReactElement } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
-import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import { MetadataBlockInfoJSDataverseRepository } from '@/metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { AdvancedSearch } from './AdvancedSearch'
 
@@ -18,16 +17,12 @@ function AdvancedSearchWithSearchParams() {
   const { collectionId } = useParams<{ collectionId: string }>() as {
     collectionId: string
   }
-  const [searchParams] = useSearchParams()
-
-  const collectionPageQuery: string | null = searchParams.get(CollectionItemsQueryParams.QUERY)
 
   return (
     <AdvancedSearch
       collectionId={collectionId}
       collectionRepository={collectionRepository}
       metadataBlockInfoRepository={metadataBlockInfoRepository}
-      collectionPageQuery={collectionPageQuery}
     />
   )
 }

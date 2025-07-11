@@ -61,6 +61,20 @@ export const AdvancedSearchForm = ({
     defaultValues: formDefaultValues
   })
 
+  const handleSubmit = (data: AdvancedSearchFormData) => {
+    const advancedSearchQuery = AdvancedSearchHelper.constructSearchQuery(data)
+    const searchParams = new URLSearchParams()
+    searchParams.set(CollectionItemsQueryParams.QUERY, advancedSearchQuery)
+    searchParams.set(
+      CollectionItemsQueryParams.TYPES,
+      [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(',')
+    )
+
+    navigate(`${Route.COLLECTIONS_BASE}/${collectionId}?${searchParams.toString()}`)
+
+    AdvancedSearchHelper.saveAdvancedSearchQueryToLocalStorage(collectionId, data)
+  }
+
   const subjectFieldControlledVocab: string[] = useMemo(
     () =>
       metadataBlocks.find((block) => block.name === MetadataBlockName.CITATION)?.metadataFields[
@@ -76,27 +90,7 @@ export const AdvancedSearchForm = ({
 
   return (
     <FormProvider {...formMethods}>
-      <form
-        onSubmit={formMethods.handleSubmit((data) => {
-          const advancedSearchQuery = AdvancedSearchHelper.constructSearchQuery(data)
-          const searchParams = new URLSearchParams()
-          searchParams.set(CollectionItemsQueryParams.QUERY, advancedSearchQuery)
-          searchParams.set(
-            CollectionItemsQueryParams.TYPES,
-            [
-              CollectionItemType.COLLECTION,
-              CollectionItemType.DATASET,
-              CollectionItemType.FILE
-            ].join(',')
-          )
-
-          const collectionUrlWithQuery = `${
-            Route.COLLECTIONS_BASE
-          }/${collectionId}?${searchParams.toString()}`
-
-          navigate(collectionUrlWithQuery)
-        })}
-        noValidate={true}>
+      <form onSubmit={formMethods.handleSubmit(handleSubmit)} noValidate={true}>
         <Button variant="primary" type="submit" className="mb-3 px-3">
           {t('find')}
         </Button>

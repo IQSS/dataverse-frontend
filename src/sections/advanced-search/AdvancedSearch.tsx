@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
@@ -10,7 +10,10 @@ import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
-import { AdvancedSearchForm } from './advanced-search-form/AdvancedSearchForm'
+import {
+  AdvancedSearchForm,
+  AdvancedSearchFormData
+} from './advanced-search-form/AdvancedSearchForm'
 import { MetadataFieldsHelper } from '../shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 import { AdvancedSearchHelper } from './AdvancedSearchHelper'
 
@@ -18,17 +21,17 @@ interface AdvancedSearchProps {
   collectionId: string
   collectionRepository: CollectionRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
-  collectionPageQuery: string | null
 }
 
 export const AdvancedSearch = ({
   collectionId,
   collectionRepository,
-  metadataBlockInfoRepository,
-  collectionPageQuery
+  metadataBlockInfoRepository
 }: AdvancedSearchProps) => {
   const { t } = useTranslation('advancedSearch')
   const { setIsLoading } = useLoading()
+  const [previousAdvancedSearchFormData, setPreviousAdvancedSearchFormData] =
+    useState<AdvancedSearchFormData | null>(null)
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
@@ -51,6 +54,19 @@ export const AdvancedSearch = ({
     }
   }, [isLoadingData, setIsLoading])
 
+  useEffect(() => {
+    const previousAdvancedSearchData =
+      AdvancedSearchHelper.getPreviousAdvancedSearchQueryFromLocalStorage()
+
+    // Check if the local storage data matches the current collectionId
+    if (previousAdvancedSearchData?.collectionId === collectionId) {
+      setPreviousAdvancedSearchFormData(previousAdvancedSearchData.formData)
+    } else {
+      // Otherwise, delete the local storage entry
+      AdvancedSearchHelper.clearPreviousAdvancedSearchQueryFromLocalStorage()
+    }
+  }, [collectionId])
+
   if (!isLoadingCollection && !collection) {
     return <NotFoundPage dvObjectNotFoundType="collection" />
   }
@@ -70,7 +86,10 @@ export const AdvancedSearch = ({
   const normalizedMetadataBlocksInfo =
     MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(metadataBlocksInfo)
 
-  const formDefaultValues = AdvancedSearchHelper.getFormDefaultValues(normalizedMetadataBlocksInfo)
+  const formDefaultValues = AdvancedSearchHelper.getFormDefaultValues(
+    normalizedMetadataBlocksInfo,
+    previousAdvancedSearchFormData
+  )
 
   return (
     <section>

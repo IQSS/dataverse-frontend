@@ -10,10 +10,13 @@ import {
 } from './advanced-search-form/AdvancedSearchForm'
 import { SearchFields } from '@/search/domain/models/SearchFields'
 import { MetadataFieldsHelper } from '../shared/form/DatasetMetadataForm/MetadataFieldsHelper'
+import { Utils } from '@/shared/helpers/Utils'
 
-// TODO:ME - create function to transform collectionPageQuery to AdvancedSearchFormData
+// TODO:ME - Add clear all values button to the form
 
 export class AdvancedSearchHelper {
+  public static previousAdvancedSearchQueryLSKey = 'previousAdvancedSearchQuery'
+
   public static filterSearchableMetadataBlockFields(
     blocks: MetadataBlockInfo[]
   ): MetadataBlockInfo[] {
@@ -47,7 +50,10 @@ export class AdvancedSearchHelper {
     })
   }
 
-  public static getFormDefaultValues(metadataBlocks: MetadataBlockInfo[]): AdvancedSearchFormData {
+  public static getFormDefaultValues(
+    metadataBlocks: MetadataBlockInfo[],
+    previousAdvancedSearchFormData: AdvancedSearchFormData | null
+  ): AdvancedSearchFormData {
     const searchableMetadataBlockFields = this.filterSearchableMetadataBlockFields(metadataBlocks)
 
     const flattenedMetadataFields: Record<string, string | string[]> = {}
@@ -57,29 +63,43 @@ export class AdvancedSearchHelper {
         const isControlledVocabulary =
           field.typeClass === TypeClassMetadataFieldOptions.ControlledVocabulary
 
-        flattenedMetadataFields[field.name] = isControlledVocabulary ? [] : ''
+        flattenedMetadataFields[field.name] = isControlledVocabulary
+          ? previousAdvancedSearchFormData?.datasets[field.name] || []
+          : previousAdvancedSearchFormData?.datasets[field.name] || ''
       }
     }
 
     return {
       collections: {
-        [SearchFields.DATAVERSE_NAME]: '',
-        [SearchFields.DATAVERSE_ALIAS]: '',
-        [SearchFields.DATAVERSE_AFFILIATION]: '',
-        [SearchFields.DATAVERSE_DESCRIPTION]: '',
-        [SearchFields.DATAVERSE_SUBJECT]: []
+        [SearchFields.DATAVERSE_NAME]:
+          previousAdvancedSearchFormData?.collections?.[SearchFields.DATAVERSE_NAME] || '',
+        [SearchFields.DATAVERSE_ALIAS]:
+          previousAdvancedSearchFormData?.collections?.[SearchFields.DATAVERSE_ALIAS] || '',
+        [SearchFields.DATAVERSE_AFFILIATION]:
+          previousAdvancedSearchFormData?.collections?.[SearchFields.DATAVERSE_AFFILIATION] || '',
+        [SearchFields.DATAVERSE_DESCRIPTION]:
+          previousAdvancedSearchFormData?.collections?.[SearchFields.DATAVERSE_DESCRIPTION] || '',
+        [SearchFields.DATAVERSE_SUBJECT]:
+          previousAdvancedSearchFormData?.collections?.[SearchFields.DATAVERSE_SUBJECT] || []
       },
       datasets: {
         ...flattenedMetadataFields
       },
       files: {
-        [SearchFields.FILE_NAME]: '',
-        [SearchFields.FILE_DESCRIPTION]: '',
-        [SearchFields.FILE_TYPE_SEARCHABLE]: '',
-        [SearchFields.FILE_PERSISTENT_ID]: '',
-        [SearchFields.VARIABLE_NAME]: '',
-        [SearchFields.VARIABLE_LABEL]: '',
-        [SearchFields.FILE_TAG_SEARCHABLE]: ''
+        [SearchFields.FILE_NAME]:
+          previousAdvancedSearchFormData?.files?.[SearchFields.FILE_NAME] || '',
+        [SearchFields.FILE_DESCRIPTION]:
+          previousAdvancedSearchFormData?.files?.[SearchFields.FILE_DESCRIPTION] || '',
+        [SearchFields.FILE_TYPE_SEARCHABLE]:
+          previousAdvancedSearchFormData?.files?.[SearchFields.FILE_TYPE_SEARCHABLE] || '',
+        [SearchFields.FILE_PERSISTENT_ID]:
+          previousAdvancedSearchFormData?.files?.[SearchFields.FILE_PERSISTENT_ID] || '',
+        [SearchFields.VARIABLE_NAME]:
+          previousAdvancedSearchFormData?.files?.[SearchFields.VARIABLE_NAME] || '',
+        [SearchFields.VARIABLE_LABEL]:
+          previousAdvancedSearchFormData?.files?.[SearchFields.VARIABLE_LABEL] || '',
+        [SearchFields.FILE_TAG_SEARCHABLE]:
+          previousAdvancedSearchFormData?.files?.[SearchFields.FILE_TAG_SEARCHABLE] || ''
       }
     }
   }
@@ -265,5 +285,34 @@ export class AdvancedSearchHelper {
     const joinedWords = words.map((word) => `${field}:${word}`).join(' ')
 
     return `(${joinedWords})`
+  }
+
+  public static saveAdvancedSearchQueryToLocalStorage(
+    collectionId: string,
+    formData: AdvancedSearchFormData
+  ): void {
+    localStorage.setItem(
+      this.previousAdvancedSearchQueryLSKey,
+      JSON.stringify({
+        collectionId,
+        formData
+      })
+    )
+  }
+
+  public static getPreviousAdvancedSearchQueryFromLocalStorage(): {
+    collectionId: string
+    formData: AdvancedSearchFormData
+  } | null {
+    const localStoragePreviousAdvancedSearchQuery = Utils.getLocalStorageItem<{
+      collectionId: string
+      formData: AdvancedSearchFormData
+    }>(AdvancedSearchHelper.previousAdvancedSearchQueryLSKey)
+
+    return localStoragePreviousAdvancedSearchQuery
+  }
+
+  public static clearPreviousAdvancedSearchQueryFromLocalStorage(): void {
+    localStorage.removeItem(this.previousAdvancedSearchQueryLSKey)
   }
 }
