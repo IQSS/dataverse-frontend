@@ -7,10 +7,16 @@ export async function getFilesCountInfoByDatasetPersistentId(
   fileRepository: FileRepository,
   datasetPersistentId: string,
   datasetVersionNumber: DatasetVersionNumber,
-  criteria: FileCriteria = new FileCriteria()
+  criteria: FileCriteria = new FileCriteria(),
+  includeDeaccessioned?: boolean
 ): Promise<FilesCountInfo> {
   return fileRepository
-    .getFilesCountInfoByDatasetPersistentId(datasetPersistentId, datasetVersionNumber, criteria)
+    .getFilesCountInfoByDatasetPersistentId(
+      datasetPersistentId,
+      datasetVersionNumber,
+      criteria,
+      includeDeaccessioned
+    )
     .catch((error: Error) => {
       throw new Error(error.message)
     })

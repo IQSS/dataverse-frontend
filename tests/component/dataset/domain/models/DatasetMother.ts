@@ -605,4 +605,34 @@ export class DatasetMother {
       ] as DatasetMetadataBlocks
     })
   }
+
+  static createDeaccessionedwithNoEditPermission(props?: Partial<Dataset>): Dataset {
+    return this.create({
+      version: DatasetVersionMother.createDeaccessioned(),
+      permissions: {
+        canDownloadFiles: true,
+        canUpdateDataset: false,
+        canPublishDataset: false,
+        canManageDatasetPermissions: false,
+        canManageFilesPermissions: false,
+        canDeleteDataset: false
+      },
+      ...props
+    })
+  }
+
+  static createDeaccessionedwithEditPermission(props?: Partial<Dataset>): Dataset {
+    return this.create({
+      version: DatasetVersionMother.createDeaccessioned(),
+      permissions: {
+        canDownloadFiles: true,
+        canUpdateDataset: true,
+        canPublishDataset: true,
+        canManageDatasetPermissions: true,
+        canManageFilesPermissions: true,
+        canDeleteDataset: true
+      },
+      ...props
+    })
+  }
 }

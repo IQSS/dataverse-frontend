@@ -42,6 +42,8 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
 
     if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
       searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+    } else {
+      searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
     }
 
     if (eventKey === EditDatasetMenuItems.FILES_UPLOAD) {

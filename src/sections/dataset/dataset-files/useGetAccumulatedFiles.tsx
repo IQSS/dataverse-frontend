@@ -19,7 +19,8 @@ type UseGetAccumulatedFilesReturnType = {
   loadMore: (
     paginationInfo: FilePaginationInfo,
     criteria: FileCriteria,
-    resetAccumulated?: boolean
+    resetAccumulated?: boolean,
+    includeDeaccessioned?: boolean
   ) => Promise<number | undefined>
   isEmptyFiles: boolean
   areFilesAvailable: boolean
@@ -54,7 +55,8 @@ export const useGetAccumulatedFiles = ({
   const loadMore = async (
     pagination: FilePaginationInfo,
     criteria: FileCriteria,
-    resetAccumulated = false
+    resetAccumulated = false,
+    includeDeaccessioned?: boolean
   ): Promise<number | undefined> => {
     setIsLoading(true)
 
@@ -64,7 +66,8 @@ export const useGetAccumulatedFiles = ({
         datasetPersistentId,
         datasetVersion,
         pagination,
-        criteria
+        criteria,
+        includeDeaccessioned
       )
 
       const newAccumulatedFiles = !resetAccumulated ? [...accumulatedFiles, ...files] : files
@@ -117,14 +120,16 @@ async function loadNextFiles(
   datasetPersistentId: string,
   datasetVersion: DatasetVersion,
   paginationInfo: FilePaginationInfo,
-  criteria?: FileCriteria
+  criteria?: FileCriteria,
+  includeDeaccessioned?: boolean
 ): Promise<FilesWithCount> {
   return getFilesByDatasetPersistentIdWithCount(
     filesRepository,
     datasetPersistentId,
     datasetVersion,
     paginationInfo,
-    criteria
+    criteria,
+    includeDeaccessioned
   ).catch((error: Error) => {
     throw new Error(error.message)
   })

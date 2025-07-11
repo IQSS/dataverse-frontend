@@ -19,6 +19,8 @@ export const Default: Story = {
   render: () => (
     <DatasetVersions
       datasetRepository={new DatasetMockRepository()}
+      currentVersionNumber={'1.0'}
+      canUpdateDataset={true}
       datasetId="test-dataset-id"
       isInView
     />

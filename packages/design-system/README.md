@@ -12,7 +12,7 @@ The Dataverse Design System is an open-source project that provides a comprehens
 
 - **Responsive and accessible**: The components are designed to be responsive and accessible, ensuring that the user interface functions well on various devices and is inclusive for all users. They comply with web accessibility standards, making it easier to create inclusive and usable experiences for individuals with disabilities.
 
-- **Documentation and examples in Storybook**: The Dataverse Design System package includes documentation, providing usage guidelines and examples for each component in the integrated [Storybook](https://646fbe232a8d3b501a1943f3-euwxbewiys.chromatic.com).
+- **Documentation and examples in Storybook**: The Dataverse Design System package includes documentation, providing usage guidelines and examples for each component in the integrated [Storybook](https://646fbe232a8d3b501a1943f3-hcaftuwtwp.chromatic.com).
 
 [//]: # '- **Active community and support**: Coming soon!'
 

@@ -4,8 +4,11 @@ import { CollectionItemsMother } from '@tests/component/collection/domain/models
 import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import { RoleRepository } from '@/roles/domain/repositories/RoleRepository'
+import { RoleMother } from '@tests/component/roles/domain/models/RoleMother'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
+const roleRepository: RoleRepository = {} as RoleRepository
 
 const totalItemCount = 200
 const items = CollectionItemsMother.createItems({
@@ -67,22 +70,70 @@ describe('MyDataItemsPanel', () => {
     cy.viewport(1280, 720)
 
     collectionRepository.getMyDataItems = cy.stub().resolves(itemsWithCount)
+    roleRepository.getUserSelectableRoles = cy.stub().resolves(RoleMother.createManyRealistic())
   })
 
   it('renders skeleton while loading', () => {
-    cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
 
     cy.findByTestId('collection-items-list-infinite-scroll-skeleton').should('exist')
   })
+
+  it('renders the error message when there is an error', () => {
+    roleRepository.getUserSelectableRoles = cy.stub().rejects(new Error('some roles error'))
+
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
+
+    cy.findByRole('alert').should('exist').should('contain.text', 'some roles error')
+  })
+
+  it('renders the correct role checkboxes', () => {
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
+
+    cy.findByRole('checkbox', { name: 'Admin' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Contributor' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Curator' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Member' }).should('exist')
+    cy.findByRole('checkbox', { name: 'File Downloader' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Dataverse + Dataset Creator' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Dataverse Creator' }).should('exist')
+    cy.findByRole('checkbox', { name: 'Dataset Creator' }).should('exist')
+  })
+
   describe('User Search', () => {
     it('does not render the search input for non-superusers', () => {
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
 
       cy.findByPlaceholderText('Search by username...').should('not.exist')
     })
 
     it('renders the search input for superusers', () => {
-      cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountSuperuser(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
 
       cy.findByPlaceholderText('Search by username...')
         .should('exist')
@@ -91,7 +142,12 @@ describe('MyDataItemsPanel', () => {
     })
 
     it('calls the repository with the default username when rendering', () => {
-      cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountSuperuser(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
       const otherUsername = 'jamespotts'
       cy.findByPlaceholderText('Search by username...')
         .should('exist')
@@ -112,7 +168,12 @@ describe('MyDataItemsPanel', () => {
     it('calls the repository with the correct username when searching', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(itemsWithCount)
 
-      cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountSuperuser(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
 
       cy.findByPlaceholderText('Search by username...')
         .should('exist')
@@ -133,7 +194,12 @@ describe('MyDataItemsPanel', () => {
     it('shows the correct message when there are no results for user', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
-      cy.mountSuperuser(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountSuperuser(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
 
       cy.findByPlaceholderText('Search by username...').clear().type('testUserName{enter}')
 
@@ -144,7 +210,13 @@ describe('MyDataItemsPanel', () => {
     it('renders correct no items message when there are no collection, dataset or files', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
       cy.findByLabelText(/Files/).should('exist').click()
       cy.findByText(
         /You have not created or contributed to any collections, datasets or files. /
@@ -154,7 +226,13 @@ describe('MyDataItemsPanel', () => {
     it('renders correct no items message when there are no collections', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
 
       cy.findByLabelText(/Datasets/)
         .should('exist')
@@ -168,7 +246,13 @@ describe('MyDataItemsPanel', () => {
     it('renders correct no items message when there are no datasets', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
 
       cy.findByLabelText(/Collections/)
         .should('exist')
@@ -182,7 +266,14 @@ describe('MyDataItemsPanel', () => {
     it('renders correct no items message when there are no files', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
+
       cy.findByLabelText(/Files/).should('exist').click()
       cy.findByLabelText(/Datasets/)
         .should('exist')
@@ -199,7 +290,13 @@ describe('MyDataItemsPanel', () => {
     it('renders correct no items message when there are no collections and datasets', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
 
       cy.findByText(
         /You have not created or contributed to any collections or datasets. You can create data by using the Add Data menu option on this page./
@@ -208,7 +305,14 @@ describe('MyDataItemsPanel', () => {
     it('renders correct no items message when there are no collections and files', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
+
       cy.findByLabelText(/Files/).should('exist').click()
       cy.findByLabelText(/Datasets/)
         .should('exist')
@@ -221,7 +325,14 @@ describe('MyDataItemsPanel', () => {
     it('renders correct no items message when there are no datasets and files', () => {
       collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
+      cy.findByRole('checkbox', { name: 'Member' }).should('exist')
+
       cy.findByLabelText(/Files/).should('exist').click()
       cy.findByLabelText(/Collections/)
         .should('exist')
@@ -236,7 +347,12 @@ describe('MyDataItemsPanel', () => {
   it('renders the no search results message when there are no items matching the search query', () => {
     collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
 
-    cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
     cy.findByPlaceholderText('Search my data...').type('example search text')
 
     cy.findByRole('button', { name: /Search submit/ }).click()
@@ -248,7 +364,12 @@ describe('MyDataItemsPanel', () => {
 
   it('renders the no search results message when there are no items matching the facet filters', () => {
     collectionRepository.getMyDataItems = cy.stub().resolves(emptyItemsWithCount)
-    cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
     cy.findByLabelText('Unpublished (0)').should('exist').click()
     cy.findByLabelText('Contributor').should('exist').click()
     cy.findByText(/There are no collections, datasets, or files that match your search./).should(
@@ -259,13 +380,23 @@ describe('MyDataItemsPanel', () => {
   it('renders error message when there is an error', () => {
     collectionRepository.getMyDataItems = cy.stub().rejects(new Error('some error'))
 
-    cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
 
     cy.findByText('Error').should('exist')
   })
 
   it('renders the 10 first items', () => {
-    cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
 
     cy.findByText('10 of 200 results displayed').should('exist')
 
@@ -273,14 +404,24 @@ describe('MyDataItemsPanel', () => {
   })
 
   it('renders the first 10 items with more to load, showing the bottom loading skeleton', () => {
-    cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
 
     cy.findByTestId('items-list').should('exist').children().should('have.length', 10)
     cy.findByTestId('collection-items-list-infinite-scroll-skeleton').should('exist')
   })
 
   it('renders 10 first items and then loads more items when scrolling to the bottom', () => {
-    cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
 
     cy.findByTestId('items-list').should('exist').children().should('have.length', 10)
     cy.findByTestId('collection-items-list-infinite-scroll-skeleton').should('exist')
@@ -305,7 +446,12 @@ describe('MyDataItemsPanel', () => {
     }
     collectionRepository.getMyDataItems = cy.stub().resolves(first4ElementsWithCount)
 
-    cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
 
     cy.findByText('4 results').should('exist')
     cy.findByTestId('items-list').should('exist').children().should('have.length', 4)
@@ -313,7 +459,12 @@ describe('MyDataItemsPanel', () => {
   })
 
   it('sets Collections and Datasets as default selected when page is rendered', () => {
-    cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <MyDataItemsPanel
+        roleRepository={roleRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
 
     cy.findByRole('checkbox', { name: /Collections/ }).should('be.checked')
     cy.findByRole('checkbox', { name: /Datasets/ }).should('be.checked')
@@ -326,7 +477,12 @@ describe('MyDataItemsPanel', () => {
   */
   describe('Functions called on search submit, filter and popstate event type changes', () => {
     it('submits the search correctly with a value and without a value', () => {
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
 
       cy.findByPlaceholderText('Search my data...').type('Some search')
       cy.findByRole('button', { name: /Search submit/ }).click()
@@ -336,7 +492,12 @@ describe('MyDataItemsPanel', () => {
     })
 
     it('changes the types correctly without an existing search value', () => {
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
 
       cy.findByRole('checkbox', { name: /Files/ }).check()
       cy.findByRole('checkbox', { name: /Collections/ }).uncheck()
@@ -348,7 +509,12 @@ describe('MyDataItemsPanel', () => {
     })
 
     it('changes the types correctly with a search value', () => {
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
       cy.findByPlaceholderText('Search my data...').type('Some search')
       cy.findByRole('button', { name: /Search submit/ }).click()
 
@@ -362,19 +528,34 @@ describe('MyDataItemsPanel', () => {
     })
 
     it('changes the roles correctly', () => {
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
 
       cy.findByRole('checkbox', { name: /Contributor/ }).uncheck()
       cy.findByRole('checkbox', { name: /Contributor/ }).check()
     })
     it('changes the publicationStatus correctory correctly', () => {
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
 
       cy.findByRole('checkbox', { name: /Draft/ }).uncheck()
       cy.findByRole('checkbox', { name: /Draft/ }).check()
     })
     it('it calls the loadItemsOnBackAndForwardNavigation on pop state event when navigating back and forward', () => {
-      cy.mountAuthenticated(<MyDataItemsPanel collectionRepository={collectionRepository} />)
+      cy.mountAuthenticated(
+        <MyDataItemsPanel
+          roleRepository={roleRepository}
+          collectionRepository={collectionRepository}
+        />
+      )
 
       cy.window().then((window) => {
         const popStateEvent = new window.PopStateEvent('popstate', {

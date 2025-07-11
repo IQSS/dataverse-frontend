@@ -1,11 +1,29 @@
 import { RoleFilters } from '@/sections/account/my-data-section/my-data-filter-panel/role-filters/RoleFilters'
-import { Role } from '@/users/domain/models/Role'
+import { Role } from '@/roles/domain/models/Role'
 
 describe('RoleFilters', () => {
   const userRoles: Role[] = [
-    { roleId: 1, roleName: 'Admin' },
-    { roleId: 2, roleName: 'Contributor' },
-    { roleId: 3, roleName: 'Curator' }
+    {
+      id: 1,
+      name: 'Admin',
+      alias: 'admin',
+      description: 'Administrator role with all permissions',
+      permissions: []
+    },
+    {
+      id: 2,
+      name: 'Contributor',
+      alias: 'contributor',
+      description: 'Can contribute to datasets',
+      permissions: []
+    },
+    {
+      id: 3,
+      name: 'Curator',
+      alias: 'curator',
+      description: 'Can curate datasets',
+      permissions: []
+    }
   ]
 
   const currentRoleIds = [1, 2, 3]
@@ -21,7 +39,7 @@ describe('RoleFilters', () => {
     )
 
     userRoles.forEach((role) => {
-      cy.findByLabelText(role.roleName).should('exist')
+      cy.findByLabelText(role.name).should('exist')
     })
   })
 
@@ -55,7 +73,7 @@ describe('RoleFilters', () => {
     )
 
     userRoles.forEach((role) => {
-      cy.findByLabelText(role.roleName).should('be.disabled')
+      cy.findByLabelText(role.name).should('be.disabled')
     })
 
     cy.customMount(
