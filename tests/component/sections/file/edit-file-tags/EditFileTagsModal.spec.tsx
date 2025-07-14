@@ -183,6 +183,29 @@ describe('EditFileTagsModal', () => {
     cy.findByRole('button', { name: 'Save Changes' }).click()
   })
 
+  it('should show error message if duplicated customized tag exists', () => {
+    cy.customMount(
+      <EditFileTagsModal
+        show={true}
+        handleClose={() => {}}
+        fileId={1}
+        handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+        isUpdatingFileCategories={false}
+        errorUpdatingFileCategories={null}
+        handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+        isUpdatingTabularTags={false}
+        errorUpdatingTabularTags={null}
+        isTabularFile={true}
+        existingLabels={existingLabels}
+      />
+    )
+    cy.findByTestId('custom-file-tag-input').type('duplicated tag')
+    cy.findByRole('button', { name: 'Apply' }).click()
+    cy.findByTestId('custom-file-tag-input').type('duplicated tag')
+    cy.findByRole('button', { name: 'Apply' }).click()
+    cy.findByText('This tag already exists.').should('exist')
+  })
+
   describe('Error or Loading States', () => {
     it('should display file categories error message', () => {
       const errorMessage = 'Failed to update file categories'

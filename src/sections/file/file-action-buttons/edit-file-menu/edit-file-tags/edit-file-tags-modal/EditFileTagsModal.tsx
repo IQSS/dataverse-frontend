@@ -57,19 +57,23 @@ export const EditFileTagsModal = ({
   const { t } = useTranslation('file')
   const { refreshFiles } = useFilesContext()
   const [customTag, setCustomTag] = useState('')
+  const [hasDuplicateCustomTag, setHasDuplicateCustomTag] = useState(false)
+
   const initialSelectedFileTags = useMemo(
-    () => existingLabels?.filter((l) => l.type === 'category').map((l) => l.value) || [],
+    () =>
+      existingLabels?.filter((l) => l.type === FileLabelType.CATEGORY).map((l) => l.value) || [],
     [existingLabels]
   )
+
   const initialSelectedTabularTags = useMemo(
-    () => existingLabels?.filter((l) => l.type === 'tag').map((l) => l.value) || [],
+    () => existingLabels?.filter((l) => l.type === FileLabelType.TAG).map((l) => l.value) || [],
     [existingLabels]
   )
   const [selectedFileTags, setSelectedFileTags] = useState<string[]>(initialSelectedFileTags)
   const [fileTagOptions, setFileTagOptions] = useState<string[]>([
     ...FILE_TAG_OPTIONS,
     ...initialSelectedFileTags.filter((tag) => !FILE_TAG_OPTIONS.includes(tag))
-  ])
+  ]) //TODO: populated the tag options with Dataset's Categories if the api is ready
   const [selectedTabularTags, setSelectedTabularTags] = useState<string[]>(
     initialSelectedTabularTags
   )
@@ -89,14 +93,18 @@ export const EditFileTagsModal = ({
   }
 
   const handleAddCustomTag = () => {
-    if (customTag === '') {
+    if (customTag.trim() === '') {
       return
     }
-    if (!fileTagOptions.includes(customTag)) {
-      setFileTagOptions((prev) => [...prev, customTag])
+
+    if (fileTagOptions.some((tag) => tag === customTag)) {
+      setHasDuplicateCustomTag(true)
+      return
     }
+    setFileTagOptions((prev) => [...prev, customTag])
     setSelectedFileTags((prev) => [...prev, customTag])
     setCustomTag('')
+    setHasDuplicateCustomTag(false)
   }
 
   const handleTabularTagsChange = (selected: string[]) => {
@@ -111,6 +119,7 @@ export const EditFileTagsModal = ({
       ...FILE_TAG_OPTIONS,
       ...initialSelectedFileTags.filter((tag) => !FILE_TAG_OPTIONS.includes(tag))
     ])
+    setHasDuplicateCustomTag(false)
     handleClose()
   }
 
@@ -129,12 +138,12 @@ export const EditFileTagsModal = ({
           <Alert variant="danger">{errorUpdatingFileCategories}</Alert>
         )}
         {errorUpdatingTabularTags && <Alert variant="danger">{errorUpdatingTabularTags}</Alert>}
-        <p className={styles.helper_text}>{t('editFileTagsModal.intro')}</p>
+        <Form.Group.Text>{t('editFileTagsModal.intro')}</Form.Group.Text>
         <Stack gap={3} className={styles.stack_container}>
           <Stack direction="horizontal" gap={2} className="align-items-center">
-            <Form.Group.Label column sm={3}>
+            <span className="col-sm-3" style={{ fontWeight: 'bold' }}>
               {t('editFileTagsModal.selectedTagsLabel')}
-            </Form.Group.Label>
+            </span>
             <Col sm={9}>
               {selectedLabels.length === 0 ? (
                 <span>{t('editFileTagsModal.noTagsSelected')}</span>
@@ -144,81 +153,88 @@ export const EditFileTagsModal = ({
             </Col>
           </Stack>
 
-          <Form>
-            <Stack gap={3} className={styles.stack_container}>
-              <Stack direction="horizontal" gap={2} className="align-items-center">
-                <Form.Group.Label column sm={3}>
-                  {t('editFileTagsModal.fileTagsLabel')}
-                </Form.Group.Label>
-                <Col sm={9}>
-                  <Form.Group.SelectAdvanced
-                    isMultiple
-                    key={customTag}
-                    defaultValue={selectedFileTags}
-                    options={fileTagOptions}
-                    onChange={setSelectedFileTags}
-                    inputButtonId="file-tags-select"
-                    isSearchable={false}
-                  />
-                </Col>
-              </Stack>
+          <Stack gap={3} className={styles.stack_container}>
+            <Stack direction="horizontal" gap={2} className="align-items-center">
+              <Form.Group.Label column sm={3} htmlFor="file-tags-select">
+                {t('editFileTagsModal.fileTagsLabel')}
+              </Form.Group.Label>
+              <Col sm={9}>
+                <Form.Group.SelectAdvanced
+                  isMultiple
+                  key={customTag}
+                  defaultValue={selectedFileTags}
+                  options={fileTagOptions}
+                  onChange={setSelectedFileTags}
+                  inputButtonId="file-tags-select"
+                  isSearchable={false}
+                />
+              </Col>
+            </Stack>
 
-              <Stack direction="horizontal" gap={2} className="align-items-center">
-                <Form.Group.Label column sm={3}>
-                  {t('editFileTagsModal.customFileTagLabel')}
-                </Form.Group.Label>
-                <Col sm={9}>
-                  <p className={styles.helper_text}>{t('editFileTagsModal.customFileTagHelp')}</p>
+            <Stack direction="horizontal" gap={2} className="align-items-center">
+              <Form.Group.Label column sm={3} htmlFor="custom-file-tag-input">
+                {t('editFileTagsModal.customFileTagLabel')}
+              </Form.Group.Label>
+              <Col sm={9}>
+                <Form.Group.Text>{t('editFileTagsModal.customFileTagHelp')}</Form.Group.Text>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    handleAddCustomTag()
+                  }}>
                   <Stack direction="horizontal" gap={2}>
-                    <input
+                    <Form.Group.Input
                       type="text"
                       data-testid="custom-file-tag-input"
                       placeholder={t('editFileTagsModal.customFileTagPlaceholder')}
                       value={customTag}
-                      onChange={(e) => setCustomTag(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault()
-                          handleAddCustomTag()
-                        }
+                      onChange={(e) => {
+                        setCustomTag(e.target.value)
+                        setHasDuplicateCustomTag(false)
                       }}
-                      className={styles.custom_tag_input}
+                      isInvalid={hasDuplicateCustomTag}
                     />
-
-                    <Button type="button" variant="secondary" onClick={handleAddCustomTag}>
+                    <Button type="submit" variant="secondary">
                       {t('editFileTagsModal.customFileTagApply')}
-                    </Button>
+                    </Button>{' '}
                   </Stack>
+                </form>
+                {hasDuplicateCustomTag && (
+                  <span className="text-danger">
+                    {t('editFileTagsModal.customFileTagDuplicateError')}
+                  </span>
+                )}
+              </Col>
+            </Stack>
+
+            {isTabularFile && (
+              <Stack direction="horizontal" gap={2} className="align-items-center">
+                <Form.Group.Label column sm={3} htmlFor="tabular-tags-select">
+                  {t('editFileTagsModal.tabularTagsLabel')}
+                </Form.Group.Label>
+                <Col sm={9}>
+                  <Form.Group.Text>{t('editFileTagsModal.tabularTagsHelp')}</Form.Group.Text>
+                  <Form.Group.SelectAdvanced
+                    isMultiple
+                    defaultValue={selectedTabularTags}
+                    options={TABULAR_TAG_OPTIONS}
+                    onChange={handleTabularTagsChange}
+                    inputButtonId="tabular-tags-select"
+                    isSearchable={false}
+                  />
                 </Col>
               </Stack>
-
-              {isTabularFile && (
-                <Stack direction="horizontal" gap={2} className="align-items-center">
-                  <Form.Group.Label column sm={3}>
-                    {t('editFileTagsModal.tabularTagsLabel')}
-                  </Form.Group.Label>
-                  <Col sm={9}>
-                    <p className={styles.helper_text}>{t('editFileTagsModal.tabularTagsHelp')}</p>
-                    <Form.Group.SelectAdvanced
-                      isMultiple
-                      defaultValue={selectedTabularTags}
-                      options={TABULAR_TAG_OPTIONS}
-                      onChange={handleTabularTagsChange}
-                      inputButtonId="tabular-tags-select"
-                      isSearchable={false}
-                    />
-                  </Col>
-                </Stack>
-              )}
-            </Stack>
-            {/* This is shown when multiple files are selected */}
-            {/* <Stack gap={3} className={styles.stack_container}>
+            )}
+          </Stack>
+          {/* This is shown when multiple files are selected */}
+          {/* <Stack gap={3} className={styles.stack_container}>
               <Stack direction="horizontal" gap={2} className="align-items-center">
-                <Form.Group.Label column sm={3}>
+                <Form.Group.Label column sm={3} htmlFor="delete-tags-checkbox">
                   {t('editFileTagsModal.deleteTagsLabel')}
                 </Form.Group.Label>
                 <Col sm={9}>
-                  <p className={styles.helper_text}>{t('editFileTagsModal.deleteTagsHelp')}</p>
+                  <Form.Group.Text>{t('editFileTagsModal.deleteTagsHelp')}</Form.Group.Text>
                   <Form.Group.Checkbox
                     id="delete-tags-checkbox"
                     label={t('editFileTagsModal.deleteTagsCheckboxLabel')}
@@ -226,7 +242,6 @@ export const EditFileTagsModal = ({
                 </Col>
               </Stack>
             </Stack> */}
-          </Form>
         </Stack>
       </Modal.Body>
       <Modal.Footer>

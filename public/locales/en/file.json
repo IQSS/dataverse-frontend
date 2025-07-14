@@ -107,7 +107,8 @@
     "deleteTagsHelp": "Select to delete Custom File Tags not used by the files in the dataset.",
     "deleteTagsCheckboxLabel": "Delete tags not being used",
     "removeTagAria": "Remove tag",
-    "intro": "Select existing file tags or create new tags to describe your files. Each file can have more than one tag."
+    "intro": "Select existing file tags or create new tags to describe your files. Each file can have more than one tag.",
+    "customFileTagDuplicateError": "This tag already exists."
   },
   "fileDeletedSuccess": "The file has been deleted.",
   "fileTagsUpdatedSuccess": "The file tags have been updated.",

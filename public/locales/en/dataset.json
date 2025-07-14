@@ -60,9 +60,6 @@
         "title": "Delete Dataset",
         "message": "Are you sure you want to delete this dataset? This action cannot be undone.",
         "defaultDatasetDeleteError": "An error occurred while deleting the dataset."
-      },
-      "editDatasetTagsModal": {
-        "title": "Edit Dataset Tags"
       }
     },
     "accessDataset": {

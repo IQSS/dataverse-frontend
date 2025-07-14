@@ -6,5 +6,5 @@ export function updateFileCategories(
   categories: string[],
   replace?: boolean
 ): Promise<void> {
-  return fileRepository.UpdateFileCategories(fileId, categories, replace)
+  return fileRepository.updateFileCategories(fileId, categories, replace)
 }

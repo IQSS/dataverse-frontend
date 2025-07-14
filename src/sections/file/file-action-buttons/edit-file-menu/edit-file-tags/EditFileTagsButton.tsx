@@ -2,14 +2,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { EditFileTagsModal } from './edit-file-tags-modal/EditFileTagsModal'
 import { useUpdateFileCategories } from './useUpdateFileCategories'
 import { useUpdateFileTabularTags } from './useUpdateFileTabularTags'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { FileLabel } from '@/files/domain/models/FileMetadata'
-import { useFilesContext } from '@/sections/file/FilesContext'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 
 interface EditFileTagsButtonProps {
@@ -29,10 +28,6 @@ export const EditFileTagsButton = ({
 }: EditFileTagsButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { t } = useTranslation('file')
-  const { refreshFiles } = useFilesContext()
-  const [searchParamsURL] = useSearchParams()
-  const urlParams = new URLSearchParams(searchParamsURL)
-  const version = urlParams.get(QueryParamKey.VERSION)
   const navigate = useNavigate()
 
   const handleOpenModal = () => setIsModalOpen(true)
@@ -40,15 +35,10 @@ export const EditFileTagsButton = ({
 
   function closeModalAndNavigateToDataset() {
     setIsModalOpen(false)
-
-    if (version === 'DRAFT' || version === ':draft') {
-      void refreshFiles()
-    } else {
-      const searchParams = new URLSearchParams()
-      searchParams.set(QueryParamKey.PERSISTENT_ID, datasetPersistentId)
-      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-      navigate(`${Route.DATASETS}?${searchParams.toString()}`)
-    }
+    const searchParams = new URLSearchParams()
+    searchParams.set(QueryParamKey.PERSISTENT_ID, datasetPersistentId)
+    searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
 
     toast.success(t('fileTagsUpdatedSuccess'))
   }

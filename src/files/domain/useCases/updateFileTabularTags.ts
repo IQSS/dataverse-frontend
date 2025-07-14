@@ -6,5 +6,5 @@ export function updateFileTabularTags(
   tabularTags: string[],
   replace?: boolean
 ): Promise<void> {
-  return fileRepository.UpdateFileTabularTags(fileId, tabularTags, replace)
+  return fileRepository.updateFileTabularTags(fileId, tabularTags, replace)
 }
