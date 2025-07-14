@@ -711,7 +711,7 @@ export class MetadataBlockInfoMother {
             displayOrder: 0,
             typeClass: 'primitive',
             displayOnCreate: true,
-            isAdvancedSearchFieldType: false
+            isAdvancedSearchFieldType: true
           },
           subtitle: {
             name: 'subtitle',
@@ -846,7 +846,7 @@ export class MetadataBlockInfoMother {
                 displayOrder: 8,
                 typeClass: 'primitive',
                 displayOnCreate: true,
-                isAdvancedSearchFieldType: false
+                isAdvancedSearchFieldType: true
               },
               authorAffiliation: {
                 name: 'authorAffiliation',
@@ -863,7 +863,7 @@ export class MetadataBlockInfoMother {
                 displayOrder: 9,
                 typeClass: 'primitive',
                 displayOnCreate: true,
-                isAdvancedSearchFieldType: false
+                isAdvancedSearchFieldType: true
               },
               authorIdentifierScheme: {
                 name: 'authorIdentifierScheme',
@@ -1045,7 +1045,7 @@ export class MetadataBlockInfoMother {
             displayOrder: 19,
             typeClass: 'controlledVocabulary',
             displayOnCreate: true,
-            isAdvancedSearchFieldType: false
+            isAdvancedSearchFieldType: true
           },
           keyword: {
             name: 'keyword',
