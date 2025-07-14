@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
@@ -306,14 +306,6 @@ export const CollectionItemsPanel = ({
     setIsLoading(isLoadingItems)
   }, [isLoadingItems, setIsLoading])
 
-  const advancedSearchLinkURL: string = useMemo(() => {
-    const searchParams = new URLSearchParams()
-    if (currentSearchCriteria.searchText) {
-      searchParams.set(CollectionItemsQueryParams.QUERY, currentSearchCriteria.searchText)
-    }
-    return `${RouteWithParams.ADVANCED_SEARCH(collectionId)}?${searchParams.toString()}`
-  }, [collectionId, currentSearchCriteria.searchText])
-
   return (
     <section className={styles['items-panel']}>
       <header className={styles['top-wrapper']}>
@@ -324,7 +316,9 @@ export const CollectionItemsPanel = ({
           placeholderText={t('searchThisCollectionPlaceholder')}
         />
 
-        <Link to={advancedSearchLinkURL} className={styles[`advanced-search-link`]}>
+        <Link
+          to={RouteWithParams.ADVANCED_SEARCH(collectionId)}
+          className={styles[`advanced-search-link`]}>
           {t('advancedSearch')}
         </Link>
 
