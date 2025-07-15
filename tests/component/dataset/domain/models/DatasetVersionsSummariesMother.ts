@@ -1,6 +1,7 @@
 import {
   DatasetVersionSummaryInfo,
-  DatasetVersionSummaryStringValues
+  DatasetVersionSummaryStringValues,
+  Deaccessioned
 } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 export class DatasetVersionsSummariesMother {
@@ -31,7 +32,7 @@ export class DatasetVersionsSummariesMother {
       },
       {
         id: 10,
-        versionNumber: '2.0',
+        versionNumber: '4.0',
         summary: {
           'Citation Metadata': {
             Description: {
@@ -58,6 +59,63 @@ export class DatasetVersionsSummariesMother {
             changedVariableMetadata: 0
           },
           termsAccessChanged: false
+        },
+        contributors: 'Test ',
+        publishedOn: '2025-03-11'
+      },
+      {
+        id: 9,
+        versionNumber: '3.0',
+        summary: {
+          files: {
+            added: 0,
+            removed: 2,
+            replaced: 0,
+            changedFileMetaData: 0,
+            changedVariableMetadata: 0
+          },
+          termsAccessChanged: false
+        },
+        contributors: 'Test ',
+        publishedOn: '2025-03-11'
+      },
+      {
+        id: 8,
+        versionNumber: '2.0',
+        summary: {
+          files: {
+            added: 3,
+            removed: 1,
+            replaced: 0,
+            changedFileMetaData: 0,
+            changedVariableMetadata: 0
+          },
+          termsAccessChanged: false
+        },
+        contributors: 'Test ',
+        publishedOn: '2025-03-11'
+      },
+      {
+        id: 7,
+        versionNumber: '1.0',
+        summary: DatasetVersionSummaryStringValues.firstPublished,
+        contributors: 'Test ',
+        publishedOn: '2025-03-11'
+      }
+    ]
+    return versionSummaryInfo
+  }
+
+  static createDeaccessioned(): DatasetVersionSummaryInfo[] {
+    const deaccessioned: Deaccessioned = {
+      reason: 'deaccessioned test'
+    }
+    const versionSummaryInfo: DatasetVersionSummaryInfo[] = [
+      {
+        id: 10,
+        versionNumber: '4.0',
+        summary: {
+          deaccessioned
         },
         contributors: 'Test ',
         publishedOn: '2025-03-11'

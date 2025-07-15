@@ -19,6 +19,7 @@ interface DatasetFilesScrollableProps {
   filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
+  canUpdateDataset?: boolean
 }
 
 export type SentryRef = UseInfiniteScrollHookRefCallback
@@ -26,7 +27,8 @@ export type SentryRef = UseInfiniteScrollHookRefCallback
 export function DatasetFilesScrollable({
   filesRepository,
   datasetPersistentId,
-  datasetVersion
+  datasetVersion,
+  canUpdateDataset
 }: DatasetFilesScrollableProps) {
   const scrollableContainerRef = useRef<HTMLDivElement | null>(null)
   const criteriaContainerRef = useRef<HTMLDivElement | null>(null)
@@ -45,7 +47,8 @@ export function DatasetFilesScrollable({
     filesRepository,
     datasetPersistentId,
     datasetVersion,
-    criteria
+    criteria,
+    includeDeaccessioned: canUpdateDataset
   })
 
   const {
@@ -56,7 +59,8 @@ export function DatasetFilesScrollable({
     filesRepository,
     datasetPersistentId,
     datasetVersion,
-    criteria
+    criteria,
+    includeDeaccessioned: canUpdateDataset
   })
 
   const {
@@ -91,7 +95,12 @@ export function DatasetFilesScrollable({
       paginationInfoToSend = currentPagination.goToNextPage()
     }
 
-    const totalFilesCount = await loadMore(paginationInfoToSend, criteria)
+    const totalFilesCount = await loadMore(
+      paginationInfoToSend,
+      criteria,
+      undefined,
+      canUpdateDataset
+    )
 
     if (totalFilesCount !== undefined) {
       const paginationInfoUpdated = paginationInfoToSend.withTotal(totalFilesCount)

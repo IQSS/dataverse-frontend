@@ -6,13 +6,15 @@ export async function getFilesTotalDownloadSize(
   fileRepository: FileRepository,
   datasetPersistentId: string,
   datasetVersionNumber: DatasetVersionNumber,
-  criteria?: FileCriteria
+  criteria?: FileCriteria,
+  includeDeaccessioned?: boolean
 ): Promise<number> {
   return fileRepository
     .getFilesTotalDownloadSizeByDatasetPersistentId(
       datasetPersistentId,
       datasetVersionNumber,
-      criteria
+      criteria,
+      includeDeaccessioned
     )
     .catch((error: Error) => {
       throw new Error(error.message)

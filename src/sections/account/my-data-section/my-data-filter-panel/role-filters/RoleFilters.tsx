@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, Stack } from '@iqss/dataverse-design-system'
-import { Role } from '@/users/domain/models/Role'
+import { Role } from '@/roles/domain/models/Role'
 import styles from './RoleFilters.module.scss'
 
 interface RoleFiltersProps {
@@ -24,7 +24,7 @@ export const RoleFilters = ({
 }: RoleFiltersProps) => {
   const { t } = useTranslation('account')
   const handleItemRoleChange = (role: Role, checked: boolean) => {
-    onRolesChange({ roleId: role.roleId, checked: checked })
+    onRolesChange({ roleId: role.id, checked: checked })
   }
 
   return (
@@ -33,21 +33,21 @@ export const RoleFilters = ({
       {userRoles.map((role) => {
         const roleCheckDisabled =
           isLoadingCollectionItems ||
-          (currentRoleIds.length === 1 && currentRoleIds.includes(role.roleId))
+          (currentRoleIds.length === 1 && currentRoleIds.includes(role.id))
 
         return (
           <Form.Group.Checkbox
-            key={role.roleId}
-            id={`${role.roleName}-check`}
+            key={role.id}
+            id={`${role.alias}-check`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               handleItemRoleChange(role, e.target.checked)
             }
             label={
               <>
-                <span>{t(`${role.roleName}`)}</span>
+                <span>{t(`${role.name}`)}</span>
               </>
             }
-            checked={currentRoleIds.includes(role.roleId)}
+            checked={currentRoleIds.includes(role.id)}
             disabled={roleCheckDisabled}
           />
         )

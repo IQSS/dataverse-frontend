@@ -234,6 +234,7 @@ describe('Dataset', () => {
 
     cy.findByText('Citation Metadata').should('exist')
   })
+
   it('renders the Dataset Terms tab', () => {
     const testDataset = DatasetMother.create()
 
@@ -257,7 +258,8 @@ describe('Dataset', () => {
 
     cy.findByText('Dataset Terms').should('exist')
   })
-  it('renders the Dataset Terms tab', () => {
+
+  it('renders the Dataset Files tab', () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(
@@ -267,20 +269,61 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        tab={'metadata'}
       />,
       testDataset
     )
 
     cy.findAllByText(testDataset.version.title).should('exist')
 
-    const termsTab = cy.findByRole('tab', { name: 'Terms' })
-    termsTab.should('exist')
+    const filesTab = cy.findByRole('tab', { name: 'Files' })
+    filesTab.should('exist')
 
-    termsTab.click()
-
-    cy.findByText('Dataset Terms').should('exist')
+    filesTab.click()
+    cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
   })
+
+  it('should only render Versions tab if the dataset is in deaccessioned version, and user user has no edit permission', () => {
+    const testDataset = DatasetMother.createDeaccessionedwithNoEditPermission()
+
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+      />,
+      testDataset
+    )
+
+    cy.findAllByText(testDataset.version.title).should('exist')
+    cy.findByRole('tab', { name: 'Files' }).should('not.exist')
+    cy.findByRole('tab', { name: 'Terms' }).should('not.exist')
+    cy.findByRole('tab', { name: 'Metadata' }).should('not.exist')
+    cy.findByRole('tab', { name: 'Versions' }).should('exist')
+  })
+
+  it('should render all tabs if the dataset is in deaccessioned version, and user has edit permission', () => {
+    const testDataset = DatasetMother.createDeaccessionedwithEditPermission()
+
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+      />,
+      testDataset
+    )
+
+    cy.findAllByText(testDataset.version.title).should('exist')
+    cy.findByRole('tab', { name: 'Files' }).should('exist')
+    cy.findByRole('tab', { name: 'Terms' }).should('exist')
+    cy.findByRole('tab', { name: 'Metadata' }).should('exist')
+    cy.findByRole('tab', { name: 'Versions' }).should('exist')
+  })
+
   it('renders the Dataset in anonymized view', () => {
     const testDatasetAnonymized = DatasetMother.createAnonymized()
 
@@ -339,6 +382,7 @@ describe('Dataset', () => {
 
   it('shows the toast when the information was sent to contact successfully', () => {
     const testDataset = DatasetMother.create()
+
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}

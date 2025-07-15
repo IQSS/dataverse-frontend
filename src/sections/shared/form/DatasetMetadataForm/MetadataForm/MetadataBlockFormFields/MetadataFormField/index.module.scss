@@ -9,10 +9,10 @@
   @media screen and (min-width: 768px) {
     grid-template-columns: 1fr 1fr;
     column-gap: 1rem;
-  }
 
-  & > div:has(textarea) {
-    grid-column: span 2;
+    & > div:has(textarea) {
+      grid-column: span 2;
+    }
   }
 }
 
@@ -36,6 +36,12 @@
 
 .field-label {
   height: fit-content;
+}
+
+.composed-field-title {
+  @media (max-width: 575px) {
+    font-size: 18px;
+  }
 }
 
 .may-become-required-help-text {
