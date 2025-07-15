@@ -35,7 +35,7 @@ export const useUpdateFileTabularTags = ({
     setIsLoading(true)
 
     try {
-      await fileRepository.updateFileTabularTags(fileId, TabularTags, replace)
+      await fileRepository.updateTabularTags(fileId, TabularTags, replace)
       console.log(
         'handleUpdateTabularTags onSuccessfulUpdateTabularTags',
         fileId,

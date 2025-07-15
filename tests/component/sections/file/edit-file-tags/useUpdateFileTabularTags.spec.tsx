@@ -26,7 +26,7 @@ describe('useUpdateFileTabularTags', () => {
   })
 
   it('should successfully update file tabular tags', async () => {
-    fileRepository.updateFileTabularTags = cy.stub().resolves(undefined)
+    fileRepository.updateTabularTags = cy.stub().resolves(undefined)
 
     const { result } = renderHook(() =>
       useUpdateFileTabularTags({
@@ -39,7 +39,7 @@ describe('useUpdateFileTabularTags', () => {
       await result.current.handleUpdateTabularTags(123, ['Survey', 'Time Series'], true)
     })
 
-    expect(fileRepository.updateFileTabularTags).to.have.been.calledWith(
+    expect(fileRepository.updateTabularTags).to.have.been.calledWith(
       123,
       ['Survey', 'Time Series'],
       true
@@ -52,7 +52,7 @@ describe('useUpdateFileTabularTags', () => {
   describe('Error handling', () => {
     it('should handle WriteError and set formatted error message', async () => {
       const mockWriteError = new WriteError('Test error')
-      fileRepository.updateFileTabularTags = cy.stub().rejects(mockWriteError)
+      fileRepository.updateTabularTags = cy.stub().rejects(mockWriteError)
 
       const { result } = renderHook(() =>
         useUpdateFileTabularTags({
@@ -65,7 +65,7 @@ describe('useUpdateFileTabularTags', () => {
         await result.current.handleUpdateTabularTags(123, ['Survey'], true)
       })
 
-      expect(fileRepository.updateFileTabularTags).to.have.been.calledWith(123, ['Survey'], true)
+      expect(fileRepository.updateTabularTags).to.have.been.calledWith(123, ['Survey'], true)
       expect(onSuccessfulUpdateTabularTags).to.not.have.been.called
       expect(result.current.isLoading).to.deep.equal(false)
       expect(result.current.error).to.deep.equal('Test error')
@@ -73,7 +73,7 @@ describe('useUpdateFileTabularTags', () => {
 
     it('should handle unknown errors and set default error message', async () => {
       const unknownError = new Error('Unknown error')
-      fileRepository.updateFileTabularTags = cy.stub().rejects(unknownError)
+      fileRepository.updateTabularTags = cy.stub().rejects(unknownError)
 
       const { result } = renderHook(() =>
         useUpdateFileTabularTags({
@@ -86,7 +86,7 @@ describe('useUpdateFileTabularTags', () => {
         await result.current.handleUpdateTabularTags(123, ['Survey'], true)
       })
 
-      expect(fileRepository.updateFileTabularTags).to.have.been.calledWith(123, ['Survey'], true)
+      expect(fileRepository.updateTabularTags).to.have.been.calledWith(123, ['Survey'], true)
       expect(onSuccessfulUpdateTabularTags).to.not.have.been.called
       expect(result.current.isLoading).to.deep.equal(false)
       expect(result.current.error).to.deep.equal(

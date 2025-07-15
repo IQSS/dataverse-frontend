@@ -35,7 +35,7 @@ export const useUpdateFileCategories = ({
     setIsLoading(true)
 
     try {
-      await fileRepository.updateFileCategories(fileId, categories, replace)
+      await fileRepository.updateCategories(fileId, categories, replace)
       onSuccessfulUpdateCategories()
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {

@@ -369,7 +369,7 @@ export class FileJSDataverseRepository implements FileRepository {
     return restrictFile.execute(fileId, restrictFileDTO)
   }
 
-  updateFileTabularTags(
+  updateTabularTags(
     fileId: number | string,
     tabularTags: string[],
     replace?: boolean
@@ -377,7 +377,7 @@ export class FileJSDataverseRepository implements FileRepository {
     return updateFileTabularTags.execute(fileId, tabularTags, replace)
   }
 
-  updateFileCategories(
+  updateCategories(
     fileId: number | string,
     categories: string[],
     replace?: boolean

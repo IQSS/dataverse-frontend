@@ -56,12 +56,12 @@ export interface FileRepository {
   getFixityAlgorithm: () => Promise<FixityAlgorithm>
   updateMetadata: (fileId: number | string, fileMetadata: FileMetadataDTO) => Promise<void>
   restrict: (fileId: number | string, restrictFileDTO: RestrictFileDTO) => Promise<void>
-  updateFileTabularTags: (
+  updateTabularTags: (
     fileId: number | string,
     tabularTags: string[],
     replace?: boolean
   ) => Promise<void>
-  updateFileCategories: (
+  updateCategories: (
     fileId: number | string,
     categoryTags: string[],
     replace?: boolean

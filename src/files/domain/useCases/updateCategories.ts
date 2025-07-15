@@ -1,10 +1,10 @@
 import { FileRepository } from '../repositories/FileRepository'
 
-export function updateFileTabularTags(
+export function updateCategories(
   fileRepository: FileRepository,
   fileId: number | string,
-  tabularTags: string[],
+  categories: string[],
   replace?: boolean
 ): Promise<void> {
-  return fileRepository.updateFileTabularTags(fileId, tabularTags, replace)
+  return fileRepository.updateCategories(fileId, categories, replace)
 }

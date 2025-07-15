@@ -166,7 +166,7 @@ export class FileMockRepository implements FileRepository {
     })
   }
 
-  updateFileCategories(_fileId: number | string, _categories: string[]): Promise<void> {
+  updateCategories(_fileId: number | string, _categories: string[]): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
@@ -174,7 +174,7 @@ export class FileMockRepository implements FileRepository {
     })
   }
 
-  updateFileTabularTags(_fileId: number | string, _tabularTags: string[]): Promise<void> {
+  updateTabularTags(_fileId: number | string, _tabularTags: string[]): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()

@@ -26,7 +26,7 @@ describe('useUpdateFileCategories', () => {
   })
 
   it('should successfully update file categories', async () => {
-    fileRepository.updateFileCategories = cy.stub().resolves(undefined)
+    fileRepository.updateCategories = cy.stub().resolves(undefined)
 
     const { result } = renderHook(() =>
       useUpdateFileCategories({
@@ -39,7 +39,7 @@ describe('useUpdateFileCategories', () => {
       await result.current.handleUpdateCategories(123, ['Data', 'Code'], true)
     })
 
-    expect(fileRepository.updateFileCategories).to.have.been.calledWith(123, ['Data', 'Code'], true)
+    expect(fileRepository.updateCategories).to.have.been.calledWith(123, ['Data', 'Code'], true)
     expect(onSuccessfulUpdateCategories).to.have.been.called
     expect(result.current.isLoading).to.deep.equal(false)
     expect(result.current.error).to.deep.equal(null)
@@ -48,7 +48,7 @@ describe('useUpdateFileCategories', () => {
   describe('Error handling', () => {
     it('should handle WriteError and set formatted error message', async () => {
       const mockWriteError = new WriteError('Test error')
-      fileRepository.updateFileCategories = cy.stub().rejects(mockWriteError)
+      fileRepository.updateCategories = cy.stub().rejects(mockWriteError)
 
       const { result } = renderHook(() =>
         useUpdateFileCategories({
@@ -61,7 +61,7 @@ describe('useUpdateFileCategories', () => {
         await result.current.handleUpdateCategories(123, ['Data'], true)
       })
 
-      expect(fileRepository.updateFileCategories).to.have.been.calledWith(123, ['Data'], true)
+      expect(fileRepository.updateCategories).to.have.been.calledWith(123, ['Data'], true)
       expect(onSuccessfulUpdateCategories).to.not.have.been.called
       expect(result.current.isLoading).to.deep.equal(false)
       expect(result.current.error).to.deep.equal('Test error')
@@ -69,7 +69,7 @@ describe('useUpdateFileCategories', () => {
 
     it('should handle unknown errors and set default error message', async () => {
       const unknownError = new Error('Unknown error')
-      fileRepository.updateFileCategories = cy.stub().rejects(unknownError)
+      fileRepository.updateCategories = cy.stub().rejects(unknownError)
 
       const { result } = renderHook(() =>
         useUpdateFileCategories({
@@ -82,7 +82,7 @@ describe('useUpdateFileCategories', () => {
         await result.current.handleUpdateCategories(123, ['Data'], true)
       })
 
-      expect(fileRepository.updateFileCategories).to.have.been.calledWith(123, ['Data'], true)
+      expect(fileRepository.updateCategories).to.have.been.calledWith(123, ['Data'], true)
       expect(onSuccessfulUpdateCategories).to.not.have.been.called
       expect(result.current.isLoading).to.deep.equal(false)
       expect(result.current.error).to.deep.equal(
