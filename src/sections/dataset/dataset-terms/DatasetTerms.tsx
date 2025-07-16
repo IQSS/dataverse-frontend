@@ -21,6 +21,7 @@ interface DatasetTermsProps {
   filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
+  canUpdateDataset?: boolean
 }
 
 export function DatasetTerms({
@@ -28,13 +29,15 @@ export function DatasetTerms({
   termsOfUse,
   filesRepository,
   datasetPersistentId,
-  datasetVersion
+  datasetVersion,
+  canUpdateDataset
 }: DatasetTermsProps) {
   const { t } = useTranslation('dataset')
   const { filesCountInfo, isLoading } = useGetFilesCountInfo({
     filesRepository,
     datasetPersistentId,
-    datasetVersion
+    datasetVersion,
+    includeDeaccessioned: canUpdateDataset
   })
   const restrictedFilesCount = filesCountInfo
     ? numberOfRestrictedFiles(filesCountInfo.perAccess)

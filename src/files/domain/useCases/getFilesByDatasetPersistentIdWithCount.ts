@@ -9,14 +9,16 @@ export async function getFilesByDatasetPersistentIdWithCount(
   datasetPersistentId: string,
   datasetVersion: DatasetVersion,
   paginationInfo?: FilePaginationInfo,
-  criteria?: FileCriteria
+  criteria?: FileCriteria,
+  includeDeaccessioned?: boolean
 ): Promise<FilesWithCount> {
   return fileRepository
     .getAllByDatasetPersistentIdWithCount(
       datasetPersistentId,
       datasetVersion,
       paginationInfo,
-      criteria
+      criteria,
+      includeDeaccessioned
     )
     .catch((error: Error) => {
       throw new Error(error.message)

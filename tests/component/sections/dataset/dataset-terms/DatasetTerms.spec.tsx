@@ -50,7 +50,10 @@ const termsOfUseWithUndefinedValue = TermsOfUseMother.create({
 
 describe('DatasetTerms', () => {
   beforeEach(() => {
-    fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy
+      .stub()
+      .as('getFilesCountInfo')
+      .resolves(testFilesCountInfo)
   })
 
   it('renders the license and terms of use sections', () => {
@@ -66,6 +69,29 @@ describe('DatasetTerms', () => {
 
     cy.findByText('Dataset Terms').should('exist')
     cy.findByText('Restricted Files + Terms of Access').should('exist')
+  })
+
+  it('check that the terms of use sections are rendered even without edit permissions', () => {
+    cy.customMount(
+      <DatasetTerms
+        license={license}
+        termsOfUse={termsOfUse}
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+        canUpdateDataset={false}
+      />
+    )
+
+    cy.findByText('Dataset Terms').should('exist')
+    cy.findByText('Restricted Files + Terms of Access').should('exist')
+    cy.get('@getFilesCountInfo').should(
+      'have.been.calledWithMatch',
+      'test-dataset-persistent-id',
+      datasetVersion.number,
+      Cypress.sinon.match.any,
+      false
+    )
   })
 
   it('renders the correct number of restricted files', () => {

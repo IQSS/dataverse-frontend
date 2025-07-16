@@ -96,7 +96,8 @@ export class FileJSDataverseRepository implements FileRepository {
     datasetPersistentId: string,
     datasetVersion: DatasetVersion,
     paginationInfo: FilePaginationInfo = new FilePaginationInfo(),
-    criteria: FileCriteria = new FileCriteria()
+    criteria: FileCriteria = new FileCriteria(),
+    includeDeaccessioned?: boolean
   ): Promise<FilesWithCount> {
     return getDatasetFiles
       .execute(
@@ -210,7 +211,8 @@ export class FileJSDataverseRepository implements FileRepository {
   getFilesCountInfoByDatasetPersistentId(
     datasetPersistentId: string,
     datasetVersionNumber: DatasetVersionNumber,
-    criteria: FileCriteria
+    criteria: FileCriteria,
+    includeDeaccessioned?: boolean
   ): Promise<FilesCountInfo> {
     return getDatasetFileCounts
       .execute(
@@ -230,7 +232,8 @@ export class FileJSDataverseRepository implements FileRepository {
   getFilesTotalDownloadSizeByDatasetPersistentId(
     datasetPersistentId: string,
     datasetVersionNumber: DatasetVersionNumber,
-    criteria: FileCriteria = new FileCriteria()
+    criteria: FileCriteria = new FileCriteria(),
+    includeDeaccessioned?: boolean
   ): Promise<number> {
     return getDatasetFilesTotalDownloadSize
       .execute(

@@ -3,58 +3,86 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# Non Published Changes
+# [2.0.2](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.0.1...@iqss/dataverse-design-system@2.0.2) (2024-06-23)
 
-- **Accordion:** extend Props Interface to accept HTML Attributes props.
+### Bug Fixes
+
+- Update package.json to properly expose TypeScript types via the exports field.
+
+# [2.0.1](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.0.0...@iqss/dataverse-design-system@2.0.1) (2024-06-21)
+
+- Update Storybook link in README.md.
+
+# [2.0.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.1.0...@iqss/dataverse-design-system@2.0.0) (2024-06-20)
+
+### Features
+
+- **Card:** add Card to the Design System.
+- **ProgressBar:** add ProgressBar to the Design System.
+- **SelectAdvanced:** add SelectAdvanced to the Design System.
+- **FormRadioGroup:** add FormRadioGroup to the Design System.
+- **FormRadio:** add FormRadio to the Design System.
+- **Stack:** add Stack to the Design System.
+- **TransferList:** add TransferList to the Design System.
+- **Spinner:** add Spinner to the Design System.
+- **CloseButton:** add CloseButton to the Design System.
+- **Offcanvas:** add Offcanvas to the Design System.
+- **RichTextEditor:** add RichTextEditor to the Design System.
+
+### Improvements
+
+- **Accordion:**
+  - extend Props Interface to accept HTML Attributes props.
+  - ability to forward react ref.
 - **AccordionBody:** extend Props Interface to accept HTML Attributes, `bsPrefix` and `as` props.
 - **AccordionHeader:** extend Props Interface to accept HTML Attributes, `onClick`, `bsPrefix` and `as` props.
 - **AccordionItem:** extend Props Interface to accept HTML Attributes, `bsPrefix` and `as` props.
 - **FormChecboxGroup:** refactor styles.
-- **FormGroupWithMultipleFields:** refactor styles and conditional render logic.
-- **FormGroup:** ability to clone children wrapped by react fragments.
-- **FormCheckbox:** ability to forward react ref to input and export FormCheckboxProps interface.
-- **FormInput:** ability to forward react ref to input and export FormInputProps interface.
-- **FormSelect:** ability to forward react ref to input, add `isInvalid` `isValid` & `disabled` props and export FormSelectProps interface.
-- **FormTextArea:** ability to forward react ref to input and export FormTextAreaProps interface.
-- **FormFeedback:** remove `span: 9` from styles.
-- **FormGroup:** controlId is now optional.
-- **FormLabel:** extend Props Interface to accept `htmlFor` prop.
-- **FormSelectMultiple:** The new multiple selector is added to the "FormGroup" components.
+- **FormGroupWithMultipleFields:**
+  - refactor styles and conditional render logic.
+  - remove withDynamicFields prop and remove logic to handle adding or removing fields.
+- **FormGroup:**
+  - ability to clone children wrapped by react fragments.
+  - controlId is now optional.
+  - remove the required and fieldIndex props, remove the cloning of child elements to pass them the withinMultipleFieldsGroup and required props.
+- **FormCheckbox:**
+  - ability to forward react ref to input and export FormCheckboxProps interface.
+  - modify Props Interface to allow any react node as `label` prop.
+- **FormInput:**
+  - ability to forward react ref to input and export FormInputProps interface.
+  - remove withinMultipleFieldsGroup prop.
+  - extend Props Interface to accept `autoFocus` and `type: 'search'` prop.
+- **FormSelect:**
+  - ability to forward react ref to input, add `isInvalid` `isValid` & `disabled` props and export FormSelectProps interface.
+  - remove withinMultipleFieldsGroup prop.
+  - extend Props Interface to accept `autoFocus` prop.
+- **FormTextArea:**
+  - ability to forward react ref to input and export FormTextAreaProps interface.
+  - remove withinMultipleFieldsGroup prop.
+  - extend Props Interface to accept `autoFocus` prop.
+  - modify Props Interface to allow `rows` prop.
+- **FormFeedback:**
+  - remove `span: 9` from styles.
+  - remove withinMultipleFieldsGroup prop.
+- **FormLabel:**
+  - extend Props Interface to accept `htmlFor` prop.
+  - remove withinMultipleFieldsGroup prop extend interface to accept ColProps.
 - **DropdownButton:** extend Props Interface to accept `ariaLabel` prop.
 - **DropdownButtonItem:** extend Props Interface to accept `as` prop.
-- **Accordion:** ability to forward react ref.
 - **DynamicFieldsButtons:** Removed from design system.
-- **FormGroupWithMultipleFields:** remove withDynamicFields prop and remove logic to handle adding or removing fields.
-- **FormGroup:** remove the required and fieldIndex props, remove the cloning of child elements to pass them the withinMultipleFieldsGroup and required props.
-- **FormFeedback:** remove withinMultipleFieldsGroup prop.
-- **FormInput:** remove withinMultipleFieldsGroup prop.
-- **FormLabel:** remove withinMultipleFieldsGroup prop extend interface to accept ColProps.
-- **FormSelect:** remove withinMultipleFieldsGroup prop.
 - **FormText:** remove withinMultipleFieldsGroup prop.
-- **FormTextArea:** remove withinMultipleFieldsGroup prop.
-- **FormInputGroup:** remove hasVisibleLabel prop and accepts className prop.
-- **FormInputGroupText:** refactor type.
-- **Card:** NEW card element to show header and body.
-- **ProgressBar:** NEW progress bar element to show progress.
-- **SelectAdvanced:** NEW ehanced select to search across options, and perform both single and multiple selections.
-- **FormRadioGroup:** NEW radio group element to show radio buttons.
-- **FormRadio:** NEW radio element to show radio button.
-- **NavbarDropdownItem:** Now accepts `as` prop and takes `as` Element props.
-- **FormInputGroup:** extend Props Interface to accept `hasValidation` prop to properly show rounded corners in an <InputGroup> with validation
-- **Button:** extend Props Interface to accept `size` prop and variant `danger`.
-- **FormInput:** extend Props Interface to accept `autoFocus` and `type: 'search'` prop.
-- **FormTextArea:** extend Props Interface to accept `autoFocus` prop.
-- **FormSelect:** extend Props Interface to accept `autoFocus` prop.
-- **Stack:** NEW Stack element to manage layouts.
-- **TransferList:** NEW TransferList component to transfer items between two list, also sortable.
-- **Table:** extend Props Interface to accept `bordered`, `borderless` and `striped`.
-- **Spinner:** New Spinner component.
-- **CloseButton:** NEW close button component.
+- **FormInputGroup:**
+  - remove hasVisibleLabel prop and accepts className prop.
+  - extend Props Interface to accept `hasValidation` prop to properly show rounded corners in an <InputGroup> with validation.
 - **Tab:** extend Props Interface to accept `disabled` prop to disable the tab.
-- **Offcanvas:** NEW Offcanvas component.
-- **FormCheckbox:** modify Props Interface to allow any react node as `label` prop.
-- **RichTextEditor:** NEW Rich Text Editor component.
-- **FormTextArea:** modify Props Interface to allow `rows` prop.
+- **NavbarDropdownItem:** Now accepts `as` prop and takes `as` Element props.
+- **Button:** extend Props Interface to accept `size` prop and variant `danger`.
+- **Table:** extend Props Interface to accept `bordered`, `borderless` and `striped`.
+
+### ⚠️ Note on Breaking Changes
+
+Due to the amount of time since the last release and the significant number of new features introduced as part of the ongoing Dataverse project, this new version may include breaking changes. These could affect component behavior—especially in form-related components—and involve modifications to props or their expected usage.
+For this reason, the version has been bumped from 1.1.0 directly to 2.0.0.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 
