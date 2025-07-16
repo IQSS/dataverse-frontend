@@ -99,7 +99,7 @@ const VocabularyMultipleField = ({ fieldInfo }: VocabularyMultipleFieldProps) =>
               defaultValue={value as string[]}
               options={fieldInfo.controlledVocabularyValues as string[]}
               isMultiple={true}
-              isSearchable={true}
+              isSearchable={(fieldInfo.controlledVocabularyValues as string[])?.length > 10}
               onChange={onChange}
               isInvalid={invalid}
               ref={ref}
