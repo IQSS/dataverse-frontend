@@ -35,6 +35,7 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
   const { showModal } = useNotImplementedModal()
+  const isDeaccessioned = dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
 
   const handleOnSelect = (eventKey: EditDatasetMenuItems | string | null) => {
     const searchParams = new URLSearchParams()
@@ -110,7 +111,9 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
         {t('datasetActionButtons.editDataset.thumbnailsPlusWidgets')}
       </DropdownButtonItem>
       <DeleteDraftDatasetButton dataset={dataset} datasetRepository={datasetRepository} />
-      <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
+      {!isDeaccessioned && (
+        <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
+      )}
     </DropdownButton>
   )
 }
