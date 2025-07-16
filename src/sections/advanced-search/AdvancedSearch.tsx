@@ -21,12 +21,14 @@ interface AdvancedSearchProps {
   collectionId: string
   collectionRepository: CollectionRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  collectionFilterQueries?: string
 }
 
 export const AdvancedSearch = ({
   collectionId,
   collectionRepository,
-  metadataBlockInfoRepository
+  metadataBlockInfoRepository,
+  collectionFilterQueries
 }: AdvancedSearchProps) => {
   const { t } = useTranslation('advancedSearch')
   const { setIsLoading } = useLoading()
@@ -108,6 +110,7 @@ export const AdvancedSearch = ({
         collectionId={collectionId}
         formDefaultValues={formDefaultValues}
         metadataBlocks={normalizedMetadataBlocksInfo}
+        collectionFilterQueries={collectionFilterQueries}
       />
     </section>
   )

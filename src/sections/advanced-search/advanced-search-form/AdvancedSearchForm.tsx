@@ -21,6 +21,7 @@ interface AdvancedSearchFormProps {
   collectionId: string
   formDefaultValues: AdvancedSearchFormData
   metadataBlocks: MetadataBlockInfo[]
+  collectionFilterQueries?: string
 }
 
 export interface AdvancedSearchFormData {
@@ -52,7 +53,8 @@ export type FilesFields = {
 export const AdvancedSearchForm = ({
   collectionId,
   formDefaultValues,
-  metadataBlocks
+  metadataBlocks,
+  collectionFilterQueries
 }: AdvancedSearchFormProps) => {
   const { t } = useTranslation('shared')
   const { t: tAdvancedSearch } = useTranslation('advancedSearch')
@@ -72,6 +74,10 @@ export const AdvancedSearchForm = ({
       CollectionItemsQueryParams.TYPES,
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(',')
     )
+    // We navigate to the collection page with the previous filter queries if they exist
+    if (collectionFilterQueries) {
+      searchParams.set(CollectionItemsQueryParams.FILTER_QUERIES, collectionFilterQueries)
+    }
 
     navigate(`${Route.COLLECTIONS_BASE}/${collectionId}?${searchParams.toString()}`)
 

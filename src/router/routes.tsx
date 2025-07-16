@@ -117,7 +117,7 @@ const SignUpPage = lazy(() =>
   }))
 )
 
-const AdvancedSearch = lazy(() =>
+const AdvancedSearchPage = lazy(() =>
   import('../sections/advanced-search/AdvancedSearchFactory').then(({ AdvancedSearchFactory }) => ({
     default: () => AdvancedSearchFactory.create()
   }))
@@ -190,7 +190,7 @@ export const routes: RouteObject[] = [
             path: Route.ADVANCED_SEARCH,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <AdvancedSearch />
+                <AdvancedSearchPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
