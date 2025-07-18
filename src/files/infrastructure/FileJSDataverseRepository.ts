@@ -252,20 +252,29 @@ export class FileJSDataverseRepository implements FileRepository {
   }
 
   getById(id: number, datasetVersionNumber?: string): Promise<File> {
-    return getFileAndDataset
-      .execute(id, datasetVersionNumber)
-      .then(([jsFile, jsDataset]) =>
-        Promise.all([
-          jsFile,
-          jsDataset,
-          getDatasetCitation.execute(jsDataset.id, datasetVersionNumber, includeDeaccessioned),
-          FileJSDataverseRepository.getCitationById(jsFile.id, datasetVersionNumber),
-          FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
-          FileJSDataverseRepository.getPermissionsById(jsFile.id),
-          FileJSDataverseRepository.getThumbnailById(jsFile.id),
-          FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
-        ])
-      )
+    return FileJSDataverseRepository.getPermissionsById(id)
+      .then((permissions) => {
+        const includeDeaccessioned = permissions?.canEditOwnerDataset
+
+        return getFileAndDataset
+          .execute(id, datasetVersionNumber, includeDeaccessioned)
+          .then(([jsFile, jsDataset]) => {
+            return Promise.all([
+              jsFile,
+              jsDataset,
+              getDatasetCitation.execute(jsDataset.id, datasetVersionNumber, includeDeaccessioned),
+              FileJSDataverseRepository.getCitationById(
+                jsFile.id,
+                datasetVersionNumber,
+                includeDeaccessioned
+              ),
+              FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
+              Promise.resolve(permissions),
+              FileJSDataverseRepository.getThumbnailById(jsFile.id),
+              FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
+            ])
+          })
+      })
       .then(
         ([
           jsFile,
@@ -293,7 +302,11 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  private static getCitationById(id: number, datasetVersionNumber?: string): Promise<string> {
+  private static getCitationById(
+    id: number,
+    datasetVersionNumber?: string,
+    includeDeaccessioned?: boolean
+  ): Promise<string> {
     return getFileCitation
       .execute(id, datasetVersionNumber, includeDeaccessioned)
       .catch((error: ReadError) => {
