@@ -23,7 +23,9 @@ import {
   replaceFile,
   restrictFile,
   updateFileMetadata,
-  getFileVersionSummaries
+  getFileVersionSummaries,
+  updateFileTabularTags,
+  updateFileCategories
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -378,5 +380,21 @@ export class FileJSDataverseRepository implements FileRepository {
 
   restrict(fileId: number | string, restrictFileDTO: RestrictFileDTO): Promise<void> {
     return restrictFile.execute(fileId, restrictFileDTO)
+  }
+
+  updateTabularTags(
+    fileId: number | string,
+    tabularTags: string[],
+    replace?: boolean
+  ): Promise<void> {
+    return updateFileTabularTags.execute(fileId, tabularTags, replace)
+  }
+
+  updateCategories(
+    fileId: number | string,
+    categories: string[],
+    replace?: boolean
+  ): Promise<void> {
+    return updateFileCategories.execute(fileId, categories, replace)
   }
 }

@@ -7,12 +7,16 @@ import { DeleteFileButton } from './delete-file-button/DeleteFileButton'
 import { RestrictFileButton } from './restrict-file-button/RestrictFileButton'
 import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
+import { EditFileTagsButton } from './edit-file-tags/EditFileTagsButton'
+import { FileLabel } from '@/files/domain/models/FileMetadata'
 
 interface EditFileMenuProps {
   fileId: number
   fileRepository: FileRepository
   isRestricted: boolean
   datasetInfo: EditFileMenuDatasetInfo
+  existingLabels?: FileLabel[]
+  isTabularFile: boolean
 }
 
 export interface EditFileMenuDatasetInfo {
@@ -27,7 +31,9 @@ export const EditFileMenu = ({
   fileId,
   fileRepository,
   datasetInfo,
-  isRestricted
+  existingLabels,
+  isRestricted,
+  isTabularFile
 }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
 
@@ -64,6 +70,13 @@ export const EditFileMenu = ({
         {t('actionButtons.editFileMenu.options.replace')}
       </DropdownButtonItem>
       <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
+      <EditFileTagsButton
+        fileId={fileId}
+        fileRepository={fileRepository}
+        existingLabels={existingLabels}
+        datasetPersistentId={datasetInfo.persistentId}
+        isTabularFile={isTabularFile}
+      />
     </DropdownButton>
   )
 }

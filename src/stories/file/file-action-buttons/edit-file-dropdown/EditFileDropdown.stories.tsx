@@ -28,6 +28,7 @@ export const Default: Story = {
         versionNumber: storyFile.datasetVersion.number.toString(),
         requestAccess: true
       }}
+      isTabularFile={true}
     />
   )
 }
