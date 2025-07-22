@@ -156,7 +156,7 @@ export const AdvancedSearchForm = ({
           </Accordion.Item>
         </Accordion>
 
-        <Button variant="primary" type="submit" className="mt-3 px-3">
+        <Button variant="primary" type="submit" data-testid="submit-button" className="mt-3 px-3">
           {t('find')}
         </Button>
       </form>

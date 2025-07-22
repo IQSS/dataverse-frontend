@@ -149,4 +149,19 @@ describe('AdvancedSearch', () => {
 
     cy.findByRole('alert').should('be.visible').and('contain.text', errorMessage)
   })
+  it('should submit the form ', () => {
+    cy.customMount(
+      <AdvancedSearch
+        collectionId={testCollection.id}
+        collectionRepository={collectionRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+    cy.findByTestId('advanced-search-metadata-block-citation')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Title').should('be.visible').type('Test Dataset Title')
+      })
+    cy.findByTestId('submit-button').click()
+  })
 })
