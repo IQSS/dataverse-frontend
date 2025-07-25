@@ -5,6 +5,7 @@ import { FileLabels } from '@/sections/file/file-labels/FileLabels'
 import { FileLabel, FileLabelType } from '@/files/domain/models/FileMetadata'
 import { useFilesContext } from '@/sections/file/FilesContext'
 import { Utils } from '@/shared/helpers/Utils'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 const FILE_TAG_OPTIONS = ['Documentation', 'Data', 'Code']
 const TABULAR_TAG_OPTIONS = [
@@ -37,6 +38,8 @@ interface EditFileTagsModalProps {
   ) => Promise<void>
   isUpdatingTabularTags: boolean
   errorUpdatingTabularTags: string | null
+  datasetRepository: DatasetRepository
+  datasetPersistentId: string
 }
 
 export const EditFileTagsModal = ({
