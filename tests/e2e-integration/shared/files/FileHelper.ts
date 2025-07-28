@@ -95,7 +95,7 @@ export class FileHelper extends DataverseApiHelper {
   }
 
   static async generateImgData(): Promise<Blob | void> {
-    return await fetch(faker.image.imageUrl())
+    return await fetch('https://picsum.photos/id/237/200')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok')
