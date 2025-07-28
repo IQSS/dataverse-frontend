@@ -54,12 +54,15 @@ npm install @iqss/dataverse-client-javascript@latest --save --save-exact
 
 This command will update the `package.json` and `package-lock.json` files with the latest version of the `dataverse-client-javascript` package.
 
+If a Dockerized image of the upcoming Dataverse release is available (see [gdcc dataverse tags](https://hub.docker.com/r/gdcc/dataverse/tags)), please update the `E2E_DATAVERSE_IMAGE_TAG` in `workflows/test.yml`. This will make e2e tests on github actions to run against the new dataverse version.
+
 If everything looks good, you can push the changes to the repository.
 
 ## Merge "release branch" into "main"
 
 Create a pull request to merge the `release` branch into the `main` branch.
-Once important tests have passed (unit, functional, integration).
+Once important tests have passed (component and e2e) and the code has been reviewed, merge the pull request.
+Optionally, still to be defined, the frontend should be deployed to a test environment to verify that everything works as expected against the latest Dataverse release.
 
 ## Create a Draft Release on GitHub and Tag the Version
 
