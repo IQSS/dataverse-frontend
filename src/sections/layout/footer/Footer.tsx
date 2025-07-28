@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Container, Row, Col, Tooltip } from '@iqss/dataverse-design-system'
-import { InfoCircleFill } from 'react-bootstrap-icons'
+import { Container, Row, Col } from '@iqss/dataverse-design-system'
 import dataverseProjectLogo from '@/assets/dataverse-project-logo.svg'
 import { DataverseInfoRepository } from '../../../info/domain/repositories/DataverseInfoRepository'
 import { useDataverseVersion } from './useDataverseVersion'
@@ -14,10 +13,6 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
   const { t } = useTranslation('footer')
   const { dataverseVersion } = useDataverseVersion(dataverseInfoRepository)
   const currentYear = new Date().getFullYear().toString()
-
-  const showExtraVersionNumbers =
-    typeof window.__DATAVERSE_FRONTEND_VERSION__ !== 'undefined' &&
-    typeof window.__DATAVERSE_CLIENT_JAVASCRIPT_VERSION__ !== 'undefined'
 
   return (
     <footer className={styles.container}>
@@ -49,28 +44,7 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
                   alt="The Dataverse Project logo"
                 />
               </a>
-              <span className={styles.version}>
-                {dataverseVersion}{' '}
-                {showExtraVersionNumbers && (
-                  <span style={{ verticalAlign: '0.125em' }}>
-                    <Tooltip
-                      overlay={
-                        <div className="p-2">
-                          <p className="mb-2">{`Dataverse Frontend: v${
-                            window.__DATAVERSE_FRONTEND_VERSION__ as string
-                          }`}</p>
-                          <p className="mb-0">{`Dataverse Client JavaScript: v${
-                            window.__DATAVERSE_CLIENT_JAVASCRIPT_VERSION__ as string
-                          }`}</p>
-                        </div>
-                      }
-                      placement="top"
-                      maxWidth={350}>
-                      <InfoCircleFill />
-                    </Tooltip>
-                  </span>
-                )}
-              </span>
+              <span className={styles.version}>{dataverseVersion}</span>
             </div>
           </Col>
         </Row>
