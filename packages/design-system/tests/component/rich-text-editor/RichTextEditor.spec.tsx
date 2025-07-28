@@ -396,7 +396,7 @@ describe('RichTextEditor', () => {
           )
         })
 
-        cy.findByAltText('A random image').click()
+        cy.findByAltText('A random image').click({ force: true })
         cy.findByLabelText('Align left').click()
         cy.get(`#${editorContentId}`).then((el) => {
           const html = el[0].innerHTML
@@ -405,7 +405,7 @@ describe('RichTextEditor', () => {
           )
         })
 
-        cy.findByAltText('A random image').click()
+        cy.findByAltText('A random image').click({ force: true })
         cy.findByLabelText('Align center').click()
         cy.get(`#${editorContentId}`).then((el) => {
           const html = el[0].innerHTML
@@ -414,7 +414,7 @@ describe('RichTextEditor', () => {
           )
         })
 
-        cy.findByAltText('A random image').click()
+        cy.findByAltText('A random image').click({ force: true })
         cy.findByLabelText('Align right').click()
         cy.get(`#${editorContentId}`).then((el) => {
           const html = el[0].innerHTML
