@@ -339,6 +339,7 @@ export class DatasetMother {
 
   static create(props?: Partial<Dataset>): Dataset {
     const dataset = {
+      id: faker.datatype.number(),
       persistentId: faker.datatype.uuid(),
       version: DatasetVersionMother.create(),
       internalVersionNumber: faker.datatype.number(),
@@ -426,6 +427,7 @@ export class DatasetMother {
       ...props
     }
     return new Dataset.Builder(
+      dataset.id,
       dataset.persistentId,
       dataset.version,
       dataset.internalVersionNumber,

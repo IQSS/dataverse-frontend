@@ -60,6 +60,7 @@ export class JSDatasetMapper {
       jsDataset.versionInfo.deaccessionNote as string
     )
     return new Dataset.Builder(
+      jsDataset.id,
       jsDataset.persistentId,
       version,
       jsDataset.internalVersionNumber,

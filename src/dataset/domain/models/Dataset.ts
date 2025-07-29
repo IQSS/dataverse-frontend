@@ -408,6 +408,7 @@ export interface DatasetTermsOfUse {
 
 export class Dataset {
   constructor(
+    public readonly id: number,
     public readonly persistentId: string,
     public readonly version: DatasetVersion,
     public readonly internalVersionNumber: number,
@@ -503,6 +504,7 @@ export class Dataset {
     public readonly alerts: Alert[] = []
 
     constructor(
+      public readonly id: number,
       public readonly persistentId: string,
       public readonly version: DatasetVersion,
       public readonly internalVersionNumber: number,
@@ -571,6 +573,7 @@ export class Dataset {
 
     build(): Dataset {
       return new Dataset(
+        this.id,
         this.persistentId,
         this.version,
         this.internalVersionNumber,

@@ -252,6 +252,13 @@ describe('FileCriteriaForm', () => {
     datasetRepository.getByPersistentId = cy.stub().resolves(datasetWithUpdatePermissions)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(datasetWithUpdatePermissions)
 
+    // Temporary interception until we have the getDatasetFileStore method in the repository
+    cy.intercept('GET', `/api/datasets/${datasetWithUpdatePermissions.id}/storageDriver`, {
+      body: {
+        data: { message: 's3' }
+      }
+    }).as('getDatasetFileStore')
+
     cy.mountAuthenticated(
       <DatasetProvider
         repository={datasetRepository}

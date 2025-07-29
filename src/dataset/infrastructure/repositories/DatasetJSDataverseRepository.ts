@@ -42,6 +42,9 @@ import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
+import { axiosInstance } from '@/axiosInstance'
+import { DATAVERSE_BACKEND_URL } from '../../../config'
+import { AxiosResponse } from 'axios'
 
 const includeDeaccessioned = true
 
@@ -59,6 +62,8 @@ interface IDatasetDetails {
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
+  static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
+
   getAllWithCount(
     collectionId: string,
     paginationInfo: DatasetPaginationInfo
@@ -364,5 +369,16 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return deleteDatasetDraft.execute(datasetId).catch((error: WriteError) => {
       throw error
     })
+  }
+
+  public static getFileStore(datasetId: number): Promise<string | undefined> {
+    return axiosInstance
+      .get(`${this.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/storageDriver`)
+      .then((res: AxiosResponse<{ data: { message: string } }>) => {
+        return res.data.data.message
+      })
+      .catch(() => {
+        return undefined
+      })
   }
 }
