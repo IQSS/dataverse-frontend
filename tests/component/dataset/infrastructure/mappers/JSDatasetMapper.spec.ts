@@ -213,6 +213,7 @@ const jsDatasetFilesTotalOriginalDownloadSize = 5
 const jsDatasetFilesTotalArchivalDownloadSize = 7
 
 const expectedDataset = {
+  id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
@@ -330,6 +331,7 @@ const expectedDataset = {
   requiresMajorVersionUpdate: false
 }
 const expectedDatasetWithPublicationDate = {
+  id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
@@ -445,6 +447,7 @@ const expectedDatasetWithPublicationDate = {
   requiresMajorVersionUpdate: false
 }
 const expectedDatasetWithNextVersionNumbers = {
+  id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
@@ -561,6 +564,7 @@ const expectedDatasetWithNextVersionNumbers = {
 }
 
 const expectedDatasetAlternateVersion = {
+  id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
