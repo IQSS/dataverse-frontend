@@ -177,7 +177,8 @@ export class FileMetadataMother {
       fileMockedData.tabularData,
       fileMockedData.description,
       fileMockedData.checksum,
-      fileMockedData.persistentId
+      fileMockedData.persistentId,
+      fileMockedData.storageIdentifier
     )
   }
 
