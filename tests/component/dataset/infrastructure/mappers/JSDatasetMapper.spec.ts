@@ -211,7 +211,6 @@ const jsDatasetVersionDiff = {
 }
 const jsDatasetFilesTotalOriginalDownloadSize = 5
 const jsDatasetFilesTotalArchivalDownloadSize = 7
-const fileStore = 's3'
 
 const expectedDataset = {
   id: 505,
