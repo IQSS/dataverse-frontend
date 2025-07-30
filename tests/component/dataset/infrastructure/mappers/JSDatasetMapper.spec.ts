@@ -211,6 +211,7 @@ const jsDatasetVersionDiff = {
 }
 const jsDatasetFilesTotalOriginalDownloadSize = 5
 const jsDatasetFilesTotalArchivalDownloadSize = 7
+const fileStore = 's3'
 
 const expectedDataset = {
   id: 505,
@@ -328,7 +329,8 @@ const expectedDataset = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  fileStore: undefined
 }
 const expectedDatasetWithPublicationDate = {
   id: 505,
@@ -444,7 +446,8 @@ const expectedDatasetWithPublicationDate = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  fileStore: undefined
 }
 const expectedDatasetWithNextVersionNumbers = {
   id: 505,
@@ -560,7 +563,8 @@ const expectedDatasetWithNextVersionNumbers = {
   ),
   nextMajorVersion: '2.0',
   nextMinorVersion: '1.3',
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  fileStore: undefined
 }
 
 const expectedDatasetAlternateVersion = {
@@ -690,7 +694,8 @@ const expectedDatasetAlternateVersion = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  fileStore: undefined
 }
 
 describe('JS Dataset Mapper', () => {
