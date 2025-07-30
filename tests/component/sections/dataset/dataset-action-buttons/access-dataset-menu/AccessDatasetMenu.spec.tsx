@@ -23,6 +23,7 @@ describe('AccessDatasetMenu', () => {
         version={version}
         permissions={permissions}
         downloadUrls={downloadUrls}
+        fileStore="s3"
       />
     )
 
@@ -46,6 +47,7 @@ describe('AccessDatasetMenu', () => {
         version={version}
         permissions={permissions}
         downloadUrls={downloadUrls}
+        fileStore="s3"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
@@ -65,6 +67,7 @@ describe('AccessDatasetMenu', () => {
         version={version}
         permissions={permissions}
         downloadUrls={downloadUrls}
+        fileStore="s3"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')
@@ -84,6 +87,7 @@ describe('AccessDatasetMenu', () => {
         version={version}
         permissions={permissions}
         downloadUrls={downloadUrls}
+        fileStore="s3"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')
@@ -102,6 +106,7 @@ describe('AccessDatasetMenu', () => {
         version={version}
         permissions={permissions}
         downloadUrls={downloadUrls}
+        fileStore="s3"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
@@ -128,6 +133,7 @@ describe('AccessDatasetMenu', () => {
         version={version}
         permissions={permissions}
         downloadUrls={downloadUrls}
+        fileStore="s3"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
@@ -157,6 +163,27 @@ describe('AccessDatasetMenu', () => {
         version={version}
         permissions={permissions}
         downloadUrls={downloadUrls}
+        fileStore="s3"
+      />
+    )
+    cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')
+  })
+
+  it('does not render the AccessDatasetMenu if the file store does not start with "s3"', () => {
+    const version = DatasetVersionMother.createReleased()
+    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal(),
+      DatasetFileDownloadSizeMother.createArchival()
+    ]
+    cy.customMount(
+      <AccessDatasetMenu
+        fileDownloadSizes={fileDownloadSizes}
+        hasOneTabularFileAtLeast={true}
+        version={version}
+        permissions={permissions}
+        downloadUrls={downloadUrls}
+        fileStore="not-s3"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')

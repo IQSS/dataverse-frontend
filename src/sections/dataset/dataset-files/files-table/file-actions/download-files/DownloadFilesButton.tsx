@@ -49,6 +49,11 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
     return <></>
   }
 
+  // TODO: remove this when we can handle non-S3 files
+  if (!dataset?.fileStore?.startsWith('s3')) {
+    return <></>
+  }
+
   const dropdownButtonTitle = isBelow768px
     ? ''
     : /* istanbul ignore next */ t('actions.downloadFiles.title')

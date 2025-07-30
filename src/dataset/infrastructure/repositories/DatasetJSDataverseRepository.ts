@@ -59,6 +59,7 @@ interface IDatasetDetails {
   latestPublishedVersionMajorNumber?: number
   latestPublishedVersionMinorNumber?: number
   datasetVersionDiff?: JSDatasetVersionDiff
+  fileStore?: string
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
@@ -136,13 +137,15 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getDatasetSummaryFieldNames.execute(),
       getDatasetCitation.execute(jsDataset.id, version, includeDeaccessioned),
       getDatasetUserPermissions.execute(jsDataset.id),
-      getDatasetLocks.execute(jsDataset.id)
+      getDatasetLocks.execute(jsDataset.id),
+      this.getFileStore(jsDataset.id)
     ]).then(
-      ([summaryFieldsNames, citation, jsDatasetPermissions, jsDatasetLocks]: [
+      ([summaryFieldsNames, citation, jsDatasetPermissions, jsDatasetLocks, fileStore]: [
         string[],
         string,
         JSDatasetPermissions,
-        JSDatasetLock[]
+        JSDatasetLock[],
+        string | undefined
       ]) => {
         return {
           jsDataset,
@@ -151,7 +154,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           jsDatasetPermissions,
           jsDatasetLocks,
           jsDatasetFilesTotalOriginalDownloadSize: 0,
-          jsDatasetFilesTotalArchivalDownloadSize: 0
+          jsDatasetFilesTotalArchivalDownloadSize: 0,
+          fileStore
         }
       }
     )
@@ -237,7 +241,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           undefined,
           datasetDetails.latestPublishedVersionMajorNumber,
           datasetDetails.latestPublishedVersionMinorNumber,
-          datasetDetails.datasetVersionDiff
+          datasetDetails.datasetVersionDiff,
+          datasetDetails.fileStore
         )
       })
       .catch((error: ReadError) => {
@@ -370,10 +375,15 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       throw error
     })
   }
-
-  public static getFileStore(datasetId: number): Promise<string | undefined> {
+  /*
+    TODO: This is a temporary solution as this use case doesn't exist in js-dataverse yet and the API should also return the file store type rather than name only.
+    After https://github.com/IQSS/dataverse/issues/11695 is implemented, create a js-dataverse use case.
+  */
+  private async getFileStore(datasetId: number): Promise<string | undefined> {
     return axiosInstance
-      .get(`${this.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/storageDriver`)
+      .get(
+        `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/storageDriver`
+      )
       .then((res: AxiosResponse<{ data: { message: string } }>) => {
         return res.data.data.message
       })

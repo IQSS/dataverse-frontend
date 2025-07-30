@@ -5,7 +5,6 @@ import { Button } from '@iqss/dataverse-design-system'
 import { useSession } from '../../../session/SessionContext'
 import { useDataset } from '../../DatasetContext'
 import { QueryParamKey, Route } from '../../../Route.enum'
-import { useGetDatasetFileStore } from './useGetDatasetFileStore'
 import {
   DatasetNonNumericVersionSearchParam,
   DatasetPublishingStatus
@@ -17,15 +16,13 @@ export function DatasetUploadFilesButton() {
   const { user } = useSession()
   const { dataset } = useDataset()
   const navigate = useNavigate()
-  const { datasetFileStore } = useGetDatasetFileStore(dataset?.id)
 
   if (!user || !dataset?.permissions.canUpdateDataset) {
     return <></>
   }
 
-  // This is a temporary solution as this use case doesn't exist in js-dataverse yet and the API should also return the file store type rather than name only.
-  // When having a js-dataverse use case, this information could be fetch inside the getByPersistentId method from the DatasetJSDataverseRepository.
-  if (!datasetFileStore?.startsWith('s3')) {
+  // TODO: remove this when we can handle non-S3 files
+  if (!dataset?.fileStore?.startsWith('s3')) {
     return <></>
   }
 

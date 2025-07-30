@@ -424,6 +424,7 @@ export class DatasetMother {
       hierarchy: UpwardHierarchyNodeMother.createDataset({ name: props?.version?.title }),
       termsOfUse: TermsOfUseMother.withoutCustomTerms(),
       versionsSummaries: DatasetVersionSummaryInfoMother.createList(3),
+      fileStore: props?.fileStore ?? 's3',
       ...props
     }
     return new Dataset.Builder(
@@ -448,7 +449,8 @@ export class DatasetMother {
       dataset.requestedVersion,
       dataset.nextMajorVersion,
       dataset.nextMinorVersion,
-      dataset.requiresMajorVersionUpdate
+      dataset.requiresMajorVersionUpdate,
+      dataset.fileStore
     ).build()
   }
 

@@ -30,6 +30,7 @@ export const WithDownloadNotAllowed: Story = {
       permissions={DatasetPermissionsMother.createWithFilesDownloadNotAllowed()}
       fileDownloadSizes={[DatasetFileDownloadSizeMother.createOriginal()]}
       downloadUrls={DatasetDownloadUrlsMother.create()}
+      fileStore="s3"
     />
   )
 }
@@ -41,6 +42,7 @@ export const WithoutTabularFiles: Story = {
       permissions={DatasetPermissionsMother.createWithAllAllowed()}
       fileDownloadSizes={[DatasetFileDownloadSizeMother.createOriginal()]}
       downloadUrls={DatasetDownloadUrlsMother.create()}
+      fileStore="s3"
     />
   )
 }
@@ -55,6 +57,7 @@ export const WithTabularFiles: Story = {
         DatasetFileDownloadSizeMother.createOriginal()
       ]}
       downloadUrls={DatasetDownloadUrlsMother.create()}
+      fileStore="s3"
     />
   )
 }

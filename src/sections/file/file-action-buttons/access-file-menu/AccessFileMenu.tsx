@@ -40,6 +40,7 @@ export function AccessFileMenu({
   }
 
   // Temporary fix to avoid showing the access file menu for non-S3 files
+  // TODO: remove this when we can handle non-S3 files
   if (metadata.storageIdentifier && !metadata.storageIdentifier?.startsWith('s3')) {
     return <></>
   }

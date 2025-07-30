@@ -267,4 +267,22 @@ describe('DownloadFilesButton', () => {
       'https://single-file-download-url'
     )
   })
+
+  it('does not render the AccessDatasetMenu if the file store does not start with "s3"', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      fileStore: 'non-s3-file-store'
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
+    })
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={{}} />,
+        datasetWithDownloadFilesPermission
+      )
+    )
+
+    cy.get('#download-files').should('not.exist')
+  })
 })
