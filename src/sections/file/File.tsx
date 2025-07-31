@@ -109,6 +109,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                         file.datasetVersion.termsOfAccess?.termsOfAccessForRestrictedFiles,
                       requestAccess: file.datasetVersion.termsOfAccess?.fileAccessRequest
                     }}
+                    storageIdentifier={file.metadata.storageIdentifier}
                   />
                 )}
               </ButtonGroup>
