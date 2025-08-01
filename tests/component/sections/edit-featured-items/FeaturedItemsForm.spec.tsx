@@ -18,7 +18,7 @@ const testCollection = CollectionMother.create({ name: 'Collection Name' })
 
 const featuredItemOne = FeaturedItemMother.createCustomFeaturedItem('css', {
   id: 1,
-  imageFileUrl: 'https://loremflickr.com/320/240',
+  imageFileUrl: 'https://picsum.photos/id/237/200/300',
   displayOrder: 1,
   content: '<h1 class="rte-heading">Featured Item One</h1>'
 })
@@ -1053,7 +1053,7 @@ describe('FeaturedItemsForm', () => {
     it('should show an error message when the content is larger than max length accepted', () => {
       const featuredItemOne = FeaturedItemMother.createCustomFeaturedItem('css', {
         id: 1,
-        imageFileUrl: 'https://loremflickr.com/320/240',
+        imageFileUrl: 'https://picsum.photos/id/237/200/300',
         displayOrder: 1,
         content: `<p class="rte-paragraph">${'a'.repeat(
           FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED

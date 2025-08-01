@@ -27,6 +27,7 @@ import {
 } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { TermsOfUseMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { DatasetVersionSummaryInfoMother } from '@tests/component/dataset/domain/models/DatasetVersionSummaryInfoMother'
+import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -394,7 +395,7 @@ export class DatasetMother {
               {
                 producerName: faker.lorem.sentence(),
                 producerURL: faker.internet.url(),
-                producerLogoURL: faker.image.imageUrl()
+                producerLogoURL: FakerHelper.getImageUrl()
               }
             ]
           }
