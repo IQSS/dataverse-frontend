@@ -122,4 +122,12 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  getDatasetAvailableCategories(_datasetId: string | number): Promise<string[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, 1000)
+    })
+  }
 }

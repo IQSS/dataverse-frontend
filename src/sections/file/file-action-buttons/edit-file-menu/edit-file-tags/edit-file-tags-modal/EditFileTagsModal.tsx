@@ -6,8 +6,8 @@ import { FileLabel, FileLabelType } from '@/files/domain/models/FileMetadata'
 import { useFilesContext } from '@/sections/file/FilesContext'
 import { Utils } from '@/shared/helpers/Utils'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { useGetAvailableCategories } from './useGetAvailableCategories'
 
-const FILE_TAG_OPTIONS = ['Documentation', 'Data', 'Code']
 const TABULAR_TAG_OPTIONS = [
   'Survey',
   'Time Series',
@@ -53,7 +53,9 @@ export const EditFileTagsModal = ({
   isUpdatingFileCategories,
   errorUpdatingFileCategories,
   isUpdatingTabularTags,
-  errorUpdatingTabularTags
+  errorUpdatingTabularTags,
+  datasetRepository,
+  datasetPersistentId
 }: EditFileTagsModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('file')
@@ -71,11 +73,27 @@ export const EditFileTagsModal = ({
     () => existingLabels?.filter((l) => l.type === FileLabelType.TAG).map((l) => l.value) || [],
     [existingLabels]
   )
+
+  const {
+    availableCategories,
+    isLoading: getAvailableCategoriesLoading,
+    error: getCategoriesError
+  } = useGetAvailableCategories({
+    datasetRepository,
+    datasetId: datasetPersistentId
+  })
+
   const [selectedFileTags, setSelectedFileTags] = useState<string[]>(initialSelectedFileTags)
   const [fileTagOptions, setFileTagOptions] = useState<string[]>([
-    ...FILE_TAG_OPTIONS,
-    ...initialSelectedFileTags.filter((tag) => !FILE_TAG_OPTIONS.includes(tag))
-  ]) //TODO: populated the tag options with Dataset's Categories if the api is ready
+    ...availableCategories,
+    ...initialSelectedFileTags.filter((tag) => !availableCategories.includes(tag))
+  ])
+  useMemo(() => {
+    setFileTagOptions([
+      ...availableCategories,
+      ...initialSelectedFileTags.filter((tag) => !availableCategories.includes(tag))
+    ])
+  }, [availableCategories, initialSelectedFileTags])
   const [selectedTabularTags, setSelectedTabularTags] = useState<string[]>(
     initialSelectedTabularTags
   )
@@ -118,8 +136,8 @@ export const EditFileTagsModal = ({
     setSelectedTabularTags(initialSelectedTabularTags)
     setCustomTag('')
     setFileTagOptions([
-      ...FILE_TAG_OPTIONS,
-      ...initialSelectedFileTags.filter((tag) => !FILE_TAG_OPTIONS.includes(tag))
+      ...availableCategories,
+      ...initialSelectedFileTags.filter((tag) => !availableCategories.includes(tag))
     ])
     setHasDuplicateCustomTag(false)
     handleClose()
@@ -141,6 +159,7 @@ export const EditFileTagsModal = ({
             <Alert variant="danger">{errorUpdatingFileCategories}</Alert>
           )}
           {errorUpdatingTabularTags && <Alert variant="danger">{errorUpdatingTabularTags}</Alert>}
+          {getCategoriesError && <Alert variant="danger">{getCategoriesError}</Alert>}
           <Form.Group.Text>{t('editFileTagsModal.intro')}</Form.Group.Text>
           <Stack gap={3} className="mb-3">
             <Stack direction="horizontal" gap={2} className="align-items-center">
@@ -261,7 +280,7 @@ export const EditFileTagsModal = ({
           variant="primary"
           onClick={handleSave}
           type="button"
-          disabled={isUpdatingFileCategories}>
+          disabled={isUpdatingFileCategories || getAvailableCategoriesLoading}>
           {isUpdatingFileCategories ? tShared('saving') : tShared('saveChanges')}
         </Button>
       </Modal.Footer>

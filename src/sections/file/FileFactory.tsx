@@ -25,5 +25,12 @@ function FileWithSearchParams() {
     return <NotFoundPage dvObjectNotFoundType="file" />
   }
 
-  return <File repository={repository} id={id} datasetVersionNumber={datasetVersionNumber} />
+  return (
+    <File
+      repository={repository}
+      id={id}
+      datasetVersionNumber={datasetVersionNumber}
+      datasetRepository={datasetRepository}
+    />
+  )
 }

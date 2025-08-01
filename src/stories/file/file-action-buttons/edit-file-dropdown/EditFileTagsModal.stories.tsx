@@ -2,6 +2,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../../WithI18next'
 import { EditFileTagsModal } from '@/sections/file/file-action-buttons/edit-file-menu/edit-file-tags/edit-file-tags-modal/EditFileTagsModal'
 import { WithSettings } from '@/stories/WithSettings'
+import { DatasetMockRepository } from '../../../dataset/DatasetMockRepository'
 
 const meta: Meta<typeof EditFileTagsModal> = {
   title: 'Sections/File Page/Action Buttons/EditFileMenu/EditFileTagsModal',
@@ -17,6 +18,8 @@ export const WithExistingLabels: Story = {
     <EditFileTagsModal
       show
       fileId={123}
+      datasetRepository={new DatasetMockRepository()}
+      datasetPersistentId={'mock-dataset-id'}
       handleClose={() => {}}
       handleUpdateCategories={() => Promise.resolve()}
       isUpdatingFileCategories={false}
@@ -34,6 +37,8 @@ export const WithLoading: Story = {
     <EditFileTagsModal
       show
       fileId={123}
+      datasetRepository={new DatasetMockRepository()}
+      datasetPersistentId={'mock-dataset-id'}
       handleClose={() => {}}
       handleUpdateCategories={() => Promise.resolve()}
       isUpdatingFileCategories={true}
@@ -51,6 +56,8 @@ export const WithError: Story = {
     <EditFileTagsModal
       show
       fileId={123}
+      datasetRepository={new DatasetMockRepository()}
+      datasetPersistentId={'mock-dataset-id'}
       handleClose={() => {}}
       handleUpdateCategories={() => Promise.resolve()}
       isUpdatingFileCategories={false}
@@ -68,6 +75,8 @@ export const NonTabularFile: Story = {
     <EditFileTagsModal
       show
       fileId={123}
+      datasetRepository={new DatasetMockRepository()}
+      datasetPersistentId={'mock-dataset-id'}
       handleClose={() => {}}
       handleUpdateCategories={() => Promise.resolve()}
       isUpdatingFileCategories={false}

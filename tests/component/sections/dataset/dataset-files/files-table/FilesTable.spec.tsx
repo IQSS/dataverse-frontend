@@ -13,8 +13,10 @@ import { FilePaginationInfo } from '../../../../../../src/files/domain/models/Fi
 import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 const fileRepository: FileRepository = {} as FileRepository
+const datasetRepository: DatasetRepository = {} as DatasetRepository
 const testFiles = FilePreviewMother.createMany(10)
 const paginationInfo = new FilePaginationInfo(1, 10, 200)
 const testFilesTotalDownloadSize = 19900
@@ -29,6 +31,7 @@ describe('FilesTable', () => {
         filesTotalDownloadSize={testFilesTotalDownloadSize}
         criteria={defaultCriteria}
         fileRepository={fileRepository}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -50,6 +53,7 @@ describe('FilesTable', () => {
         filesTotalDownloadSize={testFilesTotalDownloadSize}
         criteria={defaultCriteria}
         fileRepository={fileRepository}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -65,6 +69,7 @@ describe('FilesTable', () => {
         filesTotalDownloadSize={testFilesTotalDownloadSize}
         criteria={defaultCriteria}
         fileRepository={fileRepository}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -81,6 +86,7 @@ describe('FilesTable', () => {
           filesTotalDownloadSize={testFilesTotalDownloadSize}
           criteria={defaultCriteria}
           fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -102,6 +108,7 @@ describe('FilesTable', () => {
           filesTotalDownloadSize={testFilesTotalDownloadSize}
           criteria={defaultCriteria}
           fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -127,6 +134,7 @@ describe('FilesTable', () => {
           filesTotalDownloadSize={testFilesTotalDownloadSize}
           criteria={defaultCriteria}
           fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -148,6 +156,7 @@ describe('FilesTable', () => {
           filesTotalDownloadSize={testFilesTotalDownloadSize}
           criteria={defaultCriteria}
           fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -171,6 +180,7 @@ describe('FilesTable', () => {
           filesTotalDownloadSize={testFilesTotalDownloadSize}
           criteria={defaultCriteria}
           fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
         />
       )
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -207,6 +217,7 @@ describe('FilesTable', () => {
           filesTotalDownloadSize={testFilesTotalDownloadSize}
           criteria={defaultCriteria}
           fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
         />
       </SettingsProvider>
     )
@@ -231,6 +242,7 @@ describe('FilesTable', () => {
         filesTotalDownloadSize={testFilesTotalDownloadSize}
         criteria={defaultCriteria}
         fileRepository={fileRepository}
+        datasetRepository={datasetRepository}
       />
     )
 

@@ -21,6 +21,7 @@ describe('DatasetSummary', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         summaryFields={summaryFieldsMock}
         license={licenseMock}
+        onCustomTermsClick={() => {}}
       />
     )
 
@@ -48,6 +49,7 @@ describe('DatasetSummary', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         summaryFields={summaryFieldsMock}
         license={licenseMock}
+        onCustomTermsClick={() => {}}
       />
     )
 
