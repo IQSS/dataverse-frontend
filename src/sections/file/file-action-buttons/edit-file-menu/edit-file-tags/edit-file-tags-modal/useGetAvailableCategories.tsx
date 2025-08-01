@@ -15,7 +15,11 @@ export const useGetAvailableCategories = ({
   datasetId
 }: UseGetAvailableCategories) => {
   const { t } = useTranslation('file')
-  const [availableCategories, setAvailableCategories] = useState<string[]>([])
+  const [availableCategories, setAvailableCategories] = useState<string[]>([
+    'Documentation',
+    'Code',
+    'Data'
+  ])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 

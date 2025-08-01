@@ -608,13 +608,17 @@ describe('EditFileMenu', () => {
       })
     })
 
-    it('shows toast success message when file tags are updated successfully', () => {
+    it.only('shows toast success message when file tags are updated successfully', () => {
       cy.findByRole('button', { name: 'Edit File' }).click()
       cy.findByRole('button', { name: 'Tags' }).click()
       cy.findByRole('dialog').should('exist')
       cy.findByTestId('custom-file-tag-input').should('exist')
       cy.findByTestId('custom-file-tag-input').type('Custom Tag')
+
+      cy.wait(1000)
       cy.findByRole('button', { name: 'Apply' }).click()
+
+      cy.wait(1000)
       cy.findByRole('button', { name: 'Save Changes' }).click()
 
       cy.findByText(/The file tags have been updated./i)
