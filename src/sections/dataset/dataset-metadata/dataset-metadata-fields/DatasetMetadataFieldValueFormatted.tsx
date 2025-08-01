@@ -127,6 +127,14 @@ export function joinSubFields(
     if (subFieldType === 'TEXTBOX') {
       formattedSubFieldValue = transformHtmlToMarkdown(formattedSubFieldValue)
     }
+
+    if (subFieldName === 'datasetContactEmail') {
+      return {
+        fullFieldName: subFieldName,
+        value: ''
+      }
+    }
+
     return {
       fullFieldName: subFieldName,
       value: formattedSubFieldValue
