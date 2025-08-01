@@ -1,8 +1,12 @@
 import { EditFileTagsModal } from '@/sections/file/file-action-buttons/edit-file-menu/edit-file-tags/edit-file-tags-modal/EditFileTagsModal'
 import { FileLabelType } from '@/files/domain/models/FileMetadata'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 describe('EditFileTagsModal', () => {
+  let datasetRepository: DatasetRepository
   beforeEach(() => {
+    datasetRepository = {} as DatasetRepository
+
     cy.customMount(
       <EditFileTagsModal
         show={true}
@@ -15,6 +19,8 @@ describe('EditFileTagsModal', () => {
         isUpdatingTabularTags={false}
         errorUpdatingTabularTags={null}
         isTabularFile={true}
+        datasetRepository={datasetRepository}
+        datasetPersistentId={'1'}
       />
     )
   })
@@ -118,6 +124,8 @@ describe('EditFileTagsModal', () => {
         isUpdatingTabularTags={false}
         errorUpdatingTabularTags={null}
         isTabularFile={false}
+        datasetRepository={datasetRepository}
+        datasetPersistentId={'1'}
       />
     )
 
@@ -140,6 +148,8 @@ describe('EditFileTagsModal', () => {
         isUpdatingTabularTags={false}
         errorUpdatingTabularTags={null}
         isTabularFile={false}
+        datasetRepository={datasetRepository}
+        datasetPersistentId={'1'}
       />
     )
 
@@ -177,6 +187,8 @@ describe('EditFileTagsModal', () => {
         errorUpdatingTabularTags={null}
         isTabularFile={true}
         existingLabels={existingLabels}
+        datasetRepository={datasetRepository}
+        datasetPersistentId={'1'}
       />
     )
 
@@ -197,6 +209,8 @@ describe('EditFileTagsModal', () => {
         errorUpdatingTabularTags={null}
         isTabularFile={true}
         existingLabels={existingLabels}
+        datasetRepository={datasetRepository}
+        datasetPersistentId={'1'}
       />
     )
     cy.findByTestId('custom-file-tag-input').type('duplicated tag')
@@ -221,6 +235,8 @@ describe('EditFileTagsModal', () => {
           isUpdatingTabularTags={false}
           errorUpdatingTabularTags={null}
           isTabularFile={true}
+          datasetRepository={datasetRepository}
+          datasetPersistentId={'1'}
         />
       )
 
@@ -241,6 +257,8 @@ describe('EditFileTagsModal', () => {
           isUpdatingTabularTags={false}
           errorUpdatingTabularTags={errorMessage}
           isTabularFile={true}
+          datasetRepository={datasetRepository}
+          datasetPersistentId={'1'}
         />
       )
 
@@ -260,6 +278,8 @@ describe('EditFileTagsModal', () => {
           isUpdatingTabularTags={false}
           errorUpdatingTabularTags={null}
           isTabularFile={true}
+          datasetRepository={datasetRepository}
+          datasetPersistentId={'1'}
         />
       )
 
@@ -279,6 +299,8 @@ describe('EditFileTagsModal', () => {
           isUpdatingTabularTags={false}
           errorUpdatingTabularTags={null}
           isTabularFile={true}
+          datasetRepository={datasetRepository}
+          datasetPersistentId={'1'}
         />
       )
 
