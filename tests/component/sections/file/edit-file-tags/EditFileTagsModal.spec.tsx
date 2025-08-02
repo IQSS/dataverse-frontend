@@ -7,7 +7,7 @@ describe('EditFileTagsModal', () => {
   beforeEach(() => {
     datasetRepository = {} as DatasetRepository
 
-    const categoriesMock = ['Documentation', 'Code', 'Data', 'Category4'].toSorted()
+    const categoriesMock = ['Documentation', 'Code', 'Data', 'Category4']
     datasetRepository.getDatasetAvailableCategories = cy.stub().resolves(categoriesMock)
     cy.customMount(
       <EditFileTagsModal
