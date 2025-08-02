@@ -1,9 +1,6 @@
-import { ReadError } from '@iqss/dataverse-client-javascript'
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { getDatasetAvailableCategories } from '@/dataset/domain/useCases/getDatasetAvailableCategories'
-import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 
 export interface UseGetAvailableCategories {
   datasetRepository: DatasetRepository
@@ -14,7 +11,6 @@ export const useGetAvailableCategories = ({
   datasetRepository,
   datasetId
 }: UseGetAvailableCategories) => {
-  const { t } = useTranslation('file')
   const [availableCategories, setAvailableCategories] = useState<string[]>([
     'Documentation',
     'Code',
@@ -24,26 +20,27 @@ export const useGetAvailableCategories = ({
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const getAvailableCategories = async (datasetId: number | string) => {
+    const HandleGetAvailableCategories = async (datasetId: number | string) => {
       try {
-        const categories = await getDatasetAvailableCategories(datasetRepository, datasetId)
+        const categories: string[] = await getDatasetAvailableCategories(
+          datasetRepository,
+          datasetId
+        )
+
         setAvailableCategories(categories)
-        setError(null)
-      } catch (err: ReadError | unknown) {
-        if (err instanceof ReadError) {
-          const formattedError = new JSDataverseReadErrorHandler(err).getErrorMessage()
-          setError(formattedError)
-        } else {
-          setError(t('getCategoriesError'))
-        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong fetching available categories. Try again later.'
+        setError(errorMessage)
       } finally {
         setIsLoading(false)
-        setError(null)
       }
     }
 
-    void getAvailableCategories(datasetId)
-  }, [datasetRepository, datasetId, t])
+    void HandleGetAvailableCategories(datasetId)
+  }, [datasetRepository, datasetId])
 
   return { availableCategories, isLoading, error }
 }

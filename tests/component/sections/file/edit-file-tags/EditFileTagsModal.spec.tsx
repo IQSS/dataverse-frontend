@@ -7,6 +7,8 @@ describe('EditFileTagsModal', () => {
   beforeEach(() => {
     datasetRepository = {} as DatasetRepository
 
+    const categoriesMock = ['Documentation', 'Code', 'Data', 'Category4'].toSorted()
+    datasetRepository.getDatasetAvailableCategories = cy.stub().resolves(categoriesMock)
     cy.customMount(
       <EditFileTagsModal
         show={true}
@@ -23,6 +25,15 @@ describe('EditFileTagsModal', () => {
         datasetPersistentId={'1'}
       />
     )
+  })
+
+  it('should render the available categories as File Tags', () => {
+    cy.get('#file-tags-select').should('exist')
+    cy.get('#file-tags-select').click()
+    cy.findByText('Data').should('exist')
+    cy.findByText('Code').should('exist')
+    cy.findByText('Documentation').should('exist')
+    cy.findByText('Category4').should('exist')
   })
 
   it('renders the modal with correct title and content', () => {
@@ -220,6 +231,63 @@ describe('EditFileTagsModal', () => {
     cy.findByText('This tag already exists.').should('exist')
   })
 
+  it('should call handleModalClose when clicking cancel button', () => {
+    const existingLabels = [
+      { value: 'Data', type: FileLabelType.CATEGORY },
+      { value: 'Survey', type: FileLabelType.TAG }
+    ]
+
+    const handleCloseSpy = cy.stub().as('handleClose')
+
+    cy.customMount(
+      <EditFileTagsModal
+        show={true}
+        handleClose={handleCloseSpy}
+        fileId={1}
+        handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+        isUpdatingFileCategories={false}
+        errorUpdatingFileCategories={null}
+        handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+        isUpdatingTabularTags={false}
+        errorUpdatingTabularTags={null}
+        isTabularFile={true}
+        existingLabels={existingLabels}
+        datasetRepository={datasetRepository}
+        datasetPersistentId={'1'}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Cancel' }).click()
+    cy.get('@handleClose').should('have.been.called')
+  })
+
+  it('should call handleModalClose when clicking the X button', () => {
+    const existingLabels = [{ value: 'Documentation', type: FileLabelType.CATEGORY }]
+
+    const handleCloseSpy = cy.stub().as('handleClose')
+
+    cy.customMount(
+      <EditFileTagsModal
+        show={true}
+        handleClose={handleCloseSpy}
+        fileId={1}
+        handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+        isUpdatingFileCategories={false}
+        errorUpdatingFileCategories={null}
+        handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+        isUpdatingTabularTags={false}
+        errorUpdatingTabularTags={null}
+        isTabularFile={true}
+        existingLabels={existingLabels}
+        datasetRepository={datasetRepository}
+        datasetPersistentId={'1'}
+      />
+    )
+
+    cy.get('.modal-header .btn-close').click()
+    cy.get('@handleClose').should('have.been.called')
+  })
+
   describe('Error or Loading States', () => {
     it('should display file categories error message', () => {
       const errorMessage = 'Failed to update file categories'
@@ -256,6 +324,30 @@ describe('EditFileTagsModal', () => {
           handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
           isUpdatingTabularTags={false}
           errorUpdatingTabularTags={errorMessage}
+          isTabularFile={true}
+          datasetRepository={datasetRepository}
+          datasetPersistentId={'1'}
+        />
+      )
+
+      cy.findByRole('alert').should('have.class', 'alert-danger')
+    })
+
+    it('should display error if getCategoriesError is error', () => {
+      const errorMessage = 'Failed to load categories'
+      datasetRepository.getDatasetAvailableCategories = cy.stub().rejects(new Error(errorMessage))
+
+      cy.customMount(
+        <EditFileTagsModal
+          show={true}
+          handleClose={() => {}}
+          fileId={1}
+          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+          isUpdatingFileCategories={false}
+          errorUpdatingFileCategories={null}
+          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+          isUpdatingTabularTags={false}
+          errorUpdatingTabularTags={null}
           isTabularFile={true}
           datasetRepository={datasetRepository}
           datasetPersistentId={'1'}
