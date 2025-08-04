@@ -294,7 +294,7 @@ curl -X POST \
 
 ### Production Deployment 
 
-A common alternative configuration is to run Keycloak behind a reverse proxy (see [Configuring a reverse proxy](https://www.keycloak.org/server/reverseproxy) in the documentation. 
+A common alternative configuration is to run Keycloak behind a reverse proxy (see [Configuring a reverse proxy](https://www.keycloak.org/server/reverseproxy) in the documentation). 
 This model was chosen for the initial production deployment of Keycloak at Harvard Dataverse Repository, where it has been placed behind the Apache server. This allows the admins to use the standard Apache mechanisms for access control and makes it easy to run other services behind the same Apache instance.
 
 This actually simplifies the configuration of Keycloak itself, since it is not necessary to enable SSL - it can run on the default port 8080 with the https proxying provided by Apache. 
