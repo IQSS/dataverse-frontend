@@ -1,12 +1,13 @@
 import { Dataset, DatasetLock } from '../models/Dataset'
 import { DatasetVersionDiff } from '../models/DatasetVersionDiff'
 import { DatasetPaginationInfo } from '../models/DatasetPaginationInfo'
-import { DatasetDTO } from '../useCases/DTOs/DatasetDTO'
+import { CitationFormat, DatasetDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../models/DatasetsWithCount'
 import { VersionUpdateType } from '../models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '../models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
+import { FormattedCitation } from '../models/FormattedCitation'
 
 export interface DatasetRepository {
   getByPersistentId: (
@@ -47,4 +48,9 @@ export interface DatasetRepository {
     includeMDC?: boolean
   ) => Promise<DatasetDownloadCount>
   deleteDatasetDraft: (datasetId: string | number) => Promise<void>
+  getDatasetCitationInOtherFormats: (
+    datasetId: string | number,
+    version: string,
+    format: CitationFormat
+  ) => Promise<FormattedCitation>
 }
