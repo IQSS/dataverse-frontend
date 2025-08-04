@@ -46,33 +46,6 @@ export const WithSearchEnginesDropdown: Story = {
         paddingBlock: '2rem'
       }}>
       <SearchInput
-        searchDropdownPosition="right"
-        searchServices={[
-          {
-            name: 'postExternalSearch',
-            displayName: 'Natural Language Search'
-          },
-          {
-            name: 'solr',
-            displayName: 'Dataverse Standard Search'
-          }
-        ]}
-      />
-    </div>
-  )
-}
-
-export const WithSearchEngineDropdownOnTheLeft: Story = {
-  render: () => (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingBlock: '2rem'
-      }}>
-      <SearchInput
-        searchDropdownPosition="left"
         searchServices={[
           {
             name: 'postExternalSearch',

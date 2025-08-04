@@ -97,72 +97,42 @@
 
 .search-dropdown {
   height: 100%;
+}
 
-  .search-dropdown-btn {
-    @extend %search-btn;
+.search-dropdown-btn {
+  @extend %search-btn;
 
-    z-index: 2;
-    min-width: var(--search-engine-icon-btn-width);
+  z-index: 2;
+  min-width: var(--search-engine-icon-btn-width);
+  aspect-ratio: 1;
+  height: 100%;
+}
 
-    &.on-the-left {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
+// This selector is used to style the dropdown button when the dropdown is open
+:global(.show).search-dropdown .search-dropdown-btn {
+  background-color: color.adjust($dv-brand-color, $lightness: -10%);
+}
 
-      &::after {
-        position: absolute;
-        top: 0;
-        left: 100%;
-        width: calc(
-          1.25rem + var(--search-input-gap)
-        ); // The padding inline the input has + flex gap of the search input
+.search-dropdown-menu {
+  min-width: calc(var(--search-input-max-width) / 2);
+  margin-top: 10px;
+  padding-top: 0;
 
-        height: 100%;
-        background-color: transparent;
-        transition: var(--search-input-transition);
-        transition-property: background-color;
-        content: '';
-      }
+  .search-dropdown-item {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
 
-      &:hover::after {
-        background-color: color.adjust($dv-brand-color, $lightness: -10%);
-      }
-
-      &:active::after {
-        background-color: color.adjust($dv-brand-color, $lightness: -15%);
-      }
-
-      svg {
-        margin-left: 4px;
-      }
+    svg {
+      color: $dv-text-color;
     }
 
-    &.on-the-right {
-      aspect-ratio: 1;
-      height: 100%;
-    }
-  }
-
-  .search-dropdown-menu {
-    min-width: calc(var(--search-input-max-width) / 2);
-    margin-top: 10px;
-    padding-top: 0;
-
-    .search-dropdown-item {
-      display: flex;
-      gap: 0.35rem;
-      align-items: center;
+    &[aria-selected='true'],
+    &:active {
+      background-color: $dv-brand-color;
 
       svg {
-        color: $dv-text-color;
-      }
-
-      &[aria-selected='true'],
-      &:active {
-        background-color: $dv-brand-color;
-
-        svg {
-          color: #fff;
-        }
+        color: #fff;
       }
     }
   }

@@ -7,10 +7,6 @@ export class SearchMockRepository implements SearchRepository {
       setTimeout(() => {
         resolve([
           {
-            name: 'postExternalSearch',
-            displayName: 'Natural Language Search'
-          },
-          {
             name: 'solr',
             displayName: 'Dataverse Standard Search'
           }

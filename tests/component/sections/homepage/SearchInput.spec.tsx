@@ -25,4 +25,37 @@ describe('SearchInput', () => {
     cy.get('[aria-label="Search"]').should('have.value', '')
     cy.get('[aria-label="Submit Search"]').click()
   })
+
+  it('should show the SearchDropdown with the search services when there is more than one search service', () => {
+    const searchServices = [
+      { name: 'Solr', displayName: 'Solr' },
+      { name: 'ExternalSearch', displayName: 'External Search' }
+    ]
+    cy.customMount(<SearchInput searchServices={searchServices} />)
+    cy.findByRole('button', { name: 'Toggle search services dropdown' })
+      .should('exist')
+      .as('searchDropdownToggle')
+
+    cy.get('@searchDropdownToggle').click()
+
+    cy.findByRole('button', { name: 'Solr' }).should('exist')
+    cy.findByRole('button', { name: 'External Search' }).should('exist').click()
+
+    // Check if the selected service is highlighted
+    cy.get('@searchDropdownToggle').click()
+    cy.findByRole('button', { name: 'External Search' }).should(
+      'have.attr',
+      'aria-selected',
+      'true'
+    )
+    // Check if clicking on Solr unselects External Search
+    cy.findByRole('button', { name: 'Solr' }).should('have.attr', 'aria-selected', 'false').click()
+    cy.get('@searchDropdownToggle').click()
+    cy.findByRole('button', { name: 'Solr' }).should('have.attr', 'aria-selected', 'true')
+    cy.findByRole('button', { name: 'External Search' }).should(
+      'have.attr',
+      'aria-selected',
+      'false'
+    )
+  })
 })

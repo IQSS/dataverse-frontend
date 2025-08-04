@@ -14,13 +14,9 @@ export const SOLR_SERVICE_NAME = 'solr'
 
 interface SearchInputProps {
   searchServices: SearchService[]
-  searchDropdownPosition?: 'left' | 'right'
 }
 
-export const SearchInput = ({
-  searchServices,
-  searchDropdownPosition = 'right'
-}: SearchInputProps) => {
+export const SearchInput = ({ searchServices }: SearchInputProps) => {
   const navigate = useNavigate()
   const { t } = useTranslation('shared')
   const inputSearchRef = useRef<HTMLInputElement>(null)
@@ -70,14 +66,6 @@ export const SearchInput = ({
 
   return (
     <form onSubmit={handleSubmit} className={styles['search-input-wrapper']} role="search">
-      {hasMoreThanOneSearchService && searchDropdownPosition === 'left' && (
-        <SearchDropdown
-          searchServiceSelected={searchServiceSelected}
-          handleSearchEngineSelect={handleSearchEngineSelect}
-          searchServices={searchServices}
-          position="left"
-        />
-      )}
       <div className={styles['input-and-clear-wrapper']}>
         <Form.Group.Input
           type="text"
@@ -97,12 +85,11 @@ export const SearchInput = ({
           />
         )}
       </div>
-      {hasMoreThanOneSearchService && searchDropdownPosition === 'right' && (
+      {hasMoreThanOneSearchService && (
         <SearchDropdown
           searchServiceSelected={searchServiceSelected}
           handleSearchEngineSelect={handleSearchEngineSelect}
           searchServices={searchServices}
-          position="right"
         />
       )}
       <button type="submit" aria-label={t('submitSearch')} className={styles['search-btn']}>

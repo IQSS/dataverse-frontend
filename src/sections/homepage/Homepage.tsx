@@ -14,17 +14,6 @@ import { Metrics } from './metrics/Metrics'
 import { Usage } from './usage/Usage'
 import styles from './Homepage.module.scss'
 
-// const searchServicesMock = [
-//   {
-//     name: 'postExternalSearch',
-//     displayName: 'Natural Language Search'
-//   },
-//   {
-//     name: 'solr',
-//     displayName: 'Dataverse Standard Search'
-//   }
-// ]
-
 interface HomepageProps {
   collectionRepository: CollectionRepository
   dataverseHubRepository: DataverseHubRepository
@@ -61,7 +50,7 @@ export const Homepage = ({
       </div>
 
       <div className={styles['middle-search-cta-wrapper']}>
-        <SearchInput searchDropdownPosition="right" searchServices={searchServices} />
+        <SearchInput searchServices={searchServices} />
         <Link to="/collections" className="btn btn-secondary">
           {t('browseCollections')}
         </Link>

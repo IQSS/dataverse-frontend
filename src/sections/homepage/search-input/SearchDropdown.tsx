@@ -1,27 +1,23 @@
 import { ForwardedRef, forwardRef } from 'react'
-import cn from 'classnames'
-import { Dropdown } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 import { CaretDownFill, Search as SearchIcon, Stars as StarsIcon } from 'react-bootstrap-icons'
+import { DropdownButton, DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { SearchService } from '@/search/domain/models/SearchService'
 import { SOLR_SERVICE_NAME } from './SearchInput'
 import styles from './SearchInput.module.scss'
-
-// TODO:ME - Don't use react-boostrap, move to dataverse-design-system and first check a11ty
-// TODO:ME - Persistir hover focus style de boton mientras el dropdown está abierto
 
 interface SearchDropdownProps {
   searchServices: SearchService[]
   searchServiceSelected: string
   handleSearchEngineSelect: (eventKey: string | null) => void
-  position?: 'left' | 'right'
 }
 
 export const SearchDropdown = ({
   searchServices,
   searchServiceSelected,
-  handleSearchEngineSelect,
-  position
+  handleSearchEngineSelect
 }: SearchDropdownProps) => {
+  const { t } = useTranslation('homepage')
   // Sort the search services to show the Solr service first
   const searchServicesWithSolrFirst = [...searchServices].sort((a, b) => {
     if (a.name === SOLR_SERVICE_NAME) return -1
@@ -30,52 +26,52 @@ export const SearchDropdown = ({
   })
 
   return (
-    <Dropdown
-      className={styles['search-dropdown']}
-      align={position === 'left' ? 'start' : 'end'}
-      onSelect={handleSearchEngineSelect}>
-      <Dropdown.Toggle as={CustomToggle} position={position} />
+    <DropdownButton
+      id="search-dropdown"
+      onSelect={handleSearchEngineSelect}
+      customToggle={CustomToggle}
+      customToggleClassname={styles['search-dropdown']}
+      customToggleMenuClassname={styles['search-dropdown-menu']}
+      align="end">
+      <DropdownHeader>{t('searchDropdown.header')}</DropdownHeader>
+      {searchServicesWithSolrFirst.map((service) => {
+        const isSolrService = service.name === SOLR_SERVICE_NAME
 
-      <Dropdown.Menu className={styles['search-dropdown-menu']}>
-        <Dropdown.Header>Search Services</Dropdown.Header>
-        {searchServicesWithSolrFirst.map((service) => {
-          const isSolrService = service.name === SOLR_SERVICE_NAME
-
-          return (
-            <Dropdown.Item
-              eventKey={service.name}
-              active={searchServiceSelected === service.name}
-              className={styles['search-dropdown-item']}
-              key={service.name}>
-              {isSolrService ? <SearchIcon size={12} /> : <StarsIcon size={12} />}
-              {service.displayName}
-            </Dropdown.Item>
-          )
-        })}
-      </Dropdown.Menu>
-    </Dropdown>
+        return (
+          <DropdownButtonItem
+            eventKey={service.name}
+            active={searchServiceSelected === service.name}
+            className={styles['search-dropdown-item']}
+            as="button"
+            key={service.name}>
+            {isSolrService ? <SearchIcon size={12} /> : <StarsIcon size={12} />}
+            {service.displayName}
+          </DropdownButtonItem>
+        )
+      })}
+    </DropdownButton>
   )
 }
 
 interface CustomToggleProps {
   onClick: (event: React.MouseEvent<HTMLElement>) => void
-  position?: 'left' | 'right'
 }
 
-const CustomToggle = forwardRef(({ onClick, position }: CustomToggleProps, ref) => (
-  <button
-    type="button"
-    ref={ref as ForwardedRef<HTMLButtonElement>}
-    onClick={(e) => {
-      e.preventDefault()
-      onClick(e)
-    }}
-    className={cn(styles['search-dropdown-btn'], {
-      [styles['on-the-left']]: position === 'left',
-      [styles['on-the-right']]: position === 'right'
-    })}>
-    <CaretDownFill size={14} />
-  </button>
-))
+const CustomToggle = forwardRef(({ onClick }: CustomToggleProps, ref) => {
+  const { t } = useTranslation('homepage')
+  return (
+    <button
+      type="button"
+      aria-label={t('searchDropdown.buttonLabel')}
+      ref={ref as ForwardedRef<HTMLButtonElement>}
+      onClick={(e) => {
+        e.preventDefault()
+        onClick(e)
+      }}
+      className={styles['search-dropdown-btn']}>
+      <CaretDownFill size={14} />
+    </button>
+  )
+})
 
 CustomToggle.displayName = 'CustomToggle'
