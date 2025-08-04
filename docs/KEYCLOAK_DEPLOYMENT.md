@@ -57,6 +57,8 @@ quarkus.datasource.user-store.jdbc.xa-properties.databaseName=<DB_NAME>
 
 ### SSL configuration
 
+(Consult the "Production Deployment" section for a possible alternative configuration that allows to run Keycloak securely behind an https proxy, without having to enable SSL in Keycloak itself.)
+
 To enable SSL in Keycloak, you first need to add the required SSL certificates and private keys to the instance. Specifically, the following files should be added:
 
 - `/etc/ssl/certs/<CER_NAME>.cer`
@@ -85,7 +87,7 @@ This command will set up an admin user so you can log in and create a permanent 
 For subsequent executions of Keycloak, you can use the following command omitting the admin user bootstrapping parameters:
 
 ```bash
-nohup ./bin/kc.sh start --hostname https://<KEYCLOAK_DOMAIN> > keycloak.log 2>&1 &2>&1 &
+nohup ./bin/kc.sh start --hostname https://<KEYCLOAK_DOMAIN> > keycloak.log 2>&1 &
 ```
 
 Note that the output logs of the command are saved in a file named ``keycloak.log``.
@@ -289,6 +291,64 @@ curl -X POST \
   -d "password=<DATAVERSE_PASSWORD>" \
   -d "scope=openid"
 ```
+
+### Production Deployment 
+
+A common alternative configuration is to run Keycloak behind a reverse proxy (see [Configuring a reverse proxy](https://www.keycloak.org/server/reverseproxy) in the documentation. 
+This model was chosen for the initial production deployment of Keycloak at Harvard Dataverse Repository, where it has been placed behind the Apache server. This allows the admins to use the standard Apache mechanisms for access control and makes it easy to run other services behind the same Apache instance.
+
+This actually simplifies the configuration of Keycloak itself, since it is not necessary to enable SSL - it can run on the default port 8080 with the https proxying provided by Apache. 
+
+The following configuration options must be enabled to facilitate this setup: 
+
+On the Keycloak level, the application must be started with the following options: 
+```--http-enabled=true --proxy-headers xforwarded```. 
+The configuration and the environmental variables described in the "SSL configuration" must NOT be present. 
+
+On the Apache level, the following headers need to be enabled: 
+
+```
+  ProxyRequests Off
+  ProxyPreserveHost On
+  RequestHeader set X-Forwarded-Proto "https"
+  RequestHeader set X-Forwarded-Port "443"
+```
+
+Rewrite rules can be utilized to separate the Keycloak traffic from other services that may need to be provided by the Apache instance. 
+In the following example, everything with exception of `/service1/*` and `/service2/*` is passed to Keycloak running on port 8080: 
+
+```
+  ProxyPassMatch ^/service1/	!
+  ProxyPassMatch ^/service2/	!
+  ProxyPass / http://localhost:8080/ 
+  ProxyPassReverse / http://localhost:8080/
+```
+
+(Note that the ProxyPass rules above can be further tightened, only allowing certain parts of KeyCloak to be exposed externally). 
+
+The following startup file (`/etc/systemd/system/keycloak.service`) has been created. Note the path name that reflects the standard used by the Harvad Library Technical Services who maintain our production servers.
+
+```
+[Unit]
+Description=Harvard IQSS Dataverse Keycloak Server
+After=syslog.target network.target
+Before=httpd.service
+ConditionPathExists=/opt/dvn/keycloak/current/bin/kc.sh
+
+[Service]
+User=root
+Group=root
+ExecStart=/opt/dvn/keycloak/current/bin/kc.sh start --hostname auth.dataverse.harvard.edu --http-enabled=true --proxy-headers xforwarded
+TimeoutStartSec=600
+TimeoutStopSec=600
+Restart=on-failure
+LimitNOFILE=10240
+
+[Install]
+WantedBy=multi-user.target
+```
+
+`systemctl enable keycloak` to make sure Keycloak starts every time the instance boots. 
 
 ### Register the Keycloak Dataverse Backend OIDC client in Dataverse
 
