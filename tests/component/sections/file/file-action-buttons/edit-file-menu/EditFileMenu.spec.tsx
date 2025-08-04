@@ -608,7 +608,7 @@ describe('EditFileMenu', () => {
       })
     })
 
-    it.only('shows toast success message when file tags are updated successfully', () => {
+    it('shows toast success message when file tags are updated successfully', () => {
       cy.findByRole('button', { name: 'Edit File' }).click()
       cy.findByRole('button', { name: 'Tags' }).click()
       cy.findByRole('dialog').should('exist')

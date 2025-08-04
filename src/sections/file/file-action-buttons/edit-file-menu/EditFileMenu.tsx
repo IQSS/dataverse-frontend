@@ -72,7 +72,6 @@ export const EditFileMenu = ({
         )}>
         {t('actionButtons.editFileMenu.options.replace')}
       </DropdownButtonItem>
-      <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
       <EditFileTagsButton
         fileId={fileId}
         fileRepository={fileRepository}
@@ -81,6 +80,7 @@ export const EditFileMenu = ({
         isTabularFile={isTabularFile}
         datasetRepository={datasetRepository}
       />
+      <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
     </DropdownButton>
   )
 }
