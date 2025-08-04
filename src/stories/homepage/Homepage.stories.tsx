@@ -3,7 +3,7 @@ import Homepage from '../../sections/homepage/Homepage'
 import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { DataverseHubMockRepository } from '../dataverse-hub/DataverseHubMockRepository'
 import { SearchMockRepository } from '../shared-mock-repositories/search/SearchMockRepository'
@@ -36,23 +36,23 @@ collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
-        CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+        FeaturedItemMother.createCustomFeaturedItem('css', {
           id: 11,
           displayOrder: 1
         }),
-        CollectionFeaturedItemMother.createDvObjectCollectionFeaturedItem({
+        FeaturedItemMother.createDvObjectCollectionFeaturedItem({
           id: 32,
           displayOrder: 2
         }),
-        CollectionFeaturedItemMother.createDvObjectDatasetFeaturedItem({
+        FeaturedItemMother.createDvObjectDatasetFeaturedItem({
           id: 40,
           displayOrder: 3
         }),
-        CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
+        FeaturedItemMother.createCustomFeaturedItem('books', {
           id: 55,
           displayOrder: 4
         }),
-        CollectionFeaturedItemMother.createDvObjectFileFeaturedItem({
+        FeaturedItemMother.createDvObjectFileFeaturedItem({
           id: 45,
           displayOrder: 5
         })

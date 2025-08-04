@@ -11,13 +11,15 @@ type UseLoadFilesCountInfoParams = {
   datasetPersistentId: string
   datasetVersion: DatasetVersion
   criteria?: FileCriteria
+  includeDeaccessioned?: boolean
 }
 
 export const useGetFilesCountInfo = ({
   filesRepository,
   datasetPersistentId,
   datasetVersion,
-  criteria
+  criteria,
+  includeDeaccessioned
 }: UseLoadFilesCountInfoParams) => {
   const { t } = useTranslation('files')
   const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>()
@@ -32,7 +34,8 @@ export const useGetFilesCountInfo = ({
         filesRepository,
         datasetPersistentId,
         datasetVersion.number,
-        criteria
+        criteria,
+        includeDeaccessioned
       )
       setFilesCountInfo(filesCountInfo)
     } catch (err) {
@@ -42,7 +45,14 @@ export const useGetFilesCountInfo = ({
     } finally {
       setIsLoading(false)
     }
-  }, [filesRepository, datasetPersistentId, datasetVersion.number, criteria, t])
+  }, [
+    filesRepository,
+    datasetPersistentId,
+    datasetVersion.number,
+    criteria,
+    includeDeaccessioned,
+    t
+  ])
 
   useEffect(() => {
     void getFilesCountInfo()

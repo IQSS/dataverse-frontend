@@ -21,6 +21,8 @@ export const collectionNameToAlias = (name: string) => {
 const locationOrigin =
   import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true' ? 'https://foo.com' : window.location.origin
 
+const BASENAME_URL = import.meta.env.BASE_URL ?? ''
+
 interface IdentifierFieldProps {
   rules: UseControllerProps['rules']
 }
@@ -48,7 +50,10 @@ export const IdentifierField = ({ rules }: IdentifierFieldProps) => {
         render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
           <Col>
             <Form.InputGroup hasValidation>
-              <Form.InputGroup.Text>{locationOrigin}/spa/collections/</Form.InputGroup.Text>
+              <Form.InputGroup.Text>
+                {locationOrigin}
+                {BASENAME_URL}/collections/
+              </Form.InputGroup.Text>
               <Form.Group.Input
                 type="text"
                 aria-label="identifier"

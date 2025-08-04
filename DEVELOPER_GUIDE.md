@@ -1088,6 +1088,8 @@ The Design System is published to the npm Package Registry. To publish a new ver
 
    Open the `.npmrc` file and replace `YOUR_NPM_TOKEN ` with your actual npm token.
 
+   ⚠️ Please ensure that any lines registering the `@iqss` scope with the GitHub Packages registry are commented out. This is important because otherwise, the package would be published there instead of npm.
+
    ```plaintext
    legacy-peer-deps=true
 

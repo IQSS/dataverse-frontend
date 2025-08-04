@@ -75,7 +75,7 @@ describe('EditCollectionDropdown', () => {
     })
   })
 
-  it('clicks the general info button', () => {
+  it('shows the General Information button with the correct link', () => {
     cy.mountAuthenticated(
       <EditCollectionDropdown
         collection={rootCollection}
@@ -86,10 +86,14 @@ describe('EditCollectionDropdown', () => {
 
     openDropdown()
 
-    cy.findByRole('button', { name: /General Information/i }).click()
+    cy.findByRole('link', { name: 'General Information' }).should(
+      'have.attr',
+      'href',
+      '/collections/root/edit'
+    )
   })
 
-  it('clicks the featured items button', () => {
+  it('shows the Featured Items button with the correct link', () => {
     cy.mountAuthenticated(
       <EditCollectionDropdown
         collection={rootCollection}
@@ -100,7 +104,11 @@ describe('EditCollectionDropdown', () => {
 
     openDropdown()
 
-    cy.findByRole('button', { name: /Featured Items/i }).click()
+    cy.findByRole('link', { name: 'Featured Items' }).should(
+      'have.attr',
+      'href',
+      '/collections/root/edit-featured-items'
+    )
   })
 
   describe('delete button', () => {

@@ -1,12 +1,12 @@
 import { CustomFeaturedItemCard } from '@/sections/collection/featured-items/custom-featured-item-card/CustomFeaturedItemCard'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 
-const featuredItemWithImage = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+const featuredItemWithImage = FeaturedItemMother.createCustomFeaturedItem('css', {
   id: 1,
   content: 'hey'
 })
 
-const featuredItemWithoutImage = CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
+const featuredItemWithoutImage = FeaturedItemMother.createCustomFeaturedItem('books', {
   id: 2,
   content: 'hey I am without image',
   imageFileUrl: undefined

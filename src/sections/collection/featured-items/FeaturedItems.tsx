@@ -4,8 +4,8 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { Button, useTheme } from '@iqss/dataverse-design-system'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { CustomFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { useGetCollectionFeaturedItems } from '../useGetCollectionFeaturedItems'
+import { FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
+import { useGetFeaturedItems } from '../useGetFeaturedItems'
 import { CustomFeaturedItemCard } from './custom-featured-item-card/CustomFeaturedItemCard'
 import { DvObjectFeaturedItemCard } from './dv-object-featured-item-card/DvObjectFeaturedItemCard'
 import styles from './FeaturedItems.module.scss'
@@ -30,10 +30,12 @@ export const FeaturedItems = ({
   const [nextBtnDisabled, setNextBtnDisabled] = useState(false)
   const [isOverflowing, setIsOverflowing] = useState(false)
 
-  const { collectionFeaturedItems, isLoading: isLoadingCollectionFeaturedItems } =
-    useGetCollectionFeaturedItems(collectionRepository, collectionId)
+  const { featuredItems, isLoading: isLoadingFeaturedItems } = useGetFeaturedItems(
+    collectionRepository,
+    collectionId
+  )
 
-  const hasFeaturedItems = collectionFeaturedItems.length > 0
+  const hasFeaturedItems = featuredItems.length > 0
 
   useEffect(() => {
     if (sliderRef.current) {
@@ -53,9 +55,9 @@ export const FeaturedItems = ({
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [collectionFeaturedItems])
+  }, [featuredItems])
 
-  if (isLoadingCollectionFeaturedItems && withLoadingSkeleton) {
+  if (isLoadingFeaturedItems && withLoadingSkeleton) {
     return (
       <SkeletonTheme>
         <div
@@ -77,15 +79,15 @@ export const FeaturedItems = ({
     )
   }
 
-  if (isLoadingCollectionFeaturedItems && !withLoadingSkeleton) {
+  if (isLoadingFeaturedItems && !withLoadingSkeleton) {
     return null
   }
 
-  if (!isLoadingCollectionFeaturedItems && !hasFeaturedItems) {
+  if (!isLoadingFeaturedItems && !hasFeaturedItems) {
     return null
   }
 
-  const oneItemOnly = collectionFeaturedItems.length === 1
+  const oneItemOnly = featuredItems.length === 1
 
   const handleNext = () => {
     if (sliderRef.current) {
@@ -153,16 +155,12 @@ export const FeaturedItems = ({
             checkSliderPositionToDisableButtons()
           }}
           tabIndex={0}>
-          {collectionFeaturedItems.map((item, index) => (
+          {featuredItems.map((item, index) => (
             <div key={index} className={styles['slider-item']} data-index={index}>
-              {item.type === 'collection' || item.type === 'dataset' || item.type === 'file' ? (
-                <DvObjectFeaturedItemCard featuredItem={item} key={item.id} />
+              {item.type === FeaturedItemType.CUSTOM ? (
+                <CustomFeaturedItemCard featuredItem={item} collectionId={collectionId} />
               ) : (
-                <CustomFeaturedItemCard
-                  featuredItem={item as CustomFeaturedItem}
-                  collectionId={collectionId}
-                  key={item.id}
-                />
+                <DvObjectFeaturedItemCard featuredItem={item} />
               )}
             </div>
           ))}

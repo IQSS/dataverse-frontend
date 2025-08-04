@@ -5,8 +5,8 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { Collection } from '../../collection/domain/models/Collection'
 import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
 import { CollectionMockRepository } from './CollectionMockRepository'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
+import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 
 export class CollectionErrorMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
@@ -45,7 +45,7 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
     })
   }
 
-  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<FeaturedItem[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Something went wrong')
@@ -55,8 +55,8 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
 
   updateFeaturedItems(
     _collectionId: string,
-    _featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<CollectionFeaturedItem[]> {
+    _featuredItemsDTO: FeaturedItemsDTO
+  ): Promise<FeaturedItem[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Something went wrong')
@@ -65,6 +65,14 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
   }
 
   deleteFeaturedItems(_collectionIdOrAlias: number | string): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  deleteFeaturedItem(_featuredItemId: number): Promise<void> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Something went wrong')

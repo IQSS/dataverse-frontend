@@ -6,7 +6,7 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from './CollectionMockRepository'
 import { CollectionLoadingMockRepository } from './CollectionLoadingMockRepository'
 import { UnpublishedCollectionMockRepository } from '@/stories/collection/UnpublishedCollectionMockRepository'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { ContactMockRepository } from '../shared/contact/ContactMockRepository'
 
@@ -112,7 +112,7 @@ const collectionRepositoryWithFeaturedItems = new CollectionMockRepository()
 collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(CollectionFeaturedItemMother.createFeaturedItems())
+      resolve(FeaturedItemMother.createFeaturedItems())
     }, FakerHelper.loadingTimout())
   })
 }

@@ -49,11 +49,19 @@ describe('DatasetVersions', () => {
     cy.findByRole('button', { name: 'View Differences' }).should('not.exist')
     cy.findAllByTestId('select-checkbox').should('not.exist')
     cy.findByText(/View Details/).should('not.exist')
+
+    cy.findByText('DRAFT').should('exist').and('have.attr', 'href')
   })
 
   beforeEach(() => {
     cy.customMount(
-      <DatasetVersions datasetId={'datasetId'} datasetRepository={datasetsRepository} isInView />
+      <DatasetVersions
+        datasetId={'datasetId'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'1.0'}
+        canUpdateDataset={true}
+        isInView
+      />
     )
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
     datasetsRepository.getVersionDiff = cy.stub().resolves(datasetVersionDiff)
@@ -103,6 +111,12 @@ describe('DatasetVersions', () => {
     cy.contains('th', 'Published On').should('exist')
     cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
     cy.findByRole('button', { name: 'View Differences' }).should('not.exist')
+
+    cy.findByText('DRAFT').should('exist').and('have.attr', 'href')
+    cy.findByText('4.0').should('exist').and('have.attr', 'href')
+    cy.findByText('3.0').should('exist').and('have.attr', 'href')
+    cy.findByText('2.0').should('exist').and('have.attr', 'href')
+    cy.findByText('1.0').should('exist').and('not.have.attr', 'href')
   })
 
   it('should not show view detail buttons if there is only one version', () => {
@@ -132,7 +146,13 @@ describe('DatasetVersions', () => {
 
   it('should not render the dataset version table if dataset is undefined', () => {
     cy.customMount(
-      <DatasetVersions datasetId={''} datasetRepository={datasetsRepository} isInView />
+      <DatasetVersions
+        datasetId={''}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'1.0'}
+        canUpdateDataset={true}
+        isInView
+      />
     )
     cy.findByTestId('dataset-versions-table').should('not.exist')
   })
@@ -140,7 +160,13 @@ describe('DatasetVersions', () => {
   it('should render loading skeleton if the dataset version is loading', () => {
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().returns(new Promise(() => {}))
     cy.customMount(
-      <DatasetVersions datasetId={'datasetId'} datasetRepository={datasetsRepository} isInView />
+      <DatasetVersions
+        datasetId={'datasetId'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'1.0'}
+        canUpdateDataset={true}
+        isInView
+      />
     )
     cy.findByTestId('dataset-loading-skeleton').should('exist')
     cy.findByTestId('dataset-versions-table').should('not.exist')
@@ -148,7 +174,13 @@ describe('DatasetVersions', () => {
 
   it('should render view differences button, open a modal if click', () => {
     cy.customMount(
-      <DatasetVersions datasetId={''} datasetRepository={datasetsRepository} isInView />
+      <DatasetVersions
+        datasetId={''}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'1.0'}
+        canUpdateDataset={true}
+        isInView
+      />
     )
 
     cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
@@ -160,7 +192,13 @@ describe('DatasetVersions', () => {
 
   it('should render view differences button, close modal if cancel', () => {
     cy.customMount(
-      <DatasetVersions datasetId={''} datasetRepository={datasetsRepository} isInView />
+      <DatasetVersions
+        datasetId={''}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'1.0'}
+        canUpdateDataset={true}
+        isInView
+      />
     )
 
     cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
@@ -174,8 +212,15 @@ describe('DatasetVersions', () => {
 
   it('should render view differences button, close modal if click outside', () => {
     cy.customMount(
-      <DatasetVersions datasetId={''} datasetRepository={datasetsRepository} isInView />
+      <DatasetVersions
+        datasetId={''}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'DRAFT'}
+        canUpdateDataset={true}
+        isInView
+      />
     )
+
     cy.get('input[type="checkbox"]').first().check()
     cy.get('input[type="checkbox"]').last().check()
     cy.findByRole('button', { name: 'View Differences' }).should('exist').click()
@@ -183,5 +228,24 @@ describe('DatasetVersions', () => {
     cy.findByRole('button', { name: /Cancel/i }).click()
     cy.findByRole('dialog').should('not.exist')
     cy.findByRole('button', { name: 'View Differences' }).should('exist')
+  })
+
+  it('should not navigate to Deaccessioned version if canUpdateDataset is false', () => {
+    datasetsRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves(DatasetVersionsSummariesMother.createDeaccessioned())
+
+    cy.customMount(
+      <DatasetVersions
+        datasetId={''}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'DRAFT'}
+        canUpdateDataset={false}
+        isInView
+      />
+    )
+
+    cy.get('input[type="checkbox"]').first().should('be.disabled')
+    cy.findByText('4.0').should('exist').and('not.have.attr', 'href')
   })
 })

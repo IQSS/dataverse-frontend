@@ -1,13 +1,15 @@
 import { Collection } from '../models/Collection'
 import { CollectionFacet } from '../models/CollectionFacet'
-import { CollectionFeaturedItem } from '../models/CollectionFeaturedItem'
+import { FeaturedItem } from '../models/FeaturedItem'
 import { CollectionItemsPaginationInfo } from '../models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '../models/CollectionItemSubset'
 import { MyDataCollectionItemSubset } from '../models/MyDataCollectionItemSubset'
 import { CollectionSearchCriteria } from '../models/CollectionSearchCriteria'
 import { CollectionUserPermissions } from '../models/CollectionUserPermissions'
 import { CollectionDTO } from '../useCases/DTOs/CollectionDTO'
-import { CollectionFeaturedItemsDTO } from '../useCases/DTOs/CollectionFeaturedItemsDTO'
+import { FeaturedItemsDTO } from '../useCases/DTOs/FeaturedItemsDTO'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 export interface CollectionRepository {
   getById: (id?: string) => Promise<Collection>
@@ -22,20 +24,21 @@ export interface CollectionRepository {
     searchCriteria?: CollectionSearchCriteria,
     searchService?: string
   ): Promise<CollectionItemSubset>
-  getMyDataItems(
+  getMyDataItems: (
     roleIds: number[],
-    collectionItemTypes: string[],
-    publicationStatuses: string[],
+    collectionItemTypes: CollectionItemType[],
+    publicationStatuses: PublicationStatus[],
     limit?: number,
     selectedPage?: number,
     searchText?: string,
     otherUserName?: string
-  ): Promise<MyDataCollectionItemSubset>
+  ) => Promise<MyDataCollectionItemSubset>
   edit(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void>
-  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]>
+  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<FeaturedItem[]>
   updateFeaturedItems(
     collectionIdOrAlias: number | string,
-    featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<CollectionFeaturedItem[]>
+    featuredItemsDTO: FeaturedItemsDTO
+  ): Promise<FeaturedItem[]>
   deleteFeaturedItems(collectionIdOrAlias: number | string): Promise<void>
+  deleteFeaturedItem(featuredItemId: number): Promise<void>
 }

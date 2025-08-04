@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Stack } from '@iqss/dataverse-design-system'
+import { Alert, Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { useLoading } from '@/sections/loading/LoadingContext'
 import {
   ItemsList,
   ItemsListType
@@ -21,9 +20,12 @@ import accountStyles from '@/sections/account/Account.module.scss'
 import { useSession } from '@/sections/session/SessionContext'
 import { UserNameSearch } from '@/sections/account/my-data-section/user-name-search/UserNameSearch'
 import styles from './MyDataItemsPanel.module.scss'
+import { RoleRepository } from '@/roles/domain/repositories/RoleRepository'
+import { useSelectableRoles } from '@/sections/account/my-data-section/useSelectableRoles'
 
 interface MyDataItemsPanelProps {
   collectionRepository: CollectionRepository
+  roleRepository: RoleRepository
 }
 
 /**
@@ -35,35 +37,37 @@ interface MyDataItemsPanelProps {
  * 4. When the user changes the item types, roles or publication statuses in the filter panel
  */
 
-export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps) => {
-  const { setIsLoading } = useLoading()
+export const MyDataItemsPanel = ({
+  collectionRepository,
+  roleRepository
+}: MyDataItemsPanelProps) => {
   const { user } = useSession()
   const { t } = useTranslation('account')
-
-  const [userRoles] = useState([
-    { roleId: 1, roleName: 'Admin' },
-    { roleId: 2, roleName: 'File Downloader' },
-    { roleId: 3, roleName: 'Dataverse + Dataset Creator' },
-    { roleId: 4, roleName: 'Dataverse Creator' },
-    { roleId: 5, roleName: 'Dataset Creator' },
-    { roleId: 6, roleName: 'Contributor' },
-    { roleId: 7, roleName: 'Curator' },
-    { roleId: 8, roleName: 'Member' }
-  ])
-  const roleIds = userRoles.map((role) => role.roleId)
-
+  const [roleIds, setRoleIds] = useState<number[]>([])
+  const {
+    roles: userRoles,
+    isLoading: isLoadingRoles,
+    error: rolesError
+  } = useSelectableRoles(roleRepository)
+  const [paginationInfo, setPaginationInfo] = useState<CollectionItemsPaginationInfo>(
+    new CollectionItemsPaginationInfo()
+  )
   const [currentSearchCriteria, setCurrentSearchCriteria] = useState<MyDataSearchCriteria>(
     new MyDataSearchCriteria(
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
       roleIds,
       AllPublicationStatuses,
-      undefined
+      undefined,
+      user?.superuser ? user.identifier : undefined
     )
   )
+  useEffect(() => {
+    if (!isLoadingRoles && userRoles.length > 0) {
+      const updatedRoleIds = userRoles.map((role) => role.id)
+      setRoleIds(updatedRoleIds)
+    }
+  }, [userRoles, isLoadingRoles])
 
-  const [paginationInfo, setPaginationInfo] = useState<CollectionItemsPaginationInfo>(
-    new CollectionItemsPaginationInfo()
-  )
   const itemsListContainerRef = useRef<HTMLDivElement | null>(null)
 
   const {
@@ -81,6 +85,19 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
   } = useGetMyDataAccumulatedItems({
     collectionRepository
   })
+  useEffect(() => {
+    if (!isLoadingRoles && roleIds.length > 0) {
+      const updatedCriteria = new MyDataSearchCriteria(
+        [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
+        roleIds,
+        AllPublicationStatuses,
+        undefined,
+        user?.superuser ? user.identifier : undefined
+      )
+      setCurrentSearchCriteria(updatedCriteria)
+    }
+  }, [isLoadingRoles, roleIds, user])
+
   async function handleLoadMoreOnBottomReach(currentPagination: CollectionItemsPaginationInfo) {
     let paginationInfoToSend = currentPagination
     if (totalAvailable !== undefined) {
@@ -142,7 +159,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
       roleIds,
       AllPublicationStatuses,
-      searchValue === '' ? undefined : searchValue
+      searchValue === '' ? undefined : searchValue,
+      currentSearchCriteria.otherUserName
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
@@ -193,7 +211,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       newItemsTypes,
       currentSearchCriteria.roleIds,
       currentSearchCriteria.publicationStatuses,
-      currentSearchCriteria.searchText
+      currentSearchCriteria.searchText,
+      currentSearchCriteria.otherUserName
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newMyDataSearchCriteria, true)
@@ -222,7 +241,8 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
       currentSearchCriteria.itemTypes,
       newRoleIds,
       currentSearchCriteria.publicationStatuses,
-      currentSearchCriteria.searchText
+      currentSearchCriteria.searchText,
+      currentSearchCriteria.otherUserName
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newMyDataSearchCriteria, true)
@@ -234,10 +254,15 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
     setCurrentSearchCriteria(newMyDataSearchCriteria)
   }
 
-  useEffect(() => {
-    setIsLoading(isLoadingItems)
-  }, [isLoadingItems, setIsLoading])
-
+  if (rolesError !== null) {
+    return (
+      <>
+        <Alert variant="danger" dismissible={false}>
+          {rolesError}
+        </Alert>
+      </>
+    )
+  }
   return (
     <>
       <p className={accountStyles['helper-text']}>{t('myData.description')}</p>
@@ -279,7 +304,7 @@ export const MyDataItemsPanel = ({ collectionRepository }: MyDataItemsPanelProps
               itemsListType={ItemsListType.MY_DATA_LIST}
               error={error}
               accumulatedCount={accumulatedCount}
-              isLoadingItems={isLoadingItems}
+              isLoadingItems={isLoadingItems || isLoadingRoles}
               areItemsAvailable={areItemsAvailable}
               hasNextPage={hasNextPage}
               isEmptyItems={isEmptyItems}

@@ -23,7 +23,9 @@ import {
   replaceFile,
   restrictFile,
   updateFileMetadata,
-  getFileVersionSummaries
+  getFileVersionSummaries,
+  updateFileTabularTags,
+  updateFileCategories
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -96,7 +98,8 @@ export class FileJSDataverseRepository implements FileRepository {
     datasetPersistentId: string,
     datasetVersion: DatasetVersion,
     paginationInfo: FilePaginationInfo = new FilePaginationInfo(),
-    criteria: FileCriteria = new FileCriteria()
+    criteria: FileCriteria = new FileCriteria(),
+    includeDeaccessioned?: boolean
   ): Promise<FilesWithCount> {
     return getDatasetFiles
       .execute(
@@ -210,7 +213,8 @@ export class FileJSDataverseRepository implements FileRepository {
   getFilesCountInfoByDatasetPersistentId(
     datasetPersistentId: string,
     datasetVersionNumber: DatasetVersionNumber,
-    criteria: FileCriteria
+    criteria: FileCriteria,
+    includeDeaccessioned?: boolean
   ): Promise<FilesCountInfo> {
     return getDatasetFileCounts
       .execute(
@@ -230,7 +234,8 @@ export class FileJSDataverseRepository implements FileRepository {
   getFilesTotalDownloadSizeByDatasetPersistentId(
     datasetPersistentId: string,
     datasetVersionNumber: DatasetVersionNumber,
-    criteria: FileCriteria = new FileCriteria()
+    criteria: FileCriteria = new FileCriteria(),
+    includeDeaccessioned?: boolean
   ): Promise<number> {
     return getDatasetFilesTotalDownloadSize
       .execute(
@@ -249,20 +254,29 @@ export class FileJSDataverseRepository implements FileRepository {
   }
 
   getById(id: number, datasetVersionNumber?: string): Promise<File> {
-    return getFileAndDataset
-      .execute(id, datasetVersionNumber)
-      .then(([jsFile, jsDataset]) =>
-        Promise.all([
-          jsFile,
-          jsDataset,
-          getDatasetCitation.execute(jsDataset.id, datasetVersionNumber, includeDeaccessioned),
-          FileJSDataverseRepository.getCitationById(jsFile.id, datasetVersionNumber),
-          FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
-          FileJSDataverseRepository.getPermissionsById(jsFile.id),
-          FileJSDataverseRepository.getThumbnailById(jsFile.id),
-          FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
-        ])
-      )
+    return FileJSDataverseRepository.getPermissionsById(id)
+      .then((permissions) => {
+        const includeDeaccessioned = permissions?.canEditOwnerDataset
+
+        return getFileAndDataset
+          .execute(id, datasetVersionNumber, includeDeaccessioned)
+          .then(([jsFile, jsDataset]) => {
+            return Promise.all([
+              jsFile,
+              jsDataset,
+              getDatasetCitation.execute(jsDataset.id, datasetVersionNumber, includeDeaccessioned),
+              FileJSDataverseRepository.getCitationById(
+                jsFile.id,
+                datasetVersionNumber,
+                includeDeaccessioned
+              ),
+              FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
+              Promise.resolve(permissions),
+              FileJSDataverseRepository.getThumbnailById(jsFile.id),
+              FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
+            ])
+          })
+      })
       .then(
         ([
           jsFile,
@@ -290,7 +304,11 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  private static getCitationById(id: number, datasetVersionNumber?: string): Promise<string> {
+  private static getCitationById(
+    id: number,
+    datasetVersionNumber?: string,
+    includeDeaccessioned?: boolean
+  ): Promise<string> {
     return getFileCitation
       .execute(id, datasetVersionNumber, includeDeaccessioned)
       .catch((error: ReadError) => {
@@ -362,5 +380,21 @@ export class FileJSDataverseRepository implements FileRepository {
 
   restrict(fileId: number | string, restrictFileDTO: RestrictFileDTO): Promise<void> {
     return restrictFile.execute(fileId, restrictFileDTO)
+  }
+
+  updateTabularTags(
+    fileId: number | string,
+    tabularTags: string[],
+    replace?: boolean
+  ): Promise<void> {
+    return updateFileTabularTags.execute(fileId, tabularTags, replace)
+  }
+
+  updateCategories(
+    fileId: number | string,
+    categories: string[],
+    replace?: boolean
+  ): Promise<void> {
+    return updateFileCategories.execute(fileId, categories, replace)
   }
 }

@@ -28,7 +28,7 @@ export const Slider = ({
   const sliderRef = useRef<HTMLDivElement | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const oneItemOnly = items.length === 1
+  const moreThanOne = items.length > 1
 
   const handleScroll = () => {
     if (sliderRef.current) {
@@ -68,7 +68,7 @@ export const Slider = ({
         className
       )}
       data-testid={dataTestId}>
-      {showArrows && !oneItemOnly && (
+      {showArrows && moreThanOne && (
         <Button
           className={styles['slider-arrow']}
           size="sm"
@@ -85,7 +85,7 @@ export const Slider = ({
           </div>
         ))}
       </div>
-      {showArrows && !oneItemOnly && (
+      {showArrows && moreThanOne && (
         <Button
           className={styles['slider-arrow']}
           size="sm"
@@ -95,7 +95,7 @@ export const Slider = ({
           <ChevronRight size={30} />
         </Button>
       )}
-      {showDots && !oneItemOnly && (
+      {showDots && moreThanOne && (
         <div className={styles['slider-dots']}>
           {items.map((_, index) => (
             <button

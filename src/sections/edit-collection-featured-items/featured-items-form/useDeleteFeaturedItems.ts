@@ -19,7 +19,7 @@ export const useDeleteFeaturedItems = (
 ): UseDeleteFeaturedItemsReturn => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const { t } = useTranslation('editCollectionFeaturedItems')
+  const { t } = useTranslation('editFeaturedItems')
   const navigate = useNavigate()
 
   const deleteFeaturedItems = () => {
