@@ -315,7 +315,7 @@ On the Apache level, the following headers need to be enabled:
 ```
 
 Rewrite rules can be utilized to separate the Keycloak traffic from other services that may need to be provided by the Apache instance. 
-In the following example, everything with exception of `/service1/*` and `/service2/*` is passed to Keycloak running on port 8080: 
+In the following example, everything with the exception of `/service1/*` and `/service2/*` is passed to Keycloak running on port 8080: 
 
 ```
   ProxyPassMatch ^/service1/	!
