@@ -12,10 +12,10 @@ export function SummaryLicense({ license, onCustomTermsClick }: LicenseProps) {
 
   return (
     <Row>
-      <Col sm={3}>
+      <Col md={3}>
         <b>{t('license.title')}</b>
       </Col>
-      <Col>
+      <Col md={9} className="pt-1 pt-md-0">
         {license && license.iconUri && (
           <img
             alt={t(`license.altTextPrefix`) + license.name}

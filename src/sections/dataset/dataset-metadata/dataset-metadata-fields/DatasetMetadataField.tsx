@@ -21,13 +21,13 @@ export function DatasetMetadataField({
 }: DatasetMetadataFieldProps) {
   return (
     <Row>
-      <Col sm={3}>
+      <Col md={3}>
         <DatasetMetadataFieldTitle
           metadataBlockName={metadataBlockName}
           metadataFieldName={metadataFieldName}
         />
       </Col>
-      <Col>
+      <Col md={9} className="pt-1 pt-md-0">
         <DatasetMetadataFieldTip
           metadataBlockName={metadataBlockName}
           metadataFieldName={metadataFieldName}
