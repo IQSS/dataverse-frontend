@@ -121,4 +121,30 @@ describe('DropdownButton', () => {
     )
     cy.findByText(titleText).should('be.disabled')
   })
+
+  it('renders with custom toggle', () => {
+    const CustomToggle = ({
+      onClick
+    }: {
+      onClick: (event: React.MouseEvent<HTMLElement>) => void
+    }) => (
+      <button type="button" onClick={onClick}>
+        Custom Toggle
+      </button>
+    )
+
+    cy.mount(
+      <DropdownButton
+        id="dropdown-custom-toggle"
+        title={titleText}
+        customToggle={CustomToggle}
+        onSelect={() => {}}>
+        <DropdownItem eventKey="option-1">Custom Option 1</DropdownItem>
+        <DropdownItem eventKey="option-2">Custom Option 2</DropdownItem>
+        <DropdownItem eventKey="option-3">Custom Option 3</DropdownItem>
+      </DropdownButton>
+    )
+
+    cy.findByText('Custom Toggle').should('exist')
+  })
 })
