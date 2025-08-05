@@ -7,13 +7,12 @@ import {
 import { MarkdownComponent } from '../../markdown/MarkdownComponent'
 import {
   DatasetMetadataFieldValue as DatasetMetadataFieldValueModel,
-  DatasetMetadataSubField,
-  MetadataBlockName
+  DatasetMetadataSubField
 } from '../../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
 
 interface DatasetMetadataFieldValueFormattedProps {
-  metadataBlockName: MetadataBlockName
+  metadataBlockName: string
   metadataFieldName: string
   metadataFieldValue: DatasetMetadataFieldValueModel
   metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat

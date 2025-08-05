@@ -1,10 +1,9 @@
 import { DatasetMetadataField } from './DatasetMetadataField'
 import { DatasetMetadataFields as DatasetMetadataFieldsModel } from '../../../../dataset/domain/models/Dataset'
-import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
 import { MetadataBlockInfoDisplayFormat } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 
 interface DatasetMetadataFieldsProps {
-  metadataBlockName: MetadataBlockName
+  metadataBlockName: string
   metadataFields: DatasetMetadataFieldsModel
   metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
 }

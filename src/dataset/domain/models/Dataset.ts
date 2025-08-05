@@ -26,6 +26,7 @@ export class DatasetLabel {
   ) {}
 }
 
+// Only for testing purposes and checking the existence of the citation block in some parts of the code
 export enum MetadataBlockName {
   CITATION = 'citation',
   GEOSPATIAL = 'geospatial',
@@ -40,7 +41,7 @@ export enum MetadataBlockName {
 export type DatasetMetadataBlocks = [CitationMetadataBlock, ...DatasetMetadataBlock[]]
 
 export interface DatasetMetadataBlock {
-  name: MetadataBlockName
+  name: string
   fields: DatasetMetadataFields
 }
 
@@ -59,7 +60,7 @@ export type DatasetMetadataFieldValue =
 export type DatasetMetadataSubField = Record<string, string | undefined>
 
 export interface CitationMetadataBlock extends DatasetMetadataBlock {
-  name: MetadataBlockName.CITATION
+  name: string // 'citation'
   fields: {
     alternativePersistentId?: string
     publicationDate?: string

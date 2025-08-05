@@ -8,17 +8,6 @@ export interface MetadataBlockInfo {
   displayOnCreate: boolean
 }
 
-export enum MetadataBlockName {
-  CITATION = 'citation',
-  GEOSPATIAL = 'geospatial',
-  ASTROPHYSICS = 'astrophysics',
-  BIOMEDICAL = 'biomedical',
-  CODE_META = 'codeMeta20',
-  COMPUTATIONAL_WORKFLOW = 'computationalworkflow',
-  JOURNAL = 'journal',
-  SOCIAL_SCIENCE = 'socialscience'
-}
-
 export interface MetadataBlockInfoWithMaybeValues extends MetadataBlockInfo {
   metadataFields: Record<string, MetadataFieldWithMaybeValue>
 }

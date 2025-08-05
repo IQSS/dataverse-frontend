@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { QuestionMarkTooltip } from '@iqss/dataverse-design-system'
-import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
 
 interface DatasetMetadataFieldTitleProps {
-  metadataBlockName: MetadataBlockName
+  metadataBlockName: string
   metadataFieldName: string
 }
 

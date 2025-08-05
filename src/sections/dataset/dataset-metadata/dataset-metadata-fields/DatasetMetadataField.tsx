@@ -1,13 +1,12 @@
 import { DatasetMetadataFieldValue as DatasetMetadataFieldValueModel } from '../../../../dataset/domain/models/Dataset'
 import { Col, Row } from '@iqss/dataverse-design-system'
-import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
 import { DatasetMetadataFieldValue } from './DatasetMetadataFieldValue'
 import { DatasetMetadataFieldTitle } from './DatasetMetadataFieldTitle'
 import { DatasetMetadataFieldTip } from './DatasetMetadataFieldTip'
 import { MetadataBlockInfoDisplayFormat } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 
 interface DatasetMetadataFieldProps {
-  metadataBlockName: MetadataBlockName
+  metadataBlockName: string
   metadataFieldName: string
   metadataFieldValue: DatasetMetadataFieldValueModel
   metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
