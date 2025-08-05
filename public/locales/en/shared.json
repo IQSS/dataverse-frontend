@@ -267,5 +267,11 @@
       }
     },
     "defaultFeedbackSubmitError": "An error occurred while submitting your feedback. Please try again later."
+  },
+  "expandableContent": {
+    "truncateMoreBtn": "Read full {{contentName}}",
+    "truncateLessBtn": "Show less {{contentName}}",
+    "truncateMoreTip": "Click to read the full {{contentName}}",
+    "truncateLessTip": "Click to collapse the {{contentName}}"
   }
 }

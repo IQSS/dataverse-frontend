@@ -11,6 +11,7 @@ import {
   MetadataBlockName
 } from '../../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
+import { ExpandableContent } from '@/sections/shared/expandable-content/ExpandableContent'
 
 interface DatasetMetadataFieldValueFormattedProps {
   metadataBlockName: MetadataBlockName
@@ -53,6 +54,14 @@ export function DatasetMetadataFieldValueFormatted({
       <a href={`${String(metadataFieldValue)}`} target="_blank" rel="noreferrer">
         {String(metadataFieldValue)}
       </a>
+    )
+  }
+
+  if (metadataFieldName === 'dsDescription') {
+    return (
+      <ExpandableContent contentName={translateFieldName(metadataFieldName)}>
+        <MarkdownComponent markdown={valueFormattedWithNamesTranslated} />
+      </ExpandableContent>
     )
   }
 
