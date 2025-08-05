@@ -270,7 +270,7 @@
   },
   "expandableContent": {
     "truncateMoreBtn": "Read full {{contentName}}",
-    "truncateLessBtn": "Show less {{contentName}}",
+    "truncateLessBtn": "Collapse {{contentName}}",
     "truncateMoreTip": "Click to read the full {{contentName}}",
     "truncateLessTip": "Click to collapse the {{contentName}}"
   }
