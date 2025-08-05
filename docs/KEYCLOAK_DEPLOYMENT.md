@@ -66,6 +66,8 @@ To enable SSL in Keycloak, you first need to add the required SSL certificates a
 
 Remember to update these routes with your actual file names.
 
+Please note that Keycloak requires that the certificate file above contains both the server certificate, and the issuer chain in the same file (in that order!). There are no options for configuring the 2 in separate files.
+
 Once the certificate and key have been uploaded to the instance, you need to configure the following Keycloak environment variables:
 
 - `KC_HTTPS_CERTIFICATE_FILE=/etc/ssl/certs/<CER_NAME>.cer`
@@ -295,15 +297,15 @@ curl -X POST \
 ### Production Deployment 
 
 A common alternative configuration is to run Keycloak behind a reverse proxy (see [Configuring a reverse proxy](https://www.keycloak.org/server/reverseproxy) in the documentation). 
-This model was chosen for the initial production deployment of Keycloak at Harvard Dataverse Repository, where it has been placed behind the Apache server. This allows the admins to use the standard Apache mechanisms for access control and makes it easy to run other services behind the same Apache instance.
+This model was chosen for the initial production deployment of Keycloak at Harvard Dataverse Repository, where it has been placed behind Apache. This allows the admins to use the standard Apache mechanisms for access control and makes it easy to run other services behind the same Apache instance.
 
-This actually simplifies the configuration of Keycloak itself, since it is not necessary to enable SSL - it can run on the default port 8080 with the https proxying provided by Apache. 
+This actually simplifies the configuration of Keycloak itself, since it is not necessary to enable SSL - it can run on the default port 8080 with the https proxying provided by Apache or Nginx, etc. 
 
 The following configuration options must be enabled to facilitate this setup: 
 
 On the Keycloak level, the application must be started with the following options: 
 ```--http-enabled=true --proxy-headers xforwarded```. 
-The configuration and the environmental variables described in the "SSL configuration" must NOT be present. 
+The configuration and the environmental variables described in the "SSL configuration" section must NOT be present. 
 
 On the Apache level, the following headers need to be enabled: 
 
@@ -326,7 +328,7 @@ In the following example, everything with the exception of `/service1/*` and `/s
 
 (Note that the ProxyPass rules above can be further tightened, only allowing certain parts of KeyCloak to be exposed externally). 
 
-The following startup file (`/etc/systemd/system/keycloak.service`) has been created. Note the path name that reflects the standard used by the Harvad Library Technical Services who maintain our production servers.
+The following startup file (`/etc/systemd/system/keycloak.service`) has been created. Note that Kyecloak runs under a dedicated non-root user, which is always recommended in production. 
 
 ```
 [Unit]
@@ -336,8 +338,8 @@ Before=httpd.service
 ConditionPathExists=/opt/dvn/keycloak/current/bin/kc.sh
 
 [Service]
-User=root
-Group=root
+User=keycloak
+Group=keycloak
 ExecStart=/opt/dvn/keycloak/current/bin/kc.sh start --hostname auth.dataverse.harvard.edu --http-enabled=true --proxy-headers xforwarded
 TimeoutStartSec=600
 TimeoutStopSec=600
