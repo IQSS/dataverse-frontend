@@ -27,6 +27,16 @@ export function DatasetMetadataField({
           title: t('persistentId.name'),
           description: t('persistentId.description')
         }
+      case 'publicationDate':
+        return {
+          title: t('publicationDate.name'),
+          description: t('publicationDate.description')
+        }
+      case 'alternativePersistentId':
+        return {
+          title: t('alternativePersistentId.name'),
+          description: t('alternativePersistentId.description')
+        }
       default:
         return {
           title: metadataBlockDisplayFormatInfo.fields[fieldName]?.title,
