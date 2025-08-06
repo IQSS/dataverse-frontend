@@ -11,7 +11,7 @@ export const useGetAvailableCategories = ({
   datasetRepository,
   datasetId
 }: UseGetAvailableCategories) => {
-  const [availableCategories, setAvailableCategories] = useState<string[]>(["dataverse", "dataverse-community"])
+  const [availableCategories, setAvailableCategories] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 

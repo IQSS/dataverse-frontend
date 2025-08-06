@@ -12,7 +12,6 @@ describe('useGetAvailableCategories', () => {
 
   it('should successfully get dataset available categories', async () => {
     const categoriesMock = ['Documentation', 'Code', 'Data', 'Category4']
-    const defaultCategories = ['Documentation', 'Code', 'Data']
     datasetRepository.getAvailableCategories = cy.stub().resolves(categoriesMock)
 
     const { result } = renderHook(() =>
@@ -23,7 +22,7 @@ describe('useGetAvailableCategories', () => {
     )
     await act(() => {
       expect(result.current.isLoading).to.deep.equal(true)
-      return expect(result.current.availableCategories).to.deep.equal(defaultCategories)
+      return expect(result.current.availableCategories).to.deep.equal([])
     })
 
     await act(() => {
