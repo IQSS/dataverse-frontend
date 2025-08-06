@@ -8,14 +8,12 @@ import { DatasetMetadataFieldValueFormatted } from './DatasetMetadataFieldValueF
 import { MetadataBlockInfoDisplayFormat } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 
 interface DatasetMetadataFieldValueProps {
-  metadataBlockName: string
   metadataFieldName: string
   metadataFieldValue: DatasetMetadataFieldValueModel
   metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
 }
 
 export function DatasetMetadataFieldValue({
-  metadataBlockName,
   metadataFieldName,
   metadataFieldValue,
   metadataBlockDisplayFormatInfo
@@ -28,7 +26,6 @@ export function DatasetMetadataFieldValue({
 
   return (
     <DatasetMetadataFieldValueFormatted
-      metadataBlockName={metadataBlockName}
       metadataFieldName={metadataFieldName}
       metadataFieldValue={metadataFieldValue}
       metadataBlockDisplayFormatInfo={metadataBlockDisplayFormatInfo}

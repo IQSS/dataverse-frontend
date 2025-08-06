@@ -18,7 +18,6 @@ export function DatasetMetadataFields({
       {Object.entries(metadataFields).map(([metadataFieldName, metadataFieldValue], index) => (
         <DatasetMetadataField
           key={`${metadataBlockName}-${metadataFieldName}-${index}`}
-          metadataBlockName={metadataBlockName}
           metadataFieldName={metadataFieldName}
           metadataFieldValue={metadataFieldValue}
           metadataBlockDisplayFormatInfo={metadataBlockDisplayFormatInfo}

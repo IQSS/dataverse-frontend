@@ -85,12 +85,16 @@ export type DateFormats = (typeof DateFormatsOptions)[keyof typeof DateFormatsOp
 
 export interface MetadataBlockInfoDisplayFormat {
   name: string
+  displayName: string
   fields: MetadataBlockInfoDisplayFormatFields
 }
 
 export type MetadataBlockInfoDisplayFormatFields = Record<string, MetadataFieldInfo>
 
-export type MetadataFieldInfo = Pick<MetadataField, 'displayFormat' | 'type'>
+export type MetadataFieldInfo = Pick<
+  MetadataField,
+  'displayFormat' | 'title' | 'type' | 'description'
+>
 
 export const METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER = '#VALUE'
 export const METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER = '#NAME'

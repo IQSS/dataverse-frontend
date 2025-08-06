@@ -1,24 +1,15 @@
-import { useTranslation } from 'react-i18next'
 import { QuestionMarkTooltip } from '@iqss/dataverse-design-system'
 
 interface DatasetMetadataFieldTitleProps {
-  metadataBlockName: string
-  metadataFieldName: string
+  title: string
+  description: string
 }
 
-export function DatasetMetadataFieldTitle({
-  metadataBlockName,
-  metadataFieldName
-}: DatasetMetadataFieldTitleProps) {
-  const { t } = useTranslation(`${metadataBlockName}`)
-  const completeFieldName = `${metadataBlockName}.datasetField.${metadataFieldName}`
-
+export function DatasetMetadataFieldTitle({ title, description }: DatasetMetadataFieldTitleProps) {
   return (
     <>
-      <strong>{t(`${completeFieldName}.name`)} </strong>
-      <QuestionMarkTooltip
-        placement="right"
-        message={t(`${completeFieldName}.description`)}></QuestionMarkTooltip>
+      <strong>{title} </strong>
+      <QuestionMarkTooltip placement="right" message={description}></QuestionMarkTooltip>
     </>
   )
 }
