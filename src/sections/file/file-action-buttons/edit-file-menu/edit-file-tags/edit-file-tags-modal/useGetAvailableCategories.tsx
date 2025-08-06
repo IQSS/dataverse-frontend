@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { getDatasetAvailableCategories } from '@/dataset/domain/useCases/getDatasetAvailableCategories'
+import { getAvailableCategories } from '@/dataset/domain/useCases/getAvailableCategories'
 
 export interface UseGetAvailableCategories {
   datasetRepository: DatasetRepository
@@ -11,21 +11,14 @@ export const useGetAvailableCategories = ({
   datasetRepository,
   datasetId
 }: UseGetAvailableCategories) => {
-  const [availableCategories, setAvailableCategories] = useState<string[]>([
-    'Documentation',
-    'Code',
-    'Data'
-  ])
+  const [availableCategories, setAvailableCategories] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const HandleGetAvailableCategories = async (datasetId: number | string) => {
       try {
-        const categories: string[] = await getDatasetAvailableCategories(
-          datasetRepository,
-          datasetId
-        )
+        const categories: string[] = await getAvailableCategories(datasetRepository, datasetId)
 
         setAvailableCategories(categories)
       } catch (err) {

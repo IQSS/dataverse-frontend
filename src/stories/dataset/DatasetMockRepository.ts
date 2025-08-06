@@ -128,7 +128,7 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
-  getDatasetAvailableCategories(_datasetId: string | number): Promise<string[]> {
+  getAvailableCategories(_datasetId: string | number): Promise<string[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(['Category 1', 'Category 2', 'Category 3'])

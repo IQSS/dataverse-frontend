@@ -8,7 +8,7 @@ describe('EditFileTagsModal', () => {
     datasetRepository = {} as DatasetRepository
 
     const categoriesMock = ['Documentation', 'Code', 'Data', 'Category4']
-    datasetRepository.getDatasetAvailableCategories = cy.stub().resolves(categoriesMock)
+    datasetRepository.getAvailableCategories = cy.stub().resolves(categoriesMock)
     cy.customMount(
       <EditFileTagsModal
         show={true}
@@ -335,7 +335,7 @@ describe('EditFileTagsModal', () => {
 
     it('should display error if getCategoriesError is error', () => {
       const errorMessage = 'Failed to load categories'
-      datasetRepository.getDatasetAvailableCategories = cy.stub().rejects(new Error(errorMessage))
+      datasetRepository.getAvailableCategories = cy.stub().rejects(new Error(errorMessage))
 
       cy.customMount(
         <EditFileTagsModal

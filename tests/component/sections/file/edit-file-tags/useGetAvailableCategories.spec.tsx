@@ -13,7 +13,7 @@ describe('useGetAvailableCategories', () => {
   it('should successfully get dataset available categories', async () => {
     const categoriesMock = ['Documentation', 'Code', 'Data', 'Category4']
     const defaultCategories = ['Documentation', 'Code', 'Data']
-    datasetRepository.getDatasetAvailableCategories = cy.stub().resolves(categoriesMock)
+    datasetRepository.getAvailableCategories = cy.stub().resolves(categoriesMock)
 
     const { result } = renderHook(() =>
       useGetAvailableCategories({
@@ -31,13 +31,13 @@ describe('useGetAvailableCategories', () => {
 
       return expect(result.current.availableCategories).to.deep.equal(categoriesMock)
     })
-    expect(datasetRepository.getDatasetAvailableCategories).to.have.been.calledWith(123)
+    expect(datasetRepository.getAvailableCategories).to.have.been.calledWith(123)
   })
 
   describe('Error handling', () => {
     it('should handle WriteError and set formatted error message', async () => {
       const mockReadError = new ReadError('Test error')
-      datasetRepository.getDatasetAvailableCategories = cy.stub().rejects(mockReadError)
+      datasetRepository.getAvailableCategories = cy.stub().rejects(mockReadError)
 
       const { result } = renderHook(() =>
         useGetAvailableCategories({
@@ -60,7 +60,7 @@ describe('useGetAvailableCategories', () => {
     })
 
     it('should handle unknown errors and set default error message', async () => {
-      datasetRepository.getDatasetAvailableCategories = cy.stub().rejects('Error message')
+      datasetRepository.getAvailableCategories = cy.stub().rejects('Error message')
 
       const { result } = renderHook(() =>
         useGetAvailableCategories({

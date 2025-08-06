@@ -123,7 +123,7 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     })
   }
 
-  getDatasetAvailableCategories(_datasetId: string | number): Promise<string[]> {
+  getAvailableCategories(_datasetId: string | number): Promise<string[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

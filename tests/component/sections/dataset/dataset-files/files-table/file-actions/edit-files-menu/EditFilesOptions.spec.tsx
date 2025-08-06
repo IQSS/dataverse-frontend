@@ -438,7 +438,7 @@ describe('EditFilesOptions for a single file', () => {
 
   it('should navigate to dataset and show success toast after updating file tags', () => {
     const categoriesMock = ['Documentation', 'Code', 'Data', 'Category4']
-    datasetRepository.getDatasetAvailableCategories = cy.stub().resolves(categoriesMock)
+    datasetRepository.getAvailableCategories = cy.stub().resolves(categoriesMock)
     const fileWithTags = FilePreviewMother.createWithLabels()
     fileRepository.updateCategories = cy.stub().resolves()
 

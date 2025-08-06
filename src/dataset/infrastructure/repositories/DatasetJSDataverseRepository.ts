@@ -32,7 +32,7 @@ import {
   getDatasetVersionsSummaries,
   getDatasetDownloadCount,
   deleteDatasetDraft,
-  getDatasetAvailableCategories
+  getAvailableCategories
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -366,7 +366,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       throw error
     })
   }
-  getDatasetAvailableCategories(datasetId: string | number): Promise<string[]> {
-    return getDatasetAvailableCategories.execute(datasetId)
+  getAvailableCategories(datasetId: string | number): Promise<string[]> {
+    return getAvailableCategories.execute(datasetId)
   }
 }
