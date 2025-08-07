@@ -1,13 +1,13 @@
 import { Dataset, DatasetLock } from '../models/Dataset'
 import { DatasetVersionDiff } from '../models/DatasetVersionDiff'
 import { DatasetPaginationInfo } from '../models/DatasetPaginationInfo'
-import { CitationFormat, DatasetDTO } from '../useCases/DTOs/DatasetDTO'
+import { DatasetDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../models/DatasetsWithCount'
 import { VersionUpdateType } from '../models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '../models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
-import { FormattedCitation } from '../models/FormattedCitation'
+import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
 
 export interface DatasetRepository {
   getByPersistentId: (

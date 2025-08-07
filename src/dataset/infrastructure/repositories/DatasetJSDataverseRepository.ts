@@ -37,13 +37,13 @@ import {
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
 import { JSDatasetPreviewMapper } from '../mappers/JSDatasetPreviewMapper'
-import { CitationFormat, DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
+import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
-import { FormattedCitation } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/FormattedCitation'
+import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 
 const includeDeaccessioned = true
 
@@ -368,10 +368,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     })
   }
   getDatasetCitationInOtherFormats(
-    datasetId: string | number,
+    datasetId: number | string,
     version: string,
     format: CitationFormat
   ): Promise<FormattedCitation> {
-    return getDatasetCitationInOtherFormats.execute(datasetId, version, format)
+    return getDatasetCitationInOtherFormats
+      .execute(datasetId, version, format)
+      .catch((error: ReadError) => {
+        throw error
+      })
   }
 }

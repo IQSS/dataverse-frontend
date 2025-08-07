@@ -1,10 +1,9 @@
-import { FormattedCitation } from '../models/FormattedCitation'
+import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
 import { DatasetRepository } from '../repositories/DatasetRepository'
-import { CitationFormat } from './DTOs/DatasetDTO'
 
 export function getDatasetCitationInOtherFormats(
   datasetRepository: DatasetRepository,
-  datasetId: string,
+  datasetId: string | number,
   version: string,
   format: CitationFormat
 ): Promise<FormattedCitation> {
