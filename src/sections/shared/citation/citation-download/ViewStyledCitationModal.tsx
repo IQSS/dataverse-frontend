@@ -36,7 +36,7 @@ export const ViewStyledCitationModal = ({
           </Form.Group.Label>
           <Stack direction="horizontal" gap={1}>
             <p className={styles['styledCitationBox']}>{parsedCitationContent}</p>
-            <CopyToClipboardButton text="citation" showTruncateText={false} />
+            <CopyToClipboardButton text={parsedCitationContent} showTruncateText={false} />
           </Stack>
         </Form>
       </Modal.Body>
