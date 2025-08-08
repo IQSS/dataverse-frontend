@@ -1,6 +1,7 @@
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { CitationDownloadButton } from '../../../../../src/sections/shared/citation/citation-download/CitationDownloadButton'
 import { FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
+import { ViewStyledCitationModal } from '@/sections/shared/citation/citation-download/ViewStyledCitationModal'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const mockCitation: FormattedCitation = {
@@ -149,5 +150,62 @@ describe('CitationDownloadButton', () => {
     cy.findByText('An error occurred while downloading the citation').should('exist')
   })
 
-  // Test for opening the styled citation modal
+  it('opens styled citation modal when View Styled Citation is clicked', () => {
+    datasetRepository.getDatasetCitationInOtherFormats = cy.stub().resolves(mockCitation)
+    cy.customMount(
+      <CitationDownloadButton
+        datasetRepository={datasetRepository}
+        datasetId="test-dataset"
+        version="1.0"
+      />
+    )
+
+    cy.customMount(
+      <ViewStyledCitationModal show={true} handleClose={() => {}} citation={mockCitation} />
+    )
+
+    cy.findByText('Download Citation').click()
+    cy.findByText('Select CSL Style').should('exist')
+    cy.findByText(mockCitation.content).should('exist')
+    cy.findByRole('button', { name: /Copy to clipboard icon/ }).should('exist')
+    cy.findByRole('dialog').should('exist')
+  })
+
+  it('closes styled citation modal when close is triggered', () => {
+    datasetRepository.getDatasetCitationInOtherFormats = cy.stub().resolves(mockCitation)
+
+    cy.customMount(
+      <CitationDownloadButton
+        datasetRepository={datasetRepository}
+        datasetId="test-dataset"
+        version="1.0"
+      />
+    )
+
+    cy.findByRole('button', { name: 'Cite Dataset' }).click()
+    cy.findByText('View Styled Citation').click()
+
+    cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: /close/i }).click()
+    cy.findByRole('dialog').should('not.exist')
+  })
+
+  it('handles error when fetching styled citation', () => {
+    datasetRepository.getDatasetCitationInOtherFormats = cy
+      .stub()
+      .rejects(new Error('Citation fetch error'))
+
+    cy.customMount(
+      <CitationDownloadButton
+        datasetRepository={datasetRepository}
+        datasetId="test-dataset"
+        version="1.0"
+      />
+    )
+
+    cy.findByRole('button', { name: 'Cite Dataset' }).click()
+    cy.findByText('View Styled Citation').click()
+
+    cy.findByText('An error occurred while downloading the citation').should('exist')
+  })
 })

@@ -7,6 +7,7 @@ import { DatasetRepository } from '@/dataset/domain/repositories/DatasetReposito
 import { useDownloadCitation } from './useDownloadCitation'
 import { FormattedCitation } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/FormattedCitation'
 import { toast } from 'react-toastify'
+import styles from '../Citation.module.scss'
 
 interface CitationDownloadProps {
   datasetRepository: DatasetRepository
@@ -57,7 +58,9 @@ export function CitationDownloadButton({
           onClick={() => handleDownloadCitation(CitationFormat.BibTeX, `${datasetId}.bib`)}>
           {t('downloadBibTeX')}
         </DropdownButtonItem>
-        <DropdownButtonItem onClick={handleOpenModal}>{t('viewStyledCitation')}</DropdownButtonItem>
+        <DropdownButtonItem onClick={handleOpenModal} className={styles['styledCitationButton']}>
+          {t('viewStyledCitation')}
+        </DropdownButtonItem>
       </DropdownButton>
       <ViewStyledCitationModal
         show={isModalOpen}
