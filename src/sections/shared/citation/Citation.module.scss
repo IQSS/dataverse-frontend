@@ -12,13 +12,12 @@
   color: $dv-info-border-color;
 }
 
-
 .styledCitationBox {
   padding: 0.5rem 1rem;
-  background-color: #f7f7f9;
-  border: solid 1px $dv-border-color;
-  border-radius: 4px;
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none;
+  background-color: #f7f7f9;
+  border: solid 1px $dv-border-color;
+  border-radius: 4px;
 }

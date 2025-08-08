@@ -30,7 +30,6 @@ export function useDownloadCitation({
       setError('Failed to fetch citation.')
       return null
     } finally {
-      console.log(`Fetched citation in format: ${format}`)
       setIsLoading(false)
     }
   }
