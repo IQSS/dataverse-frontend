@@ -328,7 +328,7 @@ In the following example, everything with the exception of `/service1/*` and `/s
 
 (Note that the ProxyPass rules above can be further tightened, only allowing certain parts of KeyCloak to be exposed externally). 
 
-The following startup file (`/etc/systemd/system/keycloak.service`) has been created. Note that Kyecloak runs under a dedicated non-root user, which is always recommended in production. 
+The following startup file (`/etc/systemd/system/keycloak.service`) has been created. Note that Keycloak runs under a dedicated non-root user, which is always recommended in production. 
 
 ```
 [Unit]
