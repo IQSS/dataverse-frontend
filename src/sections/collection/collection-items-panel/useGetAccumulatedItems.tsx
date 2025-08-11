@@ -59,14 +59,8 @@ export const useGetAccumulatedItems = ({
   ): Promise<number | undefined> => {
     setIsLoadingItems(true)
 
-    const selectedSearchServiceFromSessionStorage: string | null = sessionStorage.getItem(
-      CollectionItemsQueryParams.SEARCH_SERVICE
-    )
-
-    // To remove it after using it the first time
-    if (selectedSearchServiceFromSessionStorage) {
-      sessionStorage.removeItem(CollectionItemsQueryParams.SEARCH_SERVICE)
-    }
+    const searchServiceFromSessionStorage: string | undefined =
+      sessionStorage.getItem(CollectionItemsQueryParams.SEARCH_SERVICE) ?? undefined
 
     try {
       const { items, facets, totalItemCount } = await loadNextItems(
@@ -74,7 +68,7 @@ export const useGetAccumulatedItems = ({
         collectionId,
         pagination,
         searchCriteria,
-        selectedSearchServiceFromSessionStorage ?? undefined
+        searchServiceFromSessionStorage
       )
 
       const newAccumulatedItems = !resetAccumulated ? [...accumulatedItems, ...items] : items
@@ -93,6 +87,11 @@ export const useGetAccumulatedItems = ({
 
       if (!isNextPage) {
         setIsLoadingItems(false)
+
+        // External search is not working properly for pagination or types, for now we remove the ext search service selected once the user loads all pages.
+        if (searchServiceFromSessionStorage) {
+          sessionStorage.removeItem(CollectionItemsQueryParams.SEARCH_SERVICE)
+        }
       }
 
       return totalItemCount

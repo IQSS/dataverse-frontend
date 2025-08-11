@@ -43,6 +43,7 @@ export const SearchDropdown = ({
             active={searchServiceSelected === service.name}
             className={styles['search-dropdown-item']}
             as="button"
+            type="button"
             key={service.name}>
             {isSolrService ? <SearchIcon size={12} /> : <StarsIcon size={12} />}
             {service.displayName}
