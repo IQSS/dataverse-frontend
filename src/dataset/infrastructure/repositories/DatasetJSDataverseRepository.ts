@@ -192,20 +192,21 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
       .then((datasetDetails) => {
         const canEditDataset = datasetDetails.jsDatasetPermissions.canEditDataset
-        const isDeaccessioned =
-          datasetDetails.jsDataset.versionInfo.state == DatasetVersionState.DEACCESSIONED
 
-        if (isDeaccessioned && !canEditDataset) {
-          return datasetDetails
-        } else {
-          return this.fetchDownloadSizes(persistentId, version, canEditDataset).then(
-            (downloadSizes) => {
-              datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
-              datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
+        return this.fetchDownloadSizes(persistentId, version, canEditDataset)
+          .then((downloadSizes) => {
+            datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
+            datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
+            return datasetDetails
+          })
+          .catch((error: ReadError) => {
+            if (error.message.includes('404')) {
+              // If the server returns NOT_FOUND when deaccessioned info isn't included,
+              // ignore and continue without sizes.
               return datasetDetails
             }
-          )
-        }
+            throw error
+          })
       })
       .then((datasetDetails) => {
         if (
