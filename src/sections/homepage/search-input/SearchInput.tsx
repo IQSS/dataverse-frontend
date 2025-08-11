@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Form, CloseButton } from '@iqss/dataverse-design-system'
-import { Search as SearchIcon } from 'react-bootstrap-icons'
+import { Search as SearchIcon, Stars as StarsIcon } from 'react-bootstrap-icons'
 import { Route } from '../../Route.enum'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
@@ -67,7 +67,13 @@ export const SearchInput = ({ searchServices }: SearchInputProps) => {
   return (
     <form onSubmit={handleSubmit} className={styles['search-input-wrapper']} role="search">
       <div className={styles['input-and-clear-wrapper']}>
+        {searchServiceSelected !== SOLR_SERVICE_NAME && (
+          <span className="px-2">
+            <StarsIcon size={22} color="white" />
+          </span>
+        )}
         <Form.Group.Input
+          name="search"
           type="text"
           aria-label={t('search')}
           autoFocus
