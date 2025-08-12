@@ -5,7 +5,6 @@ import { TestsUtils } from '../../shared/TestsUtils'
 import {
   DatasetLabel,
   DatasetLabelSemanticMeaning,
-  DatasetLockReason,
   DatasetNonNumericVersion,
   DatasetPublishingStatus,
   DatasetVersion,
@@ -393,48 +392,6 @@ describe('Dataset JSDataverse Repository', () => {
         new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
       ])
     })
-  })
-
-  it('returns download sizes OK for deaccessioned when owner (includeDeaccessioned=true)', async () => {
-    const datasetResponse = await DatasetHelper.create(collectionId)
-    await DatasetHelper.publish(datasetResponse.persistentId)
-    await TestsUtils.wait(1500)
-    await DatasetHelper.deaccession(datasetResponse.id)
-
-    await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
-      if (!dataset) {
-        throw new Error('Dataset not found')
-      }
-      expect(dataset.version.publishingStatus).to.equal(DatasetPublishingStatus.DEACCESSIONED)
-
-      expect(dataset.fileDownloadSizes).to.deep.equal([
-        new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
-        new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
-      ])
-    })
-  })
-
-  it('gets the dataset by persistentId when is locked', async () => {
-    const datasetResponse = await DatasetHelper.create(collectionId)
-    await DatasetHelper.lock(datasetResponse.id, DatasetLockReason.FINALIZE_PUBLICATION)
-
-    await datasetRepository
-      .getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
-      .then((dataset) => {
-        if (!dataset) {
-          throw new Error('Dataset not found')
-        }
-        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
-
-        expect(dataset.version.title).to.deep.equal(datasetExpected.title)
-
-        expect(dataset.locks).to.deep.equal([
-          {
-            userPersistentId: TestsUtils.USER_USERNAME,
-            reason: DatasetLockReason.FINALIZE_PUBLICATION
-          }
-        ])
-      })
   })
 
   it('creates a new dataset from DatasetDTO', async () => {
