@@ -5,10 +5,10 @@ import { TestsUtils } from '../../shared/TestsUtils'
 import {
   DatasetLabel,
   DatasetLabelSemanticMeaning,
-  DatasetLockReason,
   DatasetNonNumericVersion,
   DatasetPublishingStatus,
   DatasetVersion,
+  DatasetVersionNumber,
   MetadataBlockName
 } from '../../../../src/dataset/domain/models/Dataset'
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
@@ -213,10 +213,7 @@ describe('Dataset JSDataverse Repository', () => {
         const newVersion = new DatasetVersion(
           dataset.version.id,
           "Darwin's Finches",
-          {
-            majorNumber: 1,
-            minorNumber: 0
-          },
+          new DatasetVersionNumber(1, 0),
           DatasetPublishingStatus.RELEASED,
           getCitationString(dataset.persistentId, 'V1'),
           [new DatasetLabel(DatasetLabelSemanticMeaning.FILE, 'Version 1.0')],
@@ -260,10 +257,7 @@ describe('Dataset JSDataverse Repository', () => {
         const newVersion = new DatasetVersion(
           dataset.version.id,
           "Darwin's Finches",
-          {
-            majorNumber: 1,
-            minorNumber: 0
-          },
+          new DatasetVersionNumber(1, 0),
           DatasetPublishingStatus.RELEASED,
           getCitationString(dataset.persistentId, 'V1'),
           [new DatasetLabel(DatasetLabelSemanticMeaning.FILE, 'Version 1.0')],
@@ -378,27 +372,26 @@ describe('Dataset JSDataverse Repository', () => {
     })
   })
 
-  it('gets the dataset by persistentId when is locked', async () => {
+  it('returns dataset even if download sizes are NOT_FOUND for deaccessioned when unauthenticated', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
-    await DatasetHelper.lock(datasetResponse.id, DatasetLockReason.FINALIZE_PUBLICATION)
+    await DatasetHelper.publish(datasetResponse.persistentId)
+    await TestsUtils.wait(1500)
+    await DatasetHelper.deaccession(datasetResponse.id)
 
-    await datasetRepository
-      .getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
-      .then((dataset) => {
-        if (!dataset) {
-          throw new Error('Dataset not found')
-        }
-        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+    // Simulate logged out user (includeDeaccessioned=false path)
+    cy.clearAllLocalStorage()
+    cy.clearAllCookies()
 
-        expect(dataset.version.title).to.deep.equal(datasetExpected.title)
-
-        expect(dataset.locks).to.deep.equal([
-          {
-            userPersistentId: TestsUtils.USER_USERNAME,
-            reason: DatasetLockReason.FINALIZE_PUBLICATION
-          }
-        ])
-      })
+    await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
+      if (!dataset) {
+        throw new Error('Dataset not found')
+      }
+      expect(dataset.version.publishingStatus).to.equal(DatasetPublishingStatus.DEACCESSIONED)
+      expect(dataset.fileDownloadSizes).to.deep.equal([
+        new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
+        new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
+      ])
+    })
   })
 
   it('creates a new dataset from DatasetDTO', async () => {

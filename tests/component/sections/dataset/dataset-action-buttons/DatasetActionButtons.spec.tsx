@@ -72,4 +72,18 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Contact Owner' }).should('exist')
     cy.findByRole('button', { name: 'Share' }).should('exist')
   })
+
+  it('should not render Share button if the the dataset is deaccessioned and user has no edit permission', () => {
+    const dataset = DatasetMother.createDeaccessionedwithNoEditPermission()
+    cy.mountAuthenticated(
+      <DatasetActionButtons
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Share' }).should('not.exist')
+  })
 })

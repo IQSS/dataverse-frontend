@@ -303,6 +303,23 @@ describe('Dataset', () => {
     cy.findByRole('tab', { name: 'Versions' }).should('exist')
   })
 
+  it('should not render DatasetMetrics if the dataset is deaccessioned and user has no edit permission', () => {
+    const testDataset = DatasetMother.createDeaccessionedwithNoEditPermission()
+
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+      />,
+      testDataset
+    )
+
+    cy.findByTestId('dataset-metrics').should('not.exist')
+  })
+
   it('should render all tabs if the dataset is in deaccessioned version, and user has edit permission', () => {
     const testDataset = DatasetMother.createDeaccessionedwithEditPermission()
 

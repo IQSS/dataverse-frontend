@@ -144,10 +144,13 @@ export function Dataset({
                 dataset={dataset}
                 contactRepository={contactRepository}
               />
-              <DatasetMetrics
-                datasetRepository={datasetRepository}
-                datasetId={dataset.persistentId}
-              />
+              {(!isCurrentVersionDeaccessioned || canUpdateDataset) && (
+                <DatasetMetrics
+                  data-testid="dataset-metrics"
+                  datasetRepository={datasetRepository}
+                  datasetId={dataset.persistentId}
+                />
+              )}
             </Col>
           </Row>
 
