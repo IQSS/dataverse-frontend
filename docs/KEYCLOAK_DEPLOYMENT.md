@@ -122,19 +122,14 @@ curl -k -X POST "https://localhost:443/admin/realms/<REALM_NAME>/components" \
     "name": "Dataverse built-in users authentication",
     "providerId": "dv-builtin-users-authenticator",
     "providerType": "org.keycloak.storage.UserStorageProvider",
-    "parentId": null
+    "parentId": null,
+    "config": {
+      "datasource": ["user-store"]
+    }
   }'
 
 echo "Keycloak SPI configured in realm."
 ```
-
-Now you have to register the provider within the realm you created in Keycloak. 
-
-To do this, go to **User Federation** and click on **Add custom provider**. The option **Add dv-builtin-users-authenticator provider** should appear.
-
-![Deployment Img Add SPI](img/keycloak_deployment_add_spi.png)
-
-Remember to set the datasource name ``user-store``, which is the one specified in ``quarkus.properties``.
 
 ### Create a Keycloak client for the Dataverse SPA
 
