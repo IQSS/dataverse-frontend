@@ -1,3 +1,4 @@
+import { FileLabelType } from '@/files/domain/models/FileMetadata'
 import { EditFileMenu } from '@/sections/file/file-action-buttons/edit-file-menu/EditFileMenu'
 import { QueryParamKey } from '@/sections/Route.enum'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
@@ -19,6 +20,7 @@ describe('EditFileMenu', () => {
           releasedVersionExists: false,
           requestAccess: false
         }}
+        isTabularFile={true}
       />
     )
 
@@ -55,6 +57,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -79,6 +82,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: true,
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -103,6 +107,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -136,6 +141,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -163,6 +169,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -189,6 +196,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          isTabularFile={true}
         />
       )
 
@@ -216,6 +224,7 @@ describe('EditFileMenu', () => {
             termsOfAccessForRestrictedFiles: 'test terms of access',
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -243,6 +252,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -267,6 +277,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -293,6 +304,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          isTabularFile={true}
         />
       )
 
@@ -325,6 +337,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          isTabularFile={true}
         />
       )
 
@@ -352,6 +365,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          isTabularFile={true}
         />
       )
 
@@ -376,6 +390,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: false
           }}
+          isTabularFile={true}
         />
       )
 
@@ -406,6 +421,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          isTabularFile={true}
         />
       )
 
@@ -430,6 +446,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: true,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          isTabularFile={true}
         />
       )
 
@@ -452,6 +469,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          isTabularFile={true}
         />
       )
 
@@ -483,6 +501,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          isTabularFile={true}
         />
       )
 
@@ -509,6 +528,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          isTabularFile={true}
         />
       )
 
@@ -519,6 +539,66 @@ describe('EditFileMenu', () => {
       cy.findByRole('button', { name: /Save Changes/i }).click()
 
       cy.findByText('error message.').should('exist')
+    })
+  })
+
+  describe('Tags button', () => {
+    beforeEach(() => {
+      cy.customMount(
+        <EditFileMenu
+          fileId={testFile.id}
+          fileRepository={new FileMockRepository()}
+          isRestricted={false}
+          datasetInfo={{
+            persistentId: testFile.datasetPersistentId,
+            versionNumber: testFile.datasetVersion.number.toSearchParam(),
+            releasedVersionExists: false,
+            requestAccess: false
+          }}
+          existingLabels={[
+            { value: 'Data', type: FileLabelType.CATEGORY },
+            { value: 'Code', type: FileLabelType.CATEGORY },
+            { value: 'Survey', type: FileLabelType.TAG },
+            { value: 'Panel', type: FileLabelType.TAG }
+          ]}
+          isTabularFile={true}
+        />
+      )
+    })
+
+    it('opens and closes the edit file tags modal', () => {
+      cy.findByRole('button', { name: 'Edit File' }).click()
+      cy.findByRole('button', { name: 'Tags' }).click()
+      cy.findByRole('dialog').should('exist')
+
+      cy.findByRole('button', { name: 'Cancel' }).click()
+      cy.findByRole('dialog').should('not.exist')
+    })
+
+    it('should show the existing file tags in the modal', () => {
+      cy.findByRole('button', { name: 'Edit File' }).click()
+      cy.findByRole('button', { name: 'Tags' }).click()
+      cy.findByRole('dialog').should('exist')
+      cy.get('[data-testid="file-labels"]').within(() => {
+        cy.findByText('Data').should('exist')
+        cy.findByText('Code').should('exist')
+        cy.findByText('Survey').should('exist')
+        cy.findByText('Panel').should('exist')
+      })
+    })
+
+    it('shows toast success message when file tags are updated successfully', () => {
+      cy.findByRole('button', { name: 'Edit File' }).click()
+      cy.findByRole('button', { name: 'Tags' }).click()
+      cy.findByRole('dialog').should('exist')
+      cy.findByTestId('custom-file-tag-input').should('exist')
+      cy.findByTestId('custom-file-tag-input').type('Custom Tag')
+      cy.findByRole('button', { name: 'Apply' }).click()
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+
+      cy.findByText(/The file tags have been updated./i)
+        .should('exist')
+        .should('be.visible')
     })
   })
 })
