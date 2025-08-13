@@ -95,6 +95,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                   isDeaccessioned={
                     file.datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
                   }
+                  isDraft={file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT}
                 />
                 {file.permissions.canEditOwnerDataset && (
                   <EditFileMenu

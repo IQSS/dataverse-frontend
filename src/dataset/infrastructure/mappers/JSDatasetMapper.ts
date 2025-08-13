@@ -76,7 +76,7 @@ export class JSDatasetMapper {
       JSDatasetMapper.toDatasetPermissions(jsDatasetPermissions),
       JSDatasetMapper.toLocks(jsDatasetLocks),
       true, // TODO Connect with dataset hasValidTermsOfAccess
-      true, // TODO Connect with dataset hasOneTabularFileAtLeast
+      false, // TODO Connect with dataset hasOneTabularFileAtLeast
       true, // TODO Connect with dataset isValid
       JSDatasetMapper.toDownloadUrls(jsDataset.persistentId, version),
       JSDatasetMapper.toFileDownloadSizes(

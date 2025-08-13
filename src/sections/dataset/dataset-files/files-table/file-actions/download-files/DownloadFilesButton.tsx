@@ -10,6 +10,7 @@ import { MouseEvent, useState } from 'react'
 import { useMultipleFileDownload } from '../../../../../file/multiple-file-download/MultipleFileDownloadContext'
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
+import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 
 interface DownloadFilesButtonProps {
   files: FilePreview[]
@@ -51,6 +52,11 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
 
   // TODO: remove this when we can handle non-S3 files
   if (!dataset?.fileStore?.startsWith('s3')) {
+    return <></>
+  }
+
+  // TODO: remove this when access datafile supports bearer tokens
+  if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
     return <></>
   }
 

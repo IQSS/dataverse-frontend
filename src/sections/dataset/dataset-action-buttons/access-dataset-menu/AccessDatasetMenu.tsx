@@ -45,6 +45,11 @@ export function AccessDatasetMenu({
     return <></>
   }
 
+  // TODO: remove this when access datafile supports bearer tokens
+  if (version.publishingStatus === DatasetPublishingStatus.DRAFT) {
+    return <></>
+  }
+
   return (
     <DropdownButton
       id={`access-dataset-menu`}

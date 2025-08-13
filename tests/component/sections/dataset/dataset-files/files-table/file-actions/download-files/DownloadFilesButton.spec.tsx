@@ -4,7 +4,8 @@ import { DatasetProvider } from '../../../../../../../../src/sections/dataset/Da
 import { DatasetRepository } from '../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
 import {
   DatasetMother,
-  DatasetPermissionsMother
+  DatasetPermissionsMother,
+  DatasetVersionMother
 } from '../../../../../../dataset/domain/models/DatasetMother'
 import { DownloadFilesButton } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/download-files/DownloadFilesButton'
 import { FileMetadataMother } from '../../../../../../files/domain/models/FileMetadataMother'
@@ -272,6 +273,24 @@ describe('DownloadFilesButton', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
       fileStore: 'non-s3-file-store'
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
+    })
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={{}} />,
+        datasetWithDownloadFilesPermission
+      )
+    )
+
+    cy.get('#download-files').should('not.exist')
+  })
+
+  it('does not render the AccessDatasetMenu if the dataset is in draft status', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      version: DatasetVersionMother.createDraft()
     })
     const files = FilePreviewMother.createMany(2, {
       metadata: FileMetadataMother.createTabular()
