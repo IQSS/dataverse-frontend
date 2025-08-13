@@ -34,7 +34,7 @@ describe('DatasetActionButtons', () => {
     )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
-    cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist') // TODO: change this to 'exist' when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
     cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
@@ -65,7 +65,7 @@ describe('DatasetActionButtons', () => {
     )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
-    cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist') // TODO: change this to 'exist' when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
     cy.findByRole('button', { name: 'Submit for Review' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')

@@ -2,7 +2,6 @@ import { type FieldNamesMarkedBoolean } from 'react-hook-form'
 import { CollectionStorage } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import {
   MetadataBlockInfo,
-  MetadataBlockName,
   MetadataField
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import {
@@ -31,13 +30,13 @@ export type CollectionFormData = {
 
 export type CollectionFormDirtyFields = FieldNamesMarkedBoolean<CollectionFormData>
 
-export type CollectionFormMetadataBlocks = Record<MetadataBlockName, boolean>
+export type CollectionFormMetadataBlocks = Record<string, boolean>
 
 export type FormattedCollectionInputLevels = {
   [key: string]: {
     include: boolean
     optionalOrRequired: CollectionFormInputLevelValue
-    parentBlockName: MetadataBlockName
+    parentBlockName: string
   }
 }
 

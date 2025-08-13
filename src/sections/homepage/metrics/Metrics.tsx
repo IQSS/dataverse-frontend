@@ -2,7 +2,7 @@ import { DataverseHubRepository } from '@/dataverse-hub/domain/repositories/Data
 import { useGetInstallationMetrics } from './useGetInstallationMetrics'
 import { MetricsResults, MetricsResultsSkeleton } from './MetricsResults'
 
-const HARVARD_DV_HUB_ID = 'DVN_HARVARD_DATAVERSE_2008'
+const HARVARD_DV_HUB_ID = '57B6E0DD-B371-4AFE-A0C0-FB22621DDD73'
 
 interface MetricsProps {
   dataverseHubRepository: DataverseHubRepository

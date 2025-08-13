@@ -232,4 +232,20 @@ describe('EditDatasetMenu', () => {
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
     cy.findByRole('button', { name: 'Terms' }).click()
   })
+
+  it('does not render the upload files button if dataset file store does not start with "s3"', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      fileStore: 'non-s3-file-store'
+    })
+
+    cy.mountAuthenticated(
+      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+    )
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Files (Upload)' }).should('not.exist')
+  })
 })

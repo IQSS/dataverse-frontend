@@ -27,7 +27,7 @@ describe('File', () => {
           cy.findByRole('tab', { name: 'Versions' }).should('exist')
           cy.findByText('Metadata').should('exist')
 
-          cy.findByRole('button', { name: 'Access File' }).should('exist')
+          cy.findByRole('button', { name: 'Access File' }).should('not.exist') // TODO: change this to 'exist' when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
         })
     })
 

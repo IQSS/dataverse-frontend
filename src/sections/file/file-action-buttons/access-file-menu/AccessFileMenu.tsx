@@ -15,6 +15,7 @@ interface FileActionButtonAccessFileProps {
   metadata: FileMetadata
   ingestInProgress: boolean
   isDeaccessioned: boolean
+  isDraft: boolean
   asIcon?: boolean
 }
 
@@ -25,6 +26,7 @@ export function AccessFileMenu({
   metadata,
   ingestInProgress,
   isDeaccessioned,
+  isDraft,
   asIcon = false
 }: FileActionButtonAccessFileProps) {
   const { t } = useTranslation('files')
@@ -37,6 +39,17 @@ export function AccessFileMenu({
       )
     }
     return children
+  }
+
+  // Temporary fix to avoid showing the access file menu for non-S3 files
+  // TODO: remove this when we can handle non-S3 files
+  if (metadata.storageIdentifier && !metadata.storageIdentifier?.startsWith('s3')) {
+    return <></>
+  }
+
+  // // TODO: remove this when access datafile supports bearer tokens
+  if (isDraft) {
+    return <></>
   }
 
   return (
