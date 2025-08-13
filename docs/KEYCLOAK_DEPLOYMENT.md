@@ -19,7 +19,7 @@ Both libraries are required for the Keycloak SPI you are going to install.
 
 ### Add Builtin Users SPI
 
-Download the JAR file from [this link](https://github.com/IQSS/dataverse-frontend/blob/develop/dev-env/keycloak/keycloak-dv-builtin-users-authenticator-1.0-SNAPSHOT.jar), which corresponds to the latest version of the Builtin Users SPI, and place it in the `keycloak-26.X.X/providers` directory.
+Download the JAR file from [this link](https://github.com/IQSS/dataverse-frontend/blob/develop/dev-env/keycloak/keycloak-dv-builtin-users-authenticator-1.0-SNAPSHOT.jar) and place it in the `keycloak-26.X.X/providers` directory.
 
 ### Add Keycloak Custom Theme
 
