@@ -1,0 +1,25 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+
+.row {
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.size-selector-container {
+  display: flex;
+  margin-bottom: 14px;
+  margin-left: 28px;
+
+  &__text {
+    margin-right: 14px;
+  }
+}
+
+.results {
+  margin-right: 4px;
+  font-weight: $dv-font-weight-bold;
+}

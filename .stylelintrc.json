@@ -1,0 +1,35 @@
+{
+  "overrides": [
+    {
+      "files": ["**/*.scss"],
+      "customSyntax": "postcss-scss"
+    }
+  ],
+  "extends": ["stylelint-config-standard-scss", "stylelint-config-rational-order"],
+  "rules": {
+    "scss/dollar-variable-pattern": null,
+    "scss/dollar-variable-empty-line-before": null,
+    "selector-id-pattern": null,
+    "selector-class-pattern": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["export", "global"]
+      }
+    ],
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreSelectors": [":export"]
+      }
+    ],
+    "at-rule-empty-line-before": [
+      "always",
+      {
+        "ignore": ["after-comment", "first-nested", "inside-block", "blockless-after-same-name-blockless"],
+        "severity": "warning",
+        "except": ["blockless-after-blockless"]
+      }
+    ]
+  }
+}

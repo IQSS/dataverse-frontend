@@ -1,0 +1,28 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.publication-status-filters {
+  .title {
+    font-weight: 600;
+  }
+
+  input[type='checkbox'] {
+    cursor: pointer;
+
+    & + label {
+      color: $dv-primary-color;
+      cursor: pointer;
+    }
+
+    &:checked + label {
+      font-weight: 500;
+    }
+
+    &:disabled {
+      opacity: 0.7;
+
+      & + label {
+        opacity: 1;
+      }
+    }
+  }
+}

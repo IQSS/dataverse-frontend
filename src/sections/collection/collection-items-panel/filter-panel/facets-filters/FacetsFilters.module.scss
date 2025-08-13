@@ -1,0 +1,64 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.facets-list,
+.labels-list {
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style-type: none;
+}
+
+.facets-list {
+  padding-top: 1rem;
+
+  &:empty {
+    padding-top: 0;
+  }
+
+  .facet-filter-group {
+    padding-bottom: 0.5rem;
+
+    &:not(:last-child) {
+      border-bottom: solid 1px $dv-border-color;
+    }
+
+    .facet-name {
+      font-weight: 600;
+    }
+
+    .show-less-more {
+      :last-child {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+
+    .labels-list {
+      li {
+        display: flex;
+      }
+
+      .facet-label-button {
+        padding: 0;
+        text-align: left;
+        text-decoration: none;
+        text-wrap: nowrap;
+
+        &.selected {
+          font-weight: 600;
+        }
+
+        &:disabled {
+          color: $dv-primary-color;
+        }
+
+        span {
+          text-wrap: wrap;
+        }
+
+        svg {
+          min-width: fit-content;
+        }
+      }
+    }
+  }
+}

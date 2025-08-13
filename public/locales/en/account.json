@@ -1,0 +1,50 @@
+{
+  "pageTitle": "Account",
+  "tabs": {
+    "myData": "My Data",
+    "notifications": "Notifications",
+    "accountInformation": "Account Information",
+    "apiToken": "API Token"
+  },
+  "apiToken": {
+    "helperText": "Your API Token is valid for a year. Check out our <anchor>API Guide</anchor> for more information on using your API Token with the Dataverse APIs.",
+    "notCreatedApiToken": "API Token for Dataverse Admin has not been created.",
+    "expirationDate": "Expiration date",
+    "copyToClipboard": "Copy to Clipboard",
+    "recreateToken": "Recreate Token",
+    "revokeToken": "Revoke Token",
+    "createToken": "Create Token"
+  },
+  "info": {
+    "username": "Username",
+    "givenName": "Given Name",
+    "familyName": "Family Name",
+    "email": "Email",
+    "affiliation": "Affiliation",
+    "position": "Position"
+  },
+  "myData": {
+    "title": "My Data",
+    "description": "Here are all the collections, datasets, and files you have access to. You can filter through them by publication status and roles.",
+    "descriptionNote": "Note: If you see unexpected dataverses or datasets in your My Data results, it might be because someone has assigned your account a role on those dataverses or datasets. For example, some institutions automatically assign the \"File Downloader\" role on their datasets to all accounts using their institutional login. To remove this data from the list, <action>uncheck</action> the File Downloader role in the filter.",
+    "noData": "You have not created or contributed to any datasets yet.",
+    "roleFilterTitle": "Roles",
+    "publicationStatusFilterTitle": "Publication Statuses",
+    "searchThisCollectionPlaceholder": "Search my data...",
+    "userNameSearchPlaceholder": "Search by username...",
+    "userNameSearchLabel": "Search by username",
+    "noItemsMessage": {
+      "otherUser": "No results found for user {{otherUserName}}.",
+      "authenticated": "You have not created or contributed to any {{typeOfEmptyItems}}. You can create data by using the Add Data menu option on this page.",
+      "itemTypeMessage": {
+        "all": "collections, datasets or files",
+        "collection": "collections",
+        "dataset": "datasets",
+        "file": "files",
+        "collectionAndDataset": "collections or datasets",
+        "collectionAndFile": "collections or files",
+        "datasetAndFile": "datasets or files"
+      }
+    }
+  }
+}

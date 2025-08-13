@@ -1,0 +1,179 @@
+@use 'sass:color';
+@import 'src/lib/assets/styles/design-tokens/colors.module';
+@import 'src/lib/assets/styles/design-tokens/typography.module';
+
+:root {
+  --select-advanced-menu-max-height: 300px;
+  --toggle-padding: 6px 36px 6px 12px;
+}
+
+.select-advanced-toggle {
+  position: relative;
+  display: grid;
+  background-color: #fff;
+
+  &.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  // Chevron icon
+  &::after {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    display: inline-block;
+    width: 0.45em;
+    height: 0.45em;
+    border-color: rgb(0 0 0 / 75%);
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    transform: translateY(-60%) rotate(-225deg);
+    content: '';
+  }
+
+  &__input-button {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    grid-area: 1 / 1;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--toggle-padding);
+    background-color: transparent;
+    border: solid 1px $dv-secondary-color;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &::after {
+      display: none;
+    }
+
+    &.invalid {
+      border-color: $dv-danger-color;
+    }
+
+    &:focus-within,
+    &:focus {
+      border-color: color.adjust($dv-primary-color, $alpha: -0.4);
+      outline: 0;
+      box-shadow: 0 0 0 0.25rem color.adjust($dv-primary-color, $alpha: -0.7);
+    }
+
+    &.invalid:focus-within,
+    &.invalid:focus {
+      border-color: color.adjust($dv-danger-color, $alpha: -0.4);
+      outline: 0;
+      box-shadow: 0 0 0 0.25rem color.adjust($dv-danger-color, $alpha: -0.7);
+    }
+  }
+
+  &__inner-content {
+    position: relative;
+    z-index: 2;
+    grid-area: 1 / 1;
+    padding: var(--toggle-padding);
+    pointer-events: none;
+
+    .multiple-selected-options-container {
+      display: inline-flex;
+      flex: 1;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      pointer-events: none;
+
+      &__item {
+        display: flex;
+        align-items: center;
+        padding: 0.25rem 0.5rem;
+        color: $dv-text-color;
+        font-weight: $dv-font-weight-bold;
+        font-size: $dv-font-size-sm;
+        background-color: $dv-secondary-color;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        pointer-events: all;
+
+        button {
+          display: grid;
+          place-items: center;
+          padding: 0;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    .single-selected-option {
+      margin: 0;
+    }
+  }
+}
+
+.select-advanced-menu {
+  width: 100%;
+  max-width: 100%;
+  max-height: var(--select-advanced-menu-max-height);
+  padding-top: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-shadow: 0 5px 10px rgb(0 0 0 / 15%);
+
+  .menu-header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    font-size: 18px;
+    background-color: $dv-secondary-color;
+
+    .selected-count {
+      margin: 0;
+      color: $dv-text-color;
+      font-size: $dv-font-size;
+    }
+  }
+
+  .option-item {
+    padding-block: 0;
+    transition: background-color 0.1s ease-in-out;
+
+    &:active,
+    &:hover {
+      color: $dv-text-color;
+      background-color: color.adjust($dv-secondary-color, $alpha: -0.7);
+    }
+
+    &:has(input[type='checkbox']:checked) {
+      background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
+    }
+
+    &__checkbox-input {
+      display: flex;
+      align-items: center;
+      padding-left: 0;
+
+      input[type='checkbox'] {
+        float: unset;
+        margin-top: 0;
+        margin-left: 0;
+      }
+
+      label {
+        width: 100%;
+        padding-left: 0.5rem;
+        padding-block: 0.25rem;
+      }
+    }
+  }
+
+  .option-item-not-multiple {
+    margin-bottom: 0.125rem;
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
+  }
+}

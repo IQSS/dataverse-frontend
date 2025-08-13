@@ -1,0 +1,47 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+
+.header {
+  margin: 0.5em 0;
+}
+
+.row {
+  margin: 12px 0;
+}
+
+.subtext {
+  margin-bottom: 10px;
+  color: $dv-subtext-color;
+}
+
+.container {
+  margin: 0.5rem 0;
+}
+
+.tab-container {
+  padding: 1em 0;
+}
+
+.separation-line {
+  margin: 1em 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.citation-title {
+  font-weight: $dv-font-weight-bold;
+}
+
+.labels {
+  display: flex;
+  align-items: center;
+}
+
+.restricted-icon {
+  margin-right: 6px;
+}
+
+.group {
+  display: flex;
+  width: 100%;
+  margin: 0.5rem 0;
+}

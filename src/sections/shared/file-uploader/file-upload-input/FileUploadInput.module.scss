@@ -1,0 +1,132 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.helper_text {
+  color: $dv-subtext-color;
+  font-size: 14px;
+}
+
+.file_uploader_drop_zone {
+  display: grid;
+  place-items: center;
+  min-height: 80px;
+  background-color: $dv-primary-text-color;
+  transition: background-color 0.3s ease-in-out;
+
+  &.is_dragging {
+    background-color: $dv-info-box-color;
+    border: dashed 2px color.adjust($dv-info-box-color, $lightness: -55%);
+  }
+}
+
+.drag_drop_msg {
+  margin: 0;
+  color: $dv-subtext-color;
+  font-size: 1.3em;
+  text-align: center;
+}
+
+.uploading_files_list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style-type: none;
+
+  .uploading_file {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background-color: color.adjust($dv-secondary-color, $alpha: -0.8);
+    border: solid 1px $dv-border-color;
+    border-radius: 8px;
+
+    .info_progress_wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .info {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      margin: 0;
+      color: color.adjust($dv-subtext-color, $blackness: 5%);
+      column-gap: 1rem;
+      row-gap: 0.1rem;
+
+      span {
+        word-break: break-all;
+      }
+
+      small {
+        text-wrap: nowrap;
+      }
+    }
+
+    .upload_progress {
+      width: 125px;
+    }
+
+    .failed_message {
+      margin: 0;
+      color: $dv-danger-color;
+      font-size: 14px;
+    }
+
+    &.failed {
+      background-color: color.adjust($dv-danger-color, $lightness: 50%);
+      border: solid 1px color.adjust($dv-danger-color, $alpha: -0.7);
+
+      .info {
+        color: $dv-danger-color;
+
+        span:first-of-type {
+          text-decoration: line-through;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    .uploading_file {
+      display: flex;
+      flex-direction: row;
+      gap: 3rem;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+
+      .info_progress_wrapper {
+        flex: 1;
+        flex-direction: row;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .info {
+        width: 50%;
+      }
+
+      .upload_progress {
+        width: 50%;
+      }
+    }
+  }
+}
+
+.file_type_different_msg {
+  display: flex;
+  gap: 1rem;
+  color: $dv-warning-color;
+
+  svg {
+    min-width: fit-content;
+  }
+}

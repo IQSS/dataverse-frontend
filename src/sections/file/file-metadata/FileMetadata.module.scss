@@ -1,0 +1,17 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.row {
+  margin: 12px 0;
+}
+
+.help-text {
+  color: $dv-subtext-color;
+}
+
+.code {
+  background-color: #f0f0f0;
+}
+
+.preview > span {
+  font-size: 16.7em;
+}

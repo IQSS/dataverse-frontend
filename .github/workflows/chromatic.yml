@@ -1,0 +1,39 @@
+name: 'Chromatic'
+
+# Event for the workflow
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+
+# List of jobs
+jobs:
+  chromatic-deployment:
+    # Operating System
+    runs-on: ubuntu-latest
+    # Job steps
+    steps:
+      - uses: actions/checkout@v1
+      - name: Create .npmrc
+        run: |
+          cp .npmrc.example .npmrc
+          sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
+      - name: Install dependencies
+        # 👇 Install dependencies with the same package manager used in the project (replace it as needed), e.g. yarn, npm, pnpm
+        run: npm install
+        # 👇 Adds Chromatic as a step in the workflow
+        # Install design system dependencies
+      - name: Build Dataverse Design System
+        working-directory: packages/design-system
+        run: npm run build
+      - name: Publish to Chromatic
+        uses: chromaui/action@v1
+        env:
+          STORYBOOK_CHROMATIC_BUILD: 'true'
+
+        # Chromatic GitHub Action options
+        with:
+          # 👇 Chromatic projectToken, refer to the manage page to obtain it.
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

@@ -1,0 +1,51 @@
+import { Meta, Typeset, Unstyled } from '@storybook/blocks'
+import { baseTheme } from '../../components/theme/BaseTheme.ts'
+
+<Meta title="Design Tokens/Typography" />
+
+export const SampleText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+export const SampleHeadingsText = 'Dataverse Heading';
+
+# Typography
+
+The typeface, text size, and line-height are set in the Bootstrap CSS. We use Bootstrap’s global default font-size of
+16px, with a line-height of 1.5, which is applied to the `<body>` and all paragraphs.
+
+**Font:** {baseTheme.typography.fontFamily}
+
+**Weights:** {baseTheme.typography.fontWeightLight}(light), {baseTheme.typography.fontWeight}(regular),
+{baseTheme.typography.fontWeightBold}(bold)
+
+# Text
+
+<Typeset
+  fontSizes={[
+    baseTheme.typography.fontSizeSm,
+    baseTheme.typography.fontSize,
+    baseTheme.typography.brandFontSize,
+  ]}
+  fontWeight={baseTheme.typography.fontWeight}
+  sampleText={SampleText}
+  fontFamily={baseTheme.typography.fontFamily}
+/>
+
+# Headings
+
+<Unstyled>
+
+<h1>h1. {SampleHeadingsText}</h1>
+<h2>h2. {SampleHeadingsText}</h2>
+<h3>h3. {SampleHeadingsText}</h3>
+<h4>h4. {SampleHeadingsText}</h4>
+<h5>h5. {SampleHeadingsText}</h5>
+<h6>h6. {SampleHeadingsText}</h6>
+
+</Unstyled>
+
+# Links
+
+<Unstyled>
+
+  <a href="packages/design-system/src/lib/stories/design-tokens#">{SampleText}</a>
+
+</Unstyled>

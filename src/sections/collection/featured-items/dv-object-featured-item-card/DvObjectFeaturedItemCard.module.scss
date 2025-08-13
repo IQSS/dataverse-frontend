@@ -1,0 +1,74 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.link_wrapper {
+  color: unset;
+  text-decoration: none;
+
+  &:hover {
+    color: unset;
+    text-decoration: none;
+  }
+}
+
+.custom_featured_item_card {
+  min-height: 100%;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border-color: $dv-brand-color;
+    box-shadow: 2px 2px 4px 0 rgba(0 0 0 / 10%);
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .title {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    overflow: hidden;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: flex-end;
+    height: fit-content;
+    padding-top: 0.35rem;
+    transition: all 0.4s ease-in-out;
+
+    &.collection {
+      color: $dv-collection-border-color;
+    }
+
+    &.dataset {
+      color: $dv-dataset-border-color;
+    }
+
+    &.file {
+      color: $dv-file-border-color;
+    }
+
+    > span {
+      margin-right: 0;
+      font-size: 85px;
+      line-height: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover .icon {
+      transform: scale(1.1);
+    }
+  }
+}

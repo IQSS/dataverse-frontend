@@ -1,0 +1,70 @@
+import { useState } from 'react'
+import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
+import { deaccessionDataset } from '../../../dataset/domain/useCases/deaccessionDataset'
+import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
+import { DeaccessionFormData } from '@/sections/dataset/deaccession-dataset/DeaccessionFormData'
+
+type UseDeaccessionDatasetReturnType =
+  | {
+      submissionStatus:
+        | SubmissionStatus.NotSubmitted
+        | SubmissionStatus.IsSubmitting
+        | SubmissionStatus.SubmitComplete
+      submitDeaccession: (deaccessionFormData: DeaccessionFormData) => void
+      deaccessionError: null
+    }
+  | {
+      submissionStatus: SubmissionStatus.Errored
+      submitDeaccession: (deaccessionFormData: DeaccessionFormData) => void
+      deaccessionError: string
+    }
+
+export function useDeaccessionDataset(
+  repository: DatasetRepository,
+  persistentId: string,
+  onDeaccessionSucceed: () => void
+): UseDeaccessionDatasetReturnType {
+  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
+    SubmissionStatus.NotSubmitted
+  )
+  const [deaccessionError, setDeaccessionError] = useState<string | null>(null)
+
+  const submitDeaccession = (deaccessionFormData: DeaccessionFormData): void => {
+    // Run the async function without returning a promise
+    void (async () => {
+      setSubmissionStatus(SubmissionStatus.IsSubmitting)
+
+      try {
+        for (const version of deaccessionFormData.versions) {
+          const datasetDeaccessionDTO = {
+            deaccessionReason:
+              deaccessionFormData.deaccessionReason +
+              (deaccessionFormData.deaccessionReasonOther
+                ? ` ${deaccessionFormData.deaccessionReasonOther}`
+                : ''),
+            deaccessionForwardUrl: deaccessionFormData.deaccessionForwardUrl
+          }
+
+          await deaccessionDataset(repository, persistentId, version, datasetDeaccessionDTO)
+        }
+
+        setDeaccessionError(null)
+        setSubmissionStatus(SubmissionStatus.SubmitComplete)
+        onDeaccessionSucceed()
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong while trying to deaccession your dataset'
+        setDeaccessionError(errorMessage)
+        setSubmissionStatus(SubmissionStatus.Errored)
+      }
+    })()
+  }
+
+  return {
+    submissionStatus,
+    submitDeaccession,
+    deaccessionError
+  } as UseDeaccessionDatasetReturnType
+}

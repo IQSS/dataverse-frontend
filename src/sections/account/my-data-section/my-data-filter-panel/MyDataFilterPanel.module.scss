@@ -1,0 +1,21 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.filter-panel {
+  @media (min-width: 992px) {
+    padding: 1rem;
+    border: 1px solid $dv-border-color;
+    border-radius: 4px;
+  }
+
+  .toggle-canvas-btn {
+    display: block;
+
+    @media (min-width: 992px) {
+      display: none;
+    }
+  }
+
+  .filters-wrapper {
+    width: 100%;
+  }
+}

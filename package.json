@@ -1,0 +1,196 @@
+{
+  "engines": {
+    "npm": ">=8.0.0",
+    "node": ">=16.0.0"
+  },
+  "name": "dataverse-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "dependencies": {
+    "@dnd-kit/core": "6.1.0",
+    "@dnd-kit/modifiers": "7.0.0",
+    "@dnd-kit/sortable": "8.0.0",
+    "@dnd-kit/utilities": "3.2.2",
+    "@faker-js/faker": "7.6.0",
+    "@iqss/dataverse-client-javascript": "2.0.0",
+    "@iqss/dataverse-design-system": "*",
+    "@istanbuljs/nyc-config-typescript": "1.0.2",
+    "@tanstack/react-table": "8.9.2",
+    "@testing-library/jest-dom": "5.16.5",
+    "@testing-library/react": "13.4.0",
+    "@testing-library/user-event": "13.5.0",
+    "@types/node": "16.18.12",
+    "@types/react": "18.0.27",
+    "@types/react-dom": "18.0.10",
+    "async-mutex": "0.5.0",
+    "bootstrap": "5.2.3",
+    "classnames": "2.5.1",
+    "dompurify": "3.2.3",
+    "html-react-parser": "3.0.16",
+    "i18next": "22.4.9",
+    "i18next-browser-languagedetector": "7.0.1",
+    "i18next-http-backend": "2.1.1",
+    "js-md5": "0.8.3",
+    "lodash": "^4.17.21",
+    "moment-timezone": "0.5.43",
+    "react-bootstrap": "2.7.2",
+    "react-bootstrap-icons": "1.11.4",
+    "react-confetti": "6.1.0",
+    "react-hook-form": "7.51.2",
+    "react-i18next": "12.1.5",
+    "react-infinite-scroll-hook": "4.1.1",
+    "react-loader-spinner": "5.3.4",
+    "react-markdown": "8.0.7",
+    "react-oauth2-code-pkce": "1.22.2",
+    "react-router-dom": "6.23.1",
+    "react-toastify": "11.0.2",
+    "react-topbar-progress-indicator": "4.1.1",
+    "sass": "1.58.1",
+    "sweetalert2": "11.17.2",
+    "sweetalert2-react-content": "5.1.0",
+    "turndown": "7.2.0",
+    "typescript": "5.7.2",
+    "use-deep-compare": "1.2.1",
+    "vite-plugin-istanbul": "4.0.1",
+    "web-vitals": "2.1.4"
+  },
+  "scripts": {
+    "start": "vite --base=/spa",
+    "build": "tsc && vite build",
+    "build-keycloak-theme": "npm run build && keycloakify build",
+    "preview": "vite preview",
+    "lint": "npm run typecheck && npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",
+    "lint:fix": "eslint --fix --ext .ts,.tsx ./src --ignore-path .gitignore . && stylelint --fix **/*.scss && prettier . --write",
+    "lint:eslint": "eslint --ignore-path .gitignore .",
+    "lint:stylelint": "stylelint **/*.scss ",
+    "lint:prettier": "prettier . --check",
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json,yml,md}' --config ./.prettierrc",
+    "cy:open-e2e": "cypress open --e2e --browser chrome",
+    "cy:open-unit": "cypress open --component --browser chrome",
+    "test:e2e": "cypress run --e2e",
+    "test:unit": "cypress run --component",
+    "test:unit-all": "concurrently 'cypress run --component' 'cd packages/design-system && npm run test:unit'",
+    "test:coverage": "nyc check-coverage",
+    "test:coverage-all": "nyc check-coverage && cd packages/design-system && npm run test:coverage",
+    "test:coverage-merge": "lcov-result-merger '**/*/lcov.info' 'merged-coverage/lcov.info' && perl -pi -e 's/src\\/lib/packages\\/design-system\\/src\\/lib/g' merged-coverage/lcov.info",
+    "git:add": "git add .",
+    "storybook": "concurrently 'storybook dev -p 6006 && open \"http://localhost:6006\"' 'cd packages/design-system && npm run storybook'",
+    "storybook:windows": "concurrently \"storybook dev -p 6006\" \"npm run storybook -w packages/design-system\"",
+    "build-storybook": "storybook build",
+    "test:storybook": "test-storybook",
+    "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'",
+    "typecheck": "tsc --noEmit"
+  },
+  "pre-commit": [
+    "typecheck",
+    "lint:fix",
+    "git:add"
+  ],
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@auto-it/all-contributors": "10.46.0",
+    "@auto-it/first-time-contributor": "10.46.0",
+    "@auto-it/npm": "10.46.0",
+    "@auto-it/released": "10.46.0",
+    "@csstools/postcss-cascade-layers": "3.0.1",
+    "@cypress/code-coverage": "3.10.7",
+    "@cypress/grep": "4.0.1",
+    "@storybook/addon-a11y": "7.0.2",
+    "@storybook/addon-essentials": "7.0.2",
+    "@storybook/addon-interactions": "7.0.2",
+    "@storybook/addon-links": "7.0.2",
+    "@storybook/blocks": "7.0.2",
+    "@storybook/react": "7.0.2",
+    "@storybook/react-vite": "7.0.2",
+    "@storybook/test-runner": "0.16.0",
+    "@storybook/testing-library": "0.1.0",
+    "@testing-library/cypress": "9.0.0",
+    "@types/chai-as-promised": "7.1.5",
+    "@types/node-sass": "4.11.3",
+    "@types/sinon": "10.0.13",
+    "@typescript-eslint/eslint-plugin": "5.51.0",
+    "@typescript-eslint/parser": "5.51.0",
+    "@vitejs/plugin-react": "3.1.0",
+    "auto": "10.46.0",
+    "axe-playwright": "1.2.3",
+    "axios": "1.4.0",
+    "babel-plugin-named-exports-order": "0.0.2",
+    "chai": "4.3.7",
+    "chai-as-promised": "7.1.1",
+    "chromatic": "6.17.4",
+    "concurrently": "8.0.1",
+    "cypress": "12.14.0",
+    "cypress-vite": "1.4.0",
+    "eslint": "8.33.0",
+    "eslint-config-prettier": "8.6.0",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-react": "7.32.2",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "eslint-plugin-simple-import-sort": "10.0.0",
+    "eslint-plugin-storybook": "0.6.11",
+    "eslint-plugin-unused-imports": "2.0.0",
+    "jsdom": "21.1.0",
+    "keycloakify": "11.8.23",
+    "lcov-result-merger": "3.3.0",
+    "lerna": "7.1.1",
+    "postcss": "8.4.23",
+    "pre-commit": "1.2.2",
+    "prettier": "2.8.4",
+    "prop-types": "15.8.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-loading-skeleton": "3.3.1",
+    "sinon": "15.0.3",
+    "storybook": "7.0.2",
+    "storybook-addon-mock-date": "0.6.0",
+    "stylelint": "15.7.0",
+    "stylelint-config-rational-order": "0.1.2",
+    "stylelint-config-standard": "30.0.1",
+    "stylelint-config-standard-scss": "7.0.1",
+    "stylelint-order": "6.0.2",
+    "vite": "4.1.5",
+    "vite-plugin-css-injected-by-js": "3.1.1",
+    "vite-plugin-dts": "2.3.0",
+    "vite-plugin-libcss": "1.0.6"
+  },
+  "msw": {
+    "workerDirectory": "public"
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "dataverse-frontend@0.1.0",
+  "overrides": {
+    "@parcel/watcher": "2.1.0"
+  }
+}

@@ -1,0 +1,26 @@
+import { DatasetItemTypePreview } from '@/dataset/domain/models/DatasetItemTypePreview'
+import { DatasetCardHeader } from './DatasetCardHeader'
+import { DatasetCardBody } from './DatasetCardBody'
+import styles from './DatasetCard.module.scss'
+
+interface DatasetCardProps {
+  datasetPreview: DatasetItemTypePreview
+  parentCollectionAlias?: string
+}
+
+export function DatasetCard({ datasetPreview, parentCollectionAlias }: DatasetCardProps) {
+  return (
+    <article className={styles['card-main-container']} data-testid="dataset-card">
+      <DatasetCardHeader
+        persistentId={datasetPreview.persistentId}
+        version={datasetPreview.version}
+        userRoles={datasetPreview.userRoles}
+        publicationStatuses={datasetPreview.publicationStatuses}
+      />
+      <DatasetCardBody
+        datasetPreview={datasetPreview}
+        parentCollectionAlias={parentCollectionAlias}
+      />
+    </article>
+  )
+}

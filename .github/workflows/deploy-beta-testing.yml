@@ -1,0 +1,107 @@
+name: 'Deploy to Beta Testing'
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Create .npmrc
+        run: |
+          cp .npmrc.example .npmrc
+          sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Dataverse UI Library
+        working-directory: packages/design-system
+        run: npm run build
+
+      - name: Create and populate .env file
+        env:
+          DATAVERSE_BACKEND_URL: ${{ secrets.BETA_DATAVERSE_BACKEND_URL }}
+          OIDC_CLIENT_ID: ${{ secrets.BETA_OIDC_CLIENT_ID }}
+          OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.BETA_OIDC_AUTHORIZATION_ENDPOINT }}
+          OIDC_TOKEN_ENDPOINT: ${{ secrets.BETA_OIDC_TOKEN_ENDPOINT }}
+          OIDC_LOGOUT_ENDPOINT: ${{ secrets.BETA_OIDC_LOGOUT_ENDPOINT }}
+          OIDC_STORAGE_KEY_PREFIX: ${{ secrets.BETA_OIDC_STORAGE_KEY_PREFIX }}
+        run: |
+          touch .env
+          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
+          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
+          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
+          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
+          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
+        shell: bash
+
+      - name: Build with base path
+        run: npm run build -- --base=/spa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: built-site
+          path: ./dist
+          include-hidden-files: true
+
+  deploy-to-payara:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: built-site
+          path: ./dist
+
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v6
+
+      - name: Build war file
+        working-directory: ./deployment/payara
+        run: mvn package "-Dversion=${{ steps.branch-name.outputs.current_branch }}"
+
+      - name: Copy war file to remote instance
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.BETA_PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.BETA_PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.BETA_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          source: './deployment/payara/target/dataverse-frontend.war'
+          target: '/home/${{ secrets.BETA_PAYARA_INSTANCE_USERNAME }}'
+          overwrite: true
+
+      - name: Execute payara war deployment remotely
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.BETA_PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.BETA_PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.BETA_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          script: |
+            APPLICATION_NAME=dataverse-frontend
+            APPLICATION_WAR_PATH=deployment/payara/target/$APPLICATION_NAME.war
+            ASADMIN='/usr/local/payara6/bin/asadmin --user admin'
+            DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
+            $ASADMIN undeploy $DATAVERSE_FRONTEND
+            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /spa $APPLICATION_WAR_PATH

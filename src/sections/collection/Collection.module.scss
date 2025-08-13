@@ -1,0 +1,35 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.header {
+  margin-bottom: $spacer;
+}
+
+.infoContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.metrics-actions-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+
+  .right-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+}
+
+.featured-items-spacing {
+  margin-block: 2rem;
+}
+
+.subtext {
+  color: $dv-subtext-color;
+}

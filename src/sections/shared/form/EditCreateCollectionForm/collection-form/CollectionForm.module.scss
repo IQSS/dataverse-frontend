@@ -1,0 +1,5 @@
+@import 'src/assets/variables';
+
+.form-container {
+  scroll-margin-top: calc(#{$header-aproximate-height} + 1rem);
+}

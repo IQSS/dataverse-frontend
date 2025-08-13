@@ -1,0 +1,149 @@
+@import 'design-tokens/typography.module';
+@import 'design-tokens/colors.module';
+
+// Theme
+
+$primary: $dv-primary-color;
+$secondary: $dv-secondary-color;
+$success: $dv-success-color;
+$info: $dv-info-color;
+$warning: $dv-warning-color;
+$danger: $dv-danger-color;
+
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+
+// Body
+$body-color: $dv-text-color;
+$headings-color: $dv-headings-color;
+$code-color: $dv-text-color;
+
+// Typography
+$font-family-base: $dv-font-family;
+
+$font-size-base: $dv-font-size;
+$font-size-sm: $dv-font-size-sm;
+
+$line-height-base: $dv-line-height;
+
+$font-weight-normal: $dv-font-weight;
+$font-weight-light: $dv-font-weight-light;
+$font-weight-bold: $dv-font-weight-bold;
+
+// Links
+$link-color: $dv-link-color;
+$link-hover-color: $dv-link-hover-color;
+
+// Base
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/reboot';
+@import 'bootstrap/scss/type';
+
+// Buttons and Dropdowns
+@import 'bootstrap/scss/buttons';
+@import 'bootstrap/scss/button-group';
+@import 'bootstrap/scss/dropdown';
+
+// Grid
+@import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/utilities/api';
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/grid';
+
+// Badge
+@import 'bootstrap/scss/badge';
+
+// Forms
+$form-label-font-weight: $dv-font-weight-bold;
+
+@import 'bootstrap/scss/forms';
+
+// Table
+@import 'bootstrap/scss/tables';
+
+// Accordion
+@import 'bootstrap/scss/accordion';
+
+// Modal
+@import 'bootstrap/scss/modal';
+@import 'bootstrap/scss/close';
+
+// Breadcrumb
+$breadcrumb-divider: '>';
+
+@import 'bootstrap/scss/breadcrumb';
+
+// QuestionMarkTooltip
+$tooltip-max-width: 500px;
+
+@import 'bootstrap/scss/tooltip';
+
+// Alert
+@import 'bootstrap/scss/alert';
+
+// Pagination
+@import 'bootstrap/scss/pagination';
+
+// Card
+@import 'bootstrap/scss/card';
+
+// Progress
+@import 'bootstrap/scss/progress';
+
+// Spinner
+@import 'bootstrap/scss/spinners';
+
+// OffCanvas
+@import 'bootstrap/scss/offcanvas';
+
+// Navbar
+
+$navbar-light-brand-color: $dv-brand-color;
+$navbar-brand-font-size: $dv-brand-font-size;
+
+@import 'bootstrap/scss/nav';
+@import 'bootstrap/scss/navbar';
+@import 'bootstrap/scss/transitions';
+@import 'bootstrap/scss/helpers';
+
+.navbar-collapse {
+  justify-content: end;
+}
+
+.dropdown-menu > .dropdown > .dropdown-toggle {
+  width: 100%;
+  text-align: start;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.dropdown-menu > .dropdown > .dropdown-toggle:hover {
+  background-color: $dropdown-link-hover-bg;
+  border-color: transparent;
+}
+
+th {
+  vertical-align: middle;
+}
+
+.btn-group > div:not(:last-child) > .btn-group > .btn,
+.btn-group-vertical > div:not(:last-child) > .btn-group > .btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-group > div:not(:first-child) > .btn-group > .btn,
+.btn-group-vertical > div:not(:first-child) > .btn-group > .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn-link {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

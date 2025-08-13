@@ -1,0 +1,63 @@
+import { FileEmbargoDate } from '../../../../../src/sections/file/file-embargo/FileEmbargoDate'
+import { DatasetPublishingStatus } from '../../../../../src/dataset/domain/models/Dataset'
+import { FileEmbargoMother } from '../../../files/domain/models/FileMetadataMother'
+import { DateHelper } from '../../../../../src/shared/helpers/DateHelper'
+
+describe('FileEmbargoDate', () => {
+  it('renders the embargo date when embargo exists', () => {
+    const embargoDate = new Date('2123-09-18')
+    const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
+    const status = DatasetPublishingStatus.RELEASED
+    cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
+    const dateString = DateHelper.toISO8601Format(embargoDate)
+    cy.findByText(`Embargoed until`).should('exist')
+    cy.get('time').should('have.text', dateString)
+  })
+
+  it('renders the until embargo date when embargo is not active and the file is not released', () => {
+    const embargoDate = new Date('2023-09-15')
+    const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
+    const status = DatasetPublishingStatus.RELEASED
+
+    cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
+    const dateString = DateHelper.toISO8601Format(embargoDate)
+
+    cy.findByText(`Was embargoed until`).should('exist')
+    cy.get('time').should('have.text', dateString)
+  })
+
+  it('renders the draft until embargo date when embargo is active and the file is not released', () => {
+    const embargoDate = new Date('2123-09-18')
+    const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
+    const status = DatasetPublishingStatus.DRAFT
+
+    cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
+    const dateString = DateHelper.toISO8601Format(embargoDate)
+
+    cy.findByText(`Draft: will be embargoed until`).should('exist')
+    cy.get('time').should('have.text', dateString)
+  })
+
+  it('renders an empty fragment when embargo is undefined', () => {
+    const embargo = undefined
+    const status = DatasetPublishingStatus.RELEASED
+
+    cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
+    cy.findByText(/Draft: will be embargoed until/).should('not.exist')
+    cy.findByText(/Embargoed until/).should('not.exist')
+    cy.findByText(/Was embargoed until/).should('not.exist')
+  })
+
+  it('renders the embargo date in YYYY-MM-DD format', () => {
+    const embargoDate = new Date('2123-09-18')
+    const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
+    const status = DatasetPublishingStatus.RELEASED
+
+    cy.customMount(
+      <FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} format="YYYY-MM-DD" />
+    )
+    const dateString = DateHelper.toISO8601Format(embargoDate)
+    cy.findByText(`Embargoed until`).should('exist')
+    cy.get('time').should('have.text', dateString)
+  })
+})

@@ -1,0 +1,9 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.errorText {
+  color: $dv-danger-color;
+}
+
+.secondaryText {
+  color: $dv-subtext-color;
+}

@@ -1,0 +1,25 @@
+.icon_pencil {
+  margin-right: 0.3rem;
+  margin-bottom: 0.2rem;
+}
+
+.selected_files_checkbox {
+  display: inline-flex;
+  align-items: center;
+  padding-right: 2rem;
+  padding-left: 0.5rem;
+}
+
+.selected_files_info {
+  position: absolute;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.uploaded_files_info {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 1em;
+}

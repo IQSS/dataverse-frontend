@@ -1,0 +1,29 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.message {
+  color: $dv-warning-color;
+
+  &.error {
+    color: $dv-danger-color;
+  }
+
+  svg {
+    min-width: fit-content;
+  }
+}
+
+.restriction_form {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.restriction_info {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  color: $dv-subtext-color;
+}
+
+.helper_text {
+  color: $dv-subtext-color;
+  font-size: 14px;
+}

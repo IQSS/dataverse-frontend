@@ -1,0 +1,24 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.container {
+  margin: 0 0 20px;
+  padding: 10px 0;
+  border: 1px solid $dv-info-border-color;
+  border-radius: 4px;
+}
+
+.deaccessioned {
+  margin: 0.5rem 0;
+  padding: 10px;
+  border: 1px solid $dv-danger-color;
+  border-radius: 4px;
+}
+
+.row {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.thumbnail {
+  font-size: 7.5em;
+}

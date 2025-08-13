@@ -1,0 +1,31 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.container {
+  display: flex;
+}
+
+.body-container {
+  padding-left: 10px;
+
+  &__subtext {
+    color: $dv-subtext-color;
+    font-size: $dv-font-size-sm;
+  }
+}
+
+.thumbnail-container {
+  min-width: 80px;
+  padding-left: 8px;
+}
+
+.checksum-container {
+  display: flex;
+  align-items: center;
+  min-height: 20px;
+}
+
+.description-container {
+  color: $dv-text-color;
+  font-size: $dv-font-size-sm;
+}

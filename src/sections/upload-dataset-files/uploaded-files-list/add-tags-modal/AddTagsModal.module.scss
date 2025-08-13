@@ -1,0 +1,26 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.add_tags_form {
+  padding-block: 0.5em;
+}
+
+.tags {
+  display: flex;
+}
+
+.tags_select {
+  width: 100%;
+}
+
+.tag_options {
+  padding-block: 0.5em;
+}
+
+.tag_info {
+  padding-block: 0.5em;
+  color: $dv-subtext-color;
+}
+
+.apply_button {
+  height: 2.4rem;
+}

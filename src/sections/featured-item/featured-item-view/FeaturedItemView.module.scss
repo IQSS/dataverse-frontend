@@ -1,0 +1,51 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.img_banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+
+  img {
+    flex-shrink: 0;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    object-fit: cover;
+  }
+
+  .breadcrumbs_in_banner_wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: fit-content;
+    padding: 0.5rem 1rem;
+    background-color: color.adjust($dv-secondary-color, $alpha: -0.1);
+    border-bottom-right-radius: 8px;
+
+    nav {
+      padding: 0;
+    }
+
+    ol {
+      margin: 0;
+
+      li a {
+        color: $dv-link-hover-color !important;
+      }
+
+      li:last-child {
+        color: $dv-text-color;
+      }
+    }
+  }
+}
+
+.content {
+  padding-block: 1rem;
+}

@@ -1,0 +1,228 @@
+import { useEffect, useMemo, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
+import { useSession } from '@/sections/session/SessionContext'
+import { Accordion, Alert, Button } from '@iqss/dataverse-design-system'
+import { type DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { type MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { type DatasetMetadataFormValues } from '../MetadataFieldsHelper'
+import { type DatasetMetadataFormMode } from '..'
+import { SubmissionStatus, useSubmitDataset } from '../useSubmitDataset'
+import { MetadataBlockFormFields } from './MetadataBlockFormFields'
+import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
+import { RouteWithParams } from '@/sections/Route.enum'
+import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
+import { DateHelper } from '@/shared/helpers/DateHelper'
+import styles from './index.module.scss'
+
+interface FormProps {
+  mode: DatasetMetadataFormMode
+  collectionId: string
+  formDefaultValues: DatasetMetadataFormValues
+  metadataBlocksInfo: MetadataBlockInfo[]
+  errorLoadingMetadataBlocksInfo: string | null
+  datasetRepository: DatasetRepository
+  datasetPersistentID?: string
+  datasetInternalVersionNumber?: number
+}
+
+export const MetadataForm = ({
+  mode,
+  collectionId,
+  formDefaultValues,
+  metadataBlocksInfo,
+  errorLoadingMetadataBlocksInfo,
+  datasetRepository,
+  datasetPersistentID,
+  datasetInternalVersionNumber
+}: FormProps) => {
+  const { user } = useSession()
+  const navigate = useNavigate()
+  const { t } = useTranslation('shared')
+
+  const accordionRef = useRef<HTMLDivElement>(null)
+  const formContainerRef = useRef<HTMLDivElement>(null)
+
+  const onCreateMode = mode === 'create'
+  const onEditMode = mode === 'edit'
+  const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocksInfo)
+
+  const form = useForm({ mode: 'onChange', defaultValues: formDefaultValues })
+  const { setValue, formState } = form
+
+  const { submissionStatus, submitError, submitForm } = useSubmitDataset(
+    mode,
+    collectionId,
+    datasetRepository,
+    onSubmitDatasetError,
+    datasetPersistentID,
+    datasetInternalVersionNumber
+  )
+
+  useEffect(() => {
+    // Only on create mode, lets prefill specific fields with user data
+    if (mode === 'create' && user) {
+      const displayName = `${user.lastName}, ${user.firstName}`
+      setValue('citation.author.0.authorName', displayName)
+      setValue('citation.datasetContact.0.datasetContactName', displayName)
+      setValue('citation.datasetContact.0.datasetContactEmail', user.email, {
+        shouldValidate: true
+      })
+      setValue('citation.depositor', displayName)
+      setValue('citation.dateOfDeposit', DateHelper.toISO8601Format(new Date()))
+
+      if (user.affiliation) {
+        setValue('citation.datasetContact.0.datasetContactAffiliation', user.affiliation)
+        setValue('citation.author.0.authorAffiliation', user.affiliation)
+      }
+    }
+  }, [setValue, user, mode])
+
+  const handleCancel = () => {
+    navigate(RouteWithParams.COLLECTIONS(collectionId))
+  }
+
+  const onInvalidSubmit = (errors: FieldErrors<DatasetMetadataFormValues>) => {
+    if (!accordionRef.current) return
+    /*
+    Get the first metadata block accordion item with an error, and if it's collapsed, open it
+    Only for the case when accordion is closed, otherwise focus is already handled by react-hook-form
+    */
+    const firstMetadataBlockNameWithError = Object.keys(errors)[0]
+
+    const accordionItemsButtons: HTMLButtonElement[] = Array.from(
+      accordionRef.current.querySelectorAll('button.accordion-button')
+    )
+
+    accordionItemsButtons.forEach((button) => {
+      const parentItem = button.closest('.accordion-item')
+      const itemBlockName = parentItem?.id.split('-').pop()
+      const buttonIsCollapsed = button.classList.contains('collapsed')
+
+      if (itemBlockName === firstMetadataBlockNameWithError && buttonIsCollapsed) {
+        button.click()
+
+        setTimeout(
+          /* istanbul ignore next */ () => {
+            const focusedElement = document.activeElement
+            focusedElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          },
+          800
+        )
+      }
+    })
+  }
+
+  function onSubmitDatasetError() {
+    if (formContainerRef.current) {
+      formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  const disableSubmitButton = useMemo(() => {
+    return (
+      isErrorLoadingMetadataBlocks ||
+      submissionStatus === SubmissionStatus.IsSubmitting ||
+      !formState.isDirty
+    )
+  }, [isErrorLoadingMetadataBlocks, submissionStatus, formState.isDirty])
+
+  const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
+    // When pressing Enter, only submit the form  if the user is focused on the submit button itself
+    if (e.key !== 'Enter') return
+
+    const isButton = e.target instanceof HTMLButtonElement
+    const isButtonTypeSubmit = isButton ? (e.target as HTMLButtonElement).type === 'submit' : false
+
+    if (!isButton && !isButtonTypeSubmit) e.preventDefault()
+  }
+
+  return (
+    <section
+      className={styles['form-container']}
+      ref={formContainerRef}
+      data-testid="metadata-form">
+      <FormProvider {...form}>
+        <form
+          onSubmit={form.handleSubmit(submitForm, onInvalidSubmit)}
+          onKeyDown={preventEnterSubmit}
+          noValidate={true}>
+          <div className={styles['top-buttons-container']}>
+            <RequiredFieldText />
+            {onEditMode && (
+              <div>
+                <Button type="submit" disabled={disableSubmitButton}>
+                  {t('saveChanges')}
+                </Button>
+                <Button
+                  withSpacing
+                  variant="secondary"
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+                  {t('cancel')}
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {submissionStatus === SubmissionStatus.Errored && (
+            <Alert
+              variant={'danger'}
+              customHeading={t('datasetMetadataForm.validationAlert.title')}
+              dismissible={false}>
+              {submitError}
+            </Alert>
+          )}
+
+          {submissionStatus === SubmissionStatus.SubmitComplete && (
+            <Alert variant="success" dismissible={false}>
+              {t('datasetMetadataForm.status.success')}
+            </Alert>
+          )}
+
+          {metadataBlocksInfo.length > 0 && (
+            <Accordion defaultActiveKey="0" ref={accordionRef}>
+              {metadataBlocksInfo.map((metadataBlock, index) => (
+                <Accordion.Item
+                  eventKey={index.toString()}
+                  id={`metadata-block-item-${metadataBlock.name}`}
+                  key={metadataBlock.id}>
+                  <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
+                  <Accordion.Body>
+                    <MetadataBlockFormFields metadataBlock={metadataBlock} />
+                  </Accordion.Body>
+                </Accordion.Item>
+              ))}
+            </Accordion>
+          )}
+
+          <SeparationLine />
+
+          {onCreateMode && (
+            <Alert
+              variant={'info'}
+              customHeading={t('datasetMetadataForm.metadataTip.title')}
+              dismissible={false}>
+              {t('datasetMetadataForm.metadataTip.content')}
+            </Alert>
+          )}
+          <div className={styles['bottom-buttons-container']}>
+            <Button type="submit" disabled={disableSubmitButton}>
+              {onCreateMode ? t('datasetMetadataForm.saveDataset') : t('saveChanges')}
+            </Button>
+            <Button
+              withSpacing
+              variant="secondary"
+              type="button"
+              onClick={handleCancel}
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+              {t('cancel')}
+            </Button>
+          </div>
+        </form>
+      </FormProvider>
+    </section>
+  )
+}
