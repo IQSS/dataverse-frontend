@@ -435,6 +435,8 @@ describe('RichTextEditor', () => {
 
           cy.findByRole('button', { name: 'OK' }).click()
 
+          cy.wait(1000) // Wait for the image to be rendered
+
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
@@ -466,6 +468,8 @@ describe('RichTextEditor', () => {
           cy.findByLabelText('Alternative text').type('A random image')
 
           cy.findByRole('button', { name: 'OK' }).click()
+
+          cy.wait(1000) // Wait for the image to be rendered
 
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
@@ -499,6 +503,8 @@ describe('RichTextEditor', () => {
 
           cy.findByRole('button', { name: 'OK' }).click()
 
+          cy.wait(1000) // Wait for the image to be rendered
+
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
@@ -530,6 +536,8 @@ describe('RichTextEditor', () => {
           cy.findByLabelText('Alternative text').type('A random image')
 
           cy.findByRole('button', { name: 'OK' }).click()
+
+          cy.wait(1000) // Wait for the image to be rendered
 
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
