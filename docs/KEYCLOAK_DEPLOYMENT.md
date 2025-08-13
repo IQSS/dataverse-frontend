@@ -23,8 +23,6 @@ Download the JAR file from [this link](https://github.com/IQSS/dataverse-fronten
 
 ### Add Keycloak Custom Theme
 
-Make sure you have Maven installed on your localhost.
-
 Within the ``dataverse-frontend`` repository, run the following command to build the custom Keycloak theme:
 
    ```bash
