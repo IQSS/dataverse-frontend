@@ -7,9 +7,13 @@ const editorContentId = 'test-editor-content-id'
 
 const textToType = 'Hello Dataverse!'
 
-const testImageUrl = 'https://picsum.photos/id/237/640/480'
+const testImageUrl = 'https://some-fake-url.com'
 
 describe('RichTextEditor', () => {
+  beforeEach(() => {
+    cy.intercept('GET', testImageUrl, { fixture: 'images/dog-640x480.jpg' })
+  })
+
   it('should render the component', () => {
     cy.mount(<RichTextEditor />)
 
@@ -371,6 +375,8 @@ describe('RichTextEditor', () => {
 
         cy.findByRole('button', { name: 'OK' }).click()
 
+        cy.wait(300)
+
         cy.get(`#${editorContentId}`).then((el) => {
           const html = el[0].innerHTML
           expect(html).to.include(
@@ -388,6 +394,8 @@ describe('RichTextEditor', () => {
         cy.findByLabelText('Alternative text').type('A random image')
 
         cy.findByRole('button', { name: 'OK' }).click()
+
+        cy.wait(300)
 
         cy.get(`#${editorContentId}`).then((el) => {
           const html = el[0].innerHTML
@@ -435,7 +443,7 @@ describe('RichTextEditor', () => {
 
           cy.findByRole('button', { name: 'OK' }).click()
 
-          cy.wait(1000) // Wait for the image to be rendered
+          cy.wait(300) // Wait for the image to be rendered
 
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
@@ -469,7 +477,7 @@ describe('RichTextEditor', () => {
 
           cy.findByRole('button', { name: 'OK' }).click()
 
-          cy.wait(1000) // Wait for the image to be rendered
+          cy.wait(300) // Wait for the image to be rendered
 
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
@@ -503,7 +511,7 @@ describe('RichTextEditor', () => {
 
           cy.findByRole('button', { name: 'OK' }).click()
 
-          cy.wait(1000) // Wait for the image to be rendered
+          cy.wait(300) // Wait for the image to be rendered
 
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
@@ -537,7 +545,7 @@ describe('RichTextEditor', () => {
 
           cy.findByRole('button', { name: 'OK' }).click()
 
-          cy.wait(1000) // Wait for the image to be rendered
+          cy.wait(300) // Wait for the image to be rendered
 
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
