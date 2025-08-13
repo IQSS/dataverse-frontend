@@ -49,8 +49,6 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
     return <NotFoundPage dvObjectNotFoundType="file" />
   }
 
-  // TODO: if the file is deaccessioned, we should show the file in deaccessioned format
-
   return (
     <>
       <BreadcrumbsGenerator hierarchy={file.hierarchy} />
@@ -111,6 +109,8 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                       requestAccess: file.datasetVersion.termsOfAccess?.fileAccessRequest
                     }}
                     storageIdentifier={file.metadata.storageIdentifier}
+                    existingLabels={file.metadata.labels}
+                    isTabularFile={file.metadata.isTabular}
                   />
                 )}
               </ButtonGroup>

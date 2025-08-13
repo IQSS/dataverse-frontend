@@ -6,7 +6,7 @@ legacy-peer-deps=true
 
 # GitHub Packages Registry
 //npm.pkg.github.com/:_authToken=<YOUR_GITHUB_AUTH_TOKEN>
-# @iqss:registry=https://npm.pkg.github.com/
+@iqss:registry=https://npm.pkg.github.com/
 # IMPORTANT: Comment out the line above when:
 # 1. Publishing the Design System to npm, to avoid publishing to the GitHub Packages Registry.
 # 2. Making a release of the application and installing latest version of Dataverse Client Javascript, to avoid installing from the GitHub Packages Registry (otherwise will lead to a npm error code ETARGET).

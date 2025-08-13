@@ -29,6 +29,7 @@ export const Default: Story = {
         requestAccess: true
       }}
       storageIdentifier="s3://10.5072/FK2/FNJFOR"
+      isTabularFile={true}
     />
   )
 }

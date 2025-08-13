@@ -42,6 +42,7 @@
       "title": "Edit Dataset",
       "filesUpload": "Files (Upload)",
       "metadata": "Metadata",
+      "tags": "Tags",
       "terms": "Terms",
       "privateUrl": "Private URL",
       "thumbnailsPlusWidgets": "Thumbnails + Widgets",
