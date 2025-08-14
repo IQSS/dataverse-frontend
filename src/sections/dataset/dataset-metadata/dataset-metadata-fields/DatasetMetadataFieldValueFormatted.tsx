@@ -9,6 +9,7 @@ import {
   DatasetMetadataFieldValue as DatasetMetadataFieldValueModel,
   DatasetMetadataSubField
 } from '../../../../dataset/domain/models/Dataset'
+import { ExpandableContent } from '@/sections/shared/expandable-content/ExpandableContent'
 
 interface DatasetMetadataFieldValueFormattedProps {
   metadataFieldName: string
@@ -43,6 +44,15 @@ export function DatasetMetadataFieldValueFormatted({
       <a href={`${String(metadataFieldValue)}`} target="_blank" rel="noreferrer">
         {String(metadataFieldValue)}
       </a>
+    )
+  }
+
+  if (metadataFieldName === 'dsDescription') {
+    return (
+      <ExpandableContent
+        contentName={metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.title}>
+        <MarkdownComponent markdown={valueFormattedWithNamesTranslated} />
+      </ExpandableContent>
     )
   }
 
