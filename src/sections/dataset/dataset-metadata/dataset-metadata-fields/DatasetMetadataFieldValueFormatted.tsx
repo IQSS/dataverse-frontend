@@ -7,14 +7,11 @@ import {
 import { MarkdownComponent } from '../../markdown/MarkdownComponent'
 import {
   DatasetMetadataFieldValue as DatasetMetadataFieldValueModel,
-  DatasetMetadataSubField,
-  MetadataBlockName
+  DatasetMetadataSubField
 } from '../../../../dataset/domain/models/Dataset'
-import { useTranslation } from 'react-i18next'
 import { ExpandableContent } from '@/sections/shared/expandable-content/ExpandableContent'
 
 interface DatasetMetadataFieldValueFormattedProps {
-  metadataBlockName: MetadataBlockName
   metadataFieldName: string
   metadataFieldValue: DatasetMetadataFieldValueModel
   metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
@@ -27,26 +24,19 @@ function transformHtmlToMarkdown(source: string): string {
 }
 
 export function DatasetMetadataFieldValueFormatted({
-  metadataBlockName,
   metadataFieldName,
   metadataFieldValue,
   metadataBlockDisplayFormatInfo
 }: DatasetMetadataFieldValueFormattedProps) {
-  const { t } = useTranslation(metadataBlockName)
-  const translateFieldName = (fieldName: string): string => {
-    return t(`${metadataBlockName}.datasetField.${fieldName}.name`)
-  }
-
   const valueFormatted = metadataFieldValueToDisplayFormat(
     metadataFieldValue,
-    translateFieldName,
     metadataBlockDisplayFormatInfo,
     metadataFieldName
   )
 
   const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
     METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
-    translateFieldName(metadataFieldName)
+    metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.title ?? ''
   )
 
   if (metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.type === 'URL') {
@@ -59,7 +49,8 @@ export function DatasetMetadataFieldValueFormatted({
 
   if (metadataFieldName === 'dsDescription') {
     return (
-      <ExpandableContent contentName={translateFieldName(metadataFieldName)}>
+      <ExpandableContent
+        contentName={metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.title}>
         <MarkdownComponent markdown={valueFormattedWithNamesTranslated} />
       </ExpandableContent>
     )
@@ -76,8 +67,7 @@ export function DatasetMetadataFieldValueFormatted({
 
 export function metadataFieldValueToDisplayFormat(
   metadataFieldValue: DatasetMetadataFieldValueModel,
-  translateFieldName: (fieldName: string) => string,
-  metadataBlockInfo?: MetadataBlockInfoDisplayFormat,
+  metadataBlockInfo: MetadataBlockInfoDisplayFormat,
   metadataFieldName?: string
 ): string {
   const separator = ';'
@@ -85,7 +75,7 @@ export function metadataFieldValueToDisplayFormat(
   if (isArrayOfObjects(metadataFieldValue)) {
     return metadataFieldValue
       .map((metadataSubField) =>
-        joinSubFields(metadataSubField, translateFieldName, metadataBlockInfo, metadataFieldName)
+        joinSubFields(metadataSubField, metadataBlockInfo, metadataFieldName)
       )
       .join(' \n \n')
   }
@@ -115,8 +105,7 @@ function joinObjectValues(obj: object, separator: string): string {
 
 export function joinSubFields(
   metadataSubField: DatasetMetadataSubField,
-  translateFieldName: (fieldName: string) => string,
-  metadataBlockInfo?: MetadataBlockInfoDisplayFormat,
+  metadataBlockInfo: MetadataBlockInfoDisplayFormat,
   parentFieldName?: string
 ): string {
   let parentDisplayFormat = ''
@@ -127,8 +116,8 @@ export function joinSubFields(
   const subfields = Object.entries(metadataSubField).map(([subFieldName, subFieldValue]) => {
     let formattedSubFieldValue = formatSubFieldValue(
       subFieldValue,
-      metadataBlockInfo?.fields[subFieldName]?.displayFormat,
-      translateFieldName(subFieldName)
+      metadataBlockInfo.fields[subFieldName]?.displayFormat,
+      metadataBlockInfo.fields[subFieldName]?.title
     )
 
     const subFieldType = metadataBlockInfo?.fields[subFieldName]?.type as string
@@ -136,6 +125,14 @@ export function joinSubFields(
     if (subFieldType === 'TEXTBOX') {
       formattedSubFieldValue = transformHtmlToMarkdown(formattedSubFieldValue)
     }
+
+    if (subFieldName === 'datasetContactEmail') {
+      return {
+        fullFieldName: subFieldName,
+        value: ''
+      }
+    }
+
     return {
       fullFieldName: subFieldName,
       value: formattedSubFieldValue
@@ -147,7 +144,7 @@ export function joinSubFields(
 function formatSubFieldValue(
   subFieldValue: string | undefined,
   displayFormat: string | undefined,
-  translatedName: string | undefined
+  fieldTitle: string | undefined
 ): string {
   if (subFieldValue === undefined) {
     return ''
@@ -163,7 +160,7 @@ function formatSubFieldValue(
   )
   const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
     METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
-    translatedName ?? ''
+    fieldTitle ?? ''
   )
   return valueFormattedWithNamesTranslated
 }

@@ -134,7 +134,7 @@ export class FileDownloadUrlsMother {
 
 export class FileMetadataMother {
   static create(props?: Partial<FileMetadata>): FileMetadata {
-    const thumbnail = valueOrUndefined<string>(faker.image.imageUrl(400))
+    const thumbnail = valueOrUndefined<string>(FakerHelper.getImageUrl(400))
     const tabularFile = faker.datatype.boolean()
     const checksum = valueOrUndefined<string>(faker.datatype.uuid())
     const fileMockedData = {
@@ -158,6 +158,7 @@ export class FileMetadataMother {
       depositDate: '2020-01-01',
       publicationDate: faker.datatype.boolean() ? '2020-01-01' : undefined,
       persistentId: faker.datatype.uuid(),
+      storageIdentifier: props?.storageIdentifier ?? 's3://10.5072/FK2/FNJFOR',
       ...props
     }
 
@@ -177,7 +178,8 @@ export class FileMetadataMother {
       fileMockedData.tabularData,
       fileMockedData.description,
       fileMockedData.checksum,
-      fileMockedData.persistentId
+      fileMockedData.persistentId,
+      fileMockedData.storageIdentifier
     )
   }
 

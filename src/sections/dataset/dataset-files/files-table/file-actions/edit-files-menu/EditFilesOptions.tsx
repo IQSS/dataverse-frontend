@@ -81,17 +81,20 @@ export function EditFilesOptions({
           fileRepository={fileRepository}
           datasetInfo={datasetInfo}
         />
+        {/* TODO: remove this when we can handle non-S3 files */}
+        {file.metadata.storageIdentifier?.startsWith('s3') && (
+          <DropdownButtonItem
+            as={Link}
+            to={RouteWithParams.FILES_REPLACE(
+              datasetInfo.persistentId,
+              datasetInfo.versionNumber,
+              file.id,
+              ReplaceFileReferrer.DATASET
+            )}>
+            {tFile('actionButtons.editFileMenu.options.replace')}
+          </DropdownButtonItem>
+        )}
 
-        <DropdownButtonItem
-          as={Link}
-          to={RouteWithParams.FILES_REPLACE(
-            datasetInfo.persistentId,
-            datasetInfo.versionNumber,
-            file.id,
-            ReplaceFileReferrer.DATASET
-          )}>
-          {tFile('actionButtons.editFileMenu.options.replace')}
-        </DropdownButtonItem>
         <DatasetEditFileTagsButton
           fileId={file.id}
           fileRepository={fileRepository}
@@ -99,6 +102,7 @@ export function EditFilesOptions({
           existingLabels={file.metadata.labels}
           isTabularFile={file.metadata.isTabular}
         />
+
         <DatasetDeleteFileButton
           fileId={file.id}
           fileRepository={fileRepository}

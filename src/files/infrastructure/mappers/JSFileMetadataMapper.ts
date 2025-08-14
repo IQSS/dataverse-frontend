@@ -42,7 +42,8 @@ export class JSFileMetadataMapper {
       tabularData,
       this.toFileDescription(jsFile.description),
       this.toFileChecksum(jsFile.checksum),
-      jsFile.persistentId
+      jsFile.persistentId,
+      jsFile.storageIdentifier
     )
   }
 

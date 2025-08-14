@@ -1,20 +1,214 @@
-import { DatasetMetadataBlock } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  DatasetMetadataBlock,
+  MetadataBlockName
+} from '../../../../../src/dataset/domain/models/Dataset'
 import { SummaryFields } from '../../../../../src/sections/dataset/dataset-summary/SummaryFields'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
-import {
-  isArrayOfObjects,
-  metadataFieldValueToDisplayFormat
-} from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValueFormatted'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
+const mockDataset = DatasetMother.create({
+  metadataBlocks: [
+    {
+      name: MetadataBlockName.CITATION,
+      fields: {
+        title: 'Some Title',
+        subject: ['subject-one', 'subject-two'],
+        author: [
+          {
+            authorName: 'Foo',
+            authorAffiliation: 'Bar'
+          },
+          {
+            authorName: 'Another Foo',
+            authorAffiliation: 'Another Bar'
+          }
+        ],
+        datasetContact: [
+          {
+            datasetContactName: 'John Doe',
+            datasetContactEmail: 'john@doe.com',
+            datasetContactAffiliation: 'Doe Inc.'
+          }
+        ],
+        dsDescription: [
+          {
+            dsDescriptionValue: 'Description of the dataset'
+          }
+        ],
+        producer: [
+          {
+            producerName: 'Foo',
+            producerAffiliation: 'XYZ',
+            producerURL: 'http://foo.com',
+            producerLogoURL:
+              'https://beta.dataverse.org/resources/images/dataverse_project_logo.svg'
+          }
+        ]
+      }
+    },
+    {
+      name: MetadataBlockName.GEOSPATIAL,
+      fields: {
+        geographicCoverage: [
+          {
+            country: 'Country Name',
+            city: 'City Name'
+          }
+        ]
+      }
+    }
+  ],
+  summaryFields: [
+    {
+      name: MetadataBlockName.CITATION,
+      fields: {
+        dsDescription: 'Description of the dataset',
+        subject: ['subject-one', 'subject-two']
+      }
+    }
+  ]
+})
+
 describe('DatasetSummary', () => {
   it('renders the DatasetSummary fields', () => {
-    const summaryFieldsMock: DatasetMetadataBlock[] = DatasetMother.create().summaryFields
-    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    const summaryFieldsMock: DatasetMetadataBlock[] = mockDataset.summaryFields
+
     const metadataBlockInfoRepository: MetadataBlockInfoRepository =
       {} as MetadataBlockInfoRepository
-    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+
+    const mockCitationMetadataBlockInfo = MetadataBlockInfoMother.create({
+      name: MetadataBlockName.CITATION,
+      displayName: 'Citation Metadata',
+      fields: {
+        title: {
+          displayFormat: '',
+          type: 'TEXT',
+          title: 'Title',
+          description: 'The main title of the Dataset'
+        },
+        subject: {
+          displayFormat: ';',
+          type: 'TEXT',
+          title: 'Subject',
+          description: 'The area of study relevant to the Dataset'
+        },
+        author: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Author',
+          description: 'The entity, e.g. a person or organization, that created the Dataset'
+        },
+        authorName: {
+          displayFormat: '#VALUE',
+          type: 'TEXT',
+          title: 'Name',
+          description:
+            "The name of the author, such as the person's name or the name of an organization"
+        },
+        authorAffiliation: {
+          displayFormat: '(#VALUE)',
+          type: 'TEXT',
+          title: 'Affiliation',
+          description:
+            "The name of the entity affiliated with the author, e.g. an organization's name"
+        },
+        datasetContact: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Point of Contact',
+          description:
+            'The entity, e.g. a person or organization, that users of the Dataset can contact with questions'
+        },
+        datasetContactName: {
+          displayFormat: '#VALUE',
+          type: 'TEXT',
+          title: 'Name',
+          description:
+            "The name of the point of contact, e.g. the person's name or the name of an organization"
+        },
+        datasetContactAffiliation: {
+          displayFormat: '(#VALUE)',
+          type: 'TEXT',
+          title: 'Affiliation',
+          description:
+            "The name of the entity affiliated with the point of contact, e.g. an organization's name"
+        },
+        dsDescription: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Description',
+          description: 'A summary describing the purpose, nature, and scope of the Dataset'
+        },
+        producer: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Producer',
+          description:
+            'The entity, such a person or organization, managing the finances or other administrative processes involved in the creation of the Dataset'
+        },
+        producerAffiliation: {
+          displayFormat: '(#VALUE)',
+          type: 'TEXT',
+          title: 'Affiliation',
+          description:
+            "The name of the entity affiliated with the producer, e.g. an organization's name"
+        },
+        producerLogoURL: {
+          displayFormat: '![#NAME](#VALUE)',
+          type: 'URL',
+          title: 'Logo URL',
+          description: "The URL of the producer's logo"
+        },
+        producerName: {
+          displayFormat: '#VALUE',
+          type: 'TEXT',
+          title: 'Name',
+          description:
+            "The name of the entity, e.g. the person's name or the name of an organization"
+        },
+        producerURL: {
+          displayFormat: '[#VALUE](#VALUE)',
+          type: 'URL',
+          title: 'URL',
+          description: "The URL of the producer's website"
+        }
+      }
+    })
+
+    const mockGeospatialMetadataBlockInfo = MetadataBlockInfoMother.create({
+      name: MetadataBlockName.GEOSPATIAL,
+      displayName: 'Geospatial Metadata',
+      fields: {
+        geographicCoverage: {
+          displayFormat: '',
+          type: 'TEXT',
+          title: 'Geographic Coverage',
+          description: 'Geographic coverage of the dataset'
+        },
+        country: {
+          displayFormat: '#VALUE,',
+          type: 'TEXT',
+          title: 'Country',
+          description: 'Country of the geographic coverage'
+        },
+        city: {
+          displayFormat: '#VALUE,',
+          type: 'TEXT',
+          title: 'City',
+          description: 'City of the geographic coverage'
+        }
+      }
+    })
+    metadataBlockInfoRepository.getByName = cy.stub().callsFake((name: string) => {
+      if (name === MetadataBlockName.CITATION) {
+        return Promise.resolve(mockCitationMetadataBlockInfo)
+      }
+      if (name === MetadataBlockName.GEOSPATIAL) {
+        return Promise.resolve(mockGeospatialMetadataBlockInfo)
+      }
+      return Promise.resolve(undefined)
+    })
 
     cy.customMount(
       <SummaryFields
@@ -23,39 +217,9 @@ describe('DatasetSummary', () => {
       />
     )
 
-    cy.fixture('metadataTranslations').then((t) => {
-      summaryFieldsMock.forEach((metadataBlock) => {
-        Object.entries(metadataBlock.fields).forEach(([summaryFieldName, summaryFieldValue]) => {
-          const translatedSummaryFieldName = t[metadataBlock.name].datasetField[summaryFieldName]
-            .name as string
-          const summaryField = cy.findByText(translatedSummaryFieldName).should('exist')
-
-          summaryField.siblings('div').trigger('mouseover')
-
-          const summaryFieldDescription = cy.findAllByText(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            t[metadataBlock.name].datasetField[summaryFieldName].description
-          )
-          summaryFieldDescription.should('exist')
-
-          const summaryFieldValueString = metadataFieldValueToDisplayFormat(
-            summaryFieldValue,
-            metadataBlockInfoMock
-          )
-
-          if (isArrayOfObjects(summaryFieldValue)) {
-            summaryFieldValueString.split(' \n \n').forEach((fieldValue) => {
-              cy.findAllByText(fieldValue).should('exist')
-            })
-            return
-          }
-
-          const fieldValue = cy.findAllByText(summaryFieldValueString, {
-            exact: false
-          })
-          fieldValue.should('exist')
-        })
-      })
-    })
+    cy.findByText('Description').should('exist')
+    cy.findByText('Description of the dataset').should('exist')
+    cy.findByText('Subject').should('exist')
+    cy.findByText('subject-one; subject-two').should('exist')
   })
 })
