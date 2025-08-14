@@ -108,7 +108,6 @@ export const CollectionItemsPanel = ({
 
   const handleSearchSubmit = async (searchValue: string) => {
     const isSearchValueEmpty = searchValue === ''
-
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
