@@ -23,6 +23,7 @@ export class JournalMetadataBlockInfoMother {
           displayOrder: 0,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             journalVolume: {
               name: 'journalVolume',
@@ -38,7 +39,8 @@ export class JournalMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 1,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             journalIssue: {
               name: 'journalIssue',
@@ -54,7 +56,8 @@ export class JournalMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 2,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             journalPubDate: {
               name: 'journalPubDate',
@@ -70,7 +73,8 @@ export class JournalMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 3,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -122,7 +126,8 @@ export class JournalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 4,
           typeClass: 'controlledVocabulary',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         }
       }
     }

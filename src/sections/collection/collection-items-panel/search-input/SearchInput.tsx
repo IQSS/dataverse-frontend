@@ -2,21 +2,21 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Form } from '@iqss/dataverse-design-system'
 import { Search } from 'react-bootstrap-icons'
-import styles from './SearchPanel.module.scss'
+import styles from './SearchInput.module.scss'
 
-interface SearchPanelProps {
+interface SearchInputProps {
   currentSearchValue?: string
   isLoadingCollectionItems: boolean
   onSubmitSearch: (searchValue: string) => void
   placeholderText: string
 }
 
-export const SearchPanel = ({
+export const SearchInput = ({
   currentSearchValue = '',
   isLoadingCollectionItems,
   onSubmitSearch,
   placeholderText
-}: SearchPanelProps) => {
+}: SearchInputProps) => {
   const { t } = useTranslation('shared')
 
   const [searchValue, setSearchValue] = useState(currentSearchValue)
@@ -38,28 +38,23 @@ export const SearchPanel = ({
   }, [currentSearchValue])
 
   return (
-    <div className={styles['search-panel']}>
-      <form onSubmit={handleSubmit} className={styles['search-form']} role="search">
-        <Form.InputGroup className={styles['search-input-group']}>
-          <Form.Group.Input
-            type="search"
-            placeholder={placeholderText}
-            aria-label="Search"
-            value={searchValue}
-            onChange={handleSearchChange}
-          />
-          <Button
-            variant="secondary"
-            type="submit"
-            icon={<Search />}
-            aria-label={t('searchSubmitButtonLabel')}
-            disabled={isLoadingCollectionItems}
-          />
-        </Form.InputGroup>
-      </form>
-      {/* <Button variant="link" className={styles['advanced-search-btn']} disabled>
-        Advanced Search
-      </Button> */}
-    </div>
+    <form onSubmit={handleSubmit} className={styles['search-form']} role="search">
+      <Form.InputGroup className={styles['search-input-group']}>
+        <Form.Group.Input
+          type="search"
+          placeholder={placeholderText}
+          aria-label="Search"
+          value={searchValue}
+          onChange={handleSearchChange}
+        />
+        <Button
+          variant="secondary"
+          type="submit"
+          icon={<Search />}
+          aria-label={t('searchSubmitButtonLabel')}
+          disabled={isLoadingCollectionItems}
+        />
+      </Form.InputGroup>
+    </form>
   )
 }

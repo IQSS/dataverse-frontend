@@ -154,6 +154,7 @@
 
     &__checkbox-input {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       padding-left: 0;
 
@@ -164,15 +165,16 @@
       }
 
       label {
-        width: 100%;
         padding-left: 0.5rem;
         padding-block: 0.25rem;
+        white-space: wrap;
       }
     }
   }
 
   .option-item-not-multiple {
     margin-bottom: 0.125rem;
+    white-space: wrap;
     cursor: pointer;
     transition: background-color 0.1s ease-in-out;
   }

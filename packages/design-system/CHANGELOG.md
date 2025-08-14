@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# Non Published Changes
+
+- **SelectAdvanced:** Fix word wrapping in options list to prevent overflow and ensure long text is displayed correctly.
+
 # [2.0.2](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.0.1...@iqss/dataverse-design-system@2.0.2) (2024-06-23)
 
 ### Bug Fixes
