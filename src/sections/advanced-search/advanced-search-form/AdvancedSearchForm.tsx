@@ -4,11 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { FormProvider, useForm } from 'react-hook-form'
 import { ArrowClockwise } from 'react-bootstrap-icons'
 import { Accordion, Button } from '@iqss/dataverse-design-system'
-import {
-  MetadataBlockInfo,
-  MetadataBlockName
-} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { SearchFields } from '@/search/domain/models/SearchFields'
+import { MetadataBlockName } from '@/dataset/domain/models/Dataset'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import { Route } from '@/sections/Route.enum'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
