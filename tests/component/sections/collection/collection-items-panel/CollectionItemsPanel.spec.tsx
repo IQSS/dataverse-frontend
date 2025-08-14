@@ -584,4 +584,44 @@ describe('CollectionItemsPanel', () => {
       cy.findByRole('button', { name: /Oldest/ }).click()
     })
   })
+
+  it('uses search_service from sessionStorage on first load and clears it when no next page', () => {
+    cy.window().then((win) => win.sessionStorage.setItem('search_service', 'ExternalSearch'))
+
+    const first4Elements = items.slice(0, 4)
+    const onePageOnly: CollectionItemSubset = {
+      items: first4Elements,
+      facets,
+      totalItemCount: first4Elements.length
+    }
+
+    collectionRepository.getItems = cy.stub().as('getItems').resolves(onePageOnly)
+
+    cy.customMount(
+      <CollectionItemsPanel
+        collectionId={ROOT_COLLECTION_ALIAS}
+        collectionRepository={collectionRepository}
+        collectionQueryParams={{
+          pageQuery: 1,
+          searchQuery: undefined,
+          typesQuery: undefined,
+          filtersQuery: undefined
+        }}
+        addDataSlot={null}
+      />
+    )
+
+    // Assert: repository was called with the search service from sessionStorage
+    cy.get('@getItems').should((spy) => {
+      const getItemsSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+      const getItemsSearchServiceArg = getItemsSpy.getCall(0).args[3] as string
+
+      expect(getItemsSearchServiceArg).to.be.eq('ExternalSearch')
+    })
+
+    // And the key was cleared since there is no next page
+    cy.window().then((win) => {
+      expect(win.sessionStorage.getItem('search_service')).to.be.null
+    })
+  })
 })
