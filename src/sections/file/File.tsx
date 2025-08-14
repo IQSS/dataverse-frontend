@@ -93,6 +93,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                   isDeaccessioned={
                     file.datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
                   }
+                  isDraft={file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT}
                 />
                 {file.permissions.canEditOwnerDataset && (
                   <EditFileMenu
@@ -107,6 +108,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                         file.datasetVersion.termsOfAccess?.termsOfAccessForRestrictedFiles,
                       requestAccess: file.datasetVersion.termsOfAccess?.fileAccessRequest
                     }}
+                    storageIdentifier={file.metadata.storageIdentifier}
                     existingLabels={file.metadata.labels}
                     isTabularFile={file.metadata.isTabular}
                   />

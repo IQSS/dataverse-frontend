@@ -1,5 +1,4 @@
 import { DatasetMetadataBlock as DatasetMetadataBlockModel } from '../../../../dataset/domain/models/Dataset'
-import { useTranslation } from 'react-i18next'
 import { Accordion } from '@iqss/dataverse-design-system'
 import { DatasetMetadataFields } from '../dataset-metadata-fields/DatasetMetadataFields'
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
@@ -15,7 +14,6 @@ export function DatasetMetadataBlock({
   metadataBlock,
   metadataBlockInfoRepository
 }: DatasetMetadataBlockProps) {
-  const { t } = useTranslation(metadataBlock.name)
   const {
     metadataBlockDisplayFormatInfo,
     isLoading: isLoadingMetadataBlockDisplayFormatInfo,
@@ -35,7 +33,7 @@ export function DatasetMetadataBlock({
 
   return (
     <>
-      <Accordion.Header>{t(`${metadataBlock.name}.name`)}</Accordion.Header>
+      <Accordion.Header>{metadataBlockDisplayFormatInfo.displayName}</Accordion.Header>
       <Accordion.Body>
         <DatasetMetadataFields
           metadataBlockName={metadataBlock.name}

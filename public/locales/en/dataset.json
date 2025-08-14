@@ -302,5 +302,20 @@
       "makeDataCountTip": "Each file downloaded is counted as 1, and added to the total download count."
     },
     "defaultGetDownloadCountError": "Something went wrong while getting the dataset download count. Try again later."
+  },
+  "persistentId": {
+    "name": "Persistent Identifier",
+    "description": "The Dataset's unique persistent identifier, either a DOI or Handle"
+  },
+  "publicationDate": {
+    "name": "Publication Date",
+    "description": "The publication date of a Dataset."
+  },
+  "alternativePersistentId": {
+    "name": "Previous Dataset Persistent ID",
+    "description": "A previously used persistent identifier for the Dataset, either a DOI or Handle"
+  },
+  "contact": {
+    "tip": "Use email button above to contact."
   }
 }

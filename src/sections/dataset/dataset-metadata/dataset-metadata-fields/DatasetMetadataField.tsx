@@ -1,39 +1,72 @@
-import { DatasetMetadataFieldValue as DatasetMetadataFieldValueModel } from '../../../../dataset/domain/models/Dataset'
+import { useTranslation } from 'react-i18next'
 import { Col, Row } from '@iqss/dataverse-design-system'
-import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
+import { DatasetMetadataFieldValue as DatasetMetadataFieldValueModel } from '../../../../dataset/domain/models/Dataset'
 import { DatasetMetadataFieldValue } from './DatasetMetadataFieldValue'
 import { DatasetMetadataFieldTitle } from './DatasetMetadataFieldTitle'
-import { DatasetMetadataFieldTip } from './DatasetMetadataFieldTip'
 import { MetadataBlockInfoDisplayFormat } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import styles from './DatasetMetadataField.module.scss'
 
 interface DatasetMetadataFieldProps {
-  metadataBlockName: MetadataBlockName
   metadataFieldName: string
   metadataFieldValue: DatasetMetadataFieldValueModel
   metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
 }
 
 export function DatasetMetadataField({
-  metadataBlockName,
   metadataFieldName,
   metadataFieldValue,
   metadataBlockDisplayFormatInfo
 }: DatasetMetadataFieldProps) {
+  const { t } = useTranslation('dataset')
+
+  // To show custom titles and descriptions for specific fields
+  const getFieldInfo = (fieldName: string) => {
+    switch (fieldName) {
+      case 'persistentId':
+        return {
+          title: t('persistentId.name'),
+          description: t('persistentId.description')
+        }
+      case 'publicationDate':
+        return {
+          title: t('publicationDate.name'),
+          description: t('publicationDate.description')
+        }
+      case 'alternativePersistentId':
+        return {
+          title: t('alternativePersistentId.name'),
+          description: t('alternativePersistentId.description')
+        }
+      default:
+        return {
+          title: metadataBlockDisplayFormatInfo.fields[fieldName]?.title,
+          description: metadataBlockDisplayFormatInfo.fields[fieldName]?.description
+        }
+    }
+  }
+
+  // To show custom tips for specific fields
+  const getFieldTip = (fieldName: string) => {
+    switch (fieldName) {
+      case 'datasetContact':
+        return t('contact.tip')
+      default:
+        return ''
+    }
+  }
+
+  const { title, description } = getFieldInfo(metadataFieldName)
+  const fieldTip = getFieldTip(metadataFieldName)
+
   return (
     <Row>
       <Col md={3}>
-        <DatasetMetadataFieldTitle
-          metadataBlockName={metadataBlockName}
-          metadataFieldName={metadataFieldName}
-        />
+        <DatasetMetadataFieldTitle title={title} description={description} />
       </Col>
-      <Col md={9} className="pt-1 pt-md-0">
-        <DatasetMetadataFieldTip
-          metadataBlockName={metadataBlockName}
-          metadataFieldName={metadataFieldName}
-        />
+      <Col md={9} className="pt-1 pt-md-0 pb-1">
+        {fieldTip && <span className={styles.tip}>{fieldTip}</span>}
+
         <DatasetMetadataFieldValue
-          metadataBlockName={metadataBlockName}
           metadataFieldName={metadataFieldName}
           metadataFieldValue={metadataFieldValue}
           metadataBlockDisplayFormatInfo={metadataBlockDisplayFormatInfo}

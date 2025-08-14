@@ -3,10 +3,7 @@ import { Col, Form, Row, Stack } from '@iqss/dataverse-design-system'
 
 import { MetadataInputLevelFieldsBlock } from './metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
 import { FieldsFromParentCheckbox } from './fields-from-parent-checkbox/FieldsFromParentCheckbox'
-import {
-  MetadataBlockInfo,
-  MetadataBlockName
-} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { CollectionFormData } from '../../types'
 
 interface MetadataFieldsSectionProps {
@@ -38,7 +35,7 @@ export const MetadataFieldsSection = ({
                 return (
                   <MetadataInputLevelFieldsBlock
                     key={block.name}
-                    blockName={block.name as MetadataBlockName}
+                    blockName={block.name}
                     blockDisplayName={block.displayName}
                     metadataBlockInfo={block}
                     isEditingRootCollection={isEditingRootCollection}
