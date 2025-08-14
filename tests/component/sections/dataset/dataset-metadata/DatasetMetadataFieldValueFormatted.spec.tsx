@@ -4,6 +4,7 @@ import {
   metadataFieldValueToDisplayFormat
 } from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValueFormatted'
 import type { DatasetMetadataSubField } from '@/dataset/domain/models/Dataset'
+import { DatasetMetadataFieldValueFormatted } from '@/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValueFormatted'
 
 describe('joinSubFields formatting logic', () => {
   const mockDisplayFormatInfo: MetadataBlockInfoDisplayFormat = {
@@ -33,6 +34,12 @@ describe('joinSubFields formatting logic', () => {
         type: 'TEXT',
         title: 'Other Field',
         description: 'Other Field description'
+      },
+      datasetContact: {
+        displayFormat: ':',
+        type: 'TEXT',
+        title: 'Dataset Contact',
+        description: 'Dataset contact description'
       }
     }
   }
@@ -79,6 +86,28 @@ describe('joinSubFields formatting logic', () => {
     const result = joinSubFields(metadataSubField, mockDisplayFormatInfo, 'otherField')
 
     expect(result).equal('value1\n value2')
+  })
+
+  it("hides the 'datasetContactEmail' subfield when present with other subfields", () => {
+    const metadataSubField = {
+      datasetContactName: 'John Doe',
+      datasetContactEmail: 'john@example.com'
+    }
+
+    const result = joinSubFields(metadataSubField, mockDisplayFormatInfo, 'datasetContact')
+
+    expect(result).to.contain('John Doe')
+    expect(result).to.not.contain('john@example.com')
+  })
+
+  it("returns empty string when only 'datasetContactEmail' is present", () => {
+    const metadataSubField: DatasetMetadataSubField = {
+      datasetContactEmail: 'john@example.com'
+    }
+
+    const result = joinSubFields(metadataSubField, mockDisplayFormatInfo, 'datasetContact')
+
+    expect(result).equal('')
   })
 })
 
@@ -274,5 +303,96 @@ describe('metadataFieldValueToDisplayFormat', () => {
 
       expect(result).equal('value1; value2')
     })
+  })
+})
+
+describe('DatasetMetadataFieldValueFormatted component', () => {
+  it('renders an anchor tag with correct attributes when field type is URL', () => {
+    const mockDisplayFormatInfo: MetadataBlockInfoDisplayFormat = {
+      name: 'mock name',
+      displayName: 'Mock Metadata',
+      fields: {
+        urlField: {
+          displayFormat: '',
+          type: 'URL',
+          title: 'URL Field',
+          description: 'URL description'
+        }
+      }
+    }
+
+    const url = 'https://example.com'
+
+    cy.mount(
+      <DatasetMetadataFieldValueFormatted
+        metadataFieldName="urlField"
+        metadataFieldValue={url}
+        metadataBlockDisplayFormatInfo={mockDisplayFormatInfo}
+      />
+    )
+
+    cy.get('a')
+      .should('have.attr', 'href', url)
+      .and('have.attr', 'target', '_blank')
+      .and('have.attr', 'rel', 'noreferrer')
+
+    cy.contains(url)
+  })
+
+  it('renders markdown (from HTML) when field type is TEXTBOX', () => {
+    const mockDisplayFormatInfo: MetadataBlockInfoDisplayFormat = {
+      name: 'mock name',
+      displayName: 'Mock Metadata',
+      fields: {
+        textBoxField: {
+          displayFormat: '',
+          type: 'TEXTBOX',
+          title: 'Text Box Field',
+          description: 'Text Box description'
+        }
+      }
+    }
+
+    // HTML will be converted to markdown, then rendered as HTML by ReactMarkdown
+    const htmlValue = '<b>Hello</b> world'
+
+    cy.mount(
+      <DatasetMetadataFieldValueFormatted
+        metadataFieldName="textBoxField"
+        metadataFieldValue={htmlValue}
+        metadataBlockDisplayFormatInfo={mockDisplayFormatInfo}
+      />
+    )
+
+    // After transformHtmlToMarkdown + ReactMarkdown, <b> becomes <strong>
+    cy.get('strong').contains('Hello')
+    cy.contains('world')
+  })
+
+  it('should just render the value as markdown when field type is neither URL nor TEXTBOX', () => {
+    const mockDisplayFormatInfo: MetadataBlockInfoDisplayFormat = {
+      name: 'mock name',
+      displayName: 'Mock Metadata',
+      fields: {
+        simpleField: {
+          displayFormat: '',
+          type: 'TEXT',
+          title: 'Simple Field',
+          description: 'Simple Field description'
+        }
+      }
+    }
+
+    const value = 'Just a simple value'
+
+    cy.mount(
+      <DatasetMetadataFieldValueFormatted
+        metadataFieldName="simpleField"
+        metadataFieldValue={value}
+        metadataBlockDisplayFormatInfo={mockDisplayFormatInfo}
+      />
+    )
+
+    cy.contains(value)
   })
 })

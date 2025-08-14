@@ -60,10 +60,10 @@ export function DatasetMetadataField({
 
   return (
     <Row>
-      <Col sm={3}>
+      <Col md={3}>
         <DatasetMetadataFieldTitle title={title} description={description} />
       </Col>
-      <Col>
+      <Col md={9} className="pt-1 pt-md-0 pb-1">
         {fieldTip && <span className={styles.tip}>{fieldTip}</span>}
 
         <DatasetMetadataFieldValue

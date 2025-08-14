@@ -44,13 +44,13 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
         {!isMDCenabled ? (
           <span>
             {t('metrics.title')}{' '}
-            <QuestionMarkTooltip placement="right" message={t('metrics.tip.default')} />
+            <QuestionMarkTooltip placement="top" message={t('metrics.tip.default')} />
           </span>
         ) : (
           <>
             <span>
               {t('metrics.makeDataCount.title')}{' '}
-              <QuestionMarkTooltip placement="right" message={t('metrics.tip.makeDataCount')} />
+              <QuestionMarkTooltip placement="top" message={t('metrics.tip.makeDataCount')} />
             </span>
 
             <small>
@@ -68,7 +68,7 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
             {t('metrics.downloads.count.default', {
               count: downloadCountNotIncludingMDC?.downloadCount
             })}{' '}
-            <QuestionMarkTooltip placement="right" message={t('metrics.downloads.defaultTip')} />
+            <QuestionMarkTooltip placement="top" message={t('metrics.downloads.defaultTip')} />
           </span>
         )}
 
@@ -80,7 +80,7 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
                 count: downloadCountIncludingMDC.downloadCount
               })}{' '}
               <QuestionMarkTooltip
-                placement="right"
+                placement="top"
                 message={t('metrics.downloads.makeDataCountTip')}
               />
             </span>
@@ -92,7 +92,7 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
                   count: downloadCountNotIncludingMDC.downloadCount
                 })})`}{' '}
                 <QuestionMarkTooltip
-                  placement="right"
+                  placement="top"
                   message={t('metrics.downloads.preMakeDataCountTip')}
                 />
               </small>
