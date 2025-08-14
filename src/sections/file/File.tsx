@@ -18,14 +18,16 @@ import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
 import { FileVersions } from './file-version/FileVersions'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface FileProps {
   repository: FileRepository
   id: number
   datasetVersionNumber?: string
+  datasetRepository: DatasetRepository
 }
 
-export function File({ repository, id, datasetVersionNumber }: FileProps) {
+export function File({ repository, id, datasetVersionNumber, datasetRepository }: FileProps) {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
@@ -80,7 +82,12 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
               <span className={styles['citation-title']}>{t('fileCitationTitle')}</span>
               <FileCitation citation={file.citation} datasetVersion={file.datasetVersion} />
               <span className={styles['citation-title']}>{t('datasetCitationTitle')}</span>
-              <DatasetCitation version={file.datasetVersion} withoutThumbnail />
+              <DatasetCitation
+                version={file.datasetVersion}
+                withoutThumbnail
+                datasetRepository={datasetRepository}
+                datasetId={file.datasetPersistentId}
+              />
             </Col>
             <Col sm={3}>
               <ButtonGroup aria-label={t('actionButtons.title')} vertical className={styles.group}>
