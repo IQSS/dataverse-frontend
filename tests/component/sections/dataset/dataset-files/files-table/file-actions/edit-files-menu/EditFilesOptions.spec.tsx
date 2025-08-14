@@ -288,7 +288,7 @@ describe('EditFilesOptions for a single file', () => {
     cy.findByRole('dialog').should('not.exist')
   })
 
-  it.only('should render the edit tags modal and successfully save changes', () => {
+  it('should render the edit tags modal and successfully save changes', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     fileRepository.updateCategories = cy.stub().resolves()
     cy.customMount(
