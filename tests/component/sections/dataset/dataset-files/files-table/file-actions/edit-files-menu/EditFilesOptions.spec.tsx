@@ -287,4 +287,23 @@ describe('EditFilesOptions for a single file', () => {
     cy.findByRole('button', { name: 'Close' }).click()
     cy.findByRole('dialog').should('not.exist')
   })
+
+  it.only('should render the edit tags modal and successfully save changes', () => {
+    const fileUnrestricted = FilePreviewMother.createDefault()
+    fileRepository.updateCategories = cy.stub().resolves()
+    cy.customMount(
+      <EditFilesOptions
+        file={fileUnrestricted}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Tags' }).click()
+    cy.get('#file-tags-select').click()
+    cy.findByText('Data').click()
+    cy.findByRole('button', { name: /Save Changes/ }).click()
+    cy.findByText('The file tags have been updated.').should('exist')
+  })
 })

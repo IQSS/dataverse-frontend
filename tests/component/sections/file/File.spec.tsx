@@ -7,7 +7,7 @@ const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
 describe('File', () => {
-  it.only('renders the File page title and details', () => {
+  it('renders the File page title and details', () => {
     const testFile = FileMother.createRealistic()
     fileRepository.getById = cy.stub().resolves(testFile)
 
