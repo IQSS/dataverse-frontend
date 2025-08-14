@@ -28,7 +28,7 @@ describe('SearchInput', () => {
 
   it('should show the SearchDropdown with the search services when there is more than one search service', () => {
     const searchServices = [
-      { name: 'Solr', displayName: 'Solr' },
+      { name: 'solr', displayName: 'Solr' },
       { name: 'ExternalSearch', displayName: 'External Search' }
     ]
     cy.customMount(<SearchInput searchServices={searchServices} />)
@@ -57,5 +57,66 @@ describe('SearchInput', () => {
       'aria-selected',
       'false'
     )
+  })
+
+  it('stores the selected non-Solr search service in sessionStorage on submit', () => {
+    const searchServices = [
+      { name: 'solr', displayName: 'Solr' },
+      { name: 'ExternalSearch', displayName: 'External Search' }
+    ]
+
+    // Ensure a clean state
+    cy.window().then((win) => win.sessionStorage.clear())
+
+    cy.customMount(<SearchInput searchServices={searchServices} />)
+
+    // Select the non-Solr search service
+    cy.findByRole('button', { name: 'Toggle search services dropdown' }).click()
+    cy.findByRole('button', { name: 'External Search' }).click()
+
+    // Enter a query and submit
+    cy.get('[aria-label="Search"]').type('test query')
+    cy.get('[aria-label="Submit Search"]').click()
+
+    // Assert the selected service was stored in sessionStorage
+    cy.window().then((win) => {
+      expect(win.sessionStorage.getItem('search_service')).to.eq('ExternalSearch')
+    })
+  })
+
+  it('sorts the search sevices to show Solr first', () => {
+    const searchServices = [
+      { name: 'ExternalSearch', displayName: 'External Search' },
+      { name: 'solr', displayName: 'Solr' }
+    ]
+
+    cy.customMount(<SearchInput searchServices={searchServices} />)
+
+    cy.findByRole('button', { name: 'Toggle search services dropdown' }).click()
+
+    cy.get('[id="search-dropdown"]').within(() => {
+      cy.findByText('Search Services').next().should('have.text', 'Solr')
+    })
+  })
+
+  // Should not happen in practice, but we test it to ensure the order is preserved
+  it('keeps the original order when there is no Solr service (covers comparator return 0)', () => {
+    const searchServices = [
+      { name: 'ExternalA', displayName: 'External A' },
+      { name: 'ExternalB', displayName: 'External B' }
+    ]
+
+    cy.customMount(<SearchInput searchServices={searchServices} />)
+
+    cy.findByRole('button', { name: 'Toggle search services dropdown' }).click()
+
+    cy.get('[id="search-dropdown"]').within(() => {
+      // After the header, the first two entries should be External A then External B
+      cy.findByText('Search Services')
+        .next()
+        .should('have.text', 'External A')
+        .next()
+        .should('have.text', 'External B')
+    })
   })
 })
