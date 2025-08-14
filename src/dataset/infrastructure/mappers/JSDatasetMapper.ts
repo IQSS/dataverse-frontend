@@ -48,7 +48,8 @@ export class JSDatasetMapper {
     privateUrl?: PrivateUrl,
     latestPublishedVersionMajorNumber?: number,
     latestPublishedVersionMinorNumber?: number,
-    datasetVersionDiff?: JSDatasetVersionDiff
+    datasetVersionDiff?: JSDatasetVersionDiff,
+    fileStore?: string
   ): Dataset {
     const version = JSDatasetVersionMapper.toVersion(
       jsDataset.versionId,
@@ -60,6 +61,7 @@ export class JSDatasetMapper {
       jsDataset.versionInfo.deaccessionNote as string
     )
     return new Dataset.Builder(
+      jsDataset.id,
       jsDataset.persistentId,
       version,
       jsDataset.internalVersionNumber,
@@ -96,7 +98,8 @@ export class JSDatasetMapper {
         latestPublishedVersionMajorNumber,
         latestPublishedVersionMinorNumber
       ),
-      JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff)
+      JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff),
+      fileStore
     ).build()
   }
 
@@ -173,7 +176,7 @@ export class JSDatasetMapper {
       }
 
       return {
-        name: JSDatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
+        name: jsDatasetMetadataBlock.name,
         fields: getSummaryFields(jsDatasetMetadataBlock.fields)
       }
     })
@@ -187,7 +190,7 @@ export class JSDatasetMapper {
   ): DatasetMetadataBlocks {
     return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
       return {
-        name: JSDatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
+        name: jsDatasetMetadataBlock.name,
         fields: JSDatasetMapper.toMetadataFields(
           jsDatasetMetadataBlock,
           alternativePersistentId,
@@ -196,18 +199,6 @@ export class JSDatasetMapper {
         )
       }
     }) as DatasetMetadataBlocks
-  }
-
-  static toMetadataBlockName(jsDatasetMetadataBlockName: string): MetadataBlockName {
-    const metadataBlockNameKey = Object.values(MetadataBlockName).find((metadataBlockNameKey) => {
-      return metadataBlockNameKey === jsDatasetMetadataBlockName
-    })
-
-    if (metadataBlockNameKey === undefined) {
-      throw new Error('Incorrect Metadata block name key')
-    }
-
-    return metadataBlockNameKey
   }
 
   static toMetadataFields(

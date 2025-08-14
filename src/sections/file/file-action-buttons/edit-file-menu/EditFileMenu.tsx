@@ -7,12 +7,17 @@ import { DeleteFileButton } from './delete-file-button/DeleteFileButton'
 import { RestrictFileButton } from './restrict-file-button/RestrictFileButton'
 import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
+import { EditFileTagsButton } from './edit-file-tags/EditFileTagsButton'
+import { FileLabel } from '@/files/domain/models/FileMetadata'
 
 interface EditFileMenuProps {
   fileId: number
   fileRepository: FileRepository
   isRestricted: boolean
   datasetInfo: EditFileMenuDatasetInfo
+  storageIdentifier: string | undefined
+  existingLabels?: FileLabel[]
+  isTabularFile: boolean
 }
 
 export interface EditFileMenuDatasetInfo {
@@ -27,7 +32,10 @@ export const EditFileMenu = ({
   fileId,
   fileRepository,
   datasetInfo,
-  isRestricted
+  isRestricted,
+  storageIdentifier,
+  existingLabels,
+  isTabularFile
 }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
 
@@ -53,17 +61,27 @@ export const EditFileMenu = ({
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
       />
-      <DropdownButtonItem
-        as={Link}
-        to={RouteWithParams.FILES_REPLACE(
-          datasetInfo.persistentId,
-          datasetInfo.versionNumber,
-          fileId,
-          ReplaceFileReferrer.FILE
-        )}>
-        {t('actionButtons.editFileMenu.options.replace')}
-      </DropdownButtonItem>
+      {/* TODO: remove this when we can handle non-S3 files */}
+      {storageIdentifier?.startsWith('s3') && (
+        <DropdownButtonItem
+          as={Link}
+          to={RouteWithParams.FILES_REPLACE(
+            datasetInfo.persistentId,
+            datasetInfo.versionNumber,
+            fileId,
+            ReplaceFileReferrer.FILE
+          )}>
+          {t('actionButtons.editFileMenu.options.replace')}
+        </DropdownButtonItem>
+      )}
       <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
+      <EditFileTagsButton
+        fileId={fileId}
+        fileRepository={fileRepository}
+        existingLabels={existingLabels}
+        datasetPersistentId={datasetInfo.persistentId}
+        isTabularFile={isTabularFile}
+      />
     </DropdownButton>
   )
 }

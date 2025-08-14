@@ -2,10 +2,8 @@ import { ChangeEvent, useEffect, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Button, Form, Stack, CloseButton } from '@iqss/dataverse-design-system'
-import {
-  MetadataBlockInfo,
-  MetadataBlockName
-} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockName } from '@/dataset/domain/models/Dataset'
 import {
   INPUT_LEVELS_GROUPER,
   METADATA_BLOCKS_NAMES_GROUPER,
@@ -15,7 +13,7 @@ import { InputLevelsTable } from './input-levels-table/InputLevelsTable'
 import { CollectionFormData } from '../../../types'
 
 interface MetadataInputLevelFieldsBlockProps {
-  blockName: MetadataBlockName
+  blockName: string
   blockDisplayName: string
   metadataBlockInfo: MetadataBlockInfo
   isEditingRootCollection: boolean

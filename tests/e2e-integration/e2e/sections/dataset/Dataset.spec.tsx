@@ -408,7 +408,7 @@ describe('Dataset', () => {
 
           cy.findByText('Upload Files').should('exist')
           cy.get('#edit-files-menu').should('exist')
-          cy.findAllByRole('button', { name: 'Access File' }).should('exist')
+          cy.findAllByRole('button', { name: 'Access File' }).should('not.exist') // TODO: change this to 'exist' when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
           cy.findAllByRole('button', { name: 'File Options' }).should('exist')
         })
     })
@@ -435,7 +435,8 @@ describe('Dataset', () => {
         })
     })
 
-    it('loads the restricted files when the user is logged in as owner', () => {
+    // TODO: Bring back this test when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
+    it.skip('loads the restricted files when the user is logged in as owner', () => {
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
         .its('persistentId')
         .then((persistentId: string) => {
@@ -517,10 +518,11 @@ describe('Dataset', () => {
 
           cy.get('#edit-files-menu').should('exist')
 
-          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
-          cy.get('@accessButton').should('exist')
-          cy.get('@accessButton').click()
-          cy.findByText('Embargoed').should('exist')
+          // TODO: Bring back this part of the test when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
+          // cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          // cy.get('@accessButton').should('exist')
+          // cy.get('@accessButton').click()
+          // cy.findByText('Embargoed').should('exist')
         })
     })
 

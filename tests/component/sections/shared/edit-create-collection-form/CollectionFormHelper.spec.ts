@@ -3,7 +3,6 @@ import { CollectionContact } from '@/collection/domain/models/CollectionContact'
 import { CollectionInputLevelDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import {
   MetadataBlockInfo,
-  MetadataBlockName,
   MetadataField
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { CollectionFormHelper } from '@/sections/shared/form/EditCreateCollectionForm/CollectionFormHelper'
@@ -92,22 +91,22 @@ const expectedBaseInputLevels: FormattedCollectionInputLevels = {
   bar: {
     include: true,
     optionalOrRequired: 'required',
-    parentBlockName: 'astrophysics' as MetadataBlockName
+    parentBlockName: 'astrophysics'
   },
   'coverage/Spectral/MinimumWavelength': {
     include: true,
     optionalOrRequired: 'optional',
-    parentBlockName: 'astrophysics' as MetadataBlockName
+    parentBlockName: 'astrophysics'
   },
   'coverage/Spectral/Wavelength': {
     include: true,
     optionalOrRequired: 'optional',
-    parentBlockName: 'astrophysics' as MetadataBlockName
+    parentBlockName: 'astrophysics'
   },
   requiredField: {
     include: true,
     optionalOrRequired: 'required',
-    parentBlockName: 'astrophysics' as MetadataBlockName
+    parentBlockName: 'astrophysics'
   }
 }
 
@@ -154,12 +153,12 @@ describe('CollectionFormHelper', () => {
       'coverage/Spectral/Wavelength': {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'astrophysics' as MetadataBlockName
+        parentBlockName: 'astrophysics'
       },
       foo: {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'astrophysics' as MetadataBlockName
+        parentBlockName: 'astrophysics'
       }
     }
 
@@ -182,12 +181,12 @@ describe('CollectionFormHelper', () => {
       'coverage/Spectral/Wavelength': {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'astrophysics' as MetadataBlockName
+        parentBlockName: 'astrophysics'
       },
       foo: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'astrophysics' as MetadataBlockName
+        parentBlockName: 'astrophysics'
       }
     })
   })
@@ -218,22 +217,22 @@ describe('CollectionFormHelper', () => {
       title: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'citation' as MetadataBlockName
+        parentBlockName: 'citation'
       },
       subtitle: {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'citation' as MetadataBlockName
+        parentBlockName: 'citation'
       },
       foo: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'socialscience' as MetadataBlockName
+        parentBlockName: 'socialscience'
       },
       bar: {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'socialscience' as MetadataBlockName
+        parentBlockName: 'socialscience'
       }
     }
 
@@ -593,22 +592,22 @@ describe('CollectionFormHelper', () => {
       title: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'citation' as MetadataBlockName
+        parentBlockName: 'citation'
       },
       subtitle: {
         include: false,
         optionalOrRequired: 'optional',
-        parentBlockName: 'citation' as MetadataBlockName
+        parentBlockName: 'citation'
       },
       foo: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'socialscience' as MetadataBlockName
+        parentBlockName: 'socialscience'
       },
       bar: {
         include: false,
         optionalOrRequired: 'optional',
-        parentBlockName: 'socialscience' as MetadataBlockName
+        parentBlockName: 'socialscience'
       }
     }
 
@@ -628,12 +627,12 @@ describe('CollectionFormHelper', () => {
       subtitle: {
         include: false,
         optionalOrRequired: 'optional',
-        parentBlockName: 'citation' as MetadataBlockName
+        parentBlockName: 'citation'
       },
       foo: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'socialscience' as MetadataBlockName
+        parentBlockName: 'socialscience'
       }
     })
   })

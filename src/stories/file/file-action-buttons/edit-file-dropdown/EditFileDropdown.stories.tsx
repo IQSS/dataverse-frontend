@@ -28,6 +28,8 @@ export const Default: Story = {
         versionNumber: storyFile.datasetVersion.number.toString(),
         requestAccess: true
       }}
+      storageIdentifier="s3://10.5072/FK2/FNJFOR"
+      isTabularFile={true}
     />
   )
 }

@@ -23,6 +23,7 @@ export function FileActionButtons({ file, fileRepository }: FileActionButtonsPro
         isDeaccessioned={file.datasetPublishingStatus === DatasetPublishingStatus.DEACCESSIONED}
         ingestInProgress={file.ingest.isInProgress}
         asIcon
+        isDraft={file.datasetPublishingStatus === DatasetPublishingStatus.DRAFT}
       />
       <FileOptionsMenu file={file} fileRepository={fileRepository} />
     </ButtonGroup>

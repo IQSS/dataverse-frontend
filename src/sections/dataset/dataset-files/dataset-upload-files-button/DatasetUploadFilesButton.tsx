@@ -21,6 +21,11 @@ export function DatasetUploadFilesButton() {
     return <></>
   }
 
+  // TODO: remove this when we can handle non-S3 files
+  if (!dataset?.fileStore?.startsWith('s3')) {
+    return <></>
+  }
+
   const handleClick = () => {
     const searchParams = new URLSearchParams()
     searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)

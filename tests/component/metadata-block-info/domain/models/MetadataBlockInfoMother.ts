@@ -16,26 +16,130 @@ export class MetadataBlockInfoMother {
   static create(props?: Partial<MetadataBlockInfoDisplayFormat>): MetadataBlockInfoDisplayFormat {
     return {
       name: MetadataBlockName.CITATION,
+      displayName: 'Citation Metadata',
       fields: {
-        alternativePersistentId: { displayFormat: '', type: 'TEXT' },
-        publicationDate: { displayFormat: '', type: 'DATE' },
-        citationDate: { displayFormat: '', type: 'DATE' },
-        title: { displayFormat: '', type: 'TEXT' },
-        subject: { displayFormat: ';', type: 'TEXT' },
-        author: { displayFormat: '', type: 'NONE' },
-        authorName: { displayFormat: '#VALUE', type: 'TEXT' },
-        authorAffiliation: { displayFormat: '(#VALUE)', type: 'TEXT' },
-        authorIdentifierScheme: { displayFormat: '- #VALUE:', type: 'TEXT' },
-        authorIdentifier: { displayFormat: '[#VALUE](https://orcid.org/#VALUE)', type: 'TEXT' },
-        datasetContact: { displayFormat: '#VALUE', type: 'NONE' },
-        datasetContactName: { displayFormat: '#VALUE', type: 'TEXT' },
-        datasetContactAffiliation: { displayFormat: '(#VALUE)', type: 'TEXT' },
-        datasetContactEmail: { displayFormat: '[#VALUE](mailto:#VALUE)', type: 'EMAIL' },
-        dsDescription: { displayFormat: '', type: 'NONE' },
-        dsDescriptionValue: { displayFormat: '#VALUE', type: 'TEXTBOX' },
-        producerURL: { displayFormat: '[#VALUE](#VALUE)', type: 'NONE' },
-        producerLogoURL: { displayFormat: '![#NAME](#VALUE)', type: 'URL' },
-        dateOfCollectionStart: { displayFormat: '#NAME: #VALUE ', type: 'NONE' }
+        alternativePersistentId: {
+          displayFormat: '',
+          type: 'TEXT',
+          title: 'Previous Dataset Persistent ID',
+          description:
+            'A previously used persistent identifier for the Dataset, either a DOI or Handle'
+        },
+        publicationDate: {
+          displayFormat: '',
+          type: 'DATE',
+          title: 'Publication Date',
+          description: 'The publication date of a Dataset.'
+        },
+        citationDate: {
+          displayFormat: '',
+          type: 'DATE',
+          title: 'Citation Date',
+          description:
+            'The citation date of a dataset, determined by the longest embargo on any file in version 1.0.'
+        },
+        title: {
+          displayFormat: '',
+          type: 'TEXT',
+          title: 'Title',
+          description: 'The main title of the Dataset'
+        },
+        subject: {
+          displayFormat: ';',
+          type: 'TEXT',
+          title: 'Subject',
+          description: 'The area of study relevant to the Dataset'
+        },
+        author: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Author',
+          description: 'The entity, e.g. a person or organization, that created the Dataset'
+        },
+        authorName: {
+          displayFormat: '#VALUE',
+          type: 'TEXT',
+          title: 'Name',
+          description:
+            "The name of the author, such as the person's name or the name of an organization"
+        },
+        authorAffiliation: {
+          displayFormat: '(#VALUE)',
+          type: 'TEXT',
+          title: 'Affiliation',
+          description:
+            "The name of the entity affiliated with the author, e.g. an organization's name"
+        },
+        authorIdentifierScheme: {
+          displayFormat: '- #VALUE:',
+          type: 'TEXT',
+          title: 'Identifier Type',
+          description:
+            'The type of identifier that uniquely identifies the author (e.g. ORCID, ISNI)'
+        },
+        authorIdentifier: {
+          displayFormat: '[#VALUE](https://orcid.org/#VALUE)',
+          type: 'TEXT',
+          title: 'Identifier',
+          description: 'Uniquely identifies the author when paired with an identifier type'
+        },
+        datasetContact: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Point of Contact',
+          description:
+            'The entity, e.g. a person or organization, that users of the Dataset can contact with questions'
+        },
+        datasetContactName: {
+          displayFormat: '#VALUE',
+          type: 'TEXT',
+          title: 'Name',
+          description:
+            "The name of the point of contact, e.g. the person's name or the name of an organization"
+        },
+        datasetContactAffiliation: {
+          displayFormat: '(#VALUE)',
+          type: 'TEXT',
+          title: 'Affiliation',
+          description:
+            "The name of the entity affiliated with the point of contact, e.g. an organization's name"
+        },
+        datasetContactEmail: {
+          displayFormat: '[#VALUE](mailto:#VALUE)',
+          type: 'EMAIL',
+          title: 'E-mail',
+          description: "The point of contact's email address"
+        },
+        dsDescription: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Description',
+          description: 'A summary describing the purpose, nature, and scope of the Dataset'
+        },
+        dsDescriptionValue: {
+          displayFormat: '#VALUE',
+          type: 'TEXTBOX',
+          title: 'Text',
+          description: 'A summary describing the purpose, nature, and scope of the Dataset'
+        },
+        producerURL: {
+          displayFormat: '[#VALUE](#VALUE)',
+          type: 'NONE',
+          title: 'URL',
+          description: "The URL of the producer's website"
+        },
+        producerLogoURL: {
+          displayFormat: '![#NAME](#VALUE)',
+          type: 'URL',
+          title: 'Logo URL',
+          description: "The URL of the producer's logo"
+        },
+        dateOfCollectionStart: {
+          displayFormat: '#NAME: #VALUE ',
+          type: 'NONE',
+          title: 'Date of Collection Start Date',
+          description: 'The start date of the period during which the data was collected'
+        }
       },
       ...props
     }
