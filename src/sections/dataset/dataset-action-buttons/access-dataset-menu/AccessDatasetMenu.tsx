@@ -15,6 +15,7 @@ interface AccessDatasetMenuProps {
   hasOneTabularFileAtLeast: boolean
   fileDownloadSizes: FileDownloadSize[]
   downloadUrls: DatasetDownloadUrls
+  fileStore: string | undefined
 }
 
 export function AccessDatasetMenu({
@@ -22,7 +23,8 @@ export function AccessDatasetMenu({
   permissions,
   hasOneTabularFileAtLeast,
   fileDownloadSizes,
-  downloadUrls
+  downloadUrls,
+  fileStore
 }: AccessDatasetMenuProps) {
   const { t } = useTranslation('dataset')
 
@@ -35,6 +37,16 @@ export function AccessDatasetMenu({
     (version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED &&
       !permissions.canUpdateDataset)
   ) {
+    return <></>
+  }
+
+  // TODO: remove this when we can handle non-S3 files
+  if (!fileStore?.startsWith('s3')) {
+    return <></>
+  }
+
+  // TODO: remove this when access datafile supports bearer tokens
+  if (version.publishingStatus === DatasetPublishingStatus.DRAFT) {
     return <></>
   }
 

@@ -7,7 +7,13 @@ const editorContentId = 'test-editor-content-id'
 
 const textToType = 'Hello Dataverse!'
 
+const testImageUrl = 'https://some-fake-url.com'
+
 describe('RichTextEditor', () => {
+  beforeEach(() => {
+    cy.intercept('GET', testImageUrl, { fixture: 'images/dog-640x480.jpg' })
+  })
+
   it('should render the component', () => {
     cy.mount(<RichTextEditor />)
 
@@ -364,15 +370,17 @@ describe('RichTextEditor', () => {
 
         cy.findByLabelText('Add image').click()
 
-        cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
-        cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+        cy.findByLabelText('Image URL').type(testImageUrl)
+        cy.findByLabelText('Alternative text').type('A random image')
 
         cy.findByRole('button', { name: 'OK' }).click()
+
+        cy.wait(300)
 
         cy.get(`#${editorContentId}`).then((el) => {
           const html = el[0].innerHTML
           expect(html).to.include(
-            `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+            `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE}">`
           )
         })
       })
@@ -382,42 +390,44 @@ describe('RichTextEditor', () => {
 
         cy.findByLabelText('Add image').click()
 
-        cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
-        cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+        cy.findByLabelText('Image URL').type(testImageUrl)
+        cy.findByLabelText('Alternative text').type('A random image')
 
         cy.findByRole('button', { name: 'OK' }).click()
 
+        cy.wait(300)
+
         cy.get(`#${editorContentId}`).then((el) => {
           const html = el[0].innerHTML
           expect(html).to.include(
-            `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+            `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE}">`
           )
         })
 
-        cy.findByAltText('A random image from loremflickr').click()
-        cy.findByLabelText('Align left').click()
+        cy.findByAltText('A random image').click({ force: true })
+        cy.findByLabelText('Align left').click({ force: true })
         cy.get(`#${editorContentId}`).then((el) => {
           const html = el[0].innerHTML
           expect(html).to.include(
-            `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} ${RichTextEditorCustomClasses.IMAGE_ALIGN_LEFT}">`
+            `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE} ${RichTextEditorCustomClasses.IMAGE_ALIGN_LEFT}">`
           )
         })
 
-        cy.findByAltText('A random image from loremflickr').click()
-        cy.findByLabelText('Align center').click()
+        cy.findByAltText('A random image').click({ force: true })
+        cy.findByLabelText('Align center').click({ force: true })
         cy.get(`#${editorContentId}`).then((el) => {
           const html = el[0].innerHTML
           expect(html).to.include(
-            `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} ${RichTextEditorCustomClasses.IMAGE_ALIGN_CENTER}">`
+            `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE} ${RichTextEditorCustomClasses.IMAGE_ALIGN_CENTER}">`
           )
         })
 
-        cy.findByAltText('A random image from loremflickr').click()
-        cy.findByLabelText('Align right').click()
+        cy.findByAltText('A random image').click({ force: true })
+        cy.findByLabelText('Align right').click({ force: true })
         cy.get(`#${editorContentId}`).then((el) => {
           const html = el[0].innerHTML
           expect(html).to.include(
-            `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} ${RichTextEditorCustomClasses.IMAGE_ALIGN_RIGHT}">`
+            `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE} ${RichTextEditorCustomClasses.IMAGE_ALIGN_RIGHT}">`
           )
         })
       })
@@ -428,19 +438,21 @@ describe('RichTextEditor', () => {
 
           cy.findByLabelText('Add image').click()
 
-          cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
-          cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+          cy.findByLabelText('Image URL').type(testImageUrl)
+          cy.findByLabelText('Alternative text').type('A random image')
 
           cy.findByRole('button', { name: 'OK' }).click()
+
+          cy.wait(300) // Wait for the image to be rendered
 
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+              `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE}">`
             )
           })
 
-          cy.findByAltText('A random image from loremflickr').click()
+          cy.findByAltText('A random image').click()
           cy.get('.resize-dot')
             .eq(1)
             .trigger('pointerdown', { which: 1, force: true })
@@ -450,7 +462,7 @@ describe('RichTextEditor', () => {
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
+              `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
             )
           })
         })
@@ -460,19 +472,21 @@ describe('RichTextEditor', () => {
 
           cy.findByLabelText('Add image').click()
 
-          cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
-          cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+          cy.findByLabelText('Image URL').type(testImageUrl)
+          cy.findByLabelText('Alternative text').type('A random image')
 
           cy.findByRole('button', { name: 'OK' }).click()
+
+          cy.wait(300) // Wait for the image to be rendered
 
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+              `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE}">`
             )
           })
 
-          cy.findByAltText('A random image from loremflickr').click()
+          cy.findByAltText('A random image').click()
           cy.get('.resize-dot')
             .eq(1)
             .trigger('pointerdown', { which: 1, force: true })
@@ -482,7 +496,7 @@ describe('RichTextEditor', () => {
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-55">`
+              `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE} rte-w-55">`
             )
           })
         })
@@ -492,19 +506,21 @@ describe('RichTextEditor', () => {
 
           cy.findByLabelText('Add image').click()
 
-          cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
-          cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+          cy.findByLabelText('Image URL').type(testImageUrl)
+          cy.findByLabelText('Alternative text').type('A random image')
 
           cy.findByRole('button', { name: 'OK' }).click()
+
+          cy.wait(300) // Wait for the image to be rendered
 
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+              `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE}">`
             )
           })
 
-          cy.findByAltText('A random image from loremflickr').click()
+          cy.findByAltText('A random image').click()
           cy.get('.resize-dot')
             .eq(2)
             .trigger('pointerdown', { which: 1, force: true })
@@ -514,7 +530,7 @@ describe('RichTextEditor', () => {
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
+              `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
             )
           })
         })
@@ -524,19 +540,21 @@ describe('RichTextEditor', () => {
 
           cy.findByLabelText('Add image').click()
 
-          cy.findByLabelText('Image URL').type('https://loremflickr.com/640/480')
-          cy.findByLabelText('Alternative text').type('A random image from loremflickr')
+          cy.findByLabelText('Image URL').type(testImageUrl)
+          cy.findByLabelText('Alternative text').type('A random image')
 
           cy.findByRole('button', { name: 'OK' }).click()
 
+          cy.wait(300) // Wait for the image to be rendered
+
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE}">`
+              `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE}">`
             )
           })
 
-          cy.findByAltText('A random image from loremflickr').click()
+          cy.findByAltText('A random image').click()
           cy.get('.resize-dot')
             .eq(1)
             .trigger('pointerdown', { which: 1, force: true })
@@ -546,11 +564,11 @@ describe('RichTextEditor', () => {
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
+              `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE} rte-w-40">`
             )
           })
 
-          cy.findByAltText('A random image from loremflickr').click()
+          cy.findByAltText('A random image').click()
           cy.get('.resize-dot')
             .eq(1)
             .trigger('pointerdown', { which: 1, force: true })
@@ -560,7 +578,7 @@ describe('RichTextEditor', () => {
           cy.get(`#${editorContentId}`).then((el) => {
             const html = el[0].innerHTML
             expect(html).to.include(
-              `<img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="${RichTextEditorCustomClasses.IMAGE} rte-w-30">`
+              `<img src="${testImageUrl}" alt="A random image" class="${RichTextEditorCustomClasses.IMAGE} rte-w-30">`
             )
           })
         })

@@ -1,8 +1,5 @@
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-import {
-  DatasetMetadataFields as DatasetMetadataFieldsModel,
-  MetadataBlockName
-} from '../../../dataset/domain/models/Dataset'
+import { DatasetMetadataFields as DatasetMetadataFieldsModel } from '../../../dataset/domain/models/Dataset'
 import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { DatasetMetadataFields } from '../dataset-metadata/dataset-metadata-fields/DatasetMetadataFields'
 
@@ -11,7 +8,7 @@ import { Col, Row } from '@iqss/dataverse-design-system'
 import { useId } from 'react'
 
 interface SummaryBlockProps {
-  metadataBlockName: MetadataBlockName
+  metadataBlockName: string
   metadataFields: DatasetMetadataFieldsModel
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }

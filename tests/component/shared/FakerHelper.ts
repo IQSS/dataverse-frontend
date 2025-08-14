@@ -113,9 +113,9 @@ export class FakerHelper {
   }
   static getImageUrl(width?: number, height?: number) {
     if (this.chromaticBuild()) {
-      return 'https://picsum.photos/id/237/200'
+      return 'https://picsum.photos/id/237/200/300'
     } else {
-      return faker.image.imageUrl(width, height)
+      return `http://picsum.photos/id/237/${width ?? 200}/${height ?? 300}`
     }
   }
 

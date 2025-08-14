@@ -15,6 +15,7 @@ interface EditFileMenuProps {
   fileRepository: FileRepository
   isRestricted: boolean
   datasetInfo: EditFileMenuDatasetInfo
+  storageIdentifier: string | undefined
   existingLabels?: FileLabel[]
   isTabularFile: boolean
 }
@@ -31,8 +32,9 @@ export const EditFileMenu = ({
   fileId,
   fileRepository,
   datasetInfo,
-  existingLabels,
   isRestricted,
+  storageIdentifier,
+  existingLabels,
   isTabularFile
 }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
@@ -59,16 +61,19 @@ export const EditFileMenu = ({
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
       />
-      <DropdownButtonItem
-        as={Link}
-        to={RouteWithParams.FILES_REPLACE(
-          datasetInfo.persistentId,
-          datasetInfo.versionNumber,
-          fileId,
-          ReplaceFileReferrer.FILE
-        )}>
-        {t('actionButtons.editFileMenu.options.replace')}
-      </DropdownButtonItem>
+      {/* TODO: remove this when we can handle non-S3 files */}
+      {storageIdentifier?.startsWith('s3') && (
+        <DropdownButtonItem
+          as={Link}
+          to={RouteWithParams.FILES_REPLACE(
+            datasetInfo.persistentId,
+            datasetInfo.versionNumber,
+            fileId,
+            ReplaceFileReferrer.FILE
+          )}>
+          {t('actionButtons.editFileMenu.options.replace')}
+        </DropdownButtonItem>
+      )}
       <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
       <EditFileTagsButton
         fileId={fileId}
