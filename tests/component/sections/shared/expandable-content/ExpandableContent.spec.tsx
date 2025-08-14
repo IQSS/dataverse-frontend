@@ -42,7 +42,7 @@ describe('ExpandableContent', () => {
     )
 
     cy.findByRole('button', { name: /Read full Description/i }).click()
-    cy.findByRole('button', { name: /Show less Description/i }).should('exist')
+    cy.findByRole('button', { name: /Collapse Description/i }).should('exist')
   })
 
   it('collapses content when "Show less" is clicked', () => {
@@ -53,7 +53,7 @@ describe('ExpandableContent', () => {
     )
 
     cy.findByRole('button', { name: /Read full Description/i }).click()
-    cy.findByRole('button', { name: /Show less Description/i }).click()
+    cy.findByRole('button', { name: /Collapse Description/i }).click()
     cy.findByRole('button', { name: /Read full Description/i }).should('exist')
   })
 
