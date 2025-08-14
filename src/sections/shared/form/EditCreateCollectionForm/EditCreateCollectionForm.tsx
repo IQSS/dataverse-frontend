@@ -120,7 +120,7 @@ export const EditCreateCollectionForm = ({
 
   const baseBlockNames = useDeepCompareMemo(() => {
     return allMetadataBlocksInfo.reduce((acc, block) => {
-      acc[block.name as keyof CollectionFormMetadataBlocks] = false
+      acc[block.name] = false
       return acc
     }, {} as CollectionFormMetadataBlocks)
   }, [allMetadataBlocksInfo])
@@ -130,7 +130,7 @@ export const EditCreateCollectionForm = ({
       metadataBlocksInfo
         .map((block) => block.name)
         .reduce((acc, blockName) => {
-          acc[blockName as keyof CollectionFormMetadataBlocks] = true
+          acc[blockName] = true
           return acc
         }, baseBlockNames),
     [metadataBlocksInfo, baseBlockNames]

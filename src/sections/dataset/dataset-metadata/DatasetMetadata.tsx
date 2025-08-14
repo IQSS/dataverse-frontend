@@ -25,6 +25,11 @@ export function DatasetMetadata({
             ? { persistentId: persistentId, ...metadataBlock.fields }
             : metadataBlock.fields
 
+        // If fields are empty, skip rendering the block
+        if (Object.keys(metadataBlock.fields).length === 0) {
+          return null
+        }
+
         return (
           <Accordion.Item key={`${metadataBlock.name}-${index}`} eventKey={index.toString()}>
             <DatasetMetadataBlock

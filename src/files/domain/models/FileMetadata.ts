@@ -158,7 +158,8 @@ export class FileMetadata {
     readonly tabularData?: FileTabularData,
     readonly description?: string,
     readonly checksum?: FileChecksum,
-    readonly persistentId?: string
+    readonly persistentId?: string,
+    readonly storageIdentifier?: string
   ) {}
 
   get isActivelyEmbargoed(): boolean {

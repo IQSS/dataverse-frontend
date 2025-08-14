@@ -2,10 +2,7 @@ import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { Validator } from '@/shared/helpers/Validator'
-import {
-  collectionStorageOptions,
-  collectionTypeOptions
-} from '@/collection/domain/useCases/DTOs/CollectionDTO'
+import { collectionTypeOptions } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import { ContactsField } from './ContactsField'
 import { IdentifierField } from './IdentifierField'
 import { DescriptionField } from './DescriptionField'
@@ -152,7 +149,7 @@ export const TopFieldsSection = ({ isEditingRootCollection }: TopFieldsSectionPr
         <IdentifierField rules={aliasRules} />
 
         {/* 👇 To be defined, at the moment the SPA only supports file uploading through direct upload (S3), so we are disabling the storage selector */}
-        <Form.Group controlId="storage" as={Col} md={6}>
+        {/* <Form.Group controlId="storage" as={Col} md={6}>
           <Form.Group.Label message={t('fields.storage.description')}>
             {t('fields.storage.label')}
           </Form.Group.Label>
@@ -178,7 +175,7 @@ export const TopFieldsSection = ({ isEditingRootCollection }: TopFieldsSectionPr
               </Col>
             )}
           />
-        </Form.Group>
+        </Form.Group> */}
       </Row>
 
       {/* Category (type) & Email (contacts) & Description */}

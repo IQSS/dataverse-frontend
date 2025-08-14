@@ -3,7 +3,7 @@ import { InstallationMetrics } from '@/dataverse-hub/domain/models/InstallationM
 export class InstallationMetricsMother {
   static createInstallationMetrics(): InstallationMetrics {
     return {
-      dvHubId: 'DVN_HARVARD_DATAVERSE_2008',
+      dvHubId: '57B6E0DD-B371-4AFE-A0C0-FB22621DDD73',
       name: 'Harvard Dataverse',
       country: 'USA',
       continent: 'North America',

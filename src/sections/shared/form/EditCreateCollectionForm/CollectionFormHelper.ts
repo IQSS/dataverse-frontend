@@ -1,6 +1,5 @@
 import {
   MetadataBlockInfo,
-  MetadataBlockName,
   MetadataField,
   TypeClassMetadataFieldOptions
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
@@ -52,7 +51,7 @@ export class CollectionFormHelper {
             isFieldRequiredByDataverse && !composedFieldNotRequiredWithChildFieldsRequired
               ? 'required'
               : 'optional',
-          parentBlockName: block.name as MetadataBlockName
+          parentBlockName: block.name
         }
 
         if (field.childMetadataFields) {
@@ -69,7 +68,7 @@ export class CollectionFormHelper {
                 isChildFieldRequiredByDataverse && !isAConditionallyRequiredChildField
                   ? 'required'
                   : 'optional',
-              parentBlockName: block.name as MetadataBlockName
+              parentBlockName: block.name
             }
           })
         }
