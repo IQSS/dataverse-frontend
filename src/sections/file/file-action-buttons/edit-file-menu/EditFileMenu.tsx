@@ -37,7 +37,8 @@ export const EditFileMenu = ({
   isRestricted,
   storageIdentifier,
   existingLabels,
-  isTabularFile
+  isTabularFile,
+  datasetRepository
 }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
 
