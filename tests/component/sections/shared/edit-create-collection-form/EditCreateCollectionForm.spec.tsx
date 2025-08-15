@@ -214,7 +214,7 @@ describe('EditCreateCollectionForm', () => {
       cy.findByText('Email is not a valid email').should('exist')
     })
 
-    it('shows error message when form is submitted with invalid identifier', () => {
+    it('shows error message when form is submitted with invalid identifier with spaces', () => {
       cy.customMount(
         <EditCreateCollectionForm
           mode="create"
@@ -230,6 +230,24 @@ describe('EditCreateCollectionForm', () => {
       cy.findByRole('button', { name: 'Create Collection' }).click()
 
       cy.findByText(/Identifier is not valid./).should('exist')
+    })
+
+    it('shows error message when form is submitted with invalid numeric-only identifier', () => {
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={rootCollection}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      cy.findByLabelText(/^Identifier/i).type('3535')
+
+      cy.findByRole('button', { name: 'Create Collection' }).click()
+
+      cy.findByText(/Identifier should not be numeric only./).should('exist')
     })
 
     it('submits a valid form and succeed', () => {

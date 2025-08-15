@@ -102,6 +102,7 @@
         "required": "Identifier is required",
         "invalid": {
           "format": "Identifier is not valid. Valid characters are a-Z, 0-9, '_', and '-'.",
+          "numberOnly": "Identifier should not be numeric only.",
           "maxLength": "Identifier must be at most {{maxLength}} characters."
         },
         "suggestion": "Psst... try this"
