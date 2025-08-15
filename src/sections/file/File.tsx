@@ -18,14 +18,16 @@ import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
 import { FileVersions } from './file-version/FileVersions'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface FileProps {
   repository: FileRepository
+  datasetRepository: DatasetRepository
   id: number
   datasetVersionNumber?: string
 }
 
-export function File({ repository, id, datasetVersionNumber }: FileProps) {
+export function File({ repository, id, datasetVersionNumber, datasetRepository }: FileProps) {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
@@ -111,6 +113,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                     storageIdentifier={file.metadata.storageIdentifier}
                     existingLabels={file.metadata.labels}
                     isTabularFile={file.metadata.isTabular}
+                    datasetRepository={datasetRepository}
                   />
                 )}
               </ButtonGroup>

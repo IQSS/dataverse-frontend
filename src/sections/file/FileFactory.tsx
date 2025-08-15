@@ -1,11 +1,13 @@
 import { ReactElement } from 'react'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
+import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { File } from './File'
 import { useSearchParams } from 'react-router-dom'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { searchParamVersionToDomainVersion } from '../../router'
 
 const repository = new FileJSDataverseRepository()
+const datasetRepository = new DatasetJSDataverseRepository()
 export class FileFactory {
   static create(): ReactElement {
     return <FileWithSearchParams />
@@ -23,5 +25,12 @@ function FileWithSearchParams() {
     return <NotFoundPage dvObjectNotFoundType="file" />
   }
 
-  return <File repository={repository} id={id} datasetVersionNumber={datasetVersionNumber} />
+  return (
+    <File
+      repository={repository}
+      id={id}
+      datasetVersionNumber={datasetVersionNumber}
+      datasetRepository={datasetRepository}
+    />
+  )
 }

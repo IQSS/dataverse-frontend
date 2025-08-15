@@ -7,6 +7,7 @@ import { FileMockNoDataRepository } from '../../file/FileMockNoDataRepository'
 import { WithSettings } from '../../WithSettings'
 import { FileMockNoFiltersRepository } from '../../file/FileMockNoFiltersRepository'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import { DatasetMockRepository } from '../../dataset/DatasetMockRepository'
 
 const meta: Meta<typeof DatasetFilesScrollable> = {
   title: 'Sections/Dataset Page/DatasetFilesScrollable',
@@ -27,6 +28,7 @@ export const Default: Story = {
   render: () => (
     <DatasetFilesScrollable
       filesRepository={new FileMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -37,6 +39,7 @@ export const Loading: Story = {
   render: () => (
     <DatasetFilesScrollable
       filesRepository={new FileMockLoadingRepository()}
+      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -47,6 +50,7 @@ export const NoFiles: Story = {
   render: () => (
     <DatasetFilesScrollable
       filesRepository={new FileMockNoDataRepository()}
+      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -57,6 +61,7 @@ export const NoFilters: Story = {
   render: () => (
     <DatasetFilesScrollable
       filesRepository={new FileMockNoFiltersRepository()}
+      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
