@@ -26,6 +26,7 @@ export class DatasetLabel {
   ) {}
 }
 
+// Only for testing purposes and checking the existence of the citation block in some parts of the code
 export enum MetadataBlockName {
   CITATION = 'citation',
   GEOSPATIAL = 'geospatial',
@@ -40,7 +41,7 @@ export enum MetadataBlockName {
 export type DatasetMetadataBlocks = [CitationMetadataBlock, ...DatasetMetadataBlock[]]
 
 export interface DatasetMetadataBlock {
-  name: MetadataBlockName
+  name: string
   fields: DatasetMetadataFields
 }
 
@@ -59,7 +60,7 @@ export type DatasetMetadataFieldValue =
 export type DatasetMetadataSubField = Record<string, string | undefined>
 
 export interface CitationMetadataBlock extends DatasetMetadataBlock {
-  name: MetadataBlockName.CITATION
+  name: string // 'citation'
   fields: {
     alternativePersistentId?: string
     publicationDate?: string
@@ -408,6 +409,7 @@ export interface DatasetTermsOfUse {
 
 export class Dataset {
   constructor(
+    public readonly id: number,
     public readonly persistentId: string,
     public readonly version: DatasetVersion,
     public readonly internalVersionNumber: number,
@@ -430,7 +432,8 @@ export class Dataset {
     public readonly publicationDate?: string,
     public readonly nextMajorVersion?: string,
     public readonly nextMinorVersion?: string,
-    public readonly requiresMajorVersionUpdate?: boolean
+    public readonly requiresMajorVersionUpdate?: boolean,
+    public readonly fileStore?: string
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
@@ -503,6 +506,7 @@ export class Dataset {
     public readonly alerts: Alert[] = []
 
     constructor(
+      public readonly id: number,
       public readonly persistentId: string,
       public readonly version: DatasetVersion,
       public readonly internalVersionNumber: number,
@@ -523,7 +527,8 @@ export class Dataset {
       public readonly requestedVersion?: string,
       public readonly nextMajorVersionNumber?: string,
       public readonly nextMinorVersionNumber?: string,
-      public readonly requiresMajorVersionUpdate?: boolean
+      public readonly requiresMajorVersionUpdate?: boolean,
+      public readonly fileStore?: string
     ) {
       this.withAlerts()
     }
@@ -571,6 +576,7 @@ export class Dataset {
 
     build(): Dataset {
       return new Dataset(
+        this.id,
         this.persistentId,
         this.version,
         this.internalVersionNumber,
@@ -593,7 +599,8 @@ export class Dataset {
         undefined,
         this.nextMajorVersionNumber,
         this.nextMinorVersionNumber,
-        this.requiresMajorVersionUpdate
+        this.requiresMajorVersionUpdate,
+        this.fileStore
       )
     }
   }

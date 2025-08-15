@@ -85,12 +85,16 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
       asButtonGroup
       variant="secondary"
       disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
-      <DropdownButtonItem
-        eventKey={EditDatasetMenuItems.FILES_UPLOAD}
-        as="button"
-        disabled={!dataset.hasValidTermsOfAccess}>
-        {t('datasetActionButtons.editDataset.filesUpload')}
-      </DropdownButtonItem>
+      {/* TODO: remove this when we can handle non-S3 files */}
+      {dataset?.fileStore?.startsWith('s3') && (
+        <DropdownButtonItem
+          eventKey={EditDatasetMenuItems.FILES_UPLOAD}
+          as="button"
+          disabled={!dataset.hasValidTermsOfAccess}>
+          {t('datasetActionButtons.editDataset.filesUpload')}
+        </DropdownButtonItem>
+      )}
+
       <DropdownButtonItem
         eventKey={EditDatasetMenuItems.METADATA}
         as="button"

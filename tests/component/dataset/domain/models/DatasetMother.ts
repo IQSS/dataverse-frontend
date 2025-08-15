@@ -339,6 +339,7 @@ export class DatasetMother {
 
   static create(props?: Partial<Dataset>): Dataset {
     const dataset = {
+      id: faker.datatype.number(),
       persistentId: faker.datatype.uuid(),
       version: DatasetVersionMother.create(),
       internalVersionNumber: faker.datatype.number(),
@@ -423,9 +424,11 @@ export class DatasetMother {
       hierarchy: UpwardHierarchyNodeMother.createDataset({ name: props?.version?.title }),
       termsOfUse: TermsOfUseMother.withoutCustomTerms(),
       versionsSummaries: DatasetVersionSummaryInfoMother.createList(3),
+      fileStore: props?.fileStore ?? 's3',
       ...props
     }
     return new Dataset.Builder(
+      dataset.id,
       dataset.persistentId,
       dataset.version,
       dataset.internalVersionNumber,
@@ -446,7 +449,8 @@ export class DatasetMother {
       dataset.requestedVersion,
       dataset.nextMajorVersion,
       dataset.nextMinorVersion,
-      dataset.requiresMajorVersionUpdate
+      dataset.requiresMajorVersionUpdate,
+      dataset.fileStore
     ).build()
   }
 

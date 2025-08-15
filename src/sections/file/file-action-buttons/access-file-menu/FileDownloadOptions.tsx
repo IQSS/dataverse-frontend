@@ -29,8 +29,7 @@ export function FileDownloadOptions({
   return (
     <>
       <DropdownHeader>
-        {t('actions.accessFileMenu.downloadOptions.title')}
-        <Download />
+        {t('actions.accessFileMenu.downloadOptions.title')} <Download />
       </DropdownHeader>
       {isTabular ? (
         <FileTabularDownloadOptions

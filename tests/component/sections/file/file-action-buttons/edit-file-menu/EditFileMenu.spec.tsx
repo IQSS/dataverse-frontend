@@ -21,6 +21,7 @@ describe('EditFileMenu', () => {
           releasedVersionExists: false,
           requestAccess: false
         }}
+        storageIdentifier="s3://10.5072/FK2/FNJFOR"
         isTabularFile={true}
         datasetRepository={new DatasetMockRepository()}
       />
@@ -46,6 +47,26 @@ describe('EditFileMenu', () => {
       .and('include', searchParams.toString())
   })
 
+  it('does not render the replace file button if file storageIdentifier does not start with "s3"', () => {
+    cy.customMount(
+      <EditFileMenu
+        fileId={testFile.id}
+        fileRepository={new FileMockRepository()}
+        isRestricted={false}
+        datasetInfo={{
+          persistentId: testFile.datasetPersistentId,
+          versionNumber: testFile.datasetVersion.number.toSearchParam(),
+          releasedVersionExists: false,
+          requestAccess: false
+        }}
+        isTabularFile={true}
+        storageIdentifier="non-s3://10.5072/FK2/FNJFOR"
+      />
+    )
+
+    cy.findByRole('link', { name: 'Replace' }).should('not.exist')
+  })
+
   describe('Delete button', () => {
     it('opens and close the delete file confirmation modal', () => {
       cy.customMount(
@@ -59,6 +80,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -85,6 +107,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: true,
             requestAccess: false
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -111,6 +134,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -146,6 +170,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -175,6 +200,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -203,6 +229,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -232,6 +259,7 @@ describe('EditFileMenu', () => {
             termsOfAccessForRestrictedFiles: 'test terms of access',
             requestAccess: false
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -261,6 +289,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: false
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -287,6 +316,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: false
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -315,6 +345,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -349,6 +380,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -378,6 +410,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: true
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -404,6 +437,7 @@ describe('EditFileMenu', () => {
             versionNumber: testFile.datasetVersion.number.toSearchParam(),
             requestAccess: false
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -436,6 +470,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -462,6 +497,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: true,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -486,6 +522,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -519,6 +556,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -547,6 +585,7 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             versionNumber: testFile.datasetVersion.number.toSearchParam()
           }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
         />
@@ -583,6 +622,7 @@ describe('EditFileMenu', () => {
           ]}
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
         />
       )
     })
