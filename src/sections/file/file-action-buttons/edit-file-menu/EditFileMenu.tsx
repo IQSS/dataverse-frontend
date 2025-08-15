@@ -64,16 +64,6 @@ export const EditFileMenu = ({
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
       />
-      <DropdownButtonItem
-        as={Link}
-        to={RouteWithParams.FILES_REPLACE(
-          datasetInfo.persistentId,
-          datasetInfo.versionNumber,
-          fileId,
-          ReplaceFileReferrer.FILE
-        )}>
-        {t('actionButtons.editFileMenu.options.replace')}
-      </DropdownButtonItem>
       {/* TODO: remove this when we can handle non-S3 files */}
       {storageIdentifier?.startsWith('s3') && (
         <DropdownButtonItem
@@ -87,7 +77,6 @@ export const EditFileMenu = ({
           {t('actionButtons.editFileMenu.options.replace')}
         </DropdownButtonItem>
       )}
-      <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
       <EditFileTagsButton
         fileId={fileId}
         fileRepository={fileRepository}

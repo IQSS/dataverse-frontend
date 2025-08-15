@@ -61,6 +61,7 @@ describe('EditFileMenu', () => {
         }}
         isTabularFile={true}
         storageIdentifier="non-s3://10.5072/FK2/FNJFOR"
+        datasetRepository={new DatasetMockRepository()}
       />
     )
 
