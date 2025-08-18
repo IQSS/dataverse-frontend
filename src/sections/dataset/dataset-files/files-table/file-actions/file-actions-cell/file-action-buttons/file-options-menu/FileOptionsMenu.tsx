@@ -9,13 +9,15 @@ import { FileAlreadyDeletedModal } from './FileAlreadyDeletedModal'
 import { useDataset } from '../../../../../../DatasetContext'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { EditFilesMenuDatasetInfo } from '../../../edit-files-menu/EditFilesOptions'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface FileOptionsMenuProps {
   file: FilePreview
   fileRepository: FileRepository
+  datasetRepository: DatasetRepository
 }
 
-export function FileOptionsMenu({ file, fileRepository }: FileOptionsMenuProps) {
+export function FileOptionsMenu({ file, fileRepository, datasetRepository }: FileOptionsMenuProps) {
   const { t } = useTranslation('files')
   const { user } = useSession()
   const { dataset } = useDataset()
@@ -75,6 +77,7 @@ export function FileOptionsMenu({ file, fileRepository }: FileOptionsMenuProps) 
           fileRepository={fileRepository}
           datasetInfo={datasetInfo}
           isHeader={false}
+          datasetRepository={datasetRepository}
         />
       </DropdownButton>
     </Tooltip>

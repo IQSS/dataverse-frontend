@@ -14,11 +14,13 @@ import { FilesTableScrollable } from './files-table/FilesTableScrollable'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FilesContext } from '@/sections/file/FilesContext'
 import styles from './DatasetFilesScrollable.module.scss'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface DatasetFilesScrollableProps {
   filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
+  datasetRepository: DatasetRepository
   canUpdateDataset?: boolean
 }
 
@@ -28,7 +30,8 @@ export function DatasetFilesScrollable({
   filesRepository,
   datasetPersistentId,
   datasetVersion,
-  canUpdateDataset
+  canUpdateDataset,
+  datasetRepository
 }: DatasetFilesScrollableProps) {
   const scrollableContainerRef = useRef<HTMLDivElement | null>(null)
   const criteriaContainerRef = useRef<HTMLDivElement | null>(null)
@@ -184,6 +187,7 @@ export function DatasetFilesScrollable({
             isEmptyFiles={isEmptyFiles}
             accumulatedCount={accumulatedCount}
             fileRepository={filesRepository}
+            datasetRepository={datasetRepository}
           />
         </FilesContext.Provider>
       </div>

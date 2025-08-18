@@ -35,7 +35,12 @@ describe('EditFilesMenu', () => {
   it('renders the Edit Files menu', () => {
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
+        <EditFilesMenu
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
+        />,
         datasetWithUpdatePermissions
       )
     )
@@ -46,7 +51,12 @@ describe('EditFilesMenu', () => {
   it('does not render the Edit Files menu when the user is not authenticated', () => {
     cy.customMount(
       withDataset(
-        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
+        <EditFilesMenu
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
+        />,
         datasetWithUpdatePermissions
       )
     )
@@ -57,7 +67,12 @@ describe('EditFilesMenu', () => {
   it('does not render the Edit Files menu when there are no files in the dataset', () => {
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu files={[]} fileSelection={{}} fileRepository={fileRepository} />,
+        <EditFilesMenu
+          files={[]}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
+        />,
         datasetWithUpdatePermissions
       )
     )
@@ -68,7 +83,12 @@ describe('EditFilesMenu', () => {
   it('renders the Edit Files options', () => {
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
+        <EditFilesMenu
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
+        />,
         datasetWithUpdatePermissions
       )
     )
@@ -84,7 +104,12 @@ describe('EditFilesMenu', () => {
 
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
+        <EditFilesMenu
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
+        />,
         datasetWithNoUpdatePermissions
       )
     )
@@ -100,7 +125,12 @@ describe('EditFilesMenu', () => {
 
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
+        <EditFilesMenu
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
+        />,
         datasetWithUpdatePermissions
       )
     )
@@ -116,7 +146,12 @@ describe('EditFilesMenu', () => {
 
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
+        <EditFilesMenu
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
+        />,
         datasetWithUpdatePermissions
       )
     )
