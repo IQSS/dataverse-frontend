@@ -25,8 +25,8 @@ export const Default: Story = {
   render: () => (
     <File
       repository={new FileMockRepository()}
-      id={56}
       datasetRepository={new DatasetMockRepository()}
+      id={56}
     />
   )
 }
@@ -35,8 +35,8 @@ export const Restricted: Story = {
   render: () => (
     <File
       repository={new FileMockRepository(FileMother.createRestricted())}
-      id={56}
       datasetRepository={new DatasetMockRepository()}
+      id={56}
     />
   )
 }
@@ -45,8 +45,8 @@ export const RestrictedWithAccessGranted: Story = {
   render: () => (
     <File
       repository={new FileMockRepository(FileMother.createRestrictedWithAccessGranted())}
-      id={56}
       datasetRepository={new DatasetMockRepository()}
+      id={56}
     />
   )
 }
@@ -55,8 +55,8 @@ export const Loading: Story = {
   render: () => (
     <File
       repository={new FileMockLoadingRepository()}
-      id={56}
       datasetRepository={new DatasetMockRepository()}
+      id={56}
     />
   )
 }
@@ -65,8 +65,8 @@ export const FileNotFound: Story = {
   render: () => (
     <File
       repository={new FileMockNoDataRepository()}
-      id={56}
       datasetRepository={new DatasetMockRepository()}
+      id={56}
     />
   )
 }

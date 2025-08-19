@@ -7,7 +7,7 @@ import { FileMockNoDataRepository } from '../../file/FileMockNoDataRepository'
 import { WithSettings } from '../../WithSettings'
 import { FileMockNoFiltersRepository } from '../../file/FileMockNoFiltersRepository'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
-import { DatasetMockRepository } from '../DatasetMockRepository'
+import { DatasetMockRepository } from '../../dataset/DatasetMockRepository'
 
 const meta: Meta<typeof DatasetFiles> = {
   title: 'Sections/Dataset Page/DatasetFiles',
@@ -24,9 +24,9 @@ export const Default: Story = {
   render: () => (
     <DatasetFiles
       filesRepository={new FileMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -35,9 +35,9 @@ export const Loading: Story = {
   render: () => (
     <DatasetFiles
       filesRepository={new FileMockLoadingRepository()}
+      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -46,9 +46,9 @@ export const NoFiles: Story = {
   render: () => (
     <DatasetFiles
       filesRepository={new FileMockNoDataRepository()}
+      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -57,9 +57,9 @@ export const NoFilters: Story = {
   render: () => (
     <DatasetFiles
       filesRepository={new FileMockNoFiltersRepository()}
+      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }

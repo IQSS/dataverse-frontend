@@ -22,9 +22,9 @@ import { DatasetRepository } from '@/dataset/domain/repositories/DatasetReposito
 
 interface FileProps {
   repository: FileRepository
+  datasetRepository: DatasetRepository
   id: number
   datasetVersionNumber?: string
-  datasetRepository: DatasetRepository
 }
 
 export function File({ repository, id, datasetVersionNumber, datasetRepository }: FileProps) {
