@@ -1,10 +1,9 @@
 import { FileRepository } from '../../../../src/files/domain/repositories/FileRepository'
 import { FileMother } from '../../files/domain/models/FileMother'
 import { File } from '../../../../src/sections/file/File'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 
 const fileRepository: FileRepository = {} as FileRepository
-const datasetRepository: DatasetRepository = {} as DatasetRepository
 
 describe('File', () => {
   it('renders the File page title and details', () => {
@@ -12,7 +11,7 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={datasetRepository} />
+      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
     )
 
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
@@ -40,7 +39,7 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={datasetRepository} />
+      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
     )
 
     cy.findByTestId('file-skeleton').should('exist')
@@ -52,7 +51,7 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(undefined)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={datasetRepository} />
+      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
     )
 
     cy.findByTestId('not-found-page').should('exist')
@@ -63,7 +62,7 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={datasetRepository} />
+      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
     )
 
     cy.findByText('Restricted File Icon').should('exist')
@@ -78,7 +77,7 @@ describe('File', () => {
         repository={fileRepository}
         id={19}
         datasetVersionNumber={'2.0'}
-        datasetRepository={datasetRepository}
+        datasetRepository={new DatasetMockRepository()}
       />
     )
 
