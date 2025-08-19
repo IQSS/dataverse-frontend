@@ -211,8 +211,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           })
           .catch((error: ReadError) => {
             if (error.message.includes('404')) {
-              // If the server returns NOT_FOUND when deaccessioned info isn't included,
-              // ignore and continue without sizes.
+              // If the server returns NOT_FOUND when deaccessioned info isn't included, ignore and continue without sizes.
               return datasetDetails
             }
             throw error
