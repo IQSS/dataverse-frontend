@@ -1,0 +1,93 @@
+.dataset-terms-tab {
+  max-width: 900px;
+}
+
+.license-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+}
+
+.section-title {
+  margin-bottom: 0;
+  margin-left: 0.5rem;
+  color: var(--bs-dark);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.license-description {
+  color: var(--bs-body-color);
+  line-height: 1.6;
+
+  a {
+    color: var(--bs-primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.license-selection {
+  margin-left: 0.5rem;
+
+  .form-select {
+    max-width: 250px;
+  }
+}
+
+.license-display {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: var(--bs-light);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+}
+
+.license-icon {
+  width: auto;
+  height: 31px;
+  border: 1px solid var(--bs-border-color-subtle);
+}
+
+.license-link {
+  margin-left: 0.5rem;
+  color: var(--bs-primary);
+  font-weight: 500;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.custom-terms-section {
+  margin-top: 1.5rem;
+
+  .form-label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .form-control {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .form-text {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--bs-border-color);
+}

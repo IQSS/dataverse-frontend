@@ -317,5 +317,53 @@
   },
   "contact": {
     "tip": "Use email button above to contact."
+  },
+  "editTerms": {
+    "pageTitle": "Edit Dataset Terms",
+    "tabs": {
+      "datasetTerms": "Dataset Terms",
+      "restrictedFilesTerms": "Restricted Files + Terms of Access",
+      "guestBook": "Guest Book"
+    },
+    "datasetTerms": {
+      "title": "Dataset Terms",
+      "description": "Configure the license and custom terms for this dataset.",
+      "placeholder": "Dataset terms form will be implemented here...",
+      "licenseRequired": "Please select a license for this dataset",
+      "customTermsRequired": "Custom terms are required when Custom Dataset Terms is selected",
+      "customTermsPlaceholder": "Enter your custom terms of use for this dataset..."
+    },
+    "restrictedFilesTerms": {
+      "title": "Restricted Files + Terms of Access",
+      "description": "Set up access restrictions and terms for restricted files in this dataset.",
+      "placeholder": "Restricted files and terms of access form will be implemented here..."
+    },
+    "restrictedFiles": {
+      "requestAccess": "Request Access",
+      "enableAccessRequest": "Enable access request",
+      "termsOfAccess": "Terms of Access for Restricted Files",
+      "termsOfAccessPlaceholder": "Enter the terms of access for restricted files...",
+      "dataAccessPlace": "Data Access Place",
+      "dataAccessPlacePlaceholder": "Specify where the data can be accessed...",
+      "originalArchive": "Original Archive",
+      "originalArchivePlaceholder": "Information about the original archive...",
+      "availabilityStatus": "Availability Status",
+      "availabilityStatusPlaceholder": "Current availability status of the data...",
+      "contactForAccess": "Contact for Access",
+      "contactForAccessPlaceholder": "Contact information for data access requests...",
+      "sizeOfCollection": "Size of Collection",
+      "sizeOfCollectionPlaceholder": "e.g., 500MB, 2GB, 1TB",
+      "studyCompletion": "Study Completion",
+      "studyCompletionPlaceholder": "e.g., 2024, Ongoing, December 2023"
+    },
+    "guestBook": {
+      "title": "Guest Book",
+      "description": "Select a guestbook to have a user provide additional information when downloading a file.",
+      "placeholder": "Guest book form will be implemented here...",
+      "testGuestbook": "Test Guestbook",
+      "previewButton": "Preview Guestbook"
+    },
+    "saveButton": "Save Changes",
+    "cancelButton": "Cancel"
   }
 }
