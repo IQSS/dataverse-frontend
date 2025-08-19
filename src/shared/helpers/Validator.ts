@@ -7,7 +7,18 @@ export class Validator {
 
   static isValidIdentifier(input: string): boolean {
     const IDENTIFIER_REGEX = /^[a-zA-Z0-9_-]+$/
-    return IDENTIFIER_REGEX.test(input)
+    // Valid characters are a-Z, 0-9, '_', and '-'
+    if (!IDENTIFIER_REGEX.test(input)) return false
+
+    // Reject numeric-only identifiers (e.g., "3838")
+    if (this.isNumberOnly(input)) return false
+
+    return true
+  }
+
+  static isNumberOnly(input: string): boolean {
+    const REGEX = /^\d+$/
+    return REGEX.test(input)
   }
 
   static isValidUsername(input: string): boolean {
