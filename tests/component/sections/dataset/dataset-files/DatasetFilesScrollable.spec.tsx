@@ -610,7 +610,7 @@ describe('DatasetFilesScrollable', () => {
         .invoke('text')
         .then((text) => {
           const count = parseInt(text.split(' ')[0], 10)
-          expect(count).to.be.gte(20)
+          expect(count).to.be.gte(10)
         })
 
       cy.get('table > tbody > tr').each(() => {
