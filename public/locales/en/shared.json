@@ -279,5 +279,11 @@
     "citationInStyle": "Citation in {{styleName}} style",
     "downloadError": "An error occurred while downloading the citation",
     "styledCitation": "Styled Citation"
+  },
+  "expandableContent": {
+    "truncateMoreBtn": "Read full {{contentName}}",
+    "truncateLessBtn": "Collapse {{contentName}}",
+    "truncateMoreTip": "Click to read the full {{contentName}}",
+    "truncateLessTip": "Click to collapse the {{contentName}}"
   }
 }
