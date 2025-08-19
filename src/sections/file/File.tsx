@@ -118,6 +118,7 @@ export function File({ repository, id, datasetVersionNumber, datasetRepository }
                     storageIdentifier={file.metadata.storageIdentifier}
                     existingLabels={file.metadata.labels}
                     isTabularFile={file.metadata.isTabular}
+                    datasetRepository={datasetRepository}
                   />
                 )}
               </ButtonGroup>

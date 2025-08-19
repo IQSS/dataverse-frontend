@@ -9,6 +9,7 @@ import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
 import { EditFileTagsButton } from './edit-file-tags/EditFileTagsButton'
 import { FileLabel } from '@/files/domain/models/FileMetadata'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface EditFileMenuProps {
   fileId: number
@@ -17,6 +18,7 @@ interface EditFileMenuProps {
   datasetInfo: EditFileMenuDatasetInfo
   storageIdentifier: string | undefined
   existingLabels?: FileLabel[]
+  datasetRepository: DatasetRepository
   isTabularFile: boolean
 }
 
@@ -35,7 +37,8 @@ export const EditFileMenu = ({
   isRestricted,
   storageIdentifier,
   existingLabels,
-  isTabularFile
+  isTabularFile,
+  datasetRepository
 }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
 

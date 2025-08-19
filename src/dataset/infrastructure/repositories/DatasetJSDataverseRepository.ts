@@ -32,7 +32,8 @@ import {
   getDatasetVersionsSummaries,
   getDatasetDownloadCount,
   deleteDatasetDraft,
-  getDatasetCitationInOtherFormats
+  getDatasetCitationInOtherFormats,
+  getDatasetAvailableCategories
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -382,12 +383,12 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     version: string,
     format: CitationFormat
   ): Promise<FormattedCitation> {
-    return getDatasetCitationInOtherFormats
-      .execute(datasetId, version, format)
-      .catch((error: ReadError) => {
-        throw error
-      })
+    return getDatasetCitationInOtherFormats.execute(datasetId, version, format)
   }
+  getAvailableCategories(datasetId: string | number): Promise<string[]> {
+    return getDatasetAvailableCategories.execute(datasetId)
+  }
+
   /*
     TODO: This is a temporary solution as this use case doesn't exist in js-dataverse yet and the API should also return the file store type rather than name only.
     After https://github.com/IQSS/dataverse/issues/11695 is implemented, create a js-dataverse use case.

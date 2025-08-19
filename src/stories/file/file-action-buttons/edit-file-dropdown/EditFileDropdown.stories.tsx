@@ -4,6 +4,7 @@ import { WithSettings } from '../../../WithSettings'
 import { EditFileMenu } from '@/sections/file/file-action-buttons/edit-file-menu/EditFileMenu'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
 import { FileMockRepository } from '../../FileMockRepository'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 
 const storyFile = FileMother.createRealistic()
 
@@ -30,6 +31,7 @@ export const Default: Story = {
       }}
       storageIdentifier="s3://10.5072/FK2/FNJFOR"
       isTabularFile={true}
+      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
