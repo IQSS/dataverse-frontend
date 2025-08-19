@@ -16,13 +16,14 @@ export const ViewStyledCitationModal = ({
   citation
 }: ViewStyledCitationModalProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'downloadCitation' })
+  const { t: tShared } = useTranslation('shared')
   //TODO: Implement more CSL Style and its corresponding parsing logic
 
   const parsedCitationContent = parse(citation?.content || '')
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header>
-        <Modal.Title>{t('title')}</Modal.Title>
+        <Modal.Title>{t('styledCitation')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -42,7 +43,7 @@ export const ViewStyledCitationModal = ({
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose} type="button">
-          {t('cancel')}
+          {tShared('cancel')}
         </Button>
       </Modal.Footer>
     </Modal>

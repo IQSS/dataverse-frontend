@@ -275,9 +275,9 @@
     "downloadEndNoteXML": "Download EndNote XML",
     "downloadRIS": "Download RIS",
     "downloadBibTeX": "Download BibTeX",
-    "selectCSLStyle": "Select CSL Style",
+    "selectCSLStyle": "Select a CSL Style",
     "citationInStyle": "Citation in {{styleName}} style",
-    "cancel": "Cancel",
-    "downloadError": "An error occurred while downloading the citation"
+    "downloadError": "An error occurred while downloading the citation",
+    "styledCitation": "Styled Citation"
   }
 }

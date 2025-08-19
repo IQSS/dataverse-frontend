@@ -164,8 +164,8 @@ describe('CitationDownloadButton', () => {
       <ViewStyledCitationModal show={true} handleClose={() => {}} citation={mockCitation} />
     )
 
-    cy.findByText('Download Citation').click()
-    cy.findByText('Select CSL Style').should('exist')
+    cy.findByText('Styled Citation').click()
+    cy.findByText('Select a CSL Style').should('exist')
     cy.findByText(mockCitation.content).should('exist')
     cy.findByRole('button', { name: /Copy to clipboard icon/ }).should('exist')
     cy.findByRole('dialog').should('exist')

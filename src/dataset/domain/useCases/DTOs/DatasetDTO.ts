@@ -24,11 +24,3 @@ export interface DatasetDeaccessionDTO {
   deaccessionReason: string
   deaccessionForwardURL?: string
 }
-
-export enum CitationFormat {
-  Internal = 'Internal',
-  EndNote = 'EndNote',
-  RIS = 'RIS',
-  BibTeX = 'BibTeX',
-  CSLJson = 'CSL'
-}
