@@ -137,5 +137,6 @@
     "defaultFileUnrestrictError": "Something went wrong unrestricting the file. Try again later.",
     "requestAccessTooltipText": "If checked, users can request access to the restricted files in this dataset.",
     "termsOfAccessTooltipTex": "information on how and if users can access restricted files in this dataset."
-  }
+  },
+  "getCategoriesError": "Something went wrong fetching available categories. Try again later"
 }

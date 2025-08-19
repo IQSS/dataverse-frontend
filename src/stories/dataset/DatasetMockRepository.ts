@@ -128,6 +128,13 @@ export class DatasetMockRepository implements DatasetRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+  getAvailableCategories(_datasetId: string | number): Promise<string[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(['Category 1', 'Category 2', 'Category 3'])
+      }, FakerHelper.loadingTimout())
+    })
+  }
 
   deleteDatasetDraft(_datasetId: string | number): Promise<void> {
     return new Promise((resolve) => {
@@ -136,7 +143,6 @@ export class DatasetMockRepository implements DatasetRepository {
       }, FakerHelper.loadingTimout())
     })
   }
-
   getDatasetCitationInOtherFormats: (
     datasetId: string | number,
     version: string,

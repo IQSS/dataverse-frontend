@@ -124,6 +124,14 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     })
   }
 
+  getAvailableCategories(_datasetId: string | number): Promise<string[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, 1000)
+    })
+  }
+
   getDatasetCitationInOtherFormats: (
     datasetId: string | number,
     version: string,

@@ -48,6 +48,7 @@ export interface DatasetRepository {
     includeMDC?: boolean
   ) => Promise<DatasetDownloadCount>
   deleteDatasetDraft: (datasetId: string | number) => Promise<void>
+  getAvailableCategories: (datasetId: string | number) => Promise<string[]>
   getDatasetCitationInOtherFormats: (
     datasetId: string | number,
     version: string,

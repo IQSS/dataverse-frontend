@@ -5,12 +5,18 @@ import { ButtonGroup } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { DatasetPublishingStatus } from '../../../../../../../dataset/domain/models/Dataset'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface FileActionButtonsProps {
   file: FilePreview
   fileRepository: FileRepository
+  datasetRepository: DatasetRepository
 }
-export function FileActionButtons({ file, fileRepository }: FileActionButtonsProps) {
+export function FileActionButtons({
+  file,
+  fileRepository,
+  datasetRepository
+}: FileActionButtonsProps) {
   const { t } = useTranslation('files')
 
   return (
@@ -25,7 +31,11 @@ export function FileActionButtons({ file, fileRepository }: FileActionButtonsPro
         asIcon
         isDraft={file.datasetPublishingStatus === DatasetPublishingStatus.DRAFT}
       />
-      <FileOptionsMenu file={file} fileRepository={fileRepository} />
+      <FileOptionsMenu
+        file={file}
+        fileRepository={fileRepository}
+        datasetRepository={datasetRepository}
+      />
     </ButtonGroup>
   )
 }

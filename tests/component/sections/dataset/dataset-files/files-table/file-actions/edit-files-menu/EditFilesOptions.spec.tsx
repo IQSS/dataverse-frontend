@@ -2,9 +2,11 @@ import { QueryParamKey } from '@/sections/Route.enum'
 import { EditFilesOptions } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/EditFilesOptions'
 import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 const files = FilePreviewMother.createMany(2)
 const fileRepository: FileRepository = {} as FileRepository
+const datasetRepository: DatasetRepository = {} as DatasetRepository
 
 const datasetInfo = {
   persistentId: `doi:10.5072/FK2/0000}`,
@@ -22,6 +24,7 @@ describe('EditFilesOptions', () => {
         fileSelection={{}}
         fileRepository={fileRepository}
         isHeader={true}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -29,6 +32,7 @@ describe('EditFilesOptions', () => {
     cy.findByRole('button', { name: 'Embargo' }).should('not.exist')
     cy.findByRole('button', { name: 'Provenance' }).should('not.exist')
     cy.findByRole('button', { name: 'Delete' }).should('exist')
+    cy.findByRole('button', { name: 'Restrict' }).should('exist')
   })
 
   it('renders the restrict option if some file is unrestricted', () => {
@@ -39,6 +43,7 @@ describe('EditFilesOptions', () => {
         fileSelection={{}}
         fileRepository={fileRepository}
         isHeader={true}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -55,6 +60,7 @@ describe('EditFilesOptions', () => {
         fileSelection={{}}
         fileRepository={fileRepository}
         isHeader={true}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -70,6 +76,7 @@ describe('EditFilesOptions', () => {
         fileSelection={{}}
         fileRepository={fileRepository}
         isHeader={true}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -85,6 +92,7 @@ describe('EditFilesOptions', () => {
         fileSelection={{}}
         fileRepository={fileRepository}
         isHeader={true}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -100,6 +108,7 @@ describe('EditFilesOptions', () => {
         fileSelection={{}}
         fileRepository={fileRepository}
         isHeader={true}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -119,6 +128,7 @@ describe('EditFilesOptions', () => {
         fileSelection={{ 'some-file-id': FilePreviewMother.create() }}
         fileRepository={fileRepository}
         isHeader={true}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -139,6 +149,7 @@ describe('EditFilesOptions for a single file', () => {
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -166,6 +177,7 @@ describe('EditFilesOptions for a single file', () => {
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -184,6 +196,7 @@ describe('EditFilesOptions for a single file', () => {
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -203,6 +216,7 @@ describe('EditFilesOptions for a single file', () => {
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -221,6 +235,7 @@ describe('EditFilesOptions for a single file', () => {
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -231,6 +246,27 @@ describe('EditFilesOptions for a single file', () => {
     cy.findByText(/The file has been deleted./).should('exist')
   })
 
+  it('should reset the modal if cancel is clicked in delete modal', () => {
+    const fileUnrestricted = FilePreviewMother.createDefault()
+    cy.customMount(
+      <EditFilesOptions
+        file={fileUnrestricted}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Delete' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByText('Cancel').click()
+    cy.findByRole('dialog').should('not.exist')
+
+    cy.findByRole('button', { name: 'Delete' }).click()
+    cy.findByRole('dialog').should('exist')
+  })
+
   it('should restrict file if restrict button clicked', () => {
     fileRepository.restrict = cy.stub().resolves()
     cy.customMount(
@@ -239,6 +275,7 @@ describe('EditFilesOptions for a single file', () => {
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -259,6 +296,7 @@ describe('EditFilesOptions for a single file', () => {
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -270,6 +308,28 @@ describe('EditFilesOptions for a single file', () => {
     cy.findByText(/The file has been unrestricted./).should('exist')
   })
 
+  it('should reset the modal if cancel is clicked in restrict modal', () => {
+    const fileUnrestricted = FilePreviewMother.createDefault()
+    cy.customMount(
+      <EditFilesOptions
+        file={fileUnrestricted}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Restrict' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByText('Cancel').click()
+    cy.findByRole('dialog').should('not.exist')
+
+    cy.findByRole('button', { name: 'Unrestrict' }).should('not.exist')
+    cy.findByRole('button', { name: 'Restrict' }).click()
+    cy.findByRole('dialog').should('exist')
+  })
+
   it('opens and closes the edit file tags modal', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
@@ -278,6 +338,7 @@ describe('EditFilesOptions for a single file', () => {
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -288,22 +349,114 @@ describe('EditFilesOptions for a single file', () => {
     cy.findByRole('dialog').should('not.exist')
   })
 
-  it('should render the edit tags modal and successfully save changes', () => {
+  it('should reset tags when cancel is clicked in tags modal', () => {
+    const fileWithTags = FilePreviewMother.createWithLabels()
+
+    cy.customMount(
+      <EditFilesOptions
+        file={fileWithTags}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Tags' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByTestId('custom-file-tag-input').should('exist')
+    cy.findByTestId('custom-file-tag-input').type('Custom Tag{enter}')
+    cy.findByRole('button', { name: 'Cancel' }).click()
+    cy.findByRole('dialog').should('not.exist')
+
+    cy.findByRole('button', { name: 'Tags' }).click()
+    cy.findByText('Custom Tag').should('not.exist')
+  })
+
+  it('should navigate to dataset and show success toast after restricting file', () => {
+    fileRepository.restrict = cy.stub().resolves()
     const fileUnrestricted = FilePreviewMother.createDefault()
-    fileRepository.updateCategories = cy.stub().resolves()
+
     cy.customMount(
       <EditFilesOptions
         file={fileUnrestricted}
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Restrict' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: /Save Changes/i }).click()
+
+    cy.findByText(/The file has been restricted./).should('exist')
+  })
+
+  it('should navigate to dataset and show success toast after unrestricting file', () => {
+    fileRepository.restrict = cy.stub().resolves()
+    const fileRestricted = FilePreviewMother.createRestricted()
+
+    cy.customMount(
+      <EditFilesOptions
+        file={fileRestricted}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Unrestrict' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: /Save Changes/i }).click()
+
+    cy.findByText(/The file has been unrestricted./).should('exist')
+  })
+
+  it('should navigate to dataset and show success toast after deleting file', () => {
+    fileRepository.delete = cy.stub().resolves()
+    const fileToDelete = FilePreviewMother.createDefault()
+
+    cy.customMount(
+      <EditFilesOptions
+        file={fileToDelete}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Delete' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByTestId('deleteButton').click()
+
+    cy.findByText(/The file has been deleted./).should('exist')
+  })
+
+  it('should navigate to dataset and show success toast after updating file tags', () => {
+    const categoriesMock = ['Documentation', 'Code', 'Data', 'Category4']
+    datasetRepository.getAvailableCategories = cy.stub().resolves(categoriesMock)
+    const fileWithTags = FilePreviewMother.createWithLabels()
+    fileRepository.updateCategories = cy.stub().resolves()
+
+    cy.customMount(
+      <EditFilesOptions
+        file={fileWithTags}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+        datasetRepository={datasetRepository}
       />
     )
 
     cy.findByRole('button', { name: 'Tags' }).click()
-    cy.get('#file-tags-select').click()
-    cy.findByText('Data').click()
-    cy.findByRole('button', { name: /Save Changes/ }).click()
-    cy.findByText('The file tags have been updated.').should('exist')
+    cy.findByRole('dialog').should('exist')
+    cy.findByTestId('custom-file-tag-input').type('Custom Tag{enter}')
+    cy.findByRole('button', { name: /Save Changes/i }).click()
+
+    cy.findByText(/The file tags have been updated./).should('exist')
   })
 })

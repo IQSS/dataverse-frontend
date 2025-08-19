@@ -7,6 +7,7 @@ import { WithDatasetAllPermissionsGranted } from '../../../../../WithDatasetAllP
 import { WithDatasetLockedFromEdits } from '../../../../../WithDatasetLockedFromEdits'
 import { FilePreviewMother } from '../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 
 const meta: Meta<typeof FileOptionsMenu> = {
   title:
@@ -24,6 +25,7 @@ export const DefaultWithLoggedInUser: Story = {
     <FileOptionsMenu
       file={FilePreviewMother.createDefault()}
       fileRepository={new FileMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -34,6 +36,7 @@ export const Restricted: Story = {
     <FileOptionsMenu
       file={FilePreviewMother.createRestricted()}
       fileRepository={new FileMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -44,6 +47,7 @@ export const WithDatasetLocked: Story = {
     <FileOptionsMenu
       file={FilePreviewMother.createDefault()}
       fileRepository={new FileMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -54,6 +58,7 @@ export const WithFileAlreadyDeleted: Story = {
     <FileOptionsMenu
       file={FilePreviewMother.createDeleted()}
       fileRepository={new FileMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
     />
   )
 }

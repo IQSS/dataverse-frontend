@@ -655,7 +655,11 @@ describe('EditFileMenu', () => {
       cy.findByRole('dialog').should('exist')
       cy.findByTestId('custom-file-tag-input').should('exist')
       cy.findByTestId('custom-file-tag-input').type('Custom Tag')
+
+      cy.wait(1000)
       cy.findByRole('button', { name: 'Apply' }).click()
+
+      cy.wait(1000)
       cy.findByRole('button', { name: 'Save Changes' }).click()
 
       cy.findByText(/The file tags have been updated./i)
