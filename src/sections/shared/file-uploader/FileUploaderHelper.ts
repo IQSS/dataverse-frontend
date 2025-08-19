@@ -88,10 +88,7 @@ export class FileUploaderHelper {
     }
 
     const fullBuffer = this.concatUint8Arrays(chunks)
-    const digest = await window.crypto.subtle.digest(
-      algorithm,
-      fullBuffer as unknown as ArrayBuffer
-    )
+    const digest = await window.crypto.subtle.digest(algorithm, fullBuffer as BufferSource)
     return this.bufferToHex(new Uint8Array(digest))
   }
 

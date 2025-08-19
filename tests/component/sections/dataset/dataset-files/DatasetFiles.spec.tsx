@@ -22,11 +22,13 @@ import { FilePaginationInfo } from '../../../../../src/files/domain/models/FileP
 import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 const testFiles: FilePreview[] = FilePreviewMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = DatasetMother.create().version
 const fileRepository: FileRepository = {} as FileRepository
+const datasetRepository: DatasetRepository = {} as DatasetRepository
 const testFilesCountInfo = FilesCountInfoMother.create({
   total: 200,
   perFileType: [
@@ -73,6 +75,7 @@ describe('DatasetFiles', () => {
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -87,6 +90,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -101,6 +105,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -119,6 +124,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -141,6 +147,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -175,6 +182,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -206,6 +214,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
@@ -239,6 +248,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
@@ -263,6 +273,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
@@ -283,6 +294,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
@@ -303,6 +315,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
@@ -333,6 +346,7 @@ describe('DatasetFiles', () => {
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
             datasetVersion={datasetVersion}
+            datasetRepository={datasetRepository}
           />
         </SettingsProvider>
       )
@@ -359,6 +373,7 @@ describe('DatasetFiles', () => {
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
             datasetVersion={datasetVersion}
+            datasetRepository={datasetRepository}
           />
         </SettingsProvider>
       )
@@ -377,6 +392,7 @@ describe('DatasetFiles', () => {
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
             datasetVersion={datasetVersion}
+            datasetRepository={datasetRepository}
           />
         </SettingsProvider>
       )
@@ -397,6 +413,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -419,6 +436,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -439,6 +457,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -459,6 +478,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -479,6 +499,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -499,6 +520,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -518,6 +540,7 @@ describe('DatasetFiles', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -537,6 +560,7 @@ describe('DatasetFiles', () => {
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
             datasetVersion={datasetVersion}
+            datasetRepository={datasetRepository}
           />
         </SettingsProvider>
       )

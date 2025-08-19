@@ -13,6 +13,7 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission
         ingestInProgress={false}
         isDeaccessioned={false}
+        isDraft={false}
       />
     )
 
@@ -29,6 +30,7 @@ describe('AccessFileMenu', () => {
         ingestInProgress={false}
         isDeaccessioned={false}
         asIcon
+        isDraft={false}
       />
     )
 
@@ -46,6 +48,7 @@ describe('AccessFileMenu', () => {
         ingestInProgress={false}
         isDeaccessioned={false}
         asIcon={false}
+        isDraft={false}
       />
     )
 
@@ -63,6 +66,7 @@ describe('AccessFileMenu', () => {
           userHasDownloadPermission
           ingestInProgress={false}
           isDeaccessioned={false}
+          isDraft={false}
         />
       </Suspense>
     )
@@ -80,6 +84,7 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission
         ingestInProgress={false}
         isDeaccessioned={false}
+        isDraft={false}
       />
     )
 
@@ -96,6 +101,7 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission={false}
         ingestInProgress={false}
         isDeaccessioned={false}
+        isDraft={false}
       />
     )
 
@@ -112,6 +118,7 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission
         ingestInProgress={false}
         isDeaccessioned={false}
+        isDraft={false}
       />
     )
 
@@ -129,10 +136,43 @@ describe('AccessFileMenu', () => {
         ingestInProgress={false}
         isDeaccessioned={false}
         asIcon
+        isDraft={false}
       />
     )
 
     cy.findByRole('button', { name: 'Access File' }).should('exist')
     cy.get('svg').should('exist')
+  })
+
+  it('should not render the access file menu for non-S3 files', () => {
+    cy.customMount(
+      <AccessFileMenu
+        id={1}
+        access={FileAccessMother.createPublic()}
+        metadata={FileMetadataMother.create({ storageIdentifier: 'local-file' })}
+        userHasDownloadPermission
+        ingestInProgress={false}
+        isDeaccessioned={false}
+        isDraft={false}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Access File' }).should('not.exist')
+  })
+
+  it('should not render the access file menu for draft datasets', () => {
+    cy.customMount(
+      <AccessFileMenu
+        id={1}
+        access={FileAccessMother.createPublic()}
+        metadata={FileMetadataMother.create()}
+        userHasDownloadPermission
+        ingestInProgress={false}
+        isDeaccessioned={false}
+        isDraft
+      />
+    )
+
+    cy.findByRole('button', { name: 'Access File' }).should('not.exist')
   })
 })

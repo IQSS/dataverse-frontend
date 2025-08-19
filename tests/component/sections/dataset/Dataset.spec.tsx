@@ -2,7 +2,10 @@ import { DatasetRepository } from '../../../../src/dataset/domain/repositories/D
 import { Dataset } from '../../../../src/sections/dataset/Dataset'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
-import { ANONYMIZED_FIELD_VALUE } from '../../../../src/dataset/domain/models/Dataset'
+import {
+  ANONYMIZED_FIELD_VALUE,
+  MetadataBlockName
+} from '../../../../src/dataset/domain/models/Dataset'
 import { AnonymizedContext } from '../../../../src/sections/dataset/anonymized/AnonymizedContext'
 import { FileRepository } from '../../../../src/files/domain/repositories/FileRepository'
 import { Dataset as DatasetModel } from '../../../../src/dataset/domain/models/Dataset'
@@ -38,6 +41,60 @@ const testFiles: FilesWithCount = {
   files: first10Files,
   totalFilesCount: TOTAL_FILES_COUNT
 }
+
+const testDataset = DatasetMother.create({
+  metadataBlocks: [
+    {
+      name: MetadataBlockName.CITATION,
+      fields: {
+        title: 'Some Title',
+        subject: ['subject-one', 'subject-two'],
+        author: [
+          {
+            authorName: 'Foo',
+            authorAffiliation: 'Bar'
+          },
+          {
+            authorName: 'Another Foo',
+            authorAffiliation: 'Another Bar'
+          }
+        ],
+        datasetContact: [
+          {
+            datasetContactName: 'John Doe',
+            datasetContactEmail: 'john@doe.com',
+            datasetContactAffiliation: 'Doe Inc.'
+          }
+        ],
+        dsDescription: [
+          {
+            dsDescriptionValue: 'Description of the dataset'
+          }
+        ],
+        producer: [
+          {
+            producerName: 'Foo',
+            producerAffiliation: 'XYZ',
+            producerURL: 'http://foo.com',
+            producerLogoURL:
+              'https://beta.dataverse.org/resources/images/dataverse_project_logo.svg'
+          }
+        ]
+      }
+    },
+    {
+      name: MetadataBlockName.GEOSPATIAL,
+      fields: {
+        geographicCoverage: [
+          {
+            country: 'Country Name',
+            city: 'City Name'
+          }
+        ]
+      }
+    }
+  ]
+})
 
 const testFilesCountInfo = FilesCountInfoMother.create({
   total: 200,
@@ -103,8 +160,139 @@ describe('Dataset', () => {
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
 
-    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
-    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+    const mockCitationMetadataBlockInfo = MetadataBlockInfoMother.create({
+      name: MetadataBlockName.CITATION,
+      displayName: 'Citation Metadata',
+      fields: {
+        title: {
+          displayFormat: '',
+          type: 'TEXT',
+          title: 'Title',
+          description: 'The main title of the Dataset'
+        },
+        subject: {
+          displayFormat: ';',
+          type: 'TEXT',
+          title: 'Subject',
+          description: 'The area of study relevant to the Dataset'
+        },
+        author: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Author',
+          description: 'The entity, e.g. a person or organization, that created the Dataset'
+        },
+        authorName: {
+          displayFormat: '#VALUE',
+          type: 'TEXT',
+          title: 'Name',
+          description:
+            "The name of the author, such as the person's name or the name of an organization"
+        },
+        authorAffiliation: {
+          displayFormat: '(#VALUE)',
+          type: 'TEXT',
+          title: 'Affiliation',
+          description:
+            "The name of the entity affiliated with the author, e.g. an organization's name"
+        },
+        datasetContact: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Point of Contact',
+          description:
+            'The entity, e.g. a person or organization, that users of the Dataset can contact with questions'
+        },
+        datasetContactName: {
+          displayFormat: '#VALUE',
+          type: 'TEXT',
+          title: 'Name',
+          description:
+            "The name of the point of contact, e.g. the person's name or the name of an organization"
+        },
+        datasetContactAffiliation: {
+          displayFormat: '(#VALUE)',
+          type: 'TEXT',
+          title: 'Affiliation',
+          description:
+            "The name of the entity affiliated with the point of contact, e.g. an organization's name"
+        },
+        dsDescription: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Description',
+          description: 'A summary describing the purpose, nature, and scope of the Dataset'
+        },
+        producer: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Producer',
+          description:
+            'The entity, such a person or organization, managing the finances or other administrative processes involved in the creation of the Dataset'
+        },
+        producerAffiliation: {
+          displayFormat: '(#VALUE)',
+          type: 'TEXT',
+          title: 'Affiliation',
+          description:
+            "The name of the entity affiliated with the producer, e.g. an organization's name"
+        },
+        producerLogoURL: {
+          displayFormat: '![#NAME](#VALUE)',
+          type: 'URL',
+          title: 'Logo URL',
+          description: "The URL of the producer's logo"
+        },
+        producerName: {
+          displayFormat: '#VALUE',
+          type: 'TEXT',
+          title: 'Name',
+          description:
+            "The name of the entity, e.g. the person's name or the name of an organization"
+        },
+        producerURL: {
+          displayFormat: '[#VALUE](#VALUE)',
+          type: 'URL',
+          title: 'URL',
+          description: "The URL of the producer's website"
+        }
+      }
+    })
+
+    const mockGeospatialMetadataBlockInfo = MetadataBlockInfoMother.create({
+      name: MetadataBlockName.GEOSPATIAL,
+      displayName: 'Geospatial Metadata',
+      fields: {
+        geographicCoverage: {
+          displayFormat: '',
+          type: 'TEXT',
+          title: 'Geographic Coverage',
+          description: 'Geographic coverage of the dataset'
+        },
+        country: {
+          displayFormat: '#VALUE,',
+          type: 'TEXT',
+          title: 'Country',
+          description: 'Country of the geographic coverage'
+        },
+        city: {
+          displayFormat: '#VALUE,',
+          type: 'TEXT',
+          title: 'City',
+          description: 'City of the geographic coverage'
+        }
+      }
+    })
+
+    metadataBlockInfoRepository.getByName = cy.stub().callsFake((name: string) => {
+      if (name === MetadataBlockName.CITATION) {
+        return Promise.resolve(mockCitationMetadataBlockInfo)
+      }
+      if (name === MetadataBlockName.GEOSPATIAL) {
+        return Promise.resolve(mockGeospatialMetadataBlockInfo)
+      }
+      return Promise.resolve(undefined)
+    })
 
     cy.customMount(
       <LoadingProvider>
@@ -120,8 +308,6 @@ describe('Dataset', () => {
   }
 
   it('renders skeleton while loading', () => {
-    const testDataset = DatasetMother.create()
-
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}
@@ -173,8 +359,6 @@ describe('Dataset', () => {
   })
 
   it('renders the breadcrumbs', () => {
-    const testDataset = DatasetMother.create()
-
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}
@@ -191,8 +375,6 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset page title and labels', () => {
-    const testDataset = DatasetMother.create()
-
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}
@@ -212,8 +394,6 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset Metadata tab', () => {
-    const testDataset = DatasetMother.create()
-
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}
@@ -236,8 +416,6 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset Terms tab', () => {
-    const testDataset = DatasetMother.create()
-
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}
@@ -260,8 +438,6 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset Files tab', () => {
-    const testDataset = DatasetMother.create()
-
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}
@@ -361,8 +537,6 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset Action Buttons', () => {
-    const testDataset = DatasetMother.create()
-
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}
@@ -378,8 +552,6 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset Files list table with infinite scrolling enabled', () => {
-    const testDataset = DatasetMother.create()
-
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}
@@ -398,8 +570,6 @@ describe('Dataset', () => {
   })
 
   it('shows the toast when the information was sent to contact successfully', () => {
-    const testDataset = DatasetMother.create()
-
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}
@@ -434,7 +604,6 @@ describe('Dataset', () => {
   })
 
   it('does not show the tooltip for contact owner button', () => {
-    const testDataset = DatasetMother.create()
     mountWithDataset(
       <Dataset
         datasetRepository={datasetRepository}
@@ -454,7 +623,6 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset Version tab', () => {
-    const testDataset = DatasetMother.create()
     datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
 
     mountWithDataset(

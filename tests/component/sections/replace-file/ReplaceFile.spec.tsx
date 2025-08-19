@@ -13,7 +13,7 @@ const GET_FILE_BY_ID_LOADING_TIME = 200
 const ORIGINAL_FILE_NAME = 'File Title'
 const ORIGINAL_FILE_TYPE = 'application/json'
 
-describe('UploadDatasetFiles', () => {
+describe('ReplaceFile', () => {
   beforeEach(() => {
     fileMockRepository.getById = cy.stub().callsFake(() => {
       return Cypress.Promise.delay(GET_FILE_BY_ID_LOADING_TIME).then(() =>

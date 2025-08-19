@@ -47,6 +47,16 @@ describe('DatasetUploadFilesButton', () => {
     cy.findByRole('button', { name: 'Upload Files' }).should('not.exist')
   })
 
+  it('does not render the upload files button if dataset file store does not start with "s3"', () => {
+    const datasetWithNonS3FileStore = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
+      fileStore: 'non-s3-file-store'
+    })
+    cy.mountAuthenticated(withDataset(<DatasetUploadFilesButton />, datasetWithNonS3FileStore))
+
+    cy.findByRole('button', { name: 'Upload Files' }).should('not.exist')
+  })
+
   it('renders the button disabled when dataset is locked from edits', () => {
     const datasetWithUpdatePermissions = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
@@ -69,6 +79,7 @@ describe('DatasetUploadFilesButton', () => {
       permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
       version: DatasetVersionMother.createDraft()
     })
+
     cy.mountAuthenticated(withDataset(<DatasetUploadFilesButton />, draftDatasetVersion))
 
     cy.findByRole('button', { name: 'Upload Files' }).click()

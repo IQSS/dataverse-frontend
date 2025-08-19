@@ -184,12 +184,14 @@ export function Dataset({
                         datasetVersion={dataset.version}
                         canUpdateDataset={canUpdateDataset}
                         key={dataset.version.publishingStatus}
+                        datasetRepository={datasetRepository}
                       />
                     ) : (
                       <DatasetFiles
                         filesRepository={fileRepository}
                         datasetPersistentId={dataset.persistentId}
                         datasetVersion={dataset.version}
+                        datasetRepository={datasetRepository}
                       />
                     )}
                   </div>

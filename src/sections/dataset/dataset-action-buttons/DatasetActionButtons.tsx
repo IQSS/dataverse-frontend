@@ -40,6 +40,7 @@ export function DatasetActionButtons({
         hasOneTabularFileAtLeast={dataset.hasOneTabularFileAtLeast}
         fileDownloadSizes={dataset.fileDownloadSizes}
         downloadUrls={dataset.downloadUrls}
+        fileStore={dataset.fileStore}
       />
       <PublishDatasetMenu
         dataset={dataset}

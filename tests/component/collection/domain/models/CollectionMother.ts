@@ -62,9 +62,9 @@ export class CollectionMother {
       affiliation: FakerHelper.affiliation()
     })
   }
-  static createWithDescription(): Collection {
+  static createWithDescription(sentenceCount?: number): Collection {
     return CollectionMother.createWithOnlyRequiredFields({
-      description: FakerHelper.paragraph()
+      description: FakerHelper.paragraph(sentenceCount)
     })
   }
 

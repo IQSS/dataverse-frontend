@@ -7,17 +7,20 @@ import { useFiles } from './useFiles'
 import { PaginationControls } from '../../shared/pagination/PaginationControls'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
+  datasetRepository: DatasetRepository
 }
 
 export function DatasetFiles({
   filesRepository,
   datasetPersistentId,
-  datasetVersion
+  datasetVersion,
+  datasetRepository
 }: DatasetFilesProps) {
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(new FilePaginationInfo())
   const [criteria, setCriteria] = useState<FileCriteria>(new FileCriteria())
@@ -44,6 +47,7 @@ export function DatasetFiles({
         paginationInfo={paginationInfo}
         filesTotalDownloadSize={filesTotalDownloadSize}
         criteria={criteria}
+        datasetRepository={datasetRepository}
       />
       <PaginationControls
         initialPaginationInfo={paginationInfo}
