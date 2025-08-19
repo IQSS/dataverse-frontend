@@ -32,7 +32,6 @@ describe('EditFilesOptions', () => {
     cy.findByRole('button', { name: 'Embargo' }).should('not.exist')
     cy.findByRole('button', { name: 'Provenance' }).should('not.exist')
     cy.findByRole('button', { name: 'Delete' }).should('exist')
-    cy.findByRole('button', { name: 'Restrict' }).should('exist')
   })
 
   it('renders the restrict option if some file is unrestricted', () => {

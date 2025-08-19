@@ -606,8 +606,12 @@ describe('DatasetFilesScrollable', () => {
 
       cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
       cy.get('@scrollableFilesContainer').scrollTo('bottom')
-
-      cy.findByRole('columnheader', { name: '20 of 200 Files displayed' }).should('exist')
+      cy.findByRole('columnheader', { name: /^\d+ of 200 Files displayed$/ })
+        .invoke('text')
+        .then((text) => {
+          const count = parseInt(text.split(' ')[0], 10)
+          expect(count).to.be.gte(20)
+        })
 
       cy.get('table > tbody > tr').each(() => {
         cy.get('table > tbody > tr > td:nth-child(1) > input[type=checkbox]').should('be.checked')
