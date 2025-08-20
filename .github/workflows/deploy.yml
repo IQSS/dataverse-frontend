@@ -10,6 +10,7 @@ on:
         options:
           - beta
           - qa
+          - demo
       basepath:
         description: 'Server base path (without slashes) for serving the application (e.g., spa). If left blank, it will try to deploy to the root base path.'
         type: string
@@ -80,6 +81,26 @@ jobs:
           echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
         shell: bash
 
+      # For DEMO environment
+      - name: Create and populate .env file for DEMO
+        if: ${{ github.event.inputs.environment == 'demo' }}
+        env:
+          DATAVERSE_BACKEND_URL: ${{ secrets.DEMO_DATAVERSE_BACKEND_URL }}
+          OIDC_CLIENT_ID: ${{ secrets.DEMO_OIDC_CLIENT_ID }}
+          OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.DEMO_OIDC_AUTHORIZATION_ENDPOINT }}
+          OIDC_TOKEN_ENDPOINT: ${{ secrets.DEMO_OIDC_TOKEN_ENDPOINT }}
+          OIDC_LOGOUT_ENDPOINT: ${{ secrets.DEMO_OIDC_LOGOUT_ENDPOINT }}
+          OIDC_STORAGE_KEY_PREFIX: ${{ secrets.DEMO_OIDC_STORAGE_KEY_PREFIX }}
+        run: |
+          touch .env
+          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
+          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
+          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
+          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
+          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
+        shell: bash
+
       - name: Build with base path
         run: npm run build -- --base=/${{ github.event.inputs.basepath }}
 
@@ -138,6 +159,18 @@ jobs:
           target: '/tmp'
           overwrite: true
 
+      # For DEMO environment
+      - name: Copy war file to remote DEMO instance
+        if: ${{ github.event.inputs.environment == 'demo' }}
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEMO_PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.DEMO_PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.DEMO_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          source: './deployment/payara/target/dataverse-frontend.war'
+          target: '/tmp'
+          overwrite: true
+
       # For BETA environment
       - name: Execute payara war deployment remotely on BETA
         if: ${{ github.event.inputs.environment == 'beta' }}
@@ -162,6 +195,22 @@ jobs:
           host: ${{ secrets.QA_PAYARA_INSTANCE_HOST }}
           username: ${{ secrets.QA_PAYARA_INSTANCE_USERNAME }}
           key: ${{ secrets.QA_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          script: |
+            APPLICATION_NAME=dataverse-frontend
+            APPLICATION_WAR_PATH=/tmp/deployment/payara/target/$APPLICATION_NAME.war
+            ASADMIN='/usr/local/payara6/bin/asadmin --user admin'
+            DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
+            $ASADMIN undeploy $DATAVERSE_FRONTEND
+            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /${{ github.event.inputs.basepath }} $APPLICATION_WAR_PATH
+
+      # For DEMO environment
+      - name: Execute payara war deployment remotely on DEMO
+        if: ${{ github.event.inputs.environment == 'demo' }}
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.DEMO_PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.DEMO_PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.DEMO_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
           script: |
             APPLICATION_NAME=dataverse-frontend
             APPLICATION_WAR_PATH=/tmp/deployment/payara/target/$APPLICATION_NAME.war
