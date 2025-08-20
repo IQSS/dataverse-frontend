@@ -6,10 +6,12 @@ import {
   DatasetPermissionsMother
 } from '../../../../../dataset/domain/models/DatasetMother'
 import { FilePreviewMother } from '../../../../../files/domain/models/FilePreviewMother'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
 
 describe('FileActionsHeader', () => {
   it('renders the file actions header', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
+    const fileRepository: FileRepository = {} as FileRepository
     const datasetWithUpdatePermissions = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithAllAllowed(),
       hasValidTermsOfAccess: true
@@ -20,7 +22,12 @@ describe('FileActionsHeader', () => {
       <DatasetProvider
         repository={datasetRepository}
         searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-        <FileActionsHeader files={files} fileSelection={{}} />
+        <FileActionsHeader
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
+        />
       </DatasetProvider>
     )
 

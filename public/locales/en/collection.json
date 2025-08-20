@@ -68,5 +68,6 @@
     "delete": "Delete"
   },
   "collectionDeletedSuccess": "Your collection has been deleted.",
-  "defaultCollectionDeleteError": "Something went wrong deleting the collection. Try again later."
+  "defaultCollectionDeleteError": "Something went wrong deleting the collection. Try again later.",
+  "description": "Description"
 }

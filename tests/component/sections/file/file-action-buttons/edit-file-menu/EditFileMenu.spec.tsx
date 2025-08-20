@@ -1,6 +1,7 @@
 import { FileLabelType } from '@/files/domain/models/FileMetadata'
 import { EditFileMenu } from '@/sections/file/file-action-buttons/edit-file-menu/EditFileMenu'
 import { QueryParamKey } from '@/sections/Route.enum'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
@@ -22,6 +23,7 @@ describe('EditFileMenu', () => {
         }}
         storageIdentifier="s3://10.5072/FK2/FNJFOR"
         isTabularFile={true}
+        datasetRepository={new DatasetMockRepository()}
       />
     )
 
@@ -59,6 +61,7 @@ describe('EditFileMenu', () => {
         }}
         isTabularFile={true}
         storageIdentifier="non-s3://10.5072/FK2/FNJFOR"
+        datasetRepository={new DatasetMockRepository()}
       />
     )
 
@@ -80,6 +83,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -106,6 +110,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -132,6 +137,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -167,6 +173,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -196,6 +203,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -224,6 +232,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -253,6 +262,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -282,6 +292,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -308,6 +319,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -336,6 +348,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -370,6 +383,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -399,6 +413,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -425,6 +440,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -457,6 +473,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -483,6 +500,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -507,6 +525,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -540,6 +559,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -568,6 +588,7 @@ describe('EditFileMenu', () => {
           }}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
         />
       )
 
@@ -601,6 +622,7 @@ describe('EditFileMenu', () => {
             { value: 'Panel', type: FileLabelType.TAG }
           ]}
           isTabularFile={true}
+          datasetRepository={new DatasetMockRepository()}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
         />
       )
@@ -633,7 +655,11 @@ describe('EditFileMenu', () => {
       cy.findByRole('dialog').should('exist')
       cy.findByTestId('custom-file-tag-input').should('exist')
       cy.findByTestId('custom-file-tag-input').type('Custom Tag')
+
+      cy.wait(1000)
       cy.findByRole('button', { name: 'Apply' }).click()
+
+      cy.wait(1000)
       cy.findByRole('button', { name: 'Save Changes' }).click()
 
       cy.findByText(/The file tags have been updated./i)

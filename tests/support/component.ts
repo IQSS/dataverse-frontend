@@ -16,6 +16,7 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import '@cypress/code-coverage/support'
+import '../../src/assets/global.scss'
 import '../../src/assets/swal-custom.scss'
 import '../../src/assets/react-toastify-custom.scss'
 import 'react-loading-skeleton/dist/skeleton.css'

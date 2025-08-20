@@ -105,6 +105,7 @@
         "required": "Identifier is required",
         "invalid": {
           "format": "Identifier is not valid. Valid characters are a-Z, 0-9, '_', and '-'.",
+          "numberOnly": "Identifier should not be numeric only.",
           "maxLength": "Identifier must be at most {{maxLength}} characters."
         },
         "suggestion": "Psst... try this"
@@ -270,5 +271,11 @@
       }
     },
     "defaultFeedbackSubmitError": "An error occurred while submitting your feedback. Please try again later."
+  },
+  "expandableContent": {
+    "truncateMoreBtn": "Read full {{contentName}}",
+    "truncateLessBtn": "Collapse {{contentName}}",
+    "truncateMoreTip": "Click to read the full {{contentName}}",
+    "truncateLessTip": "Click to collapse the {{contentName}}"
   }
 }

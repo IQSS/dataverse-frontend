@@ -9,14 +9,21 @@ import { FileSelection } from '../../row-selection/useFileSelection'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import styles from './EditFilesMenu.module.scss'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface EditFilesMenuProps {
   files: FilePreview[]
   fileSelection: FileSelection
   fileRepository: FileRepository
+  datasetRepository: DatasetRepository
 }
 const MINIMUM_FILES_COUNT_TO_SHOW_EDIT_FILES_BUTTON = 1
-export function EditFilesMenu({ files, fileSelection, fileRepository }: EditFilesMenuProps) {
+export function EditFilesMenu({
+  files,
+  fileSelection,
+  fileRepository,
+  datasetRepository
+}: EditFilesMenuProps) {
   const { t } = useTranslation('files')
   const { user } = useSession()
   const { dataset } = useDataset()
@@ -45,6 +52,7 @@ export function EditFilesMenu({ files, fileSelection, fileRepository }: EditFile
         fileSelection={fileSelection}
         fileRepository={fileRepository}
         isHeader={true}
+        datasetRepository={datasetRepository}
       />
     </DropdownButton>
   )
