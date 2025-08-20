@@ -1,0 +1,33 @@
+@import 'src/assets/variables';
+
+.expandable-content-wrapper {
+  position: relative;
+  max-width: 100%;
+  scroll-margin-top: calc(#{$header-aproximate-height} + 1rem);
+
+  .expandable-content {
+    position: relative;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+
+  .gradient-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(to bottom, transparent 20%, #fff 85%);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .toggle-button {
+    position: relative;
+    z-index: 1;
+  }
+
+  &.expanded {
+    .gradient-overlay {
+      opacity: 0;
+    }
+  }
+}

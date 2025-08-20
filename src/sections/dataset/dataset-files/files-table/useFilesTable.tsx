@@ -5,6 +5,7 @@ import { createColumnsDefinition } from './FilesTableColumnsDefinition'
 import { useFileSelection } from './row-selection/useFileSelection'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 export type RowSelection = {
   [key: string]: boolean
@@ -13,7 +14,8 @@ export type RowSelection = {
 export function useFilesTable(
   files: FilePreview[],
   paginationInfo: FilePaginationInfo,
-  fileRepository: FileRepository
+  fileRepository: FileRepository,
+  datasetRepository: DatasetRepository
 ) {
   const [currentPageRowSelection, setCurrentPageRowSelection] = useState<RowSelection>({})
   const [currentPageSelectedRowModel, setCurrentPageSelectedRowModel] = useState<
@@ -26,7 +28,12 @@ export function useFilesTable(
   )
   const table = useReactTable({
     data: files,
-    columns: createColumnsDefinition(paginationInfo, fileSelection, fileRepository),
+    columns: createColumnsDefinition(
+      paginationInfo,
+      fileSelection,
+      fileRepository,
+      datasetRepository
+    ),
     state: {
       rowSelection: currentPageRowSelection
     },
