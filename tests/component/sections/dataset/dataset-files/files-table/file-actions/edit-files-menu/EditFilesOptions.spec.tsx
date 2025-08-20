@@ -3,8 +3,9 @@ import { EditFilesOptions } from '../../../../../../../../src/sections/dataset/d
 import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { FileAccessMother } from '@tests/component/files/domain/models/FileAccessMother'
 
-const files = FilePreviewMother.createMany(2)
+const files = FilePreviewMother.createMany(2, { access: FileAccessMother.createPublic() })
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
@@ -32,6 +33,7 @@ describe('EditFilesOptions', () => {
     cy.findByRole('button', { name: 'Embargo' }).should('not.exist')
     cy.findByRole('button', { name: 'Provenance' }).should('not.exist')
     cy.findByRole('button', { name: 'Delete' }).should('exist')
+    cy.findByRole('button', { name: 'Restrict' }).should('exist')
   })
 
   it('renders the restrict option if some file is unrestricted', () => {
