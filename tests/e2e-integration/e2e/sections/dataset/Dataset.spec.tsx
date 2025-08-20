@@ -682,7 +682,8 @@ describe('Dataset', () => {
     })
 
     it('shows the thumbnail for a file', () => {
-      cy.wrap(FileHelper.createImage().then((file) => DatasetHelper.createWithFiles([file])))
+      FileHelper.createImage()
+        .then((fileData) => cy.wrap(DatasetHelper.createWithFiles([fileData])))
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
