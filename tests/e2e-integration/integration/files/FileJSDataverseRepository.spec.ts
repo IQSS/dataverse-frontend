@@ -377,19 +377,11 @@ describe('File JSDataverse Repository', () => {
       )
       if (!dataset) throw new Error('Dataset not found')
 
-      // Thumbnails may not be immediately available; retry briefly until generated
-      let thumbnail: string | undefined
-      for (let attempt = 0; attempt < 5; attempt++) {
-        const files = await fileRepository.getAllByDatasetPersistentId(
-          dataset.persistentId,
-          dataset.version
-        )
-        thumbnail = files[0]?.metadata.thumbnail
-        if (thumbnail) break
-        await TestsUtils.wait(500)
-      }
-
-      expect(thumbnail).to.not.be.undefined
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          expect(files[0].metadata.thumbnail).to.not.be.undefined
+        })
     })
 
     it('gets all the files by dataset persistentId after embargo', async () => {
