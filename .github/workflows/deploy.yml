@@ -83,7 +83,7 @@ jobs:
 
       # For DEMO environment
       - name: Create and populate .env file for DEMO
-        if: ${{ github.event.inputs.environment == 'qa' }}
+        if: ${{ github.event.inputs.environment == 'demo' }}
         env:
           DATAVERSE_BACKEND_URL: ${{ secrets.DEMO_DATAVERSE_BACKEND_URL }}
           OIDC_CLIENT_ID: ${{ secrets.DEMO_OIDC_CLIENT_ID }}
