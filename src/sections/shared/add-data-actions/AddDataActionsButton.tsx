@@ -21,6 +21,7 @@ export default function AddDataActionsButton({
 
   const createCollectionRoute = RouteWithParams.CREATE_COLLECTION(collectionId)
   const createDatasetRoute = RouteWithParams.CREATE_DATASET(collectionId)
+  const createReviewRoute = RouteWithParams.CREATE_REVIEW(collectionId)
 
   return (
     <DropdownButton
@@ -34,7 +35,7 @@ export default function AddDataActionsButton({
       <Dropdown.Item to={createDatasetRoute} as={Link} disabled={!canAddDataset}>
         {t('navigation.newDataset')}
       </Dropdown.Item>
-      <Dropdown.Item to={createDatasetRoute} as={Link} disabled={!canAddDataset}>
+      <Dropdown.Item to={createReviewRoute} as={Link} disabled={!canAddDataset}>
         {t('navigation.newReview')}
       </Dropdown.Item>
     </DropdownButton>
