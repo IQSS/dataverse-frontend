@@ -259,14 +259,21 @@ export const CollectionItemsPanel = ({
       .filter((x): x is FilterQuery => x !== null)
 
     // Update the URL with the new facets, keep other querys and include the search value if exists
-    setSearchParams((currentSearchParams) => {
-      currentSearchParams.set(
-        CollectionItemsQueryParams.FILTER_QUERIES,
-        newFilterQueriesWithFacetValueEncoded.join(',')
-      )
-
-      return currentSearchParams
-    })
+    // IF empty filter queries, remove the filter queries from the URL
+    if (newFilterQueriesWithFacetValueEncoded.length === 0) {
+      setSearchParams((currentSearchParams) => {
+        currentSearchParams.delete(CollectionItemsQueryParams.FILTER_QUERIES)
+        return currentSearchParams
+      })
+    } else {
+      setSearchParams((currentSearchParams) => {
+        currentSearchParams.set(
+          CollectionItemsQueryParams.FILTER_QUERIES,
+          newFilterQueriesWithFacetValueEncoded.join(',')
+        )
+        return currentSearchParams
+      })
+    }
 
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       currentSearchCriteria.searchText,
@@ -315,15 +322,23 @@ export const CollectionItemsPanel = ({
   const advancedSearchLinkURL: string = useMemo(() => {
     const searchParams = new URLSearchParams()
     if (currentSearchCriteria.filterQueries && currentSearchCriteria.filterQueries.length > 0) {
-      const filterQueriesWithFacetValueEncoded = currentSearchCriteria.filterQueries.map((fq) => {
-        const [facetName, facetValue] = fq.split(':')
-        return `${facetName}:${encodeURIComponent(facetValue)}`
-      })
+      const filterQueriesWithFacetValueEncoded = currentSearchCriteria.filterQueries
+        .map((fq) => {
+          const keyAndValue = CollectionHelper.splitFilterQueryKeyAndValue(fq)
+          if (keyAndValue === null) return null
 
-      searchParams.set(
-        CollectionItemsQueryParams.FILTER_QUERIES,
-        filterQueriesWithFacetValueEncoded.join(',')
-      )
+          const { filterQueryKey, filterQueryValue } = keyAndValue
+
+          return `${filterQueryKey}:${encodeURIComponent(filterQueryValue)}`
+        })
+        .filter((x): x is FilterQuery => x !== null)
+
+      if (filterQueriesWithFacetValueEncoded.length > 0) {
+        searchParams.set(
+          CollectionItemsQueryParams.FILTER_QUERIES,
+          filterQueriesWithFacetValueEncoded.join(',')
+        )
+      }
     }
     return `${RouteWithParams.ADVANCED_SEARCH(collectionId)}?${searchParams.toString()}`
   }, [collectionId, currentSearchCriteria.filterQueries])
