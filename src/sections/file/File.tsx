@@ -82,7 +82,12 @@ export function File({ repository, id, datasetVersionNumber, datasetRepository }
               <span className={styles['citation-title']}>{t('fileCitationTitle')}</span>
               <FileCitation citation={file.citation} datasetVersion={file.datasetVersion} />
               <span className={styles['citation-title']}>{t('datasetCitationTitle')}</span>
-              <DatasetCitation version={file.datasetVersion} withoutThumbnail />
+              <DatasetCitation
+                version={file.datasetVersion}
+                withoutThumbnail
+                datasetRepository={datasetRepository}
+                datasetId={file.datasetPersistentId}
+              />
             </Col>
             <Col sm={3}>
               <ButtonGroup aria-label={t('actionButtons.title')} vertical className={styles.group}>

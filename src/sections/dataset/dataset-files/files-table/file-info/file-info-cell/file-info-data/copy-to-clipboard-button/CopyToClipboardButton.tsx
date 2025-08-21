@@ -4,7 +4,13 @@ import { useState } from 'react'
 import styles from './CopyToClipboard.module.scss'
 import { useTranslation } from 'react-i18next'
 
-export function CopyToClipboardButton({ text }: { text: string }) {
+export function CopyToClipboardButton({
+  text,
+  showTruncateText = true
+}: {
+  text: string
+  showTruncateText?: boolean
+}) {
   const { t } = useTranslation('files')
   const [copied, setCopied] = useState(false)
   const copyToClipboard = () => {
@@ -23,7 +29,7 @@ export function CopyToClipboardButton({ text }: { text: string }) {
   return (
     <Tooltip placement="top" overlay={`${t('table.copyToClipboard.clickToCopy')} ${text}`}>
       <span onClick={copyToClipboard} className={styles.container} role="button">
-        {truncateText(text)}
+        {showTruncateText && truncateText(text)}
         {copied ? (
           <Check
             className={styles.check}

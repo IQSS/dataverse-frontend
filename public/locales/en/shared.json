@@ -269,6 +269,17 @@
     },
     "defaultFeedbackSubmitError": "An error occurred while submitting your feedback. Please try again later."
   },
+  "downloadCitation": {
+    "title": "Download Citation",
+    "viewStyledCitation": "View Styled Citation",
+    "downloadEndNoteXML": "Download EndNote XML",
+    "downloadRIS": "Download RIS",
+    "downloadBibTeX": "Download BibTeX",
+    "selectCSLStyle": "Select a CSL Style",
+    "citationInStyle": "Citation in {{styleName}} style",
+    "downloadError": "An error occurred while downloading the citation",
+    "styledCitation": "Styled Citation"
+  },
   "expandableContent": {
     "truncateMoreBtn": "Read full {{contentName}}",
     "truncateLessBtn": "Collapse {{contentName}}",
