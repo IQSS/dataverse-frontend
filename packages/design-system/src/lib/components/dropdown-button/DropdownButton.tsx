@@ -5,8 +5,7 @@ import { IconName } from '../icon/IconName'
 import { ButtonGroup } from '../button-group/ButtonGroup'
 import { Icon } from '../icon/Icon'
 
-type DropdownButtonVariant = 'primary' | 'secondary'
-
+type DropdownButtonVariant = 'primary' | 'secondary' | 'link'
 interface DropdownButtonProps {
   id: string
   title: string

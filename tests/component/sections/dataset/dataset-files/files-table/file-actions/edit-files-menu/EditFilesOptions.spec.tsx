@@ -3,8 +3,9 @@ import { EditFilesOptions } from '../../../../../../../../src/sections/dataset/d
 import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { FileAccessMother } from '@tests/component/files/domain/models/FileAccessMother'
 
-const files = FilePreviewMother.createMany(2)
+const files = FilePreviewMother.createMany(2, { access: FileAccessMother.createPublic() })
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 

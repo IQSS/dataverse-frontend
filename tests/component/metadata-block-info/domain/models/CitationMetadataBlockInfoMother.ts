@@ -21,7 +21,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: true,
           displayOrder: 0,
           typeClass: 'primitive',
-          displayOnCreate: true
+          displayOnCreate: true,
+          isAdvancedSearchFieldType: true
         },
         subtitle: {
           name: 'subtitle',
@@ -37,7 +38,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 1,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         alternativeTitle: {
           name: 'alternativeTitle',
@@ -53,7 +55,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 2,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         alternativeURL: {
           name: 'alternativeURL',
@@ -69,7 +72,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 3,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         otherId: {
           name: 'otherId',
@@ -86,6 +90,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 4,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             otherIdAgency: {
               name: 'otherIdAgency',
@@ -100,7 +105,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 5,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             otherIdValue: {
               name: 'otherIdValue',
@@ -115,7 +121,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 6,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -133,6 +140,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 7,
           typeClass: 'compound',
           displayOnCreate: true,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             authorName: {
               name: 'authorName',
@@ -148,7 +156,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: true,
               displayOrder: 8,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             authorAffiliation: {
               name: 'authorAffiliation',
@@ -164,7 +173,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 9,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             authorIdentifierScheme: {
               name: 'authorIdentifierScheme',
@@ -190,7 +200,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 10,
               typeClass: 'controlledVocabulary',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             authorIdentifier: {
               name: 'authorIdentifier',
@@ -205,7 +216,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 11,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -224,6 +236,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 12,
           typeClass: 'compound',
           displayOnCreate: true,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             datasetContactName: {
               name: 'datasetContactName',
@@ -239,7 +252,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 13,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             datasetContactAffiliation: {
               name: 'datasetContactAffiliation',
@@ -255,7 +269,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 14,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             datasetContactEmail: {
               name: 'datasetContactEmail',
@@ -270,7 +285,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: true,
               displayOrder: 15,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -288,6 +304,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 16,
           typeClass: 'compound',
           displayOnCreate: true,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             dsDescriptionValue: {
               name: 'dsDescriptionValue',
@@ -302,7 +319,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: true,
               displayOrder: 17,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             dsDescriptionDate: {
               name: 'dsDescriptionDate',
@@ -318,7 +336,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 18,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -351,7 +370,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: true,
           displayOrder: 19,
           typeClass: 'controlledVocabulary',
-          displayOnCreate: true
+          displayOnCreate: true,
+          isAdvancedSearchFieldType: true
         },
         keyword: {
           name: 'keyword',
@@ -368,6 +388,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 20,
           typeClass: 'compound',
           displayOnCreate: true,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             keywordValue: {
               name: 'keywordValue',
@@ -382,7 +403,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 21,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             keywordTermURI: {
               name: 'keywordTermURI',
@@ -397,7 +419,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 22,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             keywordVocabulary: {
               name: 'keywordVocabulary',
@@ -412,7 +435,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 23,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             keywordVocabularyURI: {
               name: 'keywordVocabularyURI',
@@ -428,7 +452,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 24,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -447,6 +472,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 25,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             topicClassValue: {
               name: 'topicClassValue',
@@ -461,7 +487,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 26,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             topicClassVocab: {
               name: 'topicClassVocab',
@@ -476,7 +503,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 27,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             topicClassVocabURI: {
               name: 'topicClassVocabURI',
@@ -492,7 +520,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 28,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -511,6 +540,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 29,
           typeClass: 'compound',
           displayOnCreate: true,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             publicationCitation: {
               name: 'publicationCitation',
@@ -525,7 +555,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 30,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             publicationIDType: {
               name: 'publicationIDType',
@@ -561,7 +592,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 31,
               typeClass: 'controlledVocabulary',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             publicationIDNumber: {
               name: 'publicationIDNumber',
@@ -576,7 +608,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 32,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             },
             publicationURL: {
               name: 'publicationURL',
@@ -592,7 +625,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 33,
               typeClass: 'primitive',
-              displayOnCreate: true
+              displayOnCreate: true,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -609,7 +643,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 34,
           typeClass: 'primitive',
-          displayOnCreate: true
+          displayOnCreate: true,
+          isAdvancedSearchFieldType: false
         },
         language: {
           name: 'language',
@@ -812,7 +847,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 35,
           typeClass: 'controlledVocabulary',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         producer: {
           name: 'producer',
@@ -829,6 +865,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 36,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             producerName: {
               name: 'producerName',
@@ -844,7 +881,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: true,
               displayOrder: 37,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             producerAffiliation: {
               name: 'producerAffiliation',
@@ -860,7 +898,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 38,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             producerAbbreviation: {
               name: 'producerAbbreviation',
@@ -875,7 +914,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 39,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             producerURL: {
               name: 'producerURL',
@@ -890,7 +930,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 40,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             producerLogoURL: {
               name: 'producerLogoURL',
@@ -905,7 +946,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 41,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -923,7 +965,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 42,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         productionPlace: {
           name: 'productionPlace',
@@ -939,7 +982,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 43,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         contributor: {
           name: 'contributor',
@@ -956,6 +1000,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 44,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             contributorType: {
               name: 'contributorType',
@@ -989,7 +1034,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 45,
               typeClass: 'controlledVocabulary',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             contributorName: {
               name: 'contributorName',
@@ -1005,7 +1051,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 46,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -1023,6 +1070,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 47,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             grantNumberAgency: {
               name: 'grantNumberAgency',
@@ -1037,7 +1085,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 48,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             grantNumberValue: {
               name: 'grantNumberValue',
@@ -1053,7 +1102,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 49,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -1072,6 +1122,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 50,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             distributorName: {
               name: 'distributorName',
@@ -1087,7 +1138,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 51,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             distributorAffiliation: {
               name: 'distributorAffiliation',
@@ -1103,7 +1155,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 52,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             distributorAbbreviation: {
               name: 'distributorAbbreviation',
@@ -1118,7 +1171,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 53,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             distributorURL: {
               name: 'distributorURL',
@@ -1133,7 +1187,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 54,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             distributorLogoURL: {
               name: 'distributorLogoURL',
@@ -1149,7 +1204,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 55,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -1166,7 +1222,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 56,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         depositor: {
           name: 'depositor',
@@ -1182,7 +1239,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 57,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         dateOfDeposit: {
           name: 'dateOfDeposit',
@@ -1197,7 +1255,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 58,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         timePeriodCovered: {
           name: 'timePeriodCovered',
@@ -1214,6 +1273,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 59,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             timePeriodCoveredStart: {
               name: 'timePeriodCoveredStart',
@@ -1228,7 +1288,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 60,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             timePeriodCoveredEnd: {
               name: 'timePeriodCoveredEnd',
@@ -1243,7 +1304,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 61,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -1261,6 +1323,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 62,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             dateOfCollectionStart: {
               name: 'dateOfCollectionStart',
@@ -1275,7 +1338,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 63,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             dateOfCollectionEnd: {
               name: 'dateOfCollectionEnd',
@@ -1290,7 +1354,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 64,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -1308,7 +1373,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 65,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         series: {
           name: 'series',
@@ -1324,6 +1390,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 66,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             seriesName: {
               name: 'seriesName',
@@ -1338,7 +1405,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 67,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             seriesInformation: {
               name: 'seriesInformation',
@@ -1354,7 +1422,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 68,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -1372,6 +1441,7 @@ export class CitationMetadataBlockInfoMother {
           displayOrder: 69,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             softwareName: {
               name: 'softwareName',
@@ -1386,7 +1456,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 70,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             softwareVersion: {
               name: 'softwareVersion',
@@ -1401,7 +1472,8 @@ export class CitationMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 71,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -1419,7 +1491,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 72,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         relatedDatasets: {
           name: 'relatedDatasets',
@@ -1435,7 +1508,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 73,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         otherReferences: {
           name: 'otherReferences',
@@ -1451,7 +1525,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 74,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         dataSources: {
           name: 'dataSources',
@@ -1467,7 +1542,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 75,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         originOfSources: {
           name: 'originOfSources',
@@ -1483,7 +1559,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 76,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         characteristicOfSources: {
           name: 'characteristicOfSources',
@@ -1498,7 +1575,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 77,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         accessToSources: {
           name: 'accessToSources',
@@ -1514,7 +1592,8 @@ export class CitationMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 78,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         }
       }
     }

@@ -32,6 +32,7 @@ import {
   getDatasetVersionsSummaries,
   getDatasetDownloadCount,
   deleteDatasetDraft,
+  getDatasetCitationInOtherFormats,
   getDatasetAvailableCategories
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
@@ -43,6 +44,7 @@ import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
+import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 import { axiosInstance } from '@/axiosInstance'
 import { DATAVERSE_BACKEND_URL } from '../../../config'
 import { AxiosResponse } from 'axios'
@@ -376,7 +378,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       throw error
     })
   }
-
+  getDatasetCitationInOtherFormats(
+    datasetId: number | string,
+    version: string,
+    format: CitationFormat
+  ): Promise<FormattedCitation> {
+    return getDatasetCitationInOtherFormats.execute(datasetId, version, format)
+  }
   getAvailableCategories(datasetId: string | number): Promise<string[]> {
     return getDatasetAvailableCategories.execute(datasetId)
   }

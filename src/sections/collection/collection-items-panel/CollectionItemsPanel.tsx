@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
@@ -23,9 +23,10 @@ import {
   ItemsList,
   ItemsListType
 } from '@/sections/collection/collection-items-panel/items-list/ItemsList'
-import { SearchPanel } from '@/sections/collection/collection-items-panel/search-panel/SearchPanel'
+import { SearchInput } from '@/sections/collection/collection-items-panel/search-input/SearchInput'
 import { ItemTypeChange } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
 import { SelectedFacets } from '@/sections/collection/collection-items-panel/selected-facets/SelectedFacets'
+import { RouteWithParams } from '@/sections/Route.enum'
 import styles from './CollectionItemsPanel.module.scss'
 
 interface CollectionItemsPanelProps {
@@ -311,15 +312,36 @@ export const CollectionItemsPanel = ({
     setIsLoading(isLoadingItems)
   }, [isLoadingItems, setIsLoading])
 
+  const advancedSearchLinkURL: string = useMemo(() => {
+    const searchParams = new URLSearchParams()
+    if (currentSearchCriteria.filterQueries && currentSearchCriteria.filterQueries.length > 0) {
+      const filterQueriesWithFacetValueEncoded = currentSearchCriteria.filterQueries.map((fq) => {
+        const [facetName, facetValue] = fq.split(':')
+        return `${facetName}:${encodeURIComponent(facetValue)}`
+      })
+
+      searchParams.set(
+        CollectionItemsQueryParams.FILTER_QUERIES,
+        filterQueriesWithFacetValueEncoded.join(',')
+      )
+    }
+    return `${RouteWithParams.ADVANCED_SEARCH(collectionId)}?${searchParams.toString()}`
+  }, [collectionId, currentSearchCriteria.filterQueries])
+
   return (
     <section className={styles['items-panel']}>
       <header className={styles['top-wrapper']}>
-        <SearchPanel
+        <SearchInput
           onSubmitSearch={handleSearchSubmit}
           currentSearchValue={currentSearchCriteria.searchText}
           isLoadingCollectionItems={isLoadingItems}
           placeholderText={t('searchThisCollectionPlaceholder')}
         />
+
+        <Link to={advancedSearchLinkURL} className={styles[`advanced-search-link`]}>
+          {t('advancedSearch')}
+        </Link>
+
         <div className={styles['add-data-slot']}>{addDataSlot}</div>
       </header>
 
