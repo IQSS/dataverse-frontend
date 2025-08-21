@@ -3,6 +3,7 @@ import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
 import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { FacetFilterGroup, RemoveAddFacetFilter } from './FacetFilterGroup'
+import { CollectionHelper } from '@/sections/collection/CollectionHelper'
 import styles from './FacetsFilters.module.scss'
 
 interface FacetsFiltersProps {
@@ -26,8 +27,11 @@ export const FacetsFilters = ({
     <Stack gap={2} as="ul" className={styles['facets-list']}>
       {facets.map((facet) => {
         const facetSelectedLabels = currentFilterQueries
-          ?.filter((query) => query.split(':')[0] === facet.name)
-          .map((query) => query.split(':')[1])
+          ?.filter((query) => query.startsWith(`${facet.name}:`))
+          .map((query) => {
+            const keyAndValue = CollectionHelper.splitFilterQueryKeyAndValue(query)
+            return keyAndValue?.filterQueryValue || 'Unknown' // Fallback if split fails
+          })
 
         return (
           <FacetFilterGroup

@@ -246,10 +246,16 @@ export const CollectionItemsPanel = ({
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
     setPaginationInfo(resetPaginationInfo)
 
-    const newFilterQueriesWithFacetValueEncoded = newFilterQueries.map((fq) => {
-      const [facetName, facetValue] = fq.split(':')
-      return `${facetName}:${encodeURIComponent(facetValue)}`
-    })
+    const newFilterQueriesWithFacetValueEncoded = newFilterQueries
+      .map((fq) => {
+        const keyAndValue = CollectionHelper.splitFilterQueryKeyAndValue(fq)
+        if (keyAndValue === null) return null
+
+        const { filterQueryKey, filterQueryValue } = keyAndValue
+
+        return `${filterQueryKey}:${encodeURIComponent(filterQueryValue)}`
+      })
+      .filter((x): x is FilterQuery => x !== null)
 
     // Update the URL with the new facets, keep other querys and include the search value if exists
     setSearchParams((currentSearchParams) => {
