@@ -34,6 +34,9 @@ export default function AddDataActionsButton({
       <Dropdown.Item to={createDatasetRoute} as={Link} disabled={!canAddDataset}>
         {t('navigation.newDataset')}
       </Dropdown.Item>
+      <Dropdown.Item to={createDatasetRoute} as={Link} disabled={!canAddDataset}>
+        {t('navigation.newReview')}
+      </Dropdown.Item>
     </DropdownButton>
   )
 }

@@ -35,6 +35,7 @@ export const LoggedInHeaderActions = ({
 
   const createCollectionRoute = RouteWithParams.CREATE_COLLECTION(collection.id)
   const createDatasetRoute = RouteWithParams.CREATE_DATASET(collection.id)
+  const createReviewRoute = RouteWithParams.CREATE_REVIEW(collection.id)
 
   const canUserAddCollectionToRoot = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserAddDatasetToRoot = Boolean(collectionUserPermissions?.canAddDataset)
@@ -50,6 +51,9 @@ export const LoggedInHeaderActions = ({
         </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item as={Link} to={createDatasetRoute} disabled={!canUserAddDatasetToRoot}>
           {t('navigation.newDataset')}
+        </Navbar.Dropdown.Item>
+        <Navbar.Dropdown.Item as={Link} to={createReviewRoute} disabled={!canUserAddDatasetToRoot}>
+          {t('navigation.newReview')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>
       <Navbar.Dropdown title={user.displayName} id="dropdown-user">

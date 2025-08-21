@@ -29,6 +29,7 @@ export const RouteWithParams = {
   COLLECTIONS: (collectionId?: string) =>
     collectionId ? `/collections/${collectionId}` : Route.COLLECTIONS_BASE,
   CREATE_COLLECTION: (parentCollectionId: string) => `/collections/${parentCollectionId}/create`,
+  CREATE_REVIEW: (collectionId: string) => `/reviews/${collectionId}/create`,
   CREATE_DATASET: (collectionId: string) => `/datasets/${collectionId}/create`,
   EDIT_COLLECTION: (collectionId: string) => `/collections/${collectionId}/edit`,
   EDIT_FEATURED_ITEMS: (collectionId: string) => `/collections/${collectionId}/edit-featured-items`,
