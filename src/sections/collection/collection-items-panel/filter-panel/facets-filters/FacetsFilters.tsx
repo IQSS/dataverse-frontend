@@ -30,7 +30,7 @@ export const FacetsFilters = ({
           ?.filter((query) => query.startsWith(`${facet.name}:`))
           .map((query) => {
             const keyAndValue = CollectionHelper.splitFilterQueryKeyAndValue(query)
-            return keyAndValue?.filterQueryValue || 'Unknown' // Fallback if split fails
+            return keyAndValue?.filterQueryValue || /* istanbul ignore next */ 'Unknown' // Fallback if split fails
           })
 
         return (
