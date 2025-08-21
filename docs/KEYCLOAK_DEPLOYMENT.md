@@ -131,6 +131,12 @@ curl -k -X POST "https://localhost:443/admin/realms/<REALM_NAME>/components" \
 echo "Keycloak SPI configured in realm."
 ```
 
+### Disable Profile Verification
+
+For the SPI to work correctly and for Keycloak to rely on the user attributes coming from it, you need to disable the ``Verify Profile`` option under ``Authentication > Required Actions`` in the Realm-level configuration.
+
+![Deployment Img Disable Verify Profile](img/keycloak_deployment_verify_profile.png)
+
 ### Create a Keycloak client for the Dataverse SPA
 
 To allow the SPA to authenticate with Keycloak using PKCE, we need to create a public OIDC client in the Keycloak realm.  
