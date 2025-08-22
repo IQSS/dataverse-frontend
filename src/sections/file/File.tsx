@@ -18,14 +18,16 @@ import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
 import { FileVersions } from './file-version/FileVersions'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface FileProps {
   repository: FileRepository
+  datasetRepository: DatasetRepository
   id: number
   datasetVersionNumber?: string
 }
 
-export function File({ repository, id, datasetVersionNumber }: FileProps) {
+export function File({ repository, id, datasetVersionNumber, datasetRepository }: FileProps) {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
@@ -80,7 +82,12 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
               <span className={styles['citation-title']}>{t('fileCitationTitle')}</span>
               <FileCitation citation={file.citation} datasetVersion={file.datasetVersion} />
               <span className={styles['citation-title']}>{t('datasetCitationTitle')}</span>
-              <DatasetCitation version={file.datasetVersion} withoutThumbnail />
+              <DatasetCitation
+                version={file.datasetVersion}
+                withoutThumbnail
+                datasetRepository={datasetRepository}
+                datasetId={file.datasetPersistentId}
+              />
             </Col>
             <Col sm={3}>
               <ButtonGroup aria-label={t('actionButtons.title')} vertical className={styles.group}>
@@ -93,6 +100,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                   isDeaccessioned={
                     file.datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
                   }
+                  isDraft={file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT}
                 />
                 {file.permissions.canEditOwnerDataset && (
                   <EditFileMenu
@@ -107,8 +115,10 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                         file.datasetVersion.termsOfAccess?.termsOfAccessForRestrictedFiles,
                       requestAccess: file.datasetVersion.termsOfAccess?.fileAccessRequest
                     }}
+                    storageIdentifier={file.metadata.storageIdentifier}
                     existingLabels={file.metadata.labels}
                     isTabularFile={file.metadata.isTabular}
+                    datasetRepository={datasetRepository}
                   />
                 )}
               </ButtonGroup>

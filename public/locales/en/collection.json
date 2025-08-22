@@ -33,6 +33,7 @@
   "datasetFilterTypeLabel": "Datasets",
   "fileFilterTypeLabel": "Files",
   "searchThisCollectionPlaceholder": "Search this collection...",
+  "advancedSearch": "Advanced Search",
   "publish": {
     "title": "Publish Collection",
     "button": "Publish",
@@ -67,5 +68,6 @@
     "delete": "Delete"
   },
   "collectionDeletedSuccess": "Your collection has been deleted.",
-  "defaultCollectionDeleteError": "Something went wrong deleting the collection. Try again later."
+  "defaultCollectionDeleteError": "Something went wrong deleting the collection. Try again later.",
+  "description": "Description"
 }

@@ -213,6 +213,7 @@ const jsDatasetFilesTotalOriginalDownloadSize = 5
 const jsDatasetFilesTotalArchivalDownloadSize = 7
 
 const expectedDataset = {
+  id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
@@ -327,9 +328,11 @@ const expectedDataset = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  fileStore: undefined
 }
 const expectedDatasetWithPublicationDate = {
+  id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
@@ -442,9 +445,11 @@ const expectedDatasetWithPublicationDate = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  fileStore: undefined
 }
 const expectedDatasetWithNextVersionNumbers = {
+  id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
@@ -557,10 +562,12 @@ const expectedDatasetWithNextVersionNumbers = {
   ),
   nextMajorVersion: '2.0',
   nextMinorVersion: '1.3',
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  fileStore: undefined
 }
 
 const expectedDatasetAlternateVersion = {
+  id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
@@ -686,7 +693,8 @@ const expectedDatasetAlternateVersion = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  fileStore: undefined
 }
 
 describe('JS Dataset Mapper', () => {

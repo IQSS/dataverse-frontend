@@ -14,6 +14,7 @@ import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersio
 import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
+import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -127,11 +128,36 @@ export class DatasetMockRepository implements DatasetRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+  getAvailableCategories(_datasetId: string | number): Promise<string[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(['Category 1', 'Category 2', 'Category 3'])
+      }, FakerHelper.loadingTimout())
+    })
+  }
 
   deleteDatasetDraft(_datasetId: string | number): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+  getDatasetCitationInOtherFormats: (
+    datasetId: string | number,
+    version: string,
+    format: CitationFormat
+  ) => Promise<FormattedCitation> = (
+    _datasetId: string | number,
+    _version: string,
+    _format: CitationFormat
+  ) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          content: 'Formatted citation content',
+          contentType: 'text/plain'
+        })
       }, FakerHelper.loadingTimout())
     })
   }

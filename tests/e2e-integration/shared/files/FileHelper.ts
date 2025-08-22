@@ -59,15 +59,11 @@ export class FileHelper extends DataverseApiHelper {
     }
   }
 
-  static async createImage(): Promise<FileData> {
-    const fileBinary = await this.generateImgData()
-    if (!fileBinary) {
-      throw new Error('File could not be fetched')
-    }
-    return {
-      file: fileBinary,
+  static createImage(): Cypress.Chainable<FileData> {
+    return this.generateImgData().then((blob) => ({
+      file: blob,
       jsonData: JSON.stringify({ description: 'This is an example file' })
-    }
+    }))
   }
 
   static generateCsvData(): string {
@@ -94,17 +90,10 @@ export class FileHelper extends DataverseApiHelper {
     return faker.lorem.sentence()
   }
 
-  static async generateImgData(): Promise<Blob | void> {
-    return await fetch(faker.image.imageUrl())
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.blob()
-      })
-      .catch(() => {
-        throw new Error('Files could not be fetched')
-      })
+  static generateImgData(): Cypress.Chainable<Blob> {
+    return cy
+      .fixture('images/dog-640x480.jpg', 'binary')
+      .then((binary: string) => Cypress.Blob.binaryStringToBlob(binary, 'image/jpeg'))
   }
 
   static async download(id: number) {

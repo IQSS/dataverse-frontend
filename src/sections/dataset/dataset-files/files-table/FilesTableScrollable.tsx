@@ -12,6 +12,7 @@ import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginati
 import { type SentryRef } from '../DatasetFilesScrollable'
 import styles from './FilesTable.module.scss'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface FilesTableScrollableProps {
   files: FilePreview[]
@@ -24,6 +25,7 @@ interface FilesTableScrollableProps {
   isEmptyFiles: boolean
   fileRepository: FileRepository
   accumulatedCount: number
+  datasetRepository: DatasetRepository
 }
 
 export const FilesTableScrollable = ({
@@ -36,10 +38,17 @@ export const FilesTableScrollable = ({
   showSentryRef,
   isEmptyFiles,
   fileRepository,
-  accumulatedCount
+  accumulatedCount,
+  datasetRepository
 }: FilesTableScrollableProps) => {
   const { table, fileSelection, selectAllPossibleRows, clearRowsSelection } =
-    useFilesTableScrollable(files, paginationInfo, accumulatedCount, fileRepository)
+    useFilesTableScrollable(
+      files,
+      paginationInfo,
+      accumulatedCount,
+      fileRepository,
+      datasetRepository
+    )
 
   const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
 

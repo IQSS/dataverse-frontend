@@ -53,7 +53,7 @@ export const WithAllFormats: Story = {
   render: () => (
     <RichTextEditor
       initialValue={
-        '<h1 class="rte-heading">Heading 1</h1><h2 class="rte-heading">Heading 2</h2><h3 class="rte-heading">Heading 3</h3><p class="rte-paragraph">Hello <strong class="rte-bold">Dataverse</strong> <em class="rte-italic">new </em><s class="rte-strike">rick</s> <strong class="rte-bold">rich</strong> <em class="rte-italic">text</em> <code class="rte-code">editor</code>! This is a <a target="_blank" rel="noopener noreferrer nofollow" class="rte-link" href="https://beta.dataverse.org/spa/">link</a>.</p><ul class="rte-bullet-list"><li><p class="rte-paragraph">Item</p></li><li><p class="rte-paragraph">Item</p></li></ul><ol class="rte-ordered-list"><li><p class="rte-paragraph">Item 1</p></li><li><p class="rte-paragraph">Item 2</p></li></ol><pre class="rte-code-block"><code class="language-typescriptreact">onUpdate: ({ editor }) =&gt; onChange &amp;&amp; onChange(editor.getHTML())</code></pre><blockquote class="rte-blockquote"><p class="rte-paragraph">This is a blockquoute</p></blockquote><img src="https://loremflickr.com/640/480" alt="A random image from loremflickr" class="rte-img rte-w-25">'
+        '<h1 class="rte-heading">Heading 1</h1><h2 class="rte-heading">Heading 2</h2><h3 class="rte-heading">Heading 3</h3><p class="rte-paragraph">Hello <strong class="rte-bold">Dataverse</strong> <em class="rte-italic">new </em><s class="rte-strike">rick</s> <strong class="rte-bold">rich</strong> <em class="rte-italic">text</em> <code class="rte-code">editor</code>! This is a <a target="_blank" rel="noopener noreferrer nofollow" class="rte-link" href="https://beta.dataverse.org/spa/">link</a>.</p><ul class="rte-bullet-list"><li><p class="rte-paragraph">Item</p></li><li><p class="rte-paragraph">Item</p></li></ul><ol class="rte-ordered-list"><li><p class="rte-paragraph">Item 1</p></li><li><p class="rte-paragraph">Item 2</p></li></ol><pre class="rte-code-block"><code class="language-typescriptreact">onUpdate: ({ editor }) =&gt; onChange &amp;&amp; onChange(editor.getHTML())</code></pre><blockquote class="rte-blockquote"><p class="rte-paragraph">This is a blockquoute</p></blockquote><img src="https://picsum.photos/id/237/200/300" alt="A random image from picsum" class="rte-img rte-w-25">'
       }
       onChange={handleChange}
     />
@@ -62,9 +62,9 @@ export const WithAllFormats: Story = {
 
 export const WithImagesAlignedToTheLeftCenterAndRight: Story = {
   render: () => {
-    const imageLeft = `<img src="https://loremflickr.com/640/480" alt="Foo" class="rte-img rte-w-15 ${RichTextEditorCustomClasses.IMAGE_ALIGN_LEFT}">`
-    const imageCenter = `<img src="https://loremflickr.com/640/480" alt="Foo" class="rte-img rte-w-15 ${RichTextEditorCustomClasses.IMAGE_ALIGN_CENTER}">`
-    const imageRight = `<img src="https://loremflickr.com/640/480" alt="Foo" class="rte-img rte-w-15 ${RichTextEditorCustomClasses.IMAGE_ALIGN_RIGHT}">`
+    const imageLeft = `<img src="https://picsum.photos/id/237/200/300" alt="Foo" class="rte-img rte-w-15 ${RichTextEditorCustomClasses.IMAGE_ALIGN_LEFT}">`
+    const imageCenter = `<img src="https://picsum.photos/id/237/200/300" alt="Foo" class="rte-img rte-w-15 ${RichTextEditorCustomClasses.IMAGE_ALIGN_CENTER}">`
+    const imageRight = `<img src="https://picsum.photos/id/237/200/300" alt="Foo" class="rte-img rte-w-15 ${RichTextEditorCustomClasses.IMAGE_ALIGN_RIGHT}">`
 
     return (
       <RichTextEditor initialValue={imageLeft + imageCenter + imageRight} onChange={handleChange} />
@@ -75,11 +75,11 @@ export const WithImagesAlignedToTheLeftCenterAndRight: Story = {
 export const WithImagesResizedDifferently: Story = {
   render: () => {
     const imageLeft =
-      '<img src="https://loremflickr.com/640/480" alt="Foo" class="rte-img rte-w-15">'
+      '<img src="https://picsum.photos/id/237/200/300" alt="Foo" class="rte-img rte-w-15">'
     const imageCenter =
-      '<img src="https://loremflickr.com/640/480" alt="Foo" class="rte-img rte-w-30">'
+      '<img src="https://picsum.photos/id/237/200/300" alt="Foo" class="rte-img rte-w-30">'
     const imageRight =
-      '<img src="https://loremflickr.com/640/480" alt="Foo" class="rte-img rte-w-40">'
+      '<img src="https://picsum.photos/id/237/200/300" alt="Foo" class="rte-img rte-w-40">'
 
     return (
       <RichTextEditor initialValue={imageLeft + imageCenter + imageRight} onChange={handleChange} />

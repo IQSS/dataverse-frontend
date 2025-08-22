@@ -1,6 +1,7 @@
 import { FileRepository } from '../../../../src/files/domain/repositories/FileRepository'
 import { FileMother } from '../../files/domain/models/FileMother'
 import { File } from '../../../../src/sections/file/File'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 
 const fileRepository: FileRepository = {} as FileRepository
 
@@ -9,7 +10,9 @@ describe('File', () => {
     const testFile = FileMother.createRealistic()
     fileRepository.getById = cy.stub().resolves(testFile)
 
-    cy.customMount(<File repository={fileRepository} id={19} />)
+    cy.customMount(
+      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+    )
 
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
 
@@ -20,6 +23,7 @@ describe('File', () => {
     cy.findByText('File Citation').should('exist')
     cy.findByText(/fileName/).should('exist')
     cy.findByText('Dataset Citation').should('exist')
+    cy.findByText('Cite Dataset').should('exist')
     cy.findAllByText(/Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title",/).should(
       'exist'
     )
@@ -34,7 +38,9 @@ describe('File', () => {
     const testFile = FileMother.createRealistic()
     fileRepository.getById = cy.stub().resolves(testFile)
 
-    cy.customMount(<File repository={fileRepository} id={19} />)
+    cy.customMount(
+      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+    )
 
     cy.findByTestId('file-skeleton').should('exist')
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
@@ -44,7 +50,9 @@ describe('File', () => {
   it('renders page not found when file is not found', () => {
     fileRepository.getById = cy.stub().resolves(undefined)
 
-    cy.customMount(<File repository={fileRepository} id={19} />)
+    cy.customMount(
+      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+    )
 
     cy.findByTestId('not-found-page').should('exist')
   })
@@ -53,7 +61,9 @@ describe('File', () => {
     const testFile = FileMother.createRestricted()
     fileRepository.getById = cy.stub().resolves(testFile)
 
-    cy.customMount(<File repository={fileRepository} id={19} />)
+    cy.customMount(
+      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+    )
 
     cy.findByText('Restricted File Icon').should('exist')
   })
@@ -62,7 +72,14 @@ describe('File', () => {
     const testFile = FileMother.createRealistic()
     fileRepository.getById = cy.stub().resolves(testFile)
 
-    cy.customMount(<File repository={fileRepository} id={19} datasetVersionNumber={'2.0'} />)
+    cy.customMount(
+      <File
+        repository={fileRepository}
+        id={19}
+        datasetVersionNumber={'2.0'}
+        datasetRepository={new DatasetMockRepository()}
+      />
+    )
 
     cy.findByText('Version 1.0').should('exist')
     cy.findByRole('tab', { name: 'Metadata' }).should('exist')

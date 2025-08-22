@@ -365,22 +365,30 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it('gets all the files by dataset persistentId after adding a thumbnail to the files', async () => {
-      const datasetResponse = await FileHelper.createImage().then((file) =>
-        DatasetHelper.createWithFiles([file])
-      )
-      if (!datasetResponse.files) throw new Error('Files not found')
+    it('gets all the files by dataset persistentId after adding a thumbnail to the files', () => {
+      FileHelper.createImage()
+        .then((fileData) => cy.wrap(DatasetHelper.createWithFiles([fileData])))
+        .then((datasetResponse) => {
+          expect(datasetResponse.files).to.exist
 
-      const dataset = await datasetRepository.getByPersistentId(
-        datasetResponse.persistentId,
-        DatasetNonNumericVersion.DRAFT
-      )
-      if (!dataset) throw new Error('Dataset not found')
+          return cy.wrap(
+            datasetRepository.getByPersistentId(
+              datasetResponse.persistentId,
+              DatasetNonNumericVersion.DRAFT
+            )
+          )
+        })
+        .then((dataset) => {
+          expect(dataset).to.exist
 
-      await fileRepository
-        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+          if (!dataset) throw new Error('Dataset not found')
+
+          return cy.wrap(
+            fileRepository.getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+          )
+        })
         .then((files) => {
-          expect(files[0].metadata.thumbnail).to.not.be.undefined
+          expect(files?.[0]?.metadata?.thumbnail).to.not.be.undefined
         })
     })
 

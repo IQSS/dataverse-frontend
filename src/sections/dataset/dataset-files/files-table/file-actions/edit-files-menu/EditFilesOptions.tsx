@@ -15,6 +15,7 @@ import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFile
 import { useSettings } from '@/sections/settings/SettingsContext'
 import { SettingName } from '@/settings/domain/models/Setting'
 import { DatasetEditFileTagsButton } from './DatasetEditFileTagsButton'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 type EditFilesOptionsProps =
   | {
@@ -24,6 +25,7 @@ type EditFilesOptionsProps =
       fileRepository: FileRepository
       datasetInfo?: never
       isHeader: true
+      datasetRepository: DatasetRepository
     }
   | {
       files?: never
@@ -32,6 +34,7 @@ type EditFilesOptionsProps =
       fileRepository: FileRepository
       datasetInfo: EditFilesMenuDatasetInfo
       isHeader: false
+      datasetRepository: DatasetRepository
     }
 
 export interface EditFilesMenuDatasetInfo {
@@ -49,7 +52,8 @@ export function EditFilesOptions({
   fileSelection,
   fileRepository,
   datasetInfo,
-  isHeader
+  isHeader,
+  datasetRepository
 }: EditFilesOptionsProps) {
   const { t } = useTranslation('files')
   const { t: tFile } = useTranslation('file')
@@ -81,24 +85,29 @@ export function EditFilesOptions({
           fileRepository={fileRepository}
           datasetInfo={datasetInfo}
         />
+        {/* TODO: remove this when we can handle non-S3 files */}
+        {file.metadata.storageIdentifier?.startsWith('s3') && (
+          <DropdownButtonItem
+            as={Link}
+            to={RouteWithParams.FILES_REPLACE(
+              datasetInfo.persistentId,
+              datasetInfo.versionNumber,
+              file.id,
+              ReplaceFileReferrer.DATASET
+            )}>
+            {tFile('actionButtons.editFileMenu.options.replace')}
+          </DropdownButtonItem>
+        )}
 
-        <DropdownButtonItem
-          as={Link}
-          to={RouteWithParams.FILES_REPLACE(
-            datasetInfo.persistentId,
-            datasetInfo.versionNumber,
-            file.id,
-            ReplaceFileReferrer.DATASET
-          )}>
-          {tFile('actionButtons.editFileMenu.options.replace')}
-        </DropdownButtonItem>
         <DatasetEditFileTagsButton
           fileId={file.id}
           fileRepository={fileRepository}
           datasetPersistentId={datasetInfo.persistentId}
           existingLabels={file.metadata.labels}
           isTabularFile={file.metadata.isTabular}
+          datasetRepository={datasetRepository}
         />
+
         <DatasetDeleteFileButton
           fileId={file.id}
           fileRepository={fileRepository}

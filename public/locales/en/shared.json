@@ -1,6 +1,8 @@
 {
   "collection": "Collection",
+  "collections": "Collections",
   "dataset": "Dataset",
+  "datasets": "Datasets",
   "file": "File",
   "files": "Files",
   "page": "Page",
@@ -24,6 +26,7 @@
   "submitSearch": "Submit Search",
   "dragHandleLabel": "press space to select and keys to drag",
   "unknown": "Unknown",
+  "find": "Find",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
@@ -102,6 +105,7 @@
         "required": "Identifier is required",
         "invalid": {
           "format": "Identifier is not valid. Valid characters are a-Z, 0-9, '_', and '-'.",
+          "numberOnly": "Identifier should not be numeric only.",
           "maxLength": "Identifier must be at most {{maxLength}} characters."
         },
         "suggestion": "Psst... try this"
@@ -267,5 +271,22 @@
       }
     },
     "defaultFeedbackSubmitError": "An error occurred while submitting your feedback. Please try again later."
+  },
+  "downloadCitation": {
+    "title": "Download Citation",
+    "viewStyledCitation": "View Styled Citation",
+    "downloadEndNoteXML": "Download EndNote XML",
+    "downloadRIS": "Download RIS",
+    "downloadBibTeX": "Download BibTeX",
+    "selectCSLStyle": "Select a CSL Style",
+    "citationInStyle": "Citation in {{styleName}} style",
+    "downloadError": "An error occurred while downloading the citation",
+    "styledCitation": "Styled Citation"
+  },
+  "expandableContent": {
+    "truncateMoreBtn": "Read full {{contentName}}",
+    "truncateLessBtn": "Collapse {{contentName}}",
+    "truncateMoreTip": "Click to read the full {{contentName}}",
+    "truncateLessTip": "Click to collapse the {{contentName}}"
   }
 }

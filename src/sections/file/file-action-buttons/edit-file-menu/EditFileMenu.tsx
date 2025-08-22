@@ -9,13 +9,16 @@ import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
 import { EditFileTagsButton } from './edit-file-tags/EditFileTagsButton'
 import { FileLabel } from '@/files/domain/models/FileMetadata'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface EditFileMenuProps {
   fileId: number
   fileRepository: FileRepository
   isRestricted: boolean
   datasetInfo: EditFileMenuDatasetInfo
+  storageIdentifier: string | undefined
   existingLabels?: FileLabel[]
+  datasetRepository: DatasetRepository
   isTabularFile: boolean
 }
 
@@ -31,9 +34,11 @@ export const EditFileMenu = ({
   fileId,
   fileRepository,
   datasetInfo,
-  existingLabels,
   isRestricted,
-  isTabularFile
+  storageIdentifier,
+  existingLabels,
+  isTabularFile,
+  datasetRepository
 }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
 
@@ -59,24 +64,28 @@ export const EditFileMenu = ({
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
       />
-      <DropdownButtonItem
-        as={Link}
-        to={RouteWithParams.FILES_REPLACE(
-          datasetInfo.persistentId,
-          datasetInfo.versionNumber,
-          fileId,
-          ReplaceFileReferrer.FILE
-        )}>
-        {t('actionButtons.editFileMenu.options.replace')}
-      </DropdownButtonItem>
-      <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
+      {/* TODO: remove this when we can handle non-S3 files */}
+      {storageIdentifier?.startsWith('s3') && (
+        <DropdownButtonItem
+          as={Link}
+          to={RouteWithParams.FILES_REPLACE(
+            datasetInfo.persistentId,
+            datasetInfo.versionNumber,
+            fileId,
+            ReplaceFileReferrer.FILE
+          )}>
+          {t('actionButtons.editFileMenu.options.replace')}
+        </DropdownButtonItem>
+      )}
       <EditFileTagsButton
         fileId={fileId}
         fileRepository={fileRepository}
         existingLabels={existingLabels}
         datasetPersistentId={datasetInfo.persistentId}
         isTabularFile={isTabularFile}
+        datasetRepository={datasetRepository}
       />
+      <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
     </DropdownButton>
   )
 }

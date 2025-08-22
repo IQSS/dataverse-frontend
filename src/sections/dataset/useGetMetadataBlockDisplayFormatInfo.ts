@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
-import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
 import { MetadataBlockInfoDisplayFormat } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { getMetadataBlockInfoByName } from '../../metadata-block-info/domain/useCases/getMetadataBlockInfoByName'
 
 interface Props {
-  metadataBlockName: MetadataBlockName
+  metadataBlockName: string
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
