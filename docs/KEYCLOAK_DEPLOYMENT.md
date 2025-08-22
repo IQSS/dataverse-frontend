@@ -25,21 +25,21 @@ Download the JAR file from [this link](https://github.com/IQSS/dataverse-fronten
 
 First, make sure you have built the latest version of the design system, which is required for the custom Keycloak theme:
 
-  ```bash
-  cd packages/design-system && npm run build
-  ```
+```bash
+cd packages/design-system && npm run build
+```
 
 From the repository root run the following command to build the custom Keycloak theme:
 
-   ```bash
-   npm run build-keycloak-theme
-   ```
+```bash
+npm run build-keycloak-theme
+```
 
-Copy the generated ``dv-spa-kc-theme.jar`` file to your Keycloak instance’s ``keycloak-26.X.X/providers`` directory.
+Copy the generated `dv-spa-kc-theme.jar` file to your Keycloak instance’s `keycloak-26.X.X/providers` directory.
 
 ### Create quarkus.properties
 
-Inside the ``keycloak-26.X.X/conf`` directory, create the following file, replacing the bracketed variables with the corresponding values for the Dataverse database that the SPI will access.
+Inside the `keycloak-26.X.X/conf` directory, create the following file, replacing the bracketed variables with the corresponding values for the Dataverse database that the SPI will access.
 
 ```properties
 quarkus.datasource.user-store.db-kind=postgresql
@@ -81,7 +81,7 @@ Once the certificate and key have been uploaded to the instance, you need to con
 
 ### Running Keycloak
 
-Run Keycloak for the first time on the instance using the following command. 
+Run Keycloak for the first time on the instance using the following command.
 
 ```bash
 nohup ./bin/kc.sh start --bootstrap-admin-username tmpadm --bootstrap-admin-password pass --hostname https://<KEYCLOAK_DOMAIN> > keycloak.log 2>&1 &
@@ -96,12 +96,12 @@ For subsequent executions of Keycloak, you can use the following command omittin
 nohup ./bin/kc.sh start --hostname https://<KEYCLOAK_DOMAIN> > keycloak.log 2>&1 &
 ```
 
-Note that the output logs of the command are saved in a file named ``keycloak.log``.
+Note that the output logs of the command are saved in a file named `keycloak.log`.
 
 ### Create a Keycloak Realm
 
 Create a realm in Keycloak from the Keycloak Admin Console:  
-`https://<KEYCLOAK_DOMAIN>/admin/master/console/`. 
+`https://<KEYCLOAK_DOMAIN>/admin/master/console/`.
 
 Give it a descriptive name for the environment you are deploying, since this name will appear in the different URLs used for OIDC and other purposes.
 
@@ -139,13 +139,13 @@ echo "Keycloak SPI configured in realm."
 
 ### Disable Profile Verification
 
-For the SPI to work correctly and for Keycloak to rely on the user attributes coming from it, you need to disable the ``Verify Profile`` option under ``Authentication > Required Actions`` in the Realm-level configuration.
+For the SPI to work correctly and for Keycloak to rely on the user attributes coming from it, you need to disable the `Verify Profile` option under `Authentication > Required Actions` in the Realm-level configuration.
 
 ![Deployment Img Disable Verify Profile](img/keycloak_deployment_verify_profile.png)
 
 ### Create a Keycloak client for the Dataverse SPA
 
-To allow the SPA to authenticate with Keycloak using PKCE, we need to create a public OIDC client in the Keycloak realm.  
+To allow the SPA to authenticate with Keycloak using PKCE, we need to create a public OIDC client in the Keycloak realm.
 
 You can create a JSON file based on the following example file, replacing the value of the dataverse domain name with that of your installation, and use the **Import Client** option in Keycloak to create the client from a JSON file.
 
@@ -161,12 +161,8 @@ You can create a JSON file based on the following example file, replacing the va
   "enabled": true,
   "alwaysDisplayInConsole": false,
   "clientAuthenticatorType": "client-secret",
-  "redirectUris": [
-    "https://<INSTALLATION_DOMAIN_NAME>/spa/*"
-  ],
-  "webOrigins": [
-    "+"
-  ],
+  "redirectUris": ["https://<INSTALLATION_DOMAIN_NAME>/spa/*"],
+  "webOrigins": ["+"],
   "notBefore": 0,
   "bearerOnly": false,
   "consentRequired": false,
@@ -188,20 +184,8 @@ You can create a JSON file based on the following example file, replacing the va
   "authenticationFlowBindingOverrides": {},
   "fullScopeAllowed": true,
   "nodeReRegistrationTimeout": -1,
-  "defaultClientScopes": [
-    "web-origins",
-    "acr",
-    "roles",
-    "profile",
-    "basic",
-    "email"
-  ],
-  "optionalClientScopes": [
-    "address",
-    "phone",
-    "offline_access",
-    "microprofile-jwt"
-  ],
+  "defaultClientScopes": ["web-origins", "acr", "roles", "profile", "basic", "email"],
+  "optionalClientScopes": ["address", "phone", "offline_access", "microprofile-jwt"],
   "access": {
     "view": true,
     "configure": true,
@@ -230,9 +214,7 @@ Below is a JSON file that you can import to set up the client.
   "enabled": true,
   "alwaysDisplayInConsole": false,
   "clientAuthenticatorType": "client-secret",
-  "redirectUris": [
-    "*"
-  ],
+  "redirectUris": ["*"],
   "webOrigins": [],
   "notBefore": 0,
   "bearerOnly": false,
@@ -256,14 +238,7 @@ Below is a JSON file that you can import to set up the client.
   "authenticationFlowBindingOverrides": {},
   "fullScopeAllowed": true,
   "nodeReRegistrationTimeout": -1,
-  "defaultClientScopes": [
-    "web-origins",
-    "acr",
-    "profile",
-    "roles",
-    "basic",
-    "email"
-  ],
+  "defaultClientScopes": ["web-origins", "acr", "profile", "roles", "basic", "email"],
   "optionalClientScopes": [
     "address",
     "phone",
@@ -299,20 +274,20 @@ curl -X POST \
   -d "scope=openid"
 ```
 
-### Production Deployment 
+### Production Deployment
 
-A common alternative configuration is to run Keycloak behind a reverse proxy (see [Configuring a reverse proxy](https://www.keycloak.org/server/reverseproxy) in the documentation). 
+A common alternative configuration is to run Keycloak behind a reverse proxy (see [Configuring a reverse proxy](https://www.keycloak.org/server/reverseproxy) in the documentation).
 This model was chosen for the initial production deployment of Keycloak at Harvard Dataverse Repository, where it has been placed behind Apache. This allows the admins to use the standard Apache mechanisms for access control and makes it easy to run other services behind the same Apache instance.
 
-This actually simplifies the configuration of Keycloak itself, since it is not necessary to enable SSL - it can run on the default port 8080 with the https proxying provided by Apache or Nginx, etc. 
+This actually simplifies the configuration of Keycloak itself, since it is not necessary to enable SSL - it can run on the default port 8080 with the https proxying provided by Apache or Nginx, etc.
 
-The following configuration options must be enabled to facilitate this setup: 
+The following configuration options must be enabled to facilitate this setup:
 
-On the Keycloak level, the application must be started with the following options: 
-```--http-enabled=true --proxy-headers xforwarded```. 
-The configuration and the environmental variables described in the "SSL configuration" section must NOT be present. 
+On the Keycloak level, the application must be started with the following options:
+`--http-enabled=true --proxy-headers xforwarded`.
+The configuration and the environmental variables described in the "SSL configuration" section must NOT be present.
 
-On the Apache level, the following headers need to be enabled: 
+On the Apache level, the following headers need to be enabled:
 
 ```
   ProxyRequests Off
@@ -321,19 +296,19 @@ On the Apache level, the following headers need to be enabled:
   RequestHeader set X-Forwarded-Port "443"
 ```
 
-Rewrite rules can be utilized to separate the Keycloak traffic from other services that may need to be provided by the Apache instance. 
-In the following example, everything with the exception of `/service1/*` and `/service2/*` is passed to Keycloak running on port 8080: 
+Rewrite rules can be utilized to separate the Keycloak traffic from other services that may need to be provided by the Apache instance.
+In the following example, everything with the exception of `/service1/*` and `/service2/*` is passed to Keycloak running on port 8080:
 
 ```
   ProxyPassMatch ^/service1/	!
   ProxyPassMatch ^/service2/	!
-  ProxyPass / http://localhost:8080/ 
+  ProxyPass / http://localhost:8080/
   ProxyPassReverse / http://localhost:8080/
 ```
 
-(Note that the ProxyPass rules above can be further tightened, only allowing certain parts of KeyCloak to be exposed externally). 
+(Note that the ProxyPass rules above can be further tightened, only allowing certain parts of KeyCloak to be exposed externally).
 
-The following startup file (`/etc/systemd/system/keycloak.service`) has been created. Note that Keycloak runs under a dedicated non-root user, which is always recommended in production. 
+The following startup file (`/etc/systemd/system/keycloak.service`) has been created. Note that Keycloak runs under a dedicated non-root user, which is always recommended in production.
 
 ```
 [Unit]
@@ -355,7 +330,7 @@ LimitNOFILE=10240
 WantedBy=multi-user.target
 ```
 
-`systemctl enable keycloak` to make sure Keycloak starts every time the instance boots. 
+`systemctl enable keycloak` to make sure Keycloak starts every time the instance boots.
 
 ### Register the Keycloak Dataverse Backend OIDC client in Dataverse
 

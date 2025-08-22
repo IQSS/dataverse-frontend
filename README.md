@@ -254,8 +254,7 @@ The environment is accessible through the following URLs:
 >
 > Additionally, to allow the SPI to authenticate users against the Dataverse database, the Dataverse database must be accessible from the Keycloak service within the deployed infrastructure.
 >
->Detailed information on how to configure a remote Keycloak instance is available in the [Keycloak Deployment](./docs/KEYCLOAK_DEPLOYMENT.md) documentation.
-
+> Detailed information on how to configure a remote Keycloak instance is available in the [Keycloak Deployment](./docs/KEYCLOAK_DEPLOYMENT.md) documentation.
 
 </details>
 
