@@ -23,7 +23,13 @@ Download the JAR file from [this link](https://github.com/IQSS/dataverse-fronten
 
 ### Add Keycloak Custom Theme
 
-Within the ``dataverse-frontend`` repository, run the following command to build the custom Keycloak theme:
+First, make sure you have built the latest version of the design system, which is required for the custom Keycloak theme:
+
+  ```bash
+  cd packages/design-system && npm run build
+  ```
+
+From the repository root run the following command to build the custom Keycloak theme:
 
    ```bash
    npm run build-keycloak-theme
