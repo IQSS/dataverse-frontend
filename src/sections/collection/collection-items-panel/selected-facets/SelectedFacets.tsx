@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@iqss/dataverse-design-system'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
+import { CollectionHelper } from '../../CollectionHelper'
 import styles from './SelectedFacets.module.scss'
 
 interface SelectedFacetsProps {
@@ -20,7 +21,9 @@ export const SelectedFacets = ({
   return (
     <div className={styles['selected-facets-container']}>
       {selectedFilterQueries.map((filterQuery) => {
-        const [_facetName, labelName] = filterQuery.split(':')
+        const keyAndValue = CollectionHelper.splitFilterQueryKeyAndValue(filterQuery)
+
+        const labelName = keyAndValue?.filterQueryValue || 'Unknown' // Fallback if split fails
 
         return (
           <Button
