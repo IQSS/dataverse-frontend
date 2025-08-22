@@ -55,6 +55,12 @@ const CreateDatasetPage = lazy(() =>
   }))
 )
 
+const CreateReviewPage = lazy(() =>
+  import('../sections/create-review/CreateReviewFactory').then(({ CreateReviewFactory }) => ({
+    default: () => CreateReviewFactory.create()
+  }))
+)
+
 const UploadDatasetFilesPage = lazy(() =>
   import('../sections/upload-dataset-files/UploadDatasetFilesFactory').then(
     ({ UploadDatasetFilesFactory }) => ({
@@ -220,6 +226,15 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <CreateDatasetPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.CREATE_REVIEW,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <CreateReviewPage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

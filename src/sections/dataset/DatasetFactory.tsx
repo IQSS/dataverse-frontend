@@ -56,6 +56,7 @@ function DatasetWithSearchParams() {
   const state = location.state as { publishInProgress: boolean } | undefined
   const publishInProgress = state?.publishInProgress ?? false
   const datasetContext = useContext(DatasetContext)
+  console.log('persistentId:', persistentId)
 
   useEffect(() => {
     if (privateUrlToken) setAnonymizedView(true)
