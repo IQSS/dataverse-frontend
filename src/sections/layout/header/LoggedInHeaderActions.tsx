@@ -9,21 +9,25 @@ import { RouteWithParams, Route } from '@/sections//Route.enum'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { AccountHelper } from '@/sections/account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
+import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
+import { useGetUnreadNotificationsCount } from '@/sections/layout/header/useGetUnreadNotificationsCount'
 
 interface LoggedInHeaderActionsProps {
   user: User
   collectionRepository: CollectionRepository
+  notificationRepository: NotificationRepository
 }
 
 export const LoggedInHeaderActions = ({
   user,
-  collectionRepository
+  collectionRepository,
+  notificationRepository
 }: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
   const { logOut } = useContext(AuthContext)
 
   const { collection } = useCollection(collectionRepository)
-
+  const { unreadNotificationsCount } = useGetUnreadNotificationsCount(notificationRepository)
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: undefined,
     collectionRepository: collectionRepository
@@ -52,11 +56,18 @@ export const LoggedInHeaderActions = ({
           {t('navigation.newDataset')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>
-      <Navbar.Dropdown title={user.displayName} id="dropdown-user">
+      <Navbar.Dropdown
+        title={`${user.displayName} (${unreadNotificationsCount})`}
+        id="dropdown-user">
         <Navbar.Dropdown.Item
           as={Link}
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.myData}`}>
           {t('navigation.myData')}
+        </Navbar.Dropdown.Item>
+        <Navbar.Dropdown.Item
+          as={Link}
+          to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}`}>
+          {t('navigation.notifications')}
         </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item
           as={Link}

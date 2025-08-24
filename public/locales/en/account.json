@@ -46,5 +46,38 @@
         "datasetAndFile": "datasets or files"
       }
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "notification": {
+      "ingestCompleted": "Dataset <a href='/dataset.xhtml?persistentId={0}' title='{1}'>{1}</a> has one or more tabular files that completed the <a href='{2}/{3}/user/dataset-management.html#tabular-data-files' title='Tabular Data Files - Dataverse User Guide' target='_blank' rel='noopener'>tabular ingest process</a> and are available in archival formats.",
+      "ingestCompletedWithErrors": "Dataset <a href='/dataset.xhtml?persistentId={0}' title='{1}'>{1}</a> has one or more tabular files that are available but are not supported for <a href='{2}/{3}/user/dataset-management.html#tabular-data-files' title='Tabular Data Files - Dataverse User Guide' target='_blank' rel='noopener'>tabular ingest</a>.",
+      "genericObjectDeleted": "The dataverse, dataset, or file for this notification has been deleted.",
+      "accessGrantedDataverse": "You have been granted the {0} role for {1}.",
+      "accessGrantedDataset": "You have been granted the {0} role for {1}.",
+      "accessGrantedDatafile": "You have been granted the {0} role for file in {1}.",
+      "accessGrantedFileDownloaderAdditionalDataverse": "{0} You now have access to all published restricted and unrestricted files in this dataverse.",
+      "accessGrantedFileDownloaderAdditionalDataset": "{0} You now have access to all published restricted and unrestricted files in this dataset.",
+      "accessRevokedDataverse": "You have been removed from a role in {0}.",
+      "accessRevokedDataset": "You have been removed from a role in {0}.",
+      "accessRevokedDatafile": "You have been removed from a role in {0}.",
+      "checksumFail": "One or more files in your upload failed checksum validation for dataset <a href='/dataset.xhtml?persistentId={0}' title='{1}'>{1}</a>. Please re-run the upload script. If the problem persists, please contact support.",
+      "ingestCompletedWithErrorsDetailed": "Your Dataset <a href='{0}/dataset.xhtml?persistentId={1}' title='{2}'>{2}</a> has one or more tabular files that have been uploaded successfully but are not supported for tabular ingest. After you publish the dataset, these files will not have additional archival features. Please see <a href='{3}/{4}/user/dataset-management.html#tabular-data-files' title='Tabular Data Files - Dataverse User Guide' target='_blank' rel='noopener'>the guides</a> for more information about ingest and support for tabular files.<br><br>Files with incomplete ingest: {5}",
+      "mailImportFilesystem": "Dataset {2} ({0}/dataset.xhtml?persistentId={1}) has been successfully uploaded and verified.",
+      "mailGlobusUploadCompleted": "Globus transfer to Dataset <a href='{0}/dataset.xhtml?persistentId={1}' title='{2}'>{2}</a> was successful. File(s) have been uploaded and verified. <br><br> {3}<br>",
+      "mailGlobusDownloadCompleted": "Globus transfer of file(s) from the dataset <a href='{0}/dataset.xhtml?persistentId={1}' title='{2}'>{2}</a> was successful. <br><br> {3}<br>",
+      "mailGlobusUploadCompletedWithErrors": "Globus transfer to Dataset <a href='{0}/dataset.xhtml?persistentId={1}' title='{2}'>{2}</a> is complete with errors. <br><br> {3}<br>",
+      "mailGlobusUploadFailedRemotely": "Remote data transfer between Globus endpoints for Dataset <a href='{0}/dataset.xhtml?persistentId={1}' title='{2}'>{2}</a> failed, as reported via Globus API. <br><br> {3}<br>",
+      "mailGlobusUploadFailedLocally": "Dataverse received a confirmation of a successful Globus data transfer for Dataset <a href='{0}/dataset.xhtml?persistentId={1}' title='{2}'>{2}</a>, but failed to add the files to the dataset locally. <br><br> {3}<br>",
+      "mailGlobusDownloadCompletedWithErrors": "Globus transfer from the dataset <a href='{0}/dataset.xhtml?persistentId={1}' title='{2}'>{2}</a> is complete with errors. <br><br> {3}<br>",
+      "importFilesystem": "Dataset <a href='/dataset.xhtml?persistentId={0}' title='{1}'>{1}</a> has been successfully uploaded and verified.",
+      "globusUploadCompleted": "Globus transfer to Dataset <a href='/dataset.xhtml?persistentId={0}' title='{1}'>{1}</a> was successful. File(s) have been uploaded and verified.",
+      "globusDownloadCompleted": "Globus transfer from the dataset <a href='/dataset.xhtml?persistentId={0}' title='{1}'>{1}</a> was successful.",
+      "globusUploadCompletedWithErrors": "Globus transfer to Dataset <a href='/dataset.xhtml?persistentId={0}' title='{1}'>{1}</a> is complete with errors.",
+      "globusUploadFailedRemotely": "Remote data transfer between Globus collections for Dataset <a href='{0}/dataset.xhtml?persistentId={1}' title='{2}'>{2}</a> failed, reported via Globus API. <br><br> {3}<br>",
+      "globusUploadFailedLocally": "Dataverse received a confirmation of a successful Globus data transfer for Dataset <a href='{0}/dataset.xhtml?persistentId={1}' title='{2}'>{2}</a>, but failed to add the files to the dataset locally. <br><br> {3}<br>",
+      "globusDownloadCompletedWithErrors": "Globus transfer from the dataset <a href='/dataset.xhtml?persistentId={0}' title='{1}'>{1}</a> is complete with errors.",
+      "importChecksum": "<a href='/dataset.xhtml?persistentId={0}' title='{1}'>{1}</a>, dataset had file checksums added via a batch job."
+    }
   }
 }
