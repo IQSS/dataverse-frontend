@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { forwardRef } from 'react'
 import { DropdownButtonItem } from '../../components/dropdown-button/dropdown-button-item/DropdownButtonItem'
 import { DropdownButton } from '../../components/dropdown-button/DropdownButton'
 import { IconName } from '../../components/icon/IconName'
 import { CanvasFixedHeight } from '../CanvasFixedHeight'
 import { DropdownSeparator } from '../../components/dropdown-button/dropdown-separator/DropdownSeparator'
 import { DropdownHeader } from '../../components/dropdown-button/dropdown-header/DropdownHeader'
+import { Icon } from '../../components/icon/Icon'
 
 /**
  * ## Description
@@ -188,6 +190,49 @@ export const UseCaseSelect: Story = {
         <DropdownButtonItem eventKey="option-1">Option 1</DropdownButtonItem>
         <DropdownButtonItem eventKey="option-2">Option 2</DropdownButtonItem>
         <DropdownButtonItem eventKey="option-3">Option 3</DropdownButtonItem>
+      </DropdownButton>
+    </CanvasFixedHeight>
+  )
+}
+
+// Custom Toggle Component Example
+const CustomToggle = forwardRef<
+  HTMLButtonElement,
+  { onClick: (event: React.MouseEvent<HTMLElement>) => void }
+>(({ onClick }, ref) => (
+  <button
+    type="button"
+    ref={ref}
+    onClick={onClick}
+    style={{
+      display: 'grid',
+      placeItems: 'center',
+      padding: '8px 16px',
+      borderRadius: '999px',
+      cursor: 'pointer',
+      backgroundColor: 'orange',
+      fontSize: '22px'
+    }}>
+    <Icon name={IconName.COLLECTION} />
+  </button>
+))
+
+CustomToggle.displayName = 'CustomToggle'
+
+export const WithCustomToggle: Story = {
+  name: 'With Custom Toggle',
+  render: () => (
+    <CanvasFixedHeight height={150}>
+      <DropdownButton
+        withSpacing
+        title=""
+        id="dropdown-custom-toggle"
+        customToggle={CustomToggle}
+        onSelect={() => {}}>
+        <DropdownHeader>Choose an Option</DropdownHeader>
+        <DropdownButtonItem eventKey="option-1">Custom Option 1</DropdownButtonItem>
+        <DropdownButtonItem eventKey="option-2">Custom Option 2</DropdownButtonItem>
+        <DropdownButtonItem eventKey="option-3">Custom Option 3</DropdownButtonItem>
       </DropdownButton>
     </CanvasFixedHeight>
   )

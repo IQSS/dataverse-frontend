@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DataverseHubRepository } from '@/dataverse-hub/domain/repositories/DataverseHubRepository'
+import { SearchRepository } from '@/search/domain/repositories/SearchRepository'
+import { useGetSearchServices } from '@/search/domain/hooks/useGetSearchServices'
 import { useCollection } from '../collection/useCollection'
 import { FeaturedItems } from '../collection/featured-items/FeaturedItems'
 import { useLoading } from '../loading/LoadingContext'
@@ -15,20 +17,29 @@ import styles from './Homepage.module.scss'
 interface HomepageProps {
   collectionRepository: CollectionRepository
   dataverseHubRepository: DataverseHubRepository
+  searchRepository: SearchRepository
 }
 
-export const Homepage = ({ collectionRepository, dataverseHubRepository }: HomepageProps) => {
+export const Homepage = ({
+  collectionRepository,
+  dataverseHubRepository,
+  searchRepository
+}: HomepageProps) => {
   const { collection, isLoading: isLoadingCollection } = useCollection(collectionRepository)
+  const { searchServices, isLoadingSearchServices } = useGetSearchServices({
+    searchRepository,
+    autoFetch: true
+  })
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('homepage')
 
   useEffect(() => {
-    if (!isLoadingCollection) {
+    if (!isLoadingCollection && !isLoadingSearchServices) {
       setIsLoading(false)
     }
-  }, [setIsLoading, isLoadingCollection])
+  }, [setIsLoading, isLoadingCollection, isLoadingSearchServices])
 
-  if (isLoadingCollection) {
+  if (isLoadingCollection || isLoadingSearchServices) {
     return <AppLoader />
   }
 
@@ -39,7 +50,7 @@ export const Homepage = ({ collectionRepository, dataverseHubRepository }: Homep
       </div>
 
       <div className={styles['middle-search-cta-wrapper']}>
-        <SearchInput />
+        <SearchInput searchServices={searchServices} />
         <Link to="/collections" className="btn btn-secondary">
           {t('browseCollections')}
         </Link>
