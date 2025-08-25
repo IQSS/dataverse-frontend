@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { BarChartFill as BarChartFillIcon } from 'react-bootstrap-icons'
 import { DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
-import { getDatasetExternalToolUrl } from '@/externalTools/domain/useCases/GetDatasetExternalToolUrl'
+import { getDatasetExternalToolResolved } from '@/externalTools/domain/useCases/GetDatasetExternalToolResolved'
 import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 
 interface DatasetExploreOptionsProps {
@@ -75,7 +75,7 @@ const ExploreOption = ({
       // Set a temporary title on the new window while fetching the tool URL
       newWindow.document.title = `Loading ${toolDisplayName}...`
 
-      const datasetExternalTool = await getDatasetExternalToolUrl(
+      const datasetExternalTool = await getDatasetExternalToolResolved(
         externalToolsRepository,
         persistentId,
         toolId,
