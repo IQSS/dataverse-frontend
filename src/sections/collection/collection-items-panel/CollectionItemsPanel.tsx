@@ -15,7 +15,7 @@ import { CollectionItemsQueryParams } from '@/collection/domain/models/Collectio
 import { useGetAccumulatedItems } from './useGetAccumulatedItems'
 import { UseCollectionQueryParamsReturnType } from '../useGetCollectionQueryParams'
 import { useLoadMoreOnPopStateEvent } from './useLoadMoreOnPopStateEvent'
-import { useLoading } from '@/sections/loading/LoadingContext'
+import { useLoading } from '@/shared/contexts/loading/LoadingContext'
 import { CollectionHelper } from '../CollectionHelper'
 import { FilterPanel } from '@/sections/collection/collection-items-panel/filter-panel/FilterPanel'
 import { RemoveAddFacetFilter } from '@/sections/collection/collection-items-panel/filter-panel/facets-filters/FacetFilterGroup'

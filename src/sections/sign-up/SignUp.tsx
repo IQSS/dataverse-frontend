@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert, Tabs } from '@iqss/dataverse-design-system'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
-import { useLoading } from '../loading/LoadingContext'
+import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { ValidTokenNotLinkedAccountForm } from './valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
 import styles from './SignUp.module.scss'
 

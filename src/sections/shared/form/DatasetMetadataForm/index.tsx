@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { useLoading } from '../../../loading/LoadingContext'
+import { useLoading } from '../../../../shared/contexts/loading/LoadingContext'
 import { useGetMetadataBlocksInfo } from './useGetMetadataBlocksInfo'
 import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'

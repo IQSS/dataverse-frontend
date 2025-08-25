@@ -5,7 +5,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useGetCollectionMetadataBlocksInfo } from '@/shared/hooks/useGetCollectionMetadataBlocksInfo'
 import { useCollection } from '../collection/useCollection'
-import { useLoading } from '../loading/LoadingContext'
+import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'

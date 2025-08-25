@@ -5,7 +5,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { DataverseHubRepository } from '@/dataverse-hub/domain/repositories/DataverseHubRepository'
 import { useCollection } from '../collection/useCollection'
 import { FeaturedItems } from '../collection/featured-items/FeaturedItems'
-import { useLoading } from '../loading/LoadingContext'
+import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { SearchInput } from './search-input/SearchInput'
 import { Metrics } from './metrics/Metrics'

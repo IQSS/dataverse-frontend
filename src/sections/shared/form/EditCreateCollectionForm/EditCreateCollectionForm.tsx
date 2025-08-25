@@ -5,7 +5,7 @@ import { useGetCollectionMetadataBlocksInfo } from '@/shared/hooks/useGetCollect
 import { useGetAllMetadataBlocksInfo } from '@/shared/hooks/useGetAllMetadataBlocksInfo'
 import { useGetCollectionFacets } from '@/shared/hooks/useGetCollectionFacets'
 import { useGetAllFacetableMetadataFields } from '@/shared/hooks/useGetAllFacetableMetadataFields'
-import { useLoading } from '@/sections/loading/LoadingContext'
+import { useLoading } from '@/shared/contexts/loading/LoadingContext'
 import { useDeepCompareMemo } from 'use-deep-compare'
 import { CollectionFormHelper } from './CollectionFormHelper'
 import {

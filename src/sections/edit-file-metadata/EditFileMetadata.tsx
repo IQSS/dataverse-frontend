@@ -10,7 +10,7 @@ import {
   EditFileMetadataFormData,
   EditFilesList
 } from '@/sections/edit-file-metadata/EditFilesList'
-import { useLoading } from '../loading/LoadingContext'
+import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { useFile } from '@/sections/file/useFile'
 import styles from './EditFileMetadata.module.scss'
 

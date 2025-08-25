@@ -7,7 +7,7 @@ import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/U
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { AccountInfoSection } from './account-info-section/AccountInfoSection'
-import { useLoading } from '../loading/LoadingContext'
+import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
 import { RoleJSDataverseRepository } from '@/roles/infrastructure/repositories/RoleJSDataverseRepository'
 import styles from './Account.module.scss'
