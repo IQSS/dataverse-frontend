@@ -117,6 +117,12 @@ const SignUpPage = lazy(() =>
   }))
 )
 
+const AdvancedSearchPage = lazy(() =>
+  import('../sections/advanced-search/AdvancedSearchFactory').then(({ AdvancedSearchFactory }) => ({
+    default: () => AdvancedSearchFactory.create()
+  }))
+)
+
 export const routes: RouteObject[] = [
   {
     element: <SessionProvider repository={userRepository} />,
@@ -176,6 +182,15 @@ export const routes: RouteObject[] = [
             element: (
               <Suspense fallback={<AppLoader />}>
                 <FeaturedItemPage />
+              </Suspense>
+            ),
+            errorElement: <ErrorPage />
+          },
+          {
+            path: Route.ADVANCED_SEARCH,
+            element: (
+              <Suspense fallback={<AppLoader />}>
+                <AdvancedSearchPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />

@@ -7,6 +7,7 @@ import { VersionUpdateType } from '../models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '../models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
+import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
 
 export interface DatasetRepository {
   getByPersistentId: (
@@ -48,4 +49,9 @@ export interface DatasetRepository {
   ) => Promise<DatasetDownloadCount>
   deleteDatasetDraft: (datasetId: string | number) => Promise<void>
   getAvailableCategories: (datasetId: string | number) => Promise<string[]>
+  getDatasetCitationInOtherFormats: (
+    datasetId: string | number,
+    version: string,
+    format: CitationFormat
+  ) => Promise<FormattedCitation>
 }

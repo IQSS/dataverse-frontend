@@ -17,7 +17,8 @@ export class FacetableMetadataFieldMother {
         isRequired: true,
         displayOrder: 8,
         typeClass: 'primitive',
-        displayOnCreate: true
+        displayOnCreate: true,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'authorAffiliation',
@@ -33,7 +34,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 9,
         typeClass: 'primitive',
-        displayOnCreate: true
+        displayOnCreate: true,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'subject',
@@ -64,7 +66,8 @@ export class FacetableMetadataFieldMother {
         isRequired: true,
         displayOrder: 19,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: true
+        displayOnCreate: true,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'keywordValue',
@@ -79,7 +82,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 21,
         typeClass: 'primitive',
-        displayOnCreate: true
+        displayOnCreate: true,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'topicClassValue',
@@ -94,7 +98,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 26,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'language',
@@ -297,7 +302,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 35,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'producerName',
@@ -313,7 +319,8 @@ export class FacetableMetadataFieldMother {
         isRequired: true,
         displayOrder: 37,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'productionDate',
@@ -329,7 +336,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 42,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'productionPlace',
@@ -345,7 +353,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 43,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'contributorType',
@@ -379,7 +388,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 45,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'contributorName',
@@ -395,7 +405,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 46,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'grantNumberAgency',
@@ -410,7 +421,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 48,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'grantNumberValue',
@@ -426,7 +438,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 49,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'distributorName',
@@ -442,7 +455,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 51,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'distributionDate',
@@ -457,7 +471,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 56,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'dateOfDeposit',
@@ -472,7 +487,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 58,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'timePeriodCoveredStart',
@@ -487,7 +503,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 60,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'timePeriodCoveredEnd',
@@ -502,7 +519,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 61,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'kindOfData',
@@ -518,7 +536,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 65,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'seriesName',
@@ -533,7 +552,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 67,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'country',
@@ -799,7 +819,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 1,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'state',
@@ -815,7 +836,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 2,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'city',
@@ -831,7 +853,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 3,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'otherGeographicCoverage',
@@ -846,7 +869,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 4,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'geographicUnit',
@@ -862,7 +886,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 5,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'unitOfAnalysis',
@@ -878,7 +903,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 0,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'universe',
@@ -894,7 +920,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 1,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'timeMethod',
@@ -910,7 +937,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 2,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'frequencyOfDataCollection',
@@ -926,7 +954,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 5,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'responseRate',
@@ -941,7 +970,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 19,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'astroType',
@@ -982,7 +1012,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 0,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'astroFacility',
@@ -997,7 +1028,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 1,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'astroInstrument',
@@ -1012,7 +1044,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 2,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'astroObject',
@@ -1028,7 +1061,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 3,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'resolution.Spatial',
@@ -1044,7 +1078,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 4,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'resolution.Spectral',
@@ -1060,7 +1095,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 5,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'coverage.Spectral.Bandpass',
@@ -1075,7 +1111,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 7,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'coverage.Spectral.CentralWavelength',
@@ -1090,7 +1127,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 8,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'coverage.Spectral.MinimumWavelength',
@@ -1105,7 +1143,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 10,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'coverage.Spectral.MaximumWavelength',
@@ -1120,7 +1159,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 11,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'coverage.Temporal.StartTime',
@@ -1135,7 +1175,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 13,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'coverage.Temporal.StopTime',
@@ -1150,7 +1191,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 14,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyDesignType',
@@ -1177,7 +1219,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 0,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyOtherDesignType',
@@ -1193,7 +1236,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 1,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyFactorType',
@@ -1230,7 +1274,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 2,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyOtherFactorType',
@@ -1246,7 +1291,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 3,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyAssayOrganism',
@@ -1289,7 +1335,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 4,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyAssayOtherOrganism',
@@ -1305,7 +1352,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 5,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyAssayMeasurementType',
@@ -1353,7 +1401,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 6,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyAssayOtherMeasurmentType',
@@ -1369,7 +1418,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 7,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyAssayTechnologyType',
@@ -1400,7 +1450,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 8,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyAssayOtherTechnologyType',
@@ -1416,7 +1467,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 9,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyAssayPlatform',
@@ -1618,7 +1670,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 10,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyAssayOtherPlatform',
@@ -1634,7 +1687,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 11,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'studyAssayCellType',
@@ -1649,7 +1703,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 12,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'journalVolume',
@@ -1664,7 +1719,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 1,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'journalIssue',
@@ -1680,7 +1736,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 2,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'journalPubDate',
@@ -1696,7 +1753,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 3,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       {
         name: 'journalArticleType',
@@ -1746,7 +1804,8 @@ export class FacetableMetadataFieldMother {
         isRequired: false,
         displayOrder: 4,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       }
     ]
   }

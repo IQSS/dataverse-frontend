@@ -9,7 +9,7 @@ import {
   ItemsListType
 } from '@/sections/collection/collection-items-panel/items-list/ItemsList'
 import { MyDataFilterPanel } from '@/sections/account/my-data-section/my-data-filter-panel/MyDataFilterPanel'
-import { SearchPanel } from '@/sections/collection/collection-items-panel/search-panel/SearchPanel'
+import { SearchInput } from '@/sections/collection/collection-items-panel/search-input/SearchInput'
 import { ItemTypeChange } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
 import { MyDataSearchCriteria } from '@/sections/account/my-data-section/MyDataSearchCriteria'
 import { useGetMyDataAccumulatedItems } from '@/sections/account/my-data-section/useGetMyDataAccumulatedItems'
@@ -269,7 +269,7 @@ export const MyDataItemsPanel = ({
 
       <section className={styles['items-panel']}>
         <header className={styles['top-wrapper']}>
-          <SearchPanel
+          <SearchInput
             onSubmitSearch={handleSearchSubmit}
             currentSearchValue={currentSearchCriteria.searchText}
             isLoadingCollectionItems={isLoadingItems}
