@@ -69,7 +69,8 @@
         "zip": "Download ZIP",
         "originalZip": "Original Format ZIP",
         "archivalZip": "Archival Format (.tab) ZIP"
-      }
+      },
+      "exploreOptions": "Explore Options"
     },
     "uploadFiles": "Upload Files",
     "share": {

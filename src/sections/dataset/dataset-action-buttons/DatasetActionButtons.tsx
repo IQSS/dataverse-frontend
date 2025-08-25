@@ -11,6 +11,7 @@ import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
 import { ContactButton } from '@/sections/shared/contact/ContactButton'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 import styles from './DatasetActionButtons.module.scss'
 
 interface DatasetActionButtonsProps {
@@ -18,13 +19,15 @@ interface DatasetActionButtonsProps {
   datasetRepository: DatasetRepository
   collectionRepository: CollectionRepository
   contactRepository: ContactRepository
+  externalToolsRepository: ExternalToolsRepository
 }
 
 export function DatasetActionButtons({
   dataset,
   datasetRepository,
   collectionRepository,
-  contactRepository
+  contactRepository,
+  externalToolsRepository
 }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
 
@@ -37,6 +40,8 @@ export function DatasetActionButtons({
         fileDownloadSizes={dataset.fileDownloadSizes}
         downloadUrls={dataset.downloadUrls}
         fileStore={dataset.fileStore}
+        persistentId={dataset.persistentId}
+        externalToolsRepository={externalToolsRepository}
       />
       <PublishDatasetMenu
         dataset={dataset}

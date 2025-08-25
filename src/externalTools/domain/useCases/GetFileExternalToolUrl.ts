@@ -1,4 +1,4 @@
-import { FileExternalToolUrl } from '../models/FileExternalToolUrl'
+import { FileExternalToolResolved } from '../models/FileExternalToolResolved'
 import { ExternalToolsRepository } from '../repositories/ExternalToolsRepository'
 import { GetExternalToolDTO } from './DTOs/GetExternalToolUrlDTO'
 
@@ -7,6 +7,6 @@ export function getFileExternalToolUrl(
   fileId: number | string,
   toolId: number,
   getExternalToolDTO: GetExternalToolDTO
-): Promise<FileExternalToolUrl> {
+): Promise<FileExternalToolResolved> {
   return externalToolsRepository.getFileExternalToolUrl(fileId, toolId, getExternalToolDTO)
 }

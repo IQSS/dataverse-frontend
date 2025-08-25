@@ -7,7 +7,9 @@ import {
 import { DropdownButton, DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/FileMetadata'
-import { Download } from 'react-bootstrap-icons'
+import { Download as DownloadIcon } from 'react-bootstrap-icons'
+import { DatasetExploreOptions } from './DatasetExploreOptions'
+import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 
 interface AccessDatasetMenuProps {
   version: DatasetVersion
@@ -16,6 +18,8 @@ interface AccessDatasetMenuProps {
   fileDownloadSizes: FileDownloadSize[]
   downloadUrls: DatasetDownloadUrls
   fileStore: string | undefined
+  persistentId: string
+  externalToolsRepository: ExternalToolsRepository
 }
 
 export function AccessDatasetMenu({
@@ -24,7 +28,9 @@ export function AccessDatasetMenu({
   hasOneTabularFileAtLeast,
   fileDownloadSizes,
   downloadUrls,
-  fileStore
+  fileStore,
+  persistentId,
+  externalToolsRepository
 }: AccessDatasetMenuProps) {
   const { t } = useTranslation('dataset')
 
@@ -56,13 +62,17 @@ export function AccessDatasetMenu({
       title={t('datasetActionButtons.accessDataset.title')}
       asButtonGroup
       variant="primary">
-      <DropdownHeader>
-        {t('datasetActionButtons.accessDataset.downloadOptions.header')} <Download></Download>
+      <DropdownHeader className="d-flex align-items-center gap-1">
+        {t('datasetActionButtons.accessDataset.downloadOptions.header')} <DownloadIcon />
       </DropdownHeader>
       <DatasetDownloadOptions
         hasOneTabularFileAtLeast={hasOneTabularFileAtLeast}
         fileDownloadSizes={fileDownloadSizes}
         downloadUrls={downloadUrls}
+      />
+      <DatasetExploreOptions
+        externalToolsRepository={externalToolsRepository}
+        persistentId={persistentId}
       />
     </DropdownButton>
   )
@@ -105,5 +115,4 @@ const DatasetDownloadOptions = ({
 }
 
 // TODO: add download feature https://github.com/IQSS/dataverse-frontend/issues/63
-// TODO: add explore feature
 // TODO: add compute feature

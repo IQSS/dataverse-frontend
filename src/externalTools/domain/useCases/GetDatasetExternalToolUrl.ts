@@ -1,4 +1,4 @@
-import { DatasetExternalToolUrl } from '../models/DatasetExternalToolUrl'
+import { DatasetExternalToolResolved } from '../models/DatasetExternalToolResolved'
 import { ExternalToolsRepository } from '../repositories/ExternalToolsRepository'
 import { GetExternalToolDTO } from './DTOs/GetExternalToolUrlDTO'
 
@@ -7,6 +7,6 @@ export function getDatasetExternalToolUrl(
   datasetId: number | string,
   toolId: number,
   getExternalToolDTO: GetExternalToolDTO
-): Promise<DatasetExternalToolUrl> {
+): Promise<DatasetExternalToolResolved> {
   return externalToolsRepository.getDatasetExternalToolUrl(datasetId, toolId, getExternalToolDTO)
 }

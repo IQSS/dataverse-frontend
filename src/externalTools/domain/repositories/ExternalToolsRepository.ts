@@ -1,6 +1,6 @@
-import { DatasetExternalToolUrl } from '../models/DatasetExternalToolUrl'
+import { DatasetExternalToolResolved } from '../models/DatasetExternalToolResolved'
 import { ExternalTool } from '../models/ExternalTool'
-import { FileExternalToolUrl } from '../models/FileExternalToolUrl'
+import { FileExternalToolResolved } from '../models/FileExternalToolResolved'
 import { GetExternalToolDTO } from '../useCases/DTOs/GetExternalToolUrlDTO'
 
 export interface ExternalToolsRepository {
@@ -9,10 +9,10 @@ export interface ExternalToolsRepository {
     datasetId: number | string,
     toolId: number,
     getExternalToolDTO: GetExternalToolDTO
-  ): Promise<DatasetExternalToolUrl>
+  ): Promise<DatasetExternalToolResolved>
   getFileExternalToolUrl(
     fileId: number | string,
     toolId: number,
     getExternalToolDTO: GetExternalToolDTO
-  ): Promise<FileExternalToolUrl>
+  ): Promise<FileExternalToolResolved>
 }

@@ -1,6 +1,6 @@
-export interface DatasetExternalToolUrl {
+export interface FileExternalToolResolved {
   toolUrlResolved: string
   displayName: string
-  datasetId: number
+  fileId: number
   preview: boolean
 }
