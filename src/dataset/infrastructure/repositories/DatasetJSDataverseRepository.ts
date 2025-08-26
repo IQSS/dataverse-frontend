@@ -46,6 +46,7 @@ import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCou
 import { axiosInstance } from '@/axiosInstance'
 import { DATAVERSE_BACKEND_URL } from '../../../config'
 import { AxiosResponse } from 'axios'
+import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 
 const includeDeaccessioned = true
 
@@ -209,12 +210,16 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
             return datasetDetails
           })
-          .catch((error: ReadError) => {
-            if (error.message.includes('404')) {
-              // If the server returns NOT_FOUND when deaccessioned info isn't included, ignore and continue without sizes.
+          .catch((err: unknown) => {
+            if (err instanceof ReadError) {
+              const errorHandler = new JSDataverseReadErrorHandler(err)
+              const statusCode = errorHandler.getStatusCode()
+              if (statusCode === 404) return datasetDetails
+            } else if (err instanceof Error && err.message.includes('404')) {
               return datasetDetails
+            } else {
+              throw err
             }
-            throw error
           })
       })
       .then((datasetDetails) => {

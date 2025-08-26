@@ -5,6 +5,7 @@ import { TestsUtils } from '../../shared/TestsUtils'
 import {
   DatasetLabel,
   DatasetLabelSemanticMeaning,
+  DatasetLockReason,
   DatasetNonNumericVersion,
   DatasetPublishingStatus,
   DatasetVersion,
@@ -370,6 +371,29 @@ describe('Dataset JSDataverse Repository', () => {
       expect(dataset.version.title).to.deep.equal(datasetExpected.title)
       expect(dataset.version.publishingStatus).to.equal(DatasetPublishingStatus.DEACCESSIONED)
     })
+  })
+
+  it('gets the dataset by persistentId when is locked', async () => {
+    const datasetResponse = await DatasetHelper.create(collectionId)
+    await DatasetHelper.lock(datasetResponse.id, DatasetLockReason.FINALIZE_PUBLICATION)
+
+    await datasetRepository
+      .getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
+      .then((dataset) => {
+        if (!dataset) {
+          throw new Error('Dataset not found')
+        }
+        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+
+        expect(dataset.version.title).to.deep.equal(datasetExpected.title)
+
+        expect(dataset.locks).to.deep.equal([
+          {
+            userPersistentId: TestsUtils.USER_USERNAME,
+            reason: DatasetLockReason.FINALIZE_PUBLICATION
+          }
+        ])
+      })
   })
 
   it('returns dataset even if download sizes are NOT_FOUND for deaccessioned when unauthenticated', async () => {
