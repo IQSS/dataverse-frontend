@@ -5,7 +5,7 @@ import { Dataset as DatasetModel } from '../../../../src/dataset/domain/models/D
 import { ReactNode } from 'react'
 import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvider'
 import { UploadDatasetFiles } from '../../../../src/sections/upload-dataset-files/UploadDatasetFiles'
-import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
+import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 import { FileMockRepository } from '../../../../src/stories/file/FileMockRepository'
 
 const fileRepository: FileRepository = {} as FileRepository

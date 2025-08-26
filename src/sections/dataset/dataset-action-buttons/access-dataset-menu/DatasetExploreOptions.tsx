@@ -7,6 +7,9 @@ import { useExternalTools } from '@/shared/contexts/external-tools/ExternalTools
 import { getDatasetExternalToolResolved } from '@/externalTools/domain/useCases/GetDatasetExternalToolResolved'
 import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 
+// TODO:ME - Add File Preview icon on dataset files.
+// TODO:ME - Add File Explore options.
+
 interface DatasetExploreOptionsProps {
   externalToolsRepository: ExternalToolsRepository
   persistentId: string
@@ -54,7 +57,7 @@ const ExploreOption = ({
   externalToolsRepository
 }: ExploreOptionProps) => {
   const [isOpening, setIsOpening] = useState(false)
-  const { t: tShared } = useTranslation('shared')
+  const { t: tShared, i18n } = useTranslation('shared')
 
   const handleClick = async () => {
     // If already opening, do nothing
@@ -79,7 +82,7 @@ const ExploreOption = ({
         externalToolsRepository,
         persistentId,
         toolId,
-        { preview: false, locale: 'en' }
+        { preview: false, locale: i18n.language }
       )
       // Change the location of the new window to the tool URL
       newWindow.location.href = datasetExternalTool.toolUrlResolved

@@ -6,8 +6,11 @@ import {
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
 import { FileSizeUnit } from '../../../../../../src/files/domain/models/FileMetadata'
+import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 
 const downloadUrls = DatasetDownloadUrlsMother.create()
+const externalToolsRepository: ExternalToolsRepository = {} as ExternalToolsRepository
+
 describe('AccessDatasetMenu', () => {
   it('renders the AccessDatasetMenu if the user has download files permissions and the dataset is not deaccessioned', () => {
     const version = DatasetVersionMother.createReleased()
@@ -24,6 +27,8 @@ describe('AccessDatasetMenu', () => {
         permissions={permissions}
         downloadUrls={downloadUrls}
         fileStore="s3"
+        externalToolsRepository={externalToolsRepository}
+        persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
     )
 
@@ -48,6 +53,8 @@ describe('AccessDatasetMenu', () => {
         permissions={permissions}
         downloadUrls={downloadUrls}
         fileStore="s3"
+        externalToolsRepository={externalToolsRepository}
+        persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
@@ -68,6 +75,8 @@ describe('AccessDatasetMenu', () => {
         permissions={permissions}
         downloadUrls={downloadUrls}
         fileStore="s3"
+        externalToolsRepository={externalToolsRepository}
+        persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')
@@ -88,6 +97,8 @@ describe('AccessDatasetMenu', () => {
         permissions={permissions}
         downloadUrls={downloadUrls}
         fileStore="s3"
+        externalToolsRepository={externalToolsRepository}
+        persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')
@@ -107,6 +118,8 @@ describe('AccessDatasetMenu', () => {
         permissions={permissions}
         downloadUrls={downloadUrls}
         fileStore="s3"
+        externalToolsRepository={externalToolsRepository}
+        persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
@@ -134,6 +147,8 @@ describe('AccessDatasetMenu', () => {
         permissions={permissions}
         downloadUrls={downloadUrls}
         fileStore="s3"
+        externalToolsRepository={externalToolsRepository}
+        persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
@@ -164,6 +179,8 @@ describe('AccessDatasetMenu', () => {
         permissions={permissions}
         downloadUrls={downloadUrls}
         fileStore="s3"
+        externalToolsRepository={externalToolsRepository}
+        persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')
@@ -184,6 +201,8 @@ describe('AccessDatasetMenu', () => {
         permissions={permissions}
         downloadUrls={downloadUrls}
         fileStore="not-s3"
+        externalToolsRepository={externalToolsRepository}
+        persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')

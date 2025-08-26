@@ -114,5 +114,4 @@ const DatasetDownloadOptions = ({
   )
 }
 
-// TODO: add download feature https://github.com/IQSS/dataverse-frontend/issues/63
 // TODO: add compute feature

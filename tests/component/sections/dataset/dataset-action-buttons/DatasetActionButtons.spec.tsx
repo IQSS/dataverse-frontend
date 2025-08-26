@@ -9,10 +9,12 @@ import {
   DatasetVersionMother
 } from '../../../dataset/domain/models/DatasetMother'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const contactRepository: ContactRepository = {} as ContactRepository
+const externalToolsRepository: ExternalToolsRepository = {} as ExternalToolsRepository
 
 describe('DatasetActionButtons', () => {
   it('renders the DatasetActionButtons with the Publish button', () => {
@@ -30,6 +32,7 @@ describe('DatasetActionButtons', () => {
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        externalToolsRepository={externalToolsRepository}
       />
     )
 
@@ -61,6 +64,7 @@ describe('DatasetActionButtons', () => {
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        externalToolsRepository={externalToolsRepository}
       />
     )
 

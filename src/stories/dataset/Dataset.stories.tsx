@@ -18,7 +18,8 @@ import { WithNotImplementedModal } from '../WithNotImplementedModal'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { DatasetMockRepository } from './DatasetMockRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
-import { ContactMockRepository } from '../shared/contact/ContactMockRepository'
+import { ContactMockRepository } from '../shared-mock-repositories/contact/ContactMockRepository'
+import { ExternalToolsMockRepository } from '../shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -42,6 +43,7 @@ export const Default: Story = {
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
+      externalToolsRepository={new ExternalToolsMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -55,6 +57,7 @@ export const WithNormalPagination: Story = {
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
+      externalToolsRepository={new ExternalToolsMockRepository()}
     />
   )
 }
@@ -68,6 +71,7 @@ export const DraftWithAllDatasetPermissions: Story = {
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
+      externalToolsRepository={new ExternalToolsMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -81,6 +85,7 @@ export const Deaccessioned: Story = {
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
+      externalToolsRepository={new ExternalToolsMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -94,6 +99,7 @@ export const LoggedInAsOwner: Story = {
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
+      externalToolsRepository={new ExternalToolsMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -108,6 +114,7 @@ export const Loading: Story = {
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
+      externalToolsRepository={new ExternalToolsMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -122,6 +129,7 @@ export const DatasetNotFound: Story = {
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
+      externalToolsRepository={new ExternalToolsMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -136,6 +144,7 @@ export const DatasetAnonymizedView: Story = {
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
+      externalToolsRepository={new ExternalToolsMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -150,6 +159,7 @@ export const DatasetWithNoFiles: Story = {
       fileRepository={new FileMockNoDataRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
+      externalToolsRepository={new ExternalToolsMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
