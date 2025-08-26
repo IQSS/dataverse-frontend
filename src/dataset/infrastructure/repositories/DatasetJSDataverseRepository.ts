@@ -217,9 +217,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
               if (statusCode === 404) return datasetDetails
             } else if (err instanceof Error && err.message.includes('404')) {
               return datasetDetails
-            } else {
-              throw err
             }
+            throw err
           })
       })
       .then((datasetDetails) => {
