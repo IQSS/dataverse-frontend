@@ -47,7 +47,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 0,
           typeClass: 'controlledVocabulary',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         astroFacility: {
           name: 'astroFacility',
@@ -62,7 +63,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 1,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         astroInstrument: {
           name: 'astroInstrument',
@@ -77,7 +79,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 2,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         astroObject: {
           name: 'astroObject',
@@ -93,7 +96,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 3,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'resolution.Spatial': {
           name: 'resolution.Spatial',
@@ -109,7 +113,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 4,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'resolution.Spectral': {
           name: 'resolution.Spectral',
@@ -125,7 +130,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 5,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'resolution.Temporal': {
           name: 'resolution.Temporal',
@@ -141,7 +147,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 6,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'coverage.Spectral.Bandpass': {
           name: 'coverage.Spectral.Bandpass',
@@ -156,7 +163,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 7,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'coverage.Spectral.CentralWavelength': {
           name: 'coverage.Spectral.CentralWavelength',
@@ -171,7 +179,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 8,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'coverage.Spectral.Wavelength': {
           name: 'coverage.Spectral.Wavelength',
@@ -187,6 +196,7 @@ export class AstrophysicsMetadataBlockInfoMother {
           displayOrder: 9,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             'coverage.Spectral.MinimumWavelength': {
               name: 'coverage.Spectral.MinimumWavelength',
@@ -201,7 +211,8 @@ export class AstrophysicsMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 10,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             'coverage.Spectral.MaximumWavelength': {
               name: 'coverage.Spectral.MaximumWavelength',
@@ -216,7 +227,8 @@ export class AstrophysicsMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 11,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -234,6 +246,7 @@ export class AstrophysicsMetadataBlockInfoMother {
           displayOrder: 12,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             'coverage.Temporal.StartTime': {
               name: 'coverage.Temporal.StartTime',
@@ -248,7 +261,8 @@ export class AstrophysicsMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 13,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             'coverage.Temporal.StopTime': {
               name: 'coverage.Temporal.StopTime',
@@ -263,7 +277,8 @@ export class AstrophysicsMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 14,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -280,7 +295,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 15,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'coverage.Depth': {
           name: 'coverage.Depth',
@@ -295,7 +311,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 16,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'coverage.ObjectDensity': {
           name: 'coverage.ObjectDensity',
@@ -311,7 +328,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 17,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'coverage.ObjectCount': {
           name: 'coverage.ObjectCount',
@@ -326,7 +344,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 18,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'coverage.SkyFraction': {
           name: 'coverage.SkyFraction',
@@ -342,7 +361,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 19,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'coverage.Polarization': {
           name: 'coverage.Polarization',
@@ -357,7 +377,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 20,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         redshiftType: {
           name: 'redshiftType',
@@ -373,7 +394,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 21,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'resolution.Redshift': {
           name: 'resolution.Redshift',
@@ -389,7 +411,8 @@ export class AstrophysicsMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 22,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         'coverage.RedshiftValue': {
           name: 'coverage.RedshiftValue',
@@ -406,6 +429,7 @@ export class AstrophysicsMetadataBlockInfoMother {
           displayOrder: 23,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             'coverage.Redshift.MinimumValue': {
               name: 'coverage.Redshift.MinimumValue',
@@ -421,7 +445,8 @@ export class AstrophysicsMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 24,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             'coverage.Redshift.MaximumValue': {
               name: 'coverage.Redshift.MaximumValue',
@@ -437,7 +462,8 @@ export class AstrophysicsMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 25,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         }

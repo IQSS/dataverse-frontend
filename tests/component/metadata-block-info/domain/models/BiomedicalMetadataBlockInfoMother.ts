@@ -33,7 +33,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 0,
           typeClass: 'controlledVocabulary',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyOtherDesignType: {
           name: 'studyOtherDesignType',
@@ -49,7 +50,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 1,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyFactorType: {
           name: 'studyFactorType',
@@ -86,7 +88,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 2,
           typeClass: 'controlledVocabulary',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyOtherFactorType: {
           name: 'studyOtherFactorType',
@@ -102,7 +105,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 3,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyAssayOrganism: {
           name: 'studyAssayOrganism',
@@ -145,7 +149,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 4,
           typeClass: 'controlledVocabulary',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyAssayOtherOrganism: {
           name: 'studyAssayOtherOrganism',
@@ -161,7 +166,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 5,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyAssayMeasurementType: {
           name: 'studyAssayMeasurementType',
@@ -209,7 +215,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 6,
           typeClass: 'controlledVocabulary',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyAssayOtherMeasurmentType: {
           name: 'studyAssayOtherMeasurmentType',
@@ -225,7 +232,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 7,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyAssayTechnologyType: {
           name: 'studyAssayTechnologyType',
@@ -256,7 +264,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 8,
           typeClass: 'controlledVocabulary',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyAssayOtherTechnologyType: {
           name: 'studyAssayOtherTechnologyType',
@@ -272,7 +281,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 9,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyAssayPlatform: {
           name: 'studyAssayPlatform',
@@ -474,7 +484,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 10,
           typeClass: 'controlledVocabulary',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyAssayOtherPlatform: {
           name: 'studyAssayOtherPlatform',
@@ -490,7 +501,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 11,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         studyAssayCellType: {
           name: 'studyAssayCellType',
@@ -505,7 +517,8 @@ export class BiomedicalMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 12,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         }
       }
     }

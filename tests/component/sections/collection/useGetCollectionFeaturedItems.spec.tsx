@@ -6,7 +6,7 @@ import { FeaturedItemMother } from '@tests/component/collection/domain/models/Fe
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const featuredItemsMock = FeaturedItemMother.createFeaturedItems()
 
-describe('useGetFeaturedItems', () => {
+describe('useGetCollectionUserPermissions', () => {
   it('should return collection featured items correctly', async () => {
     collectionRepository.getFeaturedItems = cy.stub().resolves(featuredItemsMock)
 

@@ -1,4 +1,5 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'src/assets/mixins';
 
 .items-panel {
   display: flex;
@@ -11,14 +12,24 @@
   flex-direction: column;
   gap: 0.5rem;
 
-  @media (min-width: 768px) {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
   .add-data-slot {
     align-self: flex-end;
+  }
+
+  .advanced-search-link {
+    @include link-hover-underlined;
+
+    width: fit-content;
+    min-width: fit-content;
+    margin-right: auto;
+    font-size: 14px;
+  }
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 

@@ -22,7 +22,8 @@ export enum Route {
   FEATURED_ITEM = '/featured-item/:parentCollectionId/:featuredItemId',
   NOT_FOUND_PAGE = '/404',
   AUTH_CALLBACK = '/auth-callback',
-  SIGN_UP = '/sign-up'
+  SIGN_UP = '/sign-up',
+  ADVANCED_SEARCH = '/collections/:collectionId/search'
 }
 
 export const RouteWithParams = {
@@ -66,7 +67,8 @@ export const RouteWithParams = {
     return `/files/replace?${searchParams.toString()}`
   },
   FEATURED_ITEM: (parentCollectionId: string, featuredItemId: string) =>
-    `/featured-item/${parentCollectionId}/${featuredItemId}`
+    `/featured-item/${parentCollectionId}/${featuredItemId}`,
+  ADVANCED_SEARCH: (collectionId: string) => `/collections/${collectionId}/search`
 }
 
 export enum QueryParamKey {
