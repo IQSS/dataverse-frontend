@@ -8,6 +8,7 @@ import {
 } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 
 export const NO_COLLECTION_ITEMS = 0
 
@@ -58,12 +59,16 @@ export const useGetAccumulatedItems = ({
   ): Promise<number | undefined> => {
     setIsLoadingItems(true)
 
+    const searchServiceFromSessionStorage: string | undefined =
+      sessionStorage.getItem(CollectionItemsQueryParams.SEARCH_SERVICE) ?? undefined
+
     try {
       const { items, facets, totalItemCount } = await loadNextItems(
         collectionRepository,
         collectionId,
         pagination,
-        searchCriteria
+        searchCriteria,
+        searchServiceFromSessionStorage
       )
 
       const newAccumulatedItems = !resetAccumulated ? [...accumulatedItems, ...items] : items
@@ -82,6 +87,11 @@ export const useGetAccumulatedItems = ({
 
       if (!isNextPage) {
         setIsLoadingItems(false)
+
+        // External search is not working properly for pagination or types, for now we remove the ext search service selected once the user loads all pages.
+        if (searchServiceFromSessionStorage) {
+          sessionStorage.removeItem(CollectionItemsQueryParams.SEARCH_SERVICE)
+        }
       }
 
       return totalItemCount
@@ -114,13 +124,15 @@ async function loadNextItems(
   collectionRepository: CollectionRepository,
   collectionId: string,
   paginationInfo: CollectionItemsPaginationInfo,
-  searchCriteria: CollectionSearchCriteria
+  searchCriteria: CollectionSearchCriteria,
+  searchService?: string
 ): Promise<CollectionItemSubset> {
   return getCollectionItems(
     collectionRepository,
     collectionId,
     paginationInfo,
-    searchCriteria
+    searchCriteria,
+    searchService
   ).catch((err: Error) => {
     throw new Error(err.message)
   })
