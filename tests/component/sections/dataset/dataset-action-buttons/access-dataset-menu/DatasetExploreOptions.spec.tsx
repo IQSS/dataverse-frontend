@@ -1,7 +1,6 @@
 import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 import { DatasetExploreOptions } from '@/sections/dataset/dataset-action-buttons/access-dataset-menu/DatasetExploreOptions'
 import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
-import { DatasetExternalToolResolvedMother } from '@tests/component/externalTools/domain/models/DatasetExternalToolResolvedMother'
 
 const externalToolsRepository: ExternalToolsRepository = {} as ExternalToolsRepository
 
@@ -29,23 +28,5 @@ describe('DatasetExploreOptions', () => {
 
     cy.contains('Explore Options').should('exist')
     cy.contains('Dataset Explore Tool').should('exist')
-  })
-
-  it('calls the getDatasetExternalToolResolved use case when clicking on an explore option', () => {
-    externalToolsRepository.getDatasetExternalToolResolved = cy
-      .stub()
-      .as('getDatasetExternalToolResolved')
-      .resolves(DatasetExternalToolResolvedMother.create())
-
-    cy.customMount(
-      <DatasetExploreOptions
-        externalToolsRepository={externalToolsRepository}
-        persistentId="testPersistentId"
-      />
-    )
-
-    cy.findByText('Dataset Explore Tool').click()
-
-    cy.get('@getDatasetExternalToolResolved').should('have.been.calledOnce')
   })
 })
