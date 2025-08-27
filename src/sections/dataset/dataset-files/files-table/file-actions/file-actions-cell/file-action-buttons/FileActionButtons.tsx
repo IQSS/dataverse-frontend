@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { ButtonGroup, Tooltip, useTheme } from '@iqss/dataverse-design-system'
-import { EyeFill } from 'react-bootstrap-icons'
+import { EyeFill, Robot } from 'react-bootstrap-icons'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
@@ -12,6 +12,8 @@ import { FileOptionsMenu } from './file-options-menu/FileOptionsMenu'
 import { LinkToPage } from '@/sections/shared/link-to-page/LinkToPage'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { FilePageHelper } from '@/sections/file/FilePageHelper'
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
 
 interface FileActionButtonsProps {
   file: FilePreview
@@ -25,29 +27,42 @@ export function FileActionButtons({
 }: FileActionButtonsProps) {
   const { t } = useTranslation('files')
   const theme = useTheme()
+  const isBelow768px = useMediaQuery('(max-width: 768px)')
   const { externalTools } = useExternalTools()
-  const filePreviewExternalTools: ExternalTool[] = externalTools.filter(
-    (tool) => tool.contentType === file.metadata.type.value
-  )
+  const fileAssociatedPreviewOrQueryTools: ExternalTool[] =
+    FilePageHelper.getFileAssociatedPreviewOrQueryTools(externalTools, file.metadata.type.value)
+
+  console.log(file)
 
   return (
-    <ButtonGroup aria-label={t('actions.buttons')}>
-      {filePreviewExternalTools.length > 0 && (
-        <Tooltip placement="top" overlay={filePreviewExternalTools[0].displayName}>
-          <LinkToPage
-            page={Route.FILES}
-            type={DvObjectType.FILE}
-            searchParams={{
-              id: file.id.toString(),
-              datasetVersion: file.datasetVersionNumber.toSearchParam(),
-              [QueryParamKey.TOOL_TYPE]: ToolType.Preview
-            }}
-            className="btn btn-secondary">
-            <EyeFill color={theme.color.primary} size={20} />
-          </LinkToPage>
-        </Tooltip>
-      )}
-
+    <ButtonGroup aria-label={t('actions.buttons')} vertical={isBelow768px}>
+      {fileAssociatedPreviewOrQueryTools.length > 0 &&
+        fileAssociatedPreviewOrQueryTools.map((tool) => (
+          <Tooltip placement="top" overlay={tool.displayName} key={tool.id}>
+            <LinkToPage
+              page={Route.FILES}
+              type={DvObjectType.FILE}
+              searchParams={{
+                id: file.id.toString(),
+                datasetVersion: file.datasetVersionNumber.toSearchParam(),
+                [QueryParamKey.TOOL_TYPE]: tool.types.includes(ToolType.Preview)
+                  ? ToolType.Preview
+                  : ToolType.Query
+              }}
+              className="btn btn-secondary">
+              {tool.types.includes(ToolType.Preview) && (
+                <EyeFill
+                  color={theme.color.primary}
+                  size={20}
+                  aria-label={`Preview ${file.name}`}
+                />
+              )}
+              {tool.types.includes(ToolType.Query) && (
+                <Robot color={theme.color.primary} size={20} aria-label={`Query ${file.name}`} />
+              )}
+            </LinkToPage>
+          </Tooltip>
+        ))}
       <AccessFileMenu
         id={file.id}
         access={file.access}
