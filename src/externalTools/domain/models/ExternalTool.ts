@@ -4,6 +4,7 @@ export interface ExternalTool {
   description: string
   types: ToolType[]
   scope: ToolScope
+  contentType?: string // Only present when scope is 'file'
 }
 
 export enum ToolType {
