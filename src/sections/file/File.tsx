@@ -44,14 +44,17 @@ export function File({
   const { externalTools } = useExternalTools()
   const [activeTab, setActiveTab] = useState<string>('metadata')
 
-  const fileAssociatedPreviewOrQueryTools = useMemo(
+  const fileApplicablePreviewOrQueryTools = useMemo(
     () =>
-      FilePageHelper.getFileAssociatedPreviewOrQueryTools(externalTools, file?.metadata.type.value),
+      FilePageHelper.getApplicablePreviewOrQueryToolsForFileType(
+        externalTools,
+        file?.metadata.type.value
+      ),
     [externalTools, file]
   )
 
   const externalToolTabTitle: string = FilePageHelper.getExternalToolTabTitle(
-    fileAssociatedPreviewOrQueryTools,
+    fileApplicablePreviewOrQueryTools,
     t,
     file?.metadata.type.value
   )
@@ -60,7 +63,7 @@ export function File({
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
 
-  // To change active tab to external tool in case the file has associated tools
+  // To change active tab to external tool in case the file has applicable tools
   useEffect(() => {
     if (file) {
       const defaultActiveTab = FilePageHelper.defineDefaultActiveTab(
@@ -160,12 +163,13 @@ export function File({
             </Col>
           </Row>
           <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
-            {fileAssociatedPreviewOrQueryTools.length > 0 && (
+            {fileApplicablePreviewOrQueryTools.length > 0 && (
               <Tabs.Tab eventKey={FilePageHelper.EXT_TOOL_TAB_KEY} title={externalToolTabTitle}>
                 <div className={styles['tab-container']} style={{ paddingTop: '3rem' }}>
                   <FileEmbededExternalTool
                     file={file}
-                    associdatedTools={fileAssociatedPreviewOrQueryTools}
+                    applicableTools={fileApplicablePreviewOrQueryTools}
+                    toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
                   />
                 </div>
               </Tabs.Tab>

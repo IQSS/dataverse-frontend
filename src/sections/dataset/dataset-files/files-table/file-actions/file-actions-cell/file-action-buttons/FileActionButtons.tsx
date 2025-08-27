@@ -29,15 +29,16 @@ export function FileActionButtons({
   const theme = useTheme()
   const isBelow768px = useMediaQuery('(max-width: 768px)')
   const { externalTools } = useExternalTools()
-  const fileAssociatedPreviewOrQueryTools: ExternalTool[] =
-    FilePageHelper.getFileAssociatedPreviewOrQueryTools(externalTools, file.metadata.type.value)
-
-  console.log(file)
+  const fileApplicablePreviewOrQueryTools: ExternalTool[] =
+    FilePageHelper.getApplicablePreviewOrQueryToolsForFileType(
+      externalTools,
+      file.metadata.type.value
+    )
 
   return (
     <ButtonGroup aria-label={t('actions.buttons')} vertical={isBelow768px}>
-      {fileAssociatedPreviewOrQueryTools.length > 0 &&
-        fileAssociatedPreviewOrQueryTools.map((tool) => (
+      {fileApplicablePreviewOrQueryTools.length > 0 &&
+        fileApplicablePreviewOrQueryTools.map((tool) => (
           <Tooltip placement="top" overlay={tool.displayName} key={tool.id}>
             <LinkToPage
               page={Route.FILES}

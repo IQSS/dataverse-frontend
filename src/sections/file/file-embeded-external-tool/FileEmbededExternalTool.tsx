@@ -1,7 +1,7 @@
 /**
- * This component will render an embedded external tool if the file has one associated.
+ * This component will render an embedded external tool if the file has one applicable.
  * This could be a "preview" or "query" tool type.
- * If more than one tool is associated with the file, we show a dropdown to select which one to use.
+ * If more than one tool is applicable with the file, we show a dropdown to select which one to use.
  * The tool resolved URL is fetched when the component is mounted or the tool selection changes.
  * The tool is rendered in an iframe.
  */
@@ -15,14 +15,17 @@ import { File } from '@/files/domain/models/File'
 
 interface FileEmbededExternalToolProps {
   file: File
-  associdatedTools: ExternalTool[]
+  applicableTools: ExternalTool[]
+  toolTypeSelectedQueryParam: string | undefined
 }
 
 export const FileEmbededExternalTool = ({
   file,
-  associdatedTools
+  applicableTools,
+  toolTypeSelectedQueryParam
 }: FileEmbededExternalToolProps) => {
-  const moreThanOneTool = associdatedTools.length > 1
+  console.log({ applicableTools })
+  const moreThanOneTool = applicableTools.length > 1
 
   return (
     <div>

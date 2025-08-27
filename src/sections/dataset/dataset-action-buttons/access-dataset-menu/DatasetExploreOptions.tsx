@@ -7,7 +7,9 @@ import { useExternalTools } from '@/shared/contexts/external-tools/ExternalTools
 import { getDatasetExternalToolResolved } from '@/externalTools/domain/useCases/GetDatasetExternalToolResolved'
 import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 
+// TODO:ME - Add File Previewer UI.
 // TODO:ME - Add File Explore options.
+// TODO:ME - Add translations files.
 
 interface DatasetExploreOptionsProps {
   externalToolsRepository: ExternalToolsRepository
