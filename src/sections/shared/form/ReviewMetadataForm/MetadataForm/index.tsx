@@ -8,13 +8,13 @@ import { type DatasetRepository } from '@/dataset/domain/repositories/DatasetRep
 import { type MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { type DatasetMetadataFormValues } from '../../DatasetMetadataForm/MetadataFieldsHelper'
 import { type DatasetMetadataFormMode } from '..'
-import { SubmissionStatus, useSubmitDataset } from '../../DatasetMetadataForm/useSubmitDataset'
+import { SubmissionStatus, useSubmitReview } from '../useSubmitReview'
 import { MetadataBlockFormFields } from '../../DatasetMetadataForm/MetadataForm/MetadataBlockFormFields'
 import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { DateHelper } from '@/shared/helpers/DateHelper'
-import styles from './index.module.scss'
+import styles from '../../DatasetMetadataForm/MetadataForm/index.module.scss'
 
 interface FormProps {
   mode: DatasetMetadataFormMode
@@ -51,7 +51,7 @@ export const MetadataForm = ({
   const form = useForm({ mode: 'onChange', defaultValues: formDefaultValues })
   const { setValue, formState } = form
 
-  const { submissionStatus, submitError, submitForm } = useSubmitDataset(
+  const { submissionStatus, submitError, submitForm } = useSubmitReview(
     mode,
     collectionId,
     datasetRepository,

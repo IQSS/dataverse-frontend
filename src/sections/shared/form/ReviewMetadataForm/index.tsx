@@ -5,7 +5,7 @@ import { DatasetRepository } from '../../../../dataset/domain/repositories/Datas
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataFieldsHelper } from '../DatasetMetadataForm/MetadataFieldsHelper'
 import { MetadataFormSkeleton } from '../DatasetMetadataForm/MetadataForm/MetadataFormSkeleton'
-import { MetadataForm } from '../DatasetMetadataForm/MetadataForm'
+import { MetadataForm } from './MetadataForm'
 import { DatasetMetadataBlocks } from '../../../../dataset/domain/models/Dataset'
 import { Alert } from '@iqss/dataverse-design-system'
 
@@ -189,7 +189,8 @@ export const DatasetMetadataForm = ({
       }
     }
   }
-  const metadataBlocksInfo = [reviewBlock, ...metatadaBlocksInfo2]
+  //const metadataBlocksInfo = [reviewBlock, ...metatadaBlocksInfo2]
+  const metadataBlocksInfo = [...metatadaBlocksInfo2]
   console.log(metadataBlocksInfo)
 
   // Metadata blocks info with field names that have dots replaced by slashes

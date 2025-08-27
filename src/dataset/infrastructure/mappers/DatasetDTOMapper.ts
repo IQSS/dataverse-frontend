@@ -9,7 +9,8 @@ export class DatasetDTOMapper {
   public static toJSDatasetDTO(dataset: DatasetDTO): JSDatasetDTO {
     return {
       license: defaultLicense,
-      metadataBlockValues: dataset.metadataBlocks as JSMetadataBlocksDTO[]
+      metadataBlockValues: dataset.metadataBlocks as JSMetadataBlocksDTO[],
+      datasetType: dataset.datasetType
     }
   }
 }
