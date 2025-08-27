@@ -3,7 +3,7 @@ import styles from './File.module.scss'
 import { ButtonGroup, Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useFile } from './useFile'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { FileSkeleton } from './FileSkeleton'
 import { DatasetCitation } from '../dataset/dataset-citation/DatasetCitation'
@@ -19,23 +19,58 @@ import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
 import { FileVersions } from './file-version/FileVersions'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
+import { FilePageHelper } from './FilePageHelper'
+import { FileEmbededExternalTool } from './file-embeded-external-tool/FileEmbededExternalTool'
 
 interface FileProps {
   repository: FileRepository
   datasetRepository: DatasetRepository
   id: number
   datasetVersionNumber?: string
+  toolTypeSelectedQueryParam?: string
 }
 
-export function File({ repository, id, datasetVersionNumber, datasetRepository }: FileProps) {
+export function File({
+  repository,
+  id,
+  datasetVersionNumber,
+  datasetRepository,
+  toolTypeSelectedQueryParam
+}: FileProps) {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
+  const { externalTools } = useExternalTools()
   const [activeTab, setActiveTab] = useState<string>('metadata')
+
+  const fileAssociatedPreviewOrQueryTools = useMemo(
+    () =>
+      FilePageHelper.getFileAssociatedPreviewOrQueryTools(externalTools, file?.metadata.type.value),
+    [externalTools, file]
+  )
+
+  const externalToolTabTitle: string = FilePageHelper.getExternalToolTabTitle(
+    fileAssociatedPreviewOrQueryTools,
+    t,
+    file?.metadata.type.value
+  )
 
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
+
+  // To change active tab to external tool in case the file has associated tools
+  useEffect(() => {
+    if (file) {
+      const defaultActiveTab = FilePageHelper.defineDefaultActiveTab(
+        externalTools,
+        file?.metadata.type.value
+      )
+
+      setActiveTab(defaultActiveTab)
+    }
+  }, [file, externalTools])
 
   if (isLoading) {
     return <FileSkeleton />
@@ -124,7 +159,17 @@ export function File({ repository, id, datasetVersionNumber, datasetRepository }
               </ButtonGroup>
             </Col>
           </Row>
-          <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
+          <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
+            {fileAssociatedPreviewOrQueryTools.length > 0 && (
+              <Tabs.Tab eventKey={FilePageHelper.EXT_TOOL_TAB_KEY} title={externalToolTabTitle}>
+                <div className={styles['tab-container']} style={{ paddingTop: '3rem' }}>
+                  <FileEmbededExternalTool
+                    file={file}
+                    associdatedTools={fileAssociatedPreviewOrQueryTools}
+                  />
+                </div>
+              </Tabs.Tab>
+            )}
             <Tabs.Tab eventKey="metadata" title={t('tabs.metadata')}>
               <div className={styles['tab-container']}>
                 <FileMetadata

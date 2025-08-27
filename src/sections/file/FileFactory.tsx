@@ -5,6 +5,7 @@ import { File } from './File'
 import { useSearchParams } from 'react-router-dom'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { searchParamVersionToDomainVersion } from '../../router'
+import { QueryParamKey } from '../Route.enum'
 
 const repository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
@@ -20,6 +21,8 @@ function FileWithSearchParams() {
   const id = searchParamId ? parseInt(searchParamId) : undefined
   const datasetVersionSearchParam = searchParams.get('datasetVersion') ?? undefined
   const datasetVersionNumber = searchParamVersionToDomainVersion(datasetVersionSearchParam)
+  const toolTypeSelectedQueryParam: string | undefined =
+    searchParams.get(QueryParamKey.TOOL_TYPE) ?? undefined
 
   if (!id) {
     return <NotFoundPage dvObjectNotFoundType="file" />
@@ -31,6 +34,7 @@ function FileWithSearchParams() {
       id={id}
       datasetVersionNumber={datasetVersionNumber}
       datasetRepository={datasetRepository}
+      toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
     />
   )
 }

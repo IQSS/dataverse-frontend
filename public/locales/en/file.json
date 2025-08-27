@@ -1,7 +1,10 @@
 {
   "tabs": {
     "metadata": "Metadata",
-    "versions": "Versions"
+    "versions": "Versions",
+    "preview": "Preview",
+    "query": "Query",
+    "fileTools": "File Tools"
   },
   "fileVersion": {
     "version": "Dataset Version",
