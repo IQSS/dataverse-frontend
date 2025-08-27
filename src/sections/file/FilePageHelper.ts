@@ -53,4 +53,20 @@ export class FilePageHelper {
 
     return t('tabs.preview')
   }
+
+  static getDefaultSelectedToolId(
+    toolTypeSelectedQueryParam: string | undefined,
+    applicableTools: ExternalTool[]
+  ): number {
+    if (toolTypeSelectedQueryParam) {
+      const matchedTool = applicableTools.find((tool) =>
+        tool.types.includes(toolTypeSelectedQueryParam as ToolType)
+      )
+      if (matchedTool) {
+        return matchedTool.id
+      }
+    }
+    // Fallback to the first applicable tool's id
+    return applicableTools[0].id
+  }
 }

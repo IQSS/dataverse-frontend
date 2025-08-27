@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import styles from './File.module.scss'
 import { ButtonGroup, Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
+import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 import { useFile } from './useFile'
 import { useEffect, useMemo, useState } from 'react'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
@@ -27,6 +28,7 @@ interface FileProps {
   repository: FileRepository
   datasetRepository: DatasetRepository
   id: number
+  externalToolsRepository: ExternalToolsRepository
   datasetVersionNumber?: string
   toolTypeSelectedQueryParam?: string
 }
@@ -36,6 +38,7 @@ export function File({
   id,
   datasetVersionNumber,
   datasetRepository,
+  externalToolsRepository,
   toolTypeSelectedQueryParam
 }: FileProps) {
   const { setIsLoading } = useLoading()
@@ -165,11 +168,13 @@ export function File({
           <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
             {fileApplicablePreviewOrQueryTools.length > 0 && (
               <Tabs.Tab eventKey={FilePageHelper.EXT_TOOL_TAB_KEY} title={externalToolTabTitle}>
-                <div className={styles['tab-container']} style={{ paddingTop: '3rem' }}>
+                <div className={styles['tab-container']}>
                   <FileEmbededExternalTool
                     file={file}
                     applicableTools={fileApplicablePreviewOrQueryTools}
                     toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
+                    isInView={activeTab === FilePageHelper.EXT_TOOL_TAB_KEY}
+                    externalToolsRepository={externalToolsRepository}
                   />
                 </div>
               </Tabs.Tab>
