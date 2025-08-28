@@ -8,7 +8,7 @@ import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErr
 type ExternalToolsContextValue = {
   externalTools: ExternalTool[]
   loading: boolean
-  error: unknown
+  error: string | null
   refreshExternalTools: () => Promise<void>
   datasetExploreTools: ExternalTool[]
   fileExploreTools: ExternalTool[]
@@ -30,11 +30,11 @@ export function ExternalToolsProvider({
 }: ExternalToolsProviderProps) {
   const [externalTools, setExternalTools] = useState<ExternalTool[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<unknown>(undefined)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchExternalTools = useCallback(async () => {
     setLoading(true)
-    setError(undefined)
+    setError(null)
 
     try {
       const data = await getExternalTools(externalToolsRepository)

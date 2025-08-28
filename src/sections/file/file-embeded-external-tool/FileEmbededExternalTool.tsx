@@ -130,11 +130,11 @@ export const FileEmbededExternalTool = ({
             onError={handleOnErrorIframe}
             role="presentation"></iframe>
         )}
-        {/* Keep skeleton overlay on top of the iframe while it loads to mask flickering */}
+        {/* Keep overlay on top of the iframe while it loads to mask flickering */}
         <div aria-hidden={true} className={styles.overlay}>
           <Spinner />
         </div>
-        {/* Show error message if the fetching the tool URL fails or the iframe somehow fails. */}
+        {/* Show error message if fetching the tool URL fails or the iframe somehow fails. */}
         {errorLoadingTool && (
           <Alert variant="danger" dismissible={false}>
             {errorLoadingTool}
