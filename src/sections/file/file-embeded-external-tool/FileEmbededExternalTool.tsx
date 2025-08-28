@@ -1,21 +1,9 @@
-/**
- * This component will render an embedded external tool if the file has one applicable.
- * This could be a "preview" or "query" tool type.
- * If more than one tool is applicable with the file, we show a dropdown to select which one to use.
- * The tool resolved URL is fetched when the component is mounted or the tool selection changes.
- * The tool is rendered in an iframe.
- */
-
-/* TODO:ME - If is in view and only first time then fetch resolved url and show iframe */
-
-/* TODO:ME - Open in new window button */
-
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Skeleton from 'react-loading-skeleton'
 import cn from 'classnames'
 import { WriteError } from '@iqss/dataverse-client-javascript'
-import { Alert, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
+import { Alert, DropdownButton, DropdownButtonItem, Spinner } from '@iqss/dataverse-design-system'
+import { BoxArrowUpRight } from 'react-bootstrap-icons'
 import { ExternalTool } from '@/externalTools/domain/models/ExternalTool'
 import { File } from '@/files/domain/models/File'
 import { FileExternalToolResolved } from '@/externalTools/domain/models/FileExternalToolResolved'
@@ -40,7 +28,7 @@ export const FileEmbededExternalTool = ({
   toolTypeSelectedQueryParam,
   externalToolsRepository
 }: FileEmbededExternalToolProps) => {
-  const { t, i18n } = useTranslation('file', { keyPrefix: 'fileEmbededExternalTool' })
+  const { t, i18n } = useTranslation('file', { keyPrefix: 'previewTab' })
   const [toolIdSelected, setToolIdSelected] = useState<number>(
     FilePageHelper.getDefaultSelectedToolId(toolTypeSelectedQueryParam, applicableTools)
   )
@@ -93,29 +81,41 @@ export const FileEmbededExternalTool = ({
   }, [isInView, toolIdSelected, externalToolsRepository, file.id, t, i18n.language])
 
   return (
-    <div>
-      <div>
+    <section>
+      <header className={styles.header}>
         {moreThanOneTool && (
-          <div>
-            <DropdownButton
-              title="Change Tool"
-              id="external-tool-selector"
-              onSelect={handleToolSelect}
-              variant="secondary"
-              size="sm">
-              {applicableTools.map((tool) => (
-                <DropdownButtonItem
-                  eventKey={tool.id.toString()}
-                  active={toolIdSelected === tool.id}
-                  as="button"
-                  key={tool.id}>
-                  {tool.displayName}
-                </DropdownButtonItem>
-              ))}
-            </DropdownButton>
-          </div>
+          <DropdownButton
+            title="Change Tool"
+            id="external-tool-selector"
+            onSelect={handleToolSelect}
+            variant="secondary"
+            size="sm">
+            {applicableTools.map((tool) => (
+              <DropdownButtonItem
+                eventKey={tool.id.toString()}
+                active={toolIdSelected === tool.id}
+                as="button"
+                key={tool.id}>
+                {tool.displayName}
+              </DropdownButtonItem>
+            ))}
+          </DropdownButton>
         )}
-      </div>
+
+        {fileExternalToolResolved && (
+          // eslint-disable-next-line react/jsx-no-target-blank
+          <a
+            href={FilePageHelper.replacePreviewParamInToolUrl(
+              fileExternalToolResolved.toolUrlResolved,
+              false
+            )}
+            target="_blank"
+            className="btn btn-secondary btn-sm d-flex align-items-center gap-1">
+            <BoxArrowUpRight size={12} />
+            <span>{t('openInNewWindow')}</span>
+          </a>
+        )}
+      </header>
 
       <div
         className={cn(styles['iframe-container'], {
@@ -133,7 +133,7 @@ export const FileEmbededExternalTool = ({
         )}
         {/* Keep skeleton overlay on top of the iframe while it loads to mask flickering */}
         <div aria-hidden={true} className={styles.overlay}>
-          <Skeleton height="50%" width="100%" />
+          <Spinner />
         </div>
         {/* Show error message if the fetching the tool URL fails or the iframe somehow fails. */}
         {errorLoadingTool && (
@@ -142,6 +142,6 @@ export const FileEmbededExternalTool = ({
           </Alert>
         )}
       </div>
-    </div>
+    </section>
   )
 }

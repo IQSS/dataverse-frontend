@@ -142,7 +142,8 @@
     "termsOfAccessTooltipTex": "information on how and if users can access restricted files in this dataset."
   },
   "getCategoriesError": "Something went wrong fetching available categories. Try again later.",
-  "fileEmbededExternalTool": {
+  "previewTab": {
+    "openInNewWindow": "Open in New Window",
     "defaultLoadingToolError": "Something went wrong loading the external tool. Try again later."
   }
 }

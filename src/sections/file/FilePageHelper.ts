@@ -73,4 +73,10 @@ export class FilePageHelper {
     // Fallback to the first applicable tool's id
     return applicableTools[0].id
   }
+
+  static replacePreviewParamInToolUrl(url: string, preview: boolean): string {
+    const u = new URL(url, window.location.href)
+    u.searchParams.set('preview', String(preview))
+    return u.toString()
+  }
 }

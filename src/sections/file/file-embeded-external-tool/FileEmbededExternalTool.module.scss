@@ -1,3 +1,8 @@
+.header {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .iframe-container {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -14,6 +19,9 @@
     inset: 0;
     top: 1rem;
     z-index: 2;
+    display: flex;
+    justify-content: center;
+    padding-top: 3rem;
     background-color: #fff;
     opacity: 1;
     pointer-events: none; // Prevents blocking interactions with the iframe

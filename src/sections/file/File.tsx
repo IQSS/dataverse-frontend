@@ -47,7 +47,9 @@ export function File({
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
   const { externalTools } = useExternalTools()
-  const [activeTab, setActiveTab] = useState<string>()
+  const [activeTab, setActiveTab] = useState<string>(
+    toolTypeSelectedQueryParam ? FilePageHelper.EXT_TOOL_TAB_KEY : 'metadata'
+  )
 
   const fileApplicablePreviewOrQueryTools = useMemo(
     () =>
