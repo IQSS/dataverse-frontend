@@ -11,14 +11,19 @@
 /* TODO:ME - Open in new window button */
 
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import Skeleton from 'react-loading-skeleton'
+import cn from 'classnames'
+import { WriteError } from '@iqss/dataverse-client-javascript'
+import { Alert, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { ExternalTool } from '@/externalTools/domain/models/ExternalTool'
 import { File } from '@/files/domain/models/File'
-import { DropdownButton, DropdownButtonItem, Spinner } from '@iqss/dataverse-design-system'
 import { FileExternalToolResolved } from '@/externalTools/domain/models/FileExternalToolResolved'
 import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
-import { FilePageHelper } from '../FilePageHelper'
 import { getFileExternalToolResolved } from '@/externalTools/domain/useCases/GetFileExternalToolResolved'
-import { useTranslation } from 'react-i18next'
+import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
+import { FilePageHelper } from '../FilePageHelper'
+import styles from './FileEmbededExternalTool.module.scss'
 
 interface FileEmbededExternalToolProps {
   file: File
@@ -35,78 +40,57 @@ export const FileEmbededExternalTool = ({
   toolTypeSelectedQueryParam,
   externalToolsRepository
 }: FileEmbededExternalToolProps) => {
-  const { t, i18n } = useTranslation('file')
+  const { t, i18n } = useTranslation('file', { keyPrefix: 'fileEmbededExternalTool' })
   const [toolIdSelected, setToolIdSelected] = useState<number>(
     FilePageHelper.getDefaultSelectedToolId(toolTypeSelectedQueryParam, applicableTools)
   )
-  const [isLoadingToolIframe, setIsLoadingToolIframe] = useState<boolean>(true)
-  const [fileExternalToolsResolved, setFileExternalToolsResolved] =
+  const [iframeLoaded, setIframeLoaded] = useState<boolean>(false)
+  const [errorLoadingTool, setErrorLoadingTool] = useState<string | null>(null)
+  const [fileExternalToolResolved, setFileExternalToolResolved] =
     useState<FileExternalToolResolved | null>(null)
 
   const moreThanOneTool = applicableTools.length > 1
 
-  const handleToolSelect = (eventKey: string | null) => {
-    setToolIdSelected(Number(eventKey))
+  const handleToolSelect = (eventKey: string | null) => setToolIdSelected(Number(eventKey))
+
+  const handleOnLoadIframe = () => setIframeLoaded(true)
+  const handleOnErrorIframe = () => {
+    setIframeLoaded(false)
+    setErrorLoadingTool(t('defaultLoadingToolError'))
   }
 
-  const openInNewWindow = async () => {
-    // // If already opening, do nothing
-    // if (isOpening) return
-    // setIsOpening(true)
-    // const newWindow = window.open('', '_blank')
-    // // If the window didn't open, likely due to a popup blocker
-    // if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-    //   toast.info(tShared('allowPopups'))
-    //   setIsOpening(false)
-    //   newWindow?.close()
-    //   return
-    // }
-    // try {
-    //   // Set a temporary title on the new window while fetching the tool URL
-    //   newWindow.document.title = `Loading ${toolDisplayName}...`
-    //   const datasetExternalTool = await getDatasetExternalToolResolved(
-    //     externalToolsRepository,
-    //     persistentId,
-    //     toolId,
-    //     { preview: false, locale: i18n.language }
-    //   )
-    //   // Change the location of the new window to the tool URL
-    //   newWindow.location.href = datasetExternalTool.toolUrlResolved
-    // } catch (error) {
-    //   // If there's an error, notify the user and close the new window
-    //   toast.error(tShared('externalToolOpeningFailed'))
-    //   if (!newWindow?.closed) newWindow.close()
-    // } finally {
-    //   setIsOpening(false)
-    // }
-  }
-
+  // Loads the tool every time the tab is in view or the tool selection changes.
   useEffect(() => {
-    if (isInView) {
-      const fetchFileExternalToolResolved = async () => {
-        setIsLoadingToolIframe(true)
-        setFileExternalToolsResolved(null)
+    if (!isInView) return
 
-        try {
-          const fileExternalTool = await getFileExternalToolResolved(
-            externalToolsRepository,
-            file.id,
-            toolIdSelected,
-            { preview: true, locale: i18n.language }
-          )
+    const fetchFileExternalToolResolved = async () => {
+      setIframeLoaded(false)
+      setErrorLoadingTool(null)
+      setFileExternalToolResolved(null)
 
-          setFileExternalToolsResolved(fileExternalTool)
-        } catch (error) {
-          console.error('Error fetching tool resolved URL:', error)
-        } finally {
-          setIsLoadingToolIframe(false)
+      try {
+        const fileExternalTool = await getFileExternalToolResolved(
+          externalToolsRepository,
+          file.id,
+          toolIdSelected,
+          { preview: true, locale: i18n.language }
+        )
+
+        setFileExternalToolResolved(fileExternalTool)
+      } catch (err: WriteError | unknown) {
+        if (err instanceof WriteError) {
+          const error = new JSDataverseWriteErrorHandler(err)
+          const formattedError =
+            error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
+          setErrorLoadingTool(formattedError)
+        } else {
+          setErrorLoadingTool(t('defaultLoadingToolError'))
         }
       }
-
-      void fetchFileExternalToolResolved()
-      console.log('Fetch tool resolved url for tool id:', toolIdSelected)
     }
-  }, [isInView, toolIdSelected, externalToolsRepository, file.id, i18n.language])
+
+    void fetchFileExternalToolResolved()
+  }, [isInView, toolIdSelected, externalToolsRepository, file.id, t, i18n.language])
 
   return (
     <div>
@@ -131,32 +115,31 @@ export const FileEmbededExternalTool = ({
             </DropdownButton>
           </div>
         )}
-        {/* If tool is preview */}
-        {/* {fileExternalToolsResolved && applicableTools.(
-          <div style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#555' }}>
-            {t('previewToolDescription', { toolName: fileExternalToolsResolved.toolDisplayName })}
-          </div>
-        )} */}
       </div>
 
-      <div style={{ width: '100%', height: '100%', aspectRatio: '16/9', paddingBlock: '1rem' }}>
-        {fileExternalToolsResolved && (
+      <div
+        className={cn(styles['iframe-container'], {
+          [styles.loaded]: iframeLoaded,
+          [styles.error]: errorLoadingTool
+        })}>
+        {fileExternalToolResolved && (
           <iframe
-            style={{ width: '100%', height: '100%', border: 'none' }}
-            src={fileExternalToolsResolved.toolUrlResolved}
-            title={t('tabs.preview')}
+            src={fileExternalToolResolved.toolUrlResolved}
+            title={fileExternalToolResolved.displayName}
+            className={styles.iframe}
+            onLoad={handleOnLoadIframe}
+            onError={handleOnErrorIframe}
             role="presentation"></iframe>
         )}
-        {isLoadingToolIframe && (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingBlock: '4rem'
-            }}>
-            <Spinner aria-label={t('loadingExternalTool')} />
-          </div>
+        {/* Keep skeleton overlay on top of the iframe while it loads to mask flickering */}
+        <div aria-hidden={true} className={styles.overlay}>
+          <Skeleton height="50%" width="100%" />
+        </div>
+        {/* Show error message if the fetching the tool URL fails or the iframe somehow fails. */}
+        {errorLoadingTool && (
+          <Alert variant="danger" dismissible={false}>
+            {errorLoadingTool}
+          </Alert>
         )}
       </div>
     </div>

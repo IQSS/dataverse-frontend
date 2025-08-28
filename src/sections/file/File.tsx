@@ -23,6 +23,7 @@ import { DatasetRepository } from '@/dataset/domain/repositories/DatasetReposito
 import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { FilePageHelper } from './FilePageHelper'
 import { FileEmbededExternalTool } from './file-embeded-external-tool/FileEmbededExternalTool'
+import { useScrollTop } from '@/shared/hooks/useScrollTop'
 
 interface FileProps {
   repository: FileRepository
@@ -41,11 +42,12 @@ export function File({
   externalToolsRepository,
   toolTypeSelectedQueryParam
 }: FileProps) {
+  useScrollTop()
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
   const { externalTools } = useExternalTools()
-  const [activeTab, setActiveTab] = useState<string>('metadata')
+  const [activeTab, setActiveTab] = useState<string>()
 
   const fileApplicablePreviewOrQueryTools = useMemo(
     () =>

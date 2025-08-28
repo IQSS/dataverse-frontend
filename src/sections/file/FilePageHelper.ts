@@ -4,6 +4,10 @@ export class FilePageHelper {
   static readonly EXT_TOOL_TAB_KEY = 'extTool'
 
   static defineDefaultActiveTab(externalTools: ExternalTool[], fileType?: string): string {
+    if (externalTools.length === 0) {
+      return 'metadata'
+    }
+
     if (this.getApplicablePreviewOrQueryToolsForFileType(externalTools, fileType).length > 0) {
       return this.EXT_TOOL_TAB_KEY
     }
