@@ -25,7 +25,6 @@ import {
   DatasetVersionSummaryStringValues
 } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
-import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
@@ -33,7 +32,6 @@ const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const contactRepository = {} as ContactRepository
-const externalToolsRepository = {} as ExternalToolsRepository
 
 const TOTAL_FILES_COUNT = 200
 const allFiles = FilePreviewMother.createMany(TOTAL_FILES_COUNT)
@@ -317,7 +315,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -336,7 +333,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       emptyDataset
     )
@@ -355,7 +351,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       dataset
     )
@@ -371,7 +366,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -388,7 +382,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -408,7 +401,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -431,7 +423,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -454,7 +445,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -478,7 +468,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -500,7 +489,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -522,7 +510,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDatasetAnonymized
     )
@@ -540,7 +527,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -557,7 +543,6 @@ describe('Dataset', () => {
         filesTabInfiniteScrollEnabled={true}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -575,7 +560,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -610,7 +594,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )
@@ -632,7 +615,6 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
       />,
       testDataset
     )

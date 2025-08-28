@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/FileMetadata'
 import { Download as DownloadIcon } from 'react-bootstrap-icons'
 import { DatasetExploreOptions } from './DatasetExploreOptions'
-import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 
 interface AccessDatasetMenuProps {
   version: DatasetVersion
@@ -19,7 +18,6 @@ interface AccessDatasetMenuProps {
   downloadUrls: DatasetDownloadUrls
   fileStore: string | undefined
   persistentId: string
-  externalToolsRepository: ExternalToolsRepository
 }
 
 export function AccessDatasetMenu({
@@ -29,8 +27,7 @@ export function AccessDatasetMenu({
   fileDownloadSizes,
   downloadUrls,
   fileStore,
-  persistentId,
-  externalToolsRepository
+  persistentId
 }: AccessDatasetMenuProps) {
   const { t } = useTranslation('dataset')
 
@@ -70,10 +67,7 @@ export function AccessDatasetMenu({
         fileDownloadSizes={fileDownloadSizes}
         downloadUrls={downloadUrls}
       />
-      <DatasetExploreOptions
-        externalToolsRepository={externalToolsRepository}
-        persistentId={persistentId}
-      />
+      <DatasetExploreOptions persistentId={persistentId} />
     </DropdownButton>
   )
 }

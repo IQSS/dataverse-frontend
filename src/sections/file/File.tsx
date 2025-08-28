@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next'
 import styles from './File.module.scss'
 import { ButtonGroup, Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
-import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 import { useFile } from './useFile'
 import { useEffect, useMemo, useState } from 'react'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
@@ -29,7 +28,6 @@ interface FileProps {
   repository: FileRepository
   datasetRepository: DatasetRepository
   id: number
-  externalToolsRepository: ExternalToolsRepository
   datasetVersionNumber?: string
   toolTypeSelectedQueryParam?: string
 }
@@ -39,7 +37,6 @@ export function File({
   id,
   datasetVersionNumber,
   datasetRepository,
-  externalToolsRepository,
   toolTypeSelectedQueryParam
 }: FileProps) {
   useScrollTop()
@@ -178,7 +175,6 @@ export function File({
                     applicableTools={fileApplicablePreviewOrQueryTools}
                     toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
                     isInView={activeTab === FilePageHelper.EXT_TOOL_TAB_KEY}
-                    externalToolsRepository={externalToolsRepository}
                   />
                 </div>
               </Tabs.Tab>

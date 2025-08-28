@@ -18,7 +18,6 @@ import { searchParamVersionToDomainVersion } from '../../router'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
-import { ExternalToolsJSDataverseRepository } from '@/externalTools/infrastructure/repositories/ExternalToolsJSDataverseRepository'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
@@ -26,7 +25,6 @@ const fileRepository = new FileJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
 const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
-const externalToolsRepository = new ExternalToolsJSDataverseRepository()
 
 export class DatasetFactory {
   static create(): ReactElement {
@@ -81,7 +79,6 @@ function DatasetWithSearchParams() {
           fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           contactRepository={contactRepository}
-          externalToolsRepository={externalToolsRepository}
           filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
           tab={tab}
         />
@@ -100,7 +97,6 @@ function DatasetWithSearchParams() {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
-        externalToolsRepository={externalToolsRepository}
         publishInProgress={publishInProgress}
         filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
         tab={tab}

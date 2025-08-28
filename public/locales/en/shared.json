@@ -290,5 +290,7 @@
     "truncateLessBtn": "Collapse {{contentName}}",
     "truncateMoreTip": "Click to read the full {{contentName}}",
     "truncateLessTip": "Click to collapse the {{contentName}}"
-  }
+  },
+  "exploreOptions": "Explore Options",
+  "queryOptions": "Query Options"
 }

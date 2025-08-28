@@ -9,22 +9,14 @@ describe('DatasetExploreOptions', () => {
     externalToolsRepository.getExternalTools = cy.stub().resolves([])
     cy.customMount(
       <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
-        <DatasetExploreOptions
-          externalToolsRepository={externalToolsRepository}
-          persistentId="testPersistentId"
-        />
+        <DatasetExploreOptions persistentId="testPersistentId" />
       </ExternalToolsProvider>
     )
     cy.findByText('Explore Options').should('not.exist')
   })
 
   it('renders the explore options if there are dataset explore tools', () => {
-    cy.customMount(
-      <DatasetExploreOptions
-        externalToolsRepository={externalToolsRepository}
-        persistentId="testPersistentId"
-      />
-    )
+    cy.customMount(<DatasetExploreOptions persistentId="testPersistentId" />)
 
     cy.contains('Explore Options').should('exist')
     cy.contains('Dataset Explore Tool').should('exist')

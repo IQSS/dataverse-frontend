@@ -31,7 +31,6 @@ import { DatasetVersions } from './dataset-versions/DatasetVersions'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { DatasetMetrics } from './dataset-metrics/DatasetMetrics'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
-import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -39,7 +38,6 @@ interface DatasetProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionRepository: CollectionRepository
   contactRepository: ContactRepository
-  externalToolsRepository: ExternalToolsRepository
   filesTabInfiniteScrollEnabled?: boolean
   publishInProgress?: boolean
   tab?: string
@@ -51,7 +49,6 @@ export function Dataset({
   metadataBlockInfoRepository,
   collectionRepository,
   contactRepository,
-  externalToolsRepository,
   filesTabInfiniteScrollEnabled,
   publishInProgress,
   tab = 'files'
@@ -151,7 +148,6 @@ export function Dataset({
                 collectionRepository={collectionRepository}
                 dataset={dataset}
                 contactRepository={contactRepository}
-                externalToolsRepository={externalToolsRepository}
               />
               <DatasetMetrics
                 datasetRepository={datasetRepository}

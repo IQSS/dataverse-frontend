@@ -8,7 +8,6 @@ import {
   DatasetVersionMother
 } from '../../../../../tests/component/dataset/domain/models/DatasetMother'
 import { AccessDatasetMenu } from '../../../../sections/dataset/dataset-action-buttons/access-dataset-menu/AccessDatasetMenu'
-import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 
 const meta: Meta<typeof AccessDatasetMenu> = {
   title: 'Sections/Dataset Page/DatasetActionButtons/AccessDatasetMenu',
@@ -32,7 +31,6 @@ export const WithDownloadNotAllowed: Story = {
       fileDownloadSizes={[DatasetFileDownloadSizeMother.createOriginal()]}
       downloadUrls={DatasetDownloadUrlsMother.create()}
       fileStore="s3"
-      externalToolsRepository={new ExternalToolsMockRepository()}
       persistentId="doi:10.5072/FK2/ABCDEFGH"
     />
   )
@@ -46,7 +44,6 @@ export const WithoutTabularFiles: Story = {
       fileDownloadSizes={[DatasetFileDownloadSizeMother.createOriginal()]}
       downloadUrls={DatasetDownloadUrlsMother.create()}
       fileStore="s3"
-      externalToolsRepository={new ExternalToolsMockRepository()}
       persistentId="doi:10.5072/FK2/ABCDEFGH"
     />
   )
@@ -63,7 +60,6 @@ export const WithTabularFiles: Story = {
       ]}
       downloadUrls={DatasetDownloadUrlsMother.create()}
       fileStore="s3"
-      externalToolsRepository={new ExternalToolsMockRepository()}
       persistentId="doi:10.5072/FK2/ABCDEFGH"
     />
   )

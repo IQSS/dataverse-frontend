@@ -14,6 +14,7 @@ type ExternalToolsContextValue = {
   fileExploreTools: ExternalTool[]
   filePreviewTools: ExternalTool[]
   fileQueryTools: ExternalTool[]
+  externalToolsRepository: ExternalToolsRepository
 }
 
 const ExternalToolsContext = createContext<ExternalToolsContextValue | undefined>(undefined)
@@ -90,7 +91,8 @@ export function ExternalToolsProvider({
       fileExploreTools,
       filePreviewTools,
       fileQueryTools,
-      refreshExternalTools: fetchExternalTools
+      refreshExternalTools: fetchExternalTools,
+      externalToolsRepository
     }),
     [
       externalTools,
@@ -100,7 +102,8 @@ export function ExternalToolsProvider({
       fileExploreTools,
       filePreviewTools,
       fileQueryTools,
-      fetchExternalTools
+      fetchExternalTools,
+      externalToolsRepository
     ]
   )
 
