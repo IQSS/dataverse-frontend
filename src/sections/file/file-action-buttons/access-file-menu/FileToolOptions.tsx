@@ -13,14 +13,17 @@ type ToolKind = 'explore' | 'query'
 interface FileToolOptionsProps {
   fileId: number
   kind: ToolKind
+  userHasDownloadPermission: boolean
 }
 
-const FileToolOptions = ({ fileId, kind }: FileToolOptionsProps) => {
+const FileToolOptions = ({ fileId, kind, userHasDownloadPermission }: FileToolOptionsProps) => {
   const { t } = useTranslation('shared')
   const { fileExploreTools, fileQueryTools, externalToolsRepository } = useExternalTools()
 
   const tools = kind === 'explore' ? fileExploreTools : fileQueryTools
   if (!tools || tools.length === 0) return null
+
+  if (!userHasDownloadPermission) return null
 
   const headerLabel = kind === 'explore' ? t('exploreOptions') : t('queryOptions')
 

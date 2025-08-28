@@ -35,9 +35,12 @@ export function FileActionButtons({
       file.metadata.type.value
     )
 
+  const showExternalToolsButtons =
+    fileApplicablePreviewOrQueryTools.length > 0 && file.permissions.canDownloadFile
+
   return (
     <ButtonGroup aria-label={t('actions.buttons')} vertical={isBelow768px}>
-      {fileApplicablePreviewOrQueryTools.length > 0 &&
+      {showExternalToolsButtons &&
         fileApplicablePreviewOrQueryTools.map((tool) => (
           <Tooltip placement="top" overlay={tool.displayName} key={tool.id}>
             <LinkToPage

@@ -45,7 +45,9 @@ export function File({
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
   const { externalTools } = useExternalTools()
   const [activeTab, setActiveTab] = useState<string>(
-    toolTypeSelectedQueryParam ? FilePageHelper.EXT_TOOL_TAB_KEY : 'metadata'
+    toolTypeSelectedQueryParam && file?.permissions.canDownloadFile
+      ? FilePageHelper.EXT_TOOL_TAB_KEY
+      : 'metadata'
   )
 
   const fileApplicablePreviewOrQueryTools = useMemo(
@@ -167,7 +169,7 @@ export function File({
             </Col>
           </Row>
           <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
-            {fileApplicablePreviewOrQueryTools.length > 0 && (
+            {fileApplicablePreviewOrQueryTools.length > 0 && file.permissions.canDownloadFile && (
               <Tabs.Tab eventKey={FilePageHelper.EXT_TOOL_TAB_KEY} title={externalToolTabTitle}>
                 <div className={styles['tab-container']}>
                   <FileEmbededExternalTool
