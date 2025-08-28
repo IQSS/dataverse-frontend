@@ -157,7 +157,7 @@ services:
         condition: service_completed_successfully
     restart: on-failure
     expose:
-      - '8983'
+      - '8983:8983'
     networks:
       - dataverse
     command:

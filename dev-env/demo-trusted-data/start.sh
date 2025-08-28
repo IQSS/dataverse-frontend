@@ -1,0 +1,1 @@
+cd .. && ./run-env.sh 11747-review-dataset-type
