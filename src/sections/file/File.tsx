@@ -162,6 +162,7 @@ export function File({
                     storageIdentifier={file.metadata.storageIdentifier}
                     existingLabels={file.metadata.labels}
                     isTabularFile={file.metadata.isTabular}
+                    fileType={file.metadata.type.value}
                     datasetRepository={datasetRepository}
                   />
                 )}

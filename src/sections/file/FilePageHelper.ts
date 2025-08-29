@@ -27,15 +27,12 @@ export class FilePageHelper {
       .filter((tool) => (fileType ? tool.contentType === fileType : false))
   }
 
-  static getApplicableExploreOrQueryToolsForFileType(
+  static getApplicableToolsForFileType(
     externalTools: ExternalTool[],
     fileType?: string
   ): ExternalTool[] {
     return externalTools
       .filter((tool) => tool.scope === ToolScope.File)
-      .filter(
-        (tool) => tool.types.includes(ToolType.Explore) || tool.types.includes(ToolType.Query)
-      )
       .filter((tool) => (fileType ? tool.contentType === fileType : false))
   }
 

@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
-import { BarChartFill as BarChartFillIcon } from 'react-bootstrap-icons'
+import {
+  BarChartFill as BarChartFillIcon,
+  GearFill as GearFillIcon,
+  type Icon as IconType
+} from 'react-bootstrap-icons'
 import { DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { getFileExternalToolResolved } from '@/externalTools/domain/useCases/GetFileExternalToolResolved'
@@ -9,43 +13,46 @@ import { ExternalToolsRepository } from '@/externalTools/domain/repositories/Ext
 import { FilePageHelper } from '../../FilePageHelper'
 import { ExternalTool } from '@/externalTools/domain/models/ExternalTool'
 
-type ToolKind = 'explore' | 'query'
+type ToolKind = 'explore' | 'query' | 'configure'
 
 interface FileToolOptionsProps {
   fileId: number
   fileType: string
   kind: ToolKind
-  userHasDownloadPermission: boolean
 }
 
-const FileToolOptions = ({
-  fileId,
-  fileType,
-  kind,
-  userHasDownloadPermission
-}: FileToolOptionsProps) => {
+const FileToolOptions = ({ fileId, fileType, kind }: FileToolOptionsProps) => {
   const { t } = useTranslation('shared')
-  const { fileExploreTools, fileQueryTools, externalTools, externalToolsRepository } =
+  const { fileExploreTools, fileQueryTools, fileConfigureTools, externalToolsRepository } =
     useExternalTools()
 
-  if (!userHasDownloadPermission) return null
+  /** Per-kind config (single source of truth) */
+  const configByKind: Record<
+    ToolKind,
+    {
+      tools: ExternalTool[]
+      headerI18nKey: string
+      Icon: IconType
+    }
+  > = {
+    explore: { tools: fileExploreTools, headerI18nKey: 'exploreOptions', Icon: BarChartFillIcon },
+    query: { tools: fileQueryTools, headerI18nKey: 'queryOptions', Icon: BarChartFillIcon },
+    configure: { tools: fileConfigureTools, headerI18nKey: 'configureOptions', Icon: GearFillIcon }
+  }
 
-  const tools = kind === 'explore' ? fileExploreTools : fileQueryTools
+  const { tools, headerI18nKey, Icon } = configByKind[kind]
 
   if (!tools || tools.length === 0) return null
 
-  const fileApplicablePreviewOrQueryTools: ExternalTool[] =
-    FilePageHelper.getApplicableExploreOrQueryToolsForFileType(externalTools, fileType)
+  const applicableTools = FilePageHelper.getApplicableToolsForFileType(tools, fileType)
 
-  if (fileApplicablePreviewOrQueryTools.length === 0) return null
-
-  const headerLabel = kind === 'explore' ? t('exploreOptions') : t('queryOptions')
+  if (applicableTools.length === 0) return null
 
   return (
     <>
       <DropdownHeader className="d-flex align-items-center gap-1">
-        {headerLabel}
-        <BarChartFillIcon />
+        {t(headerI18nKey)}
+        <Icon />
       </DropdownHeader>
 
       {tools.map((tool) => (
@@ -122,10 +129,14 @@ const ToolOption = ({
 }
 
 /** Wrappers for readability */
-export const FileExploreOptions = (props: Omit<FileToolOptionsProps, 'kind'>) => (
+export const FileExploreToolsOptions = (props: Omit<FileToolOptionsProps, 'kind'>) => (
   <FileToolOptions kind="explore" {...props} />
 )
 
-export const FileQueryOptions = (props: Omit<FileToolOptionsProps, 'kind'>) => (
+export const FileQueryToolsOptions = (props: Omit<FileToolOptionsProps, 'kind'>) => (
   <FileToolOptions kind="query" {...props} />
+)
+
+export const FileConfigureToolsOptions = (props: Omit<FileToolOptionsProps, 'kind'>) => (
+  <FileToolOptions kind="configure" {...props} />
 )
