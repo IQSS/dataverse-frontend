@@ -18,10 +18,10 @@ describe('FileToolOptions', () => {
       ])
   })
 
-  it('renders the tool options if user has download permission and file explore tools are available', () => {
+  it('renders the tool options if user has download permission and file explore tools are available and compatible with the type', () => {
     cy.customMount(
       <ExternalToolsProvider externalToolsRepository={testExternalToolsRepository}>
-        <FileExploreOptions fileId={1} userHasDownloadPermission={true} />
+        <FileExploreOptions fileId={1} userHasDownloadPermission={true} fileType="text/plain" />
       </ExternalToolsProvider>
     )
 
@@ -30,10 +30,10 @@ describe('FileToolOptions', () => {
     cy.findByText('File Explore Tool').should('exist')
   })
 
-  it('renders the tool options if user has download permission and file query tools are available', () => {
+  it('renders the tool options if user has download permission and file query tools are available and compatible with the type', () => {
     cy.customMount(
       <ExternalToolsProvider externalToolsRepository={testExternalToolsRepository}>
-        <FileQueryOptions fileId={1} userHasDownloadPermission={true} />
+        <FileQueryOptions fileId={1} userHasDownloadPermission={true} fileType="text/plain" />
       </ExternalToolsProvider>
     )
 
@@ -45,7 +45,18 @@ describe('FileToolOptions', () => {
   it('does not render the tool options if user lacks download permission', () => {
     cy.customMount(
       <ExternalToolsProvider externalToolsRepository={testExternalToolsRepository}>
-        <FileQueryOptions fileId={1} userHasDownloadPermission={false} />
+        <FileQueryOptions fileId={1} userHasDownloadPermission={false} fileType="text/plain" />
+      </ExternalToolsProvider>
+    )
+
+    cy.findByText('Explore Options').should('not.exist')
+    cy.findByText('Query Options').should('not.exist')
+  })
+
+  it('does not render the tool options if there are not applicable tools for the file type', () => {
+    cy.customMount(
+      <ExternalToolsProvider externalToolsRepository={testExternalToolsRepository}>
+        <FileQueryOptions fileId={1} userHasDownloadPermission={true} fileType="application/pdf" />
       </ExternalToolsProvider>
     )
 

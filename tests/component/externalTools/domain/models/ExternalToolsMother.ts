@@ -21,6 +21,16 @@ export class ExternalToolsMother {
     }
   }
 
+  static createDatasetConfigureTool(): ExternalTool {
+    return {
+      id: 5,
+      displayName: 'Dataset Configure Tool',
+      description: 'Description for Dataset Configure Tool',
+      scope: ToolScope.Dataset,
+      types: [ToolType.Configure]
+    }
+  }
+
   static createFilePreviewTool(): ExternalTool {
     return {
       id: 2,

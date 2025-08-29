@@ -11,6 +11,7 @@ type ExternalToolsContextValue = {
   error: string | null
   refreshExternalTools: () => Promise<void>
   datasetExploreTools: ExternalTool[]
+  datasetConfigureTools: ExternalTool[]
   fileExploreTools: ExternalTool[]
   filePreviewTools: ExternalTool[]
   fileQueryTools: ExternalTool[]
@@ -64,6 +65,12 @@ export function ExternalToolsProvider({
     )
   }, [externalTools])
 
+  const datasetConfigureTools = useMemo(() => {
+    return externalTools.filter(
+      (tool) => tool.scope === ToolScope.Dataset && tool.types.includes(ToolType.Configure)
+    )
+  }, [externalTools])
+
   const fileExploreTools = useMemo(() => {
     return externalTools.filter(
       (tool) => tool.scope === ToolScope.File && tool.types.includes(ToolType.Explore)
@@ -88,6 +95,7 @@ export function ExternalToolsProvider({
       loading,
       error,
       datasetExploreTools,
+      datasetConfigureTools,
       fileExploreTools,
       filePreviewTools,
       fileQueryTools,
@@ -99,6 +107,7 @@ export function ExternalToolsProvider({
       loading,
       error,
       datasetExploreTools,
+      datasetConfigureTools,
       fileExploreTools,
       filePreviewTools,
       fileQueryTools,

@@ -1,4 +1,3 @@
-// FileToolOptions.tsx
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
@@ -7,23 +6,38 @@ import { DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-syste
 import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { getFileExternalToolResolved } from '@/externalTools/domain/useCases/GetFileExternalToolResolved'
 import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
+import { FilePageHelper } from '../../FilePageHelper'
+import { ExternalTool } from '@/externalTools/domain/models/ExternalTool'
 
 type ToolKind = 'explore' | 'query'
 
 interface FileToolOptionsProps {
   fileId: number
+  fileType: string
   kind: ToolKind
   userHasDownloadPermission: boolean
 }
 
-const FileToolOptions = ({ fileId, kind, userHasDownloadPermission }: FileToolOptionsProps) => {
+const FileToolOptions = ({
+  fileId,
+  fileType,
+  kind,
+  userHasDownloadPermission
+}: FileToolOptionsProps) => {
   const { t } = useTranslation('shared')
-  const { fileExploreTools, fileQueryTools, externalToolsRepository } = useExternalTools()
-
-  const tools = kind === 'explore' ? fileExploreTools : fileQueryTools
-  if (!tools || tools.length === 0) return null
+  const { fileExploreTools, fileQueryTools, externalTools, externalToolsRepository } =
+    useExternalTools()
 
   if (!userHasDownloadPermission) return null
+
+  const tools = kind === 'explore' ? fileExploreTools : fileQueryTools
+
+  if (!tools || tools.length === 0) return null
+
+  const fileApplicablePreviewOrQueryTools: ExternalTool[] =
+    FilePageHelper.getApplicableExploreOrQueryToolsForFileType(externalTools, fileType)
+
+  if (fileApplicablePreviewOrQueryTools.length === 0) return null
 
   const headerLabel = kind === 'explore' ? t('exploreOptions') : t('queryOptions')
 

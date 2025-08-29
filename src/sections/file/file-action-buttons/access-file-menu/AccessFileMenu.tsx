@@ -83,8 +83,16 @@ export function AccessFileMenu({
           isTabular={metadata.isTabular}
           userHasDownloadPermission={userHasDownloadPermission}
         />
-        <FileExploreOptions fileId={id} userHasDownloadPermission={userHasDownloadPermission} />
-        <FileQueryOptions fileId={id} userHasDownloadPermission={userHasDownloadPermission} />
+        <FileExploreOptions
+          fileId={id}
+          userHasDownloadPermission={userHasDownloadPermission}
+          fileType={metadata.type.value}
+        />
+        <FileQueryOptions
+          fileId={id}
+          userHasDownloadPermission={userHasDownloadPermission}
+          fileType={metadata.type.value}
+        />
       </DropdownButton>
     </MenuWrapper>
   )
