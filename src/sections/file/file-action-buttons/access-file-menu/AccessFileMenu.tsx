@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { FileDownloadOptions } from './FileDownloadOptions'
 import { FileAccess } from '../../../../files/domain/models/FileAccess'
 import { FileMetadata } from '../../../../files/domain/models/FileMetadata'
-import { FileExploreOptions, FileQueryOptions } from './FileToolOptions'
+import { FileExploreToolsOptions, FileQueryToolsOptions } from './FileToolOptions'
 
 interface FileActionButtonAccessFileProps {
   id: number
@@ -83,16 +83,12 @@ export function AccessFileMenu({
           isTabular={metadata.isTabular}
           userHasDownloadPermission={userHasDownloadPermission}
         />
-        <FileExploreOptions
-          fileId={id}
-          userHasDownloadPermission={userHasDownloadPermission}
-          fileType={metadata.type.value}
-        />
-        <FileQueryOptions
-          fileId={id}
-          userHasDownloadPermission={userHasDownloadPermission}
-          fileType={metadata.type.value}
-        />
+        {userHasDownloadPermission && (
+          <>
+            <FileExploreToolsOptions fileId={id} fileType={metadata.type.value} />
+            <FileQueryToolsOptions fileId={id} fileType={metadata.type.value} />
+          </>
+        )}
       </DropdownButton>
     </MenuWrapper>
   )
