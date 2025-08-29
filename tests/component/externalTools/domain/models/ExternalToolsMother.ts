@@ -26,7 +26,8 @@ export class ExternalToolsMother {
       displayName: 'File Preview Tool',
       description: 'Description for File Preview Tool',
       scope: ToolScope.File,
-      types: [ToolType.Preview]
+      types: [ToolType.Preview],
+      contentType: 'text/plain'
     }
   }
 
@@ -36,7 +37,19 @@ export class ExternalToolsMother {
       displayName: 'File Explore Tool',
       description: 'Description for File Explore Tool',
       scope: ToolScope.File,
-      types: [ToolType.Explore]
+      types: [ToolType.Explore],
+      contentType: 'text/plain'
+    }
+  }
+
+  static createFileQueryTool(): ExternalTool {
+    return {
+      id: 4,
+      displayName: 'File Query Tool',
+      description: 'Description for File Query Tool',
+      scope: ToolScope.File,
+      types: [ToolType.Query],
+      contentType: 'text/plain'
     }
   }
 }

@@ -10,6 +10,8 @@ import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/mod
 import { Download as DownloadIcon } from 'react-bootstrap-icons'
 import { DatasetExploreOptions } from './DatasetExploreOptions'
 
+// TODO: add compute feature
+
 interface AccessDatasetMenuProps {
   version: DatasetVersion
   permissions: DatasetPermissions
@@ -107,5 +109,3 @@ const DatasetDownloadOptions = ({
     </DropdownButtonItem>
   )
 }
-
-// TODO: add compute feature
