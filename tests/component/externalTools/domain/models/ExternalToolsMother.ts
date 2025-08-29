@@ -7,7 +7,8 @@ export class ExternalToolsMother {
       this.createDatasetExploreTool(),
       this.createFilePreviewTool(),
       this.createFileExploreTool(),
-      this.createFileQueryTool()
+      this.createFileQueryTool(),
+      this.createFileConfigureTool()
     ].map((tool) => ({ ...tool, ...props }))
   }
 
@@ -60,6 +61,17 @@ export class ExternalToolsMother {
       description: 'Description for File Query Tool',
       scope: ToolScope.File,
       types: [ToolType.Query],
+      contentType: 'text/plain'
+    }
+  }
+
+  static createFileConfigureTool(): ExternalTool {
+    return {
+      id: 6,
+      displayName: 'File Configure Tool',
+      description: 'Description for File Configure Tool',
+      scope: ToolScope.File,
+      types: [ToolType.Configure],
       contentType: 'text/plain'
     }
   }
