@@ -1,30 +1,38 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
-import { BarChartFill as BarChartFillIcon } from 'react-bootstrap-icons'
+import { BarChartFill as BarChartFillIcon, GearFill } from 'react-bootstrap-icons'
 import { DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { getDatasetExternalToolResolved } from '@/externalTools/domain/useCases/GetDatasetExternalToolResolved'
 import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 
-interface DatasetExploreOptionsProps {
+type ToolKind = 'explore' | 'configure'
+
+interface DatasetToolOptionsProps {
   persistentId: string
+  kind: ToolKind
 }
 
-export const DatasetExploreOptions = ({ persistentId }: DatasetExploreOptionsProps) => {
+const DatasetToolOptions = ({ persistentId, kind }: DatasetToolOptionsProps) => {
   const { t } = useTranslation('shared')
-  const { datasetExploreTools, externalToolsRepository } = useExternalTools()
+  const { datasetExploreTools, datasetConfigureTools, externalToolsRepository } = useExternalTools()
 
-  if (!datasetExploreTools || datasetExploreTools.length === 0) return null
+  const tools = kind === 'explore' ? datasetExploreTools : datasetConfigureTools
+  if (!tools || tools.length === 0) return null
+
+  const headerLabel = kind === 'explore' ? t('exploreOptions') : t('configureOptions')
+  const icon = kind === 'explore' ? <BarChartFillIcon /> : <GearFill />
 
   return (
     <>
       <DropdownHeader className="d-flex align-items-center gap-1">
-        {t('exploreOptions')}
-        <BarChartFillIcon />
+        {headerLabel}
+        {icon}
       </DropdownHeader>
-      {datasetExploreTools.map((tool) => (
-        <ExploreOption
+
+      {tools.map((tool) => (
+        <ToolOption
           toolId={tool.id}
           toolDisplayName={tool.displayName}
           externalToolsRepository={externalToolsRepository}
@@ -36,19 +44,19 @@ export const DatasetExploreOptions = ({ persistentId }: DatasetExploreOptionsPro
   )
 }
 
-interface ExploreOptionProps {
+interface ToolOptionProps {
   toolId: number
   toolDisplayName: string
   persistentId: string
   externalToolsRepository: ExternalToolsRepository
 }
 
-const ExploreOption = ({
+const ToolOption = ({
   toolId,
   toolDisplayName,
   persistentId,
   externalToolsRepository
-}: ExploreOptionProps) => {
+}: ToolOptionProps) => {
   const [isOpening, setIsOpening] = useState(false)
   const { t, i18n } = useTranslation('shared')
 
@@ -96,3 +104,12 @@ const ExploreOption = ({
     </DropdownButtonItem>
   )
 }
+
+/** Wrappers for readability */
+export const DatasetExploreOptions = (props: Omit<DatasetToolOptionsProps, 'kind'>) => (
+  <DatasetToolOptions kind="explore" {...props} />
+)
+
+export const DatasetConfigureOptions = (props: Omit<DatasetToolOptionsProps, 'kind'>) => (
+  <DatasetToolOptions kind="configure" {...props} />
+)

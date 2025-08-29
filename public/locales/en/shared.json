@@ -292,5 +292,6 @@
     "truncateLessTip": "Click to collapse the {{contentName}}"
   },
   "exploreOptions": "Explore Options",
-  "queryOptions": "Query Options"
+  "queryOptions": "Query Options",
+  "configureOptions": "Configure Options"
 }
