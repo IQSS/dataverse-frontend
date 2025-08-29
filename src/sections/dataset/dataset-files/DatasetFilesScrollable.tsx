@@ -173,23 +173,24 @@ export function DatasetFilesScrollable({
             onInfiniteScrollMode
           />
         </header>
-
-        <FilesContext.Provider
-          value={{ files: accumulatedFiles, isLoading, refreshFiles: refreshFiles }}>
-          <FilesTableScrollable
-            files={accumulatedFiles}
-            paginationInfo={paginationInfo}
-            filesTotalDownloadSize={filesTotalDownloadSize}
-            criteria={criteria}
-            criteriaContainerHeight={criteriaContainerSize.height}
-            sentryRef={sentryRef}
-            showSentryRef={showSentryRef}
-            isEmptyFiles={isEmptyFiles}
-            accumulatedCount={accumulatedCount}
-            fileRepository={filesRepository}
-            datasetRepository={datasetRepository}
-          />
-        </FilesContext.Provider>
+        <div className={styles['files-scrollable-container__content']}>
+          <FilesContext.Provider
+            value={{ files: accumulatedFiles, isLoading, refreshFiles: refreshFiles }}>
+            <FilesTableScrollable
+              files={accumulatedFiles}
+              paginationInfo={paginationInfo}
+              filesTotalDownloadSize={filesTotalDownloadSize}
+              criteria={criteria}
+              criteriaContainerHeight={criteriaContainerSize.height}
+              sentryRef={sentryRef}
+              showSentryRef={showSentryRef}
+              isEmptyFiles={isEmptyFiles}
+              accumulatedCount={accumulatedCount}
+              fileRepository={filesRepository}
+              datasetRepository={datasetRepository}
+            />
+          </FilesContext.Provider>
+        </div>
       </div>
     </section>
   )

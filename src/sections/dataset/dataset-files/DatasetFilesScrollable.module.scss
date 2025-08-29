@@ -8,7 +8,7 @@
     min-height: auto;
   }
 
-  .criteria-form-container {
+  .criteria-form-container { 
     position: sticky;
     top: 0;
     z-index: 2;
@@ -18,5 +18,10 @@
 
   table {
     margin-bottom: 0;
+  }
+
+  .files-scrollable-container__content {
+    overflow-x: auto;
+    overflow-y: auto;
   }
 }
