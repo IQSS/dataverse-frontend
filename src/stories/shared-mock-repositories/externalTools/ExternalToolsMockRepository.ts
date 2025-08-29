@@ -41,3 +41,13 @@ export class ExternalToolsMockRepository implements ExternalToolsRepository {
     })
   }
 }
+
+export class ExternalToolsEmptyMockRepository implements Partial<ExternalToolsMockRepository> {
+  getExternalTools(): Promise<ExternalTool[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([])
+      }, FakerHelper.loadingTimout())
+    })
+  }
+}

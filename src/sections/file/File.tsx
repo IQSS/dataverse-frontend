@@ -21,7 +21,7 @@ import { FileVersions } from './file-version/FileVersions'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { FilePageHelper } from './FilePageHelper'
-import { FileEmbededExternalTool } from './file-embeded-external-tool/FileEmbededExternalTool'
+import { FileEmbeddedExternalTool } from './file-embedded-external-tool/FileEmbeddedExternalTool'
 import { useScrollTop } from '@/shared/hooks/useScrollTop'
 
 interface FileProps {
@@ -43,7 +43,7 @@ export function File({
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
-  const { externalTools } = useExternalTools()
+  const { externalTools, externalToolsRepository } = useExternalTools()
   const [activeTab, setActiveTab] = useState<string>(
     toolTypeSelectedQueryParam && file?.permissions.canDownloadFile
       ? FilePageHelper.EXT_TOOL_TAB_KEY
@@ -172,11 +172,12 @@ export function File({
             {fileApplicablePreviewOrQueryTools.length > 0 && file.permissions.canDownloadFile && (
               <Tabs.Tab eventKey={FilePageHelper.EXT_TOOL_TAB_KEY} title={externalToolTabTitle}>
                 <div className={styles['tab-container']}>
-                  <FileEmbededExternalTool
+                  <FileEmbeddedExternalTool
                     file={file}
                     applicableTools={fileApplicablePreviewOrQueryTools}
                     toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
                     isInView={activeTab === FilePageHelper.EXT_TOOL_TAB_KEY}
+                    externalToolsRepository={externalToolsRepository}
                   />
                 </div>
               </Tabs.Tab>

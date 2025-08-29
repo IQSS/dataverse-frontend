@@ -4,6 +4,8 @@ import { WithI18next } from '../../../WithI18next'
 import { WithSettings } from '../../../WithSettings'
 import { FileAccessMother } from '../../../../../tests/component/files/domain/models/FileAccessMother'
 import { FileMetadataMother } from '../../../../../tests/component/files/domain/models/FileMetadataMother'
+import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
+import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 
 const meta: Meta<typeof AccessFileMenu> = {
   title: 'Sections/File Page/Action Buttons/AccessFileMenu',
@@ -166,5 +168,21 @@ export const WithEmbargoAndRestrictedWithAccessGranted: Story = {
       ingestInProgress={false}
       isDraft={false}
     />
+  )
+}
+
+export const WithExploreOptionsTools: Story = {
+  render: () => (
+    <ExternalToolsProvider externalToolsRepository={new ExternalToolsMockRepository()}>
+      <AccessFileMenu
+        id={1}
+        access={FileAccessMother.createPublic()}
+        metadata={FileMetadataMother.create()}
+        userHasDownloadPermission
+        isDeaccessioned={false}
+        ingestInProgress={false}
+        isDraft={false}
+      />
+    </ExternalToolsProvider>
   )
 }

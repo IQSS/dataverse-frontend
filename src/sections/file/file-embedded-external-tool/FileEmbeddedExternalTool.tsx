@@ -4,30 +4,31 @@ import cn from 'classnames'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { Alert, DropdownButton, DropdownButtonItem, Spinner } from '@iqss/dataverse-design-system'
 import { BoxArrowUpRight } from 'react-bootstrap-icons'
-import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { ExternalTool } from '@/externalTools/domain/models/ExternalTool'
+import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 import { FileExternalToolResolved } from '@/externalTools/domain/models/FileExternalToolResolved'
 import { getFileExternalToolResolved } from '@/externalTools/domain/useCases/GetFileExternalToolResolved'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { File } from '@/files/domain/models/File'
 import { FilePageHelper } from '../FilePageHelper'
-import styles from './FileEmbededExternalTool.module.scss'
+import styles from './FileEmbeddedExternalTool.module.scss'
 
-interface FileEmbededExternalToolProps {
+interface FileEmbeddedExternalToolProps {
   file: File
   isInView: boolean
   applicableTools: ExternalTool[]
   toolTypeSelectedQueryParam: string | undefined
+  externalToolsRepository: ExternalToolsRepository
 }
 
-export const FileEmbededExternalTool = ({
+export const FileEmbeddedExternalTool = ({
   file,
   isInView,
   applicableTools,
-  toolTypeSelectedQueryParam
-}: FileEmbededExternalToolProps) => {
+  toolTypeSelectedQueryParam,
+  externalToolsRepository
+}: FileEmbeddedExternalToolProps) => {
   const { t, i18n } = useTranslation('file', { keyPrefix: 'previewTab' })
-  const { externalToolsRepository } = useExternalTools()
   const [toolIdSelected, setToolIdSelected] = useState<number>(
     FilePageHelper.getDefaultSelectedToolId(toolTypeSelectedQueryParam, applicableTools)
   )

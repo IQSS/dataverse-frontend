@@ -4,7 +4,7 @@ import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { createBrowserRouter, RouteObject, RouterProvider } from 'react-router-dom'
 import { FakerHelper } from '../tests/component/shared/FakerHelper'
 import { ExternalToolsProvider } from '../src/shared/contexts/external-tools/ExternalToolsProvider'
-import { ExternalToolsMockRepository } from '../src/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
+import { ExternalToolsEmptyMockRepository } from '../src/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 import 'react-loading-skeleton/dist/skeleton.css'
 import '../src/assets/global.scss'
 import '../src/assets/swal-custom.scss'
@@ -34,7 +34,7 @@ const preview: Preview = {
 
       return (
         <ThemeProvider>
-          <ExternalToolsProvider externalToolsRepository={new ExternalToolsMockRepository()}>
+          <ExternalToolsProvider externalToolsRepository={new ExternalToolsEmptyMockRepository()}>
             <RouterProvider router={browserRouter} />
           </ExternalToolsProvider>
         </ThemeProvider>

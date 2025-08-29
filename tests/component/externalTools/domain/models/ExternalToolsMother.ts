@@ -6,7 +6,8 @@ export class ExternalToolsMother {
     return [
       this.createDatasetExploreTool(),
       this.createFilePreviewTool(),
-      this.createFileExploreTool()
+      this.createFileExploreTool(),
+      this.createFileQueryTool()
     ].map((tool) => ({ ...tool, ...props }))
   }
 
