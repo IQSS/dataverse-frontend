@@ -1,23 +1,33 @@
 import { useTranslation } from 'react-i18next'
 import { BriefcaseFill } from 'react-bootstrap-icons'
 import { Button } from '@iqss/dataverse-design-system'
-import styles from './EditDatasetTermsButton.module.scss'
 import { useSession } from '@/sections/session/SessionContext'
 import { useDataset } from '@/sections/dataset/DatasetContext'
-import { useNotImplementedModal } from '@/sections/not-implemented/NotImplementedModalContext'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
+import styles from './EditDatasetTermsButton.module.scss'
 
 export function EditDatasetTermsButton() {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const { dataset } = useDataset()
-  const { showModal } = useNotImplementedModal()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   if (!user || !dataset?.permissions.canUpdateDataset) {
     return null
   }
 
   const handleClick = () => {
-    showModal()
+    // Preserve current dataset identifiers in query params if present
+    const newParams = new URLSearchParams(searchParams)
+    if (dataset?.persistentId) {
+      newParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+    }
+    if (dataset?.version.number) {
+      newParams.set(QueryParamKey.DATASET_VERSION, dataset.version.number.toString())
+    }
+    navigate(`${Route.EDIT_DATASET_TERMS}?${newParams.toString()}`)
   }
 
   return (

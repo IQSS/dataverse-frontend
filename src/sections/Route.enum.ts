@@ -10,6 +10,7 @@ export enum Route {
   CREATE_DATASET = '/datasets/:collectionId/create',
   UPLOAD_DATASET_FILES = '/datasets/upload-files',
   EDIT_DATASET_METADATA = '/datasets/edit-metadata',
+  EDIT_DATASET_TERMS = '/datasets/edit-terms',
   FILES = '/files',
   EDIT_FILE_METADATA = '/files/edit-metadata',
   FILES_REPLACE = '/files/replace',

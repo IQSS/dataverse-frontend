@@ -1,7 +1,7 @@
 {
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
-  "termsTabTitle": "Terms",
+  "termsTabTitle": "Terms and Guestbook",
   "anonymizedFieldValue": "withheld",
   "customTerms": {
     "title": "Custom Dataset Terms",
@@ -43,7 +43,7 @@
       "filesUpload": "Files (Upload)",
       "metadata": "Metadata",
       "tags": "Tags",
-      "terms": "Terms",
+      "terms": "Terms and Guestbook",
       "privateUrl": "Private URL",
       "thumbnailsPlusWidgets": "Thumbnails + Widgets",
       "delete": {
@@ -130,7 +130,7 @@
     "datasetDeletedSuccess": "The dataset has been deleted."
   },
   "termsTab": {
-    "editTermsButton": "Edit Term Requirements",
+    "editTermsButton": "Edit Terms and Guestbook",
     "licenseTitle": "Dataset Terms",
     "termsTitle": "Restricted Files + Terms of Access",
     "licenseHelpText": "Our <anchor>Community Norms</anchor> as well as good scientific practices expect that proper credit is given via citation. Please use the data citation shown on the dataset page.",
