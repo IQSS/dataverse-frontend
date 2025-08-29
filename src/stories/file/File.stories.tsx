@@ -82,6 +82,7 @@ export const WithMultipleExternalTools: Story = {
         repository={new FileMockRepository(FileMother.createRealistic())}
         datasetRepository={new DatasetMockRepository()}
         id={56}
+        toolTypeSelectedQueryParam="preview"
       />
     </ExternalToolsProvider>
   )
@@ -103,6 +104,7 @@ export const WithOnlyOnePreviewExternalTool: Story = {
         repository={new FileMockRepository(FileMother.createRealistic())}
         datasetRepository={new DatasetMockRepository()}
         id={56}
+        toolTypeSelectedQueryParam="preview"
       />
     </ExternalToolsProvider>
   )
@@ -124,6 +126,7 @@ export const WithOnlyOneQueryExternalTool: Story = {
         repository={new FileMockRepository(FileMother.createRealistic())}
         datasetRepository={new DatasetMockRepository()}
         id={56}
+        toolTypeSelectedQueryParam="query"
       />
     </ExternalToolsProvider>
   )

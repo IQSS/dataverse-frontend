@@ -6,7 +6,7 @@ import { ExternalToolsMother } from '@tests/component/externalTools/domain/model
 import { FileMetadataMother } from '@tests/component/files/domain/models/FileMetadataMother'
 import { FilePreviewMother } from '@tests/component/files/domain/models/FilePreviewMother'
 
-const testFilePreview = FilePreviewMother.createDefault()
+const testFilePreview = FilePreviewMother.createDefault() // text/plain file
 const testExternalToolsRepository: ExternalToolsRepository = {} as ExternalToolsRepository
 
 describe('FileTools', () => {

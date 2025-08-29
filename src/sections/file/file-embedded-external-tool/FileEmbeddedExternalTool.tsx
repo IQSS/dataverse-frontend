@@ -129,10 +129,11 @@ export const FileEmbeddedExternalTool = ({
             className={styles.iframe}
             onLoad={handleOnLoadIframe}
             onError={handleOnErrorIframe}
-            role="presentation"></iframe>
+            role="presentation"
+            data-testid="external-tool-iframe"></iframe>
         )}
         {/* Keep overlay on top of the iframe while it loads to mask flickering */}
-        <div aria-hidden={true} className={styles.overlay}>
+        <div aria-hidden={true} className={styles.overlay} data-testid="loading-overlay">
           <Spinner />
         </div>
         {/* Show error message if fetching the tool URL fails or the iframe somehow fails. */}

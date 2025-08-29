@@ -6,7 +6,7 @@ export class FileExternalToolResolvedMother {
       displayName: 'File Explore Tool',
       fileId: 1,
       preview: false,
-      toolUrlResolved: 'https://www.youtube.com/embed/MPQ0Tpgaxt0?si=376kd6g0CVmCtIOi',
+      toolUrlResolved: 'https://example.com/explore-tool?fileId=1',
       ...props
     }
   }
