@@ -15,6 +15,7 @@ type ExternalToolsContextValue = {
   fileExploreTools: ExternalTool[]
   filePreviewTools: ExternalTool[]
   fileQueryTools: ExternalTool[]
+  fileConfigureTools: ExternalTool[]
   externalToolsRepository: ExternalToolsRepository
 }
 
@@ -89,6 +90,12 @@ export function ExternalToolsProvider({
     )
   }, [externalTools])
 
+  const fileConfigureTools = useMemo(() => {
+    return externalTools.filter(
+      (tool) => tool.scope === ToolScope.File && tool.types.includes(ToolType.Configure)
+    )
+  }, [externalTools])
+
   const value = useMemo<ExternalToolsContextValue>(
     () => ({
       externalTools,
@@ -99,6 +106,7 @@ export function ExternalToolsProvider({
       fileExploreTools,
       filePreviewTools,
       fileQueryTools,
+      fileConfigureTools,
       refreshExternalTools: fetchExternalTools,
       externalToolsRepository
     }),
@@ -111,6 +119,7 @@ export function ExternalToolsProvider({
       fileExploreTools,
       filePreviewTools,
       fileQueryTools,
+      fileConfigureTools,
       fetchExternalTools,
       externalToolsRepository
     ]
