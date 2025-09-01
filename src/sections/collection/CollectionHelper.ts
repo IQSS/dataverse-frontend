@@ -30,10 +30,24 @@ export class CollectionHelper {
     const filtersParam = searchParams.get(CollectionItemsQueryParams.FILTER_QUERIES) ?? undefined
 
     const filtersQuery: FilterQuery[] | undefined = filtersParam
-      ? (filtersParam
+      ? filtersParam
           ?.split(',')
-          .map((filterQuery) => decodeURIComponent(filterQuery))
-          .filter((decodedFilter) => /^[^:]+:[^:]+$/.test(decodedFilter)) as FilterQuery[])
+          .map((fq) => {
+            try {
+              return decodeURIComponent(fq)
+            } catch {
+              return fq // To be tolerant to bad encoding
+            }
+          })
+          .map((fq) => {
+            const keyAndValue = this.splitFilterQueryKeyAndValue(fq)
+            if (keyAndValue === null) return null
+
+            const { filterQueryKey, filterQueryValue } = keyAndValue
+
+            return `${filterQueryKey}:${filterQueryValue}`
+          })
+          .filter((x): x is FilterQuery => x !== null)
       : undefined
 
     // If we don't have a sort query parameter, we default to RELEVANCE if there is a search query or DATE otherwise.
@@ -45,6 +59,33 @@ export class CollectionHelper {
       (searchParams.get(CollectionItemsQueryParams.ORDER) as OrderType) ?? OrderType.DESC
 
     return { pageQuery, searchQuery, typesQuery, filtersQuery, sortQuery, orderQuery }
+  }
+  /**
+   * Splits a filter query string into its key and value parts.
+   * Returns null if the format is invalid.
+   */
+  static splitFilterQueryKeyAndValue(filterQuery: string): {
+    filterQueryKey: string
+    filterQueryValue: string
+  } | null {
+    const idx = filterQuery.indexOf(':')
+    // If idx === -1 there is no colon at all, invalid.
+    // If idx === 0 colon is the first character, means the key is empty (":value"), invalid.
+    // If idx === filterQuery.length - 1 colon is the last character, means the value is empty ("key:"), invalid.
+    if (idx <= 0 || idx === filterQuery.length - 1) return null
+
+    const filterQueryKey = filterQuery.slice(0, idx).trim()
+    const filterQueryValue = filterQuery.slice(idx + 1).trim()
+
+    // !filterQueryKey means the key is empty, invalid.
+    // !filterQueryValue means the value is empty after trimming, invalid.
+    // /[:\s]/.test(filterQueryKey) checks if the key contains a colon or whitespace, which is invalid.
+    if (!filterQueryKey || !filterQueryValue || /[:\s]/.test(filterQueryKey)) return null
+
+    return {
+      filterQueryKey,
+      filterQueryValue
+    }
   }
 
   static isRootCollection(collectionHierarchy: Collection['hierarchy']) {
