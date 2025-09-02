@@ -55,6 +55,8 @@ export const FilesTableScrollable = ({
   const tableTopMessagesRef = useRef<HTMLDivElement | null>(null)
   const tableTopMessagesSize = useObserveElementSize(tableTopMessagesRef)
 
+  const tableHeaderStickyTopValue = criteriaContainerHeight + tableTopMessagesSize.height
+
   useEffect(() => {
     if (previousCriteria != criteria) {
       clearRowsSelection()
@@ -83,7 +85,7 @@ export const FilesTableScrollable = ({
       <Table>
         <FilesTableHeader
           headers={table.getHeaderGroups()}
-          topStickyValue={tableTopMessagesSize.height}
+          topStickyValue={tableHeaderStickyTopValue}
         />
 
         <FilesTableBody
