@@ -13,8 +13,8 @@ import { useObserveElementSize } from '../../../shared/hooks/useObserveElementSi
 import { FilesTableScrollable } from './files-table/FilesTableScrollable'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FilesContext } from '@/sections/file/FilesContext'
-import styles from './DatasetFilesScrollable.module.scss'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import styles from './DatasetFilesScrollable.module.scss'
 
 interface DatasetFilesScrollableProps {
   filesRepository: FileRepository
@@ -173,24 +173,23 @@ export function DatasetFilesScrollable({
             onInfiniteScrollMode
           />
         </header>
-        <div className={styles['files-scrollable-container__content']}>
-          <FilesContext.Provider
-            value={{ files: accumulatedFiles, isLoading, refreshFiles: refreshFiles }}>
-            <FilesTableScrollable
-              files={accumulatedFiles}
-              paginationInfo={paginationInfo}
-              filesTotalDownloadSize={filesTotalDownloadSize}
-              criteria={criteria}
-              criteriaContainerHeight={criteriaContainerSize.height}
-              sentryRef={sentryRef}
-              showSentryRef={showSentryRef}
-              isEmptyFiles={isEmptyFiles}
-              accumulatedCount={accumulatedCount}
-              fileRepository={filesRepository}
-              datasetRepository={datasetRepository}
-            />
-          </FilesContext.Provider>
-        </div>
+
+        <FilesContext.Provider
+          value={{ files: accumulatedFiles, isLoading, refreshFiles: refreshFiles }}>
+          <FilesTableScrollable
+            files={accumulatedFiles}
+            paginationInfo={paginationInfo}
+            filesTotalDownloadSize={filesTotalDownloadSize}
+            criteria={criteria}
+            criteriaContainerHeight={criteriaContainerSize.height}
+            sentryRef={sentryRef}
+            showSentryRef={showSentryRef}
+            isEmptyFiles={isEmptyFiles}
+            accumulatedCount={accumulatedCount}
+            fileRepository={filesRepository}
+            datasetRepository={datasetRepository}
+          />
+        </FilesContext.Provider>
       </div>
     </section>
   )
