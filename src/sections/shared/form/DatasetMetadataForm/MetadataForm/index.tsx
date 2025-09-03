@@ -21,7 +21,6 @@ interface FormProps {
   collectionId: string
   formDefaultValues: DatasetMetadataFormValues
   metadataBlocksInfo: MetadataBlockInfo[]
-  errorLoadingMetadataBlocksInfo: string | null
   datasetRepository: DatasetRepository
   datasetPersistentID?: string
   datasetInternalVersionNumber?: number
@@ -32,7 +31,6 @@ export const MetadataForm = ({
   collectionId,
   formDefaultValues,
   metadataBlocksInfo,
-  errorLoadingMetadataBlocksInfo,
   datasetRepository,
   datasetPersistentID,
   datasetInternalVersionNumber
@@ -46,7 +44,6 @@ export const MetadataForm = ({
 
   const onCreateMode = mode === 'create'
   const onEditMode = mode === 'edit'
-  const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocksInfo)
 
   const form = useForm({ mode: 'onChange', defaultValues: formDefaultValues })
   const { setValue, formState } = form
@@ -121,12 +118,8 @@ export const MetadataForm = ({
   }
 
   const disableSubmitButton = useMemo(() => {
-    return (
-      isErrorLoadingMetadataBlocks ||
-      submissionStatus === SubmissionStatus.IsSubmitting ||
-      !formState.isDirty
-    )
-  }, [isErrorLoadingMetadataBlocks, submissionStatus, formState.isDirty])
+    return submissionStatus === SubmissionStatus.IsSubmitting || !formState.isDirty
+  }, [submissionStatus, formState.isDirty])
 
   const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
     // When pressing Enter, only submit the form  if the user is focused on the submit button itself

@@ -112,7 +112,6 @@ export const DatasetMetadataForm = ({
       collectionId={collectionId}
       formDefaultValues={formDefaultValues}
       metadataBlocksInfo={normalizedMetadataBlocksInfo}
-      errorLoadingMetadataBlocksInfo={errorLoadingMetadataBlocksInfo}
       datasetRepository={datasetRepository}
       datasetPersistentID={datasetPersistentID}
       datasetInternalVersionNumber={datasetInternalVersionNumber}
