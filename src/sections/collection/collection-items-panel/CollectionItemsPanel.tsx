@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
@@ -23,9 +23,10 @@ import {
   ItemsList,
   ItemsListType
 } from '@/sections/collection/collection-items-panel/items-list/ItemsList'
-import { SearchPanel } from '@/sections/collection/collection-items-panel/search-panel/SearchPanel'
+import { SearchInput } from '@/sections/collection/collection-items-panel/search-input/SearchInput'
 import { ItemTypeChange } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
 import { SelectedFacets } from '@/sections/collection/collection-items-panel/selected-facets/SelectedFacets'
+import { RouteWithParams } from '@/sections/Route.enum'
 import styles from './CollectionItemsPanel.module.scss'
 
 interface CollectionItemsPanelProps {
@@ -108,7 +109,6 @@ export const CollectionItemsPanel = ({
 
   const handleSearchSubmit = async (searchValue: string) => {
     const isSearchValueEmpty = searchValue === ''
-
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
@@ -246,20 +246,33 @@ export const CollectionItemsPanel = ({
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
     setPaginationInfo(resetPaginationInfo)
 
-    const newFilterQueriesWithFacetValueEncoded = newFilterQueries.map((fq) => {
-      const [facetName, facetValue] = fq.split(':')
-      return `${facetName}:${encodeURIComponent(facetValue)}`
-    })
+    const newFilterQueriesWithFacetValueEncoded = newFilterQueries
+      .map((fq) => {
+        const keyAndValue = CollectionHelper.splitFilterQueryKeyAndValue(fq)
+        if (keyAndValue === null) return null
+
+        const { filterQueryKey, filterQueryValue } = keyAndValue
+
+        return `${filterQueryKey}:${encodeURIComponent(filterQueryValue)}`
+      })
+      .filter((x): x is FilterQuery => x !== null)
 
     // Update the URL with the new facets, keep other querys and include the search value if exists
-    setSearchParams((currentSearchParams) => {
-      currentSearchParams.set(
-        CollectionItemsQueryParams.FILTER_QUERIES,
-        newFilterQueriesWithFacetValueEncoded.join(',')
-      )
-
-      return currentSearchParams
-    })
+    // IF empty filter queries, remove the filter queries from the URL
+    if (newFilterQueriesWithFacetValueEncoded.length === 0) {
+      setSearchParams((currentSearchParams) => {
+        currentSearchParams.delete(CollectionItemsQueryParams.FILTER_QUERIES)
+        return currentSearchParams
+      })
+    } else {
+      setSearchParams((currentSearchParams) => {
+        currentSearchParams.set(
+          CollectionItemsQueryParams.FILTER_QUERIES,
+          newFilterQueriesWithFacetValueEncoded.join(',')
+        )
+        return currentSearchParams
+      })
+    }
 
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       currentSearchCriteria.searchText,
@@ -305,15 +318,44 @@ export const CollectionItemsPanel = ({
     setIsLoading(isLoadingItems)
   }, [isLoadingItems, setIsLoading])
 
+  const advancedSearchLinkURL: string = useMemo(() => {
+    const searchParams = new URLSearchParams()
+    if (currentSearchCriteria.filterQueries && currentSearchCriteria.filterQueries.length > 0) {
+      const filterQueriesWithFacetValueEncoded = currentSearchCriteria.filterQueries
+        .map((fq) => {
+          const keyAndValue = CollectionHelper.splitFilterQueryKeyAndValue(fq)
+          if (keyAndValue === null) return null
+
+          const { filterQueryKey, filterQueryValue } = keyAndValue
+
+          return `${filterQueryKey}:${encodeURIComponent(filterQueryValue)}`
+        })
+        .filter((x): x is FilterQuery => x !== null)
+
+      if (filterQueriesWithFacetValueEncoded.length > 0) {
+        searchParams.set(
+          CollectionItemsQueryParams.FILTER_QUERIES,
+          filterQueriesWithFacetValueEncoded.join(',')
+        )
+      }
+    }
+    return `${RouteWithParams.ADVANCED_SEARCH(collectionId)}?${searchParams.toString()}`
+  }, [collectionId, currentSearchCriteria.filterQueries])
+
   return (
     <section className={styles['items-panel']}>
       <header className={styles['top-wrapper']}>
-        <SearchPanel
+        <SearchInput
           onSubmitSearch={handleSearchSubmit}
           currentSearchValue={currentSearchCriteria.searchText}
           isLoadingCollectionItems={isLoadingItems}
           placeholderText={t('searchThisCollectionPlaceholder')}
         />
+
+        <Link to={advancedSearchLinkURL} className={styles[`advanced-search-link`]}>
+          {t('advancedSearch')}
+        </Link>
+
         <div className={styles['add-data-slot']}>{addDataSlot}</div>
       </header>
 

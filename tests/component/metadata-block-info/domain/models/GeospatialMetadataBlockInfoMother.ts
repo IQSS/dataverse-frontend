@@ -23,6 +23,7 @@ export class GeospatialMetadataBlockInfoMother {
           displayOrder: 0,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             country: {
               name: 'country',
@@ -288,7 +289,8 @@ export class GeospatialMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 1,
               typeClass: 'controlledVocabulary',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             state: {
               name: 'state',
@@ -304,7 +306,8 @@ export class GeospatialMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 2,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             city: {
               name: 'city',
@@ -320,7 +323,8 @@ export class GeospatialMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 3,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             otherGeographicCoverage: {
               name: 'otherGeographicCoverage',
@@ -335,7 +339,8 @@ export class GeospatialMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 4,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -353,7 +358,8 @@ export class GeospatialMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 5,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         geographicBoundingBox: {
           name: 'geographicBoundingBox',
@@ -370,6 +376,7 @@ export class GeospatialMetadataBlockInfoMother {
           displayOrder: 6,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             westLongitude: {
               name: 'westLongitude',
@@ -385,7 +392,8 @@ export class GeospatialMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 7,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             eastLongitude: {
               name: 'eastLongitude',
@@ -401,7 +409,8 @@ export class GeospatialMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 8,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             northLatitude: {
               name: 'northLatitude',
@@ -417,7 +426,8 @@ export class GeospatialMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 9,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             southLatitude: {
               name: 'southLatitude',
@@ -433,7 +443,8 @@ export class GeospatialMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 10,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         }

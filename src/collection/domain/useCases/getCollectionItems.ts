@@ -7,10 +7,11 @@ export async function getCollectionItems(
   collectionRepository: CollectionRepository,
   collectionId: string,
   paginationInfo: CollectionItemsPaginationInfo,
-  searchCriteria: CollectionSearchCriteria
+  searchCriteria: CollectionSearchCriteria,
+  searchService?: string
 ): Promise<CollectionItemSubset> {
   return collectionRepository
-    .getItems(collectionId, paginationInfo, searchCriteria)
+    .getItems(collectionId, paginationInfo, searchCriteria, searchService)
     .catch((error: Error) => {
       throw new Error(error.message)
     })

@@ -414,7 +414,7 @@ export class MetadataFieldsHelper {
   }
 
   private static replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
-  private static replaceSlashWithDot = (str: string) => str.replace(/\//g, '.')
+  public static replaceSlashWithDot = (str: string) => str.replace(/\//g, '.')
 
   /*
    * To define the field name that will be used to register the field in the form

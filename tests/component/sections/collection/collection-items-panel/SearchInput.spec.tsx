@@ -1,4 +1,4 @@
-import { SearchPanel } from '@/sections/collection/collection-items-panel/search-panel/SearchPanel'
+import { SearchInput } from '@/sections/collection/collection-items-panel/search-input/SearchInput'
 
 describe('SearchPanel', () => {
   it('prefills the search input with the search query param', () => {
@@ -6,7 +6,7 @@ describe('SearchPanel', () => {
 
     const SEARCH_VALUE = 'some search'
     cy.customMount(
-      <SearchPanel
+      <SearchInput
         placeholderText={'Search this collection...'}
         onSubmitSearch={onSubmitSearch}
         isLoadingCollectionItems={false}
@@ -20,7 +20,7 @@ describe('SearchPanel', () => {
   it('search submit button is disabled while loading items', () => {
     const onSubmitSearch = cy.stub().as('onSubmitSearch')
     cy.customMount(
-      <SearchPanel
+      <SearchInput
         placeholderText={'Search this collection...'}
         onSubmitSearch={onSubmitSearch}
         isLoadingCollectionItems={true}
@@ -35,7 +35,7 @@ describe('SearchPanel', () => {
   it('updates the search value while typing something', () => {
     const onSubmitSearch = cy.stub().as('onSubmitSearch')
     cy.customMount(
-      <SearchPanel
+      <SearchInput
         placeholderText={'Search this collection...'}
         onSubmitSearch={onSubmitSearch}
         isLoadingCollectionItems={false}
@@ -52,7 +52,7 @@ describe('SearchPanel', () => {
     const SEARCH_VALUE = 'John Doe'
 
     cy.customMount(
-      <SearchPanel
+      <SearchInput
         placeholderText={'Search this collection...'}
         onSubmitSearch={onSubmitSearch}
         isLoadingCollectionItems={false}

@@ -129,7 +129,12 @@ export function Dataset({
         <div className={styles.container}>
           <Row>
             <Col lg={9} className="mb-4">
-              <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
+              <DatasetCitation
+                thumbnail={dataset.thumbnail}
+                version={dataset.version}
+                datasetId={dataset.persistentId}
+                datasetRepository={datasetRepository}
+              />
               <DatasetSummary
                 summaryFields={dataset.summaryFields}
                 license={dataset.license}
@@ -144,10 +149,13 @@ export function Dataset({
                 dataset={dataset}
                 contactRepository={contactRepository}
               />
-              <DatasetMetrics
-                datasetRepository={datasetRepository}
-                datasetId={dataset.persistentId}
-              />
+              {(!isCurrentVersionDeaccessioned || canUpdateDataset) && (
+                <DatasetMetrics
+                  data-testid="dataset-metrics"
+                  datasetRepository={datasetRepository}
+                  datasetId={dataset.persistentId}
+                />
+              )}
             </Col>
           </Row>
 

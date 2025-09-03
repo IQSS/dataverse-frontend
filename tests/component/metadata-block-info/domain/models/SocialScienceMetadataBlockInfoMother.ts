@@ -22,7 +22,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 0,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         universe: {
           name: 'universe',
@@ -38,7 +39,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 1,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         timeMethod: {
           name: 'timeMethod',
@@ -54,7 +56,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 2,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         dataCollector: {
           name: 'dataCollector',
@@ -70,7 +73,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 3,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         collectorTraining: {
           name: 'collectorTraining',
@@ -85,7 +89,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 4,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         frequencyOfDataCollection: {
           name: 'frequencyOfDataCollection',
@@ -101,7 +106,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 5,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         samplingProcedure: {
           name: 'samplingProcedure',
@@ -117,7 +123,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 6,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         targetSampleSize: {
           name: 'targetSampleSize',
@@ -134,6 +141,7 @@ export class SocialScienceMetadataBlockInfoMother {
           displayOrder: 7,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             targetSampleActualSize: {
               name: 'targetSampleActualSize',
@@ -148,7 +156,8 @@ export class SocialScienceMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 8,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             targetSampleSizeFormula: {
               name: 'targetSampleSizeFormula',
@@ -163,7 +172,8 @@ export class SocialScienceMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 9,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         },
@@ -181,7 +191,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 10,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         collectionMode: {
           name: 'collectionMode',
@@ -197,7 +208,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 11,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         researchInstrument: {
           name: 'researchInstrument',
@@ -213,7 +225,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 12,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         dataCollectionSituation: {
           name: 'dataCollectionSituation',
@@ -229,7 +242,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 13,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         actionsToMinimizeLoss: {
           name: 'actionsToMinimizeLoss',
@@ -245,7 +259,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 14,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         controlOperations: {
           name: 'controlOperations',
@@ -261,7 +276,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 15,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         weighting: {
           name: 'weighting',
@@ -277,7 +293,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 16,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         cleaningOperations: {
           name: 'cleaningOperations',
@@ -293,7 +310,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 17,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         datasetLevelErrorNotes: {
           name: 'datasetLevelErrorNotes',
@@ -309,7 +327,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 18,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         responseRate: {
           name: 'responseRate',
@@ -324,7 +343,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 19,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         samplingErrorEstimates: {
           name: 'samplingErrorEstimates',
@@ -340,7 +360,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 20,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         otherDataAppraisal: {
           name: 'otherDataAppraisal',
@@ -356,7 +377,8 @@ export class SocialScienceMetadataBlockInfoMother {
           isRequired: false,
           displayOrder: 21,
           typeClass: 'primitive',
-          displayOnCreate: false
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
         },
         socialScienceNotes: {
           name: 'socialScienceNotes',
@@ -372,6 +394,7 @@ export class SocialScienceMetadataBlockInfoMother {
           displayOrder: 22,
           typeClass: 'compound',
           displayOnCreate: false,
+          isAdvancedSearchFieldType: false,
           childMetadataFields: {
             socialScienceNotesType: {
               name: 'socialScienceNotesType',
@@ -386,7 +409,8 @@ export class SocialScienceMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 23,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             socialScienceNotesSubject: {
               name: 'socialScienceNotesSubject',
@@ -401,7 +425,8 @@ export class SocialScienceMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 24,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             },
             socialScienceNotesText: {
               name: 'socialScienceNotesText',
@@ -416,7 +441,8 @@ export class SocialScienceMetadataBlockInfoMother {
               isRequired: false,
               displayOrder: 25,
               typeClass: 'primitive',
-              displayOnCreate: false
+              displayOnCreate: false,
+              isAdvancedSearchFieldType: false
             }
           }
         }

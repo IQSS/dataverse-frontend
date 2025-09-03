@@ -6,6 +6,7 @@ import { Router } from './router'
 import { Route } from './sections/Route.enum'
 import { OIDC_AUTH_CONFIG, DATAVERSE_BACKEND_URL } from './config'
 import 'react-loading-skeleton/dist/skeleton.css'
+import './assets/global.scss'
 import './assets/react-toastify-custom.scss'
 import './assets/swal-custom.scss'
 

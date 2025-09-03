@@ -32,6 +32,7 @@ import {
   getDatasetVersionsSummaries,
   getDatasetDownloadCount,
   deleteDatasetDraft,
+  getDatasetCitationInOtherFormats,
   getDatasetAvailableCategories
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
@@ -43,9 +44,11 @@ import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
+import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 import { axiosInstance } from '@/axiosInstance'
 import { DATAVERSE_BACKEND_URL } from '../../../config'
 import { AxiosResponse } from 'axios'
+import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 
 const includeDeaccessioned = true
 
@@ -201,17 +204,23 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .execute(persistentId, version, includeDeaccessioned, keepRawFields)
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
       .then((datasetDetails) => {
-        // This could be a temp fix, but we are only going to fetch the download sizes with includeDeaccessioned to true if user has edit permissions.
-        const includeDeaccessioned = datasetDetails.jsDatasetPermissions.canEditDataset
+        const canEditDataset = datasetDetails.jsDatasetPermissions.canEditDataset
 
-        return this.fetchDownloadSizes(persistentId, version, includeDeaccessioned)
+        return this.fetchDownloadSizes(persistentId, version, canEditDataset)
           .then((downloadSizes) => {
             datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
             datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
             return datasetDetails
           })
-          .catch(() => {
-            return datasetDetails
+          .catch((err: unknown) => {
+            if (err instanceof ReadError) {
+              const errorHandler = new JSDataverseReadErrorHandler(err)
+              const statusCode = errorHandler.getStatusCode()
+              if (statusCode === 404) return datasetDetails
+            } else if (err instanceof Error && err.message.includes('404')) {
+              return datasetDetails
+            }
+            throw err
           })
       })
       .then((datasetDetails) => {
@@ -376,7 +385,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       throw error
     })
   }
-
+  getDatasetCitationInOtherFormats(
+    datasetId: number | string,
+    version: string,
+    format: CitationFormat
+  ): Promise<FormattedCitation> {
+    return getDatasetCitationInOtherFormats.execute(datasetId, version, format)
+  }
   getAvailableCategories(datasetId: string | number): Promise<string[]> {
     return getDatasetAvailableCategories.execute(datasetId)
   }

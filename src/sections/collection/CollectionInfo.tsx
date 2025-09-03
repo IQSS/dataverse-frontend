@@ -1,9 +1,11 @@
-import { Collection } from '../../collection/domain/models/Collection'
+import { useTranslation } from 'react-i18next'
 import TurndownService from 'turndown'
-import styles from './Collection.module.scss'
-import { MarkdownComponent } from '../dataset/markdown/MarkdownComponent'
 import { Badge } from '@iqss/dataverse-design-system'
+import { Collection } from '../../collection/domain/models/Collection'
 import { DatasetLabelSemanticMeaning } from '../../dataset/domain/models/Dataset'
+import { MarkdownComponent } from '../dataset/markdown/MarkdownComponent'
+import { ExpandableContent } from '../shared/expandable-content/ExpandableContent'
+import styles from './Collection.module.scss'
 
 interface CollectionInfoProps {
   collection: Collection
@@ -11,6 +13,8 @@ interface CollectionInfoProps {
 const turndownService = new TurndownService()
 
 export function CollectionInfo({ collection }: CollectionInfoProps) {
+  const { t } = useTranslation('collection')
+
   return (
     <>
       <header className={styles.header}>
@@ -27,9 +31,9 @@ export function CollectionInfo({ collection }: CollectionInfoProps) {
         </div>
       </header>
       {collection.description && (
-        <div>
+        <ExpandableContent contentName={t('description')}>
           <MarkdownComponent markdown={turndownService.turndown(collection.description)} />
-        </div>
+        </ExpandableContent>
       )}
     </>
   )

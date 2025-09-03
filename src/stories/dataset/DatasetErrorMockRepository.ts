@@ -9,6 +9,7 @@ import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
+import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
 
 export class DatasetErrorMockRepository implements DatasetMockRepository {
   getAllWithCount: (
@@ -128,6 +129,22 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
       setTimeout(() => {
         reject('Error thrown from mock')
       }, 1000)
+    })
+  }
+
+  getDatasetCitationInOtherFormats: (
+    datasetId: string | number,
+    version: string,
+    format: CitationFormat
+  ) => Promise<FormattedCitation> = (
+    _datasetId: string | number,
+    _version: string,
+    _format: CitationFormat
+  ) => {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
     })
   }
 }

@@ -5,15 +5,25 @@ import { DatasetThumbnail } from '../dataset-thumbnail/DatasetThumbnail'
 import { CitationDescription } from '../../shared/citation/CitationDescription'
 import { DatasetCitationTooltip } from './DatasetCitationTooltip'
 import { CitationLearnAbout } from '../../shared/citation/CitationLearnAbout'
+import { CitationDownloadButton } from '@/sections/shared/citation/citation-download/CitationDownloadButton'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import styles from './DatasetCitation.module.scss'
 
 interface DatasetCitationProps {
+  datasetRepository: DatasetRepository
+  datasetId: string
   thumbnail?: string
   version: DatasetVersion
   withoutThumbnail?: boolean
 }
 
-export function DatasetCitation({ thumbnail, version, withoutThumbnail }: DatasetCitationProps) {
+export function DatasetCitation({
+  datasetRepository,
+  datasetId,
+  thumbnail,
+  version,
+  withoutThumbnail
+}: DatasetCitationProps) {
   const { t } = useTranslation('dataset')
 
   return (
@@ -38,9 +48,17 @@ export function DatasetCitation({ thumbnail, version, withoutThumbnail }: Datase
             citation={version.citation}
             tooltip={<DatasetCitationTooltip status={version.publishingStatus} />}
           />
-          <CitationLearnAbout />
+          <Stack direction="horizontal" gap={2} style={{ marginLeft: '-12px' }}>
+            <CitationDownloadButton
+              datasetRepository={datasetRepository}
+              datasetId={datasetId}
+              version={version.number.toString()}
+            />
+            <CitationLearnAbout />
+          </Stack>
         </Col>
       </Row>
+
       {version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED && (
         <Row className={styles.deaccessioned}>
           <Stack>
