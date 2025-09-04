@@ -51,17 +51,13 @@ export const usePrefillFieldsWithUserData = ({
       formDefaultValues?.citation?.author as ComposedSingleFieldValue[]
     )?.[0].authorAffiliation
 
-    if (!authorName0) {
-      setValue('citation.author.0.authorName', displayName)
-    }
-    if (!datasetContact0) {
+    if (!datasetContact0 && !datasetContactEmail0) {
       setValue('citation.datasetContact.0.datasetContactName', displayName)
-    }
-    if (!datasetContactEmail0) {
       setValue('citation.datasetContact.0.datasetContactEmail', user.email, {
         shouldValidate: true
       })
     }
+
     if (!depositor) {
       setValue('citation.depositor', displayName)
     }
@@ -69,11 +65,13 @@ export const usePrefillFieldsWithUserData = ({
       setValue('citation.dateOfDeposit', DateHelper.toISO8601Format(new Date()))
     }
 
+    if (!authorName0 && !authorAffiliation0) {
+      setValue('citation.author.0.authorName', displayName)
+    }
+
     if (user.affiliation) {
-      if (!datasetContactAffiliation) {
+      if (!authorName0 && !datasetContactAffiliation && !authorAffiliation0) {
         setValue('citation.datasetContact.0.datasetContactAffiliation', user.affiliation)
-      }
-      if (!authorAffiliation0) {
         setValue('citation.author.0.authorAffiliation', user.affiliation)
       }
     }
