@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
@@ -46,7 +46,7 @@ export const MetadataForm = ({
   const onEditMode = mode === 'edit'
 
   const form = useForm({ mode: 'onChange', defaultValues: formDefaultValues })
-  const { setValue, formState } = form
+  const { setValue } = form
 
   const { submissionStatus, submitError, submitForm } = useSubmitDataset(
     mode,
@@ -56,7 +56,7 @@ export const MetadataForm = ({
     datasetPersistentID,
     datasetInternalVersionNumber
   )
-  // Prefill specific fields with user data when in create mode
+
   usePrefillFieldsWithUserData({ mode, user, formDefaultValues, setValue })
 
   const handleCancel = () => {
@@ -100,9 +100,7 @@ export const MetadataForm = ({
     }
   }
 
-  const disableSubmitButton = useMemo(() => {
-    return submissionStatus === SubmissionStatus.IsSubmitting || !formState.isDirty
-  }, [submissionStatus, formState.isDirty])
+  const disableSubmitButton = submissionStatus === SubmissionStatus.IsSubmitting
 
   const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
     // When pressing Enter, only submit the form  if the user is focused on the submit button itself
