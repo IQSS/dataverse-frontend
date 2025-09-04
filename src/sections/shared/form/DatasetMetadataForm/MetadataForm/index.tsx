@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
@@ -13,7 +13,7 @@ import { MetadataBlockFormFields } from './MetadataBlockFormFields'
 import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
-import { DateHelper } from '@/shared/helpers/DateHelper'
+import { usePrefillFieldsWithUserData } from './usePrefillFieldsWithUserData'
 import styles from './index.module.scss'
 
 interface FormProps {
@@ -56,25 +56,8 @@ export const MetadataForm = ({
     datasetPersistentID,
     datasetInternalVersionNumber
   )
-
-  useEffect(() => {
-    // Only on create mode, lets prefill specific fields with user data
-    if (mode === 'create' && user) {
-      const displayName = `${user.lastName}, ${user.firstName}`
-      setValue('citation.author.0.authorName', displayName)
-      setValue('citation.datasetContact.0.datasetContactName', displayName)
-      setValue('citation.datasetContact.0.datasetContactEmail', user.email, {
-        shouldValidate: true
-      })
-      setValue('citation.depositor', displayName)
-      setValue('citation.dateOfDeposit', DateHelper.toISO8601Format(new Date()))
-
-      if (user.affiliation) {
-        setValue('citation.datasetContact.0.datasetContactAffiliation', user.affiliation)
-        setValue('citation.author.0.authorAffiliation', user.affiliation)
-      }
-    }
-  }, [setValue, user, mode])
+  // Prefill specific fields with user data when in create mode
+  usePrefillFieldsWithUserData({ mode, user, formDefaultValues, setValue })
 
   const handleCancel = () => {
     navigate(RouteWithParams.COLLECTIONS(collectionId))

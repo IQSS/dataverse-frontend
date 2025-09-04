@@ -29,7 +29,7 @@ type PrimitiveMultipleFormValue = { value: string }[]
 
 type ComposedFieldValues = ComposedSingleFieldValue | ComposedSingleFieldValue[]
 
-type ComposedSingleFieldValue = Record<string, string>
+export type ComposedSingleFieldValue = Record<string, string>
 
 export class MetadataFieldsHelper {
   public static replaceMetadataBlocksInfoDotNamesKeysWithSlash(
