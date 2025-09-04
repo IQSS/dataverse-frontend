@@ -128,6 +128,7 @@ export function CreateDataset({
           datasetRepository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetTemplate={selectedTemplate ?? undefined}
+          key={selectedTemplate ? selectedTemplate.id : 'no-template-selected'} // We use the template id as key to force remounting the form when the template changes
         />
       </section>
     </>

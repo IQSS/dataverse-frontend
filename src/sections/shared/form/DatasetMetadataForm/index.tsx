@@ -8,6 +8,7 @@ import { MetadataFormSkeleton } from './MetadataForm/MetadataFormSkeleton'
 import { MetadataForm } from './MetadataForm'
 import { DatasetMetadataBlocks } from '../../../../dataset/domain/models/Dataset'
 import { Alert } from '@iqss/dataverse-design-system'
+import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 
 type DatasetMetadataFormProps =
   | {
@@ -18,6 +19,7 @@ type DatasetMetadataFormProps =
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues?: never
       datasetInternalVersionNumber?: never
+      datasetTemplate?: DatasetTemplate
     }
   | {
       mode: 'edit'
@@ -27,6 +29,7 @@ type DatasetMetadataFormProps =
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
       datasetInternalVersionNumber: number
+      datasetTemplate?: never
     }
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
@@ -38,7 +41,8 @@ export const DatasetMetadataForm = ({
   datasetPersistentID,
   metadataBlockInfoRepository,
   datasetMetadaBlocksCurrentValues,
-  datasetInternalVersionNumber
+  datasetInternalVersionNumber,
+  datasetTemplate
 }: DatasetMetadataFormProps) => {
   const { setIsLoading } = useLoading()
   const onEditMode = mode === 'edit'
@@ -69,6 +73,15 @@ export const DatasetMetadataForm = ({
     )
   }, [datasetMetadaBlocksCurrentValues])
 
+  // Dataset Template metadata blocks values properties with dots replaced by slashes to match the metadata blocks info
+  const normalizedDatasetTemplateMetadataBlocksValues = useMemo(() => {
+    if (!datasetTemplate) return undefined
+
+    return MetadataFieldsHelper.replaceDatasetMetadataBlocksCurrentValuesDotKeysWithSlash(
+      datasetTemplate.datasetMetadataBlocks
+    )
+  }, [datasetTemplate])
+
   // If we are in edit mode, we need to add the values to the metadata blocks info
   const normalizedMetadataBlocksInfoWithValues = useMemo(() => {
     if (normalizedMetadataBlocksInfo.length === 0 || !normalizedDatasetMetadaBlocksCurrentValues) {
@@ -83,12 +96,48 @@ export const DatasetMetadataForm = ({
       : null
   }, [normalizedMetadataBlocksInfo, normalizedDatasetMetadaBlocksCurrentValues, onEditMode])
 
+  // If we are in create mode and have a dataset template, add template values into the metadata blocks info
+  const normalizedMetadataBlocksInfoWithTemplateValues = useMemo(() => {
+    if (
+      normalizedMetadataBlocksInfo.length === 0 ||
+      !normalizedDatasetTemplateMetadataBlocksValues
+    ) {
+      return null
+    }
+    return !onEditMode
+      ? MetadataFieldsHelper.addFieldValuesToMetadataBlocksInfo(
+          normalizedMetadataBlocksInfo,
+          normalizedDatasetTemplateMetadataBlocksValues
+        )
+      : null
+  }, [normalizedMetadataBlocksInfo, normalizedDatasetTemplateMetadataBlocksValues, onEditMode])
+
   // Set the form default values object based on the metadata blocks info
   const formDefaultValues = useMemo(() => {
-    return onEditMode && normalizedMetadataBlocksInfoWithValues !== null
-      ? MetadataFieldsHelper.getFormDefaultValues(normalizedMetadataBlocksInfoWithValues)
-      : MetadataFieldsHelper.getFormDefaultValues(normalizedMetadataBlocksInfo)
-  }, [normalizedMetadataBlocksInfo, normalizedMetadataBlocksInfoWithValues, onEditMode])
+    if (onEditMode) {
+      if (normalizedMetadataBlocksInfoWithValues !== null) {
+        // console.log('Edit mode: using current values to set default values')
+        return MetadataFieldsHelper.getFormDefaultValues(normalizedMetadataBlocksInfoWithValues)
+      }
+      // console.log('Edit mode: no current values, using metadata blocks info to set default values')
+      return MetadataFieldsHelper.getFormDefaultValues(normalizedMetadataBlocksInfo)
+    } else {
+      if (datasetTemplate && normalizedMetadataBlocksInfoWithTemplateValues !== null) {
+        // console.log('Using template to set default values')
+        return MetadataFieldsHelper.getFormDefaultValues(
+          normalizedMetadataBlocksInfoWithTemplateValues
+        )
+      }
+      // console.log('Create mode: using metadata blocks info to set default values')
+      return MetadataFieldsHelper.getFormDefaultValues(normalizedMetadataBlocksInfo)
+    }
+  }, [
+    normalizedMetadataBlocksInfo,
+    normalizedMetadataBlocksInfoWithValues,
+    normalizedMetadataBlocksInfoWithTemplateValues,
+    datasetTemplate,
+    onEditMode
+  ])
 
   useEffect(() => {
     setIsLoading(isLoadingMetadataBlocksInfo)
