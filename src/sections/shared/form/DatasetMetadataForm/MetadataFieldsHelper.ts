@@ -31,9 +31,6 @@ type ComposedFieldValues = ComposedSingleFieldValue | ComposedSingleFieldValue[]
 
 export type ComposedSingleFieldValue = Record<string, string>
 
-// TODO:ME - Probably we dont need structuredClone if some places
-// TODO:ME - Clean comments made in spanish
-
 export class MetadataFieldsHelper {
   public static replaceMetadataBlocksInfoDotNamesKeysWithSlash(
     metadataBlocks: MetadataBlockInfo[]
@@ -64,11 +61,9 @@ export class MetadataFieldsHelper {
   public static replaceDatasetMetadataBlocksDotKeysWithSlash(
     datasetMetadataBlocks: DatasetMetadataBlocks
   ): DatasetMetadataBlocks {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const datasetMetadataBlocksCopy: DatasetMetadataBlocks = structuredClone(datasetMetadataBlocks)
     const dataWithoutKeysWithDots: DatasetMetadataBlocks = [] as unknown as DatasetMetadataBlocks
 
-    for (const block of datasetMetadataBlocksCopy) {
+    for (const block of datasetMetadataBlocks) {
       const newBlockFields: DatasetMetadataFields =
         this.datasetMetadataBlocksCurrentValuesDotReplacer(block.fields)
 
@@ -471,9 +466,9 @@ export class MetadataFieldsHelper {
 
   /**
    * To define the metadata blocks info that will be used to render the form.
-   * In create mode, if a template is provided, it adds the fields from the template to the metadata blocks info for create.
-   * It also adds the values from the template to the metadata blocks info for create.
-   * In edit mode, it adds the current values to the metadata blocks info for edit.
+   * In create mode, if a template is provided, it adds the fields and values from the template to the metadata blocks info.
+   * In edit mode, it adds the current dataset values to the metadata blocks info.
+   * Normalizes field names by replacing dots with slashes to avoid issues with react-hook-form. (e.g. coverage.Spectral.MinimumWavelength -> coverage/Spectral/MinimumWavelength)
    * Finally, it orders the fields by display order.
    */
   public static defineMetadataBlockInfo(
@@ -552,10 +547,8 @@ export class MetadataFieldsHelper {
       return metadataBlocksInfoForDisplayOnCreate
     }
 
-    // Trabajamos sobre una copia
     const createCopy: MetadataBlockInfo[] = structuredClone(metadataBlocksInfoForDisplayOnCreate)
 
-    // Mapas útiles
     const createMap = createCopy.reduce<Record<string, MetadataBlockInfo>>((acc, block) => {
       acc[block.name] = block
       return acc
@@ -569,16 +562,15 @@ export class MetadataFieldsHelper {
       {}
     )
 
-    // Recorremos los bloques del template (el template solo trae valores)
     for (const tBlock of templateFields) {
       const blockName = tBlock.name
       const editBlock = editMap[blockName]
       if (!editBlock) {
-        // No sabemos cómo luce este bloque en "edit", no podemos copiar su forma
+        // We don't know how this block looks in "edit", we can't copy its shape. So we skip it.
         continue
       }
 
-      // Aseguramos que el bloque exista en el array de "create"
+      // We ensure the block exists in the "create" array
       let createBlock = createMap[blockName]
       if (!createBlock) {
         createBlock = {
@@ -596,13 +588,14 @@ export class MetadataFieldsHelper {
       const editFields = editBlock.metadataFields
 
       // Por cada field que el template trae con valor, si no existe en "create", lo copiamos desde "edit"
+      // For each field that the template brings with value, if it doesn't exist in "create", we copy it from "edit"
       const templateBlockFields = tBlock.fields ?? {}
       for (const fieldName of Object.keys(templateBlockFields)) {
         if (createFields[fieldName]) continue
 
         const fieldFromEdit = editFields[fieldName]
         if (!fieldFromEdit) {
-          // El field no existe ni en "edit": no hay forma de conocer su forma; lo saltamos
+          // The field doesn't exist in "edit" either: there's no way to know its shape; we skip it
           continue
         }
 

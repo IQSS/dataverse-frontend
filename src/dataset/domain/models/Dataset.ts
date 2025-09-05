@@ -104,8 +104,8 @@ export interface CitationMetadataBlock extends DatasetMetadataBlock {
 }
 
 interface OtherId extends DatasetMetadataSubField {
-  otherIdAgency: string
-  otherIdValue: string
+  otherIdAgency?: string
+  otherIdValue?: string
 }
 
 export interface Author extends DatasetMetadataSubField {

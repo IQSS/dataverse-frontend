@@ -12,7 +12,7 @@ export class DatasetTemplateMother {
       collectionAlias: faker.lorem.word({ length: { min: 3, max: 15 } }),
       createTime: 'Tue Sep 02 13:13:47 UTC 2025',
       createDate: 'Sep 2, 2025',
-      datasetFields: {},
+      datasetMetadataBlocks: [] as unknown as DatasetTemplate['datasetMetadataBlocks'],
       isDefault: faker.datatype.boolean(),
       usageCount: faker.datatype.number({ min: 0, max: 100 }),
       instructions: [],
