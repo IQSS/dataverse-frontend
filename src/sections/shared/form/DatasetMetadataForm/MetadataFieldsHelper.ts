@@ -49,6 +49,12 @@ export class MetadataFieldsHelper {
   private static metadataBlocksInfoDotReplacer(metadataFields: Record<string, MetadataField>) {
     for (const key in metadataFields) {
       const field = metadataFields[key]
+      const fieldReplacedKey = this.replaceDotWithSlash(key)
+      if (fieldReplacedKey !== key) {
+        // Change the key in the object only if it has changed (i.e., it had a dot)
+        metadataFields[fieldReplacedKey] = field
+        delete metadataFields[key]
+      }
       if (field.name.includes('.')) {
         field.name = this.replaceDotWithSlash(field.name)
       }
@@ -541,9 +547,9 @@ export class MetadataFieldsHelper {
   public static addFieldsFromTemplateToMetadataBlocksInfoForDisplayOnCreate(
     metadataBlocksInfoForDisplayOnCreate: MetadataBlockInfo[],
     metadataBlocksInfoForDisplayOnEdit: MetadataBlockInfo[],
-    templateFields: DatasetMetadataBlocks | undefined
+    templateBlocks: DatasetMetadataBlocks | undefined
   ): MetadataBlockInfo[] {
-    if (!templateFields || templateFields.length === 0) {
+    if (!templateBlocks || templateBlocks.length === 0) {
       return metadataBlocksInfoForDisplayOnCreate
     }
 
@@ -562,9 +568,15 @@ export class MetadataFieldsHelper {
       {}
     )
 
-    for (const tBlock of templateFields) {
+    for (const tBlock of templateBlocks) {
       const blockName = tBlock.name
       const editBlock = editMap[blockName]
+
+      // Could be the case that the template block is returned from the API but it has no fields, so we skip it.
+      const templateBlockHasFields: boolean = Object.keys(tBlock.fields ?? {}).length > 0
+
+      if (!templateBlockHasFields) continue
+
       if (!editBlock) {
         // We don't know how this block looks in "edit", we can't copy its shape. So we skip it.
         continue
@@ -572,6 +584,7 @@ export class MetadataFieldsHelper {
 
       // We ensure the block exists in the "create" array
       let createBlock = createMap[blockName]
+
       if (!createBlock) {
         createBlock = {
           id: editBlock.id,
@@ -587,7 +600,6 @@ export class MetadataFieldsHelper {
       const createFields = createBlock.metadataFields
       const editFields = editBlock.metadataFields
 
-      // Por cada field que el template trae con valor, si no existe en "create", lo copiamos desde "edit"
       // For each field that the template brings with value, if it doesn't exist in "create", we copy it from "edit"
       const templateBlockFields = tBlock.fields ?? {}
       for (const fieldName of Object.keys(templateBlockFields)) {
