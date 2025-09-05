@@ -40,7 +40,11 @@ export function ExternalToolsProvider({
 
     try {
       const data = await getExternalTools(externalToolsRepository)
-      setExternalTools(data)
+
+      // Temporary workaround, filter out external tools that have a requirement field defined
+      const toolsWithoutRequirements = data.filter((tool) => !tool.requirements)
+
+      setExternalTools(toolsWithoutRequirements)
     } catch (err: ReadError | unknown) {
       if (err instanceof ReadError) {
         const error = new JSDataverseReadErrorHandler(err)
