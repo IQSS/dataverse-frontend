@@ -34,8 +34,6 @@ type DatasetMetadataFormProps =
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
 
-// TODO:ME - Check we render the form with defaultValues only once.
-
 export const DatasetMetadataForm = ({
   mode,
   collectionId,
@@ -110,6 +108,7 @@ export const DatasetMetadataForm = ({
       datasetRepository={datasetRepository}
       datasetPersistentID={datasetPersistentID}
       datasetInternalVersionNumber={datasetInternalVersionNumber}
+      datasetTemplateInstructions={datasetTemplate?.instructions}
     />
   )
 }

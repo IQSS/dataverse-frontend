@@ -14,6 +14,7 @@ import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { usePrefillFieldsWithUserData } from './usePrefillFieldsWithUserData'
+import { DatasetTemplateInstruction } from '@/dataset/domain/models/DatasetTemplate'
 import styles from './index.module.scss'
 
 interface FormProps {
@@ -24,6 +25,7 @@ interface FormProps {
   datasetRepository: DatasetRepository
   datasetPersistentID?: string
   datasetInternalVersionNumber?: number
+  datasetTemplateInstructions?: DatasetTemplateInstruction[]
 }
 
 export const MetadataForm = ({
@@ -33,7 +35,8 @@ export const MetadataForm = ({
   metadataBlocksInfo,
   datasetRepository,
   datasetPersistentID,
-  datasetInternalVersionNumber
+  datasetInternalVersionNumber,
+  datasetTemplateInstructions
 }: FormProps) => {
   const { user } = useSession()
   const navigate = useNavigate()
@@ -165,7 +168,10 @@ export const MetadataForm = ({
                   key={metadataBlock.id}>
                   <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
                   <Accordion.Body>
-                    <MetadataBlockFormFields metadataBlock={metadataBlock} />
+                    <MetadataBlockFormFields
+                      metadataBlock={metadataBlock}
+                      datasetTemplateInstructions={datasetTemplateInstructions}
+                    />
                   </Accordion.Body>
                 </Accordion.Item>
               ))}

@@ -29,7 +29,8 @@ export const Primitive = ({
   withinMultipleFieldsGroup,
   fieldsArrayIndex,
   isFieldThatMayBecomeRequired,
-  childFieldNamesThatTriggerRequired
+  childFieldNamesThatTriggerRequired,
+  fieldInstructions
 }: PrimitiveProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
   const { control } = useFormContext()
@@ -88,6 +89,7 @@ export const Primitive = ({
         rules={updatedRulesToApply}
         render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
           <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
+            {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
             <Row>
               <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
                 {isTextArea ? (
