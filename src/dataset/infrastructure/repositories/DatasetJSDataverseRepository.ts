@@ -310,9 +310,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  create(dataset: DatasetDTO, collectionId: string): Promise<{ persistentId: string }> {
+  create(
+    dataset: DatasetDTO,
+    collectionId: string,
+    datasetType?: string
+  ): Promise<{ persistentId: string }> {
     return createDataset
-      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId)
+      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId, datasetType)
       .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({
         persistentId: jsDatasetIdentifiers.persistentId
       }))

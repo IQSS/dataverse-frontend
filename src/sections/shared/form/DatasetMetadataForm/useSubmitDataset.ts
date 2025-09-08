@@ -61,7 +61,13 @@ export function useSubmitDataset(
     )
 
     if (mode === 'create') {
-      createDataset(datasetRepository, formattedFormValues, collectionId)
+      let datasetType = 'dataset'
+      const urlParams = new URLSearchParams(window.location.search)
+      const datasetTypeIn = urlParams.get('datasetType')
+      if (datasetTypeIn) {
+        datasetType = datasetTypeIn
+      }
+      createDataset(datasetRepository, formattedFormValues, collectionId, datasetType)
         .then(({ persistentId }) => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)

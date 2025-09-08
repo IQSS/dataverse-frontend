@@ -21,6 +21,9 @@ export default function AddDataActionsButton({
 
   const createCollectionRoute = RouteWithParams.CREATE_COLLECTION(collectionId)
   const createDatasetRoute = RouteWithParams.CREATE_DATASET(collectionId)
+  // TODO: Enable/disable review creation based on config setting. See also LoggedInHeaderActions.tsx
+  // TODO: Longer term, query /api/datasets/datasetTypes and show those
+  const reviewCreationEnabled = false
 
   return (
     <DropdownButton
@@ -34,6 +37,14 @@ export default function AddDataActionsButton({
       <Dropdown.Item to={createDatasetRoute} as={Link} disabled={!canAddDataset}>
         {t('navigation.newDataset')}
       </Dropdown.Item>
+      {reviewCreationEnabled && (
+        <Dropdown.Item
+          to={`${createDatasetRoute}?datasetType=review`}
+          as={Link}
+          disabled={!canAddDataset}>
+          {t('navigation.newReview')}
+        </Dropdown.Item>
+      )}
     </DropdownButton>
   )
 }
