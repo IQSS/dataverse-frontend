@@ -2118,6 +2118,10 @@ describe('DatasetMetadataForm', () => {
           {
             instructionField: 'title',
             instructionText: 'A title field instruction.'
+          },
+          {
+            instructionField: 'subject',
+            instructionText: 'A subject field instruction.'
           }
         ]
       })
@@ -2134,6 +2138,7 @@ describe('DatasetMetadataForm', () => {
 
       cy.findByText('An author field instruction.').should('exist')
       cy.findByText('A title field instruction.').should('exist')
+      cy.findByText('A subject field instruction.').should('exist')
     })
   })
 })

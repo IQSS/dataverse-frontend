@@ -16,6 +16,9 @@ const userPermissionsMock = CollectionMother.createUserPermissions()
 const collectionMetadataBlocksInfo =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
 
+const metadataBlocksInfoOnEditMode =
+  MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateFalse()
+
 const COLLECTION_NAME = 'Collection Name'
 const collection = CollectionMother.create({ name: COLLECTION_NAME, id: 'test-alias' })
 
@@ -26,6 +29,8 @@ describe('Create Dataset', () => {
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
       .resolves(collectionMetadataBlocksInfo)
+
+    metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(metadataBlocksInfoOnEditMode)
 
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
     collectionRepository.getById = cy.stub().resolves(collection)
@@ -223,6 +228,20 @@ describe('Create Dataset', () => {
       })
 
       cy.findAllByText('Template 2').should('exist').should('have.length', 2) // Template 2 is selected, we see two
+    })
+
+    it('shows the warning alert when there is an error loading the templates', () => {
+      datasetRepository.getTemplates = cy.stub().rejects()
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByText(/Something went wrong getting the dataset templates./)
     })
   })
 })
