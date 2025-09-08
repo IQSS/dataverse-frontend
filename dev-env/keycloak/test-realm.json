@@ -436,6 +436,34 @@
       "clientRoles": {}
     }
   ],
+  "users": [
+    {
+      "id": "e5531496-cfb8-498c-a902-50c98d649e79",
+      "createdTimestamp": 1684755721064,
+      "username": "curator",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Dataverse",
+      "lastName": "Curator",
+      "email": "dataverse-curator@mailinator.com",
+      "credentials": [
+        {
+          "id": "664546b4-b936-45cf-a4cf-5e98b743fc7f",
+          "type": "password",
+          "userLabel": "My password",
+          "createdDate": 1684755740776,
+          "secretData": "{\"value\":\"AvVqybCNtCBVAdLEeJKresy9tc3c4BBUQvu5uHVQw4IjVagN6FpKGlDEKOrxhzdSM8skEvthOEqJkloPo1w+NQ==\",\"salt\":\"2em2DDRRlNEYsNR3xDqehw==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["default-roles-test"],
+      "notBefore": 0,
+      "groups": ["/curators"]
+    }
+  ],
   "defaultRole": {
     "id": "b4ff9091-ddf9-4536-b175-8cfa3e331d71",
     "name": "default-roles-test",
