@@ -3,7 +3,7 @@ import { ReactElement } from 'react'
 import { DataverseVersion } from '../../../../../src/info/domain/models/DataverseVersion'
 import { DataverseInfoRepository } from '../../../../../src/info/domain/repositories/DataverseInfoRepository'
 import { Footer } from '../../../../../src/sections/layout/footer/Footer'
-import { DataverseVersionMother } from '../../../info/models/DataverseVersionMother'
+import { DataverseVersionMother } from '@tests/component/info/domain/models/DataverseVersionMother'
 
 export class FooterMother {
   static withDataverseVersion(
