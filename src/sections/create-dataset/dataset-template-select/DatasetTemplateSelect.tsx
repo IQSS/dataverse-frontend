@@ -30,7 +30,7 @@ export const DatasetTemplateSelect = ({
   )
 
   return (
-    <Form.Group>
+    <Form.Group data-testid="dataset-template-select">
       <Form.Group.Label
         message={t('template.description')}
         column

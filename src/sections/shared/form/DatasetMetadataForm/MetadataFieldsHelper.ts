@@ -10,6 +10,7 @@ import {
   DatasetMetadataChildFieldValueDTO
 } from '../../../../dataset/domain/useCases/DTOs/DatasetDTO'
 import {
+  DatasetMetadataBlock,
   DatasetMetadataBlocks,
   DatasetMetadataFields,
   DatasetMetadataSubField,
@@ -65,9 +66,9 @@ export class MetadataFieldsHelper {
   }
 
   public static replaceDatasetMetadataBlocksDotKeysWithSlash(
-    datasetMetadataBlocks: DatasetMetadataBlocks
-  ): DatasetMetadataBlocks {
-    const dataWithoutKeysWithDots: DatasetMetadataBlocks = [] as unknown as DatasetMetadataBlocks
+    datasetMetadataBlocks: DatasetMetadataBlock[]
+  ): DatasetMetadataBlock[] {
+    const dataWithoutKeysWithDots: DatasetMetadataBlock[] = [] as unknown as DatasetMetadataBlock[]
 
     for (const block of datasetMetadataBlocks) {
       const newBlockFields: DatasetMetadataFields =
@@ -387,7 +388,7 @@ export class MetadataFieldsHelper {
 
   public static addFieldValuesToMetadataBlocksInfo(
     normalizedMetadataBlocksInfo: MetadataBlockInfo[],
-    normalizedDatasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
+    normalizedDatasetMetadaBlocksCurrentValues: DatasetMetadataBlock[]
   ): MetadataBlockInfoWithMaybeValues[] {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const normalizedMetadataBlocksInfoCopy: MetadataBlockInfoWithMaybeValues[] = structuredClone(
@@ -482,7 +483,7 @@ export class MetadataFieldsHelper {
     metadataBlocksInfoForDisplayOnCreate: MetadataBlockInfo[],
     metadataBlocksInfoForDisplayOnEdit: MetadataBlockInfo[],
     datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks | undefined,
-    templateMetadataBlocks: DatasetMetadataBlocks | undefined
+    templateMetadataBlocks: DatasetMetadataBlock[] | undefined
   ): MetadataBlockInfo[] {
     // Replace field names with dots to slashes, to avoid issues with the form library react-hook-form
     const normalizedMetadataBlocksInfoForDisplayOnCreate =
@@ -547,7 +548,7 @@ export class MetadataFieldsHelper {
   public static addFieldsFromTemplateToMetadataBlocksInfoForDisplayOnCreate(
     metadataBlocksInfoForDisplayOnCreate: MetadataBlockInfo[],
     metadataBlocksInfoForDisplayOnEdit: MetadataBlockInfo[],
-    templateBlocks: DatasetMetadataBlocks | undefined
+    templateBlocks: DatasetMetadataBlock[] | undefined
   ): MetadataBlockInfo[] {
     if (!templateBlocks || templateBlocks.length === 0) {
       return metadataBlocksInfoForDisplayOnCreate

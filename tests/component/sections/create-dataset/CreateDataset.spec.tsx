@@ -5,6 +5,7 @@ import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
+import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -21,6 +22,7 @@ const collection = CollectionMother.create({ name: COLLECTION_NAME, id: 'test-al
 describe('Create Dataset', () => {
   beforeEach(() => {
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
+    datasetRepository.getTemplates = cy.stub().resolves([])
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
       .resolves(collectionMetadataBlocksInfo)
@@ -130,5 +132,97 @@ describe('Create Dataset', () => {
       />
     )
     cy.findAllByTestId('not-allowed-to-create-dataset-alert').should('not.exist')
+  })
+
+  describe('dataset templates functionality', () => {
+    it('should not show template select when there are no templates', () => {
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-template-select').should('not.exist')
+    })
+
+    it('should show template select when there are templates', () => {
+      const testDatasetTemplate1 = DatasetTemplateMother.create({
+        name: 'Template 1',
+        isDefault: false
+      })
+      datasetRepository.getTemplates = cy.stub().resolves([testDatasetTemplate1])
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-template-select').should('exist')
+
+      cy.findByText('None').should('exist') // No default template
+    })
+
+    it('should set default template when there is one', () => {
+      const testDatasetTemplate1 = DatasetTemplateMother.create({
+        name: 'Template 1',
+        isDefault: false
+      })
+      const testDatasetTemplate2 = DatasetTemplateMother.create({
+        name: 'Template 2',
+        isDefault: true
+      })
+      datasetRepository.getTemplates = cy
+        .stub()
+        .resolves([testDatasetTemplate1, testDatasetTemplate2])
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-template-select').should('exist')
+      cy.findByText('None').should('not.exist')
+      cy.findByText('Template 2').should('exist') // Default template
+    })
+
+    it('should change template when user selects another one', () => {
+      const testDatasetTemplate1 = DatasetTemplateMother.create({
+        name: 'Template 1',
+        isDefault: false
+      })
+      const testDatasetTemplate2 = DatasetTemplateMother.create({
+        name: 'Template 2',
+        isDefault: false
+      })
+      datasetRepository.getTemplates = cy
+        .stub()
+        .resolves([testDatasetTemplate1, testDatasetTemplate2])
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-template-select').should('exist').as('templateSelect')
+      cy.findByText('None').should('exist') // No default template, None is shown
+
+      cy.get('@templateSelect').within(() => {
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findByText('Template 2').click()
+      })
+
+      cy.findAllByText('Template 2').should('exist').should('have.length', 2) // Template 2 is selected, we see two
+    })
   })
 })
