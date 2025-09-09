@@ -7,6 +7,8 @@ import {
 import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
 import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { DatasetMetadataExportFormatsMother } from '@tests/component/info/domain/models/DatasetMetadataExportFormatsMother'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 
 const mockDataset = DatasetMother.create({
   metadataBlocks: [
@@ -61,7 +63,6 @@ const mockDataset = DatasetMother.create({
     }
   ]
 })
-const mockMetadataBlocks = mockDataset.metadataBlocks
 const mockCitationMetadataBlockInfo = MetadataBlockInfoMother.create({
   name: MetadataBlockName.CITATION,
   displayName: 'Citation Metadata',
@@ -186,6 +187,10 @@ const mockGeospatialMetadataBlockInfo = MetadataBlockInfoMother.create({
 
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 
+const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
+
+const mockDatasetMetadataExportFormats = DatasetMetadataExportFormatsMother.create()
+
 describe('DatasetMetadata', () => {
   beforeEach(() => {
     cy.viewport(1280, 720)
@@ -199,14 +204,18 @@ describe('DatasetMetadata', () => {
       }
       return Promise.resolve(undefined)
     })
+    dataverseInfoRepository.getAvailableDatasetMetadataExportFormats = cy
+      .stub()
+      .resolves(mockDatasetMetadataExportFormats)
   })
 
   it('renders the metadata blocks sections titles correctly', () => {
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockMetadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
@@ -217,9 +226,10 @@ describe('DatasetMetadata', () => {
   it('renders the metadata blocks fields correctly', () => {
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockMetadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
@@ -247,9 +257,10 @@ describe('DatasetMetadata', () => {
   it('renders the metadata blocks fields values correctly', () => {
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockMetadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
@@ -315,7 +326,6 @@ describe('DatasetMetadata', () => {
   it('renders the metadata blocks in anonymized view', () => {
     const setAnonymizedView = () => {}
     const mockDataset = DatasetMother.createAnonymized()
-    const mockAnonymizedMetadataBlocks = mockDataset.metadataBlocks
 
     const metadataBlockInfoMock = MetadataBlockInfoMother.create()
     const metadataBlockInfoRepository: MetadataBlockInfoRepository =
@@ -325,9 +335,10 @@ describe('DatasetMetadata', () => {
     cy.customMount(
       <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
         <DatasetMetadata
-          persistentId={mockDataset.persistentId}
-          metadataBlocks={mockAnonymizedMetadataBlocks}
+          dataset={mockDataset}
+          anonymizedView={false}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
         />
       </AnonymizedContext.Provider>
     )
@@ -338,9 +349,10 @@ describe('DatasetMetadata', () => {
   it('shows a tip for dataset contact field', () => {
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockMetadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
@@ -354,9 +366,10 @@ describe('DatasetMetadata', () => {
 
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockMetadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
@@ -404,9 +417,10 @@ describe('DatasetMetadata', () => {
     })
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockDataset.metadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
