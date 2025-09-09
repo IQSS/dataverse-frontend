@@ -9,8 +9,8 @@ import {
   FileTabularDataMother,
   FileTypeMother
 } from '../../../files/domain/models/FileMetadataMother'
-import { DatasetPublishingStatus } from '../../../../../src/dataset/domain/models/Dataset'
 import { FilePermissionsMother } from '../../../files/domain/models/FilePermissionsMother'
+import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 
 const file = FileMother.create()
 describe('FileMetadata', () => {
@@ -20,7 +20,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={file.metadata}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -33,7 +35,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={file.metadata}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -48,7 +52,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithLabels}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -64,7 +70,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutLabels}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -80,7 +88,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithPersistentId}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -95,7 +105,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutPersistentId}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -112,7 +124,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={file.metadata}
         permissions={permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -135,7 +149,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={file.metadata}
         permissions={permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -151,7 +167,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithUnf}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -166,7 +184,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutTabularData}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -182,7 +202,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithChecksum}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -197,7 +219,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutChecksum}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -210,7 +234,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={file.metadata}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
     cy.findByText('Deposit Date').should('exist')
@@ -226,7 +252,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithPublicationDate}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -243,7 +271,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithNoPublicationDate}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -257,7 +287,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithPublicationDate}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -275,7 +307,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithPublicationDateEmbargoed}
         permissions={file.permissions}
-        datasetPublishingStatus={DatasetPublishingStatus.RELEASED}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -295,7 +329,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithNoPublicationDate}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -311,7 +347,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithEmbargoReason}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -326,7 +364,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithNoEmbargo}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -342,7 +382,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithNoEmbargoReason}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -358,7 +400,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithFileSize}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -375,7 +419,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithFileType}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -392,7 +438,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithTabularData}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -409,7 +457,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutTabularData}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -426,7 +476,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithDirectory}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -441,7 +493,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutDirectory}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -458,7 +512,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithDescription}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -474,7 +530,9 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutDescription}
         permissions={file.permissions}
-        datasetPublishingStatus={file.datasetVersion.publishingStatus}
+        datasetPersistentId={file.datasetPersistentId}
+        datasetVersion={file.datasetVersion}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 

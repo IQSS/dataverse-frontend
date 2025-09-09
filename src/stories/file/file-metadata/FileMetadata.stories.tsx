@@ -2,8 +2,9 @@ import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { FileMetadata } from '../../../sections/file/file-metadata/FileMetadata'
 import { FileMetadataMother } from '../../../../tests/component/files/domain/models/FileMetadataMother'
-import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
 import { FilePermissionsMother } from '../../../../tests/component/files/domain/models/FilePermissionsMother'
+import { DatasetVersionMother } from '@tests/component/dataset/domain/models/DatasetMother'
+import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 
 const meta: Meta<typeof FileMetadata> = {
   title: 'Sections/File Page/FileMetadata',
@@ -20,7 +21,9 @@ export const Default: Story = {
       name="File Title"
       metadata={FileMetadataMother.createDefault()}
       permissions={FilePermissionsMother.create()}
-      datasetPublishingStatus={DatasetPublishingStatus.RELEASED}
+      datasetPersistentId="doi:10.5072/FK2/12345"
+      datasetVersion={DatasetVersionMother.create()}
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }
