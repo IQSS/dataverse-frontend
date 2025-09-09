@@ -24,16 +24,18 @@ export function DatasetMetadata({
 }: DatasetMetadataProps) {
   return (
     <>
-      <ExportMetadataDropdown
-        datasetPersistentId={dataset.persistentId}
-        anonymizedView={anonymizedView}
-        datasetIsReleased={dataset.version.someDatasetVersionHasBeenReleased}
-        datasetIsDeaccessioned={
-          dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
-        }
-        canUpdateDataset={dataset.permissions?.canUpdateDataset}
-        dataverseInfoRepository={dataverseInfoRepository}
-      />
+      <div className="d-flex justify-content-end mb-3">
+        <ExportMetadataDropdown
+          datasetPersistentId={dataset.persistentId}
+          anonymizedView={anonymizedView}
+          datasetIsReleased={dataset.version.someDatasetVersionHasBeenReleased}
+          datasetIsDeaccessioned={
+            dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
+          }
+          canUpdateDataset={dataset.permissions?.canUpdateDataset}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
+      </div>
       <Accordion defaultActiveKey={['0']} alwaysOpen>
         {dataset.metadataBlocks.map((metadataBlock, index) => {
           metadataBlock.fields =

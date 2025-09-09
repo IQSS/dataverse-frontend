@@ -43,26 +43,24 @@ export const ExportMetadataDropdown = ({
   }
 
   return (
-    <div className="d-flex justify-content-end mb-3">
-      <DropdownButton
-        id="export-metadata-dropdown"
-        title="Export Metadata"
-        size="sm"
-        icon={<BoxArrowUpRight className="me-2 mb-1" />}>
-        {Object.entries(datasetMetadataExportFormats).map(([key, exportFormat]) => {
-          if (!exportFormat.isVisibleInUserInterface) return null
+    <DropdownButton
+      id="export-metadata-dropdown"
+      title="Export Metadata"
+      size="sm"
+      icon={<BoxArrowUpRight className="me-2 mb-1" />}>
+      {Object.entries(datasetMetadataExportFormats).map(([key, exportFormat]) => {
+        if (!exportFormat.isVisibleInUserInterface) return null
 
-          const href = `${DATAVERSE_BACKEND_URL}/api/datasets/export?exporter=${key}&${
-            QueryParamKey.PERSISTENT_ID
-          }=${encodeURIComponent(datasetPersistentId)}`
+        const href = `${DATAVERSE_BACKEND_URL}/api/datasets/export?exporter=${key}&${
+          QueryParamKey.PERSISTENT_ID
+        }=${encodeURIComponent(datasetPersistentId)}`
 
-          return (
-            <DropdownButtonItem as="a" href={href} target="_blank" key={key}>
-              {exportFormat.displayName}
-            </DropdownButtonItem>
-          )
-        })}
-      </DropdownButton>
-    </div>
+        return (
+          <DropdownButtonItem as="a" href={href} target="_blank" key={key}>
+            {exportFormat.displayName}
+          </DropdownButtonItem>
+        )
+      })}
+    </DropdownButton>
   )
 }

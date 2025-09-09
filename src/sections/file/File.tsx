@@ -19,15 +19,23 @@ import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
 import { FileVersions } from './file-version/FileVersions'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 
 interface FileProps {
   repository: FileRepository
   datasetRepository: DatasetRepository
   id: number
   datasetVersionNumber?: string
+  dataverseInfoRepository: DataverseInfoRepository
 }
 
-export function File({ repository, id, datasetVersionNumber, datasetRepository }: FileProps) {
+export function File({
+  repository,
+  id,
+  datasetVersionNumber,
+  datasetRepository,
+  dataverseInfoRepository
+}: FileProps) {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
@@ -131,7 +139,9 @@ export function File({ repository, id, datasetVersionNumber, datasetRepository }
                   name={file.name}
                   metadata={file.metadata}
                   permissions={file.permissions}
-                  datasetPublishingStatus={file.datasetVersion.publishingStatus}
+                  datasetPersistentId={file.datasetPersistentId}
+                  datasetVersion={file.datasetVersion}
+                  dataverseInfoRepository={dataverseInfoRepository}
                 />
               </div>
             </Tabs.Tab>
