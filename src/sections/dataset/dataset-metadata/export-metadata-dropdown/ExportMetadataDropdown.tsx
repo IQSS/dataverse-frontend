@@ -1,9 +1,10 @@
-import { DATAVERSE_BACKEND_URL } from '@/config'
+import { useTranslation } from 'react-i18next'
+import { BoxArrowUpRight } from 'react-bootstrap-icons'
+import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useGetAvailableDatasetMetadataExportFormats } from '@/info/domain/hooks/useGetAvailableDatasetMetadataExportFormats'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { QueryParamKey } from '@/sections/Route.enum'
-import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { BoxArrowUpRight } from 'react-bootstrap-icons'
+import { DATAVERSE_BACKEND_URL } from '@/config'
 
 interface ExportMetadataDropdownProps {
   datasetPersistentId: string
@@ -14,9 +15,6 @@ interface ExportMetadataDropdownProps {
   dataverseInfoRepository: DataverseInfoRepository
 }
 
-// TODO:ME - Add dropdown in file metadata tab too
-// TODO:ME - Add unit tests
-
 export const ExportMetadataDropdown = ({
   datasetPersistentId,
   datasetIsReleased,
@@ -25,6 +23,7 @@ export const ExportMetadataDropdown = ({
   anonymizedView,
   dataverseInfoRepository
 }: ExportMetadataDropdownProps) => {
+  const { t } = useTranslation('shared')
   const { datasetMetadataExportFormats, isLoadingExportFormats, errorGetExportFormats } =
     useGetAvailableDatasetMetadataExportFormats({ dataverseInfoRepository })
 
@@ -45,7 +44,7 @@ export const ExportMetadataDropdown = ({
   return (
     <DropdownButton
       id="export-metadata-dropdown"
-      title="Export Metadata"
+      title={t('exportMetadata')}
       size="sm"
       icon={<BoxArrowUpRight className="me-2 mb-1" />}>
       {Object.entries(datasetMetadataExportFormats).map(([key, exportFormat]) => {
