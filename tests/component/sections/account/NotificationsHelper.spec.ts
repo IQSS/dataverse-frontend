@@ -152,6 +152,146 @@ describe('getTranslatedNotification', () => {
       '/datasets?persistentId=doi:10.5678/osl.2024'
     )
   })
+  it('should translate assignRole correctly', () => {
+    const notification: Notification = {
+      id: 1,
+      type: NotificationType.ASSIGN_ROLE,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false,
+      datasetDisplayName: 'Dataset A',
+      roleAssignments: [
+        {
+          id: 1,
+          assignee: 'user123',
+          definitionPointId: 101,
+          roleId: 3,
+          roleName: 'Editor',
+          _roleAlias: 'editor'
+        }
+      ],
+      datasetPersistentIdentifier: 'doi:10.9012/dataset.a'
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('You have been granted the Editor role for Dataset A.').should('exist')
+  })
+
+  it('should translate assignRoleFileDownloader correctly', () => {
+    const notification: Notification = {
+      id: 2,
+      type: NotificationType.ASSIGN_ROLE,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false,
+      datasetDisplayName: 'Dataset B',
+      datasetPersistentIdentifier: 'doi:10.3456/dataset.b',
+      roleAssignments: [
+        {
+          id: 1,
+          assignee: 'user123',
+          definitionPointId: 101,
+          roleId: 3,
+          roleName: 'File Downloader',
+          _roleAlias: 'fileDownloader'
+        }
+      ]
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains(
+      'You now have access to all published restricted and unrestricted files in Dataset B.'
+    ).should('exist')
+  })
+
+  it('should translate revokeRole correctly', () => {
+    const notification: Notification = {
+      id: 3,
+      type: NotificationType.REVOKE_ROLE,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false,
+      datasetDisplayName: 'Dataset C',
+      datasetPersistentIdentifier: 'doi:10.9012/dataset.c',
+      roleAssignments: [
+        {
+          id: 1,
+          assignee: 'user123',
+          definitionPointId: 101,
+          roleId: 3,
+          roleName: 'Editor',
+          _roleAlias: 'editor'
+        }
+      ]
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('You have been removed from a role in Dataset C.').should('exist')
+  })
+
+  it('should translate createCollection correctly', () => {
+    const notification: Notification = {
+      id: 4,
+      type: NotificationType.CREATE_COLLECTION,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false,
+      collectionDisplayName: 'Collection A',
+      collectionAlias: 'collection_a',
+      ownerDisplayName: 'User A',
+      ownerAlias: 'user_a',
+      userGuidesBaseUrl: 'https://guides.dataverse.org',
+      userGuidesVersion: 'v5.12',
+      userGuidesSectionPath: 'managing-collections'
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('Collection A was created in User A.').should('exist')
+  })
+
+  it('should translate globusUploadRemoteFailure correctly', () => {
+    const notification: Notification = {
+      id: 5,
+      type: NotificationType.GLOBUS_UPLOAD_REMOTE_FAILURE,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false
+    }
+    const result = getTranslatedNotification(notification, mockT)
+    expect(result).to.contain('Unknown notification: globusUploadRemoteFailure')
+  })
+
+  it('should translate published dataset correctly', () => {
+    const notification: Notification = {
+      id: 6,
+      type: NotificationType.PUBLISHED_DS,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false,
+      datasetDisplayName: 'Dataset D',
+      datasetPersistentIdentifier: 'doi:10.1234/dataset.d',
+      ownerDisplayName: 'User B'
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('Dataset D').should('exist')
+    cy.contains('User B').should('exist')
+    cy.findByRole('link', { name: 'Dataset D' }).should(
+      'have.attr',
+      'href',
+      '/datasets?persistentId=doi:10.1234/dataset.d'
+    )
+  })
+
+  it('should translate status updated correctly', () => {
+    const notification: Notification = {
+      id: 7,
+      type: NotificationType.STATUS_UPDATED,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false,
+      datasetDisplayName: 'Dataset E',
+      datasetPersistentIdentifier: 'doi:10.5678/dataset.e',
+      currentCurationStatus: 'In Review',
+      ownerDisplayName: 'User C'
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('Dataset E').should('exist')
+    cy.contains('has been updated to In Review').should('exist')
+    cy.findByRole('link', { name: 'Dataset E' }).should(
+      'have.attr',
+      'href',
+      '/datasets?persistentId=doi:10.5678/dataset.e'
+    )
+  })
   it('handles unknown notification types gracefully', () => {
     const notification: Notification = {
       id: 2,

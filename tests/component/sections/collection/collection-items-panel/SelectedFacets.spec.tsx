@@ -1,3 +1,4 @@
+import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { SelectedFacets } from '@/sections/collection/collection-items-panel/selected-facets/SelectedFacets'
 
 describe('SelectedFacets', () => {
@@ -45,5 +46,19 @@ describe('SelectedFacets', () => {
     )
 
     cy.findByRole('button', { name: /Bar/ }).should('be.disabled')
+  })
+
+  it('should render "Unknown" when filter query split fails', () => {
+    const onRemoveFacet = cy.stub().as('onRemoveFacet')
+
+    cy.customMount(
+      <SelectedFacets
+        selectedFilterQueries={['InvalidQuery'] as unknown as FilterQuery[]} // Casting to simulate a badly formatted filter query, should not happen but we want to test the fallback
+        onRemoveFacet={onRemoveFacet}
+        isLoadingCollectionItems={false}
+      />
+    )
+
+    cy.findByRole('button', { name: /Unknown/ }).should('exist')
   })
 })

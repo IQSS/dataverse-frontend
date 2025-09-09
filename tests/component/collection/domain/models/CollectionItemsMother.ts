@@ -129,6 +129,20 @@ export class CollectionItemsMother {
             count: 7
           }
         ]
+      },
+      {
+        name: 'fileTag',
+        friendlyName: 'File Tag',
+        labels: [
+          {
+            name: 'Dragon: Ball',
+            count: 1
+          },
+          {
+            name: 'John:Doe',
+            count: 1
+          }
+        ]
       }
     ]
   }

@@ -79,6 +79,9 @@ function translateRoleNotification(
   }
 
   const roleNames = notification.roleAssignments.map((ra) => ra.roleName).join(', ')
+  if (roleNames === 'File Downloader') {
+    key = 'notifications.notification.assignRoleFileDownloader'
+  }
   let objectLink: JSX.Element
   let objectName: string
   if (notification.collectionAlias && notification.collectionDisplayName) {

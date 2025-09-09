@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { ButtonGroup } from '@iqss/dataverse-design-system'
-import { Dataset } from '@/dataset/domain/models/Dataset'
+import { Dataset, DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { AccessDatasetMenu } from './access-dataset-menu/AccessDatasetMenu'
@@ -28,6 +28,10 @@ export function DatasetActionButtons({
 }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
 
+  const isCurrentVersionDeaccessioned =
+    dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
+  const canUpdateDataset = dataset.permissions.canUpdateDataset
+
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
       <AccessDatasetMenu
@@ -54,7 +58,7 @@ export function DatasetActionButtons({
           contactRepository={contactRepository}
         />
 
-        <ShareDatasetButton />
+        {(!isCurrentVersionDeaccessioned || canUpdateDataset) && <ShareDatasetButton />}
       </ButtonGroup>
     </ButtonGroup>
   )
