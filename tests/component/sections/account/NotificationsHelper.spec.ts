@@ -3,6 +3,19 @@ import { getTranslatedNotification } from '@/sections/account/notifications-sect
 import { TFunction } from 'i18next'
 
 import accountTranslations from '../../../../public/locales/en/account.json'
+const mockTranslations = {
+  notifications: {
+    notification: {
+      assignRole:
+        'You have been granted the {{roleName}} role for <objectLink>{{objectName}}</objectLink>.',
+      assignRoleFileDownloader:
+        'You now have access to all published restricted and unrestricted files in <objectLink>{{objectName}}</objectLink>.',
+      revokeRole: 'You have been removed from a role in <objectLink>{{objectName}}</objectLink>.',
+      createCollection:
+        '<collectionLink>{{collectionDisplayName}}</collectionLink> was created in <ownerLink>{{ownerDisplayName}}</ownerLink> . '
+    }
+  }
+}
 
 function getNestedValue(obj: unknown, path: string[]): unknown {
   return path.reduce((acc, key) => {
@@ -13,9 +26,15 @@ function getNestedValue(obj: unknown, path: string[]): unknown {
   }, obj)
 }
 
-const mockT: TFunction = ((key: string) => {
+const accountT: TFunction = ((key: string) => {
   const path = key.split('.')
   const value = getNestedValue(accountTranslations, path)
+  return typeof value === 'string' ? value : key
+}) as TFunction
+
+const mockT: TFunction = ((key: string) => {
+  const path = key.split('.')
+  const value = getNestedValue(mockTranslations, path)
   return typeof value === 'string' ? value : key
 }) as TFunction
 
@@ -33,7 +52,7 @@ describe('getTranslatedNotification', () => {
       userGuidesBaseUrl: 'https://guides.dataverse.org',
       userGuidesVersion: 'v5.12'
     }
-    cy.customMount(getTranslatedNotification(notification, mockT))
+    cy.customMount(getTranslatedNotification(notification, accountT))
     cy.findByText('Climate Data').should('exist')
     cy.findByText('Jane Doe').should('exist')
     cy.findByRole('link', { name: 'Climate Data' }).should(
@@ -63,7 +82,7 @@ describe('getTranslatedNotification', () => {
       ownerDisplayName: 'Alice Smith',
       ownerAlias: 'alice_smith'
     }
-    cy.customMount(getTranslatedNotification(notification, mockT))
+    cy.customMount(getTranslatedNotification(notification, accountT))
     cy.findByText('Biodiversity Data').should('exist')
     cy.contains('You have been granted the Curator').should('exist')
     cy.findByRole('link', { name: 'Biodiversity Data' }).should(
@@ -84,7 +103,7 @@ describe('getTranslatedNotification', () => {
       ownerDisplayName: 'John Smith Collection',
       ownerAlias: 'john_smith'
     }
-    cy.customMount(getTranslatedNotification(notification, mockT))
+    cy.customMount(getTranslatedNotification(notification, accountT))
     cy.findByText('Global Warming Trends').should('exist')
     cy.findByText('John Smith Collection').should('exist')
     cy.findByRole('link', { name: 'Global Warming Trends' }).should(
@@ -105,7 +124,7 @@ describe('getTranslatedNotification', () => {
       ownerAlias: 'deleted_owner',
       objectDeleted: true
     }
-    cy.customMount(getTranslatedNotification(notification, mockT))
+    cy.customMount(getTranslatedNotification(notification, accountT))
     cy.contains('The dataverse, dataset, or file for this notification has been deleted.').should(
       'exist'
     )
@@ -124,7 +143,7 @@ describe('getTranslatedNotification', () => {
       ownerDisplayName: 'Alice Johnson',
       ownerAlias: 'alice_johnson'
     }
-    cy.customMount(getTranslatedNotification(notification, mockT))
+    cy.customMount(getTranslatedNotification(notification, accountT))
     cy.findByText('Ocean Salinity Levels').should('exist')
     cy.contains('has been updated to Approved').should('exist')
     cy.findByRole('link', { name: 'Ocean Salinity Levels' }).should(
@@ -136,13 +155,13 @@ describe('getTranslatedNotification', () => {
   it('handles unknown notification types gracefully', () => {
     const notification: Notification = {
       id: 2,
-      type: NotificationType.ASSIGN_ROLE_COLLECTION, // Assuming this type is not in the map
+      type: NotificationType.GLOBUS_UPLOAD_REMOTE_FAILURE, // Assuming this type is not in the map
       sentTimestamp: new Date().toISOString(),
       displayAsRead: false
     }
 
     const result = getTranslatedNotification(notification, mockT)
     console.log('result:', result)
-    expect(result).contains('Unknown notification: assignRoleCollection')
+    expect(result).contains('Unknown notification: globusUploadRemoteFailure')
   })
 })

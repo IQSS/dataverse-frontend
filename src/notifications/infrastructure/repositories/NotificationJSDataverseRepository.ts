@@ -1,13 +1,17 @@
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { Notification } from '@/notifications/domain/models/Notification'
-// TODO: Implement actual data fetching logic from Dataverse API
+import { getAllNotificationsByUser } from '@iqss/dataverse-client-javascript'
+import { JSNotificationMapper } from '../mappers/JSNotificationMapper'
+
 export class NotificationJSDataverseRepository implements NotificationRepository {
+  private readonly mapper = new JSNotificationMapper()
+
   getAllNotificationsByUser(): Promise<Notification[]> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([])
-      }, 500) // Simulate loading delay
-    })
+    return getAllNotificationsByUser
+      .execute()
+      .then((notifications) =>
+        notifications.map((notification) => this.mapper.toNotification(notification))
+      )
   }
 
   getUnreadNotificationsCount(): Promise<number> {

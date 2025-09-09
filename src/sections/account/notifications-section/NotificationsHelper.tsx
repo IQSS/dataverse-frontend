@@ -5,19 +5,51 @@ import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { QueryParamKey, Route, RouteWithParams } from '@/sections/Route.enum'
 
-function formatString(template: string, values: (string | undefined)[]): string {
-  return template.replace(/{(\d+)}/g, (match, index) => {
-    const value = values[Number(index)]
-    return value !== undefined ? value : match
-  })
+const demoSiteUrl = 'https://demo.dataverse.org'
+const NotificationTypeToTranslationMap: Record<NotificationType, string> = {
+  [NotificationType.ASSIGN_ROLE]: 'assignRole',
+  [NotificationType.REVOKE_ROLE]: 'revokeRole',
+  [NotificationType.CREATE_COLLECTION]: 'createCollection',
+  [NotificationType.CREATE_DATASET]: 'createDataset',
+  [NotificationType.CREATE_ACC]: 'createAcc',
+  [NotificationType.SUBMITTED_DS]: 'submittedDataset',
+  [NotificationType.RETURNED_DS]: 'returnedDataset',
+  [NotificationType.PUBLISHED_DS]: 'publishedDataset',
+  [NotificationType.REQUEST_FILE_ACCESS]: 'requestFileAccess',
+  [NotificationType.GRANT_FILE_ACCESS]: 'grantFileAccess',
+  [NotificationType.REJECT_FILE_ACCESS]: 'rejectFileAccess',
+  [NotificationType.FILE_SYSTEM_IMPORT]: 'fileSystemImport',
+  [NotificationType.CHECKSUM_IMPORT]: 'checksumImport',
+  [NotificationType.CHECKSUM_FAIL]: 'checksumFail',
+  [NotificationType.CONFIRM_EMAIL]: 'confirmEmail',
+  [NotificationType.API_GENERATED]: 'apiGenerated',
+  [NotificationType.INGEST_COMPLETED]: 'ingestCompleted',
+  [NotificationType.INGEST_COMPLETED_WITH_ERRORS]: 'ingestCompletedWithErrors',
+  [NotificationType.PUBLISH_FAILED_PIDREG]: 'publishFailedPidReg',
+  [NotificationType.WORKFLOW_SUCCESS]: 'workflowSuccess',
+  [NotificationType.WORKFLOW_FAILURE]: 'workflowFailure',
+  [NotificationType.STATUS_UPDATED]: 'statusUpdated',
+  [NotificationType.DATASET_CREATED]: 'datasetCreated',
+  [NotificationType.DATASET_MENTIONED]: 'datasetMentioned',
+  [NotificationType.GLOBUS_UPLOAD_COMPLETED]: 'globusUploadCompleted',
+  [NotificationType.GLOBUS_UPLOAD_COMPLETED_WITH_ERRORS]: 'globusUploadCompletedWithErrors',
+  [NotificationType.GLOBUS_DOWNLOAD_COMPLETED]: 'globusDownloadCompleted',
+  [NotificationType.GLOBUS_DOWNLOAD_COMPLETED_WITH_ERRORS]: 'globusDownloadCompletedWithErrors',
+  [NotificationType.REQUESTED_FILE_ACCESS]: 'requestedFileAccess',
+  [NotificationType.GLOBUS_UPLOAD_REMOTE_FAILURE]: 'globusUploadRemoteFailure',
+  [NotificationType.GLOBUS_UPLOAD_LOCAL_FAILURE]: 'globusUploadLocalFailure',
+  [NotificationType.PID_RECONCILED]: 'pidReconciled'
 }
+
 type TranslatedNotification = string | JSX.Element
 
 export function getTranslatedNotification(
   notification: Notification,
   t: TFunction = i18n.t.bind(i18n)
 ): TranslatedNotification {
-  const key = `notifications.notification.${notification.type}`
+  const key = NotificationTypeToTranslationMap[notification.type]
+    ? `notifications.notification.${NotificationTypeToTranslationMap[notification.type]}`
+    : `notifications.notification.unknown`
   const template = t(key)
 
   // If translation missing, return a fallback
@@ -28,95 +60,16 @@ export function getTranslatedNotification(
     const deletedKey = 'notifications.notification.genericObjectDeleted'
     return t(deletedKey)
   }
-  switch (notification.type) {
-    case NotificationType.CREATE_COLLECTION:
-      return translateCreateCollection(notification, key, t)
-    case NotificationType.ASSIGN_ROLE:
-    case NotificationType.REVOKE_ROLE:
-      return translateWithRoles(notification, key, t)
-    case NotificationType.PUBLISHED_DS:
-    case NotificationType.PUBLISH_FAILED_PIDREG:
-    case NotificationType.RETURNED_DS:
-    case NotificationType.WORKFLOW_FAILURE:
-    case NotificationType.WORKFLOW_SUCCESS:
-    case NotificationType.PID_RECONCILED:
-    case NotificationType.FILE_SYSTEM_IMPORT:
-    case NotificationType.CHECKSUM_IMPORT:
-    case NotificationType.GLOBUS_UPLOAD_COMPLETED:
-    case NotificationType.GLOBUS_DOWNLOAD_COMPLETED:
-    case NotificationType.GLOBUS_UPLOAD_COMPLETED_WITH_ERRORS:
-    case NotificationType.GLOBUS_UPLOAD_REMOTE_FAILURE:
-    case NotificationType.GLOBUS_UPLOAD_LOCAL_FAILURE:
-    case NotificationType.GLOBUS_DOWNLOAD_COMPLETED_WITH_ERRORS:
-    case NotificationType.CHECKSUM_FAIL:
-      return translateWithDatasetLink(notification, key, t)
-    case NotificationType.STATUS_UPDATED:
-      return translateWithDatasetLink(notification, key, t, true)
-    default: {
-      return template
-    }
+  if (
+    notification.type === NotificationType.ASSIGN_ROLE ||
+    notification.type === NotificationType.REVOKE_ROLE
+  ) {
+    return translateRoleNotification(notification, key, t)
   }
-}
-type RequiredField = keyof Notification
-
-function requireNotificationFields<K extends RequiredField>(
-  notification: Notification,
-  ...fields: K[]
-): Notification & Record<K, string> {
-  for (const field of fields) {
-    const value = notification[field]
-    if (typeof value !== 'string' || value.trim() === '') {
-      throw new Error(`Missing required field: ${field}`)
-    }
-  }
-
-  return notification as Notification & Record<K, string>
+  return translateGeneric(notification, key, t)
 }
 
-export function translateCreateCollection(
-  notification: Notification,
-  key: string,
-  t: TFunction
-): JSX.Element {
-  const {
-    collectionDisplayName,
-    collectionAlias,
-    ownerDisplayName,
-    ownerAlias,
-    userGuidesBaseUrl,
-    userGuidesVersion
-  } = requireNotificationFields(
-    notification,
-    'collectionDisplayName',
-    'collectionAlias',
-    'ownerDisplayName',
-    'ownerAlias',
-    'userGuidesBaseUrl',
-    'userGuidesVersion'
-  )
-  return (
-    <Trans
-      t={t}
-      i18nKey={key}
-      values={{
-        collectionDisplayName: collectionDisplayName,
-        ownerDisplayName: ownerDisplayName
-      }}
-      components={{
-        collectionLink: <Link to={RouteWithParams.COLLECTIONS(collectionAlias)} />,
-        ownerLink: <Link to={RouteWithParams.COLLECTIONS(ownerAlias)} />,
-        userGuideLink: (
-          <a
-            href={`${userGuidesBaseUrl}/${userGuidesVersion}/user/your-guide-section.html`}
-            target="_blank"
-            rel="noopener noreferrer"
-          />
-        )
-      }}
-    />
-  )
-}
-export function translateWithRoles(
+function translateRoleNotification(
   notification: Notification,
   key: string,
   t: TFunction
@@ -159,44 +112,42 @@ export function translateWithRoles(
   )
 }
 
-export function translateWithDatasetLink(
-  notification: Notification,
-  key: string,
-  t: TFunction,
-  includeCurationStatus = false
-): JSX.Element {
-  const { datasetDisplayName, datasetPersistentIdentifier, ownerDisplayName, ownerAlias } =
-    requireNotificationFields(
-      notification,
-      'datasetDisplayName',
-      'datasetPersistentIdentifier',
-      'ownerDisplayName',
-      'ownerAlias'
+function translateGeneric(notification: Notification, key: string, t: TFunction): JSX.Element {
+  const components: Record<string, JSX.Element> = {}
+  const values: Record<string, string> = Object.fromEntries(
+    Object.entries(notification).filter(
+      ([_, value]) => typeof value === 'string' && value !== undefined
     )
-  const values = {
-    datasetDisplayName: datasetDisplayName,
-    ownerDisplayName: ownerDisplayName
-  }
-  if (includeCurationStatus) {
-    const { currentCurationStatus } = requireNotificationFields(
-      notification,
-      'currentCurationStatus'
-    )
-    Object.assign(values, { currentCurationStatus })
-  }
-  return (
-    <Trans
-      t={t}
-      i18nKey={key}
-      values={values}
-      components={{
-        datasetLink: (
-          <Link
-            to={`${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentIdentifier}`}
-          />
-        ),
-        ownerLink: <Link to={RouteWithParams.COLLECTIONS(ownerAlias)} />
-      }}
-    />
   )
+  // TODO: handle additionalInfo for DATASET_MENTIONED type when needed
+  if (notification.datasetPersistentIdentifier) {
+    components.datasetLink = (
+      <Link
+        to={`${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${notification.datasetPersistentIdentifier}`}
+      />
+    )
+  }
+  if (notification.ownerAlias) {
+    components.ownerLink = <Link to={RouteWithParams.COLLECTIONS(notification.ownerAlias)} />
+  }
+  if (notification.collectionAlias) {
+    components.collectionLink = (
+      <Link to={RouteWithParams.COLLECTIONS(notification.collectionAlias)} />
+    )
+  }
+  if (notification.userGuidesBaseUrl && notification.userGuidesVersion) {
+    components.userGuideLink = (
+      <a
+        href={`${notification.userGuidesBaseUrl}/${notification.userGuidesVersion}/${
+          notification.userGuidesSectionPath || ''
+        }`}
+        target="_blank"
+        rel="noopener noreferrer"></a>
+    )
+  }
+  if (notification.type === NotificationType.CREATE_ACC) {
+    components.demoLink = <a href={demoSiteUrl} target="_self" rel="noopener noreferrer"></a>
+  }
+
+  return <Trans t={t} i18nKey={key} values={values} components={components} />
 }
