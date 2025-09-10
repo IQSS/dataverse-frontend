@@ -41,24 +41,24 @@ const NotificationTypeToTranslationMap: Record<NotificationType, string> = {
   [NotificationType.PID_RECONCILED]: 'pidReconciled'
 }
 
-type TranslatedNotification = string | JSX.Element
-
 export function getTranslatedNotification(
   notification: Notification,
   t: TFunction = i18n.t.bind(i18n)
-): TranslatedNotification {
+): JSX.Element {
   const key = NotificationTypeToTranslationMap[notification.type]
     ? `notifications.notification.${NotificationTypeToTranslationMap[notification.type]}`
     : `notifications.notification.unknown`
   const template = t(key)
+  console.log('🧪 i18nKey:', key)
+  console.log('🧪 t(key):', t(key))
 
   // If translation missing, return a fallback
   if (!template || template === key) {
-    return `Unknown notification: ${notification.type}`
+    return <span>Unknown notification: {notification.type}</span>
   }
   if (notification.objectDeleted) {
     const deletedKey = 'notifications.notification.genericObjectDeleted'
-    return t(deletedKey)
+    return <span>{t(deletedKey)}</span>
   }
   if (
     notification.type === NotificationType.ASSIGN_ROLE ||
@@ -74,11 +74,13 @@ function translateRoleNotification(
   key: string,
   t: TFunction
 ): JSX.Element {
-  if (!notification.roleAssignments) {
+  /*if (!notification.roleAssignments) {
     throw new Error(`Missing required field: roleAssignments`)
   }
-
-  const roleNames = notification.roleAssignments.map((ra) => ra.roleName).join(', ')
+*/
+  const roleNames = notification.roleAssignments
+    ? notification.roleAssignments.map((ra) => ra.roleName).join(', ')
+    : ''
   if (roleNames === 'File Downloader') {
     key = 'notifications.notification.assignRoleFileDownloader'
   }
@@ -98,7 +100,9 @@ function translateRoleNotification(
     objectName = notification.dataFileDisplayName
     objectLink = <Link to={`${Route.FILES}?${QueryParamKey.FILE_ID}=${notification.dataFileId}`} />
   } else {
-    throw new Error('Missing required field for role notification message.')
+    // throw new Error('Missing required field for role notification message.')
+    objectName = 'unknown object'
+    objectLink = <></>
   }
   return (
     <Trans
@@ -132,6 +136,9 @@ function translateGeneric(notification: Notification, key: string, t: TFunction)
   }
   if (notification.ownerAlias) {
     components.ownerLink = <Link to={RouteWithParams.COLLECTIONS(notification.ownerAlias)} />
+  } else {
+    components.ownerLink = <Link to={RouteWithParams.COLLECTIONS()} />
+    values.ownerDisplayName = notification.installationBrandName || 'this installation'
   }
   if (notification.collectionAlias) {
     components.collectionLink = (
@@ -141,13 +148,15 @@ function translateGeneric(notification: Notification, key: string, t: TFunction)
   if (notification.userGuidesBaseUrl && notification.userGuidesVersion) {
     components.userGuideLink = (
       <a
-        href={`${notification.userGuidesBaseUrl}/${notification.userGuidesVersion}/${
+        href={`${notification.userGuidesBaseUrl}/en/${notification.userGuidesVersion}/${
           notification.userGuidesSectionPath || ''
         }`}
         target="_blank"
         rel="noopener noreferrer"></a>
     )
+    values.userGuideLinkText = t('notifications.userGuideLinkText')
   }
+
   if (notification.type === NotificationType.CREATE_ACC) {
     components.demoLink = <a href={demoSiteUrl} target="_self" rel="noopener noreferrer"></a>
   }

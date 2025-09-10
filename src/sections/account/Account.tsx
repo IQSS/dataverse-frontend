@@ -11,6 +11,8 @@ import { useLoading } from '../loading/LoadingContext'
 import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
 import { RoleJSDataverseRepository } from '@/roles/infrastructure/repositories/RoleJSDataverseRepository'
 import styles from './Account.module.scss'
+import NotificationsSection from '@/sections/account/notifications-section/NotificationsSection'
+import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 
@@ -19,13 +21,15 @@ interface AccountProps {
   userRepository: UserJSDataverseRepository
   collectionRepository: CollectionRepository
   roleRepository: RoleJSDataverseRepository
+  notificationRepository: NotificationRepository
 }
 
 export const Account = ({
   defaultActiveTabKey,
   userRepository,
   collectionRepository,
-  roleRepository
+  roleRepository,
+  notificationRepository
 }: AccountProps) => {
   const { t } = useTranslation('account')
   const [_, setSearchParams] = useSearchParams()
@@ -56,8 +60,10 @@ export const Account = ({
             />
           </div>
         </Tabs.Tab>
-        <Tabs.Tab eventKey={tabsKeys.notifications} title={t('tabs.notifications')} disabled>
-          <div className={styles['tab-container']}></div>
+        <Tabs.Tab eventKey={tabsKeys.notifications} title={t('tabs.notifications')}>
+          <div className={styles['tab-container']}>
+            <NotificationsSection repository={notificationRepository} />
+          </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.accountInformation} title={t('tabs.accountInformation')}>
           <div className={styles['tab-container']}>
