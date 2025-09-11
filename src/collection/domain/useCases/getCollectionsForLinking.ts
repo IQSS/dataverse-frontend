@@ -3,7 +3,7 @@ import { CollectionSummary } from '../models/CollectionSummary'
 
 export type LinkingObjectType = 'collection' | 'dataset'
 
-export async function getCollectionForLinking(
+export async function getCollectionsForLinking(
   collectionRepository: CollectionRepository,
   objectType: LinkingObjectType,
   id: number | string,

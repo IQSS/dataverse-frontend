@@ -69,5 +69,11 @@
   },
   "collectionDeletedSuccess": "Your collection has been deleted.",
   "defaultCollectionDeleteError": "Something went wrong deleting the collection. Try again later.",
-  "description": "Description"
+  "description": "Description",
+  "link": {
+    "title": "Link",
+    "linkCollection": "Link Collection",
+    "linkCollectionHelperText": "Choose which of your dataverses you would like to link this dataverse to.",
+    "saveLinkedCollection": "Save Linked Collection"
+  }
 }

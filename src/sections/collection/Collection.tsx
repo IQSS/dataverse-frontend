@@ -21,6 +21,7 @@ import { Route } from '../Route.enum'
 import { CollectionHelper } from './CollectionHelper'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
+import { LinkCollectionDropdown } from './link-collection-dropdown/LinkCollectionDropdown'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -33,6 +34,8 @@ interface CollectionProps {
   contactRepository: ContactRepository
 }
 
+// TODO:ME - AssertionError: Timed out retrying after 4000ms: Expected <span._message_9f1l8_33> not to exist in the DOM, but it was continuously found.
+// removes the selection when the header checkbox is clicked again:
 export function Collection({
   collectionIdFromParams,
   collectionRepository,
@@ -61,8 +64,6 @@ export function Collection({
   const canUserDeleteCollection = Boolean(collectionUserPermissions?.canDeleteCollection)
 
   const showAddDataActions = canUserAddCollection || canUserAddDataset
-  const showPublishButton = !collection?.isReleased && canUserPublishCollection
-  const showEditButton = canUserEditCollection
 
   if (isLoadingCollection) {
     return <CollectionSkeleton />
@@ -110,16 +111,22 @@ export function Collection({
 
                 <ShareCollectionButton />
 
-                {(showPublishButton || showEditButton) && (
+                {(canUserPublishCollection || canUserEditCollection) && (
                   <ButtonGroup>
-                    {showPublishButton && (
+                    {!collection?.isReleased && canUserPublishCollection && (
                       <PublishCollectionButton
                         repository={collectionRepository}
                         collectionId={collection.id}
                         refetchCollection={refetchCollection}
                       />
                     )}
-                    {showEditButton && (
+                    {/* TODO:ME - Dont show link dropdown on root collection?? */}
+                    <LinkCollectionDropdown
+                      collectionId={collection.id}
+                      collectionRepository={collectionRepository}
+                    />
+
+                    {canUserEditCollection && (
                       <EditCollectionDropdown
                         collection={collection}
                         canUserDeleteCollection={canUserDeleteCollection}

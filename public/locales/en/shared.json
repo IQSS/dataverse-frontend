@@ -288,5 +288,11 @@
     "truncateLessBtn": "Collapse {{contentName}}",
     "truncateMoreTip": "Click to read the full {{contentName}}",
     "truncateLessTip": "Click to collapse the {{contentName}}"
+  },
+  "collectionLinkSelect": {
+    "label": "Your Collection",
+    "select": "Select a Collection",
+    "placeholder": "Enter Collection Name",
+    "noOptions": "No collections found"
   }
 }
