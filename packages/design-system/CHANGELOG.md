@@ -12,6 +12,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **DropdownButtonItem:**
   - Add `type` prop to allow specifying the type of the element.
 - **SelectAdvanced:** Fix word wrapping in options list to prevent overflow and ensure long text is displayed correctly.
+- **FormText:** Add `className` prop to allow custom styling.
 
 # [2.0.2](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.0.1...@iqss/dataverse-design-system@2.0.2) (2024-06-23)
 
