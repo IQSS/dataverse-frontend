@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { Badge, Col, Form } from '@iqss/dataverse-design-system'
+import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
@@ -98,7 +98,7 @@ export const CollectionLinkSelect = ({
               aria-label="Toggle options menu"
               className={styles.toggle}
             />
-            <div className={styles['inner-content']} data-testid="toggle-inner-content">
+            <div className={styles['inner-content']}>
               {selectedCollection ? (
                 <span>{selectedCollection.displayName}</span>
               ) : (
@@ -112,6 +112,7 @@ export const CollectionLinkSelect = ({
                 onChange={handleSearchChange}
                 type="search"
                 placeholder={tShared('collectionLinkSelect.placeholder')}
+                size="sm"
               />
               <div className={`${styles['loader-line']} ${isLoading ? styles.loading : ''}`} />
             </Dropdown.Header>
@@ -119,15 +120,20 @@ export const CollectionLinkSelect = ({
             {collectionsForLinking.length === 0 && (
               <div className="px-3 py-1">{tShared('collectionLinkSelect.noOptions')}</div>
             )}
+
             {collectionsForLinking.map((collection) => (
               <Dropdown.Item
                 eventKey={collection.id}
                 active={selectedCollection?.id === collection.id}
                 key={collection.id}>
-                <div className="d-flex align-items-center gap-2">
-                  <span>{collection.displayName}</span>
-                  <Badge variant="secondary">{collection.alias}</Badge>
-                </div>
+                <Row>
+                  <Col xs={7} className="text-wrap">
+                    {collection.displayName}
+                  </Col>
+                  <Col xs={5} className="text-wrap text-break text-muted">
+                    <small>{collection.alias}</small>
+                  </Col>
+                </Row>
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>

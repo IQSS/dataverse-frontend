@@ -58,6 +58,9 @@
     z-index: 2;
     grid-area: 1 / 1;
     padding: var(--toggle-padding);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     pointer-events: none;
   }
 }
