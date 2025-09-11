@@ -13,7 +13,9 @@ import {
   updateCollectionFeaturedItems,
   deleteCollectionFeaturedItems,
   deleteCollection,
-  deleteCollectionFeaturedItem
+  deleteCollectionFeaturedItem,
+  getCollectionsForLinking,
+  linkCollection
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
@@ -28,6 +30,8 @@ import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItem
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -141,5 +145,20 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
 
   deleteFeaturedItem(featuredItemId: number): Promise<void> {
     return deleteCollectionFeaturedItem.execute(featuredItemId)
+  }
+
+  getForLinking(
+    objectType: LinkingObjectType,
+    id: number | string,
+    searchTerm?: string
+  ): Promise<CollectionSummary[]> {
+    return getCollectionsForLinking.execute(objectType, id, searchTerm)
+  }
+
+  link(
+    linkedCollectionIdOrAlias: number | string,
+    linkingCollectionIdOrAlias: number | string
+  ): Promise<void> {
+    return linkCollection.execute(linkedCollectionIdOrAlias, linkingCollectionIdOrAlias)
   }
 }

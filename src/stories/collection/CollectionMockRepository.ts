@@ -15,6 +15,9 @@ import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
 import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
+import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id?: string): Promise<Collection> {
@@ -184,6 +187,29 @@ export class CollectionMockRepository implements CollectionRepository {
   }
 
   deleteFeaturedItem(_featuredItemId: number): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getForLinking(
+    _objectType: LinkingObjectType,
+    _id: number | string,
+    _searchTerm?: string
+  ): Promise<CollectionSummary[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(CollectionSummaryMother.createMany(5))
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  link(
+    _linkedCollectionIdOrAlias: number | string,
+    _linkingCollectionIdOrAlias: number | string
+  ): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
