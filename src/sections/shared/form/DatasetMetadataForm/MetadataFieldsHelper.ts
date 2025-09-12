@@ -510,13 +510,14 @@ export class MetadataFieldsHelper {
           normalizedMetadataBlocksInfoForDisplayOnEdit,
           normalizedDatasetTemplateMetadataBlocksValues
         )
+
       // 3) Add the values from the template to the metadata blocks info for create
       const metadataBlocksInfoWithValuesFromTemplate = this.addFieldValuesToMetadataBlocksInfo(
         metadataBlocksInfoWithAddedFieldsFromTemplate,
         normalizedDatasetTemplateMetadataBlocksValues
       )
 
-      // 5) Order fields by display order
+      // 4) Order fields by display order
       const metadataBlocksInfoOrdered = this.orderFieldsByDisplayOrder(
         metadataBlocksInfoWithValuesFromTemplate
       )
