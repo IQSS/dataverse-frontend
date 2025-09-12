@@ -52,7 +52,7 @@
     "userGuideLinkText": "User Guide",
     "demoServerLinkText": "Demo Site",
     "notification": {
-      "welcome": "Welcome to {{installationBrandName}}! Get started by adding or finding data. Have questions? Check out the <userGuideLink>{{userGuideLinkText}}</userGuideLink>. Want to test out Dataverse features? Use our <demoLink>{{t(notifications.demoServerLinkText)}}</demoLink>.",
+      "createAcc": "Welcome to {{installationBrandName}}! Get started by adding or finding data. Have questions? Check out the <userGuideLink>{{userGuideLinkText}}</userGuideLink>. Want to test out Dataverse features? Use our <demoLink>{{demoServerLinkText}}</demoLink>.",
       "ingestCompleted": "Dataset <datasetLink>{{datasetDisplayName}}</datasetLink> has one or more tabular files that completed the <a>tabular ingest process</a> and are available in archival formats.",
       "ingestCompletedWithErrors": "Dataset <datasetLink>{{datasetDisplayName}}</datasetLink> has one or more tabular files that are available but are not supported for <b>tabular ingest</b>.",
       "genericObjectDeleted": "The dataverse, dataset, or file for this notification has been deleted.",

@@ -159,6 +159,7 @@ function translateGeneric(notification: Notification, key: string, t: TFunction)
 
   if (notification.type === NotificationType.CREATE_ACC) {
     components.demoLink = <a href={demoSiteUrl} target="_self" rel="noopener noreferrer"></a>
+    values.demoServerLinkText = t('notifications.demoServerLinkText')
   }
 
   return <Trans t={t} i18nKey={key} values={values} components={components} />
