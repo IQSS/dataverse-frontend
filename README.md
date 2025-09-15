@@ -134,7 +134,7 @@ The Dataverse Frontend project uses several environments to support different st
 All environments follow an “all-in-one” setup, where the frontend and backend applications run together on a Payara server.  
 
 #### Beta
-The **Beta** environment provides a remote space for testing the latest changes. It automatically deploys the current `develop` branches of both the frontend and backend through GitHub Actions.  
+The **Beta** environment provides a remote space for testing the latest changes. GitHub Actions automatically deploy the current `develop` branches of both the frontend and backend.  
 - **Audience:** Development team, QA analysts, project managers, selected users for early feedback  
 - **URL:** [beta.dataverse.org/spa][dv_app_beta_spa_url]
 
