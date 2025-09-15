@@ -64,8 +64,6 @@ export const CollectionLinkSelect = ({
         } else {
           setNoCollectionsToLink(false)
         }
-
-        firstFetchHappened.current = true
       } catch (err: ReadError | unknown) {
         if (err instanceof ReadError) {
           const error = new JSDataverseReadErrorHandler(err)
@@ -78,6 +76,7 @@ export const CollectionLinkSelect = ({
         }
       } finally {
         setIsLoading(false)
+        firstFetchHappened.current = true
       }
     },
     [collectionIdOrAlias, collectionRepository]
@@ -126,9 +125,7 @@ export const CollectionLinkSelect = ({
         <div>
           <InfoCircleFill />
         </div>
-        <span>
-          <small>{tShared('linkCollectionDataset.noCollectionsToLink')}</small>
-        </span>
+        <span>{tShared('linkCollectionDataset.noCollectionsToLink')}</span>
       </div>
     )
   }
@@ -142,6 +139,8 @@ export const CollectionLinkSelect = ({
         {tShared('linkCollectionDataset.label')}
       </Form.Group.Label>
       <Col lg={9}>
+        {error && <small className="text-danger">{error}</small>}
+
         {onlyOneCollection && selectedCollection && (
           <Form.Group.Input readOnly value={selectedCollection.displayName} />
         )}
@@ -173,7 +172,7 @@ export const CollectionLinkSelect = ({
                 />
                 <div className={`${styles['loader-line']} ${isLoading ? styles.loading : ''}`} />
               </Dropdown.Header>
-              {error && <div className="px-3 py-1 text-danger">{error}</div>}
+
               {collectionsForLinking.length === 0 && (
                 <div className="px-3 py-1">{tShared('linkCollectionDataset.noOptions')}</div>
               )}

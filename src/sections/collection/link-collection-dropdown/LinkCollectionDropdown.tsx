@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+import { Trans, useTranslation } from 'react-i18next'
 import { Link45deg } from 'react-bootstrap-icons'
 import {
   Button,
@@ -9,17 +10,24 @@ import {
   Spinner,
   Stack
 } from '@iqss/dataverse-design-system'
+import { WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionLinkSelect } from './collection-link-select/CollectionLinkSelect'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
+import { RouteWithParams } from '@/sections/Route.enum'
+
+const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 
 interface LinkCollectionDropdownProps {
   collectionId: string
+  collectionName: string
   collectionRepository: CollectionRepository
 }
 
 export const LinkCollectionDropdown = ({
   collectionId,
+  collectionName,
   collectionRepository
 }: LinkCollectionDropdownProps) => {
   const { t: tShared } = useTranslation('shared')
@@ -31,8 +39,48 @@ export const LinkCollectionDropdown = ({
   const handleClose = () => setShowModal(false)
   const handleShow = () => setShowModal(true)
 
-  const handleLink = () => {
-    // Link collection logic here
+  const handleSaveLink = async () => {
+    if (!collectionSelected) return
+
+    setIsLinkingCollection(true)
+    setErrorLinkingCollection(null)
+
+    try {
+      await collectionRepository.link(collectionId, collectionSelected.id)
+      // Show success toast and close modal
+      toast.success(
+        <Trans
+          t={tShared}
+          i18nKey={'linkCollectionDataset.linkCollectionSuccess'}
+          values={{
+            linkedCollectionName: collectionName,
+            linkingCollectionName: collectionSelected?.displayName
+          }}
+          components={{
+            wrapper: <div style={{ whiteSpace: 'pre-line' }} />,
+            a: (
+              <a
+                href={`${BASENAME_URL}${RouteWithParams.COLLECTIONS(collectionSelected?.alias)}`}
+              />
+            )
+          }}
+        />,
+        { style: { width: 'auto' } }
+      )
+      handleClose()
+    } catch (err: WriteError | unknown) {
+      if (err instanceof WriteError) {
+        const error = new JSDataverseWriteErrorHandler(err)
+        const formattedError =
+          error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
+
+        setErrorLinkingCollection(formattedError)
+      } else {
+        setErrorLinkingCollection('An unexpected error occurred while linking the collection.')
+      }
+    } finally {
+      setIsLinkingCollection(false)
+    }
   }
 
   const handleCollectionSelected = (collection: CollectionSummary | null) => {
@@ -69,6 +117,10 @@ export const LinkCollectionDropdown = ({
             helpText={tShared('linkCollectionDataset.linkCollectionHelperText')}
             helpTextOnlyOneCollection={tShared('linkCollectionDataset.onlyOneCollectionToLink')}
           />
+
+          {errorLinkingCollection && (
+            <small className="text-danger">{errorLinkingCollection}</small>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -80,7 +132,7 @@ export const LinkCollectionDropdown = ({
           </Button>
           <Button
             variant="primary"
-            onClick={handleLink}
+            onClick={handleSaveLink}
             type="button"
             disabled={isLinkingCollection || !collectionSelected}>
             <Stack direction="horizontal" gap={1}>

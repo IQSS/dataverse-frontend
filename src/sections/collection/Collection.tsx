@@ -126,6 +126,7 @@ export function Collection({
                       !CollectionHelper.isRootCollection(collection.hierarchy) && (
                         <LinkCollectionDropdown
                           collectionId={collection.id}
+                          collectionName={collection.name}
                           collectionRepository={collectionRepository}
                         />
                       )}

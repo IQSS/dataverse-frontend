@@ -299,6 +299,7 @@
     "linkCollectionHelperText": "Choose which of your collections you would like to link this collection to.",
     "saveLinkedCollection": "Save Linked Collection",
     "onlyOneCollectionToLink": "You have one collection you can add linked collection and datasets in.",
-    "noCollectionsToLink": "To be able to link a collection or dataset, you need to have your own collection. Create a collection to get started."
+    "noCollectionsToLink": "No collections are showing up to link. They may already be linked, or you might not have any yet. Create a new collection to continue.",
+    "linkCollectionSuccess": "<wrapper>{{linkedCollectionName}} has been successfully linked to <a>{{linkingCollectionName}}</a>.\nPlease wait for its contents to appear.</wrapper>"
   }
 }
