@@ -22,6 +22,7 @@ import { CollectionHelper } from './CollectionHelper'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { LinkCollectionDropdown } from './link-collection-dropdown/LinkCollectionDropdown'
+import { useSession } from '../session/SessionContext'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -47,7 +48,7 @@ export function Collection({
   useScrollTop()
   const { previousPath } = useHistoryTracker()
   const previousPathIsHomepage = previousPath === Route.HOME
-
+  const { user } = useSession()
   const {
     collection,
     isLoading: isLoadingCollection,
@@ -121,10 +122,13 @@ export function Collection({
                       />
                     )}
                     {/* TODO:ME - Dont show link dropdown on root collection?? */}
-                    <LinkCollectionDropdown
-                      collectionId={collection.id}
-                      collectionRepository={collectionRepository}
-                    />
+                    {user?.superuser &&
+                      !CollectionHelper.isRootCollection(collection.hierarchy) && (
+                        <LinkCollectionDropdown
+                          collectionId={collection.id}
+                          collectionRepository={collectionRepository}
+                        />
+                      )}
 
                     {canUserEditCollection && (
                       <EditCollectionDropdown
