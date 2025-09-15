@@ -13,13 +13,6 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { CollectionLinkSelect } from './collection-link-select/CollectionLinkSelect'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 
-/*
-    3 different options for the modal.
-    1. More than one collection for linking.
-    2. Only one collection for linking.
-    3. No collections for linking.
-*/
-
 interface LinkCollectionDropdownProps {
   collectionId: string
   collectionRepository: CollectionRepository
@@ -30,7 +23,6 @@ export const LinkCollectionDropdown = ({
   collectionRepository
 }: LinkCollectionDropdownProps) => {
   const { t: tShared } = useTranslation('shared')
-  const { t } = useTranslation('collection')
   const [showModal, setShowModal] = useState(false)
   const [collectionSelected, setCollectionSelected] = useState<CollectionSummary | null>(null)
   const [isLinkingCollection, setIsLinkingCollection] = useState(false)
@@ -51,13 +43,13 @@ export const LinkCollectionDropdown = ({
     <>
       <DropdownButton
         id="link-dropdown"
-        title={t('link.title')}
+        title={tShared('linkCollectionDataset.link')}
         asButtonGroup
         variant="secondary"
         align="end"
         icon={<Link45deg className="me-1 mb-1" />}>
         <DropdownButtonItem as="button" type="button" onClick={handleShow}>
-          {t('link.linkCollection')}
+          {tShared('linkCollectionDataset.linkCollection')}
         </DropdownButtonItem>
       </DropdownButton>
 
@@ -67,14 +59,15 @@ export const LinkCollectionDropdown = ({
         centered
         size="lg">
         <Modal.Header>
-          <Modal.Title>{t('link.linkCollection')}</Modal.Title>
+          <Modal.Title>{tShared('linkCollectionDataset.linkCollection')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <CollectionLinkSelect
             collectionIdOrAlias={collectionId}
             collectionRepository={collectionRepository}
             onCollectionSelected={handleCollectionSelected}
-            helpText={t('link.linkCollectionHelperText')}
+            helpText={tShared('linkCollectionDataset.linkCollectionHelperText')}
+            helpTextOnlyOneCollection={tShared('linkCollectionDataset.onlyOneCollectionToLink')}
           />
         </Modal.Body>
         <Modal.Footer>
@@ -89,9 +82,9 @@ export const LinkCollectionDropdown = ({
             variant="primary"
             onClick={handleLink}
             type="button"
-            disabled={isLinkingCollection}>
+            disabled={isLinkingCollection || !collectionSelected}>
             <Stack direction="horizontal" gap={1}>
-              {t('link.saveLinkedCollection')}
+              {tShared('linkCollectionDataset.saveLinkedCollection')}
               {isLinkingCollection && <Spinner variant="light" animation="border" size="sm" />}
             </Stack>
           </Button>

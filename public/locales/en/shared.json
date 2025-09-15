@@ -289,10 +289,16 @@
     "truncateMoreTip": "Click to read the full {{contentName}}",
     "truncateLessTip": "Click to collapse the {{contentName}}"
   },
-  "collectionLinkSelect": {
+  "linkCollectionDataset": {
     "label": "Your Collection",
     "select": "Select a Collection",
     "placeholder": "Enter Collection Name",
-    "noOptions": "No collections found"
+    "noOptions": "No collections found",
+    "link": "Link",
+    "linkCollection": "Link Collection",
+    "linkCollectionHelperText": "Choose which of your collections you would like to link this collection to.",
+    "saveLinkedCollection": "Save Linked Collection",
+    "onlyOneCollectionToLink": "You have one collection you can add linked collection and datasets in.",
+    "noCollectionsToLink": "To be able to link a collection or dataset, you need to have your own collection. Create a collection to get started."
   }
 }

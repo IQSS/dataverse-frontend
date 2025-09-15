@@ -121,7 +121,7 @@ export function Collection({
                         refetchCollection={refetchCollection}
                       />
                     )}
-                    {/* TODO:ME - Dont show link dropdown on root collection?? */}
+
                     {user?.superuser &&
                       !CollectionHelper.isRootCollection(collection.hierarchy) && (
                         <LinkCollectionDropdown
