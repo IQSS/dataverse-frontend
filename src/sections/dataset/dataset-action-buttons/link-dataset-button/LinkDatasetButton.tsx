@@ -16,19 +16,13 @@ export function LinkDatasetButton({ dataset }: LinkDatasetButtonProps) {
   }
   const { showModal } = useNotImplementedModal()
 
-  if (
-    !user ||
-    !dataset.version.someDatasetVersionHasBeenReleased ||
-    dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
-  ) {
+  if (!user || dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
     return <></>
   }
 
   return (
-    <ButtonGroup>
-      <Button onClick={handleClick} variant="secondary">
-        {t('datasetActionButtons.linkDataset.title')}
-      </Button>
-    </ButtonGroup>
+    <Button onClick={handleClick} variant="secondary">
+      {t('datasetActionButtons.linkDataset.title')}
+    </Button>
   )
 }

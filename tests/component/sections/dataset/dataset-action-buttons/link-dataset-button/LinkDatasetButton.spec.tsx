@@ -34,14 +34,4 @@ describe('LinkDatasetButton', () => {
 
     cy.findByRole('button', { name: 'Link Dataset' }).should('not.exist')
   })
-
-  it('does not render the LinkDatasetButton if the dataset is not released', () => {
-    const dataset = DatasetMother.create({
-      version: DatasetVersionMother.createNotReleased()
-    })
-
-    cy.mountAuthenticated(<LinkDatasetButton dataset={dataset} />)
-
-    cy.findByRole('button', { name: 'Link Dataset' }).should('not.exist')
-  })
 })
