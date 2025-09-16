@@ -101,6 +101,29 @@ is created for an issue, we'll remove the issue from the board so that we only t
 
 Thanks for your contribution!
 
+## Changelog Guidelines
+
+When contributing to this project, it's important to document your changes in the changelog to help users and developers understand what has been added, changed, fixed, or removed between versions. The changelog helps maintain transparency about project evolution and assists users in understanding the impact of updates. We also have another changelog for design system, so for any design system changes, please include them in that changelog.
+
+### When to Add Changelog Entries
+
+Add a changelog entry for changes, including:
+
+- **Added**: New features, components, or functionality
+- **Changed**: Changes to existing functionality, API modifications, or behavior updates
+- **Fixed**: Bug fixes and issue resolutions
+- **Removed**: Deprecated features or removed functionality
+
+### How to Add Changelog Entries
+
+1. **Edit the CHANGELOG.md file**: Add your entry under the `[Unreleased]` section in the appropriate category (`Added`, `Changed`, `Fixed`, or `Removed`)
+
+2. **Follow the format**: Use this structure for entries:
+
+   ```markdown
+   - Brief description of the change (#ISSUE_NUMBER)
+   ```
+
 ## Other ways to contribute to the code
 
 We love code contributions. Developers are not limited to the Frontend Dataverse code in this git repo. You can help with

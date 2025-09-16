@@ -72,6 +72,7 @@ To stay up-to-date with all the latest changes, join the [Google Group][dv_commu
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#changelog">Changelog</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -275,6 +276,17 @@ Harvard University to get a look at upcoming initiatives for the project.
 ## References
 
 For more information on the Dataverse re-architecture project, see the original documentation, [Restructuring the Dataverse UI as a Single-Page Application][dv_docs_rearchitecture_url].
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<br>
+
+## Changelog
+
+All notable changes to this project are documented in our [CHANGELOG.md](CHANGELOG.md). The changelog follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format and adheres to [Semantic Versioning](https://semver.org/).
+
+We also maintain a separate [Design System Changelog](./packages/design-system/CHANGELOG.md) for component-specific changes.
+
+**For Contributors**: Please ensure you add appropriate changelog entries for user-facing changes when submitting pull requests. See our [Changelog Guidelines](.github/CONTRIBUTING.md#changelog-guidelines) for details.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>

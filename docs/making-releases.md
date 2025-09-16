@@ -40,6 +40,50 @@ npm version 3.5.0 --no-git-tag-version
 
 This command will update the version in the `package.json` and `package-lock.json`.
 
+## Update the Changelog
+
+Before releasing, ensure the changelog is properly prepared:
+
+1. **Review the [Unreleased] section** in `CHANGELOG.md` and `packages/design-system/CHANGELOG.md`
+2. **Move entries from [Unreleased] to the new version section**:
+
+   ```markdown
+   ## [vX.X.X] -- YYYY-MM-DD
+
+   ### Added
+
+   - Feature descriptions from unreleased section
+
+   ### Changed
+
+   - Changes from unreleased section
+
+   ### Fixed
+
+   - Bug fixes from unreleased section
+
+   ### Removed
+
+   - Removals from unreleased section
+   ```
+
+3. **Clear the [Unreleased] section** but keep the structure:
+
+   ```markdown
+   ## [Unreleased]
+
+   ### Added
+
+   ### Changed
+
+   ### Fixed
+
+   ### Removed
+   ```
+
+4. **Update the version links** at the bottom of the changelog files
+5. **Commit the changelog updates** as part of the release preparation
+
 ## Use the Latest Dataverse Client Javascript Version
 
 During development, the `@iqss/dataverse-client-javascript` package is installed from the [GitHub Packages Registry](https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript), where we publish versions from PRs and the develop branch. However, for production we are going to use the latest published version of `@iqss/dataverse-client-javascript` package [from npm](https://www.npmjs.com/package/@iqss/dataverse-client-javascript?activeTab=versions).
@@ -76,7 +120,7 @@ Go to https://github.com/IQSS/dataverse-frontend/releases/new to start creating 
 
 - Under "Release title" use the same name as the tag such as v3.5.0.
 
-- Add a description of the changes included in this release. Summarize the key updates, fixes, or features.
+- Add a description of the changes included in this release. You can copy the relevant section from the `CHANGELOG.md` file, and summarize the key updates, fixes, or features from the changelog entries to emphasize user-focused changes.
 
 - Click "Save draft" because we do not want to publish the release yet.
 
