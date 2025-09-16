@@ -580,7 +580,7 @@ This project maintains a changelog following the [Keep a Changelog](https://keep
 #### When Working on Features
 
 1. **During Development**: Add entries to the `[Unreleased]` section as you implement changes
-2. **Before PR Submission**: Ensure all user-facing changes have appropriate changelog entries
+2. **Before PR Submission**: PR should include a changelog fragment if it should be included
 3. **PR Review**: Reviewers will verify changelog entries are complete and properly formatted
 
 #### Changelog Entry Guidelines
