@@ -171,13 +171,13 @@ export const WithEmbargoAndRestrictedWithAccessGranted: Story = {
   )
 }
 
-export const WithExploreOptionsTools: Story = {
+export const WithExploreAndQueryOptionsTools: Story = {
   render: () => (
     <ExternalToolsProvider externalToolsRepository={new ExternalToolsMockRepository()}>
       <AccessFileMenu
         id={1}
         access={FileAccessMother.createPublic()}
-        metadata={FileMetadataMother.create()}
+        metadata={FileMetadataMother.createDefault()}
         userHasDownloadPermission
         isDeaccessioned={false}
         ingestInProgress={false}
