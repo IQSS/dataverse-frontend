@@ -74,9 +74,10 @@ guidelines to help:
 
 1. **Solve a problem** – Features are great, but even better is cleaning-up and fixing issues in the code that you discover.
 2. **Write tests** – This helps preserve functionality as the codebase grows and demonstrates how your change affects the code.
-3. **Write documentation** – We have a [README] that always needs updating.
-4. **Small > big** – Better to have a few small pull requests that address specific parts of the code, than one big pull request that jumps all over.
-5. **Comply with Coding Standards** – See next section.
+3. **Update the changelog** – All PRs should include a changelog entry. (see [Changelog Guidelines](#changelog-guidelines) below).
+4. **Write documentation** – We have a [README] that always needs updating.
+5. **Small > big** – Better to have a few small pull requests that address specific parts of the code, than one big pull request that jumps all over.
+6. **Comply with Coding Standards** – See next section.
 
 ### How to start
 
@@ -106,6 +107,8 @@ Thanks for your contribution!
 When contributing to this project, it's important to document your changes in the changelog to help users and developers understand what has been added, changed, fixed, or removed between versions. The changelog helps maintain transparency about project evolution and assists users in understanding the impact of updates. We also have another changelog for design system, so for any design system changes, please include them in that changelog.
 
 ### When to Add Changelog Entries
+
+**Every pull request should include a changelog entry**
 
 Add a changelog entry for changes, including:
 

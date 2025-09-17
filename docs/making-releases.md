@@ -42,6 +42,8 @@ This command will update the version in the `package.json` and `package-lock.jso
 
 ## Update the Changelog
 
+**Note**: Contributors should have already added their changes to the `[Unreleased]` section as part of their pull requests (see [CONTRIBUTING.md](../.github/CONTRIBUTING.md#changelog-guidelines) for details).
+
 Before releasing, ensure the changelog is properly prepared:
 
 1. **Review the [Unreleased] section** in `CHANGELOG.md` and `packages/design-system/CHANGELOG.md`
