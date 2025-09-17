@@ -31,6 +31,7 @@ export const LinkCollectionDropdown = ({
   collectionName,
   collectionRepository
 }: LinkCollectionDropdownProps) => {
+  const { t } = useTranslation('collection')
   const { t: tShared } = useTranslation('shared')
   const [showModal, setShowModal] = useState(false)
   const [collectionSelected, setCollectionSelected] = useState<CollectionSummary | null>(null)
@@ -51,8 +52,8 @@ export const LinkCollectionDropdown = ({
 
       toast.success(
         <Trans
-          t={tShared}
-          i18nKey={'linkCollectionDataset.linkCollectionSuccess'}
+          t={t}
+          i18nKey={'linkCollection.success'}
           values={{
             linkedCollectionName: collectionName,
             linkingCollectionName: collectionSelected?.displayName
@@ -92,13 +93,13 @@ export const LinkCollectionDropdown = ({
     <>
       <DropdownButton
         id="link-dropdown"
-        title={tShared('linkCollectionDataset.link')}
+        title={tShared('link')}
         asButtonGroup
         variant="secondary"
         align="end"
         icon={<Link45deg className="me-1 mb-1" />}>
         <DropdownButtonItem as="button" type="button" onClick={handleShow}>
-          {tShared('linkCollectionDataset.linkCollection')}
+          {t('linkCollection.title')}
         </DropdownButtonItem>
       </DropdownButton>
 
@@ -108,7 +109,7 @@ export const LinkCollectionDropdown = ({
         centered
         size="lg">
         <Modal.Header>
-          <Modal.Title>{tShared('linkCollectionDataset.linkCollection')}</Modal.Title>
+          <Modal.Title>{t('linkCollection.title')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <CollectionLinkSelect
@@ -116,8 +117,7 @@ export const LinkCollectionDropdown = ({
             collectionIdOrAlias={collectionId}
             collectionRepository={collectionRepository}
             onCollectionSelected={handleCollectionSelected}
-            helpText={tShared('linkCollectionDataset.linkCollectionHelperText')}
-            helpTextOnlyOneCollection={tShared('linkCollectionDataset.onlyOneCollectionToLink')}
+            helpText={t('linkCollection.helper')}
           />
 
           {errorLinkingCollection && (
@@ -138,7 +138,7 @@ export const LinkCollectionDropdown = ({
             type="button"
             disabled={isLinkingCollection || !collectionSelected}>
             <Stack direction="horizontal" gap={1}>
-              {tShared('linkCollectionDataset.saveLinkedCollection')}
+              {t('linkCollection.save')}
               {isLinkingCollection && <Spinner variant="light" animation="border" size="sm" />}
             </Stack>
           </Button>

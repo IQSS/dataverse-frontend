@@ -16,7 +16,6 @@ type BaseProps = {
   collectionRepository: CollectionRepository
   onCollectionSelected: (collectionSelected: CollectionSummary | null) => void
   helpText: string
-  helpTextOnlyOneCollection: string
 }
 
 type CollectionLinkSelectProps = BaseProps &
@@ -39,8 +38,7 @@ export const CollectionLinkSelect = ({
   collectionRepository,
   linkingObjectType,
   onCollectionSelected,
-  helpText,
-  helpTextOnlyOneCollection
+  helpText
 }: CollectionLinkSelectProps) => {
   const { t: tShared } = useTranslation('shared')
   const [collectionsForLinking, setCollectionsForLinking] = useState<CollectionSummary[]>([])
@@ -144,7 +142,7 @@ export const CollectionLinkSelect = ({
         <div>
           <InfoCircleFill />
         </div>
-        <span>{tShared('linkCollectionDataset.noCollectionsToLink')}</span>
+        <span>{tShared('collectionLinkSelect.noCollectionsToLink')}</span>
       </div>
     )
   }
@@ -152,10 +150,14 @@ export const CollectionLinkSelect = ({
   return (
     <Form.Group>
       <Form.Group.Text className="mb-2">
-        {onlyOneCollection ? <span>{helpTextOnlyOneCollection}</span> : <span>{helpText}</span>}
+        {onlyOneCollection ? (
+          <span>{tShared('collectionLinkSelect.onlyOneCollectionToLink')}</span>
+        ) : (
+          <span>{helpText}</span>
+        )}
       </Form.Group.Text>
       <Form.Group.Label column lg={3} htmlFor="search-collection">
-        {tShared('linkCollectionDataset.label')}
+        {tShared('collectionLinkSelect.label')}
       </Form.Group.Label>
       <Col lg={9}>
         {error && <small className="text-danger">{error}</small>}
@@ -177,7 +179,7 @@ export const CollectionLinkSelect = ({
                 {selectedCollection ? (
                   <span>{selectedCollection.displayName}</span>
                 ) : (
-                  <span className="text-muted">{tShared('linkCollectionDataset.select')}</span>
+                  <span className="text-muted">{tShared('collectionLinkSelect.select')}</span>
                 )}
               </div>
             </div>
@@ -186,14 +188,14 @@ export const CollectionLinkSelect = ({
                 <Form.Group.Input
                   onChange={handleSearchChange}
                   type="search"
-                  placeholder={tShared('linkCollectionDataset.placeholder')}
+                  placeholder={tShared('collectionLinkSelect.placeholder')}
                   size="sm"
                 />
                 <div className={`${styles['loader-line']} ${isLoading ? styles.loading : ''}`} />
               </Dropdown.Header>
 
               {collectionsForLinking.length === 0 && (
-                <div className="px-3 py-1">{tShared('linkCollectionDataset.noOptions')}</div>
+                <div className="px-3 py-1">{tShared('collectionLinkSelect.noOptions')}</div>
               )}
 
               {collectionsForLinking.map((collection) => (

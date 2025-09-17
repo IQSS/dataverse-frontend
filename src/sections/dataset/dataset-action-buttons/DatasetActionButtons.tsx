@@ -12,6 +12,7 @@ import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
 import { ContactButton } from '@/sections/shared/contact/ContactButton'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import styles from './DatasetActionButtons.module.scss'
+import { UnlinkDatasetButton } from './unlink-dataset-button/UnlinkDatasetButton'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
@@ -54,6 +55,7 @@ export function DatasetActionButtons({
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
       />
+      <UnlinkDatasetButton dataset={dataset} datasetRepository={datasetRepository} />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
         <ContactButton
           toContactName={dataset.metadataBlocks[0].fields.title}

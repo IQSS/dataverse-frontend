@@ -36,7 +36,13 @@
       "removeCurrentStatus": "Remove Current Status"
     },
     "linkDataset": {
-      "title": "Link Dataset"
+      "title": "Link Dataset",
+      "helper": "Choose which of your collections you would like to link this dataset to.",
+      "save": "Save Linked Dataset",
+      "success": "<wrapper>Dataset from {{parentCollection}} has been successfully linked to <a>{{linkingCollectionName}}</a></wrapper>"
+    },
+    "unlinkDataset": {
+      "title": "Unlink Dataset"
     },
     "editDataset": {
       "title": "Edit Dataset",

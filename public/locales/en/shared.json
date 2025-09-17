@@ -27,6 +27,7 @@
   "dragHandleLabel": "press space to select and keys to drag",
   "unknown": "Unknown",
   "find": "Find",
+  "link": "Link",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
@@ -289,20 +290,12 @@
     "truncateMoreTip": "Click to read the full {{contentName}}",
     "truncateLessTip": "Click to collapse the {{contentName}}"
   },
-  "linkCollectionDataset": {
+  "collectionLinkSelect": {
     "label": "Your Collection",
     "select": "Select a Collection",
     "placeholder": "Enter Collection Name",
     "noOptions": "No collections found",
-    "link": "Link",
-    "linkCollection": "Link Collection",
-    "linkCollectionHelperText": "Choose which of your collections you would like to link this collection to.",
-    "linkDatasetHelperText": "Choose which of your collections you would like to link this dataset to.",
-    "saveLinkedCollection": "Save Linked Collection",
-    "saveLinkedDataset": "Save Linked Dataset",
     "onlyOneCollectionToLink": "You have one collection you can add linked collection and datasets in.",
-    "noCollectionsToLink": "No collections are showing up to link. They may already be linked, or you might not have any yet. Create a new collection to continue.",
-    "linkCollectionSuccess": "<wrapper>{{linkedCollectionName}} has been successfully linked to <a>{{linkingCollectionName}}</a></wrapper>",
-    "linkDatasetSuccess": "<wrapper>Dataset from {{parentCollection}} has been successfully linked to <a>{{linkingCollectionName}}</a></wrapper>"
+    "noCollectionsToLink": "No collections are showing up to link. They may already be linked, or you might not have any yet. Create a new collection to continue."
   }
 }

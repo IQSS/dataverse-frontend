@@ -56,8 +56,8 @@ export function LinkDatasetButton({
 
       toast.success(
         <Trans
-          t={tShared}
-          i18nKey={'linkCollectionDataset.linkDatasetSuccess'}
+          t={t}
+          i18nKey={'datasetActionButtons.linkDataset.success'}
           values={{
             parentCollection: 'Collection Really Long Here With Number 1',
             linkingCollectionName: 'Collection Really Long Here With Number 1'
@@ -119,8 +119,7 @@ export function LinkDatasetButton({
             datasetPersistentId={dataset.persistentId}
             collectionRepository={collectionRepository}
             onCollectionSelected={handleCollectionSelected}
-            helpText={tShared('linkCollectionDataset.linkDatasetHelperText')}
-            helpTextOnlyOneCollection={tShared('linkCollectionDataset.onlyOneCollectionToLink')}
+            helpText={t('datasetActionButtons.linkDataset.helper')}
           />
 
           {datasetLinkedCollections.length > 0 && (
@@ -151,7 +150,7 @@ export function LinkDatasetButton({
             type="button"
             disabled={isLinkingDataset || !collectionSelected}>
             <Stack direction="horizontal" gap={1}>
-              {tShared('linkCollectionDataset.saveLinkedDataset')}
+              {t('datasetActionButtons.linkDataset.save')}
               {isLinkingDataset && <Spinner variant="light" animation="border" size="sm" />}
             </Stack>
           </Button>
