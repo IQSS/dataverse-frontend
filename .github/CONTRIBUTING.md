@@ -103,50 +103,26 @@ Thanks for your contribution!
 
 ## Changelog Guidelines
 
-**Every pull request must include a changelog fragment.** This helps users and developers track what has been added, changed, fixed, or removed between versions. The changelog maintains transparency about project evolution and helps users understand the impact of updates.
+When contributing to this project, it's important to document your changes in the changelog to help users and developers understand what has been added, changed, fixed, or removed between versions. The changelog helps maintain transparency about project evolution and assists users in understanding the impact of updates. We also have another changelog for design system, so for any design system changes, please include them in that changelog.
 
-We maintain separate changelogs for different components:
+### When to Add Changelog Entries
 
-- **Main application changes**: Create fragments in [`docs/release-notes/`](../docs/release-notes/)
-- **Design system changes**: For changes affecting design system components, update to [`packages/design-system/CHANGELOG.md`](../packages/design-system/CHANGELOG.md)
-
-### What Needs to Be in the Changelog?
-
-Include developer-visible changes that affect the product, APIs, or workflows:
-
-- **UI changes** (new buttons, wording, layouts)
-- **Behavior changes** (URLs, shortcuts, keyboard navigation)
-- **Bug fixes** that alter what users experience
-- **Performance or accessibility improvements** users benefit from
-- **Breaking changes** (anything that requires action to upgrade)
-- **Developer-relevant refactors** (if they affect interfaces, tooling, or expected dev workflows)
-
-**All pull requests require a changelog entry.** Document your changes in the appropriate category:
+Add a changelog entry for changes, including:
 
 - **Added**: New features, components, or functionality
 - **Changed**: Changes to existing functionality, API modifications, or behavior updates
 - **Fixed**: Bug fixes and issue resolutions
 - **Removed**: Deprecated features or removed functionality
-  If breaking, prefix with BREAKING: and include a 1-line upgrade note.
 
 ### How to Add Changelog Entries
 
-1. **Create a changelog fragment**: Create a new markdown file in `docs/release-notes/` with a descriptive name related to your change and issue number (if applicable)
+1. **Edit the CHANGELOG.md file**: Add your entry under the `[Unreleased]` section in the appropriate category (`Added`, `Changed`, `Fixed`, or `Removed`)
 
-2. **File naming convention**: Use format like `ISSUE_NUMBER-brief-description.md` or `brief-description.md`
+2. **Follow the format**: Use this structure for entries:
 
-3. **Add your entry**: In the file, add your entry under the appropriate category (`Added`, `Changed`, `Fixed`, or `Removed`)
-
-### Example Changelog Fragments
-
-**Example 1: Documents Addition (Issue #828)**
-File: `docs/release-notes/add-changelog.md`
-
-```markdown
-### Added
-
-- Add new CHANGELOG.md and its guidance to the repository (#828)
-```
+   ```markdown
+   - Brief description of the change (#ISSUE_NUMBER)
+   ```
 
 ## Other ways to contribute to the code
 

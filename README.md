@@ -282,11 +282,11 @@ For more information on the Dataverse re-architecture project, see the original 
 
 ## Changelog
 
-All notable changes to this project are documented in our [CHANGELOG.md](docs/release-notes/CHANGELOG.md). The changelog follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format and adheres to [Semantic Versioning](https://semver.org/).
+All notable changes to this project are documented in our [CHANGELOG.md](CHANGELOG.md). The changelog follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format and adheres to [Semantic Versioning](https://semver.org/).
 
 We also maintain a separate [Design System Changelog](./packages/design-system/CHANGELOG.md) for component-specific changes.
 
-**For Contributors**: **Every pull request must include a changelog entry.** See our [Changelog Guidelines](.github/CONTRIBUTING.md#changelog-guidelines) for details on format and requirements.
+**For Contributors**: Please ensure you add appropriate changelog entries for user-facing changes when submitting pull requests. See our [Changelog Guidelines](.github/CONTRIBUTING.md#changelog-guidelines) for details.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>

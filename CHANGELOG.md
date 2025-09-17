@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to **Dataverse Frontend** are documented here. We also maintain a separate [Design System Changelog](../../packages/design-system/CHANGELOG.md) for component-specific changes.
+All notable changes to **Dataverse Frontend** are documented here. We also maintain a separate [Design System Changelog](./packages/design-system/CHANGELOG.md) for component-specific changes.
 
 This changelog follows the principles of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and adheres to [Semantic Versioning](https://semver.org/). This document is intended for developers, contributors, and users who need to understand the technical details.
 

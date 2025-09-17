@@ -40,16 +40,49 @@ npm version 3.5.0 --no-git-tag-version
 
 This command will update the version in the `package.json` and `package-lock.json`.
 
-## Consolidate Changelog Fragments
+## Update the Changelog
 
-Before releasing, consolidate all changelog fragments into the main changelog:
+Before releasing, ensure the changelog is properly prepared:
 
-1. **Collect all fragments** from [`docs/release-notes/`](../docs/release-notes/) directory (all `.md` files)
-2. **Group entries by category** from all fragments (`Added`, `Changed`, `Fixed`, `Removed`)
-3. **Create the release section** in the main changelog [`docs/release-notes/CHANGELOG`](../docs/release-notes/CHANGELOG.md) by consolidating all fragment entries
-4. **Clear the fragment directory** - Delete all processed fragment files after consolidation
-5. **Update version links** at the bottom of the changelog file
-6. **Commit the changelog updates** as part of the release preparation
+1. **Review the [Unreleased] section** in `CHANGELOG.md` and `packages/design-system/CHANGELOG.md`
+2. **Move entries from [Unreleased] to the new version section**:
+
+   ```markdown
+   ## [vX.X.X] -- YYYY-MM-DD
+
+   ### Added
+
+   - Feature descriptions from unreleased section
+
+   ### Changed
+
+   - Changes from unreleased section
+
+   ### Fixed
+
+   - Bug fixes from unreleased section
+
+   ### Removed
+
+   - Removals from unreleased section
+   ```
+
+3. **Clear the [Unreleased] section** but keep the structure:
+
+   ```markdown
+   ## [Unreleased]
+
+   ### Added
+
+   ### Changed
+
+   ### Fixed
+
+   ### Removed
+   ```
+
+4. **Update the version links** at the bottom of the changelog files
+5. **Commit the changelog updates** as part of the release preparation
 
 ## Use the Latest Dataverse Client Javascript Version
 
