@@ -137,10 +137,9 @@ Include developer-visible changes that affect the product, APIs, or workflows:
 
 3. **Add your entry**: In the file, add your entry under the appropriate category (`Added`, `Changed`, `Fixed`, or `Removed`)
 
-### Example Changelog Fragments
+### Example Changelog Fragment
 
-**Example 1: Documents Addition (Issue #828)**
-File: `docs/release-notes/add-changelog.md`
+File: `docs/release-notes/828-add-changelog-and-update-documents.md`
 
 ```markdown
 ### Added
