@@ -58,6 +58,7 @@ export const LinkCollectionDropdown = ({
             linkingCollectionName: collectionSelected?.displayName
           }}
           components={{
+            wrapper: <div className="d-flex flex-wrap" />,
             a: (
               <a
                 className="ms-1"
@@ -65,8 +66,7 @@ export const LinkCollectionDropdown = ({
               />
             )
           }}
-        />,
-        { style: { width: 'auto' } }
+        />
       )
       handleClose()
     } catch (err: WriteError | unknown) {
