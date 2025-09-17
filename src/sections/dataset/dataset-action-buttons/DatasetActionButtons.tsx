@@ -49,7 +49,11 @@ export function DatasetActionButtons({
       />
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} datasetRepository={datasetRepository} />
-      <LinkDatasetButton dataset={dataset} />
+      <LinkDatasetButton
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+      />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
         <ContactButton
           toContactName={dataset.metadataBlocks[0].fields.title}
