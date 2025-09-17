@@ -12,17 +12,32 @@ import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErr
 import { Utils } from '@/shared/helpers/Utils'
 import styles from './CollectionLinkSelect.module.scss'
 
-interface CollectionLinkSelectProps {
-  collectionIdOrAlias: string
+type BaseProps = {
   collectionRepository: CollectionRepository
   onCollectionSelected: (collectionSelected: CollectionSummary | null) => void
   helpText: string
   helpTextOnlyOneCollection: string
 }
 
+type CollectionLinkSelectProps = BaseProps &
+  (
+    | {
+        linkingObjectType: 'collection'
+        collectionIdOrAlias: string
+        datasetPersistentId?: never
+      }
+    | {
+        linkingObjectType: 'dataset'
+        collectionIdOrAlias?: never
+        datasetPersistentId: string
+      }
+  )
+
 export const CollectionLinkSelect = ({
   collectionIdOrAlias,
+  datasetPersistentId,
   collectionRepository,
+  linkingObjectType,
   onCollectionSelected,
   helpText,
   helpTextOnlyOneCollection
@@ -47,10 +62,14 @@ export const CollectionLinkSelect = ({
       try {
         const collectionSummaries = await getCollectionsForLinking(
           collectionRepository,
-          'collection',
-          collectionIdOrAlias,
+          linkingObjectType,
+          linkingObjectType === 'collection' ? collectionIdOrAlias : datasetPersistentId,
           searchTerm
         )
+
+        // Sort by display name alphabetically
+        collectionSummaries.sort((a, b) => a.displayName.localeCompare(b.displayName))
+
         setCollectionsForLinking(collectionSummaries)
 
         if (searchTerm === '' && collectionSummaries.length === 1) {
@@ -79,7 +98,7 @@ export const CollectionLinkSelect = ({
         firstFetchHappened.current = true
       }
     },
-    [collectionIdOrAlias, collectionRepository]
+    [collectionIdOrAlias, datasetPersistentId, linkingObjectType, collectionRepository]
   )
 
   // Fetch all collections for linking with empty search when the component is mounted

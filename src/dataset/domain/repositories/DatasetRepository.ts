@@ -54,4 +54,6 @@ export interface DatasetRepository {
     version: string,
     format: CitationFormat
   ) => Promise<FormattedCitation>
+  link(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
+  unlink(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
 }

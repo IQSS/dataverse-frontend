@@ -12,6 +12,7 @@ import {
 } from '@iqss/dataverse-design-system'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { linkCollection } from '@/collection/domain/useCases/linkCollection'
 import { CollectionLinkSelect } from './collection-link-select/CollectionLinkSelect'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
@@ -46,8 +47,8 @@ export const LinkCollectionDropdown = ({
     setErrorLinkingCollection(null)
 
     try {
-      await collectionRepository.link(collectionId, collectionSelected.id)
-      // Show success toast and close modal
+      await linkCollection(collectionRepository, collectionId, collectionSelected.id)
+
       toast.success(
         <Trans
           t={tShared}
@@ -57,9 +58,9 @@ export const LinkCollectionDropdown = ({
             linkingCollectionName: collectionSelected?.displayName
           }}
           components={{
-            wrapper: <div style={{ whiteSpace: 'pre-line' }} />,
             a: (
               <a
+                className="ms-1"
                 href={`${BASENAME_URL}${RouteWithParams.COLLECTIONS(collectionSelected?.alias)}`}
               />
             )
@@ -111,6 +112,7 @@ export const LinkCollectionDropdown = ({
         </Modal.Header>
         <Modal.Body>
           <CollectionLinkSelect
+            linkingObjectType="collection"
             collectionIdOrAlias={collectionId}
             collectionRepository={collectionRepository}
             onCollectionSelected={handleCollectionSelected}
