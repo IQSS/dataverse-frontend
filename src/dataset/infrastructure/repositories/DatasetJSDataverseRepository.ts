@@ -35,7 +35,8 @@ import {
   getDatasetCitationInOtherFormats,
   getDatasetAvailableCategories,
   linkDataset,
-  unlinkDataset
+  unlinkDataset,
+  getDatasetLinkedCollections
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -51,6 +52,7 @@ import { axiosInstance } from '@/axiosInstance'
 import { DATAVERSE_BACKEND_URL } from '../../../config'
 import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 
 const includeDeaccessioned = true
 
@@ -404,6 +406,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   unlink(datasetId: string | number, collectionIdOrAlias: string | number) {
     return unlinkDataset.execute(datasetId, collectionIdOrAlias)
+  }
+
+  getDatasetLinkedCollections(datasetId: string | number): Promise<CollectionSummary[]> {
+    return getDatasetLinkedCollections.execute(datasetId)
   }
 
   /*
