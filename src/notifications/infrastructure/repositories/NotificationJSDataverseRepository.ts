@@ -1,6 +1,7 @@
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { Notification } from '@/notifications/domain/models/Notification'
 import { getAllNotificationsByUser } from '@iqss/dataverse-client-javascript'
+import { getUnreadNotificationsCount } from '@iqss/dataverse-client-javascript'
 import { JSNotificationMapper } from '../mappers/JSNotificationMapper'
 
 export class NotificationJSDataverseRepository implements NotificationRepository {
@@ -15,11 +16,7 @@ export class NotificationJSDataverseRepository implements NotificationRepository
   }
 
   getUnreadNotificationsCount(): Promise<number> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(2) // Simulate 2 unread notifications
-      }, 500)
-    })
+    return getUnreadNotificationsCount.execute().then((count) => count)
   }
 
   markNotificationAsRead(notificationId: number): Promise<void> {

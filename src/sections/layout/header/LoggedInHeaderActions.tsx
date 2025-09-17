@@ -11,6 +11,7 @@ import { AccountHelper } from '@/sections/account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { useGetUnreadNotificationsCount } from '@/sections/layout/header/useGetUnreadNotificationsCount'
+import styles from './Header.module.scss'
 
 interface LoggedInHeaderActionsProps {
   user: User
@@ -57,7 +58,15 @@ export const LoggedInHeaderActions = ({
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>
       <Navbar.Dropdown
-        title={`${user.displayName} (${unreadNotificationsCount})`}
+        title={
+          <>
+            {user.displayName}
+            <span
+              className={
+                styles['unread-notifications-count']
+              }>{` ${unreadNotificationsCount}`}</span>
+          </>
+        }
         id="dropdown-user">
         <Navbar.Dropdown.Item
           as={Link}
@@ -68,6 +77,8 @@ export const LoggedInHeaderActions = ({
           as={Link}
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}`}>
           {t('navigation.notifications')}
+          <span
+            className={styles['unread-notifications-count']}>{` ${unreadNotificationsCount}`}</span>
         </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item
           as={Link}
