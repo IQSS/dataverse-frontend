@@ -73,7 +73,7 @@ _To get a local copy up and running follow these simple example steps._
 
 [![DockerDesktop][_shield_docker]][_uses_docker_url]
 
-1. **Node &amp; NPM**: `node >= v16` and `npm >= v8`. Recommended versions for this project are `node v19` and `npm v9`.
+1. **Node &amp; NPM**: `node >= v16` and `npm >= v8`. Recommended versions for this project are `node v22` and `npm v10`.
 2. **Docker**: We use Docker Desktop, but the Docker CLI will also work.
 3. **Create a Copy of .npmrc**: In the project directory root, duplicate `.npmrc.example`, saving the copy as `.npmrc`.
 
