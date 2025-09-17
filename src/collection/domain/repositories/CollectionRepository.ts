@@ -12,6 +12,7 @@ import { CollectionItemType } from '@/collection/domain/models/CollectionItemTyp
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 import { LinkingObjectType } from '../useCases/getCollectionsForLinking'
 import { CollectionSummary } from '../models/CollectionSummary'
+import { CollectionLinks } from '../models/CollectionLinks'
 
 export interface CollectionRepository {
   getById: (id?: string) => Promise<Collection>
@@ -52,4 +53,5 @@ export interface CollectionRepository {
     linkedCollectionIdOrAlias: number | string,
     linkingCollectionIdOrAlias: number | string
   ): Promise<void>
+  getLinks(collectionIdOrAlias: number | string): Promise<CollectionLinks>
 }

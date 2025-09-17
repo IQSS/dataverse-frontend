@@ -15,7 +15,8 @@ import {
   deleteCollection,
   deleteCollectionFeaturedItem,
   getCollectionsForLinking,
-  linkCollection
+  linkCollection,
+  getCollectionLinks
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
@@ -32,6 +33,7 @@ import { CollectionItemType } from '@/collection/domain/models/CollectionItemTyp
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
+import { CollectionLinks } from '@/collection/domain/models/CollectionLinks'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -160,5 +162,9 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     linkingCollectionIdOrAlias: number | string
   ): Promise<void> {
     return linkCollection.execute(linkedCollectionIdOrAlias, linkingCollectionIdOrAlias)
+  }
+
+  getLinks(collectionIdOrAlias: number | string): Promise<CollectionLinks> {
+    return getCollectionLinks.execute(collectionIdOrAlias)
   }
 }
