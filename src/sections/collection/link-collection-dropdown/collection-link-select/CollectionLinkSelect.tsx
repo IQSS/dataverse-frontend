@@ -138,11 +138,11 @@ export const CollectionLinkSelect = ({
   // If there are no collections to link, show a message
   if (noCollectionsToLink) {
     return (
-      <div className="d-flex gap-2 text-danger">
+      <div className="d-flex gap-2 text-info mb-3">
         <div>
           <InfoCircleFill />
         </div>
-        <span>{tShared('collectionLinkSelect.noCollectionsToLink')}</span>
+        <span className="small">{tShared('collectionLinkSelect.noCollectionsToLink')}</span>
       </div>
     )
   }

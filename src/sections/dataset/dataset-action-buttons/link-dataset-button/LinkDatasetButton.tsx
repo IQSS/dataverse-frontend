@@ -59,8 +59,8 @@ export function LinkDatasetButton({
           t={t}
           i18nKey={'datasetActionButtons.linkDataset.success'}
           values={{
-            parentCollection: 'Collection Really Long Here With Number 1',
-            linkingCollectionName: 'Collection Really Long Here With Number 1'
+            parentCollection: dataset.parentCollectionNode.name,
+            linkingCollectionName: collectionSelected.displayName
           }}
           components={{
             wrapper: <div className="d-flex flex-wrap" />,
@@ -124,7 +124,7 @@ export function LinkDatasetButton({
 
           {datasetLinkedCollections.length > 0 && (
             <p className="small">
-              <strong>Note: This dataset is already linked to the following collections:</strong>{' '}
+              <strong>{t('datasetActionButtons.linkDataset.linkedCollections')}</strong>{' '}
               {datasetLinkedCollections.map((collection, index) => (
                 <span key={collection.id}>
                   {collection.displayName}
