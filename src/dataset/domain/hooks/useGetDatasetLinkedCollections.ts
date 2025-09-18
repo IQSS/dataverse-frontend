@@ -5,17 +5,17 @@ import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetRepository } from '../repositories/DatasetRepository'
 import { getDatasetLinkedCollections } from '../useCases/getDatasetLinkedCollections'
 
-interface useGetSearchServicesProps {
+interface useGetDatasetLinkedCollectionsProps {
   datasetRepository: DatasetRepository
   datasetId: string | number
   autoFetch?: boolean
 }
 
-export const useGetDatasetLinkedCollectionLinks = ({
+export const useGetDatasetLinkedCollections = ({
   datasetRepository,
   datasetId,
   autoFetch = true
-}: useGetSearchServicesProps) => {
+}: useGetDatasetLinkedCollectionsProps) => {
   const [datasetLinkedCollections, setDatasetLinkedCollections] = useState<CollectionSummary[]>([])
   const [isLoadingDatasetLinkedCollections, setIsLoadingDatasetLinkedCollections] =
     useState<boolean>(autoFetch)

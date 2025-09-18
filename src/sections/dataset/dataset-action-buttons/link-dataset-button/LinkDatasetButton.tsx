@@ -12,7 +12,7 @@ import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { linkDataset } from '@/dataset/domain/useCases/linkDataset'
 import { RouteWithParams } from '@/sections/Route.enum'
-import { useGetDatasetLinkedCollectionLinks } from '@/dataset/domain/hooks/useGetDatasetLinkedCollections'
+import { useGetDatasetLinkedCollections } from '@/dataset/domain/hooks/useGetDatasetLinkedCollections'
 
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 
@@ -31,7 +31,7 @@ export function LinkDatasetButton({
   const { t: tShared } = useTranslation('shared')
   const { user } = useSession()
   const { datasetLinkedCollections, fetchDatasetLinkedCollections } =
-    useGetDatasetLinkedCollectionLinks({
+    useGetDatasetLinkedCollections({
       datasetRepository,
       datasetId: dataset.id,
       autoFetch: false
