@@ -163,7 +163,11 @@ export const CollectionLinkSelect = ({
         {error && <small className="text-danger">{error}</small>}
 
         {onlyOneCollection && selectedCollection && (
-          <Form.Group.Input readOnly value={selectedCollection.displayName} />
+          <Form.Group.Input
+            readOnly
+            value={selectedCollection.displayName}
+            id="search-collection"
+          />
         )}
         {!onlyOneCollection && !noCollectionsToLink && (
           <Dropdown autoClose onSelect={handleSelectCollection}>
