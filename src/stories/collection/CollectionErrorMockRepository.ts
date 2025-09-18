@@ -7,6 +7,8 @@ import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
 import { CollectionMockRepository } from './CollectionMockRepository'
 import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
 import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
 
 export class CollectionErrorMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
@@ -73,6 +75,29 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
   }
 
   deleteFeaturedItem(_featuredItemId: number): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getForLinking(
+    _objectType: LinkingObjectType,
+    _id: number | string,
+    _searchTerm?: string
+  ): Promise<CollectionSummary[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  link(
+    _linkedCollectionIdOrAlias: number | string,
+    _linkingCollectionIdOrAlias: number | string
+  ): Promise<void> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Something went wrong')

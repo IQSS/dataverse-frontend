@@ -197,11 +197,15 @@ export class CollectionMockRepository implements CollectionRepository {
   getForLinking(
     _objectType: LinkingObjectType,
     _id: number | string,
-    _searchTerm?: string
+    searchTerm?: string
   ): Promise<CollectionSummary[]> {
     return new Promise((resolve) => {
+      const items = CollectionSummaryMother.createManyRealistic(5)
+      const filteredItems = items.filter((item) =>
+        searchTerm ? item.displayName.includes(searchTerm) : true
+      )
       setTimeout(() => {
-        resolve(CollectionSummaryMother.createMany(5))
+        resolve(filteredItems)
       }, FakerHelper.loadingTimout())
     })
   }
