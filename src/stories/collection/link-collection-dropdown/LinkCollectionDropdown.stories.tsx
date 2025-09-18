@@ -3,11 +3,12 @@ import { WithI18next } from '@/stories/WithI18next'
 import { Meta, StoryObj } from '@storybook/react'
 import { userEvent, within } from '@storybook/testing-library'
 import { CollectionMockRepository } from '../CollectionMockRepository'
+import { WithToasts } from '@/stories/WithToasts'
 
 const meta: Meta<typeof LinkCollectionDropdown> = {
   title: 'Sections/Collection Page/LinkCollectionDropdown',
   component: LinkCollectionDropdown,
-  decorators: [WithI18next],
+  decorators: [WithI18next, WithToasts],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -21,7 +22,7 @@ export const Default: Story = {
   render: () => (
     <LinkCollectionDropdown
       collectionId="1"
-      collectionName="Collection Name"
+      collectionName="Collection Mock"
       collectionRepository={new CollectionMockRepository()}
     />
   ),

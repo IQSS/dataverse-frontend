@@ -15,6 +15,8 @@ import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -158,6 +160,41 @@ export class DatasetMockRepository implements DatasetRepository {
           content: 'Formatted citation content',
           contentType: 'text/plain'
         })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  link(_datasetId: string | number, _collectionIdOrAlias: string | number): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  unlink(_datasetId: string | number, _collectionIdOrAlias: string | number): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getDatasetLinkedCollections(_datasetId: string | number): Promise<CollectionSummary[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([
+          CollectionSummaryMother.create({
+            id: 1,
+            displayName: 'Collection Foo',
+            alias: 'collection-foo'
+          }),
+          CollectionSummaryMother.create({
+            id: 2,
+            displayName: 'Collection Bar',
+            alias: 'collection-bar'
+          })
+        ])
       }, FakerHelper.loadingTimout())
     })
   }

@@ -6,11 +6,12 @@ import { CollectionMockRepository } from '../CollectionMockRepository'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { CollectionErrorMockRepository } from '../CollectionErrorMockRepository'
+import { WithToasts } from '@/stories/WithToasts'
 
 const meta: Meta<typeof LinkCollectionDropdown> = {
   title: 'Sections/Collection Page/LinkCollectionDropdown/LinkCollectionModal',
   component: LinkCollectionDropdown,
-  decorators: [WithI18next],
+  decorators: [WithI18next, WithToasts],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -24,7 +25,7 @@ export const Default: Story = {
   render: () => (
     <LinkCollectionDropdown
       collectionId="1"
-      collectionName="Collection Name"
+      collectionName="Collection Mock"
       collectionRepository={new CollectionMockRepository()}
     />
   ),
@@ -52,7 +53,7 @@ export const WithOnlyOneCollectionToLink: Story = {
   render: () => (
     <LinkCollectionDropdown
       collectionId="1"
-      collectionName="Collection Name"
+      collectionName="Collection Mock"
       collectionRepository={collectionRepoWithOnlyOneCollectionToLink}
     />
   ),
@@ -80,7 +81,7 @@ export const WithNoCollectionsToLink: Story = {
   render: () => (
     <LinkCollectionDropdown
       collectionId="1"
-      collectionName="Collection Name"
+      collectionName="Collection Mock"
       collectionRepository={collectionRepoWithNoCollectionsToLink}
     />
   ),
@@ -99,7 +100,7 @@ export const WithError: Story = {
   render: () => (
     <LinkCollectionDropdown
       collectionId="1"
-      collectionName="Collection Name"
+      collectionName="Collection Mock"
       collectionRepository={new CollectionErrorMockRepository()}
     />
   ),
