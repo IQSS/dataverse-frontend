@@ -131,7 +131,7 @@ and utilize the JavaScript framework of their choice.
 
 The Dataverse Frontend project uses several environments to support different stages of development, testing, and deployment. Each environment serves a specific purpose for stakeholders ranging from developers to end users.
 
-All environments follow an “all-in-one” setup, where the frontend and backend applications run together on a Payara server.  
+All environments follow an “all-in-one” setup, where the frontend and backend applications run together on a Payara server. Although these environments use the all-in-one setup, the SPA is infrastructure-agnostic and could also be deployed independently on other platforms, such as Docker containers, object storage services (e.g., Amazon S3 buckets), or any static hosting service/CDN, as long as it can communicate with the backend APIs.
 
 #### Beta
 The **Beta** environment provides a remote space for testing the latest changes. GitHub Actions automatically deploy the current `develop` branches of both the frontend and backend.  
