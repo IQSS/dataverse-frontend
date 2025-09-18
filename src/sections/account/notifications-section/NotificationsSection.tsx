@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Form } from '@iqss/dataverse-design-system'
+import { Trash, EnvelopeFill, EnvelopeOpen } from 'react-bootstrap-icons'
+import { Tooltip, Button, Form } from '@iqss/dataverse-design-system'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { useGetNotifications } from '@/sections/account/notifications-section/useGetNotifications'
 import { getTranslatedNotification } from '@/sections/account/notifications-section/NotificationsHelper'
@@ -8,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 interface NotificationsSectionProps {
   repository: NotificationRepository
 }
-
+//TODO: add translations
 export const NotificationsSection = ({ repository }: NotificationsSectionProps) => {
   const { t } = useTranslation('account')
   const { notifications, isLoading, error } = useGetNotifications(repository)
@@ -53,16 +54,31 @@ export const NotificationsSection = ({ repository }: NotificationsSectionProps) 
           onChange={(e) => (e.target.checked ? selectAll() : clearSelection())}
           aria-label={t('Select All')}
         />
-        <span>{t('Select All')}</span>
-        <button onClick={handleDelete} disabled={selected.length === 0} title="Delete">
-          🗑️
-        </button>
-        <button onClick={handleMarkRead} disabled={selected.length === 0} title="Mark as read">
-          📖
-        </button>
-        <button onClick={handleMarkUnread} disabled={selected.length === 0} title="Mark as unread">
-          ✉️
-        </button>
+        <Tooltip overlay={t('notifications.deleteSelected')} placement="top">
+          <Button
+            size="lg"
+            icon={<Trash />}
+            variant="link"
+            onClick={handleDelete}
+            disabled={selected.length === 0}
+            title="Delete"></Button>
+        </Tooltip>
+        <Tooltip overlay={t('notifications.markAsReadSelected')} placement="top">
+          <Button
+            icon={<EnvelopeFill />}
+            variant="link"
+            onClick={handleMarkRead}
+            disabled={selected.length === 0}
+            title="Mark as read"></Button>
+        </Tooltip>
+        <Tooltip overlay={t('notifications.markAsUnReadSelected')} placement="top">
+          <Button
+            icon={<EnvelopeOpen />}
+            variant="link"
+            onClick={handleMarkUnread}
+            disabled={selected.length === 0}
+            title="Mark as unread"></Button>
+        </Tooltip>
       </div>
       {notifications.length > 0 ? (
         notifications.map((notification) => (
