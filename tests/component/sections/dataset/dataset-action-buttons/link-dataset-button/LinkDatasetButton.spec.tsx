@@ -37,6 +37,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={() => {}}
       />
     )
 
@@ -53,6 +54,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={() => {}}
       />
     )
 
@@ -69,6 +71,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={() => {}}
       />
     )
 
@@ -79,12 +82,14 @@ describe('LinkDatasetButton', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createReleased()
     })
+    const updateParentSpy = cy.spy().as('updateParentSpy')
 
     cy.mountAuthenticated(
       <LinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={updateParentSpy}
       />
     )
 
@@ -115,6 +120,8 @@ describe('LinkDatasetButton', () => {
           expect(datasetIdArg).to.equal(dataset.persistentId)
           expect(linkingCollectionIdArg).to.equal(3)
         })
+
+        cy.get('@updateParentSpy').should('have.been.calledOnce')
       })
 
     // Success toast should appear
@@ -133,6 +140,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={new CollectionMockRepository()}
+        updateParent={() => {}}
       />
     )
 
@@ -173,6 +181,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={() => {}}
       />
     )
 
@@ -209,6 +218,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={() => {}}
       />
     )
 
@@ -254,6 +264,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={() => {}}
       />
     )
 
@@ -304,6 +315,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={() => {}}
       />
     )
 
@@ -351,6 +363,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={() => {}}
       />
     )
 
@@ -379,6 +392,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={() => {}}
       />
     )
 
@@ -398,7 +412,8 @@ describe('LinkDatasetButton', () => {
   it('shows already linked collections for the dataset when opening the modal', () => {
     const linked = [
       CollectionSummaryMother.create({ id: 7, displayName: 'Alpha', alias: 'alpha' }),
-      CollectionSummaryMother.create({ id: 8, displayName: 'Beta', alias: 'beta' })
+      CollectionSummaryMother.create({ id: 8, displayName: 'Beta', alias: 'beta' }),
+      CollectionSummaryMother.create({ id: 9, displayName: 'Gamma', alias: 'gamma' })
     ]
     datasetRepository.getDatasetLinkedCollections = cy
       .stub()
@@ -414,6 +429,7 @@ describe('LinkDatasetButton', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        updateParent={() => {}}
       />
     )
 
@@ -433,8 +449,8 @@ describe('LinkDatasetButton', () => {
         cy.findByText(/Note: This dataset is already linked to the following collections:/).should(
           'exist'
         )
-        cy.findByText('Alpha,').should('exist')
-        cy.findByText('Beta.').should('exist')
+
+        cy.contains('Alpha, Beta and Gamma.').should('exist')
       })
   })
 })

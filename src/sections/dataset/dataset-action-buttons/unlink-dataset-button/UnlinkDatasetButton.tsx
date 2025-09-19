@@ -20,12 +20,14 @@ interface UnlinkDatasetButtonProps {
   dataset: Dataset
   datasetRepository: DatasetRepository
   collectionRepository: CollectionRepository
+  updateParent: () => void
 }
 
 export function UnlinkDatasetButton({
   dataset,
   datasetRepository,
-  collectionRepository
+  collectionRepository,
+  updateParent
 }: UnlinkDatasetButtonProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
@@ -71,6 +73,7 @@ export function UnlinkDatasetButton({
           }}
         />
       )
+      updateParent()
       handleClose()
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {

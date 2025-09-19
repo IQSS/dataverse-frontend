@@ -7,12 +7,11 @@ import { AccessDatasetMenu } from './access-dataset-menu/AccessDatasetMenu'
 import { PublishDatasetMenu } from './publish-dataset-menu/PublishDatasetMenu'
 import { SubmitForReviewButton } from './submit-for-review-button/SubmitForReviewButton'
 import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
-import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
 import { ContactButton } from '@/sections/shared/contact/ContactButton'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { LinkAndUnlinkActions } from './link-and-unlink-actions/LinkAndUnlinkActions'
 import styles from './DatasetActionButtons.module.scss'
-import { UnlinkDatasetButton } from './unlink-dataset-button/UnlinkDatasetButton'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
@@ -50,12 +49,7 @@ export function DatasetActionButtons({
       />
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} datasetRepository={datasetRepository} />
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-      />
-      <UnlinkDatasetButton
+      <LinkAndUnlinkActions
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}

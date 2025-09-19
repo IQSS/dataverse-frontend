@@ -20,12 +20,14 @@ interface LinkDatasetButtonProps {
   dataset: Dataset
   datasetRepository: DatasetRepository
   collectionRepository: CollectionRepository
+  updateParent: () => void
 }
 
 export function LinkDatasetButton({
   dataset,
   datasetRepository,
-  collectionRepository
+  collectionRepository,
+  updateParent
 }: LinkDatasetButtonProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
@@ -73,6 +75,7 @@ export function LinkDatasetButton({
           }}
         />
       )
+      updateParent()
       handleClose()
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {
@@ -126,12 +129,16 @@ export function LinkDatasetButton({
           {datasetLinkedCollections.length > 0 && (
             <p className="small">
               <strong>{t('datasetActionButtons.linkDataset.linkedCollections')}</strong>{' '}
-              {datasetLinkedCollections.map((collection, index) => (
-                <span key={collection.id}>
-                  {collection.displayName}
-                  {index < datasetLinkedCollections.length - 1 ? ', ' : '.'}
-                </span>
-              ))}
+              {datasetLinkedCollections.map((collection, index) => {
+                const isLast = index === datasetLinkedCollections.length - 1
+                const isPenultimate = index === datasetLinkedCollections.length - 2
+                return (
+                  <span key={collection.id}>
+                    {collection.displayName}
+                    {isLast ? '.' : isPenultimate ? ' and ' : ', '}
+                  </span>
+                )
+              })}
             </p>
           )}
 

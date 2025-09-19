@@ -41,6 +41,7 @@ export const Default: Story = {
       dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
       datasetRepository={datasetRepo}
       collectionRepository={new CollectionMockRepository()}
+      updateParent={() => {}}
     />
   ),
   play: async ({ canvasElement }) => {
@@ -57,6 +58,7 @@ export const WithLinkedCollections: Story = {
       dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
       datasetRepository={new DatasetMockRepository()}
       collectionRepository={new CollectionMockRepository()}
+      updateParent={() => {}}
     />
   ),
   play: async ({ canvasElement }) => {
