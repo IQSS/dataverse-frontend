@@ -28,7 +28,6 @@ export const useGetDatasetLinkedCollections = ({
     setErrorGetDatasetLinkedCollections(null)
 
     try {
-      console.log('Fetching dataset linked collections...')
       const linkedCollections = await getDatasetLinkedCollections(datasetRepository, datasetId)
 
       setDatasetLinkedCollections(linkedCollections)

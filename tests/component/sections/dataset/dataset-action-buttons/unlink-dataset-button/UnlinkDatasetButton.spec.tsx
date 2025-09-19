@@ -2,7 +2,7 @@ import {
   DatasetMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
-import { LinkDatasetButton } from '../../../../../../src/sections/dataset/dataset-action-buttons/link-dataset-button/LinkDatasetButton'
+import { UnlinkDatasetButton } from '@/sections/dataset/dataset-action-buttons/unlink-dataset-button/UnlinkDatasetButton'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { ReadError, WriteError } from '@iqss/dataverse-client-javascript'
@@ -16,30 +16,30 @@ const dataset = DatasetMother.create({
   version: DatasetVersionMother.createReleased()
 })
 
-const clickLinkDatasetButton = () => {
-  cy.findByRole('button', { name: /Link Dataset/i })
+const clickUnlinkDatasetButton = () => {
+  cy.findByRole('button', { name: /Unlink Dataset/i })
     .should('exist')
     .click()
 }
 
-describe('LinkDatasetButton', () => {
+describe('UnlinkDatasetButton', () => {
   beforeEach(() => {
     cy.viewport('macbook-15')
     // Default stubs for common happy-path
-    datasetRepository.link = cy.stub().as('linkDataset').resolves()
+    datasetRepository.unlink = cy.stub().as('unlinkDataset').resolves()
     datasetRepository.getDatasetLinkedCollections = cy
       .stub()
       .as('getDatasetLinkedCollections')
-      .resolves([])
-    collectionRepository.getForLinking = cy
+      .resolves(CollectionSummaryMother.createManyRealistic(5))
+    collectionRepository.getForUnlinking = cy
       .stub()
-      .as('getCollectionsForLinking')
+      .as('getCollectionsForUnlinking')
       .resolves(CollectionSummaryMother.createManyRealistic(5))
   })
 
-  it('renders the LinkDatasetButton if the user is authenticated and the dataset version is not deaccessioned and the dataset is released', () => {
+  it('renders the UnlinkDatasetButton if the user is authenticated and the dataset version is not deaccessioned and the dataset is released', () => {
     cy.mountAuthenticated(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
@@ -47,12 +47,12 @@ describe('LinkDatasetButton', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Unlink Dataset' }).should('exist')
   })
 
-  it('does not render the LinkDatasetButton if the user is not authenticated', () => {
+  it('does not render the UnlinkDatasetButton if the user is not authenticated', () => {
     cy.customMount(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
@@ -63,13 +63,13 @@ describe('LinkDatasetButton', () => {
     cy.findByRole('button', { name: 'Link Dataset' }).should('not.exist')
   })
 
-  it('does not render the LinkDatasetButton if the dataset version is deaccessioned', () => {
+  it('does not render the UnlinkDatasetButton if the dataset version is deaccessioned', () => {
     const datasetDeaccessioned = DatasetMother.create({
       version: DatasetVersionMother.createDeaccessioned()
     })
 
     cy.mountAuthenticated(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={datasetDeaccessioned}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
@@ -80,11 +80,32 @@ describe('LinkDatasetButton', () => {
     cy.findByRole('button', { name: 'Link Dataset' }).should('not.exist')
   })
 
-  it('selects a collection and links the dataset successfully', () => {
+  it('does not render the UnlinkDatasetButton if the dataset has no linked collections', () => {
+    datasetRepository.getDatasetLinkedCollections = cy
+      .stub()
+      .as('getDatasetLinkedCollections')
+      .resolves([])
+
+    cy.mountAuthenticated(
+      <UnlinkDatasetButton
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        updateParent={() => {}}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Unlink Dataset' }).should('not.exist')
+  })
+
+  it('selects a collection and unlinks the dataset successfully', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createReleased()
+    })
     const updateParentSpy = cy.spy().as('updateParentSpy')
 
     cy.mountAuthenticated(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
@@ -92,44 +113,44 @@ describe('LinkDatasetButton', () => {
       />
     )
 
-    clickLinkDatasetButton()
+    clickUnlinkDatasetButton()
 
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
         // Save disabled without selection
-        cy.findByRole('button', { name: /Save Linked Dataset/i }).should('be.disabled')
+        cy.findByRole('button', { name: /Remove Linked Dataset/i }).should('be.disabled')
 
         cy.findByLabelText(/Toggle options menu/)
           .should('exist')
           .click()
-        cy.findByText('Collection 3').should('exist').click()
+        cy.findByText('Collection 1').should('exist').click()
 
-        cy.findByRole('button', { name: /Save Linked Dataset/i })
+        cy.findByRole('button', { name: /Remove Linked Dataset/i })
           .should('not.be.disabled')
           .click()
 
-        cy.get('@linkDataset').should((spy) => {
+        cy.get('@unlinkDataset').should((spy) => {
           const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
           const datasetIdArg = linkSpy.getCall(0).args[0] as string
-          const linkingCollectionIdArg = linkSpy.getCall(0).args[1] as number
+          const unlinkingCollectionIdArg = linkSpy.getCall(0).args[1] as number
 
           expect(datasetIdArg).to.equal(dataset.persistentId)
-          expect(linkingCollectionIdArg).to.equal(3)
+          expect(unlinkingCollectionIdArg).to.equal(1)
         })
 
         cy.get('@updateParentSpy').should('have.been.calledOnce')
       })
 
     // Success toast should appear
-    cy.findByText(/Dataset from .* has been successfully linked to/i)
+    cy.findByText(/Dataset unlinked from/i)
       .should('exist')
       .should('be.visible')
   })
 
   it('searches for a collection to link', () => {
     cy.mountAuthenticated(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={new CollectionMockRepository()}
@@ -137,12 +158,12 @@ describe('LinkDatasetButton', () => {
       />
     )
 
-    clickLinkDatasetButton()
+    clickUnlinkDatasetButton()
 
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByRole('button', { name: /Save Linked Dataset/i }).should('be.disabled')
+        cy.findByRole('button', { name: /Remove Linked Dataset/i }).should('be.disabled')
 
         cy.findByLabelText(/Toggle options menu/)
           .should('exist')
@@ -160,11 +181,11 @@ describe('LinkDatasetButton', () => {
       })
   })
 
-  it('shows no collections to link message', () => {
-    collectionRepository.getForLinking = cy.stub().resolves([])
+  it('shows no collections to unlink message', () => {
+    collectionRepository.getForUnlinking = cy.stub().resolves([])
 
     cy.mountAuthenticated(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
@@ -172,21 +193,21 @@ describe('LinkDatasetButton', () => {
       />
     )
 
-    clickLinkDatasetButton()
+    clickUnlinkDatasetButton()
 
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByText(/No collections are showing up to link./)
+        cy.findByText(/No collections are showing up to unlink./)
           .should('exist')
           .should('be.visible')
       })
 
-    cy.findByRole('button', { name: /Save Linked Dataset/i }).should('be.disabled')
+    cy.findByRole('button', { name: /Remove Linked Dataset/i }).should('be.disabled')
   })
 
   it('shows only one collection message and auto-selects it', () => {
-    collectionRepository.getForLinking = cy.stub().resolves([
+    collectionRepository.getForUnlinking = cy.stub().resolves([
       CollectionSummaryMother.create({
         id: 555,
         displayName: 'Bar Collection',
@@ -195,7 +216,7 @@ describe('LinkDatasetButton', () => {
     ])
 
     cy.mountAuthenticated(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
@@ -203,12 +224,12 @@ describe('LinkDatasetButton', () => {
       />
     )
 
-    clickLinkDatasetButton()
+    clickUnlinkDatasetButton()
 
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByText(/You have one collection you can add linked collection and datasets in./)
+        cy.findByText(/You have one collection you can remove linked collection and datasets from./)
           .should('exist')
           .should('be.visible')
 
@@ -217,11 +238,11 @@ describe('LinkDatasetButton', () => {
           .and('have.attr', 'readonly')
       })
 
-    cy.findByRole('button', { name: /Save Linked Dataset/i })
+    cy.findByRole('button', { name: /Remove Linked Dataset/i })
       .should('not.be.disabled')
       .click()
 
-    cy.get('@linkDataset').should((spy) => {
+    cy.get('@unlinkDataset').should((spy) => {
       const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
       const datasetIdArg = linkSpy.getCall(0).args[0] as string
       const linkingCollectionIdArg = linkSpy.getCall(0).args[1] as number
@@ -231,11 +252,11 @@ describe('LinkDatasetButton', () => {
     })
   })
 
-  it('handles error when linking the dataset fails', () => {
-    datasetRepository.link = cy.stub().as('linkDataset').rejects(new Error('Linking failed'))
+  it('handles error when unlinking the dataset fails', () => {
+    datasetRepository.unlink = cy.stub().as('unlinkDataset').rejects(new Error('Unlinking failed'))
 
     cy.mountAuthenticated(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
@@ -243,7 +264,7 @@ describe('LinkDatasetButton', () => {
       />
     )
 
-    clickLinkDatasetButton()
+    clickUnlinkDatasetButton()
 
     cy.findByRole('dialog')
       .should('be.visible')
@@ -253,34 +274,34 @@ describe('LinkDatasetButton', () => {
           .click()
         cy.findByText('Collection 2').should('exist').click()
 
-        cy.findByRole('button', { name: /Save Linked Dataset/i })
+        cy.findByRole('button', { name: /Remove Linked Dataset/i })
           .should('not.be.disabled')
           .click()
 
-        cy.get('@linkDataset').should((spy) => {
+        cy.get('@unlinkDataset').should((spy) => {
           const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
           const datasetIdArg = linkSpy.getCall(0).args[0] as string
-          const linkingCollectionIdArg = linkSpy.getCall(0).args[1] as number
+          const unlinkingCollectionIdArg = linkSpy.getCall(0).args[1] as number
           expect(datasetIdArg).to.equal(dataset.persistentId)
-          expect(linkingCollectionIdArg).to.equal(2)
+          expect(unlinkingCollectionIdArg).to.equal(2)
         })
 
-        cy.findByText(/An unexpected error occurred while linking the dataset./)
+        cy.findByText(/An unexpected error occurred while unlinking the dataset./)
           .should('exist')
           .should('be.visible')
       })
 
-    cy.findByText(/Dataset from .* has been successfully linked to/i).should('not.exist')
+    cy.findByText(/Dataset unlinked from/i).should('not.exist')
   })
 
-  it('handles error when linking fails with WriteError', () => {
-    datasetRepository.link = cy
+  it('handles error when unlinking fails with WriteError', () => {
+    datasetRepository.unlink = cy
       .stub()
-      .as('linkDataset')
+      .as('unlinkDataset')
       .rejects(new WriteError('A WriteError received'))
 
     cy.mountAuthenticated(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
@@ -288,7 +309,7 @@ describe('LinkDatasetButton', () => {
       />
     )
 
-    clickLinkDatasetButton()
+    clickUnlinkDatasetButton()
 
     cy.findByRole('dialog')
       .should('be.visible')
@@ -298,16 +319,16 @@ describe('LinkDatasetButton', () => {
           .click()
         cy.findByText('Collection 2').should('exist').click()
 
-        cy.findByRole('button', { name: /Save Linked Dataset/i })
+        cy.findByRole('button', { name: /Remove Linked Dataset/i })
           .should('not.be.disabled')
           .click()
 
-        cy.get('@linkDataset').should((spy) => {
+        cy.get('@unlinkDataset').should((spy) => {
           const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
           const datasetIdArg = linkSpy.getCall(0).args[0] as string
-          const linkingCollectionIdArg = linkSpy.getCall(0).args[1] as number
+          const unlinkingCollectionIdArg = linkSpy.getCall(0).args[1] as number
           expect(datasetIdArg).to.equal(dataset.persistentId)
-          expect(linkingCollectionIdArg).to.equal(2)
+          expect(unlinkingCollectionIdArg).to.equal(2)
         })
 
         cy.findByText(/A WriteError received/i)
@@ -315,14 +336,16 @@ describe('LinkDatasetButton', () => {
           .should('be.visible')
       })
 
-    cy.findByText(/Dataset from .* has been successfully linked to/i).should('not.exist')
+    cy.findByText(/Dataset unlinked from/i).should('not.exist')
   })
 
   it('handles error when fetching collections for linking fails', () => {
-    collectionRepository.getForLinking = cy.stub().rejects(new Error('Fetching collections failed'))
+    collectionRepository.getForUnlinking = cy
+      .stub()
+      .rejects(new Error('Fetching collections failed'))
 
     cy.mountAuthenticated(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
@@ -330,22 +353,22 @@ describe('LinkDatasetButton', () => {
       />
     )
 
-    clickLinkDatasetButton()
+    clickUnlinkDatasetButton()
 
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByText(/An unexpected error occurred while fetching collections for linking./)
+        cy.findByText(/An unexpected error occurred while fetching collections for unlinking./)
           .should('exist')
           .should('be.visible')
       })
   })
 
   it('handles error when fetching collections fails with ReadError', () => {
-    collectionRepository.getForLinking = cy.stub().rejects(new ReadError('A ReadError received'))
+    collectionRepository.getForUnlinking = cy.stub().rejects(new ReadError('A ReadError received'))
 
     cy.mountAuthenticated(
-      <LinkDatasetButton
+      <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
@@ -353,7 +376,7 @@ describe('LinkDatasetButton', () => {
       />
     )
 
-    clickLinkDatasetButton()
+    clickUnlinkDatasetButton()
 
     cy.findByRole('dialog')
       .should('be.visible')
@@ -361,45 +384,6 @@ describe('LinkDatasetButton', () => {
         cy.findByText(/A ReadError received/i)
           .should('exist')
           .should('be.visible')
-      })
-  })
-
-  it('shows already linked collections for the dataset when opening the modal', () => {
-    const linked = [
-      CollectionSummaryMother.create({ id: 7, displayName: 'Alpha', alias: 'alpha' }),
-      CollectionSummaryMother.create({ id: 8, displayName: 'Beta', alias: 'beta' }),
-      CollectionSummaryMother.create({ id: 9, displayName: 'Gamma', alias: 'gamma' })
-    ]
-    datasetRepository.getDatasetLinkedCollections = cy
-      .stub()
-      .as('getDatasetLinkedCollections')
-      .resolves(linked)
-
-    cy.mountAuthenticated(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        updateParent={() => {}}
-      />
-    )
-
-    clickLinkDatasetButton()
-
-    cy.get('@getDatasetLinkedCollections').should((spy) => {
-      const getSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
-      const datasetIdArg = getSpy.getCall(0).args[0] as number | string
-      expect(datasetIdArg).to.equal(dataset.id)
-    })
-
-    cy.findByRole('dialog')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText(/Note: This dataset is already linked to the following collections:/).should(
-          'exist'
-        )
-
-        cy.contains('Alpha, Beta and Gamma.').should('exist')
       })
   })
 })
