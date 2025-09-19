@@ -55,7 +55,11 @@ export function DatasetActionButtons({
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
       />
-      <UnlinkDatasetButton dataset={dataset} datasetRepository={datasetRepository} />
+      <UnlinkDatasetButton
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+      />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
         <ContactButton
           toContactName={dataset.metadataBlocks[0].fields.title}

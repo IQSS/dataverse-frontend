@@ -8,14 +8,22 @@ import { ReadError } from '@iqss/dataverse-client-javascript'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { getCollectionsForLinking } from '@/collection/domain/useCases/getCollectionsForLinking'
+import { getCollectionsForUnlinking } from '@/collection/domain/useCases/getCollectionsForUnlinking'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { Utils } from '@/shared/helpers/Utils'
 import styles from './CollectionLinkSelect.module.scss'
+
+/**
+ * This component is used to select a collection to link or unlink a dataset or collection to/from.
+ * It is not responsible for performing the actual linking or unlinking, just for selecting the collection.
+ * The onCollectionSelected callback is called when a collection is selected. That gives the parent component the ability to store the selected collection in its state.
+ */
 
 type BaseProps = {
   collectionRepository: CollectionRepository
   onCollectionSelected: (collectionSelected: CollectionSummary | null) => void
   helpText: string
+  mode: 'link' | 'unlink'
 }
 
 type CollectionLinkSelectProps = BaseProps &
@@ -38,76 +46,78 @@ export const CollectionLinkSelect = ({
   collectionRepository,
   linkingObjectType,
   onCollectionSelected,
-  helpText
+  helpText,
+  mode
 }: CollectionLinkSelectProps) => {
   const { t: tShared } = useTranslation('shared')
-  const [collectionsForLinking, setCollectionsForLinking] = useState<CollectionSummary[]>([])
+
+  const [collections, setCollections] = useState<CollectionSummary[]>([])
   const [selectedCollection, setSelectedCollection] = useState<CollectionSummary | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [onlyOneCollection, setOnlyOneCollection] = useState(false)
-  const [noCollectionsToLink, setNoCollectionsToLink] = useState(false)
+  const [noCollections, setNoCollections] = useState(false)
   const firstFetchHappened = useRef(false)
-
   // A ref to hold the latest onCollectionSelected callback to avoid infinite loops in useEffect
   const onCollectionSelectedRef = useRef(onCollectionSelected)
   onCollectionSelectedRef.current = onCollectionSelected
 
-  const fetchCollectionsForLinking = useCallback(
+  const fetchCollections = useCallback(
     async (searchTerm: string) => {
       setIsLoading(true)
       setError(null)
       try {
-        const collectionSummaries = await getCollectionsForLinking(
+        const identifier =
+          linkingObjectType === 'collection' ? collectionIdOrAlias : datasetPersistentId
+        const method = mode === 'unlink' ? getCollectionsForUnlinking : getCollectionsForLinking
+
+        const collectionSummaries = await method(
           collectionRepository,
           linkingObjectType,
-          linkingObjectType === 'collection' ? collectionIdOrAlias : datasetPersistentId,
+          identifier,
           searchTerm
         )
-
         // Sort by display name alphabetically
         collectionSummaries.sort((a, b) => a.displayName.localeCompare(b.displayName))
-
-        setCollectionsForLinking(collectionSummaries)
+        setCollections(collectionSummaries)
 
         if (searchTerm === '' && collectionSummaries.length === 1) {
-          // If there's only one collection available to link, select it by default
           setOnlyOneCollection(true)
           onCollectionSelectedRef.current(collectionSummaries[0])
           setSelectedCollection(collectionSummaries[0])
         }
         if (searchTerm === '' && collectionSummaries.length === 0) {
-          setNoCollectionsToLink(true)
+          setNoCollections(true)
         } else {
-          setNoCollectionsToLink(false)
+          setNoCollections(false)
         }
-      } catch (err: ReadError | unknown) {
+      } catch (err) {
         if (err instanceof ReadError) {
           const error = new JSDataverseReadErrorHandler(err)
           const formattedError =
             error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
-
           setError(formattedError)
         } else {
-          setError('An unexpected error occurred while fetching collections for linking.')
+          setError(
+            mode === 'unlink'
+              ? 'An unexpected error occurred while fetching collections for unlinking.'
+              : 'An unexpected error occurred while fetching collections for linking.'
+          )
         }
       } finally {
         setIsLoading(false)
         firstFetchHappened.current = true
       }
     },
-    [collectionIdOrAlias, datasetPersistentId, linkingObjectType, collectionRepository]
+    [collectionIdOrAlias, datasetPersistentId, linkingObjectType, collectionRepository, mode]
   )
 
   // Fetch all collections for linking with empty search when the component is mounted
-  useEffect(() => void fetchCollectionsForLinking(''), [fetchCollectionsForLinking])
+  useEffect(() => void fetchCollections(''), [fetchCollections])
 
   const handleSelectCollection = (eventKey: string | null) => {
     if (!eventKey) return
-
-    const collection: CollectionSummary | undefined = collectionsForLinking.find(
-      (collection) => collection.id === Number(eventKey)
-    )
+    const collection = collections.find((c) => c.id === Number(eventKey))
 
     // Update the selected collection state and notify the parent component
     setSelectedCollection(collection ?? null)
@@ -115,9 +125,7 @@ export const CollectionLinkSelect = ({
   }
 
   const handleSearchChange = Utils.debounce((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
-    const trimmedValue = value.trim()
-    void fetchCollectionsForLinking(trimmedValue)
+    void fetchCollections(e.target.value.trim())
   }, 400)
 
   // Show loading skeletons until the first fetch is done
@@ -135,14 +143,17 @@ export const CollectionLinkSelect = ({
     )
   }
 
-  // If there are no collections to link, show a message
-  if (noCollectionsToLink) {
+  if (noCollections) {
     return (
       <div className="d-flex gap-2 text-info mb-3">
-        <div>
-          <InfoCircleFill />
-        </div>
-        <span className="small">{tShared('collectionLinkSelect.noCollectionsToLink')}</span>
+        <InfoCircleFill />
+        <span className="small">
+          {tShared(
+            mode === 'unlink'
+              ? 'collectionLinkSelect.noCollectionsToUnlink'
+              : 'collectionLinkSelect.noCollectionsToLink'
+          )}
+        </span>
       </div>
     )
   }
@@ -151,7 +162,13 @@ export const CollectionLinkSelect = ({
     <Form.Group>
       <Form.Group.Text className="mb-2">
         {onlyOneCollection ? (
-          <span>{tShared('collectionLinkSelect.onlyOneCollectionToLink')}</span>
+          <span>
+            {tShared(
+              mode === 'unlink'
+                ? 'collectionLinkSelect.onlyOneCollectionToUnlink'
+                : 'collectionLinkSelect.onlyOneCollectionToLink'
+            )}
+          </span>
         ) : (
           <span>{helpText}</span>
         )}
@@ -169,7 +186,8 @@ export const CollectionLinkSelect = ({
             id="search-collection"
           />
         )}
-        {!onlyOneCollection && !noCollectionsToLink && (
+
+        {!onlyOneCollection && !noCollections && (
           <Dropdown autoClose onSelect={handleSelectCollection}>
             <div className={styles['toggle-wrapper']}>
               <Dropdown.Toggle
@@ -198,11 +216,11 @@ export const CollectionLinkSelect = ({
                 <div className={`${styles['loader-line']} ${isLoading ? styles.loading : ''}`} />
               </Dropdown.Header>
 
-              {collectionsForLinking.length === 0 && (
+              {collections.length === 0 && (
                 <div className="px-3 py-1">{tShared('collectionLinkSelect.noOptions')}</div>
               )}
 
-              {collectionsForLinking.map((collection) => (
+              {collections.map((collection) => (
                 <Dropdown.Item
                   eventKey={collection.id}
                   active={selectedCollection?.id === collection.id}

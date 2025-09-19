@@ -113,6 +113,7 @@ export const LinkCollectionDropdown = ({
         </Modal.Header>
         <Modal.Body>
           <CollectionLinkSelect
+            mode="link"
             linkingObjectType="collection"
             collectionIdOrAlias={collectionId}
             collectionRepository={collectionRepository}
