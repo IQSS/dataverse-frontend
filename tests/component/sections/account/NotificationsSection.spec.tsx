@@ -3,17 +3,17 @@ import { NotificationsSection } from '@/sections/account/notifications-section/N
 import { NotificationProvider } from '@/notifications/context/NotificationsContext'
 
 export const mockRepository = {
-  fetchNotifications: async () => [
-    { id: 1, displayAsRead: false, message: 'Test notification 1' },
-    { id: 2, displayAsRead: true, message: 'Test notification 2' }
-  ],
-  markNotificationAsRead: async (_id: number) => {},
-  markNotificationAsUnread: async (_id: number) => {},
-  deleteNotification: async (_id: number) => {},
-  getAllNotificationsByUser: async () => [],
-  getUnreadNotificationsCount: async () => 1
+  fetchNotifications: () =>
+    Promise.resolve([
+      { id: 1, displayAsRead: false, message: 'Test notification 1' },
+      { id: 2, displayAsRead: true, message: 'Test notification 2' }
+    ]),
+  markNotificationAsRead: (_id: number) => Promise.resolve(),
+  markNotificationAsUnread: (_id: number) => Promise.resolve(),
+  deleteNotification: (_id: number) => Promise.resolve(),
+  getAllNotificationsByUser: () => Promise.resolve([]),
+  getUnreadNotificationsCount: () => Promise.resolve(1)
 }
-
 describe('NotificationsSection', () => {
   it('renders notifications and handles actions', () => {
     mount(

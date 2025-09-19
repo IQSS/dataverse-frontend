@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { Notification } from '@/notifications/domain/models/Notification'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { getAllNotificationsByUser } from '@/notifications/domain/useCases/getAllNotificationsByUser'
+import { SessionContext } from '@/sections/session/SessionContext'
 
 interface NotificationContextValue {
   notifications: Notification[]
@@ -18,6 +19,8 @@ const NotificationContext = createContext<NotificationContextValue | undefined>(
 
 export const useNotificationContext = () => {
   const context = useContext(NotificationContext)
+  // Ensure the user is logged in
+
   if (!context) {
     throw new Error('useNotificationContext must be used within a NotificationProvider')
   }
@@ -34,6 +37,7 @@ export const NotificationProvider = ({
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { user } = useContext(SessionContext)
 
   const fetchNotifications = useCallback(async () => {
     try {
@@ -50,8 +54,11 @@ export const NotificationProvider = ({
   }, [repository])
 
   useEffect(() => {
+    if (!user) {
+      return
+    }
     void fetchNotifications()
-  }, [fetchNotifications])
+  }, [fetchNotifications, user])
 
   const markAsRead = async (ids: number[]) => {
     setNotifications((prev) =>
@@ -65,7 +72,7 @@ export const NotificationProvider = ({
       setError(message)
     }
   }
-  const markAsUnread = async (ids: number[]) => {
+  const markAsUnread = async (_ids: number[]) => {
     // TODO: Implement mark as unread functionality
     return Promise.resolve()
   }
