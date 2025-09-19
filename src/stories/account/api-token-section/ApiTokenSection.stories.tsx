@@ -9,7 +9,6 @@ import { UserMockLoadingRepository } from '../../shared-mock-repositories/user/U
 import { UserMockErrorRepository } from '../../shared-mock-repositories/user/UserMockErrorRepository'
 import { CollectionMockRepository } from '../../collection/CollectionMockRepository'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
-import { NotificationMockRepository } from '@/stories/account/NotificationMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Sections/Account Page/ApiTokenSection',
@@ -31,7 +30,6 @@ export const Default: Story = {
       userRepository={new UserMockRepository()}
       collectionRepository={new CollectionMockRepository()}
       roleRepository={new RoleMockRepository()}
-      notificationRepository={new NotificationMockRepository()}
     />
   )
 }
@@ -43,7 +41,6 @@ export const Loading: Story = {
       userRepository={new UserMockLoadingRepository()}
       collectionRepository={new CollectionMockRepository()}
       roleRepository={new RoleMockRepository()}
-      notificationRepository={new NotificationMockRepository()}
     />
   )
 }
@@ -55,7 +52,6 @@ export const Error: Story = {
       userRepository={new UserMockErrorRepository()}
       collectionRepository={new CollectionMockRepository()}
       roleRepository={new RoleMockRepository()}
-      notificationRepository={new NotificationMockRepository()}
     />
   )
 }
@@ -80,7 +76,6 @@ export const NoToken: Story = {
         userRepository={noTokenRepository}
         collectionRepository={new CollectionMockRepository()}
         roleRepository={new RoleMockRepository()}
-        notificationRepository={new NotificationMockRepository()}
       />
     )
   }

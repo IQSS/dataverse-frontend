@@ -9,26 +9,23 @@ import { RouteWithParams, Route } from '@/sections//Route.enum'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { AccountHelper } from '@/sections/account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
-import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
-import { useGetUnreadNotificationsCount } from '@/sections/layout/header/useGetUnreadNotificationsCount'
+import { useNotificationContext } from '@/notifications/context/NotificationsContext'
 import styles from './Header.module.scss'
 
 interface LoggedInHeaderActionsProps {
   user: User
   collectionRepository: CollectionRepository
-  notificationRepository: NotificationRepository
 }
 
 export const LoggedInHeaderActions = ({
   user,
-  collectionRepository,
-  notificationRepository
+  collectionRepository
 }: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
   const { logOut } = useContext(AuthContext)
 
   const { collection } = useCollection(collectionRepository)
-  const { unreadNotificationsCount } = useGetUnreadNotificationsCount(notificationRepository)
+  const { unreadCount } = useNotificationContext()
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: undefined,
     collectionRepository: collectionRepository
@@ -61,10 +58,9 @@ export const LoggedInHeaderActions = ({
         title={
           <>
             {user.displayName}
-            <span
-              className={
-                styles['unread-notifications-count']
-              }>{` ${unreadNotificationsCount}`}</span>
+            {unreadCount > 0 && (
+              <span className={styles['unread-notifications-count']}>{` ${unreadCount}`}</span>
+            )}
           </>
         }
         id="dropdown-user">
@@ -77,8 +73,9 @@ export const LoggedInHeaderActions = ({
           as={Link}
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}`}>
           {t('navigation.notifications')}
-          <span
-            className={styles['unread-notifications-count']}>{` ${unreadNotificationsCount}`}</span>
+          {unreadCount > 0 && (
+            <span className={styles['unread-notifications-count']}>{` ${unreadCount}`}</span>
+          )}
         </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item
           as={Link}

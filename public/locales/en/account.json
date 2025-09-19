@@ -51,6 +51,9 @@
     "title": "Notifications",
     "userGuideLinkText": "User Guide",
     "demoServerLinkText": "Demo Site",
+    "markAsReadSelected": "Mark selected as read",
+    "markAsUnreadSelected": "Mark selected as unread",
+    "deleteSelected": "Delete selected",
     "notification": {
       "createAcc": "Welcome to {{installationBrandName}}! Get started by adding or finding data. Have questions? Check out the <userGuideLink>{{userGuideLinkText}}</userGuideLink>. Want to test out Dataverse features? Use our <demoLink>{{demoServerLinkText}}</demoLink>.",
       "ingestCompleted": "Dataset <datasetLink>{{datasetDisplayName}}</datasetLink> has one or more tabular files that completed the <a>tabular ingest process</a> and are available in archival formats.",

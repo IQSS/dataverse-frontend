@@ -47,11 +47,6 @@ export function AccessFileMenu({
     return <></>
   }
 
-  // // TODO: remove this when access datafile supports bearer tokens
-  if (isDraft) {
-    return <></>
-  }
-
   return (
     <MenuWrapper>
       <DropdownButton

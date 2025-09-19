@@ -7,7 +7,6 @@ import { AccountHelper } from '../../sections/account/AccountHelper'
 import { UserMockRepository } from '../shared-mock-repositories/user/UserMockRepository'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
-import { NotificationMockRepository } from '@/stories/account/NotificationMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Pages/Account',
@@ -29,7 +28,6 @@ export const Default: Story = {
       userRepository={new UserMockRepository()}
       collectionRepository={new CollectionMockRepository()}
       roleRepository={new RoleMockRepository()}
-      notificationRepository={new NotificationMockRepository()}
     />
   )
 }

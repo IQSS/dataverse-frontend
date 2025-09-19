@@ -2,6 +2,8 @@ import { NotificationRepository } from '@/notifications/domain/repositories/Noti
 import { Notification } from '@/notifications/domain/models/Notification'
 import { getAllNotificationsByUser } from '@iqss/dataverse-client-javascript'
 import { getUnreadNotificationsCount } from '@iqss/dataverse-client-javascript'
+import { markNotificationAsRead } from '@iqss/dataverse-client-javascript'
+import { deleteNotification } from '@iqss/dataverse-client-javascript'
 import { JSNotificationMapper } from '../mappers/JSNotificationMapper'
 
 export class NotificationJSDataverseRepository implements NotificationRepository {
@@ -20,20 +22,10 @@ export class NotificationJSDataverseRepository implements NotificationRepository
   }
 
   markNotificationAsRead(notificationId: number): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log(`Notification ${notificationId} marked as read.`)
-        resolve()
-      }, 500)
-    })
+    return markNotificationAsRead.execute(notificationId).then(() => {})
   }
 
   deleteNotification(notificationId: number): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log(`Notification ${notificationId} deleted.`)
-        resolve()
-      }, 500)
-    })
+    return deleteNotification.execute(notificationId).then(() => {})
   }
 }

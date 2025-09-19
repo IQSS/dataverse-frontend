@@ -1,18 +1,23 @@
 import { useState } from 'react'
 import { Trash, EnvelopeFill, EnvelopeOpen } from 'react-bootstrap-icons'
 import { Tooltip, Button, Form } from '@iqss/dataverse-design-system'
-import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
-import { useGetNotifications } from '@/sections/account/notifications-section/useGetNotifications'
 import { getTranslatedNotification } from '@/sections/account/notifications-section/NotificationsHelper'
 import { useTranslation } from 'react-i18next'
+import styles from './NotificationsSection.module.scss'
+import { useNotificationContext } from '@/notifications/context/NotificationsContext'
 
-interface NotificationsSectionProps {
-  repository: NotificationRepository
-}
 //TODO: add translations
-export const NotificationsSection = ({ repository }: NotificationsSectionProps) => {
+export const NotificationsSection = () => {
   const { t } = useTranslation('account')
-  const { notifications, isLoading, error } = useGetNotifications(repository)
+  const {
+    notifications,
+    isLoading,
+    error,
+    refetch,
+    markAsRead,
+    markAsUnread,
+    deleteNotifications
+  } = useNotificationContext()
   const [selected, setSelected] = useState<number[]>([])
 
   const toggleSelect = (id: number) => {
@@ -27,17 +32,18 @@ export const NotificationsSection = ({ repository }: NotificationsSectionProps) 
     setSelected([])
   }
 
-  // Placeholder handlers for actions
-  const handleDelete = () => {
-    // Implement delete logic here
+  const handleDelete = async () => {
+    await deleteNotifications(selected)
     clearSelection()
+    await refetch()
   }
-  const handleMarkRead = () => {
-    // Implement mark as read logic here
+  const handleMarkRead = async () => {
+    await markAsRead(selected)
     clearSelection()
+    await refetch()
   }
-  const handleMarkUnread = () => {
-    // Implement mark as unread logic here
+  const handleMarkUnread = async () => {
+    await markAsUnread(selected)
     clearSelection()
   }
 
@@ -82,7 +88,12 @@ export const NotificationsSection = ({ repository }: NotificationsSectionProps) 
       </div>
       {notifications.length > 0 ? (
         notifications.map((notification) => (
-          <div key={notification.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div
+            className={`${styles['notification-row']} ${
+              !notification.displayAsRead ? styles.unread : ''
+            }`}
+            key={notification.id}
+            style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Form.Group.Checkbox
               id={`select-${notification.id}`}
               label=""

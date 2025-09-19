@@ -10,13 +10,11 @@ import { LoggedInHeaderActions } from './LoggedInHeaderActions'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
 import styles from './Header.module.scss'
-import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 
 interface HeaderProps {
   collectionRepository: CollectionRepository
-  notificationRepository: NotificationRepository
 }
-export function Header({ collectionRepository, notificationRepository }: HeaderProps) {
+export function Header({ collectionRepository }: HeaderProps) {
   const { t } = useTranslation('header')
   const { user } = useSession()
   const { pathname, search } = useLocation()
@@ -38,11 +36,7 @@ export function Header({ collectionRepository, notificationRepository }: HeaderP
       }}
       className={styles.navbar}>
       {user ? (
-        <LoggedInHeaderActions
-          notificationRepository={notificationRepository}
-          user={user}
-          collectionRepository={collectionRepository}
-        />
+        <LoggedInHeaderActions user={user} collectionRepository={collectionRepository} />
       ) : (
         <Button
           onClick={handleOidcLogIn}
