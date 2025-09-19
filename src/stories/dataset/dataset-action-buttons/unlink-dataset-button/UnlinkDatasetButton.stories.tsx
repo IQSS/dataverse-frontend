@@ -6,16 +6,16 @@ import {
   DatasetMother,
   DatasetVersionMother
 } from '../../../../../tests/component/dataset/domain/models/DatasetMother'
-import { LinkDatasetButton } from '../../../../sections/dataset/dataset-action-buttons/link-and-unlink-actions/link-dataset-button/LinkDatasetButton'
+import { UnlinkDatasetButton } from '@/sections/dataset/dataset-action-buttons/link-and-unlink-actions/unlink-dataset-button/UnlinkDatasetButton'
 import { DatasetMockRepository } from '../../DatasetMockRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { WithToasts } from '@/stories/WithToasts'
 
-const meta: Meta<typeof LinkDatasetButton> = {
-  title: 'Sections/Dataset Page/DatasetActionButtons/LinkDatasetButton',
-  component: LinkDatasetButton,
+const meta: Meta<typeof UnlinkDatasetButton> = {
+  title: 'Sections/Dataset Page/DatasetActionButtons/UnlinkDatasetButton',
+  component: UnlinkDatasetButton,
   decorators: [WithI18next, WithSettings, WithLoggedInUser, WithToasts],
   parameters: {
     // Sets the delay for all stories.
@@ -24,37 +24,11 @@ const meta: Meta<typeof LinkDatasetButton> = {
 }
 
 export default meta
-type Story = StoryObj<typeof LinkDatasetButton>
-
-const withNoLinkedCollectionsDatasetRepo = new DatasetMockRepository()
-withNoLinkedCollectionsDatasetRepo.getDatasetLinkedCollections = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([])
-    }, FakerHelper.loadingTimout())
-  })
-}
+type Story = StoryObj<typeof UnlinkDatasetButton>
 
 export const Default: Story = {
   render: () => (
-    <LinkDatasetButton
-      dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-      datasetRepository={withNoLinkedCollectionsDatasetRepo}
-      collectionRepository={new CollectionMockRepository()}
-      updateParent={() => {}}
-    />
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    const dropdownBtn = await canvas.findByRole('button', { name: 'Link Dataset' })
-    userEvent.click(dropdownBtn)
-  }
-}
-
-export const WithLinkedCollections: Story = {
-  render: () => (
-    <LinkDatasetButton
+    <UnlinkDatasetButton
       dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
       datasetRepository={new DatasetMockRepository()}
       collectionRepository={new CollectionMockRepository()}
@@ -64,13 +38,17 @@ export const WithLinkedCollections: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    const dropdownBtn = await canvas.findByRole('button', { name: 'Link Dataset' })
+    const dropdownBtn = await canvas.findByRole(
+      'button',
+      { name: 'Unlink Dataset' },
+      { timeout: 6000 }
+    )
     userEvent.click(dropdownBtn)
   }
 }
 
-const withOnlyOneCollectionToLinkRepo = new CollectionMockRepository()
-withOnlyOneCollectionToLinkRepo.getForLinking = () => {
+const withOnlyOneCollectionToUnlinkRepo = new CollectionMockRepository()
+withOnlyOneCollectionToUnlinkRepo.getForUnlinking = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
@@ -84,19 +62,23 @@ withOnlyOneCollectionToLinkRepo.getForLinking = () => {
   })
 }
 
-export const WithOnlyOneCollectionToLink: Story = {
+export const WithOnlyOneCollectionToUnlink: Story = {
   render: () => (
-    <LinkDatasetButton
+    <UnlinkDatasetButton
       dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-      datasetRepository={withNoLinkedCollectionsDatasetRepo}
-      collectionRepository={withOnlyOneCollectionToLinkRepo}
+      datasetRepository={new DatasetMockRepository()}
+      collectionRepository={withOnlyOneCollectionToUnlinkRepo}
       updateParent={() => {}}
     />
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    const dropdownBtn = await canvas.findByRole('button', { name: 'Link Dataset' })
+    const dropdownBtn = await canvas.findByRole(
+      'button',
+      { name: 'Unlink Dataset' },
+      { timeout: 6000 }
+    )
     userEvent.click(dropdownBtn)
   }
 }

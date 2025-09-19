@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { LinkDatasetButton } from '../link-dataset-button/LinkDatasetButton'
-import { UnlinkDatasetButton } from '../unlink-dataset-button/UnlinkDatasetButton'
+import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
+import { UnlinkDatasetButton } from './unlink-dataset-button/UnlinkDatasetButton'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'

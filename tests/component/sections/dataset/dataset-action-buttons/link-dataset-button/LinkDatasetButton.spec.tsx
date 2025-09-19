@@ -2,7 +2,7 @@ import {
   DatasetMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
-import { LinkDatasetButton } from '../../../../../../src/sections/dataset/dataset-action-buttons/link-dataset-button/LinkDatasetButton'
+import { LinkDatasetButton } from '../../../../../../src/sections/dataset/dataset-action-buttons/link-and-unlink-actions/link-dataset-button/LinkDatasetButton'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { ReadError, WriteError } from '@iqss/dataverse-client-javascript'

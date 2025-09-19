@@ -2,7 +2,7 @@ import {
   DatasetMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
-import { UnlinkDatasetButton } from '@/sections/dataset/dataset-action-buttons/unlink-dataset-button/UnlinkDatasetButton'
+import { UnlinkDatasetButton } from '@/sections/dataset/dataset-action-buttons/link-and-unlink-actions/unlink-dataset-button/UnlinkDatasetButton'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { ReadError, WriteError } from '@iqss/dataverse-client-javascript'
