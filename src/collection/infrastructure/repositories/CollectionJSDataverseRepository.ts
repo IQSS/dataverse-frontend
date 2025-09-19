@@ -155,6 +155,14 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return getCollectionsForLinking.execute(objectType, id, searchTerm)
   }
 
+  getForUnlinking(
+    objectType: LinkingObjectType,
+    id: number | string,
+    searchTerm?: string
+  ): Promise<CollectionSummary[]> {
+    return getCollectionsForLinking.execute(objectType, id, searchTerm, true)
+  }
+
   link(
     linkedCollectionIdOrAlias: number | string,
     linkingCollectionIdOrAlias: number | string

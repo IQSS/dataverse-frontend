@@ -210,6 +210,22 @@ export class CollectionMockRepository implements CollectionRepository {
     })
   }
 
+  getForUnlinking(
+    _objectType: LinkingObjectType,
+    _id: number | string,
+    searchTerm?: string
+  ): Promise<CollectionSummary[]> {
+    return new Promise((resolve) => {
+      const items = CollectionSummaryMother.createManyRealistic(5)
+      const filteredItems = items.filter((item) =>
+        searchTerm ? item.displayName.includes(searchTerm) : true
+      )
+      setTimeout(() => {
+        resolve(filteredItems)
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
   link(
     _linkedCollectionIdOrAlias: number | string,
     _linkingCollectionIdOrAlias: number | string

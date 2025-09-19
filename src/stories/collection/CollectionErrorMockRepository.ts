@@ -94,6 +94,18 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
     })
   }
 
+  getForUnlinking(
+    _objectType: LinkingObjectType,
+    _id: number | string,
+    _searchTerm?: string
+  ): Promise<CollectionSummary[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
   link(
     _linkedCollectionIdOrAlias: number | string,
     _linkingCollectionIdOrAlias: number | string

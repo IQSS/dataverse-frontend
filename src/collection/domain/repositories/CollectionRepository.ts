@@ -48,6 +48,11 @@ export interface CollectionRepository {
     id: number | string,
     searchTerm?: string
   ): Promise<CollectionSummary[]>
+  getForUnlinking(
+    objectType: LinkingObjectType,
+    id: number | string,
+    searchTerm?: string
+  ): Promise<CollectionSummary[]>
   link(
     linkedCollectionIdOrAlias: number | string,
     linkingCollectionIdOrAlias: number | string
