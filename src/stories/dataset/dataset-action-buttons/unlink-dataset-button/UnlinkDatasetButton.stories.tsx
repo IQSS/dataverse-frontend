@@ -55,7 +55,7 @@ withOnlyOneCollectionToUnlinkRepo.getForUnlinking = () => {
         {
           id: 2,
           alias: 'only-collection-to-link',
-          displayName: 'Only Collection to Link'
+          displayName: 'Only Collection to Unlink'
         }
       ])
     }, FakerHelper.loadingTimout())

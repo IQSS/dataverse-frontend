@@ -295,8 +295,8 @@
     "select": "Select a Collection",
     "placeholder": "Enter Collection Name",
     "noOptions": "No collections found",
-    "onlyOneCollectionToLink": "You have one collection you can add linked collection and datasets in.",
-    "onlyOneCollectionToUnlink": "You have one collection you can remove linked collection and datasets from.",
+    "onlyOneCollectionToLink": "You have one collection you can link this {{linkingObjectType}} to.",
+    "onlyOneCollectionToUnlink": "You have one collection you can unlink this {{linkingObjectType}} from.",
     "noCollectionsToLink": "No collections are showing up to link. They may already be linked, or you might not have any yet. Create a new collection to continue.",
     "noCollectionsToUnlink": "No collections are showing up to unlink."
   }

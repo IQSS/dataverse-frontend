@@ -229,7 +229,7 @@ describe('UnlinkDatasetButton', () => {
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByText(/You have one collection you can remove linked collection and datasets from./)
+        cy.findByText(/You have one collection you can unlink this Dataset from./)
           .should('exist')
           .should('be.visible')
 

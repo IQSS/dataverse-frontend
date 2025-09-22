@@ -208,7 +208,7 @@ describe('LinkDatasetButton', () => {
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByText(/You have one collection you can add linked collection and datasets in./)
+        cy.findByText(/You have one collection you can link this Dataset to./)
           .should('exist')
           .should('be.visible')
 

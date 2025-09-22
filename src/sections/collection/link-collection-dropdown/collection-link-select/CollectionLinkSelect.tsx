@@ -166,7 +166,11 @@ export const CollectionLinkSelect = ({
             {tShared(
               mode === 'unlink'
                 ? 'collectionLinkSelect.onlyOneCollectionToUnlink'
-                : 'collectionLinkSelect.onlyOneCollectionToLink'
+                : 'collectionLinkSelect.onlyOneCollectionToLink',
+              {
+                linkingObjectType:
+                  linkingObjectType === 'collection' ? tShared('collection') : tShared('dataset')
+              }
             )}
           </span>
         ) : (
