@@ -18,6 +18,7 @@ import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCol
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
+import { CollectionLinks } from '@/collection/domain/models/CollectionLinks'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id?: string): Promise<Collection> {
@@ -233,6 +234,21 @@ export class CollectionMockRepository implements CollectionRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getLinks(_collectionIdOrAlias: number | string): Promise<CollectionLinks> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          linkedCollections: CollectionSummaryMother.createManyRealistic(2),
+          collectionsLinkingToThis: CollectionSummaryMother.createManyRealistic(2),
+          linkedDatasets: [
+            { persistentId: 'doi:10.1234/linked1', title: 'Linked Dataset 1' },
+            { persistentId: 'doi:10.1234/linked2', title: 'Linked Dataset 2' }
+          ]
+        })
       }, FakerHelper.loadingTimout())
     })
   }
