@@ -35,8 +35,6 @@ interface CollectionProps {
   contactRepository: ContactRepository
 }
 
-// TODO:ME - AssertionError: Timed out retrying after 4000ms: Expected <span._message_9f1l8_33> not to exist in the DOM, but it was continuously found.
-// removes the selection when the header checkbox is clicked again:
 export function Collection({
   collectionIdFromParams,
   collectionRepository,
