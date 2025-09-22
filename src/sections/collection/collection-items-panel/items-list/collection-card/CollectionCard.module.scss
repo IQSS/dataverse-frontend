@@ -33,12 +33,14 @@
   }
 
   .top-right-icon {
+    display: flex;
+    gap: 2px;
     height: fit-content;
     color: $dv-collection-border-color;
     font-size: 1.3em;
     line-height: 1.1;
 
-    > span {
+    & span {
       margin-right: 0;
     }
   }

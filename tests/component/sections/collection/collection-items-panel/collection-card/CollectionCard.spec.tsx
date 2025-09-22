@@ -27,6 +27,7 @@ describe('CollectionCard', () => {
 
     cy.findByAltText(collectionPreview.name).should('exist')
   })
+
   it('should render the card with user roles', () => {
     const userRoles = ['Admin', 'Contributor', 'Curator']
     const collectionPreview = CollectionItemTypePreviewMother.create({ userRoles: userRoles })
@@ -36,5 +37,15 @@ describe('CollectionCard', () => {
     userRoles.map((role) => {
       cy.findByText(role).should('exist')
     })
+  })
+
+  it('should render the linked icon when isLinked is true', () => {
+    const collectionPreview = CollectionItemTypePreviewMother.createLinked()
+
+    cy.customMount(
+      <CollectionCard collectionPreview={collectionPreview} parentCollectionAlias="" />
+    )
+
+    cy.findByTestId('linked-collection-icon').should('exist')
   })
 })

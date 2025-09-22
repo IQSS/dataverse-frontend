@@ -16,6 +16,7 @@ export function DatasetCard({ datasetPreview, parentCollectionAlias }: DatasetCa
         version={datasetPreview.version}
         userRoles={datasetPreview.userRoles}
         publicationStatuses={datasetPreview.publicationStatuses}
+        isLinked={datasetPreview.isLinked}
       />
       <DatasetCardBody
         datasetPreview={datasetPreview}

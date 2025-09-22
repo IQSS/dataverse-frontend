@@ -10,6 +10,7 @@ describe('DatasetCardHeader', () => {
         persistentId={dataset.persistentId}
         version={dataset.version}
         publicationStatuses={[PublicationStatus.Unpublished]}
+        isLinked={false}
       />
     )
 
@@ -32,6 +33,7 @@ describe('DatasetCardHeader', () => {
         persistentId={dataset.persistentId}
         version={dataset.version}
         publicationStatuses={[PublicationStatus.Draft]}
+        isLinked={false}
       />
     )
 
@@ -53,6 +55,7 @@ describe('DatasetCardHeader', () => {
         persistentId={dataset.persistentId}
         version={dataset.version}
         publicationStatuses={dataset.publicationStatuses}
+        isLinked={false}
       />
     )
 
@@ -74,9 +77,24 @@ describe('DatasetCardHeader', () => {
         persistentId={dataset.persistentId}
         version={dataset.version}
         publicationStatuses={[PublicationStatus.Published]}
+        isLinked={false}
       />
     )
 
     cy.findByText(PublicationStatus.Published).should('not.exist')
+  })
+
+  it('should render the linked icon when isLinked is true', () => {
+    const dataset = DatasetItemTypePreviewMother.create()
+    cy.customMount(
+      <DatasetCardHeader
+        persistentId={dataset.persistentId}
+        version={dataset.version}
+        publicationStatuses={[PublicationStatus.Unpublished]}
+        isLinked={true}
+      />
+    )
+
+    cy.findByTestId('linked-dataset-icon').should('exist')
   })
 })
