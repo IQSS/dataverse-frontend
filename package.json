@@ -5,6 +5,7 @@
   },
   "name": "dataverse-frontend",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "workspaces": {
     "packages": [
@@ -143,7 +144,7 @@
     "@types/sinon": "10.0.13",
     "@typescript-eslint/eslint-plugin": "5.51.0",
     "@typescript-eslint/parser": "5.51.0",
-    "@vitejs/plugin-react": "3.1.0",
+    "@vitejs/plugin-react": "4.3.1",
     "auto": "10.46.0",
     "axe-playwright": "1.2.3",
     "axios": "1.4.0",
@@ -182,7 +183,7 @@
     "stylelint-config-standard": "30.0.1",
     "stylelint-config-standard-scss": "7.0.1",
     "stylelint-order": "6.0.2",
-    "vite": "4.1.5",
+    "vite": "5.4.20",
     "vite-plugin-css-injected-by-js": "3.1.1",
     "vite-plugin-dts": "2.3.0",
     "vite-plugin-libcss": "1.0.6"
