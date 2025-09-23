@@ -134,24 +134,32 @@ The Dataverse Frontend project uses several environments to support different st
 All environments follow an “all-in-one” setup, where the frontend and backend applications run together on a Payara server. Although these environments use the all-in-one setup, the SPA is infrastructure-agnostic and could also be deployed independently on other platforms, such as Docker containers, object storage services (e.g., Amazon S3 buckets), or any static hosting service/CDN, as long as it can communicate with the backend APIs.
 
 #### Beta
-The **Beta** environment provides a remote space for testing the latest changes. GitHub Actions automatically deploy the current `develop` branches of both the frontend and backend.  
-- **Audience:** Development team, QA analysts, project managers, selected users for early feedback  
+
+The **Beta** environment provides a remote space for testing the latest changes. GitHub Actions automatically deploy the current `develop` branches of both the frontend and backend.
+
+- **Audience:** Development team, QA analysts, project managers, selected users for early feedback
 - **URL:** [beta.dataverse.org/spa][dv_app_beta_spa_url]
 
 #### Demo
-The **Demo** environment showcases the latest officially released version of the SPA, compatible with the latest Dataverse backend release. Deployments target specific tagged releases (e.g., `0.1.0`) and are performed on demand.  
-- **Audience:** Project managers, curation team, early adoption testers  
+
+The **Demo** environment showcases the latest officially released version of the SPA, compatible with the latest Dataverse backend release. Deployments target specific tagged releases (e.g., `0.1.0`) and are performed on demand.
+
+- **Audience:** Project managers, curation team, early adoption testers
 - **URL:** [demo.dataverse.org/spa][dv_app_demo_spa_url]
 
 #### QA
-The **QA** environment is a dedicated, short-lived testing space. It is deployed on demand with feature branches (e.g., `feature/xxx`), frequently overwritten, and used for validating new features and bug fixes before merging into development.  
-- **Audience:** QA analysts, development team  
+
+The **QA** environment is a dedicated, short-lived testing space. It is deployed on demand with feature branches (e.g., `feature/xxx`), frequently overwritten, and used for validating new features and bug fixes before merging into development.
+
+- **Audience:** QA analysts, development team
 - **URL:** [qa.dataverse.org/spa][dv_app_qa_spa_url]
 
 #### Spike Environments
-**Spike Environments** are temporary, project-specific deployments tied to individual branches. They are used to prototype new ideas and gather early feedback on unstable or in-progress work. Deployments can occur automatically on merge or on demand.  
-- **Audience:** Development team, project managers  
-- **URLs:** Unique per project, e.g., `project-foo.dataverse.org` or `project-abc.dataverse.org`  
+
+**Spike Environments** are temporary, project-specific deployments tied to individual branches. They are used to prototype new ideas and gather early feedback on unstable or in-progress work. Deployments can occur automatically on merge or on demand.
+
+- **Audience:** Development team, project managers
+- **URLs:** Unique per project, e.g., `project-foo.dataverse.org` or `project-abc.dataverse.org`
 - **Note:** Setting up a Spike Environment requires a working Keycloak instance. See [Keycloak Deployment](./docs/KEYCLOAK_DEPLOYMENT.md) for details.
 
 ### How Existing Dataverse Installations May Be Affected
