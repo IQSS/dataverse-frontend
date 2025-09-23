@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, Controller } from 'react-hook-form'
-import { Form, Row, Col, Button } from '@iqss/dataverse-design-system'
+import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
 import { DatasetLicense } from '../../../dataset/domain/models/Dataset'
+import { LicenseRepository } from '../../../licenses/domain/repositories/LicenseRepository'
+import { useGetLicenses } from './useGetLicenses'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import styles from './DatasetTermsTab.module.scss'
 
 interface DatasetTermsFormData {
@@ -12,48 +15,58 @@ interface DatasetTermsFormData {
 
 interface DatasetTermsTabProps {
   initialLicense?: DatasetLicense
-  onSave?: (data: DatasetTermsFormData) => void
+  licenseRepository: LicenseRepository
+  datasetRepository: DatasetRepository
 }
 
-// Available license options
-const LICENSE_OPTIONS = [
-  {
-    value: 'CC0_1.0',
-    label: 'CC0 1.0',
-    uri: 'https://creativecommons.org/publicdomain/zero/1.0',
-    iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
-  },
-  {
-    value: 'CC_BY_4.0',
-    label: 'CC BY 4.0',
-    uri: 'https://creativecommons.org/licenses/by/4.0/',
-    iconUri: 'https://licensebuttons.net/l/by/4.0/88x31.png'
-  },
-  {
-    value: 'CC_BY_SA_4.0',
-    label: 'CC BY-SA 4.0',
-    uri: 'https://creativecommons.org/licenses/by-sa/4.0/',
-    iconUri: 'https://licensebuttons.net/l/by-sa/4.0/88x31.png'
-  },
-  {
-    value: 'CC_BY_NC_4.0',
-    label: 'CC BY-NC 4.0',
-    uri: 'https://creativecommons.org/licenses/by-nc/4.0/',
-    iconUri: 'https://licensebuttons.net/l/by-nc/4.0/88x31.png'
-  },
-  {
-    value: 'CUSTOM',
-    label: 'Custom Dataset Terms',
-    uri: '',
-    iconUri: ''
-  }
-]
-
-export function DatasetTermsTab({ initialLicense, onSave }: DatasetTermsTabProps) {
+export function DatasetTermsTab({
+  initialLicense,
+  licenseRepository,
+  datasetRepository: _datasetRepository
+}: DatasetTermsTabProps) {
   const { t } = useTranslation('dataset')
-  const [selectedLicense, setSelectedLicense] = useState<string>(
-    initialLicense?.name === 'CC0 1.0' ? 'CC0_1.0' : 'CC0_1.0'
-  )
+  const { licenses, isLoadingLicenses, errorLicenses } = useGetLicenses({
+    licenseRepository,
+    autoFetch: true
+  })
+
+  const licenseOptions = useMemo(() => {
+    const dynamicOptions = licenses
+      .filter((license) => license.active)
+      .sort((a, b) => a.sortOrder - b.sortOrder)
+      .map((license) => ({
+        value: license.id.toString(),
+        label: license.name,
+        uri: license.uri,
+        iconUri: license.iconUri || '',
+        isDefault: license.isDefault
+      }))
+
+    dynamicOptions.push({
+      value: 'CUSTOM',
+      label: t('editTerms.datasetTerms.customTermsLabel'),
+      uri: '',
+      iconUri: '',
+      isDefault: false
+    })
+
+    return dynamicOptions
+  }, [licenses, t])
+
+  // Find default license or use first available license
+  const defaultLicenseValue = useMemo(() => {
+    if (licenseOptions.length === 0) {
+      return 'CUSTOM'
+    }
+
+    if (initialLicense) {
+      const matchingLicense = licenseOptions.find((option) => option.label === initialLicense.name)
+      if (matchingLicense) return matchingLicense.value
+    }
+
+    const defaultLicense = licenseOptions.find((option) => option.isDefault)
+    return defaultLicense?.value || licenseOptions[0]?.value || 'CUSTOM'
+  }, [licenseOptions, initialLicense])
 
   const {
     control,
@@ -62,18 +75,24 @@ export function DatasetTermsTab({ initialLicense, onSave }: DatasetTermsTabProps
     formState: { isValid }
   } = useForm<DatasetTermsFormData>({
     defaultValues: {
-      license: selectedLicense,
+      license: defaultLicenseValue,
       customTerms: ''
     },
     mode: 'onChange'
   })
 
   const watchedLicense = watch('license')
-  const currentLicenseOption = LICENSE_OPTIONS.find((option) => option.value === watchedLicense)
+  const currentLicenseOption = licenseOptions.find((option) => option.value === watchedLicense)
   const isCustomTerms = watchedLicense === 'CUSTOM'
 
   const onSubmit = (data: DatasetTermsFormData) => {
-    onSave?.(data)
+    // TODO: Implement actual save logic using datasetRepository
+    alert(
+      t('editTerms.datasetTerms.saveSuccessMessage', {
+        license: data.license,
+        customTerms: data.customTerms || 'None'
+      })
+    )
   }
 
   return (
@@ -87,9 +106,7 @@ export function DatasetTermsTab({ initialLicense, onSave }: DatasetTermsTabProps
             </Col>
             <Col sm={9}>
               <div className={styles['license-description']}>
-                This dataset will be published under the terms specified below. Our Community Norms
-                as well as good scientific practices expect that proper credit is given via
-                citation.
+                {t('editTerms.datasetTerms.licenseDescription')}
               </div>
 
               {/* License Selection Dropdown */}
@@ -102,23 +119,32 @@ export function DatasetTermsTab({ initialLicense, onSave }: DatasetTermsTabProps
                     <Form.Group>
                       <Form.Group.Select
                         value={value}
-                        onChange={(e) => {
-                          onChange(e)
-                          setSelectedLicense(e.target.value)
-                        }}
+                        onChange={onChange}
                         isInvalid={invalid}
-                        aria-label={t('license.title')}>
-                        {LICENSE_OPTIONS.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
+                        aria-label={t('license.title')}
+                        disabled={isLoadingLicenses}>
+                        {isLoadingLicenses ? (
+                          <option>{t('loading')}</option>
+                        ) : errorLicenses ? (
+                          <option value="">
+                            {t('editTerms.datasetTerms.errorLoadingLicenses')}
                           </option>
-                        ))}
+                        ) : (
+                          licenseOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))
+                        )}
                       </Form.Group.Select>
                       <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
                     </Form.Group>
                   )}
                 />
               </div>
+
+              {/* Error handling for license loading */}
+              {errorLicenses && <Alert variant="warning">{errorLicenses}</Alert>}
 
               {/* License Display */}
               {currentLicenseOption && !isCustomTerms && (
@@ -175,8 +201,8 @@ export function DatasetTermsTab({ initialLicense, onSave }: DatasetTermsTabProps
             </Col>
           </Row>
           {/* Form Actions */}
-        </div>{' '}
-      </Form>{' '}
+        </div>
+      </Form>
       <div className={styles['form-actions']}>
         <Button type="submit" disabled={!isValid}>
           {t('editTerms.saveButton')}

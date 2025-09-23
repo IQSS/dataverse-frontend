@@ -9,8 +9,11 @@
   },
   "license": {
     "title": "License/Data Use Agreement",
-    "altTextPrefix": "License image for "
+    "altTextPrefix": "License image for ",
+    "description": "This dataset will be published under the terms specified below. Our Community Norms as well as good scientific practices expect that proper credit is given via citation.",
+    "moreInfo": "More information"
   },
+  "loading": "Loading...",
   "citation": {
     "status": {
       "draft": {
@@ -320,6 +323,11 @@
   },
   "editTerms": {
     "pageTitle": "Edit Dataset Terms",
+    "breadcrumbActionItem": "Edit Dataset Terms and Guestbook",
+    "infoAlert": {
+      "heading": "Edit Dataset Terms",
+      "text": "Add the terms of use for this dataset to explain how to access and use your data."
+    },
     "tabs": {
       "datasetTerms": "Dataset Terms",
       "restrictedFilesTerms": "Restricted Files + Terms of Access",
@@ -331,7 +339,11 @@
       "placeholder": "Dataset terms form will be implemented here...",
       "licenseRequired": "Please select a license for this dataset",
       "customTermsRequired": "Custom terms are required when Custom Dataset Terms is selected",
-      "customTermsPlaceholder": "Enter your custom terms of use for this dataset..."
+      "customTermsPlaceholder": "Enter your custom terms of use for this dataset...",
+      "customTermsLabel": "Custom Dataset Terms",
+      "licenseDescription": "This dataset will be published under the terms specified below. Our Community Norms as well as good scientific practices expect that proper credit is given via citation.",
+      "errorLoadingLicenses": "Error loading licenses",
+      "saveSuccessMessage": "Dataset terms saved! License: {{license}}, Custom Terms: {{customTerms}}"
     },
     "restrictedFilesTerms": {
       "title": "Restricted Files + Terms of Access",

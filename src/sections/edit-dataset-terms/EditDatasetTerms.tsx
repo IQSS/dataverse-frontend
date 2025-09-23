@@ -1,65 +1,77 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
-import { Alert, Breadcrumb, Tabs } from '@iqss/dataverse-design-system'
+import { Alert, Tabs } from '@iqss/dataverse-design-system'
 import { EditDatasetTermsHelper, EditDatasetTermsTabKey } from './EditDatasetTermsHelper'
 import { useLoading } from '../loading/LoadingContext'
 import { DatasetTermsTab } from './dataset-terms-tab/DatasetTermsTab'
 import { RestrictedFilesTab } from './restricted-files-tab/RestrictedFilesTab'
-import styles from './EditDatasetTerms.module.scss'
+import { LicenseRepository } from '../../licenses/domain/repositories/LicenseRepository'
+import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { GuestBookTab } from './guest-book-tab/GuestBookTab'
+import { useDataset } from '../dataset/DatasetContext'
+import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
+import { AppLoader } from '../shared/layout/app-loader/AppLoader'
+import styles from './EditDatasetTerms.module.scss'
 
 const tabsKeys = EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS
 
 interface EditDatasetTermsProps {
   defaultActiveTabKey: EditDatasetTermsTabKey
+  licenseRepository: LicenseRepository
+  datasetRepository: DatasetRepository
 }
 
-export const EditDatasetTerms = ({ defaultActiveTabKey }: EditDatasetTermsProps) => {
+export const EditDatasetTerms = ({
+  defaultActiveTabKey,
+  licenseRepository,
+  datasetRepository
+}: EditDatasetTermsProps) => {
   const { t } = useTranslation('dataset')
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [activeKey, setActiveKey] = useState<string>(defaultActiveTabKey)
+  const { dataset, isLoading } = useDataset()
   const { setIsLoading } = useLoading()
 
-  // 🔑 local state to control which tab is active
-  const [activeKey, setActiveKey] = useState<string>(defaultActiveTabKey)
-
-  useEffect(() => setIsLoading(false), [setIsLoading])
-
-  // if query param exists, sync it with state
   useEffect(() => {
-    const queryKey = searchParams.get(EditDatasetTermsHelper.EDIT_DATASET_TERMS_TAB_QUERY_KEY)
-    if (queryKey && queryKey !== activeKey) {
-      setActiveKey(queryKey)
-    }
-  }, [searchParams, activeKey])
+    setIsLoading(isLoading)
+  }, [isLoading, setIsLoading])
 
-  const updateSearchParamTabKeyOnSelect = (keySelected: string | null) => {
+  if (isLoading) {
+    return <AppLoader />
+  }
+
+  if (!dataset) {
+    return <NotFoundPage dvObjectNotFoundType="dataset" />
+  }
+
+  const updateTabOnSelect = (keySelected: string | null) => {
     if (keySelected) {
       setActiveKey(keySelected)
-      setSearchParams({
-        [EditDatasetTermsHelper.EDIT_DATASET_TERMS_TAB_QUERY_KEY]: keySelected
-      })
     }
   }
 
   return (
     <section>
       <div style={{ margin: '1rem 1rem 0 0' }}>
-        <Breadcrumb>
-          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-          <Breadcrumb.Item href="/dataset">Dataset Name</Breadcrumb.Item>
-          <Breadcrumb.Item active>Edit Dataset Terms</Breadcrumb.Item>
-        </Breadcrumb>
+        <BreadcrumbsGenerator
+          hierarchy={dataset?.hierarchy}
+          withActionItem
+          actionItemText={t('editTerms.breadcrumbActionItem')}
+        />
       </div>
 
-      <Alert variant="info" customHeading="Edit Dataset Terms">
-        Add the terms of use for this dataset to explain how to access and use your data.
+      <Alert variant="info" customHeading={t('editTerms.infoAlert.heading')}>
+        {t('editTerms.infoAlert.text')}
       </Alert>
 
-      <Tabs activeKey={activeKey} onSelect={updateSearchParamTabKeyOnSelect}>
+      <Tabs activeKey={activeKey} onSelect={updateTabOnSelect}>
         <Tabs.Tab eventKey={tabsKeys.datasetTerms} title={t('editTerms.tabs.datasetTerms')}>
           <div className={styles['tab-container']}>
-            <DatasetTermsTab />
+            <DatasetTermsTab
+              licenseRepository={licenseRepository}
+              datasetRepository={datasetRepository}
+              initialLicense={dataset.license}
+            />
           </div>
         </Tabs.Tab>
 
