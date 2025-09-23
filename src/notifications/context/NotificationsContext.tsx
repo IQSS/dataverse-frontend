@@ -1,18 +1,16 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react'
 import { Notification } from '@/notifications/domain/models/Notification'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { getAllNotificationsByUser } from '@/notifications/domain/useCases/getAllNotificationsByUser'
 import { SessionContext } from '@/sections/session/SessionContext'
 
 interface NotificationContextValue {
-  notifications: Notification[]
+  unreadNotifications: Notification[]
   unreadCount: number
   isLoading: boolean
   error: string | null
   refetch: () => Promise<void>
   markAsRead: (ids: number[]) => Promise<void>
-  markAsUnread: (ids: number[]) => Promise<void>
-  deleteNotifications: (ids: number[]) => Promise<void>
 }
 
 const NotificationContext = createContext<NotificationContextValue | undefined>(undefined)
@@ -72,35 +70,23 @@ export const NotificationProvider = ({
       setError(message)
     }
   }
-  const markAsUnread = async (_ids: number[]) => {
-    // TODO: Implement mark as unread functionality
-    return Promise.resolve()
-  }
 
-  const deleteNotifications = async (ids: number[]) => {
-    setNotifications((prev) => prev.filter((n) => !ids.includes(n.id)))
-    try {
-      await Promise.all(ids.map((id) => repository.deleteNotification(id)))
-      setError(null)
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to delete notification'
-      setError(message)
-    }
-  }
+  const unreadNotifications = useMemo(
+    () => notifications.filter((n) => !n.displayAsRead),
+    [notifications]
+  )
 
-  const unreadCount = notifications.filter((n) => !n.displayAsRead).length
+  const unreadCount = useMemo(() => unreadNotifications.length, [unreadNotifications])
 
   return (
     <NotificationContext.Provider
       value={{
-        notifications,
+        unreadNotifications,
         unreadCount,
         isLoading,
         error,
         refetch: fetchNotifications,
-        deleteNotifications,
-        markAsRead,
-        markAsUnread
+        markAsRead
       }}>
       {children}
     </NotificationContext.Provider>

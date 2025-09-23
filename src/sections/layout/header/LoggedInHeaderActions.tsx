@@ -9,8 +9,7 @@ import { RouteWithParams, Route } from '@/sections//Route.enum'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { AccountHelper } from '@/sections/account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
-import { useNotificationContext } from '@/notifications/context/NotificationsContext'
-import styles from './Header.module.scss'
+import UnreadNotificationBadge from '@/sections/layout/header/UnreadNotificationBadge'
 
 interface LoggedInHeaderActionsProps {
   user: User
@@ -25,7 +24,6 @@ export const LoggedInHeaderActions = ({
   const { logOut } = useContext(AuthContext)
 
   const { collection } = useCollection(collectionRepository)
-  const { unreadCount } = useNotificationContext()
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: undefined,
     collectionRepository: collectionRepository
@@ -58,9 +56,7 @@ export const LoggedInHeaderActions = ({
         title={
           <>
             {user.displayName}
-            {unreadCount > 0 && (
-              <span className={styles['unread-notifications-count']}>{` ${unreadCount}`}</span>
-            )}
+            <UnreadNotificationBadge />
           </>
         }
         id="dropdown-user">
@@ -73,9 +69,7 @@ export const LoggedInHeaderActions = ({
           as={Link}
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}`}>
           {t('navigation.notifications')}
-          {unreadCount > 0 && (
-            <span className={styles['unread-notifications-count']}>{` ${unreadCount}`}</span>
-          )}
+          <UnreadNotificationBadge />
         </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item
           as={Link}

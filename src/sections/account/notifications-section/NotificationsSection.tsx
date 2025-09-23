@@ -9,7 +9,7 @@ import { X } from 'react-bootstrap-icons'
 
 export const NotificationsSection = () => {
   const { t } = useTranslation('account')
-  const { notifications, isLoading, error, refetch, markAsRead } = useNotificationContext()
+  const { unreadNotifications, isLoading, error, refetch, markAsRead } = useNotificationContext()
   const handleMarkRead = async (id: number) => {
     await markAsRead([id])
     await refetch()
@@ -25,7 +25,7 @@ export const NotificationsSection = () => {
           variant="link"
           aria-label={t('Clear All')}
           onClick={async () => {
-            const unreadIds = notifications.map((n) => n.id)
+            const unreadIds = unreadNotifications.map((n) => n.id)
             if (unreadIds.length > 0) {
               await markAsRead(unreadIds)
               await refetch()
@@ -35,8 +35,8 @@ export const NotificationsSection = () => {
           {t('Clear All')}
         </Button>
       </div>
-      {notifications.length > 0 ? (
-        notifications.map((notification) => (
+      {unreadNotifications.length > 0 ? (
+        unreadNotifications.map((notification) => (
           <div
             className={`${styles['notification-row']} ${
               !notification.displayAsRead ? styles.unread : ''
