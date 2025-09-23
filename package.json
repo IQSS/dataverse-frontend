@@ -194,6 +194,10 @@
   "readme": "ERROR: No README data found!",
   "_id": "dataverse-frontend@0.1.0",
   "overrides": {
-    "@parcel/watcher": "2.1.0"
+    "@parcel/watcher": "2.1.0",
+    "form-data": "^4.0.0",
+    "@cypress/request@*": {
+      "form-data": "^4.0.0"
+    }
   }
 }
