@@ -72,10 +72,6 @@ function translateRoleNotification(
   key: string,
   t: TFunction
 ): JSX.Element {
-  /*if (!notification.roleAssignments) {
-    throw new Error(`Missing required field: roleAssignments`)
-  }
-*/
   const roleNames = notification.roleAssignments
     ? notification.roleAssignments.map((ra) => ra.roleName).join(', ')
     : ''
