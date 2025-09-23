@@ -14,10 +14,11 @@ const config: StorybookConfig = {
     name: getAbsolutePath('@storybook/react-vite'),
     options: {}
   },
-  docs: {
-    autodocs: 'tag'
-  },
-  staticDirs: ['../public']
+  docs: {},
+  staticDirs: ['../public'],
+  typescript: {
+    reactDocgen: false
+  }
 }
 export default config
 
