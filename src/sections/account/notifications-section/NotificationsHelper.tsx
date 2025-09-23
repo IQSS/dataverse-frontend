@@ -49,8 +49,6 @@ export function getTranslatedNotification(
     ? `notifications.notification.${NotificationTypeToTranslationMap[notification.type]}`
     : `notifications.notification.unknown`
   const template = t(key)
-  console.log('🧪 i18nKey:', key)
-  console.log('🧪 t(key):', t(key))
 
   // If translation missing, return a fallback
   if (!template || template === key) {

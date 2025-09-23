@@ -23,7 +23,7 @@ export const NotificationsSection = () => {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
         <Button
           variant="link"
-          aria-label={t('Clear All')}
+          aria-label={t('notifications.clearAll')}
           onClick={async () => {
             const unreadIds = unreadNotifications.map((n) => n.id)
             if (unreadIds.length > 0) {
@@ -32,7 +32,7 @@ export const NotificationsSection = () => {
             }
           }}
           style={{ padding: 0 }}>
-          {unreadNotifications.length > 0 && t('Clear All')}
+          {unreadNotifications.length > 0 && t('notifications.clearAll')}
         </Button>
       </div>
       {unreadNotifications.length > 0 ? (
@@ -45,7 +45,7 @@ export const NotificationsSection = () => {
             style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Button
               variant="link"
-              aria-label={t('Mark as read')}
+              aria-label={t('notifications.dismiss')}
               onClick={async () => {
                 await handleMarkRead(notification.id)
               }}
@@ -56,7 +56,7 @@ export const NotificationsSection = () => {
           </div>
         ))
       ) : (
-        <div>No notifications available.</div>
+        <div>{t('notifications.noNotifications')}</div>
       )}
     </div>
   )
