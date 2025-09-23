@@ -695,7 +695,7 @@ describe('Dataset', () => {
     })
   })
 
-  describe.only('Downloading files', () => {
+  describe('Downloading files', () => {
     it('downloads the dataset', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then((dataset) =>
