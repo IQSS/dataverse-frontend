@@ -139,7 +139,8 @@ export const RichTextEditor = forwardRef(
           ...(editorContentAriaLabelledBy && { 'aria-labelledby': editorContentAriaLabelledBy }),
           ...(disabled && { disabled: 'true' }),
           ...(ariaRequired && { 'aria-required': 'true' }),
-          role: 'textbox'
+          role: 'textbox',
+          ['aria-label']: 'rich text editor content'
         }
       },
       onUpdate: ({ editor }) => onChange && onChange(editor.getHTML())
