@@ -1,5 +1,5 @@
 import { NotImplementedModal } from '../../../../src/sections/not-implemented/NotImplementedModal'
-import { mount } from 'cypress/react18'
+import { mount } from 'cypress/react'
 
 describe('NotImplementedModal Component', () => {
   it('renders the modal when show is true', () => {
