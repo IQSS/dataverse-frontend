@@ -26,7 +26,7 @@ export const ValidTokenNotLinkedAccountForm = ({
     error: errorTermsOfUse
   } = useGetTermsOfUse(dataverseInfoRepository)
 
-   const rawUserName = ValidTokenNotLinkedAccountFormHelper.getTokenDataValue<string>(
+  const rawUserName = ValidTokenNotLinkedAccountFormHelper.getTokenDataValue<string>(
     OIDC_STANDARD_CLAIMS.PREFERRED_USERNAME,
     'string',
     tokenData
