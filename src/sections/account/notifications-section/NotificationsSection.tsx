@@ -1,50 +1,18 @@
-import { useState } from 'react'
-import { Trash, EnvelopeFill, EnvelopeOpen } from 'react-bootstrap-icons'
-import { Tooltip, Button, Form } from '@iqss/dataverse-design-system'
+import { Button } from '@iqss/dataverse-design-system'
 import { getTranslatedNotification } from '@/sections/account/notifications-section/NotificationsHelper'
 import { useTranslation } from 'react-i18next'
 import styles from './NotificationsSection.module.scss'
 import { useNotificationContext } from '@/notifications/context/NotificationsContext'
+import { X } from 'react-bootstrap-icons'
 
 //TODO: add translations
+
 export const NotificationsSection = () => {
   const { t } = useTranslation('account')
-  const {
-    notifications,
-    isLoading,
-    error,
-    refetch,
-    markAsRead,
-    markAsUnread,
-    deleteNotifications
-  } = useNotificationContext()
-  const [selected, setSelected] = useState<number[]>([])
-
-  const toggleSelect = (id: number) => {
-    setSelected((prev) => (prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]))
-  }
-
-  const selectAll = () => {
-    setSelected(notifications.map((n) => n.id))
-  }
-
-  const clearSelection = () => {
-    setSelected([])
-  }
-
-  const handleDelete = async () => {
-    await deleteNotifications(selected)
-    clearSelection()
+  const { notifications, isLoading, error, refetch, markAsRead } = useNotificationContext()
+  const handleMarkRead = async (id: number) => {
+    await markAsRead([id])
     await refetch()
-  }
-  const handleMarkRead = async () => {
-    await markAsRead(selected)
-    clearSelection()
-    await refetch()
-  }
-  const handleMarkUnread = async () => {
-    await markAsUnread(selected)
-    clearSelection()
   }
 
   if (isLoading) return <div>Loading...</div>
@@ -53,38 +21,19 @@ export const NotificationsSection = () => {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-        <Form.Group.Checkbox
-          id="select-all"
-          label={'Select All'}
-          checked={selected.length === notifications.length && notifications.length > 0}
-          onChange={(e) => (e.target.checked ? selectAll() : clearSelection())}
-          aria-label={t('Select All')}
-        />
-        <Tooltip overlay={t('notifications.deleteSelected')} placement="top">
-          <Button
-            size="lg"
-            icon={<Trash />}
-            variant="link"
-            onClick={handleDelete}
-            disabled={selected.length === 0}
-            title="Delete"></Button>
-        </Tooltip>
-        <Tooltip overlay={t('notifications.markAsReadSelected')} placement="top">
-          <Button
-            icon={<EnvelopeFill />}
-            variant="link"
-            onClick={handleMarkRead}
-            disabled={selected.length === 0}
-            title="Mark as read"></Button>
-        </Tooltip>
-        <Tooltip overlay={t('notifications.markAsUnReadSelected')} placement="top">
-          <Button
-            icon={<EnvelopeOpen />}
-            variant="link"
-            onClick={handleMarkUnread}
-            disabled={selected.length === 0}
-            title="Mark as unread"></Button>
-        </Tooltip>
+        <Button
+          variant="link"
+          aria-label={t('Clear All')}
+          onClick={async () => {
+            const unreadIds = notifications.map((n) => n.id)
+            if (unreadIds.length > 0) {
+              await markAsRead(unreadIds)
+              await refetch()
+            }
+          }}
+          style={{ padding: 0 }}>
+          {t('Clear All')}
+        </Button>
       </div>
       {notifications.length > 0 ? (
         notifications.map((notification) => (
@@ -94,13 +43,15 @@ export const NotificationsSection = () => {
             }`}
             key={notification.id}
             style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Form.Group.Checkbox
-              id={`select-${notification.id}`}
-              label=""
-              aria-label={t('Select notification')}
-              checked={selected.includes(notification.id)}
-              onChange={() => toggleSelect(notification.id)}
-            />
+            <Button
+              variant="link"
+              aria-label={t('Mark as read')}
+              onClick={async () => {
+                await handleMarkRead(notification.id)
+              }}
+              style={{ padding: 0, marginRight: 8 }}>
+              <X />
+            </Button>
             <div>{getTranslatedNotification(notification, t)}</div>
           </div>
         ))
