@@ -26,12 +26,15 @@ export const ValidTokenNotLinkedAccountForm = ({
     error: errorTermsOfUse
   } = useGetTermsOfUse(dataverseInfoRepository)
 
-  const defaultUserName =
-    ValidTokenNotLinkedAccountFormHelper.getTokenDataValue<string>(
-      OIDC_STANDARD_CLAIMS.PREFERRED_USERNAME,
-      'string',
-      tokenData
-    ) ?? ''
+   const rawUserName = ValidTokenNotLinkedAccountFormHelper.getTokenDataValue<string>(
+    OIDC_STANDARD_CLAIMS.PREFERRED_USERNAME,
+    'string',
+    tokenData
+  ) ?? '';
+
+  const defaultUserName = rawUserName.includes('@') 
+    ? rawUserName.split('@')[0]
+    : rawUserName;
 
   const defaultFirstName =
     ValidTokenNotLinkedAccountFormHelper.getTokenDataValue<string>(
