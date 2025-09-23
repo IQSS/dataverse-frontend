@@ -32,7 +32,7 @@ export const NotificationsSection = () => {
             }
           }}
           style={{ padding: 0 }}>
-          {t('Clear All')}
+          {unreadNotifications.length > 0 && t('Clear All')}
         </Button>
       </div>
       {unreadNotifications.length > 0 ? (

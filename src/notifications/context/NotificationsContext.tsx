@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash'
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react'
 import { Notification } from '@/notifications/domain/models/Notification'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
@@ -39,10 +40,10 @@ export const NotificationProvider = ({
 
   const fetchNotifications = useCallback(async () => {
     try {
-      setIsLoading(true)
       const fetched = await getAllNotificationsByUser(repository)
-      setNotifications(fetched)
       setError(null)
+
+      setNotifications((prev) => (isEqual(prev, fetched) ? prev : fetched))
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch notifications'
       setError(message)
@@ -52,10 +53,15 @@ export const NotificationProvider = ({
   }, [repository])
 
   useEffect(() => {
-    if (!user) {
-      return
-    }
+    if (!user) return
+
     void fetchNotifications()
+
+    const interval = setInterval(() => {
+      void fetchNotifications()
+    }, 30000) // 30s polling interval
+
+    return () => clearInterval(interval)
   }, [fetchNotifications, user])
 
   const markAsRead = async (ids: number[]) => {
