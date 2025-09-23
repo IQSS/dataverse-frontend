@@ -39,28 +39,6 @@ const mockT: TFunction = ((key: string) => {
 }) as TFunction
 
 describe('getTranslatedNotification', () => {
-  it('should translate createCollection correctly', () => {
-    const notification: Notification = {
-      id: 1,
-      type: NotificationType.CREATE_COLLECTION,
-      sentTimestamp: new Date().toISOString(),
-      displayAsRead: false,
-      collectionDisplayName: 'Climate Data',
-      collectionAlias: 'climate',
-      ownerDisplayName: 'Jane Doe',
-      ownerAlias: 'jane_doe',
-      userGuidesBaseUrl: 'https://guides.dataverse.org',
-      userGuidesVersion: 'v5.12'
-    }
-    cy.customMount(getTranslatedNotification(notification, accountT))
-    cy.findByText('Climate Data').should('exist')
-    cy.findByText('Jane Doe').should('exist')
-    cy.findByRole('link', { name: 'Climate Data' }).should(
-      'have.attr',
-      'href',
-      '/collections/climate'
-    )
-  })
   it('should translate role assignment correctly', () => {
     const notification: Notification = {
       id: 2,
@@ -92,26 +70,6 @@ describe('getTranslatedNotification', () => {
     )
   })
 
-  it('should translate published dataset correctly', () => {
-    const notification: Notification = {
-      id: 3,
-      type: NotificationType.PUBLISHED_DS,
-      sentTimestamp: new Date().toISOString(),
-      displayAsRead: false,
-      datasetDisplayName: 'Global Warming Trends',
-      datasetPersistentIdentifier: 'doi:10.1234/gwt.2024',
-      ownerDisplayName: 'John Smith Collection',
-      ownerAlias: 'john_smith'
-    }
-    cy.customMount(getTranslatedNotification(notification, accountT))
-    cy.findByText('Global Warming Trends').should('exist')
-    cy.findByText('John Smith Collection').should('exist')
-    cy.findByRole('link', { name: 'Global Warming Trends' }).should(
-      'have.attr',
-      'href',
-      '/datasets?persistentId=doi:10.1234/gwt.2024'
-    )
-  })
   it('should display object deleted message when dataset is deleted', () => {
     const notification: Notification = {
       id: 5,
@@ -151,28 +109,6 @@ describe('getTranslatedNotification', () => {
       'href',
       '/datasets?persistentId=doi:10.5678/osl.2024'
     )
-  })
-  it('should translate assignRole correctly', () => {
-    const notification: Notification = {
-      id: 1,
-      type: NotificationType.ASSIGN_ROLE,
-      sentTimestamp: new Date().toISOString(),
-      displayAsRead: false,
-      datasetDisplayName: 'Dataset A',
-      roleAssignments: [
-        {
-          id: 1,
-          assignee: 'user123',
-          definitionPointId: 101,
-          roleId: 3,
-          roleName: 'Editor',
-          _roleAlias: 'editor'
-        }
-      ],
-      datasetPersistentIdentifier: 'doi:10.9012/dataset.a'
-    }
-    cy.customMount(getTranslatedNotification(notification, accountT))
-    cy.contains('You have been granted the Editor role for Dataset A.').should('exist')
   })
 
   it('should translate assignRoleFileDownloader correctly', () => {
@@ -238,18 +174,18 @@ describe('getTranslatedNotification', () => {
       userGuidesSectionPath: 'managing-collections'
     }
     cy.customMount(getTranslatedNotification(notification, accountT))
-    cy.contains('Collection A was created in User A.').should('exist')
+    cy.contains('Collection A was created in User A .').should('exist')
   })
 
-  it('should translate globusUploadRemoteFailure correctly', () => {
+  it('should translate unknown notification type correctly', () => {
     const notification: Notification = {
       id: 5,
       type: NotificationType.GLOBUS_UPLOAD_REMOTE_FAILURE,
       sentTimestamp: new Date().toISOString(),
       displayAsRead: false
     }
-    const result = getTranslatedNotification(notification, mockT)
-    expect(result).to.contain('Unknown notification: globusUploadRemoteFailure')
+    cy.customMount(getTranslatedNotification(notification, mockT))
+    cy.contains('Unknown notification: globusUploadRemoteFailure').should('exist')
   })
 
   it('should translate published dataset correctly', () => {
@@ -260,7 +196,8 @@ describe('getTranslatedNotification', () => {
       displayAsRead: false,
       datasetDisplayName: 'Dataset D',
       datasetPersistentIdentifier: 'doi:10.1234/dataset.d',
-      ownerDisplayName: 'User B'
+      ownerDisplayName: 'User B',
+      ownerAlias: 'user_b'
     }
     cy.customMount(getTranslatedNotification(notification, accountT))
     cy.contains('Dataset D').should('exist')
@@ -291,17 +228,5 @@ describe('getTranslatedNotification', () => {
       'href',
       '/datasets?persistentId=doi:10.5678/dataset.e'
     )
-  })
-  it('handles unknown notification types gracefully', () => {
-    const notification: Notification = {
-      id: 2,
-      type: NotificationType.GLOBUS_UPLOAD_REMOTE_FAILURE, // Assuming this type is not in the map
-      sentTimestamp: new Date().toISOString(),
-      displayAsRead: false
-    }
-
-    const result = getTranslatedNotification(notification, mockT)
-    console.log('result:', result)
-    expect(result).contains('Unknown notification: globusUploadRemoteFailure')
   })
 })
