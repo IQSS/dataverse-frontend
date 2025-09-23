@@ -1,47 +1,89 @@
-import { mount } from 'cypress/react'
 import { NotificationsSection } from '@/sections/account/notifications-section/NotificationsSection'
 import { NotificationProvider } from '@/notifications/context/NotificationsContext'
+import { NotificationType } from '@/notifications/domain/models/Notification'
 
-export const mockRepository = {
-  fetchNotifications: () =>
+const mockRepository = {
+  getAllNotificationsByUser: () =>
     Promise.resolve([
-      { id: 1, displayAsRead: false, message: 'Test notification 1' },
-      { id: 2, displayAsRead: true, message: 'Test notification 2' }
+      {
+        id: 1,
+        type: NotificationType.CREATE_COLLECTION,
+        sentTimestamp: new Date().toISOString(),
+        displayAsRead: false,
+        collectionDisplayName: 'Climate Data',
+        collectionAlias: 'climate',
+        ownerDisplayName: 'Jane Doe',
+        ownerAlias: 'jane_doe',
+        userGuidesBaseUrl: 'https://guides.dataverse.org',
+        userGuidesVersion: 'v5.12'
+      },
+      {
+        id: 2,
+        type: NotificationType.ASSIGN_ROLE,
+        sentTimestamp: new Date().toISOString(),
+        displayAsRead: false,
+        collectionDisplayName: 'Biodiversity Data',
+        collectionAlias: 'biodiversity',
+        roleAssignments: [
+          {
+            id: 1,
+            assignee: 'alice_user',
+            definitionPointId: 100,
+            roleId: 2,
+            roleName: 'Curator',
+            _roleAlias: 'curator'
+          }
+        ],
+        ownerDisplayName: 'Alice Smith',
+        ownerAlias: 'alice_smith'
+      }
     ]),
   markNotificationAsRead: (_id: number) => Promise.resolve(),
-  markNotificationAsUnread: (_id: number) => Promise.resolve(),
   deleteNotification: (_id: number) => Promise.resolve(),
-  getAllNotificationsByUser: () => Promise.resolve([]),
+  getUnreadNotificationsCount: () => Promise.resolve(1)
+}
+const mockErrorRepository = {
+  markNotificationAsRead: (_id: number) => Promise.resolve(),
+  deleteNotification: (_id: number) => Promise.resolve(),
+  getAllNotificationsByUser: () => Promise.reject(new Error('Failed to fetch')),
   getUnreadNotificationsCount: () => Promise.resolve(1)
 }
 describe('NotificationsSection', () => {
-  it('renders notifications and handles actions', () => {
-    mount(
+  it('renders notifications and handles dismiss', () => {
+    cy.spy(mockRepository, 'markNotificationAsRead').as('markNotificationAsRead')
+    cy.mountAuthenticated(
       <NotificationProvider repository={mockRepository}>
         <NotificationsSection />
       </NotificationProvider>
     )
 
-    cy.contains('Test notification 1').should('exist')
-    cy.contains('Test notification 2').should('exist')
+    cy.contains('Climate Data was created').should('exist')
+    cy.contains('You have been granted the Curator role').should('exist')
+    cy.get('[data-testid="dismiss-notification-1"]').click()
+    cy.get('@markNotificationAsRead').should('have.been.calledOnceWith', 1)
+  })
+  it('handles Clear All', () => {
+    cy.spy(mockRepository, 'markNotificationAsRead').as('markNotificationAsRead')
+    cy.mountAuthenticated(
+      <NotificationProvider repository={mockRepository}>
+        <NotificationsSection />
+      </NotificationProvider>
+    )
 
-    // Select all
-    cy.get('input#select-all').check({ force: true })
-    cy.get('button[title="Delete"]').click()
-    // You may need to stub and spy on repository methods for these assertions
-    // cy.get('@deleteNotifications').should('have.been.called')
+    cy.contains('Climate Data was created').should('exist')
+    cy.contains('You have been granted the Curator role').should('exist')
 
-    // Mark as read
-    cy.get('button[title="Mark as read"]').click()
-    // cy.get('@markAsRead').should('have.been.called')
-
-    // Mark as unread
-    cy.get('button[title="Mark as unread"]').click()
-    // cy.get('@markAsUnread').should('have.been.called')
+    cy.findByRole('button', { name: 'Clear All' }).click()
+    cy.get('@markNotificationAsRead').should('have.been.calledTwice')
   })
 
   it('shows loading and error states', () => {
-    // For loading and error states, you should create a custom NotificationProvider or mock context
-    // For simplicity, skip these or refactor your NotificationProvider to accept initial state for tests
+    cy.mountAuthenticated(
+      <NotificationProvider repository={mockErrorRepository}>
+        <NotificationsSection />
+      </NotificationProvider>
+    )
+
+    cy.contains('Failed to ').should('exist')
   })
 })

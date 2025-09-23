@@ -44,6 +44,7 @@ export const NotificationsSection = () => {
             key={notification.id}
             style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Button
+              data-testid={`dismiss-notification-${notification.id}`}
               variant="link"
               aria-label={t('notifications.dismiss')}
               onClick={async () => {
