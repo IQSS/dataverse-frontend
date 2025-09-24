@@ -5,8 +5,6 @@ import styles from './NotificationsSection.module.scss'
 import { useNotificationContext } from '@/notifications/context/NotificationsContext'
 import { X } from 'react-bootstrap-icons'
 
-//TODO: add translations
-
 export const NotificationsSection = () => {
   const { t } = useTranslation('account')
   const { unreadNotifications, isLoading, error, refetch, markAsRead } = useNotificationContext()
@@ -37,12 +35,7 @@ export const NotificationsSection = () => {
       </div>
       {unreadNotifications.length > 0 ? (
         unreadNotifications.map((notification) => (
-          <div
-            className={`${styles['notification-row']} ${
-              !notification.displayAsRead ? styles.unread : ''
-            }`}
-            key={notification.id}
-            style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div key={notification.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Button
               data-testid={`dismiss-notification-${notification.id}`}
               variant="link"
@@ -53,7 +46,10 @@ export const NotificationsSection = () => {
               style={{ padding: 0, marginRight: 8 }}>
               <X />
             </Button>
-            <div>{getTranslatedNotification(notification, t)}</div>
+            <div>
+              {getTranslatedNotification(notification, t)}
+              <span className={styles['timestamp']}>{notification.sentTimestamp}</span>
+            </div>
           </div>
         ))
       ) : (
