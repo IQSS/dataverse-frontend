@@ -1,6 +1,7 @@
 import { Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import styles from './GuestBookTab.module.scss'
+// import { NotImplementedModal } from '../../not-implemented/NotImplementedModal'
+import styles from '../dataset-terms-tab/DatasetTermsTab.module.scss'
 
 interface GuestBookTabProps {
   onPreview?: () => void
@@ -10,31 +11,32 @@ export function GuestBookTab({ onPreview }: GuestBookTabProps) {
   const { t } = useTranslation('dataset')
 
   return (
-    <div className={styles['guestbook-tab']}>
-      <Row>
-        <Col sm={3}>
-          <h4 className={styles['section-title']}>{t('editTerms.guestBook.title')}</h4>
+    <div>
+      <Row style={{ marginBottom: '1rem' }}>
+        <Col sm={4}>
+          <Form.Group.Label>{t('editTerms.guestBook.title')}</Form.Group.Label>
         </Col>
-        <Col sm={9}>
-          <div className={styles['section-description']}>
-            {t('editTerms.guestBook.description')}
-          </div>
-          <section className={styles['guestbook-option']}>
-            <Form.Group.Radio
-              defaultChecked
-              name="guestbook"
-              label={t('editTerms.guestBook.testGuestbook')}
-              id="guestbook-test"
-              value="test"
-            />
-            <Button
-              type="button"
-              size="sm"
-              onClick={onPreview}
-              aria-label={t('editTerms.guestBook.previewButton')}>
-              {t('editTerms.guestBook.previewButton')}
-            </Button>
-          </section>
+        <Col sm={8}>
+          <Form.Group.Text>{t('editTerms.guestBook.description')}</Form.Group.Text>
+          <Row>
+            <Col className={styles['guestbook-option']} sm={10}>
+              <Form.Group.Radio
+                defaultChecked
+                name="guestbook"
+                label={t('editTerms.guestBook.testGuestbook')}
+                id="guestbook-test"
+                value="test"
+              />
+              <Button
+                type="button"
+                size="sm"
+                onClick={onPreview}
+                aria-label={t('editTerms.guestBook.previewButton')}
+                style={{ marginLeft: '1rem' }}>
+                {t('editTerms.guestBook.previewButton')}
+              </Button>
+            </Col>
+          </Row>
         </Col>
       </Row>
 

@@ -12,6 +12,7 @@ import { useDataset } from '../dataset/DatasetContext'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
+import { DatasetLicense } from '@/dataset/domain/models/Dataset'
 import styles from './EditDatasetTerms.module.scss'
 
 const tabsKeys = EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS
@@ -20,6 +21,18 @@ interface EditDatasetTermsProps {
   defaultActiveTabKey: EditDatasetTermsTabKey
   licenseRepository: LicenseRepository
   datasetRepository: DatasetRepository
+}
+
+// TODO: Remove this interface and use from model
+interface CustomTermsData {
+  termsOfUse: string
+  confidentialityDeclaration?: string
+  specialPermissions?: string
+  restrictions?: string
+  citationRequirements?: string
+  depositorRequirements?: string
+  conditions?: string
+  disclaimer?: string
 }
 
 export const EditDatasetTerms = ({
@@ -70,7 +83,11 @@ export const EditDatasetTerms = ({
             <DatasetTermsTab
               licenseRepository={licenseRepository}
               datasetRepository={datasetRepository}
-              initialLicense={dataset.license}
+              initialLicense={
+                (dataset.license as DatasetLicense) ||
+                (dataset.termsOfUse.customTerms as CustomTermsData)
+              }
+              isInitialCustomTerms={dataset.termsOfUse.customTerms !== undefined}
             />
           </div>
         </Tabs.Tab>
@@ -79,7 +96,10 @@ export const EditDatasetTerms = ({
           eventKey={tabsKeys.restrictedFilesTerms}
           title={t('editTerms.tabs.restrictedFilesTerms')}>
           <div className={styles['tab-container']}>
-            <RestrictedFilesTab />
+            <RestrictedFilesTab
+              datasetRepository={datasetRepository}
+              initialTermsOfAccess={dataset.termsOfUse.termsOfAccess}
+            />
           </div>
         </Tabs.Tab>
 

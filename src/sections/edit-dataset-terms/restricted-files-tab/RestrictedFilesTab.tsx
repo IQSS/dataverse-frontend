@@ -1,67 +1,146 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import { Form, Row, Col, Button } from '@iqss/dataverse-design-system'
-import styles from './RestrictedFilesTab.module.scss'
+import styles from '../dataset-terms-tab/DatasetTermsTab.module.scss'
+import { TermsOfAccess } from '@/dataset/domain/models/Dataset'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
-interface RestrictedFilesFormData {
-  enableAccessRequest: boolean
-  termsOfAccessForRestrictedFiles: string
-  dataAccessPlace: string
-  originalArchive: string
-  availabilityStatus: string
-  contactForAccess: string
-  sizeOfCollection: string
-  studyCompletion: string
-}
+// Use TermsOfAccess directly from model
+type RestrictedFilesFormData = TermsOfAccess
 
 interface RestrictedFilesTabProps {
-  onSave?: (data: RestrictedFilesFormData) => void
+  datasetRepository: DatasetRepository
+  initialTermsOfAccess: TermsOfAccess
 }
 
-export function RestrictedFilesTab({ onSave }: RestrictedFilesTabProps) {
+// Default terms of access values
+const DEFAULT_TERMS_OF_ACCESS: TermsOfAccess = {
+  fileAccessRequest: false,
+  termsOfAccessForRestrictedFiles: '',
+  dataAccessPlace: '',
+  originalArchive: '',
+  availabilityStatus: '',
+  contactForAccess: '',
+  sizeOfCollection: '',
+  studyCompletion: ''
+}
+
+export function RestrictedFilesTab({
+  datasetRepository: _datasetRepository,
+  initialTermsOfAccess
+}: RestrictedFilesTabProps) {
   const { t } = useTranslation('dataset')
+
+  // Get initial form values from initialTermsOfAccess or defaults
+  const initialFormValues = useMemo(() => {
+    return {
+      fileAccessRequest:
+        initialTermsOfAccess?.fileAccessRequest ?? DEFAULT_TERMS_OF_ACCESS.fileAccessRequest,
+      termsOfAccessForRestrictedFiles:
+        initialTermsOfAccess?.termsOfAccessForRestrictedFiles ??
+        DEFAULT_TERMS_OF_ACCESS.termsOfAccessForRestrictedFiles,
+      dataAccessPlace:
+        initialTermsOfAccess?.dataAccessPlace ?? DEFAULT_TERMS_OF_ACCESS.dataAccessPlace,
+      originalArchive:
+        initialTermsOfAccess?.originalArchive ?? DEFAULT_TERMS_OF_ACCESS.originalArchive,
+      availabilityStatus:
+        initialTermsOfAccess?.availabilityStatus ?? DEFAULT_TERMS_OF_ACCESS.availabilityStatus,
+      contactForAccess:
+        initialTermsOfAccess?.contactForAccess ?? DEFAULT_TERMS_OF_ACCESS.contactForAccess,
+      sizeOfCollection:
+        initialTermsOfAccess?.sizeOfCollection ?? DEFAULT_TERMS_OF_ACCESS.sizeOfCollection,
+      studyCompletion:
+        initialTermsOfAccess?.studyCompletion ?? DEFAULT_TERMS_OF_ACCESS.studyCompletion
+    }
+  }, [initialTermsOfAccess])
 
   const {
     control,
     handleSubmit,
+    reset,
     formState: { isValid }
   } = useForm<RestrictedFilesFormData>({
-    defaultValues: {
-      enableAccessRequest: false,
-      termsOfAccessForRestrictedFiles: '',
-      dataAccessPlace: '',
-      originalArchive: '',
-      availabilityStatus: '',
-      contactForAccess: '',
-      sizeOfCollection: '',
-      studyCompletion: ''
-    },
+    defaultValues: initialFormValues,
     mode: 'onChange'
   })
 
+  // TODO: Implement actual save logic using datasetRepository
   const onSubmit = (data: RestrictedFilesFormData) => {
-    onSave?.(data)
+    console.log('TODO: Implement actual save logic using datasetRepository', data)
   }
 
+  // Terms of access field configuration
+  const termsOfAccessFields = useMemo(
+    () => [
+      {
+        name: 'termsOfAccessForRestrictedFiles',
+        type: 'textarea',
+        rows: 4,
+        translationKey: 'termsOfAccess',
+        required: false
+      },
+      {
+        name: 'dataAccessPlace',
+        type: 'textarea',
+        rows: 3,
+        translationKey: 'dataAccessPlace',
+        required: false
+      },
+      {
+        name: 'originalArchive',
+        type: 'textarea',
+        rows: 3,
+        translationKey: 'originalArchive',
+        required: false
+      },
+      {
+        name: 'availabilityStatus',
+        type: 'textarea',
+        rows: 3,
+        translationKey: 'availabilityStatus',
+        required: false
+      },
+      {
+        name: 'contactForAccess',
+        type: 'textarea',
+        rows: 3,
+        translationKey: 'contactForAccess',
+        required: false
+      },
+      {
+        name: 'sizeOfCollection',
+        type: 'input',
+        translationKey: 'sizeOfCollection',
+        required: false
+      },
+      {
+        name: 'studyCompletion',
+        type: 'input',
+        translationKey: 'studyCompletion',
+        required: false
+      }
+    ],
+    []
+  )
+
   return (
-    <div className={styles['restricted-files-tab']}>
+    <div>
       <Form onSubmit={handleSubmit(onSubmit)}>
         {/* Request Access Section */}
-        <section className={styles['form-section']}>
+        <section>
           <Row>
-            <Col sm={3}>
-              <h4 className={styles['section-title']}>
-                {t('editTerms.restrictedFiles.requestAccess')}
-              </h4>
+            <Col sm={4}>
+              <Form.Group.Label>{t('termsTab.requestAccess')}</Form.Group.Label>
             </Col>
-            <Col sm={9}>
+            <Col sm={8}>
               <Controller
-                name="enableAccessRequest"
+                name="fileAccessRequest"
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <Form.Group>
                     <Form.Group.Checkbox
-                      id="enableAccessRequest"
+                      id="fileAccessRequest"
                       checked={value}
                       onChange={onChange}
                       label={t('editTerms.restrictedFiles.enableAccessRequest')}
@@ -73,166 +152,41 @@ export function RestrictedFilesTab({ onSave }: RestrictedFilesTabProps) {
           </Row>
         </section>
 
-        {/* Terms of Access for Restricted Files */}
-        <section className={styles['form-section']}>
-          <Row>
-            <Col sm={3}>
-              <h4 className={styles['section-title']}>
-                {t('editTerms.restrictedFiles.termsOfAccess')}
-              </h4>
-            </Col>
-            <Col sm={9}>
-              <Controller
-                name="termsOfAccessForRestrictedFiles"
-                control={control}
-                render={({ field: { onChange, value }, fieldState: { invalid, error } }) => (
-                  <Form.Group>
-                    <Form.Group.TextArea value={value} onChange={onChange} isInvalid={invalid} />
-                  </Form.Group>
-                )}
-              />
-            </Col>
-          </Row>
-        </section>
+        {/* Form Fields */}
+        {termsOfAccessFields.map((field) => (
+          <Form.Group key={field.name} controlId={field.name}>
+            <Form.Group.Label message={t(`termsTab.${field.translationKey}Tip`)} column sm={4}>
+              {t(`termsTab.${field.translationKey}`)}
+            </Form.Group.Label>
+            <Controller
+              name={field.name as keyof RestrictedFilesFormData}
+              control={control}
+              render={({ field: { onChange, value, ref }, fieldState: { invalid, error } }) => (
+                <Col sm={8}>
+                  <Row>
+                    <Col>
+                      <Form.Group.TextArea
+                        value={value as string}
+                        onChange={onChange}
+                        isInvalid={invalid}
+                        rows={field.rows}
+                        ref={ref}
+                      />
 
-        {/* Data Access Place */}
-        <section className={styles['form-section']}>
-          <Row>
-            <Col sm={3}>
-              <h4 className={styles['section-title']}>
-                {t('editTerms.restrictedFiles.dataAccessPlace')}
-              </h4>
-            </Col>
-            <Col sm={9}>
-              <Controller
-                name="dataAccessPlace"
-                control={control}
-                render={({ field: { onChange, value }, fieldState: { invalid, error } }) => (
-                  <Form.Group>
-                    <Form.Group.TextArea value={value} onChange={onChange} isInvalid={invalid} />
-                  </Form.Group>
-                )}
-              />
-            </Col>
-          </Row>
-        </section>
+                      <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                    </Col>
+                  </Row>
+                </Col>
+              )}
+            />
+          </Form.Group>
+        ))}
 
-        {/* Original Archive */}
-        <section className={styles['form-section']}>
-          <Row>
-            <Col sm={3}>
-              <h4 className={styles['section-title']}>
-                {t('editTerms.restrictedFiles.originalArchive')}
-              </h4>
-            </Col>
-            <Col sm={9}>
-              <Controller
-                name="originalArchive"
-                control={control}
-                render={({ field: { onChange, value }, fieldState: { invalid, error } }) => (
-                  <Form.Group>
-                    <Form.Group.TextArea value={value} onChange={onChange} isInvalid={invalid} />
-                  </Form.Group>
-                )}
-              />
-            </Col>
-          </Row>
-        </section>
-
-        {/* Availability Status */}
-        <section className={styles['form-section']}>
-          <Row>
-            <Col sm={3}>
-              <h4 className={styles['section-title']}>
-                {t('editTerms.restrictedFiles.availabilityStatus')}
-              </h4>
-            </Col>
-            <Col sm={9}>
-              <Controller
-                name="availabilityStatus"
-                control={control}
-                render={({ field: { onChange, value }, fieldState: { invalid, error } }) => (
-                  <Form.Group>
-                    <Form.Group.TextArea value={value} onChange={onChange} isInvalid={invalid} />
-                  </Form.Group>
-                )}
-              />
-            </Col>
-          </Row>
-        </section>
-
-        {/* Contact for Access */}
-        <section className={styles['form-section']}>
-          <Row>
-            <Col sm={3}>
-              <h4 className={styles['section-title']}>
-                {t('editTerms.restrictedFiles.contactForAccess')}
-              </h4>
-            </Col>
-            <Col sm={9}>
-              <Controller
-                name="contactForAccess"
-                control={control}
-                render={({ field: { onChange, value }, fieldState: { invalid, error } }) => (
-                  <Form.Group>
-                    <Form.Group.TextArea value={value} onChange={onChange} isInvalid={invalid} />
-                  </Form.Group>
-                )}
-              />
-            </Col>
-          </Row>
-        </section>
-
-        {/* Size of Collection */}
-        <section className={styles['form-section']}>
-          <Row>
-            <Col sm={3}>
-              <h4 className={styles['section-title']}>
-                {t('editTerms.restrictedFiles.sizeOfCollection')}
-              </h4>
-            </Col>
-            <Col sm={9}>
-              <Controller
-                name="sizeOfCollection"
-                control={control}
-                render={({ field: { onChange, value }, fieldState: { invalid, error } }) => (
-                  <Form.Group>
-                    <Form.Group.TextArea value={value} onChange={onChange} isInvalid={invalid} />
-                  </Form.Group>
-                )}
-              />
-            </Col>
-          </Row>
-        </section>
-
-        {/* Study Completion */}
-        <section className={styles['form-section']}>
-          <Row>
-            <Col sm={3}>
-              <h4 className={styles['section-title']}>
-                {t('editTerms.restrictedFiles.studyCompletion')}
-              </h4>
-            </Col>
-            <Col sm={9}>
-              <Controller
-                name="studyCompletion"
-                control={control}
-                render={({ field: { onChange, value }, fieldState: { invalid, error } }) => (
-                  <Form.Group>
-                    <Form.Group.TextArea value={value} onChange={onChange} isInvalid={invalid} />
-                  </Form.Group>
-                )}
-              />
-            </Col>
-          </Row>
-        </section>
-
-        {/* Form Actions */}
         <div className={styles['form-actions']}>
           <Button type="submit" disabled={!isValid}>
             {t('editTerms.saveButton')}
           </Button>
-          <Button variant="secondary" type="button">
+          <Button variant="secondary" type="button" onClick={() => reset(initialFormValues)}>
             {t('editTerms.cancelButton')}
           </Button>
         </div>
