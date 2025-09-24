@@ -2,6 +2,7 @@ import { Account } from '../../../../src/sections/account/Account'
 import { AccountHelper } from '../../../../src/sections/account/AccountHelper'
 import { UserJSDataverseRepository } from '../../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
+import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
 
 describe('Account', () => {
   it('should render the component', () => {
@@ -10,6 +11,7 @@ describe('Account', () => {
         defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
         userRepository={new UserJSDataverseRepository()}
         collectionRepository={new CollectionMockRepository()}
+        roleRepository={new RoleMockRepository()}
       />
     )
 
@@ -26,6 +28,7 @@ describe('Account', () => {
         collectionRepository={new CollectionMockRepository()}
         defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
         userRepository={new UserJSDataverseRepository()}
+        roleRepository={new RoleMockRepository()}
       />
     )
 
