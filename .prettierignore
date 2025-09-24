@@ -40,3 +40,4 @@ storybook-static
 public/keycloakify-dev-resources
 
 global.scss
+/.nx/workspace-data
