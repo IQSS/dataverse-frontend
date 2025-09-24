@@ -87,13 +87,9 @@
     "build-storybook": "storybook build",
     "test:storybook": "test-storybook",
     "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
   },
-  "pre-commit": [
-    "typecheck",
-    "lint:fix",
-    "git:add"
-  ],
   "eslintConfig": {
     "extends": [
       "react-app"
@@ -164,12 +160,12 @@
     "eslint-plugin-simple-import-sort": "10.0.0",
     "eslint-plugin-storybook": "0.6.11",
     "eslint-plugin-unused-imports": "2.0.0",
+    "husky": "^9.1.7",
     "jsdom": "21.1.0",
     "keycloakify": "11.8.23",
     "lcov-result-merger": "3.3.0",
     "lerna": "7.1.1",
     "postcss": "8.4.23",
-    "pre-commit": "1.2.2",
     "prettier": "2.8.4",
     "prop-types": "15.8.1",
     "react": "18.2.0",

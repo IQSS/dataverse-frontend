@@ -118,6 +118,6 @@ repo we are using the [JavaScript Dataverse API client library] in which you can
 [5 people]: https://github.com/iqss/dataverse-frontend/graphs/contributors
 [Getting Started Section]: https://github.com/IQSS/dataverse-frontend?tab=readme-ov-file#getting-started
 [TypeScript Deep Dive Style Guide]: https://basarat.gitbook.io/typescript/styleguide
-[pre-commit]: https://www.npmjs.com/package/pre-commit
+[pre-commit]: https://www.npmjs.com/package/husky
 [IQSS Dataverse Project]: https://github.com/orgs/IQSS/projects/34
 [JavaScript Dataverse API client library]: https://github.com/IQSS/dataverse-client-javascript
