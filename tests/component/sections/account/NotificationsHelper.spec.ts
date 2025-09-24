@@ -135,6 +135,34 @@ describe('getTranslatedNotification', () => {
       'You now have access to all published restricted and unrestricted files in Dataset B.'
     ).should('exist')
   })
+  it('should translate file role assignment with file display name and id', () => {
+    const notification: Notification = {
+      id: 14,
+      type: NotificationType.ASSIGN_ROLE,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false,
+      dataFileDisplayName: 'Sample File.csv',
+      dataFileId: 12345,
+      roleAssignments: [
+        {
+          id: 2,
+          assignee: 'file_user',
+          definitionPointId: 200,
+          roleId: 4,
+          roleName: 'File Editor',
+          _roleAlias: 'fileEditor'
+        }
+      ]
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('Sample File.csv').should('exist')
+    cy.contains('You have been granted the File Editor').should('exist')
+    cy.findByRole('link', { name: 'Sample File.csv' }).should(
+      'have.attr',
+      'href',
+      '/files?id=12345'
+    )
+  })
 
   it('should translate revokeRole correctly', () => {
     const notification: Notification = {
@@ -228,5 +256,66 @@ describe('getTranslatedNotification', () => {
       'href',
       '/datasets?persistentId=doi:10.5678/dataset.e'
     )
+  })
+  it('should translate create account notification correctly', () => {
+    const notification: Notification = {
+      id: 13,
+      type: NotificationType.CREATE_ACC,
+      sentTimestamp: new Date().toISOString(),
+      installationBrandName: 'Dataverse Installation',
+      displayAsRead: false
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('Dataverse Installation').should('exist')
+    cy.contains('Get started by adding or finding data.').should('exist')
+  })
+
+  it('should handle empty roleAssignments array', () => {
+    const notification: Notification = {
+      id: 9,
+      type: NotificationType.ASSIGN_ROLE,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false,
+      roleAssignments: []
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('You have been granted the').should('exist')
+  })
+
+  it('should handle notification with future sentTimestamp', () => {
+    const notification: Notification = {
+      id: 10,
+      type: NotificationType.STATUS_UPDATED,
+      sentTimestamp: new Date(Date.now() + 1000000).toISOString(),
+      displayAsRead: false,
+      datasetDisplayName: 'Future Dataset',
+      datasetPersistentIdentifier: 'doi:10.9999/future',
+      currentCurationStatus: 'Pending'
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('Future Dataset').should('exist')
+    cy.contains('has been updated to Pending').should('exist')
+  })
+
+  it('should handle unknown notification type with missing type', () => {
+    const notification: Notification = {
+      id: 11,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false
+      // type is missing
+    } as Notification
+    cy.customMount(getTranslatedNotification(notification, mockT))
+    cy.contains('Unknown notification').should('exist')
+  })
+
+  it('should handle notification with only id and sentTimestamp', () => {
+    const notification: Notification = {
+      id: 12,
+      type: NotificationType.GLOBUS_UPLOAD_REMOTE_FAILURE,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false
+    }
+    cy.customMount(getTranslatedNotification(notification, mockT))
+    cy.contains('Unknown notification: globusUploadRemoteFailure').should('exist')
   })
 })
