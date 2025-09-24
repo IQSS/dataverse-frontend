@@ -305,8 +305,8 @@ describe('EditFilesOptions for a single file', () => {
     cy.findByRole('dialog').should('exist')
     cy.findByText('The file will be unrestricted.').should('exist')
     cy.findByRole('button', { name: /Save Changes/i }).click()
-    cy.findByRole('dialog').should('not.exist')
     cy.findByText(/The file has been unrestricted./).should('exist')
+    cy.findByRole('dialog').should('not.exist')
   })
 
   it('should reset the modal if cancel is clicked in restrict modal', () => {
