@@ -61,7 +61,7 @@ describe('Account', () => {
 
     cy.get('h1').should('contain.text', 'Account')
     cy.findByRole('tab', { name: 'My Data' }).should('exist').and('be.enabled')
-    cy.findByRole('tab', { name: 'Notifications' }).should('exist').and('be.disabled')
+    cy.findByRole('tab', { name: 'Notifications' }).should('exist').and('be.enabled')
     cy.findByRole('tab', { name: 'Account Information' }).should('exist')
     cy.findByRole('tab', { name: 'API Token' }).should('be.enabled')
   })
