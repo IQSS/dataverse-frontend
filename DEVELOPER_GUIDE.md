@@ -568,6 +568,29 @@ npm run format
 We use [husky] library to add pre-commit hooks which automatically check the committed
 code changes for any coding standard violations.
 
+### Changelog Management
+
+This project maintains a changelog following the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format to document all notable changes for users and developers.
+
+#### Changelog Files
+
+- **Main Changelog**: [`CHANGELOG.md`](../CHANGELOG.md) - Documents changes to the main application
+- **Design System Changelog**: [`packages/design-system/CHANGELOG.md`](../packages/design-system/CHANGELOG.md) - Documents changes to design system components
+
+#### When Working on Features
+
+1. **During Development**: Add entries to the `[Unreleased]` section as you implement changes
+2. **Before PR Submission**: Ensure all user-facing changes have appropriate changelog entries
+3. **PR Review**: Reviewers will verify changelog entries are complete and properly formatted
+
+#### Changelog Entry Guidelines
+
+- Use clear, user-focused language
+- Place entries in appropriate categories: `Added`, `Changed`, `Fixed`, `Removed`
+- For design system changes, update both changelogs if the change affects the main application
+
+See the [Changelog Guidelines](../.github/CONTRIBUTING.md#changelog-guidelines) in CONTRIBUTING.md for detailed formatting requirements.
+
 ### Running Tests
 
 Use the following commands to ensure your build passes checks for coding standards and coverage:
