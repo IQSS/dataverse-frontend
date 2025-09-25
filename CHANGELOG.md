@@ -10,7 +10,11 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Changed
 
+- Standardize Node.js version to 22 across all environments (docker dev environment, CI, production).
+
 ### Fixed
+
+- Upgrade dependencies to drastically reduce vulnerabilities flagged by `npm audit`. Reduced from +100 including 12 critical and 33 high to only 2 moderate.
 
 ### Removed
 
