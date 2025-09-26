@@ -233,7 +233,7 @@ describe('DatasetMetadataForm', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         datasetPersistentID={dataset.persistentId}
         datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-        datasetInternalVersionNumber={dataset.internalVersionNumber}
+        datasetLastUpdateTime={dataset.version.lastUpdateTime}
       />
     )
 
@@ -493,7 +493,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
     })
@@ -1247,7 +1247,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
       // Clear title field to undisable the Save button and unfill a required field that is already filled as it is in edit mode
@@ -1299,7 +1299,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
       cy.findByLabelText(/^Title/i)
@@ -1650,7 +1650,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
 
@@ -1682,7 +1682,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
 
@@ -1711,7 +1711,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
 
@@ -1768,7 +1768,7 @@ describe('DatasetMetadataForm', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         datasetPersistentID={dataset.persistentId}
         datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-        datasetInternalVersionNumber={dataset.internalVersionNumber}
+        datasetLastUpdateTime={dataset.version.lastUpdateTime}
       />
     )
 
@@ -1832,7 +1832,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
 
@@ -1872,7 +1872,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
 
