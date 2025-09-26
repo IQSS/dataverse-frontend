@@ -44,7 +44,7 @@ const jsDataset = {
     majorNumber: 0,
     minorNumber: 0,
     createTime: new Date('2023-09-07T13:40:04.000Z'),
-    lastUpdateTime: new Date('2023-09-07T13:40:04.000Z'),
+    lastUpdateTime: '2023-09-07T13:40:04.000Z',
     releaseTime: undefined,
     deaccessionNote: undefined
   },

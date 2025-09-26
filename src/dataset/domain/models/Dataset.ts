@@ -255,6 +255,7 @@ export class DatasetVersion {
     public readonly isInReview: boolean,
     public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
     public readonly someDatasetVersionHasBeenReleased: boolean,
+    public readonly lastUpdateTime: string,
     public readonly termsOfAccess?: TermsOfAccess,
     public readonly deaccessionNote?: string
   ) {}
@@ -271,6 +272,7 @@ export class DatasetVersion {
       public readonly isInReview: boolean,
       public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
       public readonly someDatasetVersionHasBeenReleased: boolean,
+      public readonly lastUpdateTime: string,
       public readonly termsOfAccess?: TermsOfAccess,
       public readonly deaccessionNote?: string
     ) {
@@ -339,6 +341,7 @@ export class DatasetVersion {
         this.isInReview,
         this.latestVersionPublishingStatus,
         this.someDatasetVersionHasBeenReleased,
+        this.lastUpdateTime,
         this.termsOfAccess,
         this.deaccessionNote
       )
