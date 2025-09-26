@@ -73,6 +73,7 @@ export const EditFileMetadata = ({ fileId, fileRepository, referrer }: EditFileM
                 editFileMetadataFormData={createEditFileMetadataFormData(file)}
                 referrer={referrer}
                 datasetPersistentId={file.hierarchy.parent?.persistentId}
+                datasetLastUpdateTime={file.datasetVersion.lastUpdateTime}
               />
             </div>
           </Tabs.Tab>
