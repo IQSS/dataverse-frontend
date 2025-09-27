@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, Controller } from 'react-hook-form'
-import { Form, Row, Col, Button } from '@iqss/dataverse-design-system'
+import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
 import styles from '../dataset-terms-tab/DatasetTermsTab.module.scss'
 import { TermsOfAccess } from '@/dataset/domain/models/Dataset'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
@@ -16,7 +16,7 @@ interface RestrictedFilesTabProps {
 
 // Default terms of access values
 const DEFAULT_TERMS_OF_ACCESS: TermsOfAccess = {
-  fileAccessRequest: false,
+  fileAccessRequest: true, // Enable access request by default
   termsOfAccessForRestrictedFiles: '',
   dataAccessPlace: '',
   originalArchive: '',
@@ -32,100 +32,49 @@ export function RestrictedFilesTab({
 }: RestrictedFilesTabProps) {
   const { t } = useTranslation('dataset')
 
-  // Get initial form values from initialTermsOfAccess or defaults
-  const initialFormValues = useMemo(() => {
-    return {
-      fileAccessRequest:
-        initialTermsOfAccess?.fileAccessRequest ?? DEFAULT_TERMS_OF_ACCESS.fileAccessRequest,
-      termsOfAccessForRestrictedFiles:
-        initialTermsOfAccess?.termsOfAccessForRestrictedFiles ??
-        DEFAULT_TERMS_OF_ACCESS.termsOfAccessForRestrictedFiles,
-      dataAccessPlace:
-        initialTermsOfAccess?.dataAccessPlace ?? DEFAULT_TERMS_OF_ACCESS.dataAccessPlace,
-      originalArchive:
-        initialTermsOfAccess?.originalArchive ?? DEFAULT_TERMS_OF_ACCESS.originalArchive,
-      availabilityStatus:
-        initialTermsOfAccess?.availabilityStatus ?? DEFAULT_TERMS_OF_ACCESS.availabilityStatus,
-      contactForAccess:
-        initialTermsOfAccess?.contactForAccess ?? DEFAULT_TERMS_OF_ACCESS.contactForAccess,
-      sizeOfCollection:
-        initialTermsOfAccess?.sizeOfCollection ?? DEFAULT_TERMS_OF_ACCESS.sizeOfCollection,
-      studyCompletion:
-        initialTermsOfAccess?.studyCompletion ?? DEFAULT_TERMS_OF_ACCESS.studyCompletion
-    }
-  }, [initialTermsOfAccess])
-
   const {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { isValid }
   } = useForm<RestrictedFilesFormData>({
-    defaultValues: initialFormValues,
+    defaultValues: initialTermsOfAccess,
     mode: 'onChange'
   })
+
+  // Watch the fileAccessRequest field to show/hide info alert
+  const watchedFileAccessRequest = watch('fileAccessRequest')
 
   // TODO: Implement actual save logic using datasetRepository
   const onSubmit = (data: RestrictedFilesFormData) => {
     console.log('TODO: Implement actual save logic using datasetRepository', data)
   }
 
-  // Terms of access field configuration
-  const termsOfAccessFields = useMemo(
-    () => [
-      {
-        name: 'termsOfAccessForRestrictedFiles',
-        type: 'textarea',
+  // Generate terms of access fields dynamically from DEFAULT_TERMS_OF_ACCESS (excluding fileAccessRequest)
+  const termsOfAccessFields = useMemo(() => {
+    return Object.keys(DEFAULT_TERMS_OF_ACCESS)
+      .filter((fieldName) => fieldName !== 'fileAccessRequest') // Exclude checkbox field
+      .map((fieldName) => ({
+        name: fieldName,
+        translationKey:
+          fieldName === 'termsOfAccessForRestrictedFiles' ? 'termsOfAccess' : fieldName,
+        required: false,
         rows: 4,
-        translationKey: 'termsOfAccess',
-        required: false
-      },
-      {
-        name: 'dataAccessPlace',
         type: 'textarea',
-        rows: 3,
-        translationKey: 'dataAccessPlace',
-        required: false
-      },
-      {
-        name: 'originalArchive',
-        type: 'textarea',
-        rows: 3,
-        translationKey: 'originalArchive',
-        required: false
-      },
-      {
-        name: 'availabilityStatus',
-        type: 'textarea',
-        rows: 3,
-        translationKey: 'availabilityStatus',
-        required: false
-      },
-      {
-        name: 'contactForAccess',
-        type: 'textarea',
-        rows: 3,
-        translationKey: 'contactForAccess',
-        required: false
-      },
-      {
-        name: 'sizeOfCollection',
-        type: 'input',
-        translationKey: 'sizeOfCollection',
-        required: false
-      },
-      {
-        name: 'studyCompletion',
-        type: 'input',
-        translationKey: 'studyCompletion',
-        required: false
-      }
-    ],
-    []
-  )
+        rules: {}
+      }))
+  }, [])
 
   return (
     <div>
+      {/* Show info alert when access request is enabled */}
+      {watchedFileAccessRequest && (
+        <Alert variant="info" dismissible={false}>
+          {t('termsTab.termsOfAccessInfo')}
+        </Alert>
+      )}
+
       <Form onSubmit={handleSubmit(onSubmit)}>
         {/* Request Access Section */}
         <section>
@@ -152,28 +101,45 @@ export function RestrictedFilesTab({
           </Row>
         </section>
 
-        {/* Form Fields */}
+        {/* Terms of Access Fields */}
         {termsOfAccessFields.map((field) => (
           <Form.Group key={field.name} controlId={field.name}>
-            <Form.Group.Label message={t(`termsTab.${field.translationKey}Tip`)} column sm={4}>
+            <Form.Group.Label
+              message={t(`termsTab.${field.translationKey}Tip`)}
+              required={field.required}
+              column
+              sm={4}>
               {t(`termsTab.${field.translationKey}`)}
             </Form.Group.Label>
             <Controller
               name={field.name as keyof RestrictedFilesFormData}
               control={control}
+              rules={field.rules}
               render={({ field: { onChange, value, ref }, fieldState: { invalid, error } }) => (
                 <Col sm={8}>
                   <Row>
                     <Col>
-                      <Form.Group.TextArea
-                        value={value as string}
-                        onChange={onChange}
-                        isInvalid={invalid}
-                        rows={field.rows}
-                        ref={ref}
-                      />
-
-                      <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                      {field.type === 'input' ? (
+                        <Form.Group.Input
+                          value={value as string}
+                          onChange={onChange}
+                          isInvalid={invalid}
+                          aria-required={field.required}
+                          ref={ref}
+                        />
+                      ) : (
+                        <Form.Group.TextArea
+                          value={value as string}
+                          onChange={onChange}
+                          isInvalid={invalid}
+                          rows={field.rows}
+                          aria-required={field.required}
+                          ref={ref}
+                        />
+                      )}
+                      {field.required && (
+                        <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                      )}
                     </Col>
                   </Row>
                 </Col>
@@ -186,7 +152,7 @@ export function RestrictedFilesTab({
           <Button type="submit" disabled={!isValid}>
             {t('editTerms.saveButton')}
           </Button>
-          <Button variant="secondary" type="button" onClick={() => reset(initialFormValues)}>
+          <Button variant="secondary" type="button" onClick={() => reset(initialTermsOfAccess)}>
             {t('editTerms.cancelButton')}
           </Button>
         </div>

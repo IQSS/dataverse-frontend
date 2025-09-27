@@ -47,6 +47,7 @@ export function License({ license }: LicenseProps) {
         {!license && (
           <span>
             {t('customTerms.title')} - {t('customTerms.description')}
+            {/* TODO: Add button to navigate to custom terms tab*/}
           </span>
         )}
       </Col>

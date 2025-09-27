@@ -1,40 +1,30 @@
-import { useMemo, useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
-import { DatasetLicense } from '../../../dataset/domain/models/Dataset'
+import { DatasetLicense, CustomTerms } from '../../../dataset/domain/models/Dataset'
 import { LicenseRepository } from '../../../licenses/domain/repositories/LicenseRepository'
 import { useGetLicenses } from './useGetLicenses'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { useUpdateDatasetLicense } from './useUpdateDatasetLicense'
+import { useDataset } from '../../dataset/DatasetContext'
 import styles from './DatasetTermsTab.module.scss'
-
-// TODO: Remove this interface and use from model
-interface CustomTermsData {
-  termsOfUse: string
-  confidentialityDeclaration?: string
-  specialPermissions?: string
-  restrictions?: string
-  citationRequirements?: string
-  depositorRequirements?: string
-  conditions?: string
-  disclaimer?: string
-}
 
 // TODO: Remove this interface and use from model
 interface DatasetTermsFormData {
   license: string
-  customTerms?: CustomTermsData
+  customTerms?: CustomTerms
 }
 
 interface DatasetTermsTabProps {
-  initialLicense: DatasetLicense | CustomTermsData
+  initialLicense: DatasetLicense | CustomTerms
   licenseRepository: LicenseRepository
   datasetRepository: DatasetRepository
   isInitialCustomTerms: boolean
 }
 
 // Default custom terms values
-const DEFAULT_CUSTOM_TERMS: CustomTermsData = {
+const DEFAULT_CUSTOM_TERMS: CustomTerms = {
   termsOfUse: '',
   confidentialityDeclaration: '',
   specialPermissions: '',
@@ -48,10 +38,15 @@ const DEFAULT_CUSTOM_TERMS: CustomTermsData = {
 export function DatasetTermsTab({
   initialLicense,
   licenseRepository,
-  datasetRepository: _datasetRepository,
+  datasetRepository,
   isInitialCustomTerms
 }: DatasetTermsTabProps) {
   const { t } = useTranslation('dataset')
+  const { dataset, refreshDataset } = useDataset()
+  const { handleUpdateLicense, isLoading, error } = useUpdateDatasetLicense({
+    datasetRepository,
+    onSuccessfulUpdateLicense: () => refreshDataset()
+  })
 
   const { licenses, isLoadingLicenses, errorLicenses } = useGetLicenses({
     licenseRepository,
@@ -102,7 +97,7 @@ export function DatasetTermsTab({
   } = useForm<DatasetTermsFormData>({
     defaultValues: {
       license: defaultLicenseValue,
-      customTerms: isInitialCustomTerms ? (initialLicense as CustomTermsData) : DEFAULT_CUSTOM_TERMS
+      customTerms: isInitialCustomTerms ? (initialLicense as CustomTerms) : DEFAULT_CUSTOM_TERMS
     },
     mode: 'onChange'
   })
@@ -112,9 +107,7 @@ export function DatasetTermsTab({
     if (!isLoadingLicenses && licenseOptions.length > 0) {
       reset({
         license: defaultLicenseValue,
-        customTerms: isInitialCustomTerms
-          ? (initialLicense as CustomTermsData)
-          : DEFAULT_CUSTOM_TERMS
+        customTerms: isInitialCustomTerms ? (initialLicense as CustomTerms) : DEFAULT_CUSTOM_TERMS
       })
     }
   }, [
@@ -130,74 +123,34 @@ export function DatasetTermsTab({
   const currentLicenseOption = licenseOptions.find((option) => option.value === watchedLicense)
   const isCustomTerms = watchedLicense === 'CUSTOM'
 
-  // TODO: Implement custom terms field configuration
-  const customTermsFields = useMemo(
-    () => [
-      {
-        name: 'termsOfUse',
-        translationKey: 'termsOfUse',
-        required: isCustomTerms,
-        rows: 4,
-        rules: {
-          required: isCustomTerms ? t('editTerms.datasetTerms.customTermsRequired') : false
-        }
-      },
-      {
-        name: 'confidentialityDeclaration',
-        translationKey: 'confidentialityDeclaration',
-        required: false,
-        rows: 3,
-        rules: {}
-      },
-      {
-        name: 'specialPermissions',
-        translationKey: 'specialPermissions',
-        required: false,
-        rows: 3,
-        rules: {}
-      },
-      {
-        name: 'restrictions',
-        translationKey: 'restrictions',
-        required: false,
-        rows: 3,
-        rules: {}
-      },
-      {
-        name: 'citationRequirements',
-        translationKey: 'citationRequirements',
-        required: false,
-        rows: 3,
-        rules: {}
-      },
-      {
-        name: 'depositorRequirements',
-        translationKey: 'depositorRequirements',
-        required: false,
-        rows: 3,
-        rules: {}
-      },
-      {
-        name: 'conditions',
-        translationKey: 'conditions',
-        required: false,
-        rows: 3,
-        rules: {}
-      },
-      {
-        name: 'disclaimer',
-        translationKey: 'disclaimer',
-        required: false,
-        rows: 3,
-        rules: {}
-      }
-    ],
-    [isCustomTerms, t]
-  )
+  const customTermsFields = Object.keys(DEFAULT_CUSTOM_TERMS).map((fieldName) => ({
+    name: fieldName,
+    translationKey: fieldName,
+    required: fieldName === 'termsOfUse' && isCustomTerms,
+    rows: 4,
+    rules:
+      fieldName === 'termsOfUse' && isCustomTerms
+        ? { required: t('editTerms.datasetTerms.customTermsRequired') }
+        : {}
+  }))
 
-  // TODO: Implement actual save logic using datasetRepository
-  const onSubmit = (data: DatasetTermsFormData) => {
-    console.log('TODO: Implement actual save logic using datasetRepository', data)
+  const onSubmit = async (data: DatasetTermsFormData) => {
+    if (!dataset) return
+
+    if (data.license === 'CUSTOM') {
+      // Update with custom terms
+      await handleUpdateLicense(dataset.id, {
+        customTerms: data.customTerms
+      })
+    } else {
+      // Find the selected license by ID
+      const selectedLicense = licenseOptions.find((option) => option.value === data.license)
+      if (selectedLicense) {
+        await handleUpdateLicense(dataset.id, {
+          name: selectedLicense.label
+        })
+      }
+    }
   }
 
   return (
@@ -307,25 +260,35 @@ export function DatasetTermsTab({
             ))}
           </>
         )}
+
+        {/* Error Messages */}
+        {error && (
+          <Alert variant="danger" dismissible>
+            {error}
+          </Alert>
+        )}
+
+        {/* Form Actions */}
+        <div className={styles['form-actions']}>
+          <Button type="submit" disabled={!isValid || isLoading}>
+            {isLoading ? t('editTerms.saving') : t('editTerms.saveButton')}
+          </Button>
+          <Button
+            variant="secondary"
+            type="button"
+            disabled={isLoading}
+            onClick={() =>
+              reset({
+                license: defaultLicenseValue,
+                customTerms: isInitialCustomTerms
+                  ? (initialLicense as CustomTerms)
+                  : DEFAULT_CUSTOM_TERMS
+              })
+            }>
+            {t('editTerms.cancelButton')}
+          </Button>
+        </div>
       </Form>
-      <div className={styles['form-actions']}>
-        <Button type="submit" disabled={!isValid}>
-          {t('editTerms.saveButton')}
-        </Button>
-        <Button
-          variant="secondary"
-          type="button"
-          onClick={() =>
-            reset({
-              license: defaultLicenseValue,
-              customTerms: isInitialCustomTerms
-                ? (initialLicense as CustomTermsData)
-                : DEFAULT_CUSTOM_TERMS
-            })
-          }>
-          {t('editTerms.cancelButton')}
-        </Button>
-      </div>
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { DatasetVersionSummaryInfo } from '../models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
+import { DatasetLicenseUpdateRequest } from '../models/DatasetLicenseUpdateRequest'
 
 export interface DatasetRepository {
   getByPersistentId: (
@@ -30,6 +31,10 @@ export interface DatasetRepository {
     datasetId: string | number,
     datasetDTO: DatasetDTO,
     internalVersionNumber: number
+  ) => Promise<void>
+  updateLicense: (
+    datasetId: string | number,
+    licenseUpdateRequest: DatasetLicenseUpdateRequest
   ) => Promise<void>
   deaccession: (
     datasetId: string | number,

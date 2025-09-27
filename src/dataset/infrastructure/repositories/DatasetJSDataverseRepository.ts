@@ -1,5 +1,10 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
-import { Dataset, DatasetLock, DatasetNonNumericVersion } from '../../domain/models/Dataset'
+import {
+  CustomTerms,
+  Dataset,
+  DatasetLock,
+  DatasetNonNumericVersion
+} from '../../domain/models/Dataset'
 import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
   createDataset,
@@ -45,6 +50,7 @@ import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
+import { DatasetLicenseUpdateRequest } from '../../domain/models/DatasetLicenseUpdateRequest'
 import { axiosInstance } from '@/axiosInstance'
 import { DATAVERSE_BACKEND_URL } from '../../../config'
 import { AxiosResponse } from 'axios'
@@ -356,6 +362,45 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         throw new Error(error.message)
       })
   }
+
+  updateLicense(
+    datasetId: string | number,
+    licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ): Promise<void> {
+    // TODO: This method should use updateDatasetLicense from js-dataverse when available
+    // For now, implementing as a direct API call
+
+    // The license API requires numeric dataset ID, not persistentId
+    // We need to use the dataset.id (numeric) for license updates
+    const apiUrl = `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/license`
+
+    const payload: {
+      name?: string
+      customTerms?: CustomTerms
+    } = {}
+
+    if (licenseUpdateRequest.name) {
+      payload.name = licenseUpdateRequest.name
+    }
+
+    if (licenseUpdateRequest.customTerms) {
+      payload.customTerms = licenseUpdateRequest.customTerms
+    }
+
+    return axiosInstance
+      .put(apiUrl, payload)
+      .then((response) => {
+        console.log('🔧 Repository: License update successful')
+        console.log('🔧 Response status:', response.status)
+        console.log('🔧 Response data:', response.data)
+        // Success - no return value needed
+      })
+      .catch((error: unknown) => {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        throw new Error(`Failed to update dataset license: ${errorMessage}`)
+      })
+  }
+
   deaccession(
     datasetId: string | number,
     version: string,
