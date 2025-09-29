@@ -23,7 +23,8 @@ export const ComposedFieldMultiple = ({
   description,
   childMetadataFields,
   rulesToApply,
-  notRequiredWithChildFieldsRequired
+  notRequiredWithChildFieldsRequired,
+  fieldInstructions
 }: ComposedFieldMultipleProps) => {
   const { control } = useFormContext()
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
@@ -79,6 +80,7 @@ export const ComposedFieldMultiple = ({
       message={description}
       required={Boolean(rulesToApply?.required)}
       titleClassName={styles['composed-field-title']}>
+      {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
       {notRequiredWithChildFieldsRequired && (
         <Col sm={9} className={styles['may-become-required-help-text']}>
           <Form.Group.Text>{t('mayBecomeRequired')}</Form.Group.Text>

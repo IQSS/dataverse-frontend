@@ -1,4 +1,5 @@
 import newDatasetData from '../../fixtures/dataset-finch1.json'
+import newTemplateData from '../../fixtures/new-template-data.json'
 import { DataverseApiHelper } from '../DataverseApiHelper'
 import { FileData } from '../files/FileHelper'
 import { DatasetLockReason } from '../../../../src/dataset/domain/models/Dataset'
@@ -259,5 +260,33 @@ export class DatasetHelper extends DataverseApiHelper {
     return this.request<{
       status: string
     }>(`/datasets/${id}/lock/${reason}`, 'POST')
+  }
+
+  static async createDatasetTemplate(collectionAlias?: string): Promise<{ id: number }> {
+    if (collectionAlias == undefined) {
+      collectionAlias = ':root'
+    }
+    return this.request<{ id: number }>(
+      `/dataverses/${collectionAlias}/templates`,
+      'POST',
+      newTemplateData
+    )
+  }
+
+  static async getDatasetTemplates(
+    collectionIdOrAlias = ROOT_COLLECTION_ALIAS
+  ): Promise<{ id: number; name: string }[]> {
+    return this.request<{ id: number; name: string }[]>(
+      `/dataverses/${collectionIdOrAlias}/templates`,
+      'GET'
+    )
+  }
+
+  static async deleteDatasetTemplate(templateId: number): Promise<void> {
+    try {
+      return await this.request(`/admin/template/${templateId}`, 'DELETE')
+    } catch (error) {
+      throw new Error(`Error while deleting dataset template with id ${templateId}`)
+    }
   }
 }

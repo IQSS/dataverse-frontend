@@ -21,7 +21,8 @@ export const PrimitiveMultiple = ({
   watermark,
   rulesToApply,
   metadataBlockName,
-  compoundParentName
+  compoundParentName,
+  fieldInstructions
 }: PrimitiveMultipleProps) => {
   const { control } = useFormContext()
 
@@ -76,6 +77,7 @@ export const PrimitiveMultiple = ({
         {title}
       </Form.Group.Label>
       <Col sm={9}>
+        {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
         {(fieldsArray as { id: string; value: string }[]).map((field, index) => (
           <Row className="mb-3" key={field.id}>
             <Controller

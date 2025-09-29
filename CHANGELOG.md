@@ -8,6 +8,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Dataset Templates Selector in the Create Dataset page.
+
 ### Changed
 
 ### Fixed
