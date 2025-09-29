@@ -15,6 +15,7 @@ import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
+import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLicenseUpdateRequest'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -87,6 +88,17 @@ export class DatasetMockRepository implements DatasetRepository {
   }
 
   updateMetadata(_datasetId: string | number, _updatedDataset: DatasetDTO): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  updateLicense(
+    _datasetId: string | number,
+    _licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()

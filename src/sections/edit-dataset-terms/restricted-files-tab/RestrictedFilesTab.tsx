@@ -31,6 +31,7 @@ export function RestrictedFilesTab({
   initialTermsOfAccess
 }: RestrictedFilesTabProps) {
   const { t } = useTranslation('dataset')
+  const { t: tShared } = useTranslation('shared')
 
   const {
     control,
@@ -77,33 +78,31 @@ export function RestrictedFilesTab({
 
       <Form onSubmit={handleSubmit(onSubmit)}>
         {/* Request Access Section */}
-        <section>
-          <Row>
-            <Col sm={4}>
-              <Form.Group.Label>{t('termsTab.requestAccess')}</Form.Group.Label>
-            </Col>
-            <Col sm={8}>
-              <Controller
-                name="fileAccessRequest"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <Form.Group>
-                    <Form.Group.Checkbox
-                      id="fileAccessRequest"
-                      checked={value}
-                      onChange={onChange}
-                      label={t('editTerms.restrictedFiles.enableAccessRequest')}
-                    />
-                  </Form.Group>
-                )}
-              />
-            </Col>
-          </Row>
-        </section>
+        <Form.Group controlId="fileAccessRequest" as={Row}>
+          <Col sm={4}>
+            <Form.Group.Label>{t('termsTab.requestAccess')}</Form.Group.Label>
+          </Col>
+          <Col sm={8}>
+            <Controller
+              name="fileAccessRequest"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Form.Group>
+                  <Form.Group.Checkbox
+                    id="fileAccessRequest"
+                    checked={value}
+                    onChange={onChange}
+                    label={t('editTerms.restrictedFiles.enableAccessRequest')}
+                  />
+                </Form.Group>
+              )}
+            />
+          </Col>
+        </Form.Group>
 
         {/* Terms of Access Fields */}
         {termsOfAccessFields.map((field) => (
-          <Form.Group key={field.name} controlId={field.name}>
+          <Form.Group key={field.name} controlId={field.name} as={Row}>
             <Form.Group.Label
               message={t(`termsTab.${field.translationKey}Tip`)}
               required={field.required}
@@ -121,6 +120,7 @@ export function RestrictedFilesTab({
                     <Col>
                       {field.type === 'input' ? (
                         <Form.Group.Input
+                          type="text"
                           value={value as string}
                           onChange={onChange}
                           isInvalid={invalid}
@@ -150,10 +150,10 @@ export function RestrictedFilesTab({
 
         <div className={styles['form-actions']}>
           <Button type="submit" disabled={!isValid}>
-            {t('editTerms.saveButton')}
+            {tShared('saveChanges')}
           </Button>
           <Button variant="secondary" type="button" onClick={() => reset(initialTermsOfAccess)}>
-            {t('editTerms.cancelButton')}
+            {tShared('cancel')}
           </Button>
         </div>
       </Form>

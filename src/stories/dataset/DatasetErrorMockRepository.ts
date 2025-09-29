@@ -10,6 +10,7 @@ import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersio
 import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
+import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLicenseUpdateRequest'
 
 export class DatasetErrorMockRepository implements DatasetMockRepository {
   getAllWithCount: (
@@ -78,6 +79,17 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
   }
 
   updateMetadata(_datasetId: string | number, _updatedDataset: DatasetDTO): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  updateLicense(
+    _datasetId: string | number,
+    _licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ): Promise<void> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

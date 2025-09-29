@@ -42,6 +42,7 @@ export function DatasetTermsTab({
   isInitialCustomTerms
 }: DatasetTermsTabProps) {
   const { t } = useTranslation('dataset')
+  const { t: tShared } = useTranslation('shared')
   const { dataset, refreshDataset } = useDataset()
   const { handleUpdateLicense, isLoading, error } = useUpdateDatasetLicense({
     datasetRepository,
@@ -123,16 +124,18 @@ export function DatasetTermsTab({
   const currentLicenseOption = licenseOptions.find((option) => option.value === watchedLicense)
   const isCustomTerms = watchedLicense === 'CUSTOM'
 
-  const customTermsFields = Object.keys(DEFAULT_CUSTOM_TERMS).map((fieldName) => ({
-    name: fieldName,
-    translationKey: fieldName,
-    required: fieldName === 'termsOfUse' && isCustomTerms,
-    rows: 4,
-    rules:
-      fieldName === 'termsOfUse' && isCustomTerms
-        ? { required: t('editTerms.datasetTerms.customTermsRequired') }
-        : {}
-  }))
+  const customTermsFields = useMemo(() => {
+    return Object.keys(DEFAULT_CUSTOM_TERMS).map((fieldName) => ({
+      name: fieldName,
+      translationKey: fieldName,
+      required: fieldName === 'termsOfUse' && isCustomTerms,
+      rows: 4,
+      rules:
+        fieldName === 'termsOfUse' && isCustomTerms
+          ? { required: t('editTerms.datasetTerms.customTermsRequired') }
+          : {}
+    }))
+  }, [isCustomTerms, t])
 
   const onSubmit = async (data: DatasetTermsFormData) => {
     if (!dataset) return
@@ -197,7 +200,7 @@ export function DatasetTermsTab({
             />
 
             {/* TODO: Error handling for license loading */}
-            {errorLicenses && <Alert variant="warning">{errorLicenses}</Alert>}
+            {errorLicenses && <Alert variant="danger">{errorLicenses}</Alert>}
 
             {currentLicenseOption && !isCustomTerms && (
               <>
@@ -271,7 +274,7 @@ export function DatasetTermsTab({
         {/* Form Actions */}
         <div className={styles['form-actions']}>
           <Button type="submit" disabled={!isValid || isLoading}>
-            {isLoading ? t('editTerms.saving') : t('editTerms.saveButton')}
+            {isLoading ? tShared('saving') : tShared('saveChanges')}
           </Button>
           <Button
             variant="secondary"
@@ -285,7 +288,7 @@ export function DatasetTermsTab({
                   : DEFAULT_CUSTOM_TERMS
               })
             }>
-            {t('editTerms.cancelButton')}
+            {tShared('cancel')}
           </Button>
         </div>
       </Form>

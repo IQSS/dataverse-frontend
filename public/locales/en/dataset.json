@@ -338,7 +338,7 @@
       "title": "Dataset Terms",
       "description": "Configure the license and custom terms for this dataset.",
       "licenseRequired": "Please select a license for this dataset",
-      "customTermsRequired": "Custom terms are required when Custom Dataset Terms is selected",
+      "customTermsRequired": "Terms of use is required.",
       "customTermsLabel": "Custom Dataset Terms",
       "licenseDescription": "This dataset will be published under the terms specified below. Our Community Norms as well as good scientific practices expect that proper credit is given via citation.",
       "errorLoadingLicenses": "Error loading licenses",
@@ -365,7 +365,6 @@
       "testGuestbook": "Test Guestbook",
       "previewButton": "Preview Guestbook"
     },
-    "saveButton": "Save Changes",
-    "cancelButton": "Cancel"
+    "defaultLicenseUpdateError": "An error occurred while updating the dataset license. Please try again."
   }
 }

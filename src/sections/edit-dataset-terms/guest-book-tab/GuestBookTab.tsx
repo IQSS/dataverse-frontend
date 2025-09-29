@@ -9,6 +9,7 @@ interface GuestBookTabProps {
 
 export function GuestBookTab({ onPreview }: GuestBookTabProps) {
   const { t } = useTranslation('dataset')
+  const { t: tShared } = useTranslation('shared')
 
   return (
     <div>
@@ -42,9 +43,9 @@ export function GuestBookTab({ onPreview }: GuestBookTabProps) {
 
       {/* Form Actions */}
       <div className={styles['form-actions']}>
-        <Button type="submit">{t('editTerms.saveButton')}</Button>
+        <Button type="submit">{tShared('saveChanges')}</Button>
         <Button variant="secondary" type="button">
-          {t('editTerms.cancelButton')}
+          {tShared('cancel')}
         </Button>
       </div>
     </div>
