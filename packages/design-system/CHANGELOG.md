@@ -1,6 +1,6 @@
 # Change Log
 
-All notable changes to this project will be documented in this file.
+All notable changes to the design system will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 # Non Published Changes
