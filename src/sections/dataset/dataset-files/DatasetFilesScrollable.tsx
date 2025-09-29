@@ -13,8 +13,8 @@ import { useObserveElementSize } from '../../../shared/hooks/useObserveElementSi
 import { FilesTableScrollable } from './files-table/FilesTableScrollable'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FilesContext } from '@/sections/file/FilesContext'
-import styles from './DatasetFilesScrollable.module.scss'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import styles from './DatasetFilesScrollable.module.scss'
 
 interface DatasetFilesScrollableProps {
   filesRepository: FileRepository

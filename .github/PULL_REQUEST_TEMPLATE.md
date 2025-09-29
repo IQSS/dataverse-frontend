@@ -10,6 +10,6 @@
 
 ## Does this PR introduce a user interface change? If mockups are available, please link/include them here:
 
-## Is there a release notes update needed for this change?:
+## Is there a release notes or changelog update needed for this change?:
 
 ## Additional documentation:
