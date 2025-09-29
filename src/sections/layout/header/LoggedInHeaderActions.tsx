@@ -54,10 +54,10 @@ export const LoggedInHeaderActions = ({
       </Navbar.Dropdown>
       <Navbar.Dropdown
         title={
-          <>
+          <span className="d-inline-flex align-items-center">
             {user.displayName}
             <UnreadNotificationBadge />
-          </>
+          </span>
         }
         id="dropdown-user">
         <Navbar.Dropdown.Item
@@ -68,8 +68,10 @@ export const LoggedInHeaderActions = ({
         <Navbar.Dropdown.Item
           as={Link}
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}`}>
-          {t('navigation.notifications')}
-          <UnreadNotificationBadge />
+          <span className="d-inline-flex align-items-center">
+            {t('navigation.notifications')}
+            <UnreadNotificationBadge />
+          </span>
         </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item
           as={Link}

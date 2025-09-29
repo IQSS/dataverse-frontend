@@ -1,13 +1,16 @@
+import { memo } from 'react'
+import { Badge } from '@iqss/dataverse-design-system'
 import { useNotificationContext } from '@/notifications/context/NotificationsContext'
-import styles from './Header.module.scss'
-import React from 'react'
-const UnreadNotificationBadge = React.memo(() => {
+
+const UnreadNotificationBadge = memo(() => {
   const { unreadCount } = useNotificationContext()
+
   if (unreadCount === 0) return null
+
   return (
-    <span
-      data-testid="unread-notifications-badge"
-      className={styles['unread-notifications-count']}>{` ${unreadCount}`}</span>
+    <Badge variant="danger" pill dataTestId="unread-notifications-badge" className="ms-1">
+      {unreadCount}
+    </Badge>
   )
 })
 UnreadNotificationBadge.displayName = 'UnreadNotificationBadge'
