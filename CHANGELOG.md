@@ -8,6 +8,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Link Collection and Link Dataset features.
+
 ### Changed
 
 ### Fixed
