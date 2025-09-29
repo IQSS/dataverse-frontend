@@ -7,6 +7,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ## [Unreleased]
 
 ### Added
+- Metadata Export Dropdown to the metadata tab of Dataset Page and File Page.
 
 ### Changed
 
