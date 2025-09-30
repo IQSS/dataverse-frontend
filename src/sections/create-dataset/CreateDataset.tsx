@@ -119,9 +119,6 @@ export function CreateDataset({
           />
         )}
 
-        {/* If there is an error loading dataset templates we notify the user but dont block them from creating a dataset */}
-        {errorGetDatasetTemplates && <Alert variant="warning">{errorGetDatasetTemplates}</Alert>}
-
         <DatasetMetadataForm
           mode="create"
           collectionId={collectionId}
