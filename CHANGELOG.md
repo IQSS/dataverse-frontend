@@ -8,17 +8,22 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
-- Dataset Templates Selector in the Create Dataset page.
+- Dataset Templates integration — Create Dataset form now supports template selection and prefilled fields. (#745)
+- DEMO environment option added to deploy actions. (#808)
 
 ### Changed
 
-- Standardize Node.js version to 22 across all environments (docker dev environment, CI, production).
+- Dependencies and tooling — major upgrades to reduce vulnerabilities (from 100+ including 12 critical/33 high → only 2 moderate left).
+- Keycloak — updated SPI and test realm JSON.
+- CHANGELOG introduced & related docs updated. (#828)
+- README — new Environments section and clarifications. (#803)
 
 ### Fixed
 
-- Upgrade dependencies to drastically reduce vulnerabilities flagged by `npm audit`. Reduced from +100 including 12 critical and 33 high to only 2 moderate.
-
-### Removed
+- Files Table — action buttons are always visible. (#800)
+- Collection filters — corrected handling of facet values containing `:`. (#812)
+- File upload — warning “You can only drop one file to replace” now displays correctly. (#810)
+- Collection form — prevent numeric-only aliases. (#798)
 
 ---
 
