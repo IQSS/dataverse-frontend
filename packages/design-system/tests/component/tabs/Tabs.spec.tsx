@@ -94,4 +94,40 @@ describe('Tabs', () => {
     cy.findByText('Tab 2').click()
     cy.get('@onSelect').should('have.been.calledWith', 'key-2')
   })
+
+  it('warns if activeKey is provided without onSelect', () => {
+    cy.stub(console, 'warn').as('consoleWarn')
+    cy.mount(
+      <Tabs activeKey="key-1">
+        <Tabs.Tab eventKey="key-1" title="Tab 1">
+          Content 1
+        </Tabs.Tab>
+        <Tabs.Tab eventKey="key-2" title="Tab 2">
+          Content 2
+        </Tabs.Tab>
+      </Tabs>
+    )
+    cy.get('@consoleWarn').should(
+      'have.been.calledWith',
+      'Tabs component requires onSelect function when activeKey is provided'
+    )
+  })
+
+  it('warns if neither activeKey nor defaultActiveKey is provided', () => {
+    cy.stub(console, 'warn').as('consoleWarn')
+    cy.mount(
+      <Tabs>
+        <Tabs.Tab eventKey="key-1" title="Tab 1">
+          Content 1
+        </Tabs.Tab>
+        <Tabs.Tab eventKey="key-2" title="Tab 2">
+          Content 2
+        </Tabs.Tab>
+      </Tabs>
+    )
+    cy.get('@consoleWarn').should(
+      'have.been.calledWith',
+      'Tabs component requires either activeKey or defaultActiveKey'
+    )
+  })
 })
