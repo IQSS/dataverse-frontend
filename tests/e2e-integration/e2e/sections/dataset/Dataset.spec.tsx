@@ -712,19 +712,11 @@ describe('Dataset', () => {
 
           cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
 
-          // Workaround for issue where Cypress gets stuck on the download
-          cy.window()
-            .document()
-            .then(function (doc) {
-              doc.addEventListener('click', () => {
-                setTimeout(function () {
-                  doc.location.reload()
-                }, 5000)
-              })
-              cy.findByRole('link', { name: /Original Format ZIP/ })
-                .should('exist')
-                .click({ force: true })
-            })
+          cy.findByRole('link', { name: /Original Format ZIP/ })
+            .should('exist')
+            .click({ force: true })
+
+          cy.reload()
 
           cy.findAllByText('1 Downloads').should('exist')
         })
@@ -749,17 +741,8 @@ describe('Dataset', () => {
           cy.wait(500) // wait for the event handler to attach to the button, see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
           cy.get('@accessButton').click()
 
-          // Workaround for issue where Cypress gets stuck on the download
-          cy.window()
-            .document()
-            .then(function (doc) {
-              doc.addEventListener('click', () => {
-                setTimeout(function () {
-                  doc.location.reload()
-                }, 5000)
-              })
-              cy.findByText('Plain Text').should('exist').click()
-            })
+          cy.findByText('Plain Text').should('exist').click()
+          cy.reload()
 
           cy.findByText('1 Downloads').should('exist')
         })
@@ -783,17 +766,8 @@ describe('Dataset', () => {
 
           cy.get('#download-files').should('exist').click({ force: true })
 
-          // Workaround for issue where Cypress gets stuck on the download
-          cy.window()
-            .document()
-            .then(function (doc) {
-              doc.addEventListener('click', () => {
-                setTimeout(function () {
-                  doc.location.reload()
-                }, 5000)
-              })
-              cy.findByText('Original Format').should('exist').click()
-            })
+          cy.findByText('Original Format').should('exist').click()
+          cy.reload()
 
           cy.findAllByText('1 Downloads').should('exist')
         })
