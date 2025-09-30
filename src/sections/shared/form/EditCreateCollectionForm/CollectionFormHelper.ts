@@ -206,7 +206,9 @@ export class CollectionFormHelper {
     }, {} as Record<string, MetadataBlockInfo>)
 
     return facetableMetadataFields.map((field) => {
-      const parentBlockInfo = blockInfoMap[field.name]
+      // The blockInfo map above has field names normalized with slashes instead of dots.
+      // So we need to replace dots with slashes before searching for the field in the map.
+      const parentBlockInfo = blockInfoMap[this.replaceDotWithSlash(field.name)]
 
       return {
         ...field,

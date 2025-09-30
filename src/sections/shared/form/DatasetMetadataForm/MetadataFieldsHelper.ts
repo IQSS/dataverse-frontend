@@ -10,6 +10,7 @@ import {
   DatasetMetadataChildFieldValueDTO
 } from '../../../../dataset/domain/useCases/DTOs/DatasetDTO'
 import {
+  DatasetMetadataBlock,
   DatasetMetadataBlocks,
   DatasetMetadataFields,
   DatasetMetadataSubField,
@@ -29,7 +30,7 @@ type PrimitiveMultipleFormValue = { value: string }[]
 
 type ComposedFieldValues = ComposedSingleFieldValue | ComposedSingleFieldValue[]
 
-type ComposedSingleFieldValue = Record<string, string>
+export type ComposedSingleFieldValue = Record<string, string>
 
 export class MetadataFieldsHelper {
   public static replaceMetadataBlocksInfoDotNamesKeysWithSlash(
@@ -49,6 +50,12 @@ export class MetadataFieldsHelper {
   private static metadataBlocksInfoDotReplacer(metadataFields: Record<string, MetadataField>) {
     for (const key in metadataFields) {
       const field = metadataFields[key]
+      const fieldReplacedKey = this.replaceDotWithSlash(key)
+      if (fieldReplacedKey !== key) {
+        // Change the key in the object only if it has changed (i.e., it had a dot)
+        metadataFields[fieldReplacedKey] = field
+        delete metadataFields[key]
+      }
       if (field.name.includes('.')) {
         field.name = this.replaceDotWithSlash(field.name)
       }
@@ -58,14 +65,12 @@ export class MetadataFieldsHelper {
     }
   }
 
-  public static replaceDatasetMetadataBlocksCurrentValuesDotKeysWithSlash(
-    datasetMetadataBlocks: DatasetMetadataBlocks
-  ): DatasetMetadataBlocks {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const datasetMetadataBlocksCopy: DatasetMetadataBlocks = structuredClone(datasetMetadataBlocks)
-    const dataWithoutKeysWithDots: DatasetMetadataBlocks = [] as unknown as DatasetMetadataBlocks
+  public static replaceDatasetMetadataBlocksDotKeysWithSlash(
+    datasetMetadataBlocks: DatasetMetadataBlock[]
+  ): DatasetMetadataBlock[] {
+    const dataWithoutKeysWithDots: DatasetMetadataBlock[] = [] as unknown as DatasetMetadataBlock[]
 
-    for (const block of datasetMetadataBlocksCopy) {
+    for (const block of datasetMetadataBlocks) {
       const newBlockFields: DatasetMetadataFields =
         this.datasetMetadataBlocksCurrentValuesDotReplacer(block.fields)
 
@@ -383,7 +388,7 @@ export class MetadataFieldsHelper {
 
   public static addFieldValuesToMetadataBlocksInfo(
     normalizedMetadataBlocksInfo: MetadataBlockInfo[],
-    normalizedDatasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
+    normalizedDatasetMetadaBlocksCurrentValues: DatasetMetadataBlock[]
   ): MetadataBlockInfoWithMaybeValues[] {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const normalizedMetadataBlocksInfoCopy: MetadataBlockInfoWithMaybeValues[] = structuredClone(
@@ -464,5 +469,177 @@ export class MetadataFieldsHelper {
     value: unknown
   ): value is ComposedSingleFieldValue[] => {
     return Array.isArray(value) && value.every((v) => typeof v === 'object')
+  }
+
+  /**
+   * To define the metadata blocks info that will be used to render the form.
+   * In create mode, if a template is provided, it adds the fields and values from the template to the metadata blocks info.
+   * In edit mode, it adds the current dataset values to the metadata blocks info.
+   * Normalizes field names by replacing dots with slashes to avoid issues with react-hook-form. (e.g. coverage.Spectral.MinimumWavelength -> coverage/Spectral/MinimumWavelength)
+   * Finally, it orders the fields by display order.
+   */
+  public static defineMetadataBlockInfo(
+    mode: 'create' | 'edit',
+    metadataBlocksInfoForDisplayOnCreate: MetadataBlockInfo[],
+    metadataBlocksInfoForDisplayOnEdit: MetadataBlockInfo[],
+    datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks | undefined,
+    templateMetadataBlocks: DatasetMetadataBlock[] | undefined
+  ): MetadataBlockInfo[] {
+    // Replace field names with dots to slashes, to avoid issues with the form library react-hook-form
+    const normalizedMetadataBlocksInfoForDisplayOnCreate =
+      this.replaceMetadataBlocksInfoDotNamesKeysWithSlash(metadataBlocksInfoForDisplayOnCreate)
+
+    const normalizedMetadataBlocksInfoForDisplayOnEdit =
+      this.replaceMetadataBlocksInfoDotNamesKeysWithSlash(metadataBlocksInfoForDisplayOnEdit)
+
+    // CREATE MODE
+    if (mode === 'create') {
+      // If we have no template, we just return the metadata blocks info for create with normalized field names
+      if (!templateMetadataBlocks) {
+        return normalizedMetadataBlocksInfoForDisplayOnCreate
+      }
+
+      // 1) Normalize dataset template fields
+      const normalizedDatasetTemplateMetadataBlocksValues =
+        this.replaceDatasetMetadataBlocksDotKeysWithSlash(templateMetadataBlocks)
+
+      // 2) Add missing fields from the template to the metadata blocks info for create
+      const metadataBlocksInfoWithAddedFieldsFromTemplate =
+        this.addFieldsFromTemplateToMetadataBlocksInfoForDisplayOnCreate(
+          normalizedMetadataBlocksInfoForDisplayOnCreate,
+          normalizedMetadataBlocksInfoForDisplayOnEdit,
+          normalizedDatasetTemplateMetadataBlocksValues
+        )
+
+      // 3) Add the values from the template to the metadata blocks info for create
+      const metadataBlocksInfoWithValuesFromTemplate = this.addFieldValuesToMetadataBlocksInfo(
+        metadataBlocksInfoWithAddedFieldsFromTemplate,
+        normalizedDatasetTemplateMetadataBlocksValues
+      )
+
+      // 4) Order fields by display order
+      const metadataBlocksInfoOrdered = this.orderFieldsByDisplayOrder(
+        metadataBlocksInfoWithValuesFromTemplate
+      )
+
+      return metadataBlocksInfoOrdered
+    } else {
+      // EDIT MODE
+      const datasetCurrentValues = datasetMetadaBlocksCurrentValues as DatasetMetadataBlocks // In edit mode we always have current values
+
+      // 1) Normalize dataset current values
+      const normalizedDatasetMetadaBlocksCurrentValues =
+        this.replaceDatasetMetadataBlocksDotKeysWithSlash(datasetCurrentValues)
+
+      // 2) Add current values to the metadata blocks info for edit
+      const metadataBlocksInfoWithCurrentValues = this.addFieldValuesToMetadataBlocksInfo(
+        normalizedMetadataBlocksInfoForDisplayOnEdit,
+        normalizedDatasetMetadaBlocksCurrentValues
+      )
+
+      // 3) Order fields by display order
+      const metadataBlocksInfoOrdered = this.orderFieldsByDisplayOrder(
+        metadataBlocksInfoWithCurrentValues
+      )
+
+      return metadataBlocksInfoOrdered
+    }
+  }
+
+  public static addFieldsFromTemplateToMetadataBlocksInfoForDisplayOnCreate(
+    metadataBlocksInfoForDisplayOnCreate: MetadataBlockInfo[],
+    metadataBlocksInfoForDisplayOnEdit: MetadataBlockInfo[],
+    templateBlocks: DatasetMetadataBlock[] | undefined
+  ): MetadataBlockInfo[] {
+    if (!templateBlocks || templateBlocks.length === 0) {
+      return metadataBlocksInfoForDisplayOnCreate
+    }
+
+    const createCopy: MetadataBlockInfo[] = structuredClone(metadataBlocksInfoForDisplayOnCreate)
+
+    const createMap = createCopy.reduce<Record<string, MetadataBlockInfo>>((acc, block) => {
+      acc[block.name] = block
+      return acc
+    }, {})
+
+    const editMap = metadataBlocksInfoForDisplayOnEdit.reduce<Record<string, MetadataBlockInfo>>(
+      (acc, block) => {
+        acc[block.name] = block
+        return acc
+      },
+      {}
+    )
+
+    for (const tBlock of templateBlocks) {
+      const blockName = tBlock.name
+      const editBlock = editMap[blockName]
+
+      // Could be the case that the template block is returned from the API but it has no fields, so we skip it.
+      const templateBlockHasFields: boolean = Object.keys(tBlock.fields ?? {}).length > 0
+
+      if (!templateBlockHasFields) continue
+
+      if (!editBlock) {
+        // We don't know how this block looks in "edit", we can't copy its shape. So we skip it.
+        continue
+      }
+
+      // We ensure the block exists in the "create" array
+      let createBlock = createMap[blockName]
+
+      if (!createBlock) {
+        createBlock = {
+          id: editBlock.id,
+          name: editBlock.name,
+          displayName: editBlock.displayName,
+          metadataFields: {},
+          displayOnCreate: editBlock.displayOnCreate
+        }
+        createMap[blockName] = createBlock
+        createCopy.push(createBlock)
+      }
+
+      const createFields = createBlock.metadataFields
+      const editFields = editBlock.metadataFields
+
+      // For each field that the template brings with value, if it doesn't exist in "create", we copy it from "edit"
+      const templateBlockFields = tBlock.fields ?? {}
+      for (const fieldName of Object.keys(templateBlockFields)) {
+        if (createFields[fieldName]) continue
+
+        const fieldFromEdit = editFields[fieldName]
+        if (!fieldFromEdit) {
+          // The field doesn't exist in "edit" either: there's no way to know its shape; we skip it
+          continue
+        }
+
+        const clonedField = structuredClone(fieldFromEdit)
+
+        createFields[fieldName] = clonedField
+      }
+    }
+
+    return createCopy
+  }
+
+  private static orderFieldsByDisplayOrder(
+    metadataBlocksInfo: MetadataBlockInfo[]
+  ): MetadataBlockInfo[] {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const metadataBlocksInfoCopy: MetadataBlockInfo[] = structuredClone(metadataBlocksInfo)
+
+    for (const block of metadataBlocksInfoCopy) {
+      if (block.metadataFields) {
+        const fieldsArray = Object.values(block.metadataFields)
+        fieldsArray.sort((a, b) => a.displayOrder - b.displayOrder)
+
+        const orderedFields: Record<string, MetadataField> = {}
+        for (const field of fieldsArray) {
+          orderedFields[field.name] = field
+        }
+        block.metadataFields = orderedFields
+      }
+    }
+    return metadataBlocksInfoCopy
   }
 }

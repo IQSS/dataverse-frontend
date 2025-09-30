@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
 import { type DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
@@ -11,11 +11,13 @@ import { DatasetMetadataForm } from '../shared/form/DatasetMetadataForm'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
-
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useCollection } from '../collection/useCollection'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { CreateDatasetSkeleton } from './CreateDatasetSkeleton'
+import { useGetDatasetTemplates } from '@/dataset/domain/hooks/useGetDatasetTemplates'
+import { type DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
+import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
 
 interface CreateDatasetProps {
   datasetRepository: DatasetRepository
@@ -33,6 +35,7 @@ export function CreateDataset({
   const { t } = useTranslation('createDataset')
   const { isModalOpen, hideModal } = useNotImplementedModal()
   const { setIsLoading } = useLoading()
+  const [selectedTemplate, setSelectedTemplate] = useState<DatasetTemplate | null>(null)
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
@@ -46,17 +49,41 @@ export function CreateDataset({
     })
 
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
-  const isLoadingData = isLoadingCollectionUserPermissions || isLoadingCollection
+
+  const { datasetTemplates, isLoadingDatasetTemplates, errorGetDatasetTemplates } =
+    useGetDatasetTemplates({
+      datasetRepository,
+      collectionIdOrAlias: collectionId
+    })
+
+  const handleDatasetTemplateChange = (selectedTemplateId: string) => {
+    const template: DatasetTemplate | null =
+      datasetTemplates.find((template) => template.id.toString() === selectedTemplateId) || null
+    setSelectedTemplate(template)
+  }
+
+  const isLoadingData =
+    isLoadingCollectionUserPermissions || isLoadingCollection || isLoadingDatasetTemplates
 
   useEffect(() => {
     setIsLoading(isLoadingData)
   }, [isLoadingData, setIsLoading])
 
+  // When dataset templates are loaded we set the default one if any
+  useEffect(() => {
+    if (datasetTemplates.length > 0) {
+      const defaultTemplate: DatasetTemplate | null =
+        datasetTemplates.find((template) => template.isDefault) || null
+
+      setSelectedTemplate(defaultTemplate)
+    }
+  }, [datasetTemplates])
+
   if (!isLoadingCollection && !collection) {
     return <NotFoundPage dvObjectNotFoundType="collection" />
   }
 
-  if (isLoadingCollection || !collection) {
+  if (isLoadingData || !collection) {
     return <CreateDatasetSkeleton />
   }
 
@@ -85,11 +112,23 @@ export function CreateDataset({
         <SeparationLine />
         <HostCollectionForm collectionId={collection.id} />
 
+        {datasetTemplates.length > 0 && (
+          <DatasetTemplateSelect
+            datasetTemplates={datasetTemplates}
+            onChange={handleDatasetTemplateChange}
+          />
+        )}
+
+        {/* If there is an error loading dataset templates we notify the user but dont block them from creating a dataset */}
+        {errorGetDatasetTemplates && <Alert variant="warning">{errorGetDatasetTemplates}</Alert>}
+
         <DatasetMetadataForm
           mode="create"
           collectionId={collectionId}
           datasetRepository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetTemplate={selectedTemplate ?? undefined}
+          key={selectedTemplate ? selectedTemplate.id : 'no-template-selected'} // We use the template id as key to force remounting the form when the template changes
         />
       </section>
     </>
