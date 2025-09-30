@@ -413,4 +413,75 @@ describe('DatasetMetadata', () => {
     cy.findByRole('button', { name: 'Citation Metadata' }).should('exist')
     cy.findByRole('button', { name: 'Geospatial Metadata' }).should('not.exist')
   })
+
+  it('adds name and description to extra fields of the citation metadata block', () => {
+    const mockDatasetWithExtraFields = DatasetMother.create({
+      metadataBlocks: [
+        {
+          name: MetadataBlockName.CITATION,
+          fields: {
+            title: 'Some Title',
+            subject: ['subject-one', 'subject-two'],
+            author: [
+              {
+                authorName: 'Foo',
+                authorAffiliation: 'Bar'
+              },
+              {
+                authorName: 'Another Foo',
+                authorAffiliation: 'Another Bar'
+              }
+            ],
+            datasetContact: [
+              {
+                datasetContactName: 'John Doe',
+                datasetContactEmail: 'john@doe.com',
+                datasetContactAffiliation: 'Doe Inc.'
+              }
+            ],
+            dsDescription: [
+              {
+                dsDescriptionValue: 'Description of the dataset'
+              }
+            ],
+            producer: [
+              {
+                producerName: 'Foo',
+                producerAffiliation: 'XYZ',
+                producerURL: 'http://foo.com',
+                producerLogoURL:
+                  'https://beta.dataverse.org/resources/images/dataverse_project_logo.svg'
+              }
+            ],
+            // Extra fields
+            publicationDate: '2023-01-01',
+            alternativePersistentId: 'some-alternative-pid'
+          }
+        }
+      ]
+    })
+
+    cy.customMount(
+      <DatasetMetadata
+        persistentId={mockDatasetWithExtraFields.persistentId}
+        metadataBlocks={mockDatasetWithExtraFields.metadataBlocks}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    cy.get('.accordion > :nth-child(1)').within(() => {
+      cy.findByText(/Citation Metadata/i).should('exist')
+
+      cy.findByText('Persistent Identifier')
+        .parent()
+        .siblings('div')
+        .should('contain', mockDatasetWithExtraFields.persistentId)
+
+      cy.findByText('Publication Date').should('exist')
+      cy.findByText('2023-01-01').should('exist')
+
+      cy.findByText('Previous Dataset Persistent ID').should('exist')
+      cy.findByText('some-alternative-pid').should('exist')
+    })
+  })
 })
