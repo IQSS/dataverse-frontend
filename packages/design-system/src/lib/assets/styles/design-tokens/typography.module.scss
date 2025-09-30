@@ -11,12 +11,12 @@ $dv-font-weight-bold: 700;
 $dv-line-height: 1.5;
 
 :export {
-  fontSize: $dv-font-size;
-  fontSizeSm: $dv-font-size-sm;
-  brandFontSize: $dv-brand-font-size;
-  fontFamily: $dv-font-family;
-  fontWeight: $dv-font-weight;
-  fontWeightLight: $dv-font-weight-light;
-  fontWeightBold: $dv-font-weight-bold;
-  lineHeight: $dv-line-height;
+  font-weight: $dv-font-weight;
+  font-size: $dv-font-size;
+  font-size-sm: $dv-font-size-sm;
+  brand-font-size: $dv-brand-font-size;
+  font-family: $dv-font-family;
+  font-weight-light: $dv-font-weight-light;
+  font-weight-bold: $dv-font-weight-bold;
+  line-height: $dv-line-height;
 }
