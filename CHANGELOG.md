@@ -8,22 +8,37 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
-- Dataset Templates integration — Create Dataset form now supports template selection and prefilled fields. (#745)
-- DEMO environment option added to deploy actions. (#808)
+- Dataset Templates integration in the Create Dataset form. (#745)
+- Advanced Search UI replicating legacy JSF, with persistence of queries and facet filters. (#760, dataverse#9993)
+- External Search integration with selectable search service and first-load fetch behavior. (#710)
+- File Edit Tags with populated categories dropdown. (#763)
+- DEMO environment option in deploy actions.
 
 ### Changed
 
-- Dependencies and tooling — major upgrades to reduce vulnerabilities (from 100+ including 12 critical/33 high → only 2 moderate left).
-- Keycloak — updated SPI and test realm JSON.
-- CHANGELOG introduced & related docs updated. (#828)
-- README — new Environments section and clarifications. (#803)
+- Standardized Node.js to v22 across environments (docker dev, CI, production).
+- Upgrade Keycloak to 26.3.2; updated SPI and test realm JSON.
+- Truncate long collection and dataset descriptions with expandable content. (#789)
+- UI polish: Files Table always shows action buttons. (#800)
 
 ### Fixed
 
-- Files Table — action buttons are always visible. (#800)
-- Collection filters — corrected handling of facet values containing `:`. (#812)
-- File upload — warning “You can only drop one file to replace” now displays correctly. (#810)
-- Collection form — prevent numeric-only aliases. (#798)
+- Guest user access: file info retrieval works on deaccessioned datasets. (#752)
+- Collection filter queries with values containing ":" now parsed correctly. (#812)
+- File upload: corrected "drop one file to replace" warning behavior. (#810)
+- Create Collection form: prevent numeric-only aliases. (#798)
+- Dataset page: citation downloads available in multiple formats with copy-to-clipboard. (#786)
+- Improved URL handling and wrapping across the UI. (#774)
+
+### Documentation
+
+- Introduced CHANGELOG and updated related documents. (#828)
+- Added Environments section to README.
+- Expanded Keycloak deployment documentation with realm setup and SPI guidance.
+
+### Security
+
+- Fixed dependencies vulnerabilities: reduced npm audit issues from 100+ (including 12 critical and 33 high) to only 2 moderate.
 
 ---
 
