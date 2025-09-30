@@ -1,5 +1,13 @@
-notification-row {
-  /* row styles */
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.notification-item {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background-color: color.adjust($dv-secondary-color, $lightness: 8%);
+  border-radius: 6px;
 }
 
 .timestamp {
