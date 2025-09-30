@@ -38,6 +38,9 @@ export const LoggedInHeaderActions = ({
 
   const canUserAddCollectionToRoot = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserAddDatasetToRoot = Boolean(collectionUserPermissions?.canAddDataset)
+  // Enable/disable review. See also LoggedInHeaderActions.tsx
+  // TODO: make dynamic based on getDatasetAvailableDatasetTypes
+  const reviewCreationEnabled = false
 
   return (
     <>
@@ -51,6 +54,14 @@ export const LoggedInHeaderActions = ({
         <Navbar.Dropdown.Item as={Link} to={createDatasetRoute} disabled={!canUserAddDatasetToRoot}>
           {t('navigation.newDataset')}
         </Navbar.Dropdown.Item>
+        {reviewCreationEnabled && (
+          <Navbar.Dropdown.Item
+            as={Link}
+            to={`${createDatasetRoute}?datasetType=review`} // TODO: don't hardcode this!
+            disabled={!canUserAddDatasetToRoot}>
+            {t('navigation.newReview')}
+          </Navbar.Dropdown.Item>
+        )}
       </Navbar.Dropdown>
       <Navbar.Dropdown title={user.displayName} id="dropdown-user">
         <Navbar.Dropdown.Item

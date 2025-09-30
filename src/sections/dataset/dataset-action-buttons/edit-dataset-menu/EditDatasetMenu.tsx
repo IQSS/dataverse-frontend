@@ -40,6 +40,9 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
   const handleOnSelect = (eventKey: EditDatasetMenuItems | string | null) => {
     const searchParams = new URLSearchParams()
     searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+    if (dataset.datasetType) {
+      searchParams.set(QueryParamKey.DATASET_TYPE, dataset.datasetType)
+    }
 
     if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
       searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)

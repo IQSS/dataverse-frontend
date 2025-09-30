@@ -430,7 +430,8 @@ export class Dataset {
     public readonly nextMajorVersion?: string,
     public readonly nextMinorVersion?: string,
     public readonly requiresMajorVersionUpdate?: boolean,
-    public readonly fileStore?: string
+    public readonly fileStore?: string,
+    public readonly datasetType?: string
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
@@ -525,7 +526,8 @@ export class Dataset {
       public readonly nextMajorVersionNumber?: string,
       public readonly nextMinorVersionNumber?: string,
       public readonly requiresMajorVersionUpdate?: boolean,
-      public readonly fileStore?: string
+      public readonly fileStore?: string,
+      public readonly datasetType?: string
     ) {
       this.withAlerts()
     }
@@ -597,7 +599,8 @@ export class Dataset {
         this.nextMajorVersionNumber,
         this.nextMinorVersionNumber,
         this.requiresMajorVersionUpdate,
-        this.fileStore
+        this.fileStore,
+        this.datasetType
       )
     }
   }

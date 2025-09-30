@@ -20,6 +20,7 @@ type DatasetMetadataFormProps =
       datasetMetadaBlocksCurrentValues?: never
       datasetInternalVersionNumber?: never
       datasetTemplate?: DatasetTemplate
+      datasetType?: string
     }
   | {
       mode: 'edit'
@@ -30,6 +31,8 @@ type DatasetMetadataFormProps =
       datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
       datasetInternalVersionNumber: number
       datasetTemplate?: never
+      // changing datasetType is not supported by the backend
+      datasetType?: string
     }
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
@@ -42,7 +45,8 @@ export const DatasetMetadataForm = ({
   metadataBlockInfoRepository,
   datasetMetadaBlocksCurrentValues,
   datasetInternalVersionNumber,
-  datasetTemplate
+  datasetTemplate,
+  datasetType
 }: DatasetMetadataFormProps) => {
   const { setIsLoading } = useLoading()
 
@@ -53,7 +57,8 @@ export const DatasetMetadataForm = ({
   } = useGetMetadataBlocksInfo({
     mode: 'create',
     collectionId,
-    metadataBlockInfoRepository
+    metadataBlockInfoRepository,
+    datasetType
   })
 
   const {

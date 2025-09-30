@@ -79,6 +79,7 @@ export enum QueryParamKey {
   TAB = 'tab',
   FILE_ID = 'id',
   DATASET_VERSION = 'datasetVersion',
+  DATASET_TYPE = 'datasetType',
   REFERRER = 'referrer',
   AUTH_STATE = 'state',
   VALID_TOKEN_BUT_NOT_LINKED_ACCOUNT = 'validTokenButNotLinkedAccount'
