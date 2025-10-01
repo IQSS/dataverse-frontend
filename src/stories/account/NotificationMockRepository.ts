@@ -1,13 +1,14 @@
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { Notification } from '@/notifications/domain/models/Notification'
 import { NotificationMother } from '@tests/component/notifications/domain/models/NotificationMother'
+import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
 export class NotificationMockRepository implements NotificationRepository {
   getAllNotificationsByUser(): Promise<Notification[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(NotificationMother.createManyRealistic())
-      }, 500) // Simulate loading delay
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -15,7 +16,7 @@ export class NotificationMockRepository implements NotificationRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(2) // Simulate 2 unread notifications
-      }, 500)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -24,7 +25,7 @@ export class NotificationMockRepository implements NotificationRepository {
       setTimeout(() => {
         console.log(`Notification ${notificationId} marked as read.`)
         resolve()
-      }, 500)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -33,7 +34,7 @@ export class NotificationMockRepository implements NotificationRepository {
       setTimeout(() => {
         console.log(`Notification ${notificationId} deleted.`)
         resolve()
-      }, 500)
+      }, FakerHelper.loadingTimout())
     })
   }
 }
