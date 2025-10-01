@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, Controller } from 'react-hook-form'
-import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
+import { Form, Row, Col, Button, Alert, Spinner } from '@iqss/dataverse-design-system'
 import { DatasetLicense, CustomTerms } from '../../../dataset/domain/models/Dataset'
 import { LicenseRepository } from '../../../licenses/domain/repositories/LicenseRepository'
 import { useGetLicenses } from './useGetLicenses'
@@ -181,10 +181,11 @@ export function DatasetTermsTab({
                       isInvalid={invalid}
                       disabled={isLoadingLicenses}>
                       {isLoadingLicenses ? (
-                        // TODO: Add loading state
-                        <option>{t('loading')}</option>
+                        <Spinner variant="light" animation="border" size="sm" />
                       ) : errorLicenses ? (
-                        <option value="">{t('editTerms.datasetTerms.errorLoadingLicenses')}</option>
+                        <Alert variant="danger">
+                          {t('editTerms.datasetTerms.errorLoadingLicenses')}
+                        </Alert>
                       ) : (
                         licenseOptions.map((option) => (
                           <option key={option.value} value={option.value}>
