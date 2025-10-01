@@ -477,9 +477,10 @@ describe('DatasetMetadata', () => {
 
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDatasetWithExtraFields.persistentId}
-        metadataBlocks={mockDatasetWithExtraFields.metadataBlocks}
+        dataset={mockDatasetWithExtraFields}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
