@@ -1,0 +1,46 @@
+{
+  "name": "Dataset Template One",
+  "isDefault": false,
+  "fields": [
+    {
+      "typeName": "title",
+      "value": "Dataset Template One Title"
+    },
+    {
+      "typeName": "dsDescription",
+      "value": [
+        {
+          "dsDescriptionValue": {
+            "typeName": "dsDescriptionValue",
+            "value": "This is the description from Dataset Template One"
+          }
+        }
+      ]
+    },
+    {
+      "typeName": "subject",
+      "value": ["Agricultural Sciences", "Arts and Humanities"]
+    },
+    {
+      "typeName": "author",
+      "value": [
+        {
+          "authorName": {
+            "typeName": "authorName",
+            "value": "Belicheck, Bill"
+          },
+          "authorAffiliation": {
+            "typeName": "authorIdentifierScheme",
+            "value": "ORCID"
+          }
+        }
+      ]
+    }
+  ],
+  "instructions": [
+    {
+      "instructionField": "author",
+      "instructionText": "The author data"
+    }
+  ]
+}

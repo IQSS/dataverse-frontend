@@ -1,7 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { MetadataBlockInfoMother } from '@tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { MetadataFieldsHelper } from '@/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 import { useGetAllMetadataBlocksInfo } from '@/shared/hooks/useGetAllMetadataBlocksInfo'
 
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -25,14 +24,7 @@ describe('useGetAllMetadataBlocksInfo', () => {
     await act(() => {
       expect(result.current.isLoading).to.deep.equal(false)
 
-      const allMetadataBlocksInfoNormalized =
-        MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(
-          allMetadataBlocksInfoMock
-        )
-
-      return expect(result.current.allMetadataBlocksInfo).to.deep.equal(
-        allMetadataBlocksInfoNormalized
-      )
+      return expect(result.current.allMetadataBlocksInfo).to.deep.equal(allMetadataBlocksInfoMock)
     })
   })
 

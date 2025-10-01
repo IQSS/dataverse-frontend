@@ -20,7 +20,8 @@ export default defineConfig({
     port: 5173,
     hmr: {
       clientPort: 8000 // nginx reverse proxy port
-    }
+    },
+    allowedHosts: true
   },
   resolve: {
     alias: {

@@ -1,6 +1,7 @@
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
 import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { FileDownloadSize } from '../../../files/domain/models/FileMetadata'
+import { License } from '@/licenses/domain/models/License'
 
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
@@ -104,8 +105,8 @@ export interface CitationMetadataBlock extends DatasetMetadataBlock {
 }
 
 interface OtherId extends DatasetMetadataSubField {
-  otherIdAgency: string
-  otherIdValue: string
+  otherIdAgency?: string
+  otherIdValue?: string
 }
 
 export interface Author extends DatasetMetadataSubField {
@@ -191,11 +192,7 @@ interface Software extends DatasetMetadataSubField {
   softwareVersion?: string
 }
 
-export interface DatasetLicense {
-  name: string
-  uri: string
-  iconUri?: string
-}
+export type DatasetLicense = Pick<License, 'name' | 'uri' | 'iconUri'>
 
 export const defaultLicense: DatasetLicense = {
   name: 'CC0 1.0',

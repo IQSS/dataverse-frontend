@@ -9,6 +9,7 @@ import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
 import { DatasetLicenseUpdateRequest } from '../models/DatasetLicenseUpdateRequest'
+import { DatasetTemplate } from '../models/DatasetTemplate'
 
 export interface DatasetRepository {
   getByPersistentId: (
@@ -59,4 +60,5 @@ export interface DatasetRepository {
     version: string,
     format: CitationFormat
   ) => Promise<FormattedCitation>
+  getTemplates: (collectionIdOrAlias: number | string) => Promise<DatasetTemplate[]>
 }

@@ -50,6 +50,8 @@ import { SessionContext } from '@/sections/session/SessionContext'
 import { User } from '@/users/domain/models/User'
 import { OIDC_AUTH_CONFIG } from '@/config'
 import { ToastContainer } from 'react-toastify'
+import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
+import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 
 // Define your custom mount function
 
@@ -71,7 +73,9 @@ Cypress.Commands.add(
     return cy.mount(
       <ThemeProvider>
         <I18nextProvider i18n={i18next}>
-          <RouterProvider router={memoryRouter} />
+          <ExternalToolsProvider externalToolsRepository={new ExternalToolsMockRepository()}>
+            <RouterProvider router={memoryRouter} />
+          </ExternalToolsProvider>
         </I18nextProvider>
         <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
       </ThemeProvider>

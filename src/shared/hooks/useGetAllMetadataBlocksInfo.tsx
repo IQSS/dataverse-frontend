@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { getAllMetadataBlocksInfo } from '@/metadata-block-info/domain/useCases/getAllMetadataBlocksInfo'
-import { MetadataFieldsHelper } from '@/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 import { MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 
 interface Props {
@@ -27,10 +26,7 @@ export const useGetAllMetadataBlocksInfo = ({
       try {
         const blocksInfo = await getAllMetadataBlocksInfo(metadataBlockInfoRepository)
 
-        const metadataBlocksInfoNormalized: MetadataBlockInfo[] =
-          MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(blocksInfo)
-
-        setAllMetadataBlocksInfo(metadataBlocksInfoNormalized)
+        setAllMetadataBlocksInfo(blocksInfo)
       } catch (err) {
         const errorMessage =
           err instanceof Error && err.message

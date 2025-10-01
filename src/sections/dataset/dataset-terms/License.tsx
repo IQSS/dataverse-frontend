@@ -1,10 +1,10 @@
 import { Row, Col } from '@iqss/dataverse-design-system'
-import { DatasetLicense as LicenseModel } from '../../../dataset/domain/models/Dataset'
+import { DatasetLicense } from '../../../dataset/domain/models/Dataset'
 import { Trans, useTranslation } from 'react-i18next'
 import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 
 interface LicenseProps {
-  license?: LicenseModel
+  license?: DatasetLicense
 }
 
 export function License({ license }: LicenseProps) {

@@ -30,7 +30,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         displayFormat: '',
         isRequired: true,
         displayOnCreate: true,
-        displayOrder: 0
+        displayOrder: 0,
+        isAdvancedSearchFieldType: false
       },
       controlledVocabularyNotMultiple: {
         name: 'controlledVocabularyNotMultiple',
@@ -46,7 +47,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOrder: 10,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: true
+        displayOnCreate: true,
+        isAdvancedSearchFieldType: false
       },
       controlledVocabularyMultiple: {
         name: 'controlledVocabularyMultiple',
@@ -62,7 +64,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOrder: 10,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: true
+        displayOnCreate: true,
+        isAdvancedSearchFieldType: false
       },
       'primitive.text.not.multiple': {
         name: 'primitive.text.not.multiple',
@@ -77,7 +80,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         displayFormat: '',
         isRequired: true,
         displayOnCreate: true,
-        displayOrder: 0
+        displayOrder: 0,
+        isAdvancedSearchFieldType: false
       },
       'primitive.text.multiple': {
         name: 'primitive.text.multiple',
@@ -92,7 +96,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         displayFormat: '',
         isRequired: true,
         displayOnCreate: true,
-        displayOrder: 0
+        displayOrder: 0,
+        isAdvancedSearchFieldType: false
       },
       'primitive.textbox.not.multiple': {
         name: 'primitive.textbox.not.multiple',
@@ -107,7 +112,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         displayFormat: '',
         isRequired: true,
         displayOnCreate: true,
-        displayOrder: 0
+        displayOrder: 0,
+        isAdvancedSearchFieldType: false
       },
       'primitive.textbox.multiple': {
         name: 'primitive.textbox.multiple',
@@ -122,7 +128,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         displayFormat: '',
         isRequired: true,
         displayOnCreate: true,
-        displayOrder: 0
+        displayOrder: 0,
+        isAdvancedSearchFieldType: false
       },
       'primitive.float.not.multiple': {
         name: 'primitive.float.not.multiple',
@@ -137,7 +144,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: true,
         displayOrder: 22,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       'primitive.float.multiple': {
         name: 'primitive.float.multiple',
@@ -152,7 +160,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: true,
         displayOrder: 22,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       'primitive.int.not.multiple': {
         name: 'primitive.int.not.multiple',
@@ -167,7 +176,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: true,
         displayOrder: 18,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       'primitive.int.multiple': {
         name: 'primitive.int.multiple',
@@ -182,7 +192,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: true,
         displayOrder: 18,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       'primitive.date.not.multiple': {
         name: 'primitive.date.not.multiple',
@@ -198,7 +209,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOrder: 42,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       'primitive.date.multiple': {
         name: 'primitive.date.multiple',
@@ -214,7 +226,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOrder: 42,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       'composed.field.multiple': {
         name: 'composed.field.multiple',
@@ -230,6 +243,7 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOnCreate: true,
         displayOrder: 12,
+        isAdvancedSearchFieldType: false,
         childMetadataFields: {
           'subfield.1': {
             name: 'subfield.1',
@@ -244,7 +258,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 13
+            displayOrder: 13,
+            isAdvancedSearchFieldType: false
           },
           'subfield.2': {
             name: 'subfield.2',
@@ -259,7 +274,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 14
+            displayOrder: 14,
+            isAdvancedSearchFieldType: false
           },
           someNestedKeyWithoutDot: {
             name: 'someNestedKeyWithoutDot',
@@ -274,7 +290,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: true,
             displayOnCreate: true,
-            displayOrder: 0
+            displayOrder: 0,
+            isAdvancedSearchFieldType: false
           },
           controlledVocabularyNotMultiple: {
             name: 'controlledVocabularyNotMultiple',
@@ -290,7 +307,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
             isRequired: false,
             displayOrder: 10,
             typeClass: 'controlledVocabulary',
-            displayOnCreate: true
+            displayOnCreate: true,
+            isAdvancedSearchFieldType: false
           }
         }
       },
@@ -308,6 +326,7 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOnCreate: true,
         displayOrder: 12,
+        isAdvancedSearchFieldType: false,
         childMetadataFields: {
           'subfield.1': {
             name: 'subfield.1',
@@ -322,7 +341,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 13
+            displayOrder: 13,
+            isAdvancedSearchFieldType: false
           },
           'subfield.2': {
             name: 'subfield.2',
@@ -337,7 +357,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 14
+            displayOrder: 14,
+            isAdvancedSearchFieldType: false
           },
           someNestedKeyWithoutDot: {
             name: 'someNestedKeyWithoutDot',
@@ -352,7 +373,8 @@ const metadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: true,
             displayOnCreate: true,
-            displayOrder: 0
+            displayOrder: 0,
+            isAdvancedSearchFieldType: false
           }
         }
       }
@@ -380,7 +402,8 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         displayFormat: '',
         isRequired: true,
         displayOnCreate: true,
-        displayOrder: 0
+        displayOrder: 0,
+        isAdvancedSearchFieldType: false
       },
       controlledVocabularyNotMultiple: {
         name: 'controlledVocabularyNotMultiple',
@@ -396,7 +419,8 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOrder: 10,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: true
+        displayOnCreate: true,
+        isAdvancedSearchFieldType: false
       },
       controlledVocabularyMultiple: {
         name: 'controlledVocabularyMultiple',
@@ -412,9 +436,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOrder: 10,
         typeClass: 'controlledVocabulary',
-        displayOnCreate: true
+        displayOnCreate: true,
+        isAdvancedSearchFieldType: false
       },
-      'primitive.text.not.multiple': {
+      'primitive/text/not/multiple': {
         name: 'primitive/text/not/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -427,9 +452,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         displayFormat: '',
         isRequired: true,
         displayOnCreate: true,
-        displayOrder: 0
+        displayOrder: 0,
+        isAdvancedSearchFieldType: false
       },
-      'primitive.text.multiple': {
+      'primitive/text/multiple': {
         name: 'primitive/text/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -442,9 +468,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         displayFormat: '',
         isRequired: true,
         displayOnCreate: true,
-        displayOrder: 0
+        displayOrder: 0,
+        isAdvancedSearchFieldType: false
       },
-      'primitive.textbox.not.multiple': {
+      'primitive/textbox/not/multiple': {
         name: 'primitive/textbox/not/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -457,9 +484,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         displayFormat: '',
         isRequired: true,
         displayOnCreate: true,
-        displayOrder: 0
+        displayOrder: 0,
+        isAdvancedSearchFieldType: false
       },
-      'primitive.textbox.multiple': {
+      'primitive/textbox/multiple': {
         name: 'primitive/textbox/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -472,9 +500,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         displayFormat: '',
         isRequired: true,
         displayOnCreate: true,
-        displayOrder: 0
+        displayOrder: 0,
+        isAdvancedSearchFieldType: false
       },
-      'primitive.float.not.multiple': {
+      'primitive/float/not/multiple': {
         name: 'primitive/float/not/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -487,9 +516,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: true,
         displayOrder: 22,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
-      'primitive.float.multiple': {
+      'primitive/float/multiple': {
         name: 'primitive/float/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -502,9 +532,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: true,
         displayOrder: 22,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
-      'primitive.int.not.multiple': {
+      'primitive/int/not/multiple': {
         name: 'primitive/int/not/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -517,9 +548,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: true,
         displayOrder: 18,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
-      'primitive.int.multiple': {
+      'primitive/int/multiple': {
         name: 'primitive/int/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -532,9 +564,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: true,
         displayOrder: 18,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
-      'primitive.date.not.multiple': {
+      'primitive/date/not/multiple': {
         name: 'primitive/date/not/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -548,9 +581,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOrder: 42,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
-      'primitive.date.multiple': {
+      'primitive/date/multiple': {
         name: 'primitive/date/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -564,9 +598,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOrder: 42,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
-      'composed.field.multiple': {
+      'composed/field/multiple': {
         name: 'composed/field/multiple',
         displayName: 'Foo',
         title: 'Foo',
@@ -580,8 +615,9 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOnCreate: true,
         displayOrder: 12,
+        isAdvancedSearchFieldType: false,
         childMetadataFields: {
-          'subfield.1': {
+          'subfield/1': {
             name: 'subfield/1',
             displayName: 'bar',
             title: 'Start',
@@ -594,9 +630,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 13
+            displayOrder: 13,
+            isAdvancedSearchFieldType: false
           },
-          'subfield.2': {
+          'subfield/2': {
             name: 'subfield/2',
             displayName: 'bar',
             title: 'End',
@@ -609,7 +646,8 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 14
+            displayOrder: 14,
+            isAdvancedSearchFieldType: false
           },
           someNestedKeyWithoutDot: {
             name: 'someNestedKeyWithoutDot',
@@ -624,7 +662,8 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: true,
             displayOnCreate: true,
-            displayOrder: 0
+            displayOrder: 0,
+            isAdvancedSearchFieldType: false
           },
           controlledVocabularyNotMultiple: {
             name: 'controlledVocabularyNotMultiple',
@@ -640,11 +679,12 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
             isRequired: false,
             displayOrder: 10,
             typeClass: 'controlledVocabulary',
-            displayOnCreate: true
+            displayOnCreate: true,
+            isAdvancedSearchFieldType: false
           }
         }
       },
-      'composed.field.not.multiple': {
+      'composed/field/not/multiple': {
         name: 'composed/field/not/multiple',
         displayName: 'Foo',
         title: 'Foo',
@@ -658,8 +698,9 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
         isRequired: false,
         displayOnCreate: true,
         displayOrder: 12,
+        isAdvancedSearchFieldType: false,
         childMetadataFields: {
-          'subfield.1': {
+          'subfield/1': {
             name: 'subfield/1',
             displayName: 'bar',
             title: 'Start',
@@ -672,9 +713,10 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 13
+            displayOrder: 13,
+            isAdvancedSearchFieldType: false
           },
-          'subfield.2': {
+          'subfield/2': {
             name: 'subfield/2',
             displayName: 'bar',
             title: 'End',
@@ -687,7 +729,8 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 14
+            displayOrder: 14,
+            isAdvancedSearchFieldType: false
           },
           someNestedKeyWithoutDot: {
             name: 'someNestedKeyWithoutDot',
@@ -702,7 +745,8 @@ const normalizedMetadataBlocksInfo: MetadataBlockInfo[] = [
             displayFormat: '',
             isRequired: true,
             displayOnCreate: true,
-            displayOrder: 0
+            displayOrder: 0,
+            isAdvancedSearchFieldType: false
           }
         }
       }
@@ -731,7 +775,8 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         isRequired: true,
         displayOnCreate: true,
         displayOrder: 0,
-        value: 'bar'
+        value: 'bar',
+        isAdvancedSearchFieldType: false
       },
       controlledVocabularyNotMultiple: {
         name: 'controlledVocabularyNotMultiple',
@@ -748,7 +793,8 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         displayOrder: 10,
         typeClass: 'controlledVocabulary',
         displayOnCreate: true,
-        value: 'Option2'
+        value: 'Option2',
+        isAdvancedSearchFieldType: false
       },
       controlledVocabularyMultiple: {
         name: 'controlledVocabularyMultiple',
@@ -765,9 +811,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         displayOrder: 10,
         typeClass: 'controlledVocabulary',
         displayOnCreate: true,
-        value: ['Option1']
+        value: ['Option1'],
+        isAdvancedSearchFieldType: false
       },
-      'primitive.text.not.multiple': {
+      'primitive/text/not/multiple': {
         name: 'primitive/text/not/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -781,9 +828,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         isRequired: true,
         displayOnCreate: true,
         displayOrder: 0,
-        value: 'foo'
+        value: 'foo',
+        isAdvancedSearchFieldType: false
       },
-      'primitive.text.multiple': {
+      'primitive/text/multiple': {
         name: 'primitive/text/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -797,9 +845,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         isRequired: true,
         displayOnCreate: true,
         displayOrder: 0,
-        value: ['foo', 'bar']
+        value: ['foo', 'bar'],
+        isAdvancedSearchFieldType: false
       },
-      'primitive.textbox.not.multiple': {
+      'primitive/textbox/not/multiple': {
         name: 'primitive/textbox/not/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -813,9 +862,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         isRequired: true,
         displayOnCreate: true,
         displayOrder: 0,
-        value: ''
+        value: '',
+        isAdvancedSearchFieldType: false
       },
-      'primitive.textbox.multiple': {
+      'primitive/textbox/multiple': {
         name: 'primitive/textbox/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -829,9 +879,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         isRequired: true,
         displayOnCreate: true,
         displayOrder: 0,
-        value: []
+        value: [],
+        isAdvancedSearchFieldType: false
       },
-      'primitive.float.not.multiple': {
+      'primitive/float/not/multiple': {
         name: 'primitive/float/not/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -845,9 +896,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         displayOrder: 22,
         typeClass: 'primitive',
         displayOnCreate: false,
-        value: '23.55'
+        value: '23.55',
+        isAdvancedSearchFieldType: false
       },
-      'primitive.float.multiple': {
+      'primitive/float/multiple': {
         name: 'primitive/float/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -861,9 +913,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         displayOrder: 22,
         typeClass: 'primitive',
         displayOnCreate: false,
-        value: ['23.55', '45.55']
+        value: ['23.55', '45.55'],
+        isAdvancedSearchFieldType: false
       },
-      'primitive.int.not.multiple': {
+      'primitive/int/not/multiple': {
         name: 'primitive/int/not/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -877,9 +930,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         displayOrder: 18,
         typeClass: 'primitive',
         displayOnCreate: false,
-        value: '23'
+        value: '23',
+        isAdvancedSearchFieldType: false
       },
-      'primitive.int.multiple': {
+      'primitive/int/multiple': {
         name: 'primitive/int/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -893,9 +947,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         displayOrder: 18,
         typeClass: 'primitive',
         displayOnCreate: false,
-        value: ['23', '45']
+        value: ['23', '45'],
+        isAdvancedSearchFieldType: false
       },
-      'primitive.date.not.multiple': {
+      'primitive/date/not/multiple': {
         name: 'primitive/date/not/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -910,9 +965,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         displayOrder: 42,
         typeClass: 'primitive',
         displayOnCreate: false,
-        value: '2022-01-01'
+        value: '2022-01-01',
+        isAdvancedSearchFieldType: false
       },
-      'primitive.date.multiple': {
+      'primitive/date/multiple': {
         name: 'primitive/date/multiple',
         displayName: 'foo',
         title: 'foo',
@@ -927,9 +983,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         displayOrder: 42,
         typeClass: 'primitive',
         displayOnCreate: false,
-        value: ['2022-01-01', '2022-12-31']
+        value: ['2022-01-01', '2022-12-31'],
+        isAdvancedSearchFieldType: false
       },
-      'composed.field.multiple': {
+      'composed/field/multiple': {
         name: 'composed/field/multiple',
         displayName: 'Foo',
         title: 'Foo',
@@ -943,8 +1000,9 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         isRequired: false,
         displayOnCreate: true,
         displayOrder: 12,
+        isAdvancedSearchFieldType: false,
         childMetadataFields: {
-          'subfield.1': {
+          'subfield/1': {
             name: 'subfield/1',
             displayName: 'bar',
             title: 'Start',
@@ -957,9 +1015,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 13
+            displayOrder: 13,
+            isAdvancedSearchFieldType: false
           },
-          'subfield.2': {
+          'subfield/2': {
             name: 'subfield/2',
             displayName: 'bar',
             title: 'End',
@@ -972,7 +1031,8 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 14
+            displayOrder: 14,
+            isAdvancedSearchFieldType: false
           },
           someNestedKeyWithoutDot: {
             name: 'someNestedKeyWithoutDot',
@@ -987,7 +1047,8 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
             displayFormat: '',
             isRequired: true,
             displayOnCreate: true,
-            displayOrder: 0
+            displayOrder: 0,
+            isAdvancedSearchFieldType: false
           },
           controlledVocabularyNotMultiple: {
             name: 'controlledVocabularyNotMultiple',
@@ -1003,7 +1064,8 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
             isRequired: false,
             displayOrder: 10,
             typeClass: 'controlledVocabulary',
-            displayOnCreate: true
+            displayOnCreate: true,
+            isAdvancedSearchFieldType: false
           }
         },
         value: [
@@ -1015,7 +1077,7 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
           }
         ]
       },
-      'composed.field.not.multiple': {
+      'composed/field/not/multiple': {
         name: 'composed/field/not/multiple',
         displayName: 'Foo',
         title: 'Foo',
@@ -1029,8 +1091,9 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
         isRequired: false,
         displayOnCreate: true,
         displayOrder: 12,
+        isAdvancedSearchFieldType: false,
         childMetadataFields: {
-          'subfield.1': {
+          'subfield/1': {
             name: 'subfield/1',
             displayName: 'bar',
             title: 'Start',
@@ -1043,9 +1106,10 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 13
+            displayOrder: 13,
+            isAdvancedSearchFieldType: false
           },
-          'subfield.2': {
+          'subfield/2': {
             name: 'subfield/2',
             displayName: 'bar',
             title: 'End',
@@ -1058,7 +1122,8 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
             displayFormat: '',
             isRequired: false,
             displayOnCreate: true,
-            displayOrder: 14
+            displayOrder: 14,
+            isAdvancedSearchFieldType: false
           },
           someNestedKeyWithoutDot: {
             name: 'someNestedKeyWithoutDot',
@@ -1073,7 +1138,8 @@ const normalizedMetadataBlocksInfoWithValues: MetadataBlockInfoWithMaybeValues[]
             displayFormat: '',
             isRequired: true,
             displayOnCreate: true,
-            displayOrder: 0
+            displayOrder: 0,
+            isAdvancedSearchFieldType: false
           }
         },
         value: {
@@ -1325,7 +1391,7 @@ describe('MetadataFieldsHelper', () => {
     expect(result).to.deep.equal(normalizedMetadataBlocksInfo)
   })
   it('should replace dot keys with slashes from a Dataset current metadata blocks values ', () => {
-    const result = MetadataFieldsHelper.replaceDatasetMetadataBlocksCurrentValuesDotKeysWithSlash(
+    const result = MetadataFieldsHelper.replaceDatasetMetadataBlocksDotKeysWithSlash(
       datasetMetadaBlocksCurrentValues
     )
 
@@ -1385,7 +1451,7 @@ describe('MetadataFieldsHelper', () => {
       MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(metadataBlocksInfo)
 
     const inTestNormalizedDatasetMetadaBlocksCurrentValues =
-      MetadataFieldsHelper.replaceDatasetMetadataBlocksCurrentValuesDotKeysWithSlash(
+      MetadataFieldsHelper.replaceDatasetMetadataBlocksDotKeysWithSlash(
         datasetMetadaBlocksCurrentValues
       )
 

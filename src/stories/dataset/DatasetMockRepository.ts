@@ -16,6 +16,8 @@ import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCou
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLicenseUpdateRequest'
+import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
+import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -170,6 +172,14 @@ export class DatasetMockRepository implements DatasetRepository {
           content: 'Formatted citation content',
           contentType: 'text/plain'
         })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getTemplates(_collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(DatasetTemplateMother.createMany(3))
       }, FakerHelper.loadingTimout())
     })
   }

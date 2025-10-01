@@ -41,6 +41,7 @@ export function DatasetActionButtons({
         fileDownloadSizes={dataset.fileDownloadSizes}
         downloadUrls={dataset.downloadUrls}
         fileStore={dataset.fileStore}
+        persistentId={dataset.persistentId}
       />
       <PublishDatasetMenu
         dataset={dataset}

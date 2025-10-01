@@ -73,7 +73,7 @@ _To get a local copy up and running follow these simple example steps._
 
 [![DockerDesktop][_shield_docker]][_uses_docker_url]
 
-1. **Node &amp; NPM**: `node >= v16` and `npm >= v8`. Recommended versions for this project are `node v19` and `npm v9`.
+1. **Node &amp; NPM**: `node >= v22 < v23` and `npm >= v10`. Recommended versions for this project are `node v22` and `npm v10`.
 2. **Docker**: We use Docker Desktop, but the Docker CLI will also work.
 3. **Create a Copy of .npmrc**: In the project directory root, duplicate `.npmrc.example`, saving the copy as `.npmrc`.
 
@@ -565,8 +565,31 @@ npm run format
 
 ### Enforcing coding standards using pre-commit hooks
 
-We use [pre-commit] library to add pre-commit hooks which automatically check the committed
+We use [husky] library to add pre-commit hooks which automatically check the committed
 code changes for any coding standard violations.
+
+### Changelog Management
+
+This project maintains a changelog following the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format to document all notable changes for users and developers.
+
+#### Changelog Files
+
+- **Main Changelog**: [`CHANGELOG.md`](../CHANGELOG.md) - Documents changes to the main application
+- **Design System Changelog**: [`packages/design-system/CHANGELOG.md`](../packages/design-system/CHANGELOG.md) - Documents changes to design system components
+
+#### When Working on Features
+
+1. **During Development**: Add entries to the `[Unreleased]` section as you implement changes
+2. **Before PR Submission**: Ensure all user-facing changes have appropriate changelog entries
+3. **PR Review**: Reviewers will verify changelog entries are complete and properly formatted
+
+#### Changelog Entry Guidelines
+
+- Use clear, user-focused language
+- Place entries in appropriate categories: `Added`, `Changed`, `Fixed`, `Removed`
+- For design system changes, update both changelogs if the change affects the main application
+
+See the [Changelog Guidelines](../.github/CONTRIBUTING.md#changelog-guidelines) in CONTRIBUTING.md for detailed formatting requirements.
 
 ### Running Tests
 
@@ -923,9 +946,6 @@ However, we prioritize user-centric testing over coverage numbers.
   in the `coverage` folder after running the tests. These reports are also published to [Coveralls](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
   with every pull request and merge. The coverage badge is displayed at the top of the README.
 - **Tests included in the coverage:** We include all unit tests in the coverage report.
-- **Pre-commit hook:** We use [pre-commit](https://www.npmjs.com/package/pre-commit) to run the unit tests before every commit,
-  ensuring that no code is committed without passing the tests. It also runs the coverage checks to ensure that the coverage
-  threshold is met.
 
 #### How to run the code coverage
 
