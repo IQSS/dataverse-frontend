@@ -1,11 +1,12 @@
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { Notification } from '@/notifications/domain/models/Notification'
+import { NotificationMother } from '@tests/component/notifications/domain/models/NotificationMother'
 
 export class NotificationMockRepository implements NotificationRepository {
   getAllNotificationsByUser(): Promise<Notification[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve([])
+        resolve(NotificationMother.createManyRealistic())
       }, 500) // Simulate loading delay
     })
   }

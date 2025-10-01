@@ -9,11 +9,12 @@ import { UserMockLoadingRepository } from '../../shared-mock-repositories/user/U
 import { UserMockErrorRepository } from '../../shared-mock-repositories/user/UserMockErrorRepository'
 import { CollectionMockRepository } from '../../collection/CollectionMockRepository'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
+import { WithNotifications } from '@/stories/WithNotifications'
 
 const meta: Meta<typeof Account> = {
   title: 'Sections/Account Page/ApiTokenSection',
   component: Account,
-  decorators: [WithI18next, WithLayout, WithLoggedInUser],
+  decorators: [WithI18next, WithLayout, WithLoggedInUser, WithNotifications],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }

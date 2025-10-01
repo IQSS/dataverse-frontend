@@ -39,6 +39,7 @@
     "i18next-browser-languagedetector": "7.0.1",
     "i18next-http-backend": "2.1.1",
     "js-md5": "0.8.3",
+    "lodash-es": "^4.17.21",
     "moment-timezone": "0.5.43",
     "react-bootstrap": "2.7.2",
     "react-bootstrap-icons": "1.11.4",
