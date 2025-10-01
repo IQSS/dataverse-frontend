@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
 import { useGetTermsOfUse } from '@/shared/hooks/useGetTermsOfUse'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
-import { TermsOfUseMother } from '@tests/component/info/models/TermsOfUseMother'
+import { TermsOfUseMother } from '@tests/component/info/domain/models/TermsOfUseMother'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository

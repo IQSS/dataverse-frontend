@@ -254,6 +254,10 @@ The **QA** environment is a dedicated, short-lived testing space. It is deployed
 > #### Share Collection and Dataset feature
 >
 > Links to share a collection or a dataset via LinkedIn, X or Facebook will now open in a new tab instead of a popup.
+>
+> #### Featured Items
+>
+> A feature has been added that lets users customize their collections by adding a carousel with featured collections, datasets, files, blog posts, news, and other types of content.
 
 </details>
 

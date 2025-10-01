@@ -5,7 +5,7 @@ import { useGetCollectionMetadataBlocksInfo } from '@/shared/hooks/useGetCollect
 import { useGetAllMetadataBlocksInfo } from '@/shared/hooks/useGetAllMetadataBlocksInfo'
 import { useGetCollectionFacets } from '@/shared/hooks/useGetCollectionFacets'
 import { useGetAllFacetableMetadataFields } from '@/shared/hooks/useGetAllFacetableMetadataFields'
-import { useLoading } from '@/sections/loading/LoadingContext'
+import { useLoading } from '@/shared/contexts/loading/LoadingContext'
 import { useDeepCompareMemo } from 'use-deep-compare'
 import { CollectionFormHelper } from './CollectionFormHelper'
 import {
@@ -21,6 +21,8 @@ import { User } from '@/users/domain/models/User'
 import { CollectionForm } from './collection-form/CollectionForm'
 import { EditCreateCollectionFormSkeleton } from './EditCreateCollectionFormSkeleton'
 import { CollectionHelper } from '@/sections/collection/CollectionHelper'
+import { MetadataFieldsHelper } from '../DatasetMetadataForm/MetadataFieldsHelper'
+import { MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
 export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
@@ -82,6 +84,9 @@ export const EditCreateCollectionForm = ({
     error: allMetadataBlocksInfoError
   } = useGetAllMetadataBlocksInfo({ metadataBlockInfoRepository })
 
+  const allMetadataBlocksInfoNormalized: MetadataBlockInfo[] =
+    MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(allMetadataBlocksInfo)
+
   const {
     collectionFacets,
     isLoading: isLoadingCollectionFacets,
@@ -100,8 +105,8 @@ export const EditCreateCollectionForm = ({
   })
 
   const baseInputLevels: FormattedCollectionInputLevels = useDeepCompareMemo(() => {
-    return CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfo)
-  }, [allMetadataBlocksInfo])
+    return CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfoNormalized)
+  }, [allMetadataBlocksInfoNormalized])
 
   const collectionInputLevelsToFormat =
     mode === 'edit' ? collection.inputLevels : parentCollection.inputLevels
@@ -119,11 +124,11 @@ export const EditCreateCollectionForm = ({
   }, [baseInputLevels, formattedCollectionInputLevels])
 
   const baseBlockNames = useDeepCompareMemo(() => {
-    return allMetadataBlocksInfo.reduce((acc, block) => {
+    return allMetadataBlocksInfoNormalized.reduce((acc, block) => {
       acc[block.name] = false
       return acc
     }, {} as CollectionFormMetadataBlocks)
-  }, [allMetadataBlocksInfo])
+  }, [allMetadataBlocksInfoNormalized])
 
   const defaultBlocksNames = useDeepCompareMemo(
     () =>
@@ -225,7 +230,7 @@ export const EditCreateCollectionForm = ({
       collectionRepository={collectionRepository}
       collectionIdOrParentCollectionId={mode === 'create' ? parentCollection.id : collection.id}
       defaultValues={formDefaultValues}
-      allMetadataBlocksInfo={allMetadataBlocksInfo}
+      allMetadataBlocksInfo={allMetadataBlocksInfoNormalized}
       allFacetableMetadataFields={facetableMetadataFields}
       defaultCollectionFacets={defaultCollectionFacets}
       isEditingRootCollection={isEditingRootCollection}

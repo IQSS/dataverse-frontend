@@ -7,6 +7,7 @@ import { CanvasFixedHeight } from '../CanvasFixedHeight'
 import { DropdownSeparator } from '../../components/dropdown-button/dropdown-separator/DropdownSeparator'
 import { DropdownHeader } from '../../components/dropdown-button/dropdown-header/DropdownHeader'
 import { Icon } from '../../components/icon/Icon'
+import { Stack } from '../../components/stack/Stack'
 
 /**
  * ## Description
@@ -234,6 +235,45 @@ export const WithCustomToggle: Story = {
         <DropdownButtonItem eventKey="option-2">Custom Option 2</DropdownButtonItem>
         <DropdownButtonItem eventKey="option-3">Custom Option 3</DropdownButtonItem>
       </DropdownButton>
+    </CanvasFixedHeight>
+  )
+}
+
+export const AllSizesAtAGlance: Story = {
+  name: 'All sizes at a glance',
+  render: () => (
+    <CanvasFixedHeight height={200}>
+      <Stack direction="horizontal" gap={3}>
+        <DropdownButton
+          withSpacing
+          title="Large size"
+          id="dropdown-large"
+          variant="primary"
+          size="lg">
+          <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+          <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
+          <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+        </DropdownButton>
+        <DropdownButton
+          withSpacing
+          title="Medium size (default)"
+          id="dropdown-medium"
+          variant="secondary">
+          <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+          <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
+          <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+        </DropdownButton>
+        <DropdownButton
+          withSpacing
+          title="Small size"
+          id="dropdown-small"
+          variant="secondary"
+          size="sm">
+          <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+          <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
+          <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+        </DropdownButton>
+      </Stack>
     </CanvasFixedHeight>
   )
 }

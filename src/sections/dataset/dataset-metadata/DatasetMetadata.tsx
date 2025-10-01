@@ -1,44 +1,63 @@
 import { Accordion } from '@iqss/dataverse-design-system'
 import {
-  DatasetMetadataBlock as DatasetMetadataBlockModel,
+  Dataset,
+  DatasetPublishingStatus,
   MetadataBlockName
 } from '../../../dataset/domain/models/Dataset'
 import { DatasetMetadataBlock } from './dataset-metadata-block/DatasetMetadataBlock'
 import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { ExportMetadataDropdown } from './export-metadata-dropdown/ExportMetadataDropdown'
 
 interface DatasetMetadataProps {
-  persistentId: string
-  metadataBlocks: DatasetMetadataBlockModel[]
+  dataset: Dataset
+  anonymizedView: boolean
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  dataverseInfoRepository: DataverseInfoRepository
 }
 
 export function DatasetMetadata({
-  persistentId,
-  metadataBlocks,
-  metadataBlockInfoRepository
+  dataset,
+  anonymizedView,
+  metadataBlockInfoRepository,
+  dataverseInfoRepository
 }: DatasetMetadataProps) {
   return (
-    <Accordion defaultActiveKey={['0']} alwaysOpen>
-      {metadataBlocks.map((metadataBlock, index) => {
-        metadataBlock.fields =
-          metadataBlock.name === MetadataBlockName.CITATION
-            ? { persistentId: persistentId, ...metadataBlock.fields }
-            : metadataBlock.fields
+    <>
+      <div className="d-flex justify-content-end mb-3">
+        <ExportMetadataDropdown
+          datasetPersistentId={dataset.persistentId}
+          anonymizedView={anonymizedView}
+          datasetIsReleased={dataset.version.someDatasetVersionHasBeenReleased}
+          datasetIsDeaccessioned={
+            dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
+          }
+          canUpdateDataset={dataset.permissions?.canUpdateDataset}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
+      </div>
+      <Accordion defaultActiveKey={['0']} alwaysOpen>
+        {dataset.metadataBlocks.map((metadataBlock, index) => {
+          metadataBlock.fields =
+            metadataBlock.name === MetadataBlockName.CITATION
+              ? { persistentId: dataset.persistentId, ...metadataBlock.fields }
+              : metadataBlock.fields
 
-        // If fields are empty, skip rendering the block
-        if (Object.keys(metadataBlock.fields).length === 0) {
-          return null
-        }
+          // If fields are empty, skip rendering the block
+          if (Object.keys(metadataBlock.fields).length === 0) {
+            return null
+          }
 
-        return (
-          <Accordion.Item key={`${metadataBlock.name}-${index}`} eventKey={index.toString()}>
-            <DatasetMetadataBlock
-              metadataBlock={metadataBlock}
-              metadataBlockInfoRepository={metadataBlockInfoRepository}
-            />
-          </Accordion.Item>
-        )
-      })}
-    </Accordion>
+          return (
+            <Accordion.Item key={`${metadataBlock.name}-${index}`} eventKey={index.toString()}>
+              <DatasetMetadataBlock
+                metadataBlock={metadataBlock}
+                metadataBlockInfoRepository={metadataBlockInfoRepository}
+              />
+            </Accordion.Item>
+          )
+        })}
+      </Accordion>
+    </>
   )
 }
