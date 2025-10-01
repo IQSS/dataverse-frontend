@@ -252,6 +252,7 @@ describe('EditDatasetMenu', () => {
   it('renders the Edit Private URL if user can manage file permissions', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.create({
+        canUpdateDataset: true,
         canManageDatasetPermissions: false,
         canManageFilesPermissions: true
       }),
