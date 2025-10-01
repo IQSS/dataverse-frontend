@@ -6,7 +6,7 @@ import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInf
 import { JSTermsOfUseMapper } from '@/info/infrastructure/mappers/JSTermsOfUseMapper'
 import { ValidTokenNotLinkedAccountForm } from '@/sections/sign-up/valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
 import { AuthContextMother } from '@tests/component/auth/AuthContextMother'
-import { TermsOfUseMother } from '@tests/component/info/models/TermsOfUseMother'
+import { TermsOfUseMother } from '@tests/component/info/domain/models/TermsOfUseMother'
 
 const userRepository: UserRepository = {} as UserRepository
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository

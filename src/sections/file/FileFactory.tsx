@@ -5,9 +5,12 @@ import { File } from './File'
 import { useSearchParams } from 'react-router-dom'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { searchParamVersionToDomainVersion } from '../../router'
+import { DataverseInfoJSDataverseRepository } from '@/info/infrastructure/repositories/DataverseInfoJSDataverseRepository'
 
 const repository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
+const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
+
 export class FileFactory {
   static create(): ReactElement {
     return <FileWithSearchParams />
@@ -31,6 +34,7 @@ function FileWithSearchParams() {
       id={id}
       datasetVersionNumber={datasetVersionNumber}
       datasetRepository={datasetRepository}
+      dataverseInfoRepository={dataverseInfoRepository}
     />
   )
 }

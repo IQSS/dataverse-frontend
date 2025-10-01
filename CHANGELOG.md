@@ -9,6 +9,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Added
 
 - Dataset Templates Selector in the Create Dataset page.
+- Metadata Export Dropdown to the metadata tab of Dataset Page and File Page.
 
 ### Changed
 

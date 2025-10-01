@@ -2,6 +2,7 @@ import { FileRepository } from '../../../../src/files/domain/repositories/FileRe
 import { FileMother } from '../../files/domain/models/FileMother'
 import { File } from '../../../../src/sections/file/File'
 import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
+import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 
 const fileRepository: FileRepository = {} as FileRepository
 
@@ -11,7 +12,12 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+      <File
+        repository={fileRepository}
+        id={19}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
     )
 
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
@@ -39,7 +45,12 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+      <File
+        repository={fileRepository}
+        id={19}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
     )
 
     cy.findByTestId('file-skeleton').should('exist')
@@ -51,7 +62,12 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(undefined)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+      <File
+        repository={fileRepository}
+        id={19}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
     )
 
     cy.findByTestId('not-found-page').should('exist')
@@ -62,7 +78,12 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+      <File
+        repository={fileRepository}
+        id={19}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
     )
 
     cy.findByText('Restricted File Icon').should('exist')
@@ -78,6 +99,7 @@ describe('File', () => {
         id={19}
         datasetVersionNumber={'2.0'}
         datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 

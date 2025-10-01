@@ -9,6 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
   - Add `customToggle` prop to allow custom toggle components.
   - Add `customToggleClassname` and `customToggleMenuClassname` props to allow custom styling of the custom toggle dropdown wrapper and menu.
   - Add `align` prop to control the alignment of the dropdown menu.
+  - Add `size` prop to control the size of the button (e.g., 'sm', 'lg').
 - **DropdownButtonItem:**
   - Add `type` prop to allow specifying the type of the element.
 - **SelectAdvanced:**

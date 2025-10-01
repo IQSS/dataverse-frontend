@@ -7,6 +7,7 @@ import { FileMockLoadingRepository } from './FileMockLoadingRepository'
 import { FileMockNoDataRepository } from './FileMockNoDataRepository'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
+import { DataverseInfoMockRepository } from '../shared-mock-repositories/info/DataverseInfoMockRepository'
 
 const meta: Meta<typeof File> = {
   title: 'Pages/File',
@@ -26,6 +27,7 @@ export const Default: Story = {
     <File
       repository={new FileMockRepository()}
       datasetRepository={new DatasetMockRepository()}
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
       id={56}
     />
   )
@@ -36,6 +38,7 @@ export const Restricted: Story = {
     <File
       repository={new FileMockRepository(FileMother.createRestricted())}
       datasetRepository={new DatasetMockRepository()}
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
       id={56}
     />
   )
@@ -46,6 +49,7 @@ export const RestrictedWithAccessGranted: Story = {
     <File
       repository={new FileMockRepository(FileMother.createRestrictedWithAccessGranted())}
       datasetRepository={new DatasetMockRepository()}
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
       id={56}
     />
   )
@@ -56,6 +60,7 @@ export const Loading: Story = {
     <File
       repository={new FileMockLoadingRepository()}
       datasetRepository={new DatasetMockRepository()}
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
       id={56}
     />
   )
@@ -66,6 +71,7 @@ export const FileNotFound: Story = {
     <File
       repository={new FileMockNoDataRepository()}
       datasetRepository={new DatasetMockRepository()}
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
       id={56}
     />
   )
