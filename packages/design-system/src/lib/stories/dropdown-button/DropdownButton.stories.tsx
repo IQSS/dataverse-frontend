@@ -240,6 +240,7 @@ export const WithCustomToggle: Story = {
 }
 
 export const AllSizesAtAGlance: Story = {
+  name: 'All sizes at a glance',
   render: () => (
     <CanvasFixedHeight height={200}>
       <Stack direction="horizontal" gap={3}>

@@ -23,20 +23,23 @@ import { useExternalTools } from '@/shared/contexts/external-tools/ExternalTools
 import { FilePageHelper } from './FilePageHelper'
 import { FileEmbeddedExternalTool } from './file-embedded-external-tool/FileEmbeddedExternalTool'
 import { useScrollTop } from '@/shared/hooks/useScrollTop'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 
 interface FileProps {
+  id: number
   repository: FileRepository
   datasetRepository: DatasetRepository
-  id: number
+  dataverseInfoRepository: DataverseInfoRepository
   datasetVersionNumber?: string
   toolTypeSelectedQueryParam?: string
 }
 
 export function File({
-  repository,
   id,
-  datasetVersionNumber,
+  repository,
   datasetRepository,
+  dataverseInfoRepository,
+  datasetVersionNumber,
   toolTypeSelectedQueryParam
 }: FileProps) {
   useScrollTop()
@@ -189,7 +192,9 @@ export function File({
                   name={file.name}
                   metadata={file.metadata}
                   permissions={file.permissions}
-                  datasetPublishingStatus={file.datasetVersion.publishingStatus}
+                  datasetPersistentId={file.datasetPersistentId}
+                  datasetVersion={file.datasetVersion}
+                  dataverseInfoRepository={dataverseInfoRepository}
                 />
               </div>
             </Tabs.Tab>

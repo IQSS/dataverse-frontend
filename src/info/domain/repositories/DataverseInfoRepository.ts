@@ -2,6 +2,7 @@ import { ZipDownloadLimit } from '@/settings/domain/models/ZipDownloadLimit'
 import { DataverseVersion } from '../models/DataverseVersion'
 import { TermsOfUse } from '../models/TermsOfUse'
 import { Setting } from '@/settings/domain/models/Setting'
+import { DatasetMetadataExportFormats } from '../models/DatasetMetadataExportFormats'
 
 export interface DataverseInfoRepository {
   getVersion(): Promise<DataverseVersion>
@@ -10,4 +11,5 @@ export interface DataverseInfoRepository {
   getMaxEmbargoDurationInMonths: () => Promise<Setting<number>>
   getHasPublicStore: () => Promise<Setting<boolean>>
   getExternalStatusesAllowed: () => Promise<Setting<string[]>>
+  getAvailableDatasetMetadataExportFormats: () => Promise<DatasetMetadataExportFormats>
 }

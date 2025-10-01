@@ -19,6 +19,7 @@ import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/met
 import { DatasetMockRepository } from './DatasetMockRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 import { ContactMockRepository } from '../shared-mock-repositories/contact/ContactMockRepository'
+import { DataverseInfoMockRepository } from '../shared-mock-repositories/info/DataverseInfoMockRepository'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -43,6 +44,7 @@ export const Default: Story = {
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       filesTabInfiniteScrollEnabled
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }
@@ -55,6 +57,7 @@ export const WithNormalPagination: Story = {
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }
@@ -69,6 +72,7 @@ export const DraftWithAllDatasetPermissions: Story = {
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       filesTabInfiniteScrollEnabled
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }
@@ -82,6 +86,7 @@ export const Deaccessioned: Story = {
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       filesTabInfiniteScrollEnabled
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }
@@ -95,6 +100,7 @@ export const LoggedInAsOwner: Story = {
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       filesTabInfiniteScrollEnabled
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }
@@ -109,6 +115,7 @@ export const Loading: Story = {
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       filesTabInfiniteScrollEnabled
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }
@@ -123,6 +130,7 @@ export const DatasetNotFound: Story = {
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       filesTabInfiniteScrollEnabled
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }
@@ -137,6 +145,7 @@ export const DatasetAnonymizedView: Story = {
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       filesTabInfiniteScrollEnabled
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }
@@ -151,6 +160,7 @@ export const DatasetWithNoFiles: Story = {
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       filesTabInfiniteScrollEnabled
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }

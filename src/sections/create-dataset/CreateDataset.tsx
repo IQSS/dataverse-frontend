@@ -50,11 +50,10 @@ export function CreateDataset({
 
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
 
-  const { datasetTemplates, isLoadingDatasetTemplates, errorGetDatasetTemplates } =
-    useGetDatasetTemplates({
-      datasetRepository,
-      collectionIdOrAlias: collectionId
-    })
+  const { datasetTemplates, isLoadingDatasetTemplates } = useGetDatasetTemplates({
+    datasetRepository,
+    collectionIdOrAlias: collectionId
+  })
 
   const handleDatasetTemplateChange = (selectedTemplateId: string) => {
     const template: DatasetTemplate | null =

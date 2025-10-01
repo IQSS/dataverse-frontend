@@ -31,6 +31,8 @@ import { DatasetVersions } from './dataset-versions/DatasetVersions'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { DatasetMetrics } from './dataset-metrics/DatasetMetrics'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { useAnonymized } from './anonymized/AnonymizedContext'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -38,6 +40,7 @@ interface DatasetProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionRepository: CollectionRepository
   contactRepository: ContactRepository
+  dataverseInfoRepository: DataverseInfoRepository
   filesTabInfiniteScrollEnabled?: boolean
   publishInProgress?: boolean
   tab?: string
@@ -49,6 +52,7 @@ export function Dataset({
   metadataBlockInfoRepository,
   collectionRepository,
   contactRepository,
+  dataverseInfoRepository,
   filesTabInfiniteScrollEnabled,
   publishInProgress,
   tab = 'files'
@@ -62,6 +66,7 @@ export function Dataset({
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
   const [activeTab, setActiveTab] = useState<string>(tab)
   const termsTabRef = useRef<HTMLDivElement>(null)
+  const { anonymizedView } = useAnonymized()
   useUpdateDatasetAlerts({
     dataset,
     publishInProgress
@@ -205,9 +210,10 @@ export function Dataset({
                 <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
                   <div className={styles['tab-container']}>
                     <DatasetMetadata
-                      persistentId={dataset.persistentId}
-                      metadataBlocks={dataset.metadataBlocks}
+                      dataset={dataset}
+                      anonymizedView={anonymizedView}
                       metadataBlockInfoRepository={metadataBlockInfoRepository}
+                      dataverseInfoRepository={dataverseInfoRepository}
                     />
                   </div>
                 </Tabs.Tab>

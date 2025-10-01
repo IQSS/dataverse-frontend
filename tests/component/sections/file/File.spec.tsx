@@ -6,6 +6,7 @@ import { ExternalToolsRepository } from '@/externalTools/domain/repositories/Ext
 import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { FileExternalToolResolvedMother } from '@tests/component/externalTools/domain/models/FileExternalToolResolvedMother'
+import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 
 const fileRepository: FileRepository = {} as FileRepository
 
@@ -15,7 +16,12 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+      <File
+        repository={fileRepository}
+        id={19}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
     )
 
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
@@ -43,7 +49,12 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+      <File
+        repository={fileRepository}
+        id={19}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
     )
 
     cy.findByTestId('file-skeleton').should('exist')
@@ -55,7 +66,12 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(undefined)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+      <File
+        repository={fileRepository}
+        id={19}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
     )
 
     cy.findByTestId('not-found-page').should('exist')
@@ -66,7 +82,12 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File repository={fileRepository} id={19} datasetRepository={new DatasetMockRepository()} />
+      <File
+        repository={fileRepository}
+        id={19}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
     )
 
     cy.findByText('Restricted File Icon').should('exist')
@@ -82,6 +103,7 @@ describe('File', () => {
         id={19}
         datasetVersionNumber={'2.0'}
         datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
       />
     )
 
@@ -116,6 +138,7 @@ describe('File', () => {
             repository={fileRepository}
             id={19}
             datasetRepository={new DatasetMockRepository()}
+            dataverseInfoRepository={new DataverseInfoMockRepository()}
           />
         </ExternalToolsProvider>
       )
@@ -134,6 +157,7 @@ describe('File', () => {
             repository={fileRepository}
             id={19}
             datasetRepository={new DatasetMockRepository()}
+            dataverseInfoRepository={new DataverseInfoMockRepository()}
           />
         </ExternalToolsProvider>
       )
@@ -155,6 +179,7 @@ describe('File', () => {
             repository={fileRepository}
             id={19}
             datasetRepository={new DatasetMockRepository()}
+            dataverseInfoRepository={new DataverseInfoMockRepository()}
           />
         </ExternalToolsProvider>
       )
@@ -171,6 +196,7 @@ describe('File', () => {
             repository={fileRepository}
             id={19}
             datasetRepository={new DatasetMockRepository()}
+            dataverseInfoRepository={new DataverseInfoMockRepository()}
           />
         </ExternalToolsProvider>
       )
@@ -190,6 +216,7 @@ describe('File', () => {
             repository={fileRepository}
             id={19}
             datasetRepository={new DatasetMockRepository()}
+            dataverseInfoRepository={new DataverseInfoMockRepository()}
           />
         </ExternalToolsProvider>
       )

@@ -6,9 +6,11 @@ import { File } from './File'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { searchParamVersionToDomainVersion } from '../../router'
 import { QueryParamKey } from '../Route.enum'
+import { DataverseInfoJSDataverseRepository } from '@/info/infrastructure/repositories/DataverseInfoJSDataverseRepository'
 
 const repository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
+const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
 
 export class FileFactory {
   static create(): ReactElement {
@@ -36,6 +38,7 @@ function FileWithSearchParams() {
       datasetVersionNumber={datasetVersionNumber}
       datasetRepository={datasetRepository}
       toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
+      dataverseInfoRepository={dataverseInfoRepository}
     />
   )
 }
