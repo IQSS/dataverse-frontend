@@ -248,4 +248,22 @@ describe('EditDatasetMenu', () => {
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
     cy.findByRole('button', { name: 'Files (Upload)' }).should('not.exist')
   })
+
+  it('renders the Edit Private URL if user can manage file permissions', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.create({
+        canManageDatasetPermissions: false,
+        canManageFilesPermissions: true
+      }),
+      locks: [],
+      hasValidTermsOfAccess: true
+    })
+
+    cy.mountAuthenticated(
+      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+    )
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Private URL' }).should('exist')
+  })
 })
