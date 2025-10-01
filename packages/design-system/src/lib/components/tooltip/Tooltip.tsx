@@ -1,5 +1,5 @@
-import { OverlayTrigger as OverlayTriggerBS, Tooltip as TooltipBS } from 'react-bootstrap'
 import { Placement } from 'react-bootstrap/types'
+import { OverlayTrigger as OverlayTriggerBS, Tooltip as TooltipBS } from 'react-bootstrap'
 import { ReactElement } from 'react'
 
 interface OverlayTriggerProps {

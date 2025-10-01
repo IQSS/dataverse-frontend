@@ -60,4 +60,17 @@ describe('FileEmbargoDate', () => {
     cy.findByText(`Embargoed until`).should('exist')
     cy.get('time').should('have.text', dateString)
   })
+
+  it('renders the embargo date in short format', () => {
+    const embargoDate = new Date('2123-09-18')
+    const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
+    const status = DatasetPublishingStatus.RELEASED
+
+    cy.customMount(
+      <FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} format="short" />
+    )
+    const dateString = DateHelper.toDisplayFormat(embargoDate)
+    cy.findByText(`Embargoed until`).should('exist')
+    cy.get('time').should('have.text', dateString)
+  })
 })

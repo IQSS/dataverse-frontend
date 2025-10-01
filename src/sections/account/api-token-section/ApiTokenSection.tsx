@@ -53,8 +53,8 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
     })
   }
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(currentApiTokenInfo?.apiToken ?? '').catch(
+  const copyToClipboard = (currentApiToken: string) => {
+    navigator.clipboard.writeText(currentApiToken).catch(
       /* istanbul ignore next */ (error) => {
         console.error('Failed to copy text:', error)
       }
@@ -104,7 +104,9 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
             <code data-testid="api-token">{currentApiTokenInfo.apiToken}</code>
           </div>
           <div className={styles['btns-wrapper']} role="group">
-            <Button variant="secondary" onClick={copyToClipboard}>
+            <Button
+              variant="secondary"
+              onClick={() => copyToClipboard(currentApiTokenInfo.apiToken)}>
               {t('copyToClipboard')}
             </Button>
             <Button variant="secondary" onClick={handleCreateToken}>

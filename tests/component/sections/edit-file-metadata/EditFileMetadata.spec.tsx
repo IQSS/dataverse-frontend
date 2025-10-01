@@ -2,7 +2,7 @@ import {
   EditFileMetadata,
   EditFileMetadataReferrer
 } from '@/sections/edit-file-metadata/EditFileMetadata'
-import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
+import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
 import { FilePermissionsMother } from '@tests/component/files/domain/models/FilePermissionsMother'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'

@@ -7,6 +7,10 @@ import { FileMockLoadingRepository } from './FileMockLoadingRepository'
 import { FileMockNoDataRepository } from './FileMockNoDataRepository'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
+import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
+import { ExternalToolsMockRepository } from '../shared-mock-repositories/externalTools/ExternalToolsMockRepository'
+import { FakerHelper } from '@tests/component/shared/FakerHelper'
+import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { DataverseInfoMockRepository } from '../shared-mock-repositories/info/DataverseInfoMockRepository'
 
 const meta: Meta<typeof File> = {
@@ -74,5 +78,65 @@ export const FileNotFound: Story = {
       dataverseInfoRepository={new DataverseInfoMockRepository()}
       id={56}
     />
+  )
+}
+
+export const WithMultipleExternalTools: Story = {
+  render: () => (
+    <ExternalToolsProvider externalToolsRepository={new ExternalToolsMockRepository()}>
+      <File
+        repository={new FileMockRepository(FileMother.createRealistic())}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+        id={56}
+        toolTypeSelectedQueryParam="preview"
+      />
+    </ExternalToolsProvider>
+  )
+}
+
+const externalToolsRepositoryOnlyPreviewTool = new ExternalToolsMockRepository()
+externalToolsRepositoryOnlyPreviewTool.getExternalTools = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([ExternalToolsMother.createFilePreviewTool()])
+    }, FakerHelper.loadingTimout())
+  })
+}
+
+export const WithOnlyOnePreviewExternalTool: Story = {
+  render: () => (
+    <ExternalToolsProvider externalToolsRepository={externalToolsRepositoryOnlyPreviewTool}>
+      <File
+        repository={new FileMockRepository(FileMother.createRealistic())}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+        id={56}
+        toolTypeSelectedQueryParam="preview"
+      />
+    </ExternalToolsProvider>
+  )
+}
+
+const externalToolsRepositoryOnlyQueryTool = new ExternalToolsMockRepository()
+externalToolsRepositoryOnlyQueryTool.getExternalTools = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([ExternalToolsMother.createFileQueryTool()])
+    }, FakerHelper.loadingTimout())
+  })
+}
+
+export const WithOnlyOneQueryExternalTool: Story = {
+  render: () => (
+    <ExternalToolsProvider externalToolsRepository={externalToolsRepositoryOnlyQueryTool}>
+      <File
+        repository={new FileMockRepository(FileMother.createRealistic())}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+        id={56}
+        toolTypeSelectedQueryParam="query"
+      />
+    </ExternalToolsProvider>
   )
 }

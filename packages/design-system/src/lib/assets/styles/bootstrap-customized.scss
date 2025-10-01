@@ -128,17 +128,75 @@ th {
   vertical-align: middle;
 }
 
-.btn-group > div:not(:last-child) > .btn-group > .btn,
-.btn-group-vertical > div:not(:last-child) > .btn-group > .btn {
+/* Start - Overrides to Fix Group Butttons with Buttons with Tooltips */
+
+.btn-group > .btn,
+.btn-group > div > .btn {
+  margin-left: -1px;
+}
+
+.btn-group-vertical > .btn-group > .btn,
+.btn-group-vertical > div:not([role='group']) > .btn-group > .btn {
+  margin-left: 0;
+}
+
+/* stylelint-disable */
+.btn-group-vertical > .btn,
+.btn-group-vertical > div > .btn {
+  margin-top: -1px;
+}
+
+.btn-group-vertical > .btn:not(:last-child, :first-child),
+.btn-group-vertical > div:not(:last-child, :first-child, [role='group']),
+.btn-group-vertical > div:not(:last-child, :first-child, [role='group']) > .btn-group {
+  border-radius: 0;
+}
+
+.btn-group > div:not(:first-child) > .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn-group > div:not(:last-child) > .btn {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.btn-group > div:not(:first-child) > .btn-group > .btn,
-.btn-group-vertical > div:not(:first-child) > .btn-group > .btn {
+.btn-group-vertical > div:not([role='group']),
+.btn-group-vertical > div:not([role='group']) > .btn,
+.btn-group-vertical > div:not([role='group']) > .btn-group {
+  width: 100%;
+}
+
+.btn-group-vertical
+  > div:not(:first-child, :last-child, [role='group'])
+  > .btn:not(.dropdown-toggle),
+.btn-group-vertical > div:not(:last-child, :first-child, [role='group']) > .btn-group > .btn {
+  border-radius: 0;
+}
+
+.btn-group-vertical > div:first-child:not([role='group']) > .btn:not(.dropdown-toggle),
+.btn-group-vertical > div:first-child:not([role='group']) > .btn-group > .btn {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn-group-vertical > div:last-child:not([role='group']) > .btn:not(.dropdown-toggle),
+.btn-group-vertical > div:last-child:not([role='group']) > .btn-group > .btn {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.btn-group > div:not(:last-child) > .btn-group > .btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-group > div:not(:first-child) > .btn-group > .btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+/* End - Overrides to Fix Group Butttons with Buttons with Tooltips */
 
 .btn-link {
   text-decoration: none;

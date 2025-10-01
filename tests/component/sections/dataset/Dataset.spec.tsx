@@ -1,7 +1,7 @@
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../../../src/sections/dataset/Dataset'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
-import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
+import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 import {
   ANONYMIZED_FIELD_VALUE,
   MetadataBlockName

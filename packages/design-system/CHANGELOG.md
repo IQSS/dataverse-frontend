@@ -15,6 +15,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **SelectAdvanced:**
   - Fix word wrapping in options list to prevent overflow and ensure long text is displayed correctly.
   - Support for options with a shape of `{ label: string; value: string; }[]` instead of just `string[]`.
+- **ButtonGroup:**
+  - Fix styles for vertical button groups when using tooltips.
 
 # [2.0.2](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.0.1...@iqss/dataverse-design-system@2.0.2) (2024-06-23)
 

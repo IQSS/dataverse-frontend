@@ -2,7 +2,7 @@ import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvide
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 import { useDataset } from '../../../../src/sections/dataset/DatasetContext'
-import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
+import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 
 function TestComponent() {
   const { dataset, isLoading } = useDataset()

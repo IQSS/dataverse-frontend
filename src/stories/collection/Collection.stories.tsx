@@ -8,7 +8,7 @@ import { CollectionLoadingMockRepository } from './CollectionLoadingMockReposito
 import { UnpublishedCollectionMockRepository } from '@/stories/collection/UnpublishedCollectionMockRepository'
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
-import { ContactMockRepository } from '../shared/contact/ContactMockRepository'
+import { ContactMockRepository } from '../shared-mock-repositories/contact/ContactMockRepository'
 
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',

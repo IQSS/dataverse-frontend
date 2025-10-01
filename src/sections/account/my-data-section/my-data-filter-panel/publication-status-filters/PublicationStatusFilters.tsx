@@ -52,7 +52,7 @@ export const PublicationStatusFilters = ({
                 <span>{t(`${publicationStatus}`)}</span> <span>({count})</span>
               </>
             }
-            checked={currentPublicationStatuses?.includes(publicationStatus) ?? false}
+            checked={currentPublicationStatuses.includes(publicationStatus)}
             disabled={statusCheckDisabled}
           />
         )

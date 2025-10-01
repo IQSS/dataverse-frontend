@@ -7,13 +7,15 @@ interface LinkToPageProps {
   page: Route
   searchParams?: Record<string, string>
   type: DvObjectType
+  className?: string
 }
 
 export function LinkToPage({
   children,
   page,
   searchParams,
-  type
+  type,
+  className
 }: PropsWithChildren<LinkToPageProps>) {
   const searchParamsString: string = searchParams ? '?' + encodeSearchParamsToURI(searchParams) : ''
 
@@ -21,7 +23,11 @@ export function LinkToPage({
     return <Link to={RouteWithParams.COLLECTIONS(searchParams.id)}>{children}</Link>
   }
 
-  return <Link to={`${page}${searchParamsString}`}>{children}</Link>
+  return (
+    <Link to={`${page}${searchParamsString}`} className={className}>
+      {children}
+    </Link>
+  )
 }
 
 const encodeSearchParamsToURI = (searchParams: Record<string, string>) => {
