@@ -4,14 +4,8 @@ import {
   type MetadataField,
   TypeMetadataFieldOptions
 } from '../../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import {
-  isValidURL,
-  isValidFloat,
-  isValidEmail,
-  isValidInteger,
-  isValidDateFormat,
-  dateKeyMessageErrorMap
-} from '../../../../../../../metadata-block-info/domain/models/fieldValidations'
+import { Validator } from '@/shared/helpers/Validator'
+import { dateKeyMessageErrorMap, MetadataFieldsHelper } from '../../../MetadataFieldsHelper'
 
 interface Props {
   metadataFieldInfo: MetadataField
@@ -41,13 +35,13 @@ export const useDefineRules = ({
       }
 
       if (type === TypeMetadataFieldOptions.URL) {
-        if (!isValidURL(value)) {
+        if (!Validator.isValidURL(value)) {
           return t('field.invalid.url', { displayName, interpolation: { escapeValue: false } })
         }
         return true
       }
       if (type === TypeMetadataFieldOptions.Date) {
-        const validationResult = isValidDateFormat(value)
+        const validationResult = MetadataFieldsHelper.isValidDateFormat(value)
 
         if (!validationResult.valid) {
           const baseMessage = t('field.invalid.date.base', {
@@ -61,19 +55,19 @@ export const useDefineRules = ({
         return true
       }
       if (type === TypeMetadataFieldOptions.Email) {
-        if (!isValidEmail(value)) {
+        if (!Validator.isValidEmail(value)) {
           return t('field.invalid.email', { displayName, interpolation: { escapeValue: false } })
         }
         return true
       }
       if (type === TypeMetadataFieldOptions.Int) {
-        if (!isValidInteger(value)) {
+        if (!Validator.isValidNumber(value)) {
           return t('field.invalid.int', { displayName, interpolation: { escapeValue: false } })
         }
         return true
       }
       if (type === TypeMetadataFieldOptions.Float) {
-        if (!isValidFloat(value)) {
+        if (!Validator.isValidFloat(value)) {
           return t('field.invalid.float', { displayName, interpolation: { escapeValue: false } })
         }
         return true

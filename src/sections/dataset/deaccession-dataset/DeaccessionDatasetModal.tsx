@@ -7,7 +7,7 @@ import { Alert, Button, Col, Form, Modal, Stack } from '@iqss/dataverse-design-s
 import { useDataset } from '../DatasetContext'
 import { Deaccessioned } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { isValidURL } from '@/metadata-block-info/domain/models/fieldValidations'
+import { Validator } from '@/shared/helpers/Validator'
 import { useGetDatasetVersionsSummaries } from '../dataset-versions/useGetDatasetVersionsSummaries'
 import { DeaccessionFormData } from './DeaccessionFormData'
 import { ConfirmationModal } from './ConfirmationModal'
@@ -100,7 +100,7 @@ export function DeaccessionDatasetModal({
     if (value.trim() === '') {
       return true // Consider empty strings as valid
     }
-    return isValidURL(value)
+    return Validator.isValidURL(value)
   }
 
   const handleCloseWithReset = () => {
