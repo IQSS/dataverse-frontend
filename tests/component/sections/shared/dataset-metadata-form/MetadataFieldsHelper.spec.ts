@@ -6,6 +6,8 @@ import {
 } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import {
   DatasetMetadataFormValues,
+  DateErrorCode,
+  DateLikeKind,
   MetadataFieldsHelper
 } from '../../../../../src/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 import { defaultLicense } from '../../../../../src/dataset/domain/models/Dataset'
@@ -1530,6 +1532,73 @@ describe('MetadataFieldsHelper', () => {
       expect(result).to.equal(
         `${metadataBlockName}.${compoundParentName}.${fieldsArrayIndex}.${fieldName}`
       )
+    })
+  })
+
+  describe('isValidDateFormat', () => {
+    const validCases: { input: string; kind: DateLikeKind }[] = [
+      { input: '20', kind: 'Y' },
+      { input: '2023', kind: 'Y' },
+      { input: '2023-11', kind: 'YM' },
+      { input: '2023-11-30', kind: 'YMD' },
+      { input: '2020-02-29', kind: 'YMD' }, // leap day
+      { input: '2023 AD', kind: 'AD' },
+      { input: '2023AD', kind: 'AD' },
+      { input: '2023 BC', kind: 'BC' },
+      { input: '2023BC', kind: 'BC' },
+      { input: '123456 BC', kind: 'BC' },
+      { input: '[2023?]', kind: 'BRACKET' },
+      { input: '[2023 BC?]', kind: 'BRACKET' },
+      { input: '2023-11-30T23:59:59', kind: 'TIMESTAMP' },
+      { input: '2023-11-30T23:59:59.123', kind: 'TIMESTAMP' },
+      { input: '2023-11-30 23:59:59', kind: 'TIMESTAMP' },
+      // whitespace trimming
+      { input: ' 2023-11-30 ', kind: 'YMD' }
+    ]
+
+    const invalidCases: { input: string; code: DateErrorCode }[] = [
+      { input: ' ', code: 'E_UNRECOGNIZED' },
+      { input: '', code: 'E_EMPTY' },
+      { input: '10000', code: 'E_AD_RANGE' },
+      { input: '2023-13', code: 'E_INVALID_MONTH' },
+      { input: '2023-00', code: 'E_INVALID_MONTH' },
+      { input: '2023-11-31', code: 'E_INVALID_DAY' },
+      { input: '2019-02-29', code: 'E_INVALID_DAY' }, // not leap year
+      { input: '2023-11-30T25:00:00', code: 'E_INVALID_TIME' },
+      { input: '2023-11-30T23:59:60', code: 'E_INVALID_TIME' },
+      { input: '[-2023?]', code: 'E_BRACKET_NEGATIVE' },
+      { input: '[2023-11?]', code: 'E_BRACKET_NOT_NUM' },
+      { input: '[foo BC?]', code: 'E_BRACKET_NOT_NUM' },
+      { input: '[99230 AD?]', code: 'E_BRACKET_RANGE' },
+      { input: '[10000?]', code: 'E_BRACKET_RANGE' },
+      { input: '[20a3?]', code: 'E_BRACKET_NOT_NUM' },
+      { input: 'abcd AD', code: 'E_AD_DIGITS' },
+      { input: '20a AD', code: 'E_AD_DIGITS' },
+      { input: '12345 AD', code: 'E_AD_RANGE' },
+      { input: '12x BC', code: 'E_BC_NOT_NUM' },
+      { input: '2023-11-30foo', code: 'E_UNRECOGNIZED' }
+    ]
+
+    it('accepts all valid inputs and returns the right kind', () => {
+      validCases.forEach(({ input, kind }) => {
+        const res = MetadataFieldsHelper.isValidDateFormat(input)
+        expect(res.valid, `expected valid for "${input}"`).to.eq(true)
+
+        if (res.valid) {
+          expect(res.kind, `kind for "${input}"`).to.eq(kind)
+        }
+      })
+    })
+
+    it('rejects invalid inputs and returns correct error code', () => {
+      invalidCases.forEach(({ input, code }) => {
+        const res = MetadataFieldsHelper.isValidDateFormat(input)
+        expect(res.valid, `expected invalid for "${input}"`).to.eq(false)
+
+        if (!res.valid) {
+          expect(res.errorCode, `code for "${input}"`).to.eq(code)
+        }
+      })
     })
   })
 })

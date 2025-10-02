@@ -32,14 +32,14 @@ type ComposedFieldValues = ComposedSingleFieldValue | ComposedSingleFieldValue[]
 
 export type ComposedSingleFieldValue = Record<string, string>
 
-type DateLikeKind = 'Y' | 'YM' | 'YMD' | 'AD' | 'BC' | 'BRACKET' | 'TIMESTAMP'
+export type DateLikeKind = 'Y' | 'YM' | 'YMD' | 'AD' | 'BC' | 'BRACKET' | 'TIMESTAMP'
 
 /** Stable error codes for i18n mapping */
 export const dateKeyMessageErrorMap = {
   E_EMPTY: 'field.invalid.date.empty',
   E_AD_DIGITS: 'field.invalid.date.adDigits',
   E_AD_RANGE: 'field.invalid.date.adRange',
-  E_BC_NOT_NUMERIC: 'field.invalid.date.bcNotNumeric',
+  E_BC_NOT_NUM: 'field.invalid.date.bcNotNumeric',
   E_BRACKET_NEGATIVE: 'field.invalid.date.bracketNegative',
   E_BRACKET_NOT_NUM: 'field.invalid.date.bracketNotNumeric',
   E_BRACKET_RANGE: 'field.invalid.date.bracketRange',
@@ -49,7 +49,7 @@ export const dateKeyMessageErrorMap = {
   E_UNRECOGNIZED: 'field.invalid.date.unrecognized'
 } as const
 
-type DateErrorCode = keyof typeof dateKeyMessageErrorMap
+export type DateErrorCode = keyof typeof dateKeyMessageErrorMap
 
 type DateValidation =
   | { valid: true; kind: DateLikeKind }
@@ -713,16 +713,14 @@ export class MetadataFieldsHelper {
         .replace(/\s+/g, ' ')
 
       if (s.includes('BC')) {
+        // BC: must be purely numeric
         if (!/^\d+$/.test(core)) return this.err('E_BRACKET_NOT_NUM')
-
         return this.ok('BRACKET')
       } else {
+        // AD/unspecified: numeric, 1–4 digits, 0..9999
         if (!/^\d+$/.test(core)) return this.err('E_BRACKET_NOT_NUM')
 
-        if (!/^\d{1,4}$/.test(core)) return this.err('E_BRACKET_RANGE')
-
         if (!this.isValidDateAgainstPattern(core, 'yyyy')) return this.err('E_BRACKET_RANGE')
-
         return this.ok('BRACKET')
       }
     }
@@ -733,8 +731,6 @@ export class MetadataFieldsHelper {
 
       if (!/^\d+$/.test(before)) return this.err('E_AD_DIGITS')
 
-      if (before.length > 4 || Number(before) > 9999) return this.err('E_AD_RANGE')
-
       if (!this.isValidDateAgainstPattern(before, 'yyyy')) return this.err('E_AD_RANGE')
 
       return this.ok('AD')
@@ -743,19 +739,38 @@ export class MetadataFieldsHelper {
     // 4) BC: strip BC, numeric only (no explicit max in JSF)
     if (s.includes('BC')) {
       const before = s.substring(0, s.indexOf('BC')).trim()
-
-      if (!/^\d+$/.test(before)) return this.err('E_BC_NOT_NUMERIC')
-
+      if (!/^\d+$/.test(before)) return this.err('E_BC_NOT_NUM')
       return this.ok('BC')
     }
 
+    // 5) Timestamp fallbacks (temporary)
     if (this.isValidDateAgainstPattern(s, "yyyy-MM-dd'T'HH:mm:ss")) return this.ok('TIMESTAMP')
     if (this.isValidDateAgainstPattern(s, "yyyy-MM-dd'T'HH:mm:ss.SSS")) return this.ok('TIMESTAMP')
     if (this.isValidDateAgainstPattern(s, 'yyyy-MM-dd HH:mm:ss')) return this.ok('TIMESTAMP')
 
+    // ---------- Targeted error mapping (ORDER MATTERS) ----------
+
+    // Numeric but longer than 4 → AD range-style error
     if (/^\d+$/.test(s) && s.length > 4) return this.err('E_AD_RANGE')
+
+    // Distinguish month vs day precisely
+    const ymd = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s)
+    if (ymd) {
+      const [, yStr, mStr, dStr] = ymd
+      const year = Number(yStr)
+      const month = Number(mStr)
+      const day = Number(dStr)
+
+      if (month < 1 || month > 12) return this.err('E_INVALID_MONTH')
+      const dim = this.daysInMonth(year, month)
+      if (day < 1 || day > dim) return this.err('E_INVALID_DAY')
+      // If we get here, something else was invalid earlier, fall through.
+    }
+
+    // Pure year-month (yyyy-MM) → invalid month
     if (/^\d{4}-(\d{2})$/.test(s)) return this.err('E_INVALID_MONTH')
-    if (/^\d{4}-(\d{2})-(\d{2})$/.test(s)) return this.err('E_INVALID_DAY')
+
+    // Looks like datetime → invalid time
     if (/^\d{4}-\d{2}-\d{2}T/.test(s) || /^\d{4}-\d{2}-\d{2} /.test(s))
       return this.err('E_INVALID_TIME')
 
@@ -765,20 +780,18 @@ export class MetadataFieldsHelper {
   public static isValidDateAgainstPattern(dateString: string, pattern: string): boolean {
     if (!dateString) return false
     const s = dateString.trim()
-    if (s.length > pattern.length) return false
+    if (s.length > pattern.length) return false // mirrors Java length guard
 
     switch (pattern) {
       case 'yyyy': {
         if (!/^\d{1,4}$/.test(s)) return false
         const year = Number(s)
-        return year >= 0 && year <= 9999
+        return year >= 0 && year <= 9999 // AD cap
       }
       case 'yyyy-MM': {
         const m = /^(\d{1,4})-(\d{2})$/.exec(s)
         if (!m) return false
-        const year = Number(m[1])
         const month = Number(m[2])
-        if (!(year >= 0 && year <= 9999)) return false
         return month >= 1 && month <= 12
       }
       case 'yyyy-MM-dd': {
@@ -787,42 +800,30 @@ export class MetadataFieldsHelper {
         const year = Number(m[1])
         const month = Number(m[2])
         const day = Number(m[3])
-        if (!(year >= 0 && year <= 9999)) return false
+        // if (!(year >= 0 && year <= 9999)) return false
         if (!(month >= 1 && month <= 12)) return false
         const dim = this.daysInMonth(year, month)
         return day >= 1 && day <= dim
       }
       case "yyyy-MM-dd'T'HH:mm:ss": {
         const m = /^(\d{1,4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})$/.exec(s)
-
         if (!m) return false
-
         const [, y, mo, d, hh, mm, ss] = m
-
         if (!this.isValidDateAgainstPattern(`${y}-${mo}-${d}`, 'yyyy-MM-dd')) return false
-
         return this.isValidHMS(hh, mm, ss)
       }
       case "yyyy-MM-dd'T'HH:mm:ss.SSS": {
         const m = /^(\d{1,4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.(\d{3})$/.exec(s)
-
         if (!m) return false
-
         const [, y, mo, d, hh, mm, ss, ms] = m
-
         if (!this.isValidDateAgainstPattern(`${y}-${mo}-${d}`, 'yyyy-MM-dd')) return false
-
         return this.isValidHMS(hh, mm, ss) && /^\d{3}$/.test(ms)
       }
       case 'yyyy-MM-dd HH:mm:ss': {
         const m = /^(\d{1,4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/.exec(s)
-
         if (!m) return false
-
         const [, y, mo, d, hh, mm, ss] = m
-
         if (!this.isValidDateAgainstPattern(`${y}-${mo}-${d}`, 'yyyy-MM-dd')) return false
-
         return this.isValidHMS(hh, mm, ss)
       }
       default:
