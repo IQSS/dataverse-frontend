@@ -1537,45 +1537,92 @@ describe('MetadataFieldsHelper', () => {
 
   describe('isValidDateFormat', () => {
     const validCases: { input: string; kind: DateLikeKind }[] = [
+      // yyyy, yyyy-MM, yyyy-MM-dd
+      { input: '1', kind: 'Y' },
       { input: '20', kind: 'Y' },
+      { input: '999', kind: 'Y' },
       { input: '2023', kind: 'Y' },
+      { input: ' 2023 ', kind: 'Y' }, // trims
       { input: '2023-11', kind: 'YM' },
+      { input: '1999-01', kind: 'YM' },
+      { input: ' 2023-12 ', kind: 'YM' }, // trims
       { input: '2023-11-30', kind: 'YMD' },
-      { input: '2020-02-29', kind: 'YMD' }, // leap day
+      { input: '2020-02-29', kind: 'YMD' }, // leap year
+      { input: ' 2023-01-01 ', kind: 'YMD' }, // trims
+      { input: '2023-11-01', kind: 'YMD' }, // prioritizes YMD over YM/Y
+
+      // AD/BC
       { input: '2023 AD', kind: 'AD' },
       { input: '2023AD', kind: 'AD' },
       { input: '2023 BC', kind: 'BC' },
       { input: '2023BC', kind: 'BC' },
-      { input: '123456 BC', kind: 'BC' },
+      { input: '123456 BC', kind: 'BC' }, // BC has no explicit upper bound
+
+      // Bracketed
       { input: '[2023?]', kind: 'BRACKET' },
       { input: '[2023 BC?]', kind: 'BRACKET' },
+
+      // Timestamps
       { input: '2023-11-30T23:59:59', kind: 'TIMESTAMP' },
       { input: '2023-11-30T23:59:59.123', kind: 'TIMESTAMP' },
       { input: '2023-11-30 23:59:59', kind: 'TIMESTAMP' },
-      // whitespace trimming
-      { input: ' 2023-11-30 ', kind: 'YMD' }
+      { input: ' 2023-11-30 ', kind: 'YMD' } // whitespace trimming
     ]
 
     const invalidCases: { input: string; code: DateErrorCode }[] = [
-      { input: ' ', code: 'E_UNRECOGNIZED' },
+      // empty / whitespace
       { input: '', code: 'E_EMPTY' },
+      { input: ' ', code: 'E_UNRECOGNIZED' },
+
+      // year out of range / malformed
       { input: '10000', code: 'E_AD_RANGE' },
+      { input: '2023x', code: 'E_UNRECOGNIZED' },
+      { input: 'abcd', code: 'E_UNRECOGNIZED' },
+
+      // invalid YM
       { input: '2023-13', code: 'E_INVALID_MONTH' },
       { input: '2023-00', code: 'E_INVALID_MONTH' },
+      { input: '2023-1', code: 'E_UNRECOGNIZED' },
+      { input: '2023-11x', code: 'E_UNRECOGNIZED' },
+
+      // invalid YMD
       { input: '2023-11-31', code: 'E_INVALID_DAY' },
       { input: '2019-02-29', code: 'E_INVALID_DAY' }, // not leap year
+      { input: '2023-13-01', code: 'E_INVALID_MONTH' },
+      { input: '2023-00-10', code: 'E_INVALID_MONTH' },
+      { input: '2023-11-30x', code: 'E_UNRECOGNIZED' },
+
+      // timestamp invalid date part
+      { input: '2023-13-01T01:02:03', code: 'E_INVALID_TIME' },
+      { input: '2023-11-31T01:02:03', code: 'E_INVALID_TIME' },
+      { input: '2019-02-29T01:02:03', code: 'E_INVALID_TIME' },
+      { input: '2023-00-10T12:34:56.123', code: 'E_INVALID_TIME' },
+      { input: '2023-04-31T12:34:56.123', code: 'E_INVALID_TIME' },
+
+      // timestamp invalid time part
       { input: '2023-11-30T25:00:00', code: 'E_INVALID_TIME' },
       { input: '2023-11-30T23:59:60', code: 'E_INVALID_TIME' },
+      { input: '2023-11-30T12:34:56.12', code: 'E_INVALID_TIME' }, // bad ms
+
+      // timestamp with space
+      { input: '2023-13-01 00:00:00', code: 'E_INVALID_TIME' },
+      { input: '2023-02-30 00:00:00', code: 'E_INVALID_TIME' },
+
+      // bracketed errors
       { input: '[-2023?]', code: 'E_BRACKET_NEGATIVE' },
       { input: '[2023-11?]', code: 'E_BRACKET_NOT_NUM' },
       { input: '[foo BC?]', code: 'E_BRACKET_NOT_NUM' },
       { input: '[99230 AD?]', code: 'E_BRACKET_RANGE' },
       { input: '[10000?]', code: 'E_BRACKET_RANGE' },
       { input: '[20a3?]', code: 'E_BRACKET_NOT_NUM' },
+
+      // AD/BC malformed
       { input: 'abcd AD', code: 'E_AD_DIGITS' },
       { input: '20a AD', code: 'E_AD_DIGITS' },
       { input: '12345 AD', code: 'E_AD_RANGE' },
       { input: '12x BC', code: 'E_BC_NOT_NUM' },
+
+      // trailing junk
       { input: '2023-11-30foo', code: 'E_UNRECOGNIZED' }
     ]
 

@@ -693,6 +693,12 @@ export class MetadataFieldsHelper {
     return null
   }
 
+  /**
+   * This is for validating date type fields in the edit/create dataset form.
+   * It replicates as much as possible the validation in the Dataverse backend
+   * https://github.com/IQSS/dataverse/blob/42a2904a83fa3ed990c13813b9bc2bec166bfd4b/src/main/java/edu/harvard/iq/dataverse/DatasetFieldValueValidator.java#L99
+   */
+
   public static isValidDateFormat(input: string): DateValidation {
     if (!input) return this.err('E_EMPTY')
 
@@ -780,7 +786,7 @@ export class MetadataFieldsHelper {
   public static isValidDateAgainstPattern(dateString: string, pattern: string): boolean {
     if (!dateString) return false
     const s = dateString.trim()
-    if (s.length > pattern.length) return false // mirrors Java length guard
+    if (s.length > pattern.length) return false
 
     switch (pattern) {
       case 'yyyy': {
@@ -800,7 +806,7 @@ export class MetadataFieldsHelper {
         const year = Number(m[1])
         const month = Number(m[2])
         const day = Number(m[3])
-        // if (!(year >= 0 && year <= 9999)) return false
+
         if (!(month >= 1 && month <= 12)) return false
         const dim = this.daysInMonth(year, month)
         return day >= 1 && day <= dim
