@@ -62,10 +62,10 @@
     "field": {
       "required": "{{displayName}} is required",
       "invalid": {
-        "url": "{{displayName}} is not a valid URL",
-        "email": "{{displayName}} is not a valid email",
-        "int": "{{displayName}} is not a valid integer",
-        "float": "{{displayName}} is not a valid float",
+        "url": "{{displayName}} {{value}} is not a valid URL.",
+        "email": "{{displayName}} {{value}} is not a valid email.",
+        "int": "{{displayName}} is not a valid integer.",
+        "float": "{{displayName}} is not a valid float.",
         "date": {
           "base": "{{displayName}} is not a valid date.",
           "empty": "The date is empty.",

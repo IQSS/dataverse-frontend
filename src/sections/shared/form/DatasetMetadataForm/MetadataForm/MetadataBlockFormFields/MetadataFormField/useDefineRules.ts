@@ -36,7 +36,11 @@ export const useDefineRules = ({
 
       if (type === TypeMetadataFieldOptions.URL) {
         if (!Validator.isValidURL(value)) {
-          return t('field.invalid.url', { displayName, interpolation: { escapeValue: false } })
+          return t('field.invalid.url', {
+            displayName,
+            value,
+            interpolation: { escapeValue: false }
+          })
         }
         return true
       }
@@ -56,7 +60,11 @@ export const useDefineRules = ({
       }
       if (type === TypeMetadataFieldOptions.Email) {
         if (!Validator.isValidEmail(value)) {
-          return t('field.invalid.email', { displayName, interpolation: { escapeValue: false } })
+          return t('field.invalid.email', {
+            displayName,
+            value,
+            interpolation: { escapeValue: false }
+          })
         }
         return true
       }
