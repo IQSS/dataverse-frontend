@@ -86,4 +86,13 @@ describe('Header component', () => {
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
   })
+  it('trigger oidcLogin when the Log In button is clicked', () => {
+    cy.customMount(
+      <NotificationProvider repository={notificationRepository}>
+        <Header collectionRepository={collectionRepository} />
+      </NotificationProvider>
+    )
+    cy.findByRole('button', { name: 'Toggle navigation' }).click()
+    cy.findByRole('button', { name: 'Log In' }).click()
+  })
 })
