@@ -1,7 +1,7 @@
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { useTheme } from '@iqss/dataverse-design-system'
 import { useEffect, useState } from 'react'
-import { useLoading } from '../../loading/LoadingContext'
+import { useLoading } from '../../../shared/contexts/loading/LoadingContext'
 import isChromatic from 'chromatic/isChromatic'
 
 const TopBarProgressIndicator = () => {

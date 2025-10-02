@@ -5,6 +5,8 @@ import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dis
 import { Router } from './router'
 import { Route } from './sections/Route.enum'
 import { OIDC_AUTH_CONFIG, DATAVERSE_BACKEND_URL } from './config'
+import { ExternalToolsProvider } from './shared/contexts/external-tools/ExternalToolsProvider'
+import { ExternalToolsJSDataverseRepository } from './externalTools/infrastructure/repositories/ExternalToolsJSDataverseRepository'
 import 'react-loading-skeleton/dist/skeleton.css'
 import './assets/global.scss'
 import './assets/react-toastify-custom.scss'
@@ -46,11 +48,15 @@ const authConfig: TAuthConfig = {
   clearURL: false
 }
 
+const externalToolsRepository = new ExternalToolsJSDataverseRepository()
+
 function App() {
   return (
     <>
       <AuthProvider authConfig={authConfig}>
-        <Router />
+        <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
+          <Router />
+        </ExternalToolsProvider>
       </AuthProvider>
       <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
     </>

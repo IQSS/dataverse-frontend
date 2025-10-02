@@ -14,21 +14,37 @@ jobs:
     runs-on: ubuntu-latest
     # Job steps
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
       - name: Create .npmrc
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cp .npmrc.example .npmrc
-          sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
-          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
+          sed -i -e "s#<YOUR_GITHUB_AUTH_TOKEN>#${GITHUB_TOKEN}#g" .npmrc
+          # Comment out npmjs auth token line if no token provided via secrets
+          sed -i -e 's#//registry.npmjs.org/:_authToken=<YOUR_NPM_AUTH_TOKEN>#; auth token omitted in CI#g' .npmrc
       - name: Install dependencies
-        # 👇 Install dependencies with the same package manager used in the project (replace it as needed), e.g. yarn, npm, pnpm
-        run: npm install
+        # 👇 Use clean install for reproducibility
+        run: npm ci
       - name: Build Dataverse Design System
         working-directory: packages/design-system
         run: npm run build
         # 👇 Adds Chromatic as a step in the workflow
       - name: Publish to Chromatic
-        uses: chromaui/action@v1
+        uses: chromaui/action@latest
+        env:
+          CHROMATIC_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          CHROMATIC_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CHROMATIC_SLUG: ${{ github.repository }}
         # Chromatic GitHub Action options
         with:
           # 👇 Chromatic projectToken, refer to the manage page to obtain it.

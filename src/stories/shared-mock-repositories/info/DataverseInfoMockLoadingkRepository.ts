@@ -1,3 +1,4 @@
+import { DatasetMetadataExportFormats } from '@/info/domain/models/DatasetMetadataExportFormats'
 import { DataverseInfoMockRepository } from './DataverseInfoMockRepository'
 import { DataverseVersion } from '@/info/domain/models/DataverseVersion'
 import { TermsOfUse } from '@/info/domain/models/TermsOfUse'
@@ -26,6 +27,10 @@ export class DataverseInfoMockLoadingRepository implements DataverseInfoMockRepo
   }
 
   getExternalStatusesAllowed(): Promise<Setting<string[]>> {
+    return new Promise(() => {})
+  }
+
+  getAvailableDatasetMetadataExportFormats(): Promise<DatasetMetadataExportFormats> {
     return new Promise(() => {})
   }
 }

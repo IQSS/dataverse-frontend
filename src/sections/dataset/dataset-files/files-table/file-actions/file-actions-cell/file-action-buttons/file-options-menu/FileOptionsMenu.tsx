@@ -10,6 +10,7 @@ import { useDataset } from '../../../../../../DatasetContext'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { EditFilesMenuDatasetInfo } from '../../../edit-files-menu/EditFilesOptions'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { FileConfigureToolsOptions } from '@/sections/file/file-action-buttons/access-file-menu/FileToolOptions'
 
 interface FileOptionsMenuProps {
   file: FilePreview
@@ -79,6 +80,7 @@ export function FileOptionsMenu({ file, fileRepository, datasetRepository }: Fil
           isHeader={false}
           datasetRepository={datasetRepository}
         />
+        <FileConfigureToolsOptions fileId={file.id} fileType={file.metadata.type.value} />
       </DropdownButton>
     </Tooltip>
   )

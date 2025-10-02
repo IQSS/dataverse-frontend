@@ -1,5 +1,5 @@
-import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
-import { useLoading } from '../../../../src/sections/loading/LoadingContext'
+import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
+import { useLoading } from '../../../../src/shared/contexts/loading/LoadingContext'
 
 describe('LoadingProvider', () => {
   it('should render children', () => {

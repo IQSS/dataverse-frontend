@@ -141,7 +141,7 @@
     "babel-plugin-named-exports-order": "0.0.2",
     "chai": "4.3.7",
     "chai-as-promised": "7.1.1",
-    "chromatic": "6.24.1",
+    "chromatic": "13.3.0",
     "concurrently": "8.0.1",
     "cypress": "15.2.0",
     "cypress-vite": "1.4.0",
