@@ -61,6 +61,8 @@ export class JSNotificationMapper {
       roleAssignments: jsNotification.roleAssignments,
       collectionAlias: jsNotification.collectionAlias,
       collectionDisplayName: jsNotification.collectionDisplayName,
+      ownerAlias: jsNotification.ownerAlias,
+      ownerDisplayName: jsNotification.ownerDisplayName,
       datasetPersistentIdentifier: jsNotification.datasetPersistentIdentifier,
       datasetDisplayName: jsNotification.datasetDisplayName,
       dataFileId: jsNotification.dataFileId,

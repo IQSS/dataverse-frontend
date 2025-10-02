@@ -318,4 +318,27 @@ describe('getTranslatedNotification', () => {
     cy.customMount(getTranslatedNotification(notification, mockT))
     cy.contains('Unknown notification: globusUploadRemoteFailure').should('exist')
   })
+  it('should handle create collection in owner with display name', () => {
+    const notification: Notification = {
+      id: 15,
+      type: NotificationType.CREATE_COLLECTION,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false,
+      collectionDisplayName: 'Collection B',
+      collectionAlias: 'collection_b',
+      ownerDisplayName: 'Owner B',
+      ownerAlias: 'owner_b',
+      userGuidesBaseUrl: 'https://guides.dataverse.org',
+      userGuidesVersion: 'v5.12',
+      userGuidesSectionPath: 'managing-collections'
+    }
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('Collection B was created in Owner B .').should('exist')
+    cy.findByRole('link', { name: 'Collection B' }).should(
+      'have.attr',
+      'href',
+      '/collections/collection_b'
+    )
+    cy.findByRole('link', { name: 'Owner B' }).should('have.attr', 'href', '/collections/owner_b')
+  })
 })
