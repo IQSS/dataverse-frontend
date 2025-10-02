@@ -1,7 +1,6 @@
 import { UseControllerProps } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
-  DateFormatsOptions,
   type MetadataField,
   TypeMetadataFieldOptions
 } from '../../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
@@ -10,7 +9,8 @@ import {
   isValidFloat,
   isValidEmail,
   isValidInteger,
-  isValidDateFormat
+  isValidDateFormat,
+  dateKeyMessageErrorMap
 } from '../../../../../../../metadata-block-info/domain/models/fieldValidations'
 
 interface Props {
@@ -25,7 +25,7 @@ export const useDefineRules = ({
   isParentFieldRequired
 }: Props): DefinedRules => {
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
-  const { type, displayName, isRequired, watermark } = metadataFieldInfo
+  const { type, displayName, isRequired } = metadataFieldInfo
 
   // A sub field is required if the parent field is required and the sub field is required
   const isFieldRequired =
@@ -47,15 +47,16 @@ export const useDefineRules = ({
         return true
       }
       if (type === TypeMetadataFieldOptions.Date) {
-        const acceptedDateFormat =
-          watermark === 'YYYY-MM-DD' ? DateFormatsOptions.YYYYMMDD : undefined
+        const validationResult = isValidDateFormat(value)
 
-        if (!isValidDateFormat(value, acceptedDateFormat)) {
-          return t('field.invalid.date', {
+        if (!validationResult.valid) {
+          const baseMessage = t('field.invalid.date.base', {
             displayName,
-            dateFormat: watermark,
             interpolation: { escapeValue: false }
           })
+          const specificErrorMessage = t(dateKeyMessageErrorMap[validationResult.errorCode])
+
+          return `${baseMessage} ${specificErrorMessage}`
         }
         return true
       }
