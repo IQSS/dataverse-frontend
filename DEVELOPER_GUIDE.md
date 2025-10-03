@@ -944,7 +944,7 @@ However, we prioritize user-centric testing over coverage numbers.
 - **Coverage Threshold:** We aim for a test coverage of 95% for the unit tests. This threshold is set in the `.nycrc.json` file.
 - **Coverage Reports:** We use [nyc](https://www.npmjs.com/package/nyc) to generate coverage reports, which are available
   in the `coverage` folder after running the tests. These reports are also published to [Coveralls](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
-  with every pull request and merge. The coverage badge is displayed at the top of the README.
+  with every pull request and merge. The coverage badge is displayed at the top of the README. See "include" and "exclude" in `.nycrc.json` to learn about which source files are included in coverage reports.
 - **Tests included in the coverage:** We include all unit tests in the coverage report.
 
 #### How to run the code coverage
