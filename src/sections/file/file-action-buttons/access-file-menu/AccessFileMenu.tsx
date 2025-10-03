@@ -1,3 +1,4 @@
+import { ReactElement } from 'react'
 import { Download, FileEarmark } from 'react-bootstrap-icons'
 import { AccessStatus } from './AccessStatus'
 import { RequestAccessOption } from './RequestAccessOption'
@@ -6,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { FileDownloadOptions } from './FileDownloadOptions'
 import { FileAccess } from '../../../../files/domain/models/FileAccess'
 import { FileMetadata } from '../../../../files/domain/models/FileMetadata'
-import { ReactElement } from 'react'
+import { FileExploreToolsOptions, FileQueryToolsOptions } from './FileToolOptions'
 
 interface FileActionButtonAccessFileProps {
   id: number
@@ -82,6 +83,12 @@ export function AccessFileMenu({
           isTabular={metadata.isTabular}
           userHasDownloadPermission={userHasDownloadPermission}
         />
+        {userHasDownloadPermission && (
+          <>
+            <FileExploreToolsOptions fileId={id} fileType={metadata.type.value} />
+            <FileQueryToolsOptions fileId={id} fileType={metadata.type.value} />
+          </>
+        )}
       </DropdownButton>
     </MenuWrapper>
   )

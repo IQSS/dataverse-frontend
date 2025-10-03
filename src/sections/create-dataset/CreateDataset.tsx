@@ -10,7 +10,7 @@ import { useNotImplementedModal } from '../not-implemented/NotImplementedModalCo
 import { DatasetMetadataForm } from '../shared/form/DatasetMetadataForm'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
-import { useLoading } from '../loading/LoadingContext'
+import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useCollection } from '../collection/useCollection'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
@@ -50,11 +50,10 @@ export function CreateDataset({
 
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
 
-  const { datasetTemplates, isLoadingDatasetTemplates, errorGetDatasetTemplates } =
-    useGetDatasetTemplates({
-      datasetRepository,
-      collectionIdOrAlias: collectionId
-    })
+  const { datasetTemplates, isLoadingDatasetTemplates } = useGetDatasetTemplates({
+    datasetRepository,
+    collectionIdOrAlias: collectionId
+  })
 
   const handleDatasetTemplateChange = (selectedTemplateId: string) => {
     const template: DatasetTemplate | null =
@@ -118,9 +117,6 @@ export function CreateDataset({
             onChange={handleDatasetTemplateChange}
           />
         )}
-
-        {/* If there is an error loading dataset templates we notify the user but dont block them from creating a dataset */}
-        {errorGetDatasetTemplates && <Alert variant="warning">{errorGetDatasetTemplates}</Alert>}
 
         <DatasetMetadataForm
           mode="create"

@@ -1,7 +1,10 @@
 {
   "tabs": {
     "metadata": "Metadata",
-    "versions": "Versions"
+    "versions": "Versions",
+    "preview": "Preview",
+    "query": "Query",
+    "fileTools": "File Tools"
   },
   "fileVersion": {
     "version": "Dataset Version",
@@ -138,5 +141,9 @@
     "requestAccessTooltipText": "If checked, users can request access to the restricted files in this dataset.",
     "termsOfAccessTooltipTex": "information on how and if users can access restricted files in this dataset."
   },
-  "getCategoriesError": "Something went wrong fetching available categories. Try again later."
+  "getCategoriesError": "Something went wrong fetching available categories. Try again later.",
+  "previewTab": {
+    "openInNewWindow": "Open in New Window",
+    "defaultLoadingToolError": "Something went wrong loading the external tool. Try again later."
+  }
 }

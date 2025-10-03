@@ -13,6 +13,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - External Search integration with selectable search service and first-load fetch behavior. (#710)
 - File Edit Tags with populated categories dropdown. (#763)
 - DEMO environment option in deploy actions.
+- Metadata Export Dropdown to the metadata tab of Dataset Page and File Page.
+- External Tools integration. All types supported: Explore, Configure, Preview and Query tools in Dataset and File pages. Still not showing external tools for Auxiliary Files as additional development is needed.
 
 ### Changed
 

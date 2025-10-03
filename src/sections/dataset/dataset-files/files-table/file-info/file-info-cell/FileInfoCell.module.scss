@@ -8,15 +8,31 @@
 .body-container {
   padding-left: 10px;
 
+  // Link title
+  > a {
+    @media (max-width: 576px) {
+      font-size: $dv-font-size-sm;
+      word-break: break-word;
+    }
+  }
+
   &__subtext {
     color: $dv-subtext-color;
     font-size: $dv-font-size-sm;
+
+    @media (max-width: 576px) {
+      word-break: break-word;
+    }
   }
 }
 
 .thumbnail-container {
   min-width: 80px;
   padding-left: 8px;
+
+  @media (max-width: 576px) {
+    min-width: 30px;
+  }
 }
 
 .checksum-container {

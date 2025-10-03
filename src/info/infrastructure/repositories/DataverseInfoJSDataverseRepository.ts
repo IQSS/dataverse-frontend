@@ -3,6 +3,7 @@ import {
   getDataverseVersion,
   getMaxEmbargoDurationInMonths,
   getZipDownloadLimit,
+  getAvailableDatasetMetadataExportFormats,
   ReadError
 } from '@iqss/dataverse-client-javascript'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
@@ -12,6 +13,7 @@ import { JSTermsOfUseMapper } from '../mappers/JSTermsOfUseMapper'
 import { ZipDownloadLimit } from '@/settings/domain/models/ZipDownloadLimit'
 import { FileSizeUnit } from '@/files/domain/models/FileMetadata'
 import { Setting, SettingName } from '@/settings/domain/models/Setting'
+import { DatasetMetadataExportFormats } from '@/info/domain/models/DatasetMetadataExportFormats'
 
 interface JSDataverseDataverseVersion {
   number: string
@@ -95,5 +97,9 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
         })
       }, 1000)
     })
+  }
+
+  getAvailableDatasetMetadataExportFormats(): Promise<DatasetMetadataExportFormats> {
+    return getAvailableDatasetMetadataExportFormats.execute()
   }
 }

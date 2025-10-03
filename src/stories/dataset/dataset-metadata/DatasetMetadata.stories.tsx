@@ -4,6 +4,7 @@ import { DatasetMetadata } from '../../../sections/dataset/dataset-metadata/Data
 import { WithAnonymizedView } from '../WithAnonymizedView'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 import { MetadataBlockInfoMockRepository } from '../../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
+import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 
 const meta: Meta<typeof DatasetMetadata> = {
   title: 'Sections/Dataset Page/DatasetMetadata',
@@ -20,9 +21,10 @@ const datasetMockAnonymized = DatasetMother.createRealisticAnonymized()
 export const Default: Story = {
   render: () => (
     <DatasetMetadata
-      persistentId={datasetMock.persistentId}
-      metadataBlocks={datasetMock.metadataBlocks}
+      dataset={datasetMock}
+      anonymizedView={false}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }
@@ -31,9 +33,10 @@ export const AnonymizedView: Story = {
   decorators: [WithAnonymizedView],
   render: () => (
     <DatasetMetadata
-      persistentId={datasetMockAnonymized.persistentId}
-      metadataBlocks={datasetMockAnonymized.metadataBlocks}
+      dataset={datasetMockAnonymized}
+      anonymizedView={true}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
     />
   )
 }

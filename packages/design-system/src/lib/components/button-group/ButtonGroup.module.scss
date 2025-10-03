@@ -1,6 +1,13 @@
 @import 'src/lib/assets/styles/design-tokens/colors.module';
 
 .border > button,
-.border > [role='group'] > button {
+.border > [role='group'] > button,
+.border > button:not(.dropdown-item) {
   border: 1px solid $dv-button-border-color;
+}
+
+.border > div {
+  &:global > .btn {
+    border: 1px solid $dv-button-border-color;
+  }
 }

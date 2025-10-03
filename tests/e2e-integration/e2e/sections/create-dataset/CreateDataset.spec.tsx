@@ -45,11 +45,25 @@ describe('Create Dataset', () => {
     cy.contains('Agricultural Sciences; Arts and Humanities').should('exist')
   })
 
-  it('shows template select when a template is available and prefill fields when a template is selected', () => {
-    cy.wrap(DatasetHelper.createDatasetTemplate(), { timeout: 10000 }).then(() => {
+  describe('dataset template selection', () => {
+    let datasetTemplateId: number
+
+    beforeEach(async () => {
+      await DatasetHelper.createDatasetTemplate()
+      const templates = await DatasetHelper.getDatasetTemplates()
+
+      const { id } = templates[0]
+      datasetTemplateId = id
+    })
+
+    afterEach(async () => {
+      await DatasetHelper.deleteDatasetTemplate(datasetTemplateId)
+    })
+
+    it('shows template select when a template is available and prefill fields when a template is selected', () => {
       cy.visit(CREATE_DATASET_PAGE_URL)
 
-      cy.wait(1000)
+      cy.wait(3_000)
 
       cy.findByTestId('dataset-template-select').should('exist').as('templateSelect')
       cy.findByText('None').should('exist') // No default template, None is shown
@@ -94,13 +108,6 @@ describe('Create Dataset', () => {
       cy.findByText(DatasetLabelValue.DRAFT).should('exist')
       cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
       cy.contains('Agricultural Sciences; Arts and Humanities').should('exist')
-
-      // Delete template after test
-      cy.wrap(DatasetHelper.getDatasetTemplates(), { timeout: 10000 }).then((templates) => {
-        const { id } = templates[0]
-
-        cy.wrap(DatasetHelper.deleteDatasetTemplate(id))
-      })
     })
   })
 
