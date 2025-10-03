@@ -83,8 +83,7 @@ Before releasing, ensure the changelog is properly prepared:
    ### Removed
    ```
 
-4. **Update the version links** at the bottom of the changelog files
-5. **Commit the changelog updates** as part of the release preparation
+4. **Commit the changelog updates** as part of the release preparation
 
 ## Use the Latest Dataverse Client Javascript Version
 
@@ -132,11 +131,7 @@ At this point you can send around the draft release for any final feedback. Make
 
 After merging the release branch into `main`, ensure the develop branch is updated with the latest changes.
 
-```shell
-git checkout develop
-git merge release/X.X.X
-git push origin develop
-```
+Create a pull request to merge the `main` branch into `develop` branch also.
 
 ## Delete "release branch"
 
