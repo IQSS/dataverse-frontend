@@ -949,10 +949,9 @@ However, we prioritize user-centric testing over coverage numbers.
 
 #### How to run the code coverage
 
-To generate the code coverage, you first need to run the tests with the `test:unit` script. After running the tests, you
-can check the coverage with the `test:coverage` script.
+To generate the code coverage, you first need to run the tests with the `test:unit` script. This can take a while! After running the tests, you can check the coverage with the `test:coverage` script. This will simply report the total coverage.
 
-If you want to see the coverage report in the browser, you can open the `coverage/lcov-report/index.html` file in the browser.
+To see which lines are not covered, you can open the coverage report in the browser: `coverage/lcov-report/index.html`.
 
 ```bash
 # root project directory
@@ -964,7 +963,11 @@ npm run test:unit
 # Check the coverage
 
 npm run test:coverage
+
+# See detailed report at coverage/lcov-report/index.html
 ```
+
+Note that it's easy for the `lcov-report` report to get overwritten. For example, running any test with `npm run cy:open-unit` will overwrite it. For this reason you might want to copy the `lcov-report` directory elsewhere for safe keeping.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
