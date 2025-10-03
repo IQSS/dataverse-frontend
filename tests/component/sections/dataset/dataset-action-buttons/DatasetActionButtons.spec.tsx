@@ -73,6 +73,33 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Share' }).should('exist')
   })
 
+  it('renders the DatasetActionButtons with the Edit Dataset button and dropdown', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
+      permissions: DatasetPermissionsMother.create({
+        canDownloadFiles: true,
+        canUpdateDataset: true,
+        canPublishDataset: false
+      }),
+      fileDownloadSizes: [
+        DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
+      ]
+    })
+
+    cy.mountAuthenticated(
+      <DatasetActionButtons
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+      />
+    )
+
+    cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Metadata' }).click()
+  })
+
   it('should not render Share button if the the dataset is deaccessioned and user has no edit permission', () => {
     const dataset = DatasetMother.createDeaccessionedwithNoEditPermission()
     cy.mountAuthenticated(
