@@ -49,6 +49,7 @@ describe('ApiTokenSection', () => {
 
         // eslint-disable-next-line @typescript-eslint/unbound-method
         cy.wrap(win.navigator.clipboard.writeText).should('be.calledWith', textToCopy)
+        cy.findByText(/API token copied to clipboard./).should('exist')
       })
     })
   })
