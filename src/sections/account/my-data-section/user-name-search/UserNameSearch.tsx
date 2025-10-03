@@ -4,13 +4,13 @@ import { Form } from '@iqss/dataverse-design-system'
 import styles from './UserNameSearch.module.scss'
 
 interface UserNameSearchProps {
-  currentSearchValue?: string
+  currentSearchValue: string
   isLoadingCollectionItems: boolean
   onSubmitSearch: (searchValue: string) => void
 }
 
 export const UserNameSearch = ({
-  currentSearchValue = '',
+  currentSearchValue,
   isLoadingCollectionItems,
   onSubmitSearch
 }: UserNameSearchProps) => {

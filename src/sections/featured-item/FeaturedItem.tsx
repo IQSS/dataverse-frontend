@@ -5,7 +5,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { CustomFeaturedItem } from '@/collection/domain/models/FeaturedItem'
 import { useGetFeaturedItems } from '../collection/useGetFeaturedItems'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
-import { useLoading } from '../loading/LoadingContext'
+import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { FeaturedItemView } from './featured-item-view/FeaturedItemView'
 import { useCollection } from '../collection/useCollection'
 

@@ -1,7 +1,7 @@
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../../../src/sections/dataset/Dataset'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
-import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
+import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 import {
   ANONYMIZED_FIELD_VALUE,
   MetadataBlockName
@@ -25,6 +25,8 @@ import {
   DatasetVersionSummaryStringValues
 } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { DatasetMetadataExportFormatsMother } from '@tests/component/info/domain/models/DatasetMetadataExportFormatsMother'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
@@ -32,6 +34,7 @@ const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const contactRepository = {} as ContactRepository
+const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
 
 const TOTAL_FILES_COUNT = 200
 const allFiles = FilePreviewMother.createMany(TOTAL_FILES_COUNT)
@@ -143,6 +146,9 @@ const versionSummaryInfo: DatasetVersionSummaryInfo[] = [
     publishedOn: '2025-03-11'
   }
 ]
+
+const testDatasetMetadataExportFormats = DatasetMetadataExportFormatsMother.create()
+
 describe('Dataset', () => {
   const mountWithDataset = (
     component: ReactNode,
@@ -159,6 +165,9 @@ describe('Dataset', () => {
     fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(testFiles)
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
+    dataverseInfoRepository.getAvailableDatasetMetadataExportFormats = cy
+      .stub()
+      .resolves(testDatasetMetadataExportFormats)
 
     const mockCitationMetadataBlockInfo = MetadataBlockInfoMother.create({
       name: MetadataBlockName.CITATION,
@@ -315,6 +324,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -333,6 +343,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       emptyDataset
     )
@@ -351,6 +362,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       dataset
     )
@@ -366,6 +378,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -382,6 +395,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -401,6 +415,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -423,6 +438,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -445,6 +461,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -468,6 +485,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -489,6 +507,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -506,6 +525,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -527,6 +547,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDatasetAnonymized
     )
@@ -544,6 +565,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -560,6 +582,7 @@ describe('Dataset', () => {
         filesTabInfiniteScrollEnabled={true}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -577,6 +600,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -611,6 +635,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )
@@ -632,6 +657,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
         contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />,
       testDataset
     )

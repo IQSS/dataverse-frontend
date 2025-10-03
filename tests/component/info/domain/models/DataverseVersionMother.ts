@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
-import { DataverseVersion } from '../../../../src/info/domain/models/DataverseVersion'
+import { DataverseVersion } from '../../../../../src/info/domain/models/DataverseVersion'
 import isChromatic from 'chromatic/isChromatic'
+
 export class DataverseVersionMother {
   static create(): DataverseVersion {
     return isChromatic()

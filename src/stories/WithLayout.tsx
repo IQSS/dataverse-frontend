@@ -1,7 +1,7 @@
 import { StoryFn } from '@storybook/react'
 import { Routes, Route } from 'react-router-dom'
 import { Layout } from '../sections/layout/Layout'
-import { LoadingProvider } from '../sections/loading/LoadingProvider'
+import { LoadingProvider } from '../shared/contexts/loading/LoadingProvider'
 
 export const WithLayout = (Story: StoryFn) => (
   <LoadingProvider>

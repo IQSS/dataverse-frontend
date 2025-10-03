@@ -81,5 +81,6 @@ export enum QueryParamKey {
   DATASET_VERSION = 'datasetVersion',
   REFERRER = 'referrer',
   AUTH_STATE = 'state',
-  VALID_TOKEN_BUT_NOT_LINKED_ACCOUNT = 'validTokenButNotLinkedAccount'
+  VALID_TOKEN_BUT_NOT_LINKED_ACCOUNT = 'validTokenButNotLinkedAccount',
+  TOOL_TYPE = 'toolType'
 }

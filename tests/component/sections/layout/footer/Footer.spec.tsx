@@ -1,5 +1,5 @@
 import { createSandbox, SinonSandbox } from 'sinon'
-import { DataverseVersionMother } from '../../../info/models/DataverseVersionMother'
+import { DataverseVersionMother } from '../../../info/domain/models/DataverseVersionMother'
 import { DataverseInfoRepository } from '../../../../../src/info/domain/repositories/DataverseInfoRepository'
 import { FooterMother } from './FooterMother'
 import { Footer } from '../../../../../src/sections/layout/footer/Footer'

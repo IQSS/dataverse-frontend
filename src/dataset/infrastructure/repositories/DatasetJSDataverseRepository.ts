@@ -33,7 +33,8 @@ import {
   getDatasetDownloadCount,
   deleteDatasetDraft,
   getDatasetCitationInOtherFormats,
-  getDatasetAvailableCategories
+  getDatasetAvailableCategories,
+  getDatasetTemplates
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -49,6 +50,7 @@ import { axiosInstance } from '@/axiosInstance'
 import { DATAVERSE_BACKEND_URL } from '../../../config'
 import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
+import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 
 const includeDeaccessioned = true
 
@@ -394,6 +396,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   }
   getAvailableCategories(datasetId: string | number): Promise<string[]> {
     return getDatasetAvailableCategories.execute(datasetId)
+  }
+
+  getTemplates(collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
+    return getDatasetTemplates.execute(collectionIdOrAlias)
   }
 
   /*
