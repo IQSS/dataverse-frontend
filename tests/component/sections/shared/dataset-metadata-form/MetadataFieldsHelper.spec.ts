@@ -1550,6 +1550,12 @@ describe('MetadataFieldsHelper', () => {
       { input: '2020-02-29', kind: 'YMD' }, // leap year
       { input: ' 2023-01-01 ', kind: 'YMD' }, // trims
       { input: '2023-11-01', kind: 'YMD' }, // prioritizes YMD over YM/Y
+      { input: '2023-1', kind: 'YM' },
+      { input: '20-1', kind: 'YM' },
+      { input: '2-1', kind: 'YM' },
+      { input: '2023-1-5', kind: 'YMD' },
+      { input: '2023-12-5', kind: 'YMD' },
+      { input: '2-1-5', kind: 'YMD' },
 
       // AD/BC
       { input: '2023 AD', kind: 'AD' },
@@ -1565,8 +1571,7 @@ describe('MetadataFieldsHelper', () => {
       // Timestamps
       { input: '2023-11-30T23:59:59', kind: 'TIMESTAMP' },
       { input: '2023-11-30T23:59:59.123', kind: 'TIMESTAMP' },
-      { input: '2023-11-30 23:59:59', kind: 'TIMESTAMP' },
-      { input: ' 2023-11-30 ', kind: 'YMD' } // whitespace trimming
+      { input: '2023-11-30 23:59:59', kind: 'TIMESTAMP' }
     ]
 
     const invalidCases: { input: string; code: DateErrorCode }[] = [
@@ -1582,7 +1587,6 @@ describe('MetadataFieldsHelper', () => {
       // invalid YM
       { input: '2023-13', code: 'E_INVALID_MONTH' },
       { input: '2023-00', code: 'E_INVALID_MONTH' },
-      { input: '2023-1', code: 'E_UNRECOGNIZED' },
       { input: '2023-11x', code: 'E_UNRECOGNIZED' },
 
       // invalid YMD

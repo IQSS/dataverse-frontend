@@ -795,13 +795,13 @@ export class MetadataFieldsHelper {
         return year >= 0 && year <= 9999 // AD cap
       }
       case 'yyyy-MM': {
-        const m = /^(\d{1,4})-(\d{2})$/.exec(s)
+        const m = /^(\d{1,4})-(\d{1,2})$/.exec(s)
         if (!m) return false
         const month = Number(m[2])
         return month >= 1 && month <= 12
       }
       case 'yyyy-MM-dd': {
-        const m = /^(\d{1,4})-(\d{2})-(\d{2})$/.exec(s)
+        const m = /^(\d{1,4})-(\d{1,2})-(\d{1,2})$/.exec(s)
         if (!m) return false
         const year = Number(m[1])
         const month = Number(m[2])
