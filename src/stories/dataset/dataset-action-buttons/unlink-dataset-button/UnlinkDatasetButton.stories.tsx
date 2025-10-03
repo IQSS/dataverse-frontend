@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { userEvent, within } from '@storybook/testing-library'
+import { within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { WithI18next } from '../../../WithI18next'
 import { WithSettings } from '../../../WithSettings'
 import {
