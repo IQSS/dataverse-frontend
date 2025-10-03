@@ -11,6 +11,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Dataset Templates Selector in the Create Dataset page.
 - Metadata Export Dropdown to the metadata tab of Dataset Page and File Page.
 - External Tools integration. All types supported: Explore, Configure, Preview and Query tools in Dataset and File pages. Still not showing external tools for Auxiliary Files as additional development is needed.
+- Show toast notification when API token is copied to clipboard.
 
 ### Changed
 
