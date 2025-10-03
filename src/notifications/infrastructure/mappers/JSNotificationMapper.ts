@@ -67,7 +67,12 @@ export class JSNotificationMapper {
       datasetDisplayName: jsNotification.datasetDisplayName,
       dataFileId: jsNotification.dataFileId,
       dataFileDisplayName: jsNotification.dataFileDisplayName,
-      objectDeleted: jsNotification.objectDeleted ?? false
+      objectDeleted: jsNotification.objectDeleted ?? false,
+      requestorFirstName: jsNotification.requestorFirstName,
+      requestorLastName: jsNotification.requestorLastName,
+      requestorEmail: jsNotification.requestorEmail,
+      currentCurationStatus: jsNotification.currentCurationStatus,
+      additionalInfo: jsNotification.additionalInfo
     }
   }
 }
