@@ -8,11 +8,18 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Dataset Templates Selector in the Create Dataset page.
+- Metadata Export Dropdown to the metadata tab of Dataset Page and File Page.
+- External Tools integration. All types supported: Explore, Configure, Preview and Query tools in Dataset and File pages. Still not showing external tools for Auxiliary Files as additional development is needed.
 - Link Collection and Link Dataset features.
 
 ### Changed
 
+- Standardize Node.js version to 22 across all environments (docker dev environment, CI, production).
+
 ### Fixed
+
+- Upgrade dependencies to drastically reduce vulnerabilities flagged by `npm audit`. Reduced from +100 including 12 critical and 33 high to only 2 moderate.
 
 ### Removed
 

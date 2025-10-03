@@ -10,10 +10,17 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 
 const file = FilePreviewMother.createDefault()
 const fileRepository: FileRepository = {} as FileRepository
+const datasetRepository: DatasetRepository = {} as DatasetRepository
 
 describe('FileActionButtons', () => {
   it('renders the file action buttons', () => {
-    cy.customMount(<FileActionButtons file={file} fileRepository={fileRepository} />)
+    cy.customMount(
+      <FileActionButtons
+        file={file}
+        fileRepository={fileRepository}
+        datasetRepository={datasetRepository}
+      />
+    )
 
     cy.findByRole('group', { name: 'File Action Buttons' }).should('exist')
     cy.findByRole('button', { name: 'Access File' }).should('exist')
@@ -32,7 +39,11 @@ describe('FileActionButtons', () => {
       <DatasetProvider
         repository={datasetRepository}
         searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-        <FileActionButtons file={file} fileRepository={fileRepository} />
+        <FileActionButtons
+          file={file}
+          fileRepository={fileRepository}
+          datasetRepository={datasetRepository}
+        />
       </DatasetProvider>
     )
 

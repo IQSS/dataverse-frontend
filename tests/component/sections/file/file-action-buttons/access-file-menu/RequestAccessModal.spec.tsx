@@ -50,7 +50,22 @@ describe('RequestAccessModal', () => {
     cy.findByRole('dialog').should('not.exist')
   })
 
-  it.skip('calls request access use case when button is clicked and user is logged in', () => {
+  it('calls request access use case when button is clicked and user is logged in', () => {
+    const file = FilePreviewMother.create()
+
+    cy.mountAuthenticated(<RequestAccessModal fileId={file.id} />)
+
+    cy.findByRole('button', { name: 'Request Access' }).click()
+
+    cy.findByRole('dialog').should('exist')
+    cy.findAllByText('Request Access').should('exist')
+
+    cy.findByText(
+      'Please confirm and/or complete the information needed below in order to request access to files in this dataset.'
+    ).should('exist')
+    cy.findByText('Terms of Access for Restricted Files').should('exist')
+
+    cy.findByText('Accept').click()
     // TODO - Implement request access use case
   })
 })

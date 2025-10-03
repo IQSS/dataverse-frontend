@@ -149,12 +149,14 @@ describe('AdvancedSearch', () => {
 
     cy.findByRole('alert').should('be.visible').and('contain.text', errorMessage)
   })
+
   it('should submit the form ', () => {
     cy.customMount(
       <AdvancedSearch
         collectionId={testCollection.id}
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionFilterQueries="type:dataset"
       />
     )
     cy.findByTestId('advanced-search-metadata-block-citation')
@@ -163,5 +165,49 @@ describe('AdvancedSearch', () => {
         cy.findByLabelText('Title').should('be.visible').type('Test Dataset Title')
       })
     cy.findByTestId('submit-button').click()
+  })
+
+  it('does not render the block if it has no fields for advanced search', () => {
+    const emptyMetadataBlock = {
+      id: 5,
+      name: 'empty-searchable-fields-block',
+      displayName: 'Block With No Advanced Search Fields',
+      displayOnCreate: true,
+      metadataFields: {
+        foo: {
+          name: 'foo',
+          displayName: 'Foo',
+          title: 'Foo',
+          type: 'TEXT',
+          watermark: '',
+          description: 'A text field.',
+          multiple: false,
+          isControlledVocabulary: false,
+          displayFormat: '',
+          isRequired: true,
+          displayOrder: 0,
+          typeClass: 'primitive',
+          displayOnCreate: true,
+          isAdvancedSearchFieldType: false
+        }
+      }
+    }
+
+    metadataBlockInfoRepository.getByCollectionId = cy
+      .stub()
+      .resolves([testCitationMetadataBlock, emptyMetadataBlock])
+
+    cy.customMount(
+      <AdvancedSearch
+        collectionId={testCollection.id}
+        collectionRepository={collectionRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    cy.findByTestId('advanced-search-metadata-block-citation').should('be.visible')
+    cy.findByTestId('advanced-search-metadata-block-empty-searchable-fields-block').should(
+      'not.exist'
+    )
   })
 })

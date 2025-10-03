@@ -8,6 +8,7 @@ import { DatasetVersionSummaryInfo } from '../models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
+import { DatasetTemplate } from '../models/DatasetTemplate'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 
 export interface DatasetRepository {
@@ -55,6 +56,7 @@ export interface DatasetRepository {
     version: string,
     format: CitationFormat
   ) => Promise<FormattedCitation>
+  getTemplates: (collectionIdOrAlias: number | string) => Promise<DatasetTemplate[]>
   link(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
   unlink(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
   getDatasetLinkedCollections: (datasetId: string | number) => Promise<CollectionSummary[]>

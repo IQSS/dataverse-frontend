@@ -7,6 +7,8 @@ import {
 import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
 import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { DatasetMetadataExportFormatsMother } from '@tests/component/info/domain/models/DatasetMetadataExportFormatsMother'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 
 const mockDataset = DatasetMother.create({
   metadataBlocks: [
@@ -61,7 +63,6 @@ const mockDataset = DatasetMother.create({
     }
   ]
 })
-const mockMetadataBlocks = mockDataset.metadataBlocks
 const mockCitationMetadataBlockInfo = MetadataBlockInfoMother.create({
   name: MetadataBlockName.CITATION,
   displayName: 'Citation Metadata',
@@ -186,6 +187,10 @@ const mockGeospatialMetadataBlockInfo = MetadataBlockInfoMother.create({
 
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 
+const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
+
+const mockDatasetMetadataExportFormats = DatasetMetadataExportFormatsMother.create()
+
 describe('DatasetMetadata', () => {
   beforeEach(() => {
     cy.viewport(1280, 720)
@@ -199,14 +204,18 @@ describe('DatasetMetadata', () => {
       }
       return Promise.resolve(undefined)
     })
+    dataverseInfoRepository.getAvailableDatasetMetadataExportFormats = cy
+      .stub()
+      .resolves(mockDatasetMetadataExportFormats)
   })
 
   it('renders the metadata blocks sections titles correctly', () => {
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockMetadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
@@ -217,9 +226,10 @@ describe('DatasetMetadata', () => {
   it('renders the metadata blocks fields correctly', () => {
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockMetadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
@@ -247,9 +257,10 @@ describe('DatasetMetadata', () => {
   it('renders the metadata blocks fields values correctly', () => {
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockMetadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
@@ -315,7 +326,6 @@ describe('DatasetMetadata', () => {
   it('renders the metadata blocks in anonymized view', () => {
     const setAnonymizedView = () => {}
     const mockDataset = DatasetMother.createAnonymized()
-    const mockAnonymizedMetadataBlocks = mockDataset.metadataBlocks
 
     const metadataBlockInfoMock = MetadataBlockInfoMother.create()
     const metadataBlockInfoRepository: MetadataBlockInfoRepository =
@@ -325,9 +335,10 @@ describe('DatasetMetadata', () => {
     cy.customMount(
       <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
         <DatasetMetadata
-          persistentId={mockDataset.persistentId}
-          metadataBlocks={mockAnonymizedMetadataBlocks}
+          dataset={mockDataset}
+          anonymizedView={false}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
         />
       </AnonymizedContext.Provider>
     )
@@ -338,9 +349,10 @@ describe('DatasetMetadata', () => {
   it('shows a tip for dataset contact field', () => {
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockMetadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
@@ -354,9 +366,10 @@ describe('DatasetMetadata', () => {
 
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockMetadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
@@ -404,13 +417,86 @@ describe('DatasetMetadata', () => {
     })
     cy.customMount(
       <DatasetMetadata
-        persistentId={mockDataset.persistentId}
-        metadataBlocks={mockDataset.metadataBlocks}
+        dataset={mockDataset}
+        anonymizedView={false}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     )
 
     cy.findByRole('button', { name: 'Citation Metadata' }).should('exist')
     cy.findByRole('button', { name: 'Geospatial Metadata' }).should('not.exist')
+  })
+
+  it('adds name and description to extra fields of the citation metadata block', () => {
+    const mockDatasetWithExtraFields = DatasetMother.create({
+      metadataBlocks: [
+        {
+          name: MetadataBlockName.CITATION,
+          fields: {
+            title: 'Some Title',
+            subject: ['subject-one', 'subject-two'],
+            author: [
+              {
+                authorName: 'Foo',
+                authorAffiliation: 'Bar'
+              },
+              {
+                authorName: 'Another Foo',
+                authorAffiliation: 'Another Bar'
+              }
+            ],
+            datasetContact: [
+              {
+                datasetContactName: 'John Doe',
+                datasetContactEmail: 'john@doe.com',
+                datasetContactAffiliation: 'Doe Inc.'
+              }
+            ],
+            dsDescription: [
+              {
+                dsDescriptionValue: 'Description of the dataset'
+              }
+            ],
+            producer: [
+              {
+                producerName: 'Foo',
+                producerAffiliation: 'XYZ',
+                producerURL: 'http://foo.com',
+                producerLogoURL:
+                  'https://beta.dataverse.org/resources/images/dataverse_project_logo.svg'
+              }
+            ],
+            // Extra fields
+            publicationDate: '2023-01-01',
+            alternativePersistentId: 'some-alternative-pid'
+          }
+        }
+      ]
+    })
+
+    cy.customMount(
+      <DatasetMetadata
+        dataset={mockDatasetWithExtraFields}
+        anonymizedView={false}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
+      />
+    )
+
+    cy.get('.accordion > :nth-child(1)').within(() => {
+      cy.findByText(/Citation Metadata/i).should('exist')
+
+      cy.findByText('Persistent Identifier')
+        .parent()
+        .siblings('div')
+        .should('contain', mockDatasetWithExtraFields.persistentId)
+
+      cy.findByText('Publication Date').should('exist')
+      cy.findByText('2023-01-01').should('exist')
+
+      cy.findByText('Previous Dataset Persistent ID').should('exist')
+      cy.findByText('some-alternative-pid').should('exist')
+    })
   })
 })

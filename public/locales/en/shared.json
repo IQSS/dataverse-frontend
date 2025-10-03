@@ -28,6 +28,9 @@
   "unknown": "Unknown",
   "find": "Find",
   "link": "Link",
+  "allowPopups": "You must enable popups in your browser to open external tools in a new window or tab.",
+  "externalToolOpeningFailed": "There was a problem opening the external tool. Please try again.",
+  "exportMetadata": "Export Metadata",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
@@ -299,5 +302,8 @@
     "onlyOneCollectionToUnlink": "You have one collection you can unlink this {{linkingObjectType}} from.",
     "noCollectionsToLink": "No collections are showing up to link. They may already be linked, or you might not have any yet. Create a new collection to continue.",
     "noCollectionsToUnlink": "No collections are showing up to unlink."
-  }
+  },
+  "exploreOptions": "Explore Options",
+  "queryOptions": "Query Options",
+  "configureOptions": "Configure Options"
 }

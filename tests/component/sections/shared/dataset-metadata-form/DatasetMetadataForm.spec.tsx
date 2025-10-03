@@ -8,6 +8,7 @@ import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { UserMother } from '../../../users/domain/models/UserMother'
+import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -51,7 +52,8 @@ const metadataBlocksInfoOnCreateModeWithAstroBlock =
         isRequired: true,
         displayOrder: 17,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       'coverage.ObjectCount': {
         name: 'coverage.ObjectCount',
@@ -66,7 +68,8 @@ const metadataBlocksInfoOnCreateModeWithAstroBlock =
         isRequired: true,
         displayOrder: 18,
         typeClass: 'primitive',
-        displayOnCreate: false
+        displayOnCreate: false,
+        isAdvancedSearchFieldType: false
       },
       someDate: {
         name: 'someDate',
@@ -81,7 +84,8 @@ const metadataBlocksInfoOnCreateModeWithAstroBlock =
         displayFormat: '',
         isRequired: false,
         displayOnCreate: true,
-        displayOrder: 3
+        displayOrder: 3,
+        isAdvancedSearchFieldType: false
       }
     }
   })
@@ -108,6 +112,7 @@ const metadataBlocksInfoOnCreateModeWithComposedNotMultipleField =
         displayOrder: 36,
         typeClass: 'compound',
         displayOnCreate: false,
+        isAdvancedSearchFieldType: false,
         childMetadataFields: {
           producerName: {
             name: 'producerName',
@@ -123,7 +128,8 @@ const metadataBlocksInfoOnCreateModeWithComposedNotMultipleField =
             isRequired: true,
             displayOrder: 37,
             typeClass: 'primitive',
-            displayOnCreate: false
+            displayOnCreate: false,
+            isAdvancedSearchFieldType: false
           },
           producerAffiliation: {
             name: 'producerAffiliation',
@@ -139,7 +145,8 @@ const metadataBlocksInfoOnCreateModeWithComposedNotMultipleField =
             isRequired: false,
             displayOrder: 38,
             typeClass: 'primitive',
-            displayOnCreate: false
+            displayOnCreate: false,
+            isAdvancedSearchFieldType: false
           }
         }
       }
@@ -203,6 +210,7 @@ describe('DatasetMetadataForm', () => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
     datasetRepository.updateMetadata = cy.stub().resolves(undefined)
+    datasetRepository.getTemplates = cy.stub().resolves([])
     metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(metadataBlocksInfoOnEditMode)
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
@@ -1905,6 +1913,232 @@ describe('DatasetMetadataForm', () => {
               .should('have.attr', 'aria-required', 'false')
           })
       })
+    })
+  })
+
+  describe('dataset templates functionality', () => {
+    const userDisplayName = `${testUser.lastName}, ${testUser.firstName}`
+
+    it('should pre-fill the form fields with template values when a template is selected', () => {
+      const testTemplate = DatasetTemplateMother.create({
+        datasetMetadataBlocks: [
+          {
+            name: 'citation',
+            fields: {
+              title: 'Test Template Title',
+              subject: ['Subject1', 'Subject2']
+            }
+          }
+        ]
+      })
+
+      cy.mountAuthenticated(
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetTemplate={testTemplate}
+        />
+      )
+
+      cy.findByLabelText(/^Title/i).should('have.value', 'Test Template Title')
+
+      cy.findByText('Subject')
+        .should('exist')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText('Toggle options menu').click({ force: true })
+
+          cy.findByLabelText('Subject1').should('be.checked')
+          cy.findByLabelText('Subject2').should('be.checked')
+        })
+
+      // Assert that user fields are still pre-filled
+
+      cy.findByText('Author')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText(/^Name/i).should('have.value', userDisplayName)
+        })
+    })
+
+    it('should add the subtitle field if it is included in the template and it is not part of the fields for display on create', () => {
+      const testTemplate = DatasetTemplateMother.create({
+        datasetMetadataBlocks: [
+          {
+            name: 'citation',
+            fields: {
+              subtitle: 'Test Template Subtitle'
+            }
+          }
+        ]
+      })
+
+      cy.mountAuthenticated(
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetTemplate={testTemplate}
+        />
+      )
+
+      cy.findByLabelText(/^Subtitle/i)
+        .should('exist')
+        .should('have.value', 'Test Template Subtitle')
+    })
+
+    it('should add the field from a metadata block that is not part of the fields for display on create if it is included in the template', () => {
+      metadataBlockInfoRepository.getByCollectionId = cy
+        .stub()
+        .resolves([
+          MetadataBlockInfoMother.getCitationBlock(),
+          MetadataBlockInfoMother.getAstrophysicsBlock()
+        ])
+      metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+        .stub()
+        .resolves([MetadataBlockInfoMother.getCitationBlock()])
+
+      const testTemplate = DatasetTemplateMother.create({
+        datasetMetadataBlocks: [
+          {
+            name: MetadataBlockName.ASTROPHYSICS,
+            fields: {
+              'coverage.ObjectDensity': '23.35',
+              'coverage.ObjectCount': '50'
+            }
+          }
+        ]
+      })
+
+      cy.mountAuthenticated(
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetTemplate={testTemplate}
+        />
+      )
+
+      // The astro metadata block is not part of the fields for display on create
+      // but as the template includes a field from that block, the block should be added to the form and the field should be shown and pre-filled
+
+      // We need to open the astro accordion as it is closed by default and the field is inside it
+      cy.get('.accordion > :nth-child(2)').within(() => {
+        // Open accordion and wait for it to open
+        cy.get('.accordion-button').click()
+        cy.wait(300)
+
+        cy.findByLabelText(/Object Density/)
+          .should('exist')
+          .should('have.value', '23.35')
+
+        cy.findByLabelText(/Object Count/)
+          .should('exist')
+          .should('have.value', '50')
+      })
+    })
+
+    it('should not pre-fill the form fields with user data when those fields are included in the template', () => {
+      const testTemplate = DatasetTemplateMother.create({
+        datasetMetadataBlocks: [
+          {
+            name: 'citation',
+            fields: {
+              title: 'Test Template Title',
+              subject: ['Subject1', 'Subject2'],
+              author: [
+                {
+                  authorAffiliation: 'Template Author Affiliation'
+                }
+              ],
+              datasetContact: [
+                {
+                  datasetContactName: 'Template Contact Name'
+                }
+              ]
+            }
+          }
+        ]
+      })
+
+      cy.mountAuthenticated(
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetTemplate={testTemplate}
+        />
+      )
+
+      cy.findByLabelText(/^Title/i).should('have.value', 'Test Template Title')
+
+      cy.findByText('Subject')
+        .should('exist')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText('Toggle options menu').click({ force: true })
+
+          cy.findByLabelText('Subject1').should('be.checked')
+          cy.findByLabelText('Subject2').should('be.checked')
+        })
+
+      cy.findByText('Author')
+        .closest('.row')
+        .within(() => {
+          // Author affiliation comes from the template
+          cy.findByLabelText(/^Affiliation/i).should('have.value', 'Template Author Affiliation')
+          // Even if author name is not coming from the template, it should not be pre-filled with user data as author affiliation is coming from the template.
+          cy.findByLabelText(/^Name/i).should('have.value', '')
+          cy.findByLabelText(/^Name/i).should('not.have.value', userDisplayName)
+        })
+
+      cy.findByText('Point of Contact')
+        .closest('.row')
+        .within(() => {
+          // Contact name comes from the template
+          cy.findByLabelText(/^Name/i).should('have.value', 'Template Contact Name')
+          // Even if contact email is not coming from the template, it should not be pre-filled with user data as contact name is coming from the template.
+          cy.findByLabelText(/^E-mail/i).should('have.value', '')
+          cy.findByLabelText(/^E-mail/i).should('not.have.value', testUser.email)
+        })
+    })
+
+    it('should show instructions in the form fields', () => {
+      const testTemplate = DatasetTemplateMother.create({
+        instructions: [
+          {
+            instructionField: 'author',
+            instructionText: 'An author field instruction.'
+          },
+          {
+            instructionField: 'title',
+            instructionText: 'A title field instruction.'
+          },
+          {
+            instructionField: 'subject',
+            instructionText: 'A subject field instruction.'
+          }
+        ]
+      })
+
+      cy.mountAuthenticated(
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetTemplate={testTemplate}
+        />
+      )
+
+      cy.findByText('An author field instruction.').should('exist')
+      cy.findByText('A title field instruction.').should('exist')
+      cy.findByText('A subject field instruction.').should('exist')
     })
   })
 })

@@ -51,6 +51,25 @@ export const VerticalButtonGroup: Story = {
   )
 }
 
+export const VerticalButtonGroupWithTooltips: Story = {
+  render: () => (
+    <ButtonGroup vertical>
+      <Tooltip placement="right" overlay="Share">
+        <Button variant="secondary">Share</Button>
+      </Tooltip>
+      <Tooltip placement="right" overlay="Contact Owner">
+        <Button variant="secondary">Contact Owner</Button>
+      </Tooltip>
+      <Tooltip placement="right" overlay="Contact Owner">
+        <Button variant="secondary">Contact Owner</Button>
+      </Tooltip>
+      <Tooltip placement="right" overlay="Contact Owner">
+        <Button variant="secondary">Contact Owner</Button>
+      </Tooltip>
+    </ButtonGroup>
+  )
+}
+
 export const NestedButtonGroups: Story = {
   render: () => (
     <ButtonToolbar ariaLabel="Toolbar with button groups">
@@ -98,6 +117,9 @@ export const ButtonGroupWithTooltips: Story = {
           <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
           <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
         </DropdownButton>
+      </Tooltip>
+      <Tooltip placement="top" overlay="Simple Button with Tooltip">
+        <Button variant="secondary">Other Action</Button>
       </Tooltip>
     </ButtonGroup>
   )

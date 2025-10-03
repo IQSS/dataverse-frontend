@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
@@ -13,7 +13,8 @@ import { MetadataBlockFormFields } from './MetadataBlockFormFields'
 import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
-import { DateHelper } from '@/shared/helpers/DateHelper'
+import { usePrefillFieldsWithUserData } from './usePrefillFieldsWithUserData'
+import { DatasetTemplateInstruction } from '@/dataset/domain/models/DatasetTemplate'
 import styles from './index.module.scss'
 
 interface FormProps {
@@ -21,10 +22,10 @@ interface FormProps {
   collectionId: string
   formDefaultValues: DatasetMetadataFormValues
   metadataBlocksInfo: MetadataBlockInfo[]
-  errorLoadingMetadataBlocksInfo: string | null
   datasetRepository: DatasetRepository
   datasetPersistentID?: string
   datasetInternalVersionNumber?: number
+  datasetTemplateInstructions?: DatasetTemplateInstruction[]
 }
 
 export const MetadataForm = ({
@@ -32,10 +33,10 @@ export const MetadataForm = ({
   collectionId,
   formDefaultValues,
   metadataBlocksInfo,
-  errorLoadingMetadataBlocksInfo,
   datasetRepository,
   datasetPersistentID,
-  datasetInternalVersionNumber
+  datasetInternalVersionNumber,
+  datasetTemplateInstructions
 }: FormProps) => {
   const { user } = useSession()
   const navigate = useNavigate()
@@ -46,10 +47,9 @@ export const MetadataForm = ({
 
   const onCreateMode = mode === 'create'
   const onEditMode = mode === 'edit'
-  const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocksInfo)
 
   const form = useForm({ mode: 'onChange', defaultValues: formDefaultValues })
-  const { setValue, formState } = form
+  const { setValue } = form
 
   const { submissionStatus, submitError, submitForm } = useSubmitDataset(
     mode,
@@ -60,24 +60,7 @@ export const MetadataForm = ({
     datasetInternalVersionNumber
   )
 
-  useEffect(() => {
-    // Only on create mode, lets prefill specific fields with user data
-    if (mode === 'create' && user) {
-      const displayName = `${user.lastName}, ${user.firstName}`
-      setValue('citation.author.0.authorName', displayName)
-      setValue('citation.datasetContact.0.datasetContactName', displayName)
-      setValue('citation.datasetContact.0.datasetContactEmail', user.email, {
-        shouldValidate: true
-      })
-      setValue('citation.depositor', displayName)
-      setValue('citation.dateOfDeposit', DateHelper.toISO8601Format(new Date()))
-
-      if (user.affiliation) {
-        setValue('citation.datasetContact.0.datasetContactAffiliation', user.affiliation)
-        setValue('citation.author.0.authorAffiliation', user.affiliation)
-      }
-    }
-  }, [setValue, user, mode])
+  usePrefillFieldsWithUserData({ mode, user, formDefaultValues, setValue })
 
   const handleCancel = () => {
     navigate(RouteWithParams.COLLECTIONS(collectionId))
@@ -120,13 +103,7 @@ export const MetadataForm = ({
     }
   }
 
-  const disableSubmitButton = useMemo(() => {
-    return (
-      isErrorLoadingMetadataBlocks ||
-      submissionStatus === SubmissionStatus.IsSubmitting ||
-      !formState.isDirty
-    )
-  }, [isErrorLoadingMetadataBlocks, submissionStatus, formState.isDirty])
+  const disableSubmitButton = submissionStatus === SubmissionStatus.IsSubmitting
 
   const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
     // When pressing Enter, only submit the form  if the user is focused on the submit button itself
@@ -191,7 +168,10 @@ export const MetadataForm = ({
                   key={metadataBlock.id}>
                   <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
                   <Accordion.Body>
-                    <MetadataBlockFormFields metadataBlock={metadataBlock} />
+                    <MetadataBlockFormFields
+                      metadataBlock={metadataBlock}
+                      datasetTemplateInstructions={datasetTemplateInstructions}
+                    />
                   </Accordion.Body>
                 </Accordion.Item>
               ))}

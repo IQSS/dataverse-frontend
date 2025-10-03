@@ -12,6 +12,10 @@
 
   width: 55px;
   height: 80px;
+
+  @media (max-width: 576px) {
+    width: 30px;
+  }
 }
 
 .tooltip {

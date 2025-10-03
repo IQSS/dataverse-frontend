@@ -1,3 +1,5 @@
+import { InputOptions, Option } from './SelectAdvanced'
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function debounce<T extends (...args: any[]) => unknown>(
   fn: T,
@@ -12,23 +14,22 @@ export function debounce<T extends (...args: any[]) => unknown>(
   }
 }
 
-export function areArraysEqual(arr1: string[], arr2: string[]): boolean {
-  if (arr1.length === 0 && arr2.length === 0) {
-    return true
+// Normalize to Option[]
+export function normalizeOptions(input: InputOptions): Option[] {
+  if (!input) return []
+  if (typeof input[0] === 'string' || input.length === 0) {
+    return (input as string[]).map((s) => ({ value: s, label: s }))
   }
+  return input as Option[]
+}
 
-  if (arr1.length !== arr2.length) {
-    return false
+// Checks equality by content (value+label) regardless of order
+export function areOptionArraysEqual(a: Option[], b: Option[]): boolean {
+  if (a.length !== b.length) return false
+  const A = [...a].sort((x, y) => x.value.localeCompare(y.value))
+  const B = [...b].sort((x, y) => x.value.localeCompare(y.value))
+  for (let i = 0; i < A.length; i++) {
+    if (A[i].value !== B[i].value || A[i].label !== B[i].label) return false
   }
-
-  const sortedArr1 = arr1.slice().sort()
-  const sortedArr2 = arr2.slice().sort()
-
-  for (let i = 0; i < sortedArr1.length; i++) {
-    if (sortedArr1[i] !== sortedArr2[i]) {
-      return false
-    }
-  }
-
   return true
 }

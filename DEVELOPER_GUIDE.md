@@ -73,7 +73,7 @@ _To get a local copy up and running follow these simple example steps._
 
 [![DockerDesktop][_shield_docker]][_uses_docker_url]
 
-1. **Node &amp; NPM**: `node >= v16` and `npm >= v8`. Recommended versions for this project are `node v19` and `npm v9`.
+1. **Node &amp; NPM**: `node >= v22 < v23` and `npm >= v10`. Recommended versions for this project are `node v22` and `npm v10`.
 2. **Docker**: We use Docker Desktop, but the Docker CLI will also work.
 3. **Create a Copy of .npmrc**: In the project directory root, duplicate `.npmrc.example`, saving the copy as `.npmrc`.
 
@@ -565,7 +565,7 @@ npm run format
 
 ### Enforcing coding standards using pre-commit hooks
 
-We use [pre-commit] library to add pre-commit hooks which automatically check the committed
+We use [husky] library to add pre-commit hooks which automatically check the committed
 code changes for any coding standard violations.
 
 ### Changelog Management
@@ -946,9 +946,6 @@ However, we prioritize user-centric testing over coverage numbers.
   in the `coverage` folder after running the tests. These reports are also published to [Coveralls](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
   with every pull request and merge. The coverage badge is displayed at the top of the README.
 - **Tests included in the coverage:** We include all unit tests in the coverage report.
-- **Pre-commit hook:** We use [pre-commit](https://www.npmjs.com/package/pre-commit) to run the unit tests before every commit,
-  ensuring that no code is committed without passing the tests. It also runs the coverage checks to ensure that the coverage
-  threshold is met.
 
 #### How to run the code coverage
 
