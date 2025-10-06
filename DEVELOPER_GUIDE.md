@@ -967,7 +967,7 @@ npm run test:coverage
 # See detailed report at coverage/lcov-report/index.html
 ```
 
-Note that it's easy for the `lcov-report` report to get overwritten. For example, running any test with `npm run cy:open-unit` will overwrite it. For this reason you might want to copy the `lcov-report` directory elsewhere for safe keeping.
+Note that it's easy for the `lcov-report` report to get overwritten. For example, running any test with `npm run cy:open-unit` will overwrite it. For this reason you might want to copy the `lcov-report` directory elsewhere for safe keeping. That’s mainly useful for debugging previous coverage results and improving them.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
