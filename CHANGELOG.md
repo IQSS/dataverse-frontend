@@ -11,6 +11,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Dataset Templates Selector in the Create Dataset page.
 - Metadata Export Dropdown to the metadata tab of Dataset Page and File Page.
 - External Tools integration. All types supported: Explore, Configure, Preview and Query tools in Dataset and File pages. Still not showing external tools for Auxiliary Files as additional development is needed.
+- Contact Owner button in File Page.
+- Share button in File Page.
 
 ### Changed
 
@@ -19,6 +21,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Fixed
 
 - Upgrade dependencies to drastically reduce vulnerabilities flagged by `npm audit`. Reduced from +100 including 12 critical and 33 high to only 2 moderate.
+- Share button is now not going to be shown for deaccessioned versions, even when user has edit permissions.
 
 ### Removed
 
