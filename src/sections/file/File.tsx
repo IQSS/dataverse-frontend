@@ -26,7 +26,7 @@ import { useScrollTop } from '@/shared/hooks/useScrollTop'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { ContactButton } from '../shared/contact/ContactButton'
-import { ShareDatasetButton } from '../dataset/dataset-action-buttons/share-dataset-button/ShareDatasetButton'
+import { ShareFileButton } from './share-file-button/ShareFileButton'
 
 interface FileProps {
   id: number
@@ -184,7 +184,7 @@ export function File({
                     contactRepository={contactRepository}
                   />
 
-                  {!isDeaccessioned && <ShareDatasetButton />}
+                  {!isDeaccessioned && <ShareFileButton />}
                 </ButtonGroup>
               </ButtonGroup>
             </Col>
