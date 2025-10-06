@@ -184,9 +184,7 @@ export function File({
                     contactRepository={contactRepository}
                   />
 
-                  {(!isDeaccessioned || file.permissions.canEditOwnerDataset) && (
-                    <ShareDatasetButton />
-                  )}
+                  {!isDeaccessioned && <ShareDatasetButton />}
                 </ButtonGroup>
               </ButtonGroup>
             </Col>
