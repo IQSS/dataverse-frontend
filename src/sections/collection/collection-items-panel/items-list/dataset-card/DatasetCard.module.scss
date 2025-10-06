@@ -10,6 +10,7 @@
   padding: 6px 10px;
   border: 1px solid $dv-dataset-border-color;
   border-radius: 4px;
+  word-break: break-word;
 }
 
 .card-header-container {
@@ -18,7 +19,7 @@
   justify-content: space-between;
 
   a {
-    @include link-hover-underlined;
+    @include link-hover-underlined;  
   }
 
   .left-side-content {
