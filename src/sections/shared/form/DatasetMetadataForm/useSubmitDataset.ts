@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
 import { createDataset } from '../../../../dataset/domain/useCases/createDataset'
@@ -50,6 +50,8 @@ export function useSubmitDataset(
   )
   const [submitError, setSubmitError] = useState<string | null>(null)
 
+  const [searchParams] = useSearchParams()
+
   const submitForm = (formData: DatasetMetadataFormValues): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
@@ -62,8 +64,7 @@ export function useSubmitDataset(
 
     if (mode === 'create') {
       let datasetType = 'dataset'
-      const urlParams = new URLSearchParams(window.location.search)
-      const datasetTypeIn = urlParams.get('datasetType')
+      const datasetTypeIn = searchParams.get(QueryParamKey.DATASET_TYPE)
       if (datasetTypeIn) {
         datasetType = datasetTypeIn
       }

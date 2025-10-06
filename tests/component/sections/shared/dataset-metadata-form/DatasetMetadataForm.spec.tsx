@@ -9,6 +9,7 @@ import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { UserMother } from '../../../users/domain/models/UserMother'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
+import { Route } from '@/sections/Route.enum'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -1283,7 +1284,8 @@ describe('DatasetMetadataForm', () => {
           collectionId="root"
           datasetRepository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
-        />
+        />,
+        [`${Route.CREATE_DATASET}?datasetType=dataset`]
       )
       fillRequiredFieldsOnCreate()
       cy.findByText(/Save Dataset/i).click()
