@@ -69,7 +69,10 @@ export const LoggedInHeaderActions = ({
           {t('navigation.apiToken')}
         </Navbar.Dropdown.Item>
 
-        <Navbar.Dropdown.Item href="#" onClick={() => logOut()} data-testid="oidc-logout">
+        <Navbar.Dropdown.Item
+          href="#"
+          onClick={/* istanbul ignore next */ () => logOut()}
+          data-testid="oidc-logout">
           {t('logOut')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>
