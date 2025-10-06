@@ -4,6 +4,8 @@ import { getDisplayedOnCreateMetadataBlockInfoByCollectionId } from '../../../..
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { DatasetMetadataFormMode } from '.'
+import { useSearchParams } from 'react-router-dom'
+import { QueryParamKey } from '@/sections/Route.enum'
 
 interface Props {
   mode: DatasetMetadataFormMode
@@ -27,6 +29,7 @@ export const useGetMetadataBlocksInfo = ({
   const [metadataBlocksInfo, setMetadataBlocksInfo] = useState<MetadataBlockInfo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const [searchParams] = useSearchParams()
 
   useEffect(() => {
     const handleGetDatasetMetadataBlockFields = async () => {
@@ -34,8 +37,7 @@ export const useGetMetadataBlocksInfo = ({
       try {
         let metadataBlocks: MetadataBlockInfo[] = []
 
-        const urlParams = new URLSearchParams(window.location.search)
-        const datasetTypeIn = urlParams.get('datasetType')
+        const datasetTypeIn = searchParams.get(QueryParamKey.DATASET_TYPE)
         if (datasetTypeIn) {
           datasetType = datasetTypeIn
         }
