@@ -672,7 +672,7 @@ export class MetadataFieldsHelper {
    * @returns the invalid value or null if it can't be extracted
    * @example
    * getValidationFailedFieldError("Validation Failed: Point of Contact E-mail test@test.c  is not a valid email address. (Invalid value:edu.harvard.iq.dataverse.DatasetFieldValueValue[ id=null ]).java.util.stream.ReferencePipeline$3@561b5200")
-   * // returns "Point of Contact E-mail test@test.c  is not a valid email address."
+   * // returns "Point of Contact E-mail test@test.c is not a valid email address."
    */
 
   public static getValidationFailedFieldError(errorMessage: string): string | null {
