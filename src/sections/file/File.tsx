@@ -3,8 +3,8 @@ import styles from './File.module.scss'
 import { ButtonGroup, Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useFile } from './useFile'
-import { useEffect, useState } from 'react'
-import { useLoading } from '../loading/LoadingContext'
+import { useEffect, useMemo, useState } from 'react'
+import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { FileSkeleton } from './FileSkeleton'
 import { DatasetCitation } from '../dataset/dataset-citation/DatasetCitation'
 import { FileCitation } from './file-citation/FileCitation'
@@ -18,22 +18,71 @@ import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
 import { FileVersions } from './file-version/FileVersions'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
+import { FilePageHelper } from './FilePageHelper'
+import { FileEmbeddedExternalTool } from './file-embedded-external-tool/FileEmbeddedExternalTool'
+import { useScrollTop } from '@/shared/hooks/useScrollTop'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 
 interface FileProps {
-  repository: FileRepository
   id: number
+  repository: FileRepository
+  datasetRepository: DatasetRepository
+  dataverseInfoRepository: DataverseInfoRepository
   datasetVersionNumber?: string
+  toolTypeSelectedQueryParam?: string
 }
 
-export function File({ repository, id, datasetVersionNumber }: FileProps) {
+export function File({
+  id,
+  repository,
+  datasetRepository,
+  dataverseInfoRepository,
+  datasetVersionNumber,
+  toolTypeSelectedQueryParam
+}: FileProps) {
+  useScrollTop()
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
   const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
-  const [activeTab, setActiveTab] = useState<string>('metadata')
+  const { externalTools, externalToolsRepository } = useExternalTools()
+  const [activeTab, setActiveTab] = useState<string>(
+    toolTypeSelectedQueryParam && file?.permissions.canDownloadFile
+      ? FilePageHelper.EXT_TOOL_TAB_KEY
+      : 'metadata'
+  )
+
+  const fileApplicablePreviewOrQueryTools = useMemo(
+    () =>
+      FilePageHelper.getApplicablePreviewOrQueryToolsForFileType(
+        externalTools,
+        file?.metadata.type.value
+      ),
+    [externalTools, file]
+  )
+
+  const externalToolTabTitle: string = FilePageHelper.getExternalToolTabTitle(
+    fileApplicablePreviewOrQueryTools,
+    t,
+    file?.metadata.type.value
+  )
 
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
+
+  // To change active tab to external tool in case the file has applicable tools
+  useEffect(() => {
+    if (file) {
+      const defaultActiveTab = FilePageHelper.defineDefaultActiveTab(
+        externalTools,
+        file?.metadata.type.value
+      )
+
+      setActiveTab(defaultActiveTab)
+    }
+  }, [file, externalTools])
 
   if (isLoading) {
     return <FileSkeleton />
@@ -48,8 +97,6 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
   if (!file) {
     return <NotFoundPage dvObjectNotFoundType="file" />
   }
-
-  // TODO: if the file is deaccessioned, we should show the file in deaccessioned format
 
   return (
     <>
@@ -82,7 +129,12 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
               <span className={styles['citation-title']}>{t('fileCitationTitle')}</span>
               <FileCitation citation={file.citation} datasetVersion={file.datasetVersion} />
               <span className={styles['citation-title']}>{t('datasetCitationTitle')}</span>
-              <DatasetCitation version={file.datasetVersion} withoutThumbnail />
+              <DatasetCitation
+                version={file.datasetVersion}
+                withoutThumbnail
+                datasetRepository={datasetRepository}
+                datasetId={file.datasetPersistentId}
+              />
             </Col>
             <Col sm={3}>
               <ButtonGroup aria-label={t('actionButtons.title')} vertical className={styles.group}>
@@ -111,19 +163,38 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                       requestAccess: file.datasetVersion.termsOfAccess?.fileAccessRequest
                     }}
                     storageIdentifier={file.metadata.storageIdentifier}
+                    existingLabels={file.metadata.labels}
+                    isTabularFile={file.metadata.isTabular}
+                    fileType={file.metadata.type.value}
+                    datasetRepository={datasetRepository}
                   />
                 )}
               </ButtonGroup>
             </Col>
           </Row>
-          <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
+          <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
+            {fileApplicablePreviewOrQueryTools.length > 0 && file.permissions.canDownloadFile && (
+              <Tabs.Tab eventKey={FilePageHelper.EXT_TOOL_TAB_KEY} title={externalToolTabTitle}>
+                <div className={styles['tab-container']}>
+                  <FileEmbeddedExternalTool
+                    file={file}
+                    applicableTools={fileApplicablePreviewOrQueryTools}
+                    toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
+                    isInView={activeTab === FilePageHelper.EXT_TOOL_TAB_KEY}
+                    externalToolsRepository={externalToolsRepository}
+                  />
+                </div>
+              </Tabs.Tab>
+            )}
             <Tabs.Tab eventKey="metadata" title={t('tabs.metadata')}>
               <div className={styles['tab-container']}>
                 <FileMetadata
                   name={file.name}
                   metadata={file.metadata}
                   permissions={file.permissions}
-                  datasetPublishingStatus={file.datasetVersion.publishingStatus}
+                  datasetPersistentId={file.datasetPersistentId}
+                  datasetVersion={file.datasetVersion}
+                  dataverseInfoRepository={dataverseInfoRepository}
                 />
               </div>
             </Tabs.Tab>

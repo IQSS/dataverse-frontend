@@ -67,6 +67,29 @@ describe('FileVersions', () => {
       )
   })
 
+  it('disables the link button for deaccessioned versions without permission', () => {
+    const deaccessionedFile = [
+      {
+        ...fileVersionSummaries[0],
+        datasetVersion: '1.2',
+        versionState: DatasetVersionState.DEACCESSIONED
+      }
+    ]
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(deaccessionedFile)
+    cy.customMount(
+      <FileVersions
+        fileId={1}
+        datasetVersionNumber={'2.0'}
+        fileRepository={fileRepository}
+        canEditOwnerDataset={false}
+        isInView
+      />
+    )
+
+    cy.get('span').contains('1.2').should('exist')
+    cy.findByTestId('file-version-link-1.2').should('not.exist')
+  })
+
   it('disables the link button for draft version without permission', () => {
     const draftFile = [
       {

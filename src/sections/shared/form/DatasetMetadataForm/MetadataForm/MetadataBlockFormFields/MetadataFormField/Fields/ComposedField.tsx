@@ -20,7 +20,8 @@ export const ComposedField = ({
   description,
   childMetadataFields,
   rulesToApply,
-  notRequiredWithChildFieldsRequired
+  notRequiredWithChildFieldsRequired,
+  fieldInstructions
 }: ComposedFieldProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
 
@@ -56,6 +57,7 @@ export const ComposedField = ({
         </Col>
       )}
       <Row>
+        {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
         <Col sm={9} className={styles['composed-fields-grid']}>
           {Object.entries(childMetadataFields).map(
             ([childMetadataFieldKey, childMetadataFieldInfo]) => {

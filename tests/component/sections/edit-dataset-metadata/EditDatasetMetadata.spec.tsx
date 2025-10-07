@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
-import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
+import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 import { Dataset as DatasetModel } from '../../../../src/dataset/domain/models/Dataset'
 import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvider'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'

@@ -1,6 +1,6 @@
-FROM node:19.6.1-alpine AS build_image
+FROM node:22-alpine AS build_image
 
-RUN apk --no-cache add python3 make g++
+RUN apk --no-cache add python3 py3-setuptools make g++
 
 WORKDIR /usr/src/app/packages/design-system
 COPY ./packages/design-system ./
@@ -14,7 +14,7 @@ COPY package-lock.json ./
 COPY .npmrc ./
 RUN npm install
 
-FROM node:19.6.1-alpine 
+FROM node:22-alpine
 
 WORKDIR /usr/src/app
 COPY --from=build_image /usr/src/app/node_modules ./node_modules

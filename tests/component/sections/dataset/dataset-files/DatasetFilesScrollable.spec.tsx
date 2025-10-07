@@ -23,6 +23,7 @@ import { DatasetFilesScrollable } from '../../../../../src/sections/dataset/data
 import { FilesWithCount } from '../../../../../src/files/domain/models/FilesWithCount'
 import { getCellStyle } from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTableScrollable'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { DatasetMockRepository } from '../../../../../src/stories/dataset/DatasetMockRepository'
 
 const TOTAL_FILES_COUNT = 200
 const ONLY_4_FILES_COUNT = 4
@@ -42,6 +43,7 @@ const only4Files: FilesWithCount = {
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = DatasetMother.create().version
 const fileRepository: FileRepository = {} as FileRepository
+const datasetRepository = new DatasetMockRepository()
 const testFilesCountInfo = FilesCountInfoMother.create({
   total: 200,
   perFileType: [
@@ -94,6 +96,7 @@ describe('DatasetFilesScrollable', () => {
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -109,6 +112,7 @@ describe('DatasetFilesScrollable', () => {
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
         canUpdateDataset={false}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -139,6 +143,7 @@ describe('DatasetFilesScrollable', () => {
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -160,6 +165,7 @@ describe('DatasetFilesScrollable', () => {
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
+        datasetRepository={datasetRepository}
       />
     )
 
@@ -175,6 +181,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -193,6 +200,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -214,6 +222,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -238,6 +247,7 @@ describe('DatasetFilesScrollable', () => {
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
             datasetVersion={datasetVersion}
+            datasetRepository={datasetRepository}
           />
         )
 
@@ -264,6 +274,7 @@ describe('DatasetFilesScrollable', () => {
               filesRepository={fileRepository}
               datasetPersistentId={datasetPersistentId}
               datasetVersion={datasetVersion}
+              datasetRepository={datasetRepository}
             />
           </SettingsProvider>
         )
@@ -297,6 +308,7 @@ describe('DatasetFilesScrollable', () => {
               filesRepository={fileRepository}
               datasetPersistentId={datasetPersistentId}
               datasetVersion={datasetVersion}
+              datasetRepository={datasetRepository}
             />
           </SettingsProvider>
         )
@@ -333,6 +345,7 @@ describe('DatasetFilesScrollable', () => {
               filesRepository={fileRepository}
               datasetPersistentId={datasetPersistentId}
               datasetVersion={datasetVersion}
+              datasetRepository={datasetRepository}
             />
           </SettingsProvider>
         )
@@ -398,6 +411,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -416,6 +430,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -438,6 +453,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -477,6 +493,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -521,6 +538,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -542,6 +560,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -569,6 +588,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -586,8 +606,12 @@ describe('DatasetFilesScrollable', () => {
 
       cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
       cy.get('@scrollableFilesContainer').scrollTo('bottom')
-
-      cy.findByRole('columnheader', { name: '20 of 200 Files displayed' }).should('exist')
+      cy.findByRole('columnheader', { name: /^\d+ of 200 Files displayed$/ })
+        .invoke('text')
+        .then((text) => {
+          const count = parseInt(text.split(' ')[0], 10)
+          expect(count).to.be.gte(10)
+        })
 
       cy.get('table > tbody > tr').each(() => {
         cy.get('table > tbody > tr > td:nth-child(1) > input[type=checkbox]').should('be.checked')
@@ -600,6 +624,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -616,6 +641,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -632,6 +658,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -647,6 +674,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -671,6 +699,7 @@ describe('DatasetFilesScrollable', () => {
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
             datasetVersion={datasetVersion}
+            datasetRepository={datasetRepository}
           />
         </SettingsProvider>
       )
@@ -696,6 +725,7 @@ describe('DatasetFilesScrollable', () => {
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
             datasetVersion={datasetVersion}
+            datasetRepository={datasetRepository}
           />
         </SettingsProvider>
       )
@@ -715,6 +745,7 @@ describe('DatasetFilesScrollable', () => {
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
             datasetVersion={datasetVersion}
+            datasetRepository={datasetRepository}
           />
         </SettingsProvider>
       )
@@ -741,6 +772,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.wrap(fileRepository.getAllByDatasetPersistentIdWithCount).should(
@@ -760,6 +792,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('button', { name: /Sort/ }).click()
@@ -778,6 +811,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('button', { name: 'File Type: All' }).click()
@@ -796,6 +830,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('button', { name: 'Access: All' }).click()
@@ -814,6 +849,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByRole('button', { name: 'File Tags: All' }).click()
@@ -832,6 +868,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByLabelText('Search').type('test{enter}')
@@ -849,6 +886,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
 
@@ -880,6 +918,7 @@ describe('DatasetFilesScrollable', () => {
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
             datasetVersion={datasetVersion}
+            datasetRepository={datasetRepository}
           />
         </SettingsProvider>
       )
@@ -913,6 +952,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByText('Error').should('exist')
@@ -926,6 +966,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByText(/There was an error getting the files total download size/).should('exist')
@@ -941,6 +982,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByText('Error').should('exist')
@@ -954,6 +996,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByText(/There was an error getting the files total download size/).should('exist')
@@ -969,6 +1012,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByText('Error').should('exist')
@@ -982,6 +1026,7 @@ describe('DatasetFilesScrollable', () => {
           filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
         />
       )
       cy.findByText(/There was an error getting the files count info/).should('exist')

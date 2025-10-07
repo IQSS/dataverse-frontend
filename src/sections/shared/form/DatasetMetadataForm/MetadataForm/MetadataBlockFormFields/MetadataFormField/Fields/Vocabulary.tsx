@@ -28,7 +28,8 @@ export const Vocabulary = ({
   withinMultipleFieldsGroup,
   fieldsArrayIndex,
   isFieldThatMayBecomeRequired,
-  childFieldNamesThatTriggerRequired
+  childFieldNamesThatTriggerRequired,
+  fieldInstructions
 }: VocabularyProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
 
@@ -90,6 +91,7 @@ export const Vocabulary = ({
             {title}
           </Form.Group.Label>
           <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
+            {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
             <Row>
               <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
                 {showSelectWithSearch ? (

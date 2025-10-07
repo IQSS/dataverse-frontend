@@ -33,5 +33,9 @@
       "content": "Learn about getting started creating your own dataverse repository here.",
       "text_button": "Getting started"
     }
+  },
+  "searchDropdown": {
+    "header": "Search Services",
+    "buttonLabel": "Toggle search services dropdown"
   }
 }

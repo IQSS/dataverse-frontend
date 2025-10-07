@@ -3,7 +3,7 @@ import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
-import { useLoading } from '../loading/LoadingContext'
+import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { DatasetSkeleton, TabsSkeleton } from './DatasetSkeleton'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { useTranslation } from 'react-i18next'
@@ -31,6 +31,8 @@ import { DatasetVersions } from './dataset-versions/DatasetVersions'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { DatasetMetrics } from './dataset-metrics/DatasetMetrics'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { useAnonymized } from './anonymized/AnonymizedContext'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -38,6 +40,7 @@ interface DatasetProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionRepository: CollectionRepository
   contactRepository: ContactRepository
+  dataverseInfoRepository: DataverseInfoRepository
   filesTabInfiniteScrollEnabled?: boolean
   publishInProgress?: boolean
   tab?: string
@@ -49,6 +52,7 @@ export function Dataset({
   metadataBlockInfoRepository,
   collectionRepository,
   contactRepository,
+  dataverseInfoRepository,
   filesTabInfiniteScrollEnabled,
   publishInProgress,
   tab = 'files'
@@ -62,6 +66,7 @@ export function Dataset({
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
   const [activeTab, setActiveTab] = useState<string>(tab)
   const termsTabRef = useRef<HTMLDivElement>(null)
+  const { anonymizedView } = useAnonymized()
   useUpdateDatasetAlerts({
     dataset,
     publishInProgress
@@ -129,7 +134,12 @@ export function Dataset({
         <div className={styles.container}>
           <Row>
             <Col lg={9} className="mb-4">
-              <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
+              <DatasetCitation
+                thumbnail={dataset.thumbnail}
+                version={dataset.version}
+                datasetId={dataset.persistentId}
+                datasetRepository={datasetRepository}
+              />
               <DatasetSummary
                 summaryFields={dataset.summaryFields}
                 license={dataset.license}
@@ -144,10 +154,13 @@ export function Dataset({
                 dataset={dataset}
                 contactRepository={contactRepository}
               />
-              <DatasetMetrics
-                datasetRepository={datasetRepository}
-                datasetId={dataset.persistentId}
-              />
+              {(!isCurrentVersionDeaccessioned || canUpdateDataset) && (
+                <DatasetMetrics
+                  data-testid="dataset-metrics"
+                  datasetRepository={datasetRepository}
+                  datasetId={dataset.persistentId}
+                />
+              )}
             </Col>
           </Row>
 
@@ -181,12 +194,14 @@ export function Dataset({
                         datasetVersion={dataset.version}
                         canUpdateDataset={canUpdateDataset}
                         key={dataset.version.publishingStatus}
+                        datasetRepository={datasetRepository}
                       />
                     ) : (
                       <DatasetFiles
                         filesRepository={fileRepository}
                         datasetPersistentId={dataset.persistentId}
                         datasetVersion={dataset.version}
+                        datasetRepository={datasetRepository}
                       />
                     )}
                   </div>
@@ -195,9 +210,10 @@ export function Dataset({
                 <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
                   <div className={styles['tab-container']}>
                     <DatasetMetadata
-                      persistentId={dataset.persistentId}
-                      metadataBlocks={dataset.metadataBlocks}
+                      dataset={dataset}
+                      anonymizedView={anonymizedView}
                       metadataBlockInfoRepository={metadataBlockInfoRepository}
+                      dataverseInfoRepository={dataverseInfoRepository}
                     />
                   </div>
                 </Tabs.Tab>

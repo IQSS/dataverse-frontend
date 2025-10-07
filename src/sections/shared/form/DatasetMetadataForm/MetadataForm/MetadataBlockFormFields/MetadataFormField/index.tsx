@@ -12,6 +12,8 @@ import {
   type MetadataField,
   type TypeMetadataField
 } from '../../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { DatasetTemplateInstruction } from '@/dataset/domain/models/DatasetTemplate'
+import { MetadataFieldsHelper } from '../../../MetadataFieldsHelper'
 
 export interface CommonFieldProps {
   name: string
@@ -21,6 +23,7 @@ export interface CommonFieldProps {
   description: string
   type: TypeMetadataField
   rulesToApply: DefinedRules
+  fieldInstructions?: string
 }
 
 type DynamicMetadataFormFieldProps =
@@ -33,6 +36,7 @@ type DynamicMetadataFormFieldProps =
       compoundParentIsRequired?: never
       isFieldThatMayBecomeRequired?: never
       childFieldNamesThatTriggerRequired?: never
+      datasetTemplateInstructions?: DatasetTemplateInstruction[]
     }
   | {
       metadataFieldInfo: MetadataField
@@ -43,6 +47,7 @@ type DynamicMetadataFormFieldProps =
       compoundParentIsRequired: boolean
       isFieldThatMayBecomeRequired: boolean
       childFieldNamesThatTriggerRequired: string[]
+      datasetTemplateInstructions?: DatasetTemplateInstruction[]
     }
 
 export const MetadataFormField = ({
@@ -53,7 +58,8 @@ export const MetadataFormField = ({
   compoundParentName,
   compoundParentIsRequired,
   isFieldThatMayBecomeRequired,
-  childFieldNamesThatTriggerRequired
+  childFieldNamesThatTriggerRequired,
+  datasetTemplateInstructions
 }: DynamicMetadataFormFieldProps) => {
   const {
     name,
@@ -91,6 +97,10 @@ export const MetadataFormField = ({
     isParentFieldRequired: compoundParentIsRequired
   })
 
+  const fieldInstructions: string | undefined = datasetTemplateInstructions?.find(
+    (i) => i.instructionField === MetadataFieldsHelper.replaceSlashWithDot(name)
+  )?.instructionText
+
   if (isSafePrimitive) {
     if (multiple) {
       return (
@@ -103,6 +113,7 @@ export const MetadataFormField = ({
           description={description}
           rulesToApply={rulesToApply}
           metadataBlockName={metadataBlockName}
+          fieldInstructions={fieldInstructions}
         />
       )
     }
@@ -121,6 +132,7 @@ export const MetadataFormField = ({
         withinMultipleFieldsGroup={withinMultipleFieldsGroup}
         isFieldThatMayBecomeRequired={isFieldThatMayBecomeRequired}
         childFieldNamesThatTriggerRequired={childFieldNamesThatTriggerRequired}
+        fieldInstructions={fieldInstructions}
       />
     )
   }
@@ -139,6 +151,7 @@ export const MetadataFormField = ({
           options={controlledVocabularyValues}
           compoundParentName={compoundParentName}
           metadataBlockName={metadataBlockName}
+          fieldInstructions={fieldInstructions}
         />
       )
     }
@@ -156,6 +169,7 @@ export const MetadataFormField = ({
         metadataBlockName={metadataBlockName}
         compoundParentName={compoundParentName}
         withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        fieldInstructions={fieldInstructions}
       />
     )
   }
@@ -175,6 +189,7 @@ export const MetadataFormField = ({
           compoundParentName={compoundParentName}
           childMetadataFields={childMetadataFields}
           notRequiredWithChildFieldsRequired={notRequiredWithChildFieldsRequired}
+          fieldInstructions={fieldInstructions}
         />
       )
     }
@@ -192,6 +207,7 @@ export const MetadataFormField = ({
         compoundParentName={compoundParentName}
         childMetadataFields={childMetadataFields}
         notRequiredWithChildFieldsRequired={notRequiredWithChildFieldsRequired}
+        fieldInstructions={fieldInstructions}
       />
     )
   }

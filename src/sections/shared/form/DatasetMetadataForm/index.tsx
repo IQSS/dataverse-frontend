@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react'
-import { useLoading } from '../../../loading/LoadingContext'
+import { useEffect } from 'react'
+import { useLoading } from '../../../../shared/contexts/loading/LoadingContext'
 import { useGetMetadataBlocksInfo } from './useGetMetadataBlocksInfo'
 import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
@@ -8,6 +8,7 @@ import { MetadataFormSkeleton } from './MetadataForm/MetadataFormSkeleton'
 import { MetadataForm } from './MetadataForm'
 import { DatasetMetadataBlocks } from '../../../../dataset/domain/models/Dataset'
 import { Alert } from '@iqss/dataverse-design-system'
+import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 
 type DatasetMetadataFormProps =
   | {
@@ -18,6 +19,7 @@ type DatasetMetadataFormProps =
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues?: never
       datasetInternalVersionNumber?: never
+      datasetTemplate?: DatasetTemplate
     }
   | {
       mode: 'edit'
@@ -27,6 +29,7 @@ type DatasetMetadataFormProps =
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
       datasetInternalVersionNumber: number
+      datasetTemplate?: never
     }
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
@@ -38,84 +41,74 @@ export const DatasetMetadataForm = ({
   datasetPersistentID,
   metadataBlockInfoRepository,
   datasetMetadaBlocksCurrentValues,
-  datasetInternalVersionNumber
+  datasetInternalVersionNumber,
+  datasetTemplate
 }: DatasetMetadataFormProps) => {
   const { setIsLoading } = useLoading()
-  const onEditMode = mode === 'edit'
 
   const {
-    metadataBlocksInfo,
-    isLoading: isLoadingMetadataBlocksInfo,
-    error: errorLoadingMetadataBlocksInfo
+    metadataBlocksInfo: metadataBlocksInfoForDisplayOnCreate,
+    isLoading: isLoadingMetadataBlocksInfoForDisplayOnCreate,
+    error: errorLoadingMetadataBlocksInfoForDisplayOnCreate
   } = useGetMetadataBlocksInfo({
-    mode,
+    mode: 'create',
     collectionId,
     metadataBlockInfoRepository
   })
 
-  // Metadata blocks info with field names that have dots replaced by slashes
-  const normalizedMetadataBlocksInfo = useMemo(() => {
-    if (metadataBlocksInfo.length === 0) return []
+  const {
+    metadataBlocksInfo: metadataBlocksInfoForDisplayOnEdit,
+    isLoading: isLoadingMetadataBlocksInfoForDisplayOnEdit,
+    error: errorLoadingMetadataBlocksInfoForDisplayOnEdit
+  } = useGetMetadataBlocksInfo({
+    mode: 'edit',
+    collectionId,
+    metadataBlockInfoRepository
+  })
 
-    return MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(metadataBlocksInfo)
-  }, [metadataBlocksInfo])
+  const isLoadingData =
+    isLoadingMetadataBlocksInfoForDisplayOnCreate || isLoadingMetadataBlocksInfoForDisplayOnEdit
 
-  // Dataset metadata blocks current values properties with dots replaced by slashes to match the metadata blocks info
-  const normalizedDatasetMetadaBlocksCurrentValues = useMemo(() => {
-    if (!datasetMetadaBlocksCurrentValues) return undefined
-
-    return MetadataFieldsHelper.replaceDatasetMetadataBlocksCurrentValuesDotKeysWithSlash(
-      datasetMetadaBlocksCurrentValues
-    )
-  }, [datasetMetadaBlocksCurrentValues])
-
-  // If we are in edit mode, we need to add the values to the metadata blocks info
-  const normalizedMetadataBlocksInfoWithValues = useMemo(() => {
-    if (normalizedMetadataBlocksInfo.length === 0 || !normalizedDatasetMetadaBlocksCurrentValues) {
-      return null
-    }
-
-    return onEditMode
-      ? MetadataFieldsHelper.addFieldValuesToMetadataBlocksInfo(
-          normalizedMetadataBlocksInfo,
-          normalizedDatasetMetadaBlocksCurrentValues
-        )
-      : null
-  }, [normalizedMetadataBlocksInfo, normalizedDatasetMetadaBlocksCurrentValues, onEditMode])
-
-  // Set the form default values object based on the metadata blocks info
-  const formDefaultValues = useMemo(() => {
-    return onEditMode && normalizedMetadataBlocksInfoWithValues !== null
-      ? MetadataFieldsHelper.getFormDefaultValues(normalizedMetadataBlocksInfoWithValues)
-      : MetadataFieldsHelper.getFormDefaultValues(normalizedMetadataBlocksInfo)
-  }, [normalizedMetadataBlocksInfo, normalizedMetadataBlocksInfoWithValues, onEditMode])
+  const errorLoadingData =
+    errorLoadingMetadataBlocksInfoForDisplayOnCreate ||
+    errorLoadingMetadataBlocksInfoForDisplayOnEdit
 
   useEffect(() => {
-    setIsLoading(isLoadingMetadataBlocksInfo)
-  }, [isLoadingMetadataBlocksInfo, setIsLoading])
+    setIsLoading(isLoadingData)
+  }, [isLoadingData, setIsLoading])
 
-  if (isLoadingMetadataBlocksInfo || !formDefaultValues) {
+  if (isLoadingData) {
     return <MetadataFormSkeleton onEditMode={mode === 'edit'} />
   }
 
-  if (errorLoadingMetadataBlocksInfo) {
+  if (errorLoadingData) {
     return (
       <Alert variant="danger" dismissible={false}>
-        {errorLoadingMetadataBlocksInfo}
+        {errorLoadingData}
       </Alert>
     )
   }
+
+  const metadataBlocksInfo = MetadataFieldsHelper.defineMetadataBlockInfo(
+    mode,
+    metadataBlocksInfoForDisplayOnCreate,
+    metadataBlocksInfoForDisplayOnEdit,
+    datasetMetadaBlocksCurrentValues,
+    datasetTemplate?.datasetMetadataBlocks
+  )
+
+  const formDefaultValues = MetadataFieldsHelper.getFormDefaultValues(metadataBlocksInfo)
 
   return (
     <MetadataForm
       mode={mode}
       collectionId={collectionId}
       formDefaultValues={formDefaultValues}
-      metadataBlocksInfo={normalizedMetadataBlocksInfo}
-      errorLoadingMetadataBlocksInfo={errorLoadingMetadataBlocksInfo}
+      metadataBlocksInfo={metadataBlocksInfo}
       datasetRepository={datasetRepository}
       datasetPersistentID={datasetPersistentID}
       datasetInternalVersionNumber={datasetInternalVersionNumber}
+      datasetTemplateInstructions={datasetTemplate?.instructions}
     />
   )
 }

@@ -1,3 +1,4 @@
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { VersionDetailModal } from '@/sections/dataset/dataset-versions/view-difference/DatasetVersionsDetailModal'
@@ -6,11 +7,13 @@ const datasetsRepository: DatasetRepository = {} as DatasetRepository
 const datasetVersionDiff: DatasetVersionDiff | undefined = {
   oldVersion: {
     versionNumber: '2.0',
-    lastUpdatedDate: '2025-03-11T16:22:00Z'
+    lastUpdatedDate: '2025-03-11T16:22:00Z',
+    versionState: DatasetVersionState.RELEASED
   },
   newVersion: {
     versionNumber: 'DRAFT',
-    lastUpdatedDate: '2025-03-13T14:09:03Z'
+    lastUpdatedDate: '2025-03-13T14:09:03Z',
+    versionState: DatasetVersionState.DRAFT
   },
 
   metadataChanges: [

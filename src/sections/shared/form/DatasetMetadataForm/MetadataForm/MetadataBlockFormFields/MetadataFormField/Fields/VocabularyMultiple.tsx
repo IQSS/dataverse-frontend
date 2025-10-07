@@ -19,7 +19,8 @@ export const VocabularyMultiple = ({
   options,
   metadataBlockName,
   compoundParentName,
-  fieldsArrayIndex
+  fieldsArrayIndex,
+  fieldInstructions
 }: VocabularyProps) => {
   const { control } = useFormContext()
 
@@ -51,6 +52,7 @@ export const VocabularyMultiple = ({
             {title}
           </Form.Group.Label>
           <Col sm={9}>
+            {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
             <Row>
               <Col sm={9}>
                 <Form.Group.SelectAdvanced

@@ -4,7 +4,7 @@ import {
   FileMetadataMother,
   FileTypeMother
 } from '@tests/component/files/domain/models/FileMetadataMother'
-import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
+import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 import { FileMockRepository } from '../../../../src/stories/file/FileMockRepository'
 
 const fileMockRepository = new FileMockRepository()

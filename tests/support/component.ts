@@ -16,10 +16,11 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import '@cypress/code-coverage/support'
+import '../../src/assets/global.scss'
 import '../../src/assets/swal-custom.scss'
 import '../../src/assets/react-toastify-custom.scss'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { mount, MountReturn } from 'cypress/react18'
+import { mount, MountReturn } from 'cypress/react'
 import { RouterInitialEntry } from './commands'
 import { ReactNode } from 'react'
 import { User } from '@/users/domain/models/User'

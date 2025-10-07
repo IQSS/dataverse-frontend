@@ -19,9 +19,11 @@ export const collectionNameToAlias = (name: string) => {
 
 // This is only to avoid difference snapshots in Chromatic builds, the real display origin will be the current window location
 const locationOrigin =
-  import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true' ? 'https://foo.com' : window.location.origin
+  import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true'
+    ? /* istanbul ignore next */ 'https://foo.com'
+    : window.location.origin
 
-const BASENAME_URL = import.meta.env.BASE_URL ?? ''
+const BASENAME_URL = import.meta.env.BASE_URL ?? /* istanbul ignore next */ ''
 
 interface IdentifierFieldProps {
   rules: UseControllerProps['rules']

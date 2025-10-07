@@ -41,6 +41,10 @@ export const TopFieldsSection = ({ isEditingRootCollection }: TopFieldsSectionPr
       message: t('fields.alias.invalid.maxLength', { maxLength: 60 })
     },
     validate: (value: string) => {
+      if (Validator.isNumberOnly(value)) {
+        return t('fields.alias.invalid.numberOnly')
+      }
+
       if (!Validator.isValidIdentifier(value)) {
         return t('fields.alias.invalid.format')
       }

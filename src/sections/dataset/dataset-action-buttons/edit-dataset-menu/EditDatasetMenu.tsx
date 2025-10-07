@@ -13,6 +13,7 @@ import { useSession } from '../../../session/SessionContext'
 import { QueryParamKey, Route } from '../../../Route.enum'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useNotImplementedModal } from '../../.././not-implemented/NotImplementedModalContext'
+import { DatasetConfigureOptions } from '../DatasetToolsOptions'
 
 interface EditDatasetMenuProps {
   dataset: Dataset
@@ -114,6 +115,9 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
       <DropdownButtonItem eventKey={EditDatasetMenuItems.THUMBNAILS_PLUS_WIDGETS} as="button">
         {t('datasetActionButtons.editDataset.thumbnailsPlusWidgets')}
       </DropdownButtonItem>
+
+      <DatasetConfigureOptions persistentId={dataset.persistentId} />
+
       <DeleteDraftDatasetButton dataset={dataset} datasetRepository={datasetRepository} />
       {!isDeaccessioned && (
         <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />

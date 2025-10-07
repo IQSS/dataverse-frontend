@@ -29,7 +29,7 @@ export const CustomFeaturedItemCard = ({
         {featuredItem.imageFileUrl && (
           <Card.Image
             src={appendTimestampToImageUrl(featuredItem.imageFileUrl)}
-            alt=""
+            alt="featured item thumbnail"
             variant="top"
             className={styles.image}
           />

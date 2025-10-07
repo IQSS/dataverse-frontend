@@ -188,7 +188,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
     const droppedItems = event.dataTransfer.items
 
     if (droppedItems.length > 0) {
-      if (operationType !== OperationType.REPLACE_FILE && droppedItems.length > 1) {
+      if (operationType === OperationType.REPLACE_FILE && droppedItems.length > 1) {
         toast.error(t('fileUploader.replaceFileMultipleError'))
         return
       }

@@ -76,4 +76,28 @@ describe('ApiTokenSection', () => {
     cy.get('[data-testid="noApiToken"]').should('exist')
     cy.get('button').contains('Create Token').should('exist')
   })
+
+  it('should show error message when failing to fetch the current API token', () => {
+    userRepository.getCurrentApiToken = cy.stub().rejects(new Error('Failed to fetch API token'))
+
+    cy.mountAuthenticated(<ApiTokenSection repository={userRepository} />)
+
+    cy.findByText(/Failed to fetch API token/).should('exist')
+  })
+
+  it('should show error message when failing to recreate the API token', () => {
+    userRepository.recreateApiToken = cy.stub().rejects(new Error('Failed to recreate API token'))
+
+    cy.findByRole('button', { name: 'Recreate Token' }).click()
+
+    cy.findByText(/Failed to recreate API token/).should('exist')
+  })
+
+  it('should show error message when failing to revoke the API token', () => {
+    userRepository.deleteApiToken = cy.stub().rejects(new Error('Failed to revoke API token'))
+
+    cy.findByRole('button', { name: 'Revoke Token' }).click()
+
+    cy.findByText(/Failed to revoke API token/).should('exist')
+  })
 })
