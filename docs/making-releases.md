@@ -134,6 +134,7 @@ After merging the release branch into `main`, ensure the develop branch is updat
 Create a pull request to sync the `develop` branch with the `main` branch. Create the branch from `main` and name it `sync-develop-v[version-number]`.
 
 This is a good time to revert or adjust any release-specific changes that are **not needed in `develop`**, such as:
+
 - Using the npm version of the latest `@iqss/dataverse-client-javascript` package — check what alpha version is used in `develop` and revert to that version.
 - Updating the `E2E_DATAVERSE_IMAGE_TAG` in `workflows/test.yml` — revert it to the value used in `develop` (usually `unstable`).
 - Any other release-only changes or configuration updates that should not persist in `develop`.
