@@ -43,4 +43,22 @@ describe('Login', () => {
       /Welcome to Dataverse! Your account is all set, and we're thrilled to have you on board. Start exploring today!/
     ).should('exist')
   })
+
+  it('successfully log in and finish the sign up with a user that exists in the OIDC provider and not in dataverse with a user who has email as username', () => {
+    cy.visit('/spa')
+    cy.wait(1_000)
+    cy.findAllByTestId('oidc-login').click()
+
+    TestsUtils.enterCredentialsInKeycloak('dataverse-curator-email-as-username@mailinator.com','curator')
+
+    cy.wait(1_500)
+
+    TestsUtils.finishSignUp()
+
+    cy.url().should('eq', `${Cypress.config().baseUrl as string}/spa/collections`)
+
+    cy.findByText(
+      /Welcome to Dataverse! Your account is all set, and we're thrilled to have you on board. Start exploring today!/
+    ).should('exist')
+  })
 })
