@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Trans, useTranslation } from 'react-i18next'
-import { useLoading } from '../loading/LoadingContext'
+import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { Route } from '../Route.enum'
 import styles from './NotFoundPage.module.scss'
 

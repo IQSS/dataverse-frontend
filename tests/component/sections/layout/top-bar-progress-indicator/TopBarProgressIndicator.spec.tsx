@@ -1,5 +1,5 @@
 import TopBarProgressIndicator from '../../../../../src/sections/layout/topbar-progress-indicator/TopbarProgressIndicator'
-import { LoadingContext } from '../../../../../src/sections/loading/LoadingContext'
+import { LoadingContext } from '../../../../../src/shared/contexts/loading/LoadingContext'
 
 describe('TopBarProgressIndicator', () => {
   it('should render without errors', () => {

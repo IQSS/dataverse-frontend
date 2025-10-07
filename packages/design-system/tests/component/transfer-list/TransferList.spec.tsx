@@ -317,6 +317,54 @@ describe('TransferList', () => {
     })
   })
 
+  it('renders the TransferList disabled', () => {
+    cy.mount(
+      <TransferList
+        availableItems={availableItems}
+        defaultSelected={[
+          {
+            label: 'Item A',
+            value: 'A',
+            id: 'A'
+          },
+          {
+            label: 'Item C',
+            value: 'C',
+            id: 'C'
+          }
+        ]}
+        disabled
+      />
+    )
+
+    cy.findByTestId('left-list-group').as('leftList')
+    cy.findByTestId('actions-column').as('actionsColumn')
+    cy.findByTestId('right-list-group').as('rightList')
+
+    cy.get('@leftList').should('exist')
+    cy.get('@leftList').children().should('have.length', 3)
+    cy.get('@rightList').should('exist')
+    cy.get('@rightList').children().should('have.length', 2)
+
+    cy.get('@actionsColumn').within(() => {
+      cy.findByLabelText('move all right').should('be.disabled')
+      cy.findByLabelText('move selected to right').should('be.disabled')
+      cy.findByLabelText('move selected to left').should('be.disabled')
+      cy.findByLabelText('move all left').should('be.disabled')
+    })
+
+    cy.get('@leftList').within(() => {
+      cy.findByLabelText('Item B').should('be.disabled')
+      cy.findByLabelText('Item D').should('be.disabled')
+      cy.findByLabelText('Item E').should('be.disabled')
+    })
+
+    cy.get('@rightList').within(() => {
+      cy.findByLabelText('Item A').should('be.disabled')
+      cy.findByLabelText('Item C').should('be.disabled')
+    })
+  })
+
   describe('drag and drop', () => {
     it('should sort item A for Item B', () => {
       cy.mount(

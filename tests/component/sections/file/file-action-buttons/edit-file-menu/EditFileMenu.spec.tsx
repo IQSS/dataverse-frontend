@@ -24,6 +24,7 @@ describe('EditFileMenu', () => {
         storageIdentifier="s3://10.5072/FK2/FNJFOR"
         isTabularFile={true}
         datasetRepository={new DatasetMockRepository()}
+        fileType={testFile.metadata.type.value}
       />
     )
 
@@ -62,6 +63,7 @@ describe('EditFileMenu', () => {
         isTabularFile={true}
         storageIdentifier="non-s3://10.5072/FK2/FNJFOR"
         datasetRepository={new DatasetMockRepository()}
+        fileType={testFile.metadata.type.value}
       />
     )
 
@@ -84,6 +86,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -111,6 +114,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -138,6 +142,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -174,6 +179,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -204,6 +210,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -233,6 +240,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -263,6 +271,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -293,6 +302,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -320,6 +330,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -349,6 +360,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -384,6 +396,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -414,6 +427,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -441,6 +455,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -474,6 +489,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -501,6 +517,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -526,6 +543,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -560,6 +578,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -589,6 +608,7 @@ describe('EditFileMenu', () => {
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
+          fileType={testFile.metadata.type.value}
         />
       )
 
@@ -624,6 +644,7 @@ describe('EditFileMenu', () => {
           isTabularFile={true}
           datasetRepository={new DatasetMockRepository()}
           storageIdentifier="s3://10.5072/FK2/FNJFOR"
+          fileType={testFile.metadata.type.value}
         />
       )
     })

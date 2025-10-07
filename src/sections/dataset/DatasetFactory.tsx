@@ -81,6 +81,7 @@ function DatasetWithSearchParams() {
           contactRepository={contactRepository}
           filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
           tab={tab}
+          dataverseInfoRepository={dataverseInfoRepository}
         />
       </DatasetProvider>
     )
@@ -100,6 +101,7 @@ function DatasetWithSearchParams() {
         publishInProgress={publishInProgress}
         filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
         tab={tab}
+        dataverseInfoRepository={dataverseInfoRepository}
       />
     </DatasetProvider>
   )

@@ -59,4 +59,9 @@ describe('Button', () => {
     cy.mount(<Button type="submit">{clickMeText}</Button>)
     cy.findByText(clickMeText).should('have.attr', 'type').and('eq', 'submit')
   })
+
+  it('renders the button with the spacing styles when the spacing prop is provided', () => {
+    cy.mount(<Button withSpacing>{clickMeText}</Button>)
+    cy.findByText(clickMeText).should('have.css', 'margin').and('not.eq', '0px')
+  })
 })

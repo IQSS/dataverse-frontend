@@ -8,6 +8,15 @@ function toggleOptionsMenu() {
   cy.findByLabelText('Toggle options menu').click()
 }
 
+const vlOptions = [
+  { value: 'reading', label: 'Reading' },
+  { value: 'swimming', label: 'Swimming' },
+  { value: 'running', label: 'Running' },
+  { value: 'cycling', label: 'Cycling' },
+  { value: 'cooking', label: 'Cooking' },
+  { value: 'gardening', label: 'Gardening' }
+]
+
 describe('SelectAdvanced', () => {
   describe('should render correctly', () => {
     it('on single selection', () => {
@@ -19,6 +28,12 @@ describe('SelectAdvanced', () => {
 
       cy.findByText('Select...').should('exist')
     })
+
+    it('on single selection (value/label)', () => {
+      cy.mount(<SelectAdvanced options={vlOptions} />)
+      cy.findByText('Select...').should('exist')
+    })
+
     it('on multiple selection', () => {
       cy.mount(
         <SelectAdvanced
@@ -26,6 +41,11 @@ describe('SelectAdvanced', () => {
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         />
       )
+      cy.findByText('Select...').should('exist')
+    })
+
+    it('on multiple selection (value/label)', () => {
+      cy.mount(<SelectAdvanced isMultiple options={vlOptions} />)
       cy.findByText('Select...').should('exist')
     })
   })
@@ -51,6 +71,7 @@ describe('SelectAdvanced', () => {
       // 6 Options + 1 Select... option
       cy.findAllByRole('option').should('have.length', 7)
     })
+
     it('on multiple selection', () => {
       cy.mount(
         <SelectAdvanced
@@ -60,6 +81,35 @@ describe('SelectAdvanced', () => {
       )
       toggleOptionsMenu()
 
+      cy.findByText('Reading').should('exist')
+      cy.findByText('Swimming').should('exist')
+      cy.findByText('Running').should('exist')
+      cy.findByText('Cycling').should('exist')
+      cy.findByText('Cooking').should('exist')
+      cy.findByText('Gardening').should('exist')
+
+      cy.findAllByRole('option').should('have.length', 6)
+    })
+
+    it('on single selection (value/label)', () => {
+      cy.mount(<SelectAdvanced options={vlOptions} />)
+
+      toggleOptionsMenu()
+      cy.findByText('Reading').should('exist')
+      cy.findByText('Swimming').should('exist')
+      cy.findByText('Running').should('exist')
+      cy.findByText('Cycling').should('exist')
+      cy.findByText('Cooking').should('exist')
+      cy.findByText('Gardening').should('exist')
+
+      // 6 options + 1 Select... option
+      cy.findAllByRole('option').should('have.length', 7)
+    })
+
+    it('on multiple selection (value/label)', () => {
+      cy.mount(<SelectAdvanced isMultiple options={vlOptions} />)
+
+      toggleOptionsMenu()
       cy.findByText('Reading').should('exist')
       cy.findByText('Swimming').should('exist')
       cy.findByText('Running').should('exist')
@@ -89,6 +139,18 @@ describe('SelectAdvanced', () => {
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
           defaultValue={['Reading', 'Running']}
         />
+      )
+      cy.findByText('Reading').should('exist')
+      cy.findByText('Running').should('exist')
+    })
+    it('on single selection (value/label)', () => {
+      cy.mount(<SelectAdvanced options={vlOptions} defaultValue="running" />)
+      cy.findByText('Running').should('exist') // shows label
+    })
+
+    it('on multiple selection (value/label)', () => {
+      cy.mount(
+        <SelectAdvanced isMultiple options={vlOptions} defaultValue={['reading', 'running']} />
       )
       cy.findByText('Reading').should('exist')
       cy.findByText('Running').should('exist')
@@ -128,6 +190,28 @@ describe('SelectAdvanced', () => {
 
       cy.get('@onChange').should('have.been.calledOnce')
       cy.get('@onChange').should('have.been.calledWith', ['Reading'])
+    })
+
+    it('on single selection (value/label)', () => {
+      const onChange = cy.stub().as('onChange')
+      cy.mount(<SelectAdvanced options={vlOptions} onChange={onChange} />)
+
+      toggleOptionsMenu()
+      cy.findByText('Reading').click()
+
+      cy.get('@onChange').should('have.been.calledOnce')
+      cy.get('@onChange').should('have.been.calledWith', 'reading')
+    })
+
+    it('on multiple selection (value/label)', () => {
+      const onChange = cy.stub().as('onChange')
+      cy.mount(<SelectAdvanced isMultiple options={vlOptions} onChange={onChange} />)
+
+      toggleOptionsMenu()
+      cy.findByLabelText('Reading').click()
+
+      cy.get('@onChange').should('have.been.calledOnce')
+      cy.get('@onChange').should('have.been.calledWith', ['reading'])
     })
   })
 
@@ -169,6 +253,20 @@ describe('SelectAdvanced', () => {
       cy.get('@onChange').should('have.been.calledOnce')
       cy.get('@onChange').should('have.been.calledWith', ['Running'])
     })
+
+    it('on multiple selection (value/label)', () => {
+      const onChange = cy.stub().as('onChange')
+      cy.mount(<SelectAdvanced isMultiple options={vlOptions} onChange={onChange} />)
+
+      toggleOptionsMenu()
+      cy.findByLabelText('Reading').click()
+      cy.get('@onChange').should('have.been.calledWith', ['reading'])
+
+      cy.findByLabelText('Reading').click()
+      cy.get('@onChange').should('have.been.calledWith', [])
+
+      cy.get('@onChange').should('have.been.calledTwice')
+    })
   })
 
   describe('should not call onChange when passing defaultValues and rendering for first time', () => {
@@ -193,6 +291,25 @@ describe('SelectAdvanced', () => {
           isMultiple
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
           defaultValue={['Reading', 'Running']}
+          onChange={onChange}
+        />
+      )
+      cy.get('@onChange').should('not.have.been.called')
+    })
+
+    it('on single selection (value/label)', () => {
+      const onChange = cy.stub().as('onChange')
+      cy.mount(<SelectAdvanced options={vlOptions} defaultValue="reading" onChange={onChange} />)
+      cy.get('@onChange').should('not.have.been.called')
+    })
+
+    it('on multiple selection (value/label)', () => {
+      const onChange = cy.stub().as('onChange')
+      cy.mount(
+        <SelectAdvanced
+          isMultiple
+          options={vlOptions}
+          defaultValue={['reading', 'running']}
           onChange={onChange}
         />
       )
@@ -595,6 +712,30 @@ describe('SelectAdvanced', () => {
       cy.findByLabelText('Cycling').should('not.exist')
       cy.findByLabelText('Cooking').should('not.exist')
       cy.findByLabelText('Gardening').should('not.exist')
+    })
+
+    it('on single selection (value/label) - by label', () => {
+      cy.mount(<SelectAdvanced options={vlOptions} />)
+
+      toggleOptionsMenu()
+      cy.findByPlaceholderText('Search...').type('Read')
+
+      cy.findByText('Reading').should('exist')
+      cy.findByText('Swimming').should('not.exist')
+    })
+
+    it('on multiple selection (value/label) - by value', () => {
+      cy.mount(<SelectAdvanced isMultiple options={vlOptions} />)
+      cy.clock()
+
+      toggleOptionsMenu()
+      cy.findByPlaceholderText('Search...').type('swimming') // search by value
+      cy.tick(SELECT_MENU_SEARCH_DEBOUNCE_TIME)
+
+      cy.findByLabelText('Swimming').should('exist')
+      cy.findByLabelText('Reading').should('not.exist')
+
+      cy.clock().then((clock) => clock.restore())
     })
   })
 

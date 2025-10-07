@@ -1,12 +1,14 @@
-import { ForwardedRef, forwardRef } from 'react'
+import { ForwardedRef, forwardRef, useMemo } from 'react'
 import { Dropdown as DropdownBS, Button as ButtonBS } from 'react-bootstrap'
 import { X as CloseIcon } from 'react-bootstrap-icons'
+import { Option } from './SelectAdvanced'
 import styles from './SelectAdvanced.module.scss'
 
 type SelectAdvancedToggleProps = {
   isMultiple: boolean
   selected: string | string[]
-  handleRemoveSelectedOption: (option: string) => void
+  options?: Option[]
+  handleRemoveSelectedOption: (value: string) => void
   isInvalid?: boolean
   isDisabled?: boolean
   inputButtonId?: string
@@ -19,6 +21,7 @@ export const SelectAdvancedToggle = forwardRef(
     {
       isMultiple,
       selected,
+      options = [],
       handleRemoveSelectedOption,
       isInvalid,
       isDisabled,
@@ -28,6 +31,9 @@ export const SelectAdvancedToggle = forwardRef(
     }: SelectAdvancedToggleProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
+    const map = useMemo(() => new Map(options.map((o) => [o.value, o.label])), [options])
+    const selectedArray = Array.isArray(selected) ? selected : selected ? [selected] : []
+
     return (
       <div
         className={`${styles['select-advanced-toggle']} ${isDisabled ? styles['disabled'] : ''}`}>
@@ -48,31 +54,34 @@ export const SelectAdvancedToggle = forwardRef(
         <div
           className={styles['select-advanced-toggle__inner-content']}
           data-testid="toggle-inner-content">
-          {selected.length > 0 ? (
+          {selectedArray.length > 0 ? (
             <div
               className={styles['multiple-selected-options-container']}
               aria-label="List of selected options"
               role="region">
               {isMultiple ? (
-                (selected as string[]).map((selectedValue) => (
-                  <div
-                    className={styles['multiple-selected-options-container__item']}
-                    onClick={(e) => e.stopPropagation()}
-                    key={`selected-option-${selectedValue}`}>
-                    <span className="me-2">{selectedValue}</span>
-                    <ButtonBS
-                      variant="primary"
-                      aria-label={`Remove ${selectedValue} option`}
-                      onClick={() => handleRemoveSelectedOption(selectedValue)}>
-                      <CloseIcon size={14} />
-                    </ButtonBS>
-                  </div>
-                ))
+                selectedArray.map((val) => {
+                  const label = map.get(val) ?? val
+                  return (
+                    <div
+                      className={styles['multiple-selected-options-container__item']}
+                      onClick={(e) => e.stopPropagation()}
+                      key={`selected-option-${val}`}>
+                      <span className="me-2">{label}</span>
+                      <ButtonBS
+                        variant="primary"
+                        aria-label={`Remove ${label} option`}
+                        onClick={() => handleRemoveSelectedOption(val)}>
+                        <CloseIcon size={14} />
+                      </ButtonBS>
+                    </div>
+                  )
+                })
               ) : (
                 <p
                   className={styles['single-selected-option']}
                   key={`selected-option-${selected as string}`}>
-                  {selected}
+                  {map.get(selected as string) ?? (selected as string)}
                 </p>
               )}
             </div>

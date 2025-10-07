@@ -68,7 +68,7 @@ To stay up-to-date with all the latest changes, join the [Google Group][dv_commu
         <li><a href="#what-is-dataverse">What is Dataverse?</a></li>
         <li><a href="#what-is-dataverse-frontend">What Is Dataverse Frontend &amp; How Do They Differ?</a></li>
         <li><a href="#demo-videos">Demo Videos</a></li>
-        <li><a href="#beta-testing-environment">Beta Testing Environment</a></li>
+        <li><a href="#dataverse-frontend-environments">Dataverse Frontend Environments</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
@@ -128,23 +128,40 @@ and utilize the JavaScript framework of their choice.
 - 2023-12-13: [Files table on the dataset page](https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ)
 - 2024-09-13: [Collection page, collection and dataset creation and file uploading](https://groups.google.com/g/dataverse-community/c/heSnBRhhriM/m/bFgLDvvZAQAJ)
 
-### Beta Testing Environment
+### Dataverse Frontend Environments
 
-_Track our progress and compare it to the current Dataverse application!_
+The Dataverse Frontend project uses several environments to support different stages of development, testing, and deployment. Each environment serves a specific purpose for stakeholders ranging from developers to end users.
 
-To make the SPA Frontend accessible and testable by people interested in the project, there is a remote beta testing
-environment that includes the latest changes developed both for the frontend application and the Dataverse backend
-application (develop branches).
+All environments follow an “all-in-one” setup, where the frontend and backend applications run together on a Payara server. Although these environments use the all-in-one setup, the SPA is infrastructure-agnostic and could also be deployed independently on other platforms, such as Docker containers, object storage services (e.g., Amazon S3 buckets), or any static hosting service/CDN, as long as it can communicate with the backend APIs.
 
-This environment follows the "all-in-one" solution described above, where both applications coexist on a Payara server.
+#### Beta
 
-Environment updates are carried out automatically through GitHub actions, present both in this repository and in the
-Dataverse backend repository, which deploy the develop branches when any change is pushed to them.
+The **Beta** environment provides a remote space for testing the latest changes. GitHub Actions automatically deploy the current `develop` branches of both the frontend and backend.
 
-The environment is accessible through the following URLs:
+- **Audience:** Development team, QA analysts, project managers, selected users for early feedback
+- **URL:** [beta.dataverse.org/spa][dv_app_beta_spa_url]
 
-- Dataverse Frontend SPA: [beta.dataverse.org/spa][dv_app_beta_spa_url]
-- Dataverse JSF: [beta.dataverse.org][dv_app_beta_legacyjsf_url]
+#### Demo
+
+The **Demo** environment showcases the latest officially released version of the SPA, compatible with the latest Dataverse backend release. Deployments target specific tagged releases (e.g., `0.1.0`) and are performed on demand.
+
+- **Audience:** Project managers, curation team, early adoption testers
+- **URL:** [demo.dataverse.org/spa][dv_app_demo_spa_url]
+
+#### QA
+
+The **QA** environment is a dedicated, short-lived testing space. It is deployed on demand with feature branches (e.g., `feature/xxx`), frequently overwritten, and used for validating new features and bug fixes before merging into development.
+
+- **Audience:** QA analysts, development team
+- **URL:** [qa.dataverse.org/spa][dv_app_qa_spa_url]
+
+#### Spike Environments
+
+**Spike Environments** are temporary, project-specific deployments tied to individual branches. They are used to prototype new ideas and gather early feedback on unstable or in-progress work. Deployments can occur automatically on merge or on demand.
+
+- **Audience:** Development team, project managers
+- **URLs:** Unique per project, e.g., `project-foo.dataverse.org` or `project-abc.dataverse.org`
+- **Note:** Setting up a Spike Environment requires a working Keycloak instance. See [Keycloak Deployment](./docs/KEYCLOAK_DEPLOYMENT.md) for details.
 
 ### How Existing Dataverse Installations May Be Affected
 
@@ -237,6 +254,10 @@ The environment is accessible through the following URLs:
 > #### Share Collection and Dataset feature
 >
 > Links to share a collection or a dataset via LinkedIn, X or Facebook will now open in a new tab instead of a popup.
+>
+> #### Featured Items
+>
+> A feature has been added that lets users customize their collections by adding a carousel with featured collections, datasets, files, blog posts, news, and other types of content.
 
 </details>
 
@@ -377,6 +398,8 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 <!-- [dv_app_] -->
 
 [dv_app_beta_spa_url]: https://beta.dataverse.org/spa
+[dv_app_demo_spa_url]: https://demo.dataverse.org/spa
+[dv_app_qa_spa_url]: https://qa.dataverse.org/spa
 [dv_app_beta_legacyjsf_url]: https://beta.dataverse.org
 [dv_app_legacyjsf_demo_url]: https://demo.dataverse.org/
 [dv_app_localhost_build_url]: http://localhost:5173

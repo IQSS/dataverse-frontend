@@ -8,6 +8,10 @@ import { WithDatasetLockedFromEdits } from '../../../../../WithDatasetLockedFrom
 import { FilePreviewMother } from '../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
 import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
+import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
+import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
+import { FakerHelper } from '@tests/component/shared/FakerHelper'
+import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 
 const meta: Meta<typeof FileOptionsMenu> = {
   title:
@@ -60,6 +64,28 @@ export const WithFileAlreadyDeleted: Story = {
       fileRepository={new FileMockRepository()}
       datasetRepository={new DatasetMockRepository()}
     />
+  )
+}
+
+const externalToolsRepositoryWithFileConfigureTool = new ExternalToolsMockRepository()
+externalToolsRepositoryWithFileConfigureTool.getExternalTools = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([ExternalToolsMother.createFileConfigureTool()])
+    }, FakerHelper.loadingTimout())
+  })
+}
+
+export const WithConfigureTool: Story = {
+  decorators: [WithDatasetAllPermissionsGranted],
+  render: () => (
+    <ExternalToolsProvider externalToolsRepository={externalToolsRepositoryWithFileConfigureTool}>
+      <FileOptionsMenu
+        file={FilePreviewMother.createDefault()}
+        fileRepository={new FileMockRepository()}
+        datasetRepository={new DatasetMockRepository()}
+      />
+    </ExternalToolsProvider>
   )
 }
 

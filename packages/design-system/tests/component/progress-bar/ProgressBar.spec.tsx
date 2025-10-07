@@ -6,4 +6,10 @@ describe('ProgressBar', () => {
 
     cy.findByRole('progressbar').should('exist')
   })
+
+  it('renders the ProgressBar without a now progress', () => {
+    cy.mount(<ProgressBar />)
+
+    cy.findByRole('progressbar').should('exist')
+  })
 })

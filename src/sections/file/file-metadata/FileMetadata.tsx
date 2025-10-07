@@ -7,15 +7,20 @@ import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
 import { DATAVERSE_BACKEND_URL } from '../../../config'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
 import { FilePermissions } from '../../../files/domain/models/FilePermissions'
-import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
-import styles from './FileMetadata.module.scss'
 import { MarkdownComponent } from '@/sections/dataset/markdown/MarkdownComponent'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { ExportMetadataDropdown } from '@/sections/dataset/dataset-metadata/export-metadata-dropdown/ExportMetadataDropdown'
+import { File } from '@/files/domain/models/File'
+import styles from './FileMetadata.module.scss'
+import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 
 interface FileMetadataProps {
   name: string
   metadata: FileMetadataModel
   permissions: FilePermissions
-  datasetPublishingStatus: DatasetPublishingStatus
+  datasetPersistentId: string
+  datasetVersion: File['datasetVersion']
+  dataverseInfoRepository: DataverseInfoRepository
 }
 
 const turndownService = new TurndownService()
@@ -27,174 +32,190 @@ export function FileMetadata({
   name,
   metadata,
   permissions,
-  datasetPublishingStatus
+  datasetPersistentId,
+  datasetVersion,
+  dataverseInfoRepository
 }: FileMetadataProps) {
   const { t } = useTranslation('file')
 
   return (
-    <Accordion defaultActiveKey="0">
-      <Accordion.Item eventKey="0">
-        <Accordion.Header>{t('metadata.title')}</Accordion.Header>
-        <Accordion.Body>
-          <Row className={styles.row}>
-            <Col sm={3}>
-              <strong>{t('metadata.fields.preview')}</strong>
-            </Col>
-            <Col className={styles.preview}>
-              <FilePreview thumbnail={metadata.thumbnail} type={metadata.type} name={name} />
-            </Col>
-          </Row>
-          {metadata.labels.length > 0 && (
+    <>
+      <div className="d-flex justify-content-end mb-3">
+        <ExportMetadataDropdown
+          datasetPersistentId={datasetPersistentId}
+          anonymizedView={false}
+          datasetIsReleased={datasetVersion.someDatasetVersionHasBeenReleased}
+          datasetIsDeaccessioned={
+            datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
+          }
+          canUpdateDataset={permissions.canEditOwnerDataset}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
+      </div>
+      <Accordion defaultActiveKey="0">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>{t('metadata.title')}</Accordion.Header>
+          <Accordion.Body>
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>{t('metadata.fields.labels')}</strong>
+                <strong>{t('metadata.fields.preview')}</strong>
               </Col>
-              <Col>
-                <FileLabels labels={metadata.labels} />
-              </Col>
-            </Row>
-          )}
-          {metadata.persistentId && (
-            <Row className={styles.row}>
-              <Col sm={3}>
-                <strong>{t('metadata.fields.persistentId')}</strong>
-              </Col>
-              <Col>{metadata.persistentId}</Col>
-            </Row>
-          )}
-          {permissions.canDownloadFile && (
-            <Row className={styles.row}>
-              <Col sm={3}>
-                <strong>{t('metadata.fields.downloadUrl.title')}</strong>
-              </Col>
-              <Col>
-                <Trans i18nKey="metadata.fields.downloadUrl.description">
-                  <p className={styles['help-text']}>
-                    Use the Download URL in a Wget command or a download manager to avoid
-                    interrupted downloads, time outs or other failures.{' '}
-                    <a href="https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url">
-                      User Guide - Downloading via URL
-                    </a>
-                  </p>
-                </Trans>
-                <code className={styles.code}>
-                  {DATAVERSE_BACKEND_URL}
-                  {removeQueryParams(metadata.downloadUrls.original)}
-                </code>
+              <Col className={styles.preview}>
+                <FilePreview thumbnail={metadata.thumbnail} type={metadata.type} name={name} />
               </Col>
             </Row>
-          )}
-          {metadata.tabularData?.unf && (
-            <Row className={styles.row}>
-              <Col sm={3}>
-                <strong>{t('metadata.fields.unf')}</strong>
-              </Col>
-              <Col>{metadata.tabularData.unf}</Col>
-            </Row>
-          )}
-          {metadata.checksum && (
-            <Row className={styles.row}>
-              <Col sm={3}>
-                <strong>{metadata.checksum.algorithm}</strong>
-              </Col>
-              <Col>{metadata.checksum.value}</Col>
-            </Row>
-          )}
-          <Row className={styles.row}>
-            <Col sm={3}>
-              <strong>{t('metadata.fields.depositDate')}</strong>
-            </Col>
-            <Col>
-              <time dateTime={metadata.depositDate}>{metadata.depositDate}</time>
-            </Col>
-          </Row>
-          {metadata.publicationDate && (
-            <Row className={styles.row}>
-              <Col sm={3}>
-                <strong>{t('metadata.fields.metadataReleaseDate')}</strong>
-              </Col>
-              <Col>
-                <time dateTime={metadata.publicationDate}>{metadata.publicationDate}</time>
-              </Col>
-            </Row>
-          )}
-          {(metadata.publicationDate || metadata.embargo) && (
-            <Row className={styles.row}>
-              <Col sm={3}>
-                <strong>{t('metadata.fields.publicationDate')}</strong>
-              </Col>
-              <Col>
-                {metadata.embargo ? (
-                  <FileEmbargoDate
-                    embargo={metadata.embargo}
-                    datasetPublishingStatus={datasetPublishingStatus}
-                    format="YYYY-MM-DD"
-                  />
-                ) : (
-                  metadata.publicationDate && (
-                    <time dateTime={metadata.publicationDate}>{metadata.publicationDate}</time>
-                  )
-                )}
-              </Col>
-            </Row>
-          )}
-          {metadata.embargo && metadata.embargo.reason && (
-            <Row className={styles.row}>
-              <Col sm={3}>
-                <strong>{t('metadata.fields.embargoReason')}</strong>
-              </Col>
-              <Col>{metadata.embargo.reason}</Col>
-            </Row>
-          )}
-          <Row className={styles.row}>
-            <Col sm={3}>
-              <strong>{t('metadata.fields.size')}</strong>
-            </Col>
-            <Col>{metadata.size.toString()}</Col>
-          </Row>
-          <Row className={styles.row}>
-            <Col sm={3}>
-              <strong>{t('metadata.fields.type')}</strong>
-            </Col>
-            <Col>{metadata.type.toDisplayFormat()}</Col>
-          </Row>
-          {metadata.tabularData && (
-            <>
+            {metadata.labels.length > 0 && (
               <Row className={styles.row}>
                 <Col sm={3}>
-                  <strong>{t('metadata.fields.variables')}</strong>
+                  <strong>{t('metadata.fields.labels')}</strong>
                 </Col>
-                <Col>{metadata.tabularData.variables}</Col>
+                <Col>
+                  <FileLabels labels={metadata.labels} />
+                </Col>
               </Row>
+            )}
+            {metadata.persistentId && (
               <Row className={styles.row}>
                 <Col sm={3}>
-                  <strong>{t('metadata.fields.observations')}</strong>
+                  <strong>{t('metadata.fields.persistentId')}</strong>
                 </Col>
-                <Col>{metadata.tabularData.observations}</Col>
+                <Col>{metadata.persistentId}</Col>
               </Row>
-            </>
-          )}
-          {metadata.directory && (
+            )}
+            {permissions.canDownloadFile && (
+              <Row className={styles.row}>
+                <Col sm={3}>
+                  <strong>{t('metadata.fields.downloadUrl.title')}</strong>
+                </Col>
+                <Col>
+                  <Trans i18nKey="metadata.fields.downloadUrl.description">
+                    <p className={styles['help-text']}>
+                      Use the Download URL in a Wget command or a download manager to avoid
+                      interrupted downloads, time outs or other failures.{' '}
+                      <a href="https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url">
+                        User Guide - Downloading via URL
+                      </a>
+                    </p>
+                  </Trans>
+                  <code className={styles.code}>
+                    {DATAVERSE_BACKEND_URL}
+                    {removeQueryParams(metadata.downloadUrls.original)}
+                  </code>
+                </Col>
+              </Row>
+            )}
+            {metadata.tabularData?.unf && (
+              <Row className={styles.row}>
+                <Col sm={3}>
+                  <strong>{t('metadata.fields.unf')}</strong>
+                </Col>
+                <Col>{metadata.tabularData.unf}</Col>
+              </Row>
+            )}
+            {metadata.checksum && (
+              <Row className={styles.row}>
+                <Col sm={3}>
+                  <strong>{metadata.checksum.algorithm}</strong>
+                </Col>
+                <Col>{metadata.checksum.value}</Col>
+              </Row>
+            )}
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>{t('metadata.fields.directory')}</strong>
-              </Col>
-              <Col>{metadata.directory}</Col>
-            </Row>
-          )}
-          {metadata.description && (
-            <Row className={styles.row}>
-              <Col sm={3}>
-                <strong>{t('metadata.fields.description')}</strong>
+                <strong>{t('metadata.fields.depositDate')}</strong>
               </Col>
               <Col>
-                <MarkdownComponent markdown={convertHtmlToMarkdown(metadata.description)} />
+                <time dateTime={metadata.depositDate}>{metadata.depositDate}</time>
               </Col>
             </Row>
-          )}
-        </Accordion.Body>
-      </Accordion.Item>
-    </Accordion>
+            {metadata.publicationDate && (
+              <Row className={styles.row}>
+                <Col sm={3}>
+                  <strong>{t('metadata.fields.metadataReleaseDate')}</strong>
+                </Col>
+                <Col>
+                  <time dateTime={metadata.publicationDate}>{metadata.publicationDate}</time>
+                </Col>
+              </Row>
+            )}
+            {(metadata.publicationDate || metadata.embargo) && (
+              <Row className={styles.row}>
+                <Col sm={3}>
+                  <strong>{t('metadata.fields.publicationDate')}</strong>
+                </Col>
+                <Col>
+                  {metadata.embargo ? (
+                    <FileEmbargoDate
+                      embargo={metadata.embargo}
+                      datasetPublishingStatus={datasetVersion.publishingStatus}
+                      format="YYYY-MM-DD"
+                    />
+                  ) : (
+                    metadata.publicationDate && (
+                      <time dateTime={metadata.publicationDate}>{metadata.publicationDate}</time>
+                    )
+                  )}
+                </Col>
+              </Row>
+            )}
+            {metadata.embargo && metadata.embargo.reason && (
+              <Row className={styles.row}>
+                <Col sm={3}>
+                  <strong>{t('metadata.fields.embargoReason')}</strong>
+                </Col>
+                <Col>{metadata.embargo.reason}</Col>
+              </Row>
+            )}
+            <Row className={styles.row}>
+              <Col sm={3}>
+                <strong>{t('metadata.fields.size')}</strong>
+              </Col>
+              <Col>{metadata.size.toString()}</Col>
+            </Row>
+            <Row className={styles.row}>
+              <Col sm={3}>
+                <strong>{t('metadata.fields.type')}</strong>
+              </Col>
+              <Col>{metadata.type.toDisplayFormat()}</Col>
+            </Row>
+            {metadata.tabularData && (
+              <>
+                <Row className={styles.row}>
+                  <Col sm={3}>
+                    <strong>{t('metadata.fields.variables')}</strong>
+                  </Col>
+                  <Col>{metadata.tabularData.variables}</Col>
+                </Row>
+                <Row className={styles.row}>
+                  <Col sm={3}>
+                    <strong>{t('metadata.fields.observations')}</strong>
+                  </Col>
+                  <Col>{metadata.tabularData.observations}</Col>
+                </Row>
+              </>
+            )}
+            {metadata.directory && (
+              <Row className={styles.row}>
+                <Col sm={3}>
+                  <strong>{t('metadata.fields.directory')}</strong>
+                </Col>
+                <Col>{metadata.directory}</Col>
+              </Row>
+            )}
+            {metadata.description && (
+              <Row className={styles.row}>
+                <Col sm={3}>
+                  <strong>{t('metadata.fields.description')}</strong>
+                </Col>
+                <Col>
+                  <MarkdownComponent markdown={convertHtmlToMarkdown(metadata.description)} />
+                </Col>
+              </Row>
+            )}
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+    </>
   )
 }
 

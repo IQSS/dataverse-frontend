@@ -27,6 +27,7 @@ interface DropdownButtonProps {
   customToggleClassname?: string
   customToggleMenuClassname?: string
   align?: 'end' | 'start'
+  size?: 'sm' | 'lg'
 }
 
 export function DropdownButton({
@@ -43,6 +44,7 @@ export function DropdownButton({
   customToggleClassname,
   customToggleMenuClassname,
   align,
+  size,
   children
 }: DropdownButtonProps) {
   // If customToggle is provided, use Dropdown instead of DropdownButtonBS
@@ -58,6 +60,7 @@ export function DropdownButton({
   return (
     <DropdownButtonBS
       className={withSpacing ? styles.spacing : ''}
+      size={size}
       id={id}
       title={
         <>
