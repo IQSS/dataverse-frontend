@@ -2,6 +2,7 @@ import { DatasetVersions } from '@/sections/dataset/dataset-versions/DatasetVers
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 import { DatasetVersionsSummariesMother } from '../../../dataset/domain/models/DatasetVersionsSummariesMother'
 import { DatasetVersionDiffMother } from '../../../dataset/domain/models/DatasetVersionDiffMother'
 
@@ -247,5 +248,93 @@ describe('DatasetVersions', () => {
 
     cy.get('input[type="checkbox"]').first().should('be.disabled')
     cy.findByText('4.0').should('exist').and('not.have.attr', 'href')
+  })
+
+  it('computes newVersionNumber from second element and oldVersionNumber from first element', () => {
+    const ascendingVersions: DatasetVersionSummaryInfo[] = [
+      { id: 1, versionNumber: '1.0', contributors: '' },
+      { id: 2, versionNumber: '2.0', contributors: '' },
+      { id: 3, versionNumber: '3.0', contributors: '' }
+    ]
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(ascendingVersions)
+    const diffStub = (datasetsRepository.getVersionDiff = cy
+      .stub()
+      .callsFake((pid: string, oldV: string, newV: string) =>
+        Promise.resolve({
+          oldVersion: {
+            versionNumber: oldV,
+            lastUpdatedDate: '2025-01-01T00:00:00Z',
+            versionState: DatasetVersionState.RELEASED
+          },
+          newVersion: {
+            versionNumber: newV,
+            lastUpdatedDate: '2025-01-02T00:00:00Z',
+            versionState: DatasetVersionState.RELEASED
+          }
+        })
+      ))
+
+    cy.customMount(
+      <DatasetVersions
+        datasetId={'pid'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'3.0'}
+        canUpdateDataset={true}
+        isInView
+      />
+    )
+
+    cy.findAllByTestId('select-checkbox').eq(0).check().should('be.checked')
+    cy.findAllByTestId('select-checkbox').eq(1).check().should('be.checked')
+
+    cy.findByRole('button', { name: 'View Differences' }).click()
+    cy.findByRole('dialog').should('exist')
+
+    // Assert ordering: oldVersion '1.0', newVersion '2.0'
+    cy.wrap(diffStub).should('have.been.calledWith', 'pid', '1.0', '2.0', true)
+  })
+
+  it('computes newVersionNumber from first element and oldVersionNumber from second element (opposite branch)', () => {
+    const descendingVersions: DatasetVersionSummaryInfo[] = [
+      { id: 5, versionNumber: '5.0', contributors: '' },
+      { id: 4, versionNumber: '4.0', contributors: '' },
+      { id: 3, versionNumber: '3.0', contributors: '' }
+    ]
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(descendingVersions)
+    const diffStub = (datasetsRepository.getVersionDiff = cy
+      .stub()
+      .callsFake((pid: string, oldV: string, newV: string) =>
+        Promise.resolve({
+          oldVersion: {
+            versionNumber: oldV,
+            lastUpdatedDate: '2025-01-01T00:00:00Z',
+            versionState: DatasetVersionState.RELEASED
+          },
+          newVersion: {
+            versionNumber: newV,
+            lastUpdatedDate: '2025-01-02T00:00:00Z',
+            versionState: DatasetVersionState.RELEASED
+          }
+        })
+      ))
+
+    cy.customMount(
+      <DatasetVersions
+        datasetId={'pid'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'5.0'}
+        canUpdateDataset={true}
+        isInView
+      />
+    )
+
+    cy.findAllByTestId('select-checkbox').eq(0).check().should('be.checked')
+    cy.findAllByTestId('select-checkbox').eq(1).check().should('be.checked')
+
+    cy.findByRole('button', { name: 'View Differences' }).click()
+    cy.findByRole('dialog').should('exist')
+
+    // Assert ordering: oldVersion '4.0', newVersion '5.0'
+    cy.wrap(diffStub).should('have.been.calledWith', 'pid', '4.0', '5.0', true)
   })
 })
