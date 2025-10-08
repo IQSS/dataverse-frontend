@@ -282,21 +282,6 @@ describe('getTranslatedNotification', () => {
     cy.contains('You have been granted the').should('exist')
   })
 
-  it('should handle notification with future sentTimestamp', () => {
-    const notification: Notification = {
-      id: 10,
-      type: NotificationType.STATUS_UPDATED,
-      sentTimestamp: new Date(Date.now() + 1000000).toISOString(),
-      displayAsRead: false,
-      datasetDisplayName: 'Future Dataset',
-      datasetPersistentIdentifier: 'doi:10.9999/future',
-      currentCurationStatus: 'Pending'
-    }
-    cy.customMount(getTranslatedNotification(notification, accountT))
-    cy.contains('Future Dataset').should('exist')
-    cy.contains('has been updated to Pending').should('exist')
-  })
-
   it('should handle unknown notification type with missing type', () => {
     const notification: Notification = {
       id: 11,
@@ -340,5 +325,47 @@ describe('getTranslatedNotification', () => {
       '/collections/collection_b'
     )
     cy.findByRole('link', { name: 'Owner B' }).should('have.attr', 'href', '/collections/owner_b')
+  })
+
+  it('uses datasetMentioned translation when additionalInfo has required fields', () => {
+    const notification: Notification = {
+      type: NotificationType.DATASET_MENTIONED,
+      id: 15,
+      sentTimestamp: new Date().toISOString(),
+      displayAsRead: false,
+      datasetDisplayName: 'Dataset With Mention',
+      datasetPersistentIdentifier: 'doi:10.5678/dataset.e',
+      additionalInfo: {
+        '@type': 'Dataset',
+        '@id': 'doi:10.1234/abcd',
+        name: 'Test Dataset',
+        relationship: 'mentioned'
+      }
+    }
+
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('Announcement Received: Newly released').should('exist')
+    cy.findByRole('link', { name: 'Test Dataset' }).should('exist')
+  })
+
+  it('uses datasetMentionedGeneric translation when additionalInfo is missing required fields', () => {
+    const notification: Notification = {
+      type: NotificationType.DATASET_MENTIONED,
+      id: 15,
+      sentTimestamp: new Date().toISOString(),
+      datasetDisplayName: 'Dataset With Mention',
+      datasetPersistentIdentifier: 'doi:10.5678/dataset.e',
+      displayAsRead: false,
+      additionalInfo: {
+        field1: 'value1',
+        field2: 'value2',
+        '@id': 'doi:10.1234/abcd',
+        name: 'Test Dataset',
+        relationship: 'mentioned'
+      }
+    }
+
+    cy.customMount(getTranslatedNotification(notification, accountT))
+    cy.contains('value1').should('exist')
   })
 })

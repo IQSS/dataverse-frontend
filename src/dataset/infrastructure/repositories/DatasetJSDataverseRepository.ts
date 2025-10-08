@@ -353,7 +353,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     internalVersionNumber: number
   ): Promise<void> {
     return updateDataset
-      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset), internalVersionNumber)
+      .execute(
+        datasetId,
+        DatasetDTOMapper.toJSDatasetDTO(updatedDataset),
+        internalVersionNumber.toString()
+      )
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })

@@ -120,7 +120,32 @@ function translateGeneric(notification: Notification, key: string, t: TFunction)
       ([_, value]) => typeof value === 'string' && value !== undefined
     )
   )
-  // TODO: handle additionalInfo for DATASET_MENTIONED type when needed
+
+  // if additionalInfo contains @type, @id name and relationship fields, use the datasetMentioned translation,
+  // otherwise use the generic additionalInfo field
+  if (notification.additionalInfo) {
+    const info = notification.additionalInfo
+    const hasDatasetMentionedFields =
+      typeof info === 'object' &&
+      info['@type'] !== undefined &&
+      info['name'] !== undefined &&
+      info['relationship'] !== undefined
+
+    if (hasDatasetMentionedFields) {
+      key = 'notifications.notification.datasetMentioned'
+      const id = info['@id'] as string
+      values.name = info['name'] as string
+      values.type = info['@type'] as string
+      values.relationship = info['relationship'] as string
+      components.relatedLink = <a href={`${id}`} target="_blank" rel="noopener noreferrer"></a>
+    } else {
+      console.log('additionalInfo does not have dataset mentioned fields:', info)
+      // Use generic additionalInfo field
+      key = 'notifications.notification.datasetMentionedGeneric'
+      const stringified = JSON.stringify(info, null, 2).replace(/"/g, '')
+      values.additionalInfo = stringified
+    }
+  }
   if (notification.datasetPersistentIdentifier) {
     components.datasetLink = (
       <Link
