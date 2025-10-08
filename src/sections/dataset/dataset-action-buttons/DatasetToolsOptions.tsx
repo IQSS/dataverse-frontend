@@ -72,7 +72,6 @@ const ToolOption = ({
     if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
       toast.info(t('allowPopups'))
       setIsOpening(false)
-      newWindow?.close()
       return
     }
 
