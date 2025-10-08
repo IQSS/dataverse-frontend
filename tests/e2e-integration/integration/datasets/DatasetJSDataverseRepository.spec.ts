@@ -58,7 +58,7 @@ const termsOfUse = {
   termsOfAccessForRestrictedFiles: undefined
 }
 
-const datasetData = (persistentId: string, versionId: number) => {
+const datasetData = (persistentId: string, versionId: number, lastUpdateTime: string) => {
   return {
     license: {
       name: 'CC0 1.0',
@@ -138,6 +138,7 @@ const datasetData = (persistentId: string, versionId: number) => {
         }
       ],
       someDatasetVersionHasBeenReleased: false,
+      lastUpdateTime,
       termsOfAccess: termsOfUse,
       deaccessionNote: undefined
     },
@@ -181,7 +182,11 @@ describe('Dataset JSDataverse Repository', () => {
         if (!dataset) {
           throw new Error('Dataset not found')
         }
-        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+        const datasetExpected = datasetData(
+          dataset.persistentId,
+          dataset.version.id,
+          dataset.version.lastUpdateTime
+        )
         expect(dataset.license).to.deep.equal(datasetExpected.license)
         expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
         expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
@@ -222,6 +227,7 @@ describe('Dataset JSDataverse Repository', () => {
           false,
           DatasetPublishingStatus.RELEASED,
           true,
+          dataset.version.lastUpdateTime,
           termsOfUse,
           undefined
         )
@@ -254,7 +260,11 @@ describe('Dataset JSDataverse Repository', () => {
         if (!dataset) {
           throw new Error('Dataset not found')
         }
-        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+        const datasetExpected = datasetData(
+          dataset.persistentId,
+          dataset.version.id,
+          dataset.version.lastUpdateTime
+        )
         const newVersion = new DatasetVersion(
           dataset.version.id,
           "Darwin's Finches",
@@ -266,6 +276,7 @@ describe('Dataset JSDataverse Repository', () => {
           false,
           DatasetPublishingStatus.RELEASED,
           true,
+          dataset.version.lastUpdateTime,
           termsOfUse,
           undefined
         )
@@ -289,7 +300,11 @@ describe('Dataset JSDataverse Repository', () => {
         if (!dataset) {
           throw new Error('Dataset not found')
         }
-        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+        const datasetExpected = datasetData(
+          dataset.persistentId,
+          dataset.version.id,
+          dataset.version.lastUpdateTime
+        )
 
         expect(dataset.version.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(datasetExpected.version)
@@ -304,7 +319,11 @@ describe('Dataset JSDataverse Repository', () => {
       if (!dataset) {
         throw new Error('Dataset not found')
       }
-      const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+      const datasetExpected = datasetData(
+        dataset.persistentId,
+        dataset.version.id,
+        dataset.version.lastUpdateTime
+      )
 
       expect(dataset.version.title).to.deep.equal(datasetExpected.title)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
@@ -366,7 +385,11 @@ describe('Dataset JSDataverse Repository', () => {
       if (!dataset) {
         throw new Error('Dataset not found')
       }
-      const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+      const datasetExpected = datasetData(
+        dataset.persistentId,
+        dataset.version.id,
+        dataset.version.lastUpdateTime
+      )
 
       expect(dataset.version.title).to.deep.equal(datasetExpected.title)
       expect(dataset.version.publishingStatus).to.equal(DatasetPublishingStatus.DEACCESSIONED)
@@ -383,7 +406,11 @@ describe('Dataset JSDataverse Repository', () => {
         if (!dataset) {
           throw new Error('Dataset not found')
         }
-        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+        const datasetExpected = datasetData(
+          dataset.persistentId,
+          dataset.version.id,
+          dataset.version.lastUpdateTime
+        )
 
         expect(dataset.version.title).to.deep.equal(datasetExpected.title)
 
