@@ -14,6 +14,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Show toast notification when API token is copied to clipboard.
+
 ### Removed
 
 ---
