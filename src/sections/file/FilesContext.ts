@@ -13,4 +13,12 @@ export const FilesContext = createContext<FilesContextProps>({
   refreshFiles: async () => {}
 })
 
-export const useFilesContext = () => useContext(FilesContext)
+export const useFilesContext = () => {
+  const context = useContext(FilesContext)
+  if (!context) {
+    /* istanbul ignore next */ throw new Error(
+      'useFilesContext must be used within a FilesContext Provider'
+    )
+  }
+  return context
+}
