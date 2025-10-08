@@ -83,7 +83,8 @@ describe('DatasetActionButtons', () => {
       }),
       fileDownloadSizes: [
         DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
-      ]
+      ],
+      hasValidTermsOfAccess: true
     })
 
     cy.mountAuthenticated(
