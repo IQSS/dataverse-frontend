@@ -17,6 +17,8 @@ import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/mode
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
+import { DatasetTypeMother } from '@tests/component/dataset/domain/models/DatasetTypeMother'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -168,6 +170,14 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetTemplateMother.createMany(3))
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getAvailableDatasetTypes(): Promise<DatasetType[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(DatasetTypeMother.createMany(3))
       }, FakerHelper.loadingTimout())
     })
   }

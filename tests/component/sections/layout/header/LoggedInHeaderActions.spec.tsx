@@ -2,9 +2,11 @@ import { UserMother } from '../../../users/domain/models/UserMother'
 import { LoggedInHeaderActions } from '../../../../../src/sections/layout/header/LoggedInHeaderActions'
 import { CollectionRepository } from '../../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '../../../collection/domain/models/CollectionMother'
+import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
 
 const testUser = UserMother.create()
 const collectionRepository: CollectionRepository = {} as CollectionRepository
+const datasetRepository: DatasetRepository = {} as DatasetRepository
 const userPermissionsMock = CollectionMother.createUserPermissions()
 
 describe('LoggedInHeaderActions', () => {
@@ -16,7 +18,11 @@ describe('LoggedInHeaderActions', () => {
     )
     collectionRepository.getById = cy.stub().resolves(CollectionMother.create())
     cy.customMount(
-      <LoggedInHeaderActions user={testUser} collectionRepository={collectionRepository} />
+      <LoggedInHeaderActions
+        user={testUser}
+        collectionRepository={collectionRepository}
+        datasetRepository={datasetRepository}
+      />
     )
 
     cy.findByRole('button', { name: /Add Data/i }).as('addDataBtn')
@@ -31,7 +37,11 @@ describe('LoggedInHeaderActions', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
 
     cy.customMount(
-      <LoggedInHeaderActions user={testUser} collectionRepository={collectionRepository} />
+      <LoggedInHeaderActions
+        user={testUser}
+        collectionRepository={collectionRepository}
+        datasetRepository={datasetRepository}
+      />
     )
 
     cy.findByRole('button', { name: /Add Data/i }).as('addDataBtn')
@@ -50,7 +60,11 @@ describe('LoggedInHeaderActions', () => {
     )
 
     cy.customMount(
-      <LoggedInHeaderActions user={testUser} collectionRepository={collectionRepository} />
+      <LoggedInHeaderActions
+        user={testUser}
+        collectionRepository={collectionRepository}
+        datasetRepository={datasetRepository}
+      />
     )
 
     cy.findByRole('button', { name: /Add Data/i }).as('addDataBtn')
@@ -65,7 +79,11 @@ describe('LoggedInHeaderActions', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
 
     cy.customMount(
-      <LoggedInHeaderActions user={testUser} collectionRepository={collectionRepository} />
+      <LoggedInHeaderActions
+        user={testUser}
+        collectionRepository={collectionRepository}
+        datasetRepository={datasetRepository}
+      />
     )
 
     cy.findByRole('button', { name: /Add Data/i }).as('addDataBtn')
@@ -80,7 +98,11 @@ describe('LoggedInHeaderActions', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
 
     cy.customMount(
-      <LoggedInHeaderActions user={testUser} collectionRepository={collectionRepository} />
+      <LoggedInHeaderActions
+        user={testUser}
+        collectionRepository={collectionRepository}
+        datasetRepository={datasetRepository}
+      />
     )
 
     cy.findByRole('button', { name: /Add Data/i }).as('addDataBtn')
