@@ -10,6 +10,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Changed
 
+- Use of the new `sourceLastUpdateTime` query parameter from update dataset and file metadata endpoints to support optimistic concurrency control during editing operations. See [Edit Dataset Metadata](https://guides.dataverse.org/en/6.8/api/native-api.html#edit-dataset-metadata) and [Updating File Metadata](https://guides.dataverse.org/en/6.8/api/native-api.html#updating-file-metadata) guides for more details.
+
 ### Fixed
 
 ### Removed
