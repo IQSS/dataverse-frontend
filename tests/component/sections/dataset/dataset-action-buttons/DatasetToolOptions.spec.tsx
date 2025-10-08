@@ -134,6 +134,54 @@ describe('DatasetToolOptions', () => {
       })
   })
 
+  it('does not open multiple windows if the tool option is clicked rapidly', () => {
+    const mockDatasetToolResolvedUrl = 'https://example.com/external-tool'
+
+    testExternalToolsRepository.getDatasetExternalToolResolved = cy
+      .stub()
+      .as('getDatasetExternalToolResolved')
+      .callsFake(() => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(
+              DatasetExternalToolResolvedMother.create({
+                toolUrlResolved: mockDatasetToolResolvedUrl
+              })
+            )
+          }, 50)
+        })
+      })
+
+    const fakeWindow = {
+      closed: false,
+      document: { title: '' },
+      location: { href: '' },
+      close: cy.stub().as('windowCloseStub')
+    }
+
+    cy.window().then((win) => {
+      cy.stub(win, 'open').as('windowOpen').returns(fakeWindow)
+    })
+
+    cy.customMount(
+      <ExternalToolsProvider externalToolsRepository={testExternalToolsRepository}>
+        <DatasetExploreOptions persistentId="some-persistent-id" />
+      </ExternalToolsProvider>
+    )
+
+    cy.findByText('Dataset Explore Tool').should('exist').as('toolButton')
+
+    cy.get('@toolButton').then(($btn) => {
+      const el = $btn[0]
+      el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+      el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+      el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+    })
+
+    cy.get('@windowOpen').should('have.been.calledOnce')
+    cy.get('@getDatasetExternalToolResolved').should('have.been.calledOnce')
+  })
+
   describe('popup blocked alert notification', () => {
     it('should shows popup blocked alert notification if the popup is blocked -> window is falsy', () => {
       cy.window().then((win) => {
