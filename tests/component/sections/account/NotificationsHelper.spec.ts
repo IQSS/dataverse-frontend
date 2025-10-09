@@ -117,7 +117,7 @@ describe('getTranslatedNotification', () => {
       type: NotificationType.ASSIGN_ROLE,
       sentTimestamp: new Date().toISOString(),
       displayAsRead: false,
-      datasetDisplayName: 'Dataset B',
+      datasetDisplayName: "Darwins's Finches",
       datasetPersistentIdentifier: 'doi:10.3456/dataset.b',
       roleAssignments: [
         {
@@ -141,7 +141,7 @@ describe('getTranslatedNotification', () => {
       type: NotificationType.ASSIGN_ROLE,
       sentTimestamp: new Date().toISOString(),
       displayAsRead: false,
-      dataFileDisplayName: 'Sample File.csv',
+      dataFileDisplayName: "Darwnins's Finches Data File - Sample File.csv",
       dataFileId: 12345,
       roleAssignments: [
         {
