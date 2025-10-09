@@ -14,6 +14,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Add word-break to items text to prevent layout issues when long descriptions without spaces are entered. (#839)
 - Show toast notification when API token is copied to clipboard.
 
 ### Removed
