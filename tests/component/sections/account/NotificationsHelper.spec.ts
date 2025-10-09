@@ -132,7 +132,7 @@ describe('getTranslatedNotification', () => {
     }
     cy.customMount(getTranslatedNotification(notification, accountT))
     cy.contains(
-      'You now have access to all published restricted and unrestricted files in Dataset B.'
+      "You now have access to all published restricted and unrestricted files in Darwins's Finches."
     ).should('exist')
   })
   it('should translate file role assignment with file display name and id', () => {
@@ -157,7 +157,7 @@ describe('getTranslatedNotification', () => {
     cy.customMount(getTranslatedNotification(notification, accountT))
     cy.contains('Sample File.csv').should('exist')
     cy.contains('You have been granted the File Editor').should('exist')
-    cy.findByRole('link', { name: 'Sample File.csv' }).should(
+    cy.findByRole('link', { name: "Darwnins's Finches Data File - Sample File.csv" }).should(
       'have.attr',
       'href',
       '/files?id=12345'

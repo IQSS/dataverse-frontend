@@ -72,7 +72,7 @@
       "datasetCreated": "<datasetLink>{{- datasetDisplayName}}</datasetLink> was created in <ownerLink>{{- ownerDisplayName}}</ownerLink> by {{requestorFirstName}} {{requestorLastName}}.",
       "submittedDataset": "<datasetLink>{{- datasetDisplayName}}</datasetLink> was submitted for review to be published in <ownerLink>{{- ownerDisplayName}}</ownerLink>. Don''t forget to publish it or send it back to the contributor, {{requestorFirstName}} {{requestorLastName}} ({{requestorEmail}})!",
       "returnedDataset": "<datasetLink>{{- datasetDisplayName}}</datasetLink> was returned by the curator of <ownerLink>{{- ownerDisplayName}}</ownerLink>.",
-      "publishedDataset": "{{- datasetDisplayName}} was published in <ownerLink>{{- ownerDisplayName}}</ownerLink>.",
+      "publishedDataset": "<datasetLink>{{- datasetDisplayName}}</datasetLink> was published in <ownerLink>{{- ownerDisplayName}}</ownerLink>.",
       "publishFailedPidReg": "<datasetLink>{{- datasetDisplayName}}</datasetLink> in <ownerLink>{{- ownerDisplayName}}</ownerLink> could not be published due to a failure to register, or update the Global Identifier for the dataset or one of the files in it. Contact support if this continues to happen.",
       "workflowFailure": "An external workflow run on <datasetLink>{{- datasetDisplayName}}</datasetLink> in <ownerLink>{{- ownerDisplayName}}</ownerLink> has failed. Check your email and/or view the Dataset page which may have additional details. Contact support if this continues to happen.",
       "workflowSuccess": "An external workflow run on <datasetLink>{{- datasetDisplayName}}</datasetLink> in <ownerLink>{{- ownerDisplayName}}</ownerLink> has succeeded. Check your email and/or view the Dataset page which may have additional details.",
