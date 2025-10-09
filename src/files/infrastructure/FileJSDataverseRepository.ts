@@ -356,8 +356,12 @@ export class FileJSDataverseRepository implements FileRepository {
       .then((newFileIdentifier) => newFileIdentifier)
   }
 
-  updateMetadata(fileId: number | string, fileMetadata: FileMetadataDTO): Promise<void> {
-    return updateFileMetadata.execute(fileId, fileMetadata)
+  updateMetadata(
+    fileId: number | string,
+    fileMetadata: FileMetadataDTO,
+    sourceLastUpdateTime?: string
+  ): Promise<void> {
+    return updateFileMetadata.execute(fileId, fileMetadata, sourceLastUpdateTime)
   }
   // TODO - Not a priority but could be nice to implement this use case in js-dataverse when having time
   getFixityAlgorithm(): Promise<FixityAlgorithm> {

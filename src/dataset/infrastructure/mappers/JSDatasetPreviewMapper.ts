@@ -12,7 +12,8 @@ export class JSDatasetPreviewMapper {
         jsDatasetPreview.versionId,
         jsDatasetPreview.versionInfo,
         jsDatasetPreview.title,
-        jsDatasetPreview.citation
+        jsDatasetPreview.citation,
+        jsDatasetPreview.versionInfo.lastUpdateTime
       ),
       releaseOrCreateDate: JSDatasetPreviewMapper.toPreviewDate(jsDatasetPreview.versionInfo),
       description: jsDatasetPreview.description,

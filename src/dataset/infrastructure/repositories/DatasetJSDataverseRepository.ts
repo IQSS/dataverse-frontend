@@ -350,10 +350,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   updateMetadata(
     datasetId: string | number,
     updatedDataset: DatasetDTO,
-    internalVersionNumber: number
+    sourceLastUpdateTime?: string
   ): Promise<void> {
     return updateDataset
-      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset), internalVersionNumber)
+      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset), sourceLastUpdateTime)
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
