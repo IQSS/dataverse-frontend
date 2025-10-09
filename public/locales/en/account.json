@@ -79,7 +79,7 @@
       "statusUpdated": "The status of dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> has been updated to {{currentCurationStatus}}.",
       "pidreconciled": "The persistent identifier of dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> has been updated to {{datasetPersistentId}}.",
       "datasetMentioned": "Announcement Received: Newly released {{type}} <relatedLink>{{- name}}</relatedLink> {{relationship}} dataset <datasetLink>{{- datasetDisplayName}}</datasetLink>.",
-      "datasetMentionedGeneric": "Announcement received for dataset <datasetLink>{{- datasetDisplayName}}</datasetLink>, additional info: {{additionalInfo}}.",
+      "datasetMentionedGeneric": "Announcement received for dataset <datasetLink>{{- datasetDisplayName}}</datasetLink>, additional info: {{- additionalInfo}}.",
       "checksumFail": "One or more files in your upload failed checksum validation for dataset <datasetLink>{{- datasetDisplayName}}</datasetLink>. Please re-run the upload script. If the problem persists, please contact support.",
       "importFilesystem": "Dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> has been successfully uploaded and verified.",
       "globusUploadCompleted": "Globus transfer to Dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> was successful. File(s) have been uploaded and verified.",

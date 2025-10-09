@@ -94,7 +94,6 @@ function translateRoleNotification(
     objectName = notification.dataFileDisplayName
     objectLink = <Link to={`${Route.FILES}?${QueryParamKey.FILE_ID}=${notification.dataFileId}`} />
   } else {
-    // throw new Error('Missing required field for role notification message.')
     objectName = 'unknown object'
     objectLink = <></>
   }
@@ -139,11 +138,9 @@ function translateGeneric(notification: Notification, key: string, t: TFunction)
       values.relationship = info['relationship'] as string
       components.relatedLink = <a href={`${id}`} target="_blank" rel="noopener noreferrer"></a>
     } else {
-      console.log('additionalInfo does not have dataset mentioned fields:', info)
-      // Use generic additionalInfo field
       key = 'notifications.notification.datasetMentionedGeneric'
       const stringified = JSON.stringify(info, null, 2).replace(/"/g, '')
-      values.additionalInfo = stringified
+      values.additionalInfo = JSON.stringify(info)
     }
   }
   if (notification.datasetPersistentIdentifier) {
