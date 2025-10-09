@@ -269,7 +269,12 @@ describe('EditFilesOptions for a single file', () => {
   })
 
   it('should delete file and call refreshFiles if delete button clicked in draft version', () => {
-    fileRepository.delete = cy.stub().resolves()
+    fileRepository.delete = cy
+      .stub()
+      .as('deleteFileStub')
+      .callsFake(() => {
+        return Cypress.Promise.delay(200).then(() => undefined)
+      })
     const fileToDelete = FilePreviewMother.createDefault()
 
     cy.customMount(
@@ -286,10 +291,19 @@ describe('EditFilesOptions for a single file', () => {
     )
 
     cy.findByRole('button', { name: 'Delete' }).click()
-    cy.findByRole('dialog').should('exist')
     cy.findByTestId('deleteButton').click()
-    cy.findByRole('dialog').should('not.exist')
-    cy.findByText(/The file has been deleted./).should('exist')
+    // The dialog can't be closed while deleting when pressing escape
+    cy.get('body').type('{esc}')
+    cy.findByRole('dialog').should('exist')
+
+    cy.get('@deleteFileStub').then((spy) => {
+      const deleteSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+      const deletedFileId = deleteSpy.getCall(0).args[0] as string
+
+      expect(deletedFileId).to.equal(fileToDelete.id)
+      cy.findByRole('dialog', { timeout: 10_000 }).should('not.exist')
+      cy.findByText(/The file has been deleted./, { timeout: 10_000 }).should('exist')
+    })
   })
 
   it('should restrict file if restrict button clicked', () => {

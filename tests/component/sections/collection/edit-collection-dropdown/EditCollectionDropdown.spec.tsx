@@ -174,7 +174,13 @@ describe('EditCollectionDropdown', () => {
     })
 
     it('closes the modal and shows toast success message when delete collection succeeds', () => {
-      collectionRepository.delete = cy.stub().as('deleteStub').resolves(undefined)
+      collectionRepository.delete = cy
+        .stub()
+        .as('deleteStub')
+        .callsFake(() => {
+          return Cypress.Promise.delay(200).then(() => undefined)
+        })
+
       const testCollection = CollectionMother.createSubCollectionWithNoChildObjects()
 
       cy.mountAuthenticated(
