@@ -174,9 +174,12 @@ describe('EditCollectionDropdown', () => {
     })
 
     it('closes the modal and shows toast success message when delete collection succeeds', () => {
+      collectionRepository.delete = cy.stub().as('deleteStub').resolves(undefined)
+      const testCollection = CollectionMother.createSubCollectionWithNoChildObjects()
+
       cy.mountAuthenticated(
         <EditCollectionDropdown
-          collection={CollectionMother.createSubCollectionWithNoChildObjects()}
+          collection={testCollection}
           collectionRepository={collectionRepository}
           canUserDeleteCollection={true}
         />
@@ -192,10 +195,18 @@ describe('EditCollectionDropdown', () => {
       // The loading spinner inside delete button
       cy.findByRole('status').should('exist')
 
-      cy.findByRole('dialog').should('not.exist')
-      cy.findByText(/Your collection has been deleted./)
-        .should('exist')
-        .should('be.visible')
+      // The dialog can't be closed while deleting when pressing escape
+      cy.get('body').type('{esc}')
+      cy.findByRole('dialog').should('exist')
+
+      cy.get('@deleteStub').then((spy) => {
+        const deleteSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+        const deletedCollectionId = deleteSpy.getCall(0).args[0] as string
+
+        expect(deletedCollectionId).to.equal(testCollection.id)
+        cy.findByRole('dialog', { timeout: 10_000 }).should('not.exist')
+        cy.findByText(/Your collection has been deleted./, { timeout: 10_000 }).should('exist')
+      })
     })
 
     it('shows the js-dataverse WriteError message if delete collection fails with a js-dataverse WriteError', () => {
