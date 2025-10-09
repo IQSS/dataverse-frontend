@@ -1350,7 +1350,7 @@ describe('DatasetMetadataForm', () => {
         .within(() => {
           cy.findByLabelText('Term URI', { exact: true }).type('html://test.com')
 
-          cy.findByText('Keyword Term URI is not a valid URL').should('exist')
+          cy.findByText('Keyword Term URI html://test.com is not a valid URL.').should('exist')
         })
 
       cy.findByText('Description')
@@ -1366,7 +1366,7 @@ describe('DatasetMetadataForm', () => {
         .closest('.row')
         .within(() => {
           cy.findByLabelText(/^E-mail/i).type('test')
-          cy.findByText('Point of Contact E-mail is not a valid email').should('exist')
+          cy.findByText('Point of Contact E-mail test is not a valid email.').should('exist')
         })
     })
 
@@ -1380,13 +1380,13 @@ describe('DatasetMetadataForm', () => {
       cy.findByLabelText(/Object Density/)
         .should('exist')
         .type('30L')
-      cy.findByText('Object Density is not a valid float').should('exist')
+      cy.findByText('Object Density is not a valid float.').should('exist')
 
       cy.findByText('Object Count').should('exist')
       cy.findByLabelText(/Object Count/)
         .should('exist')
         .type('30.5')
-      cy.findByText('Object Count is not a valid integer').should('exist')
+      cy.findByText('Object Count is not a valid integer.').should('exist')
     })
   })
 
@@ -1411,7 +1411,7 @@ describe('DatasetMetadataForm', () => {
         .within(() => {
           cy.findByLabelText('Term URI', { exact: true }).type('http://test.com')
 
-          cy.findByText('Keyword Term URI is not a valid URL').should('not.exist')
+          cy.findByText('Keyword Term URI http://test.com is not a valid URL.').should('not.exist')
         })
 
       cy.findByText('Description')
@@ -1427,7 +1427,9 @@ describe('DatasetMetadataForm', () => {
         .closest('.row')
         .within(() => {
           cy.findByLabelText(/^E-mail/i).type('email@valid.com')
-          cy.findByText('Point of Contact E-mail is not a valid email').should('not.exist')
+          cy.findByText('Point of Contact E-mail email@valid.com is not a valid email.').should(
+            'not.exist'
+          )
         })
     })
 
@@ -1441,13 +1443,13 @@ describe('DatasetMetadataForm', () => {
       cy.findByLabelText(/Object Density/)
         .should('exist')
         .type('30.5')
-      cy.findByText('Object Density is not a valid float').should('not.exist')
+      cy.findByText('Object Density is not a valid float.').should('not.exist')
 
       cy.findByText('Object Count').should('exist')
       cy.findByLabelText(/Object Count/)
         .should('exist')
         .type('30')
-      cy.findByText('Object Count is not a valid integer').should('not.exist')
+      cy.findByText('Object Count is not a valid integer.').should('not.exist')
 
       cy.findByText('Some Date').should('exist')
       cy.findByLabelText(/Some Date/)
