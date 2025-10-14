@@ -354,10 +354,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   updateMetadata(
     datasetId: string | number,
     updatedDataset: DatasetDTO,
-    internalVersionNumber: number
+    sourceLastUpdateTime?: string
   ): Promise<void> {
     return updateDataset
-      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset), internalVersionNumber)
+      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset), sourceLastUpdateTime)
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
@@ -427,9 +427,21 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .get(
         `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/storageDriver`
       )
-      .then((res: AxiosResponse<{ data: { message: string } }>) => {
-        return res.data.data.message
-      })
+      .then(
+        (
+          res: AxiosResponse<{
+            data: {
+              name: string
+              label: string
+              type: string
+              directDownload: boolean
+              directUpload: boolean
+            }
+          }>
+        ) => {
+          return res.data.data.name
+        }
+      )
       .catch(() => {
         return undefined
       })

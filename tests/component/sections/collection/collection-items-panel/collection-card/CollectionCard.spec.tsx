@@ -45,7 +45,26 @@ describe('CollectionCard', () => {
     cy.customMount(
       <CollectionCard collectionPreview={collectionPreview} parentCollectionAlias="" />
     )
-
+    
     cy.findByTestId('linked-collection-icon').should('exist')
+  })
+
+  it('should not overflow horizontally with long unspaced titles', () => {
+    const longName = 'abc'.repeat(50)
+    const collectionPreview = CollectionItemTypePreviewMother.create({
+      name: longName
+    })
+
+    cy.customMount(
+      <CollectionCard collectionPreview={collectionPreview} parentCollectionAlias="" />
+    )
+
+
+    cy.contains(longName).should('exist')
+    // Ensure the title wraps within the available width (no horizontal overflow)
+    cy.get('[data-testid="collection-card"] header a').then(($a) => {
+      const el = $a[0]
+      expect(el.scrollWidth).to.be.lte(el.clientWidth)
+    })
   })
 })

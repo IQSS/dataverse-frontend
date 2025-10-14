@@ -7,7 +7,9 @@ import styles from './DvObjectFormItem.module.scss'
 
 // This is only to avoid difference snapshots in Chromatic builds, the real display origin will be the current window location
 const locationOrigin =
-  import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true' ? 'https://foo.com' : window.location.origin
+  import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true'
+    ? /* istanbul ignore next */ 'https://foo.com'
+    : window.location.origin
 
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 

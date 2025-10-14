@@ -15,6 +15,7 @@
   display: flex;
   gap: 1rem;
   justify-content: space-between;
+  word-break: break-word;
 
   a {
     @include link-hover-underlined;

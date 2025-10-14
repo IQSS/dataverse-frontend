@@ -31,7 +31,7 @@ export interface DatasetRepository {
   updateMetadata: (
     datasetId: string | number,
     datasetDTO: DatasetDTO,
-    internalVersionNumber: number
+    sourceLastUpdateTime?: string
   ) => Promise<void>
   deaccession: (
     datasetId: string | number,

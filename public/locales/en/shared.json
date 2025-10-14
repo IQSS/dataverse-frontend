@@ -63,11 +63,23 @@
     "field": {
       "required": "{{displayName}} is required",
       "invalid": {
-        "url": "{{displayName}} is not a valid URL",
-        "email": "{{displayName}} is not a valid email",
-        "int": "{{displayName}} is not a valid integer",
-        "float": "{{displayName}} is not a valid float",
-        "date": "{{displayName}} is not a valid date. Please use the format {{dateFormat}}"
+        "url": "{{displayName}} {{value}} is not a valid URL.",
+        "email": "{{displayName}} {{value}} is not a valid email.",
+        "int": "{{displayName}} is not a valid integer.",
+        "float": "{{displayName}} is not a valid float.",
+        "date": {
+          "base": "{{displayName}} is not a valid date.",
+          "empty": "The date is empty.",
+          "adDigits": "The AD year must be numeric.",
+          "adRange": "The AD year can't be higher than 9999.",
+          "bracketNotNumeric": "The year in brackets must be numeric.",
+          "bracketNegative": "The year in brackets cannot be negative.",
+          "bracketRange": "The year in brackets is out of range.",
+          "invalidMonth": "The month is out of range.",
+          "invalidDay": "The day is out of range.",
+          "invalidTime": "The time is out of range.",
+          "unrecognized": "The date format is unrecognized."
+        }
       }
     },
     "status": {

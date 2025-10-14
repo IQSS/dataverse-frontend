@@ -30,7 +30,7 @@ export function FileOptionsMenu({ file, fileRepository, datasetRepository }: Fil
 
   const datasetInfo: EditFilesMenuDatasetInfo = {
     persistentId: dataset.persistentId,
-    releasedVersionExists: dataset.version.someDatasetVersionHasBeenReleased || false,
+    releasedVersionExists: dataset.version.someDatasetVersionHasBeenReleased,
     versionNumber: dataset.version.number.toSearchParam(),
     requestAccess: dataset.termsOfUse?.termsOfAccess?.fileAccessRequest,
     termsOfAccessForRestrictedFiles:
