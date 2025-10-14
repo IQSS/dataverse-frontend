@@ -60,7 +60,7 @@ describe('UnlinkDatasetButton', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Link Dataset' }).should('not.exist')
+    cy.findByRole('button', { name: 'Unlink Dataset' }).should('not.exist')
   })
 
   it('does not render the UnlinkDatasetButton if the dataset version is deaccessioned', () => {
@@ -77,7 +77,7 @@ describe('UnlinkDatasetButton', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Link Dataset' }).should('not.exist')
+    cy.findByRole('button', { name: 'Unlink Dataset' }).should('not.exist')
   })
 
   it('does not render the UnlinkDatasetButton if the dataset has no linked collections', () => {
@@ -119,14 +119,14 @@ describe('UnlinkDatasetButton', () => {
       .should('be.visible')
       .within(() => {
         // Save disabled without selection
-        cy.findByRole('button', { name: /Remove Linked Dataset/i }).should('be.disabled')
+        cy.findByRole('button', { name: /Unlink/i }).should('be.disabled')
 
         cy.findByLabelText(/Toggle options menu/)
           .should('exist')
           .click()
         cy.findByText('Collection 1').should('exist').click()
 
-        cy.findByRole('button', { name: /Remove Linked Dataset/i })
+        cy.findByRole('button', { name: /Unlink/i })
           .should('not.be.disabled')
           .click()
 
@@ -148,7 +148,7 @@ describe('UnlinkDatasetButton', () => {
       .should('be.visible')
   })
 
-  it('searches for a collection to link', () => {
+  it('searchs for a collection to link', () => {
     cy.mountAuthenticated(
       <UnlinkDatasetButton
         dataset={dataset}
@@ -163,7 +163,7 @@ describe('UnlinkDatasetButton', () => {
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByRole('button', { name: /Remove Linked Dataset/i }).should('be.disabled')
+        cy.findByRole('button', { name: /Unlink/i }).should('be.disabled')
 
         cy.findByLabelText(/Toggle options menu/)
           .should('exist')
@@ -203,7 +203,7 @@ describe('UnlinkDatasetButton', () => {
           .should('be.visible')
       })
 
-    cy.findByRole('button', { name: /Remove Linked Dataset/i }).should('be.disabled')
+    cy.findByRole('button', { name: /Unlink/i }).should('be.disabled')
   })
 
   it('shows only one collection message and auto-selects it', () => {
@@ -238,7 +238,7 @@ describe('UnlinkDatasetButton', () => {
           .and('have.attr', 'readonly')
       })
 
-    cy.findByRole('button', { name: /Remove Linked Dataset/i })
+    cy.findByRole('button', { name: /Unlink/i })
       .should('not.be.disabled')
       .click()
 
@@ -274,7 +274,7 @@ describe('UnlinkDatasetButton', () => {
           .click()
         cy.findByText('Collection 2').should('exist').click()
 
-        cy.findByRole('button', { name: /Remove Linked Dataset/i })
+        cy.findByRole('button', { name: /Unlink/i })
           .should('not.be.disabled')
           .click()
 
@@ -319,7 +319,7 @@ describe('UnlinkDatasetButton', () => {
           .click()
         cy.findByText('Collection 2').should('exist').click()
 
-        cy.findByRole('button', { name: /Remove Linked Dataset/i })
+        cy.findByRole('button', { name: /Unlink/i })
           .should('not.be.disabled')
           .click()
 

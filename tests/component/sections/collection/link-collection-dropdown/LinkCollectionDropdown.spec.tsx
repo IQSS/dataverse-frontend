@@ -172,7 +172,7 @@ describe('LinkCollectionDropdown', () => {
             .should('have.attr', 'readonly')
         })
 
-      // Save button should no be disabled as the only collection is auto selected
+      // Save button should not be disabled as the only collection is auto selected
       cy.findByRole('button', { name: /Save Linked Collection/ })
         .should('not.be.disabled')
         .click()

@@ -18,7 +18,7 @@ export const LinkAndUnlinkActions = ({
 }: LinkAndUnlinkActionsProps) => {
   const [key, setKey] = useState(0)
 
-  // This is a way to force remounting both components when either one of them succeesfully links or unlinks a dataset.
+  // This is a way to force remounting both components when either one of them successfully links or unlinks a dataset.
   // This way, the list of linked collections is refetched and updated in both components.
   const updateKey = () => setKey((prevKey) => prevKey + 1)
 
