@@ -411,9 +411,21 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .get(
         `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/storageDriver`
       )
-      .then((res: AxiosResponse<{ data: { message: string } }>) => {
-        return res.data.data.message
-      })
+      .then(
+        (
+          res: AxiosResponse<{
+            data: {
+              name: string
+              label: string
+              type: string
+              directDownload: boolean
+              directUpload: boolean
+            }
+          }>
+        ) => {
+          return res.data.data.name
+        }
+      )
       .catch(() => {
         return undefined
       })
