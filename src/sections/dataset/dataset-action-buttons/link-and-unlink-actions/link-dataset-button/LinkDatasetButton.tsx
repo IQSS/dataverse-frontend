@@ -156,7 +156,8 @@ export function LinkDatasetButton({
             variant="primary"
             onClick={handleSaveLink}
             type="button"
-            disabled={isLinkingDataset || !collectionSelected}>
+            disabled={isLinkingDataset || !collectionSelected}
+            data-testid="confirm-link-dataset-button">
             <Stack direction="horizontal" gap={1}>
               {t('datasetActionButtons.linkDataset.save')}
               {isLinkingDataset && <Spinner variant="light" animation="border" size="sm" />}

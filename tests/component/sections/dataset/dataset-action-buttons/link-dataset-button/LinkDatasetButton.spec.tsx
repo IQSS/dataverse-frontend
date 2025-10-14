@@ -98,14 +98,14 @@ describe('LinkDatasetButton', () => {
       .should('be.visible')
       .within(() => {
         // Save disabled without selection
-        cy.findByRole('button', { name: /Link/i }).should('be.disabled')
+        cy.findByTestId('confirm-link-dataset-button').should('be.disabled')
 
         cy.findByLabelText(/Toggle options menu/)
           .should('exist')
           .click()
         cy.findByText('Collection 3').should('exist').click()
 
-        cy.findByRole('button', { name: /Link/i }).should('not.be.disabled').click()
+        cy.findByTestId('confirm-link-dataset-button').should('not.be.disabled').click()
 
         cy.get('@linkDataset').should((spy) => {
           const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
@@ -140,7 +140,7 @@ describe('LinkDatasetButton', () => {
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByRole('button', { name: /Link/i }).should('be.disabled')
+        cy.findByTestId('confirm-link-dataset-button').should('be.disabled')
 
         cy.findByLabelText(/Toggle options menu/)
           .should('exist')
@@ -180,7 +180,7 @@ describe('LinkDatasetButton', () => {
           .should('be.visible')
       })
 
-    cy.findByRole('button', { name: /Link/i }).should('be.disabled')
+    cy.findByTestId('confirm-link-dataset-button').should('be.disabled')
   })
 
   it('shows only one collection message and auto-selects it', () => {
@@ -215,7 +215,7 @@ describe('LinkDatasetButton', () => {
           .and('have.attr', 'readonly')
       })
 
-    cy.findByRole('button', { name: /Link/i }).should('not.be.disabled').click()
+    cy.findByTestId('confirm-link-dataset-button').should('not.be.disabled').click()
 
     cy.get('@linkDataset').should((spy) => {
       const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
@@ -249,7 +249,7 @@ describe('LinkDatasetButton', () => {
           .click()
         cy.findByText('Collection 2').should('exist').click()
 
-        cy.findByRole('button', { name: /Link/i }).should('not.be.disabled').click()
+        cy.findByTestId('confirm-link-dataset-button').should('not.be.disabled').click()
 
         cy.get('@linkDataset').should((spy) => {
           const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
@@ -292,7 +292,7 @@ describe('LinkDatasetButton', () => {
           .click()
         cy.findByText('Collection 2').should('exist').click()
 
-        cy.findByRole('button', { name: /Link/i }).should('not.be.disabled').click()
+        cy.findByTestId('confirm-link-dataset-button').should('not.be.disabled').click()
 
         cy.get('@linkDataset').should((spy) => {
           const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>

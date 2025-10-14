@@ -140,7 +140,8 @@ export function UnlinkDatasetButton({
             variant="primary"
             onClick={handleRemoveLink}
             type="button"
-            disabled={isUnlinkingDataset || !collectionSelected}>
+            disabled={isUnlinkingDataset || !collectionSelected}
+            data-testid="confirm-unlink-dataset-button">
             <Stack direction="horizontal" gap={1}>
               {t('datasetActionButtons.unlinkDataset.save')}
               {isUnlinkingDataset && <Spinner variant="light" animation="border" size="sm" />}

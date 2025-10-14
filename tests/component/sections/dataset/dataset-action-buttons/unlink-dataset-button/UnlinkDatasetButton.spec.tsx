@@ -119,16 +119,14 @@ describe('UnlinkDatasetButton', () => {
       .should('be.visible')
       .within(() => {
         // Save disabled without selection
-        cy.findByRole('button', { name: /Unlink/i }).should('be.disabled')
+        cy.findByTestId('confirm-unlink-dataset-button').should('be.disabled')
 
         cy.findByLabelText(/Toggle options menu/)
           .should('exist')
           .click()
         cy.findByText('Collection 1').should('exist').click()
 
-        cy.findByRole('button', { name: /Unlink/i })
-          .should('not.be.disabled')
-          .click()
+        cy.findByTestId('confirm-unlink-dataset-button').should('not.be.disabled').click()
 
         cy.get('@unlinkDataset').should((spy) => {
           const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
@@ -163,7 +161,7 @@ describe('UnlinkDatasetButton', () => {
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByRole('button', { name: /Unlink/i }).should('be.disabled')
+        cy.findByTestId('confirm-unlink-dataset-button').should('be.disabled')
 
         cy.findByLabelText(/Toggle options menu/)
           .should('exist')
@@ -203,7 +201,7 @@ describe('UnlinkDatasetButton', () => {
           .should('be.visible')
       })
 
-    cy.findByRole('button', { name: /Unlink/i }).should('be.disabled')
+    cy.findByTestId('confirm-unlink-dataset-button').should('be.disabled')
   })
 
   it('shows only one collection message and auto-selects it', () => {
@@ -238,9 +236,7 @@ describe('UnlinkDatasetButton', () => {
           .and('have.attr', 'readonly')
       })
 
-    cy.findByRole('button', { name: /Unlink/i })
-      .should('not.be.disabled')
-      .click()
+    cy.findByTestId('confirm-unlink-dataset-button').should('not.be.disabled').click()
 
     cy.get('@unlinkDataset').should((spy) => {
       const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
@@ -274,9 +270,7 @@ describe('UnlinkDatasetButton', () => {
           .click()
         cy.findByText('Collection 2').should('exist').click()
 
-        cy.findByRole('button', { name: /Unlink/i })
-          .should('not.be.disabled')
-          .click()
+        cy.findByTestId('confirm-unlink-dataset-button').should('not.be.disabled').click()
 
         cy.get('@unlinkDataset').should((spy) => {
           const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
@@ -319,9 +313,7 @@ describe('UnlinkDatasetButton', () => {
           .click()
         cy.findByText('Collection 2').should('exist').click()
 
-        cy.findByRole('button', { name: /Unlink/i })
-          .should('not.be.disabled')
-          .click()
+        cy.findByTestId('confirm-unlink-dataset-button').should('not.be.disabled').click()
 
         cy.get('@unlinkDataset').should((spy) => {
           const linkSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
