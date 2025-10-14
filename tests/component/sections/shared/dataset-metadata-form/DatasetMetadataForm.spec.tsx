@@ -2111,6 +2111,52 @@ describe('DatasetMetadataForm', () => {
     })
 
     it('should show instructions in the form fields', () => {
+      const metadataBlocksInfoOnCreateMode =
+        MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
+
+      // This is for adding some extra fields to test instructions rendering in a primitive multiple and vocabulary not multiple fields
+      metadataBlocksInfoOnCreateMode[0].metadataFields = {
+        ...metadataBlocksInfoOnCreateMode[0].metadataFields,
+        alternativeTitle: {
+          name: 'alternativeTitle',
+          displayName: 'Alternative Title',
+          title: 'Alternative Title',
+          type: 'TEXT',
+          watermark: '',
+          description:
+            'Either 1) a title commonly used to refer to the Dataset or 2) an abbreviation of the main title',
+          multiple: true,
+          isControlledVocabulary: false,
+          displayFormat: '',
+          isRequired: false,
+          displayOrder: 2,
+          typeClass: 'primitive',
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
+        },
+        vocabNotMultiple: {
+          name: 'vocabNotMultiple',
+          displayName: 'Some Vocab Not Multiple',
+          title: 'Vocab not multiple',
+          type: 'TEXT',
+          watermark: '',
+          description: 'Some description',
+          multiple: false,
+          isControlledVocabulary: true,
+          controlledVocabularyValues: ['Type 1', 'Type 2', 'Type 3'],
+          displayFormat: '- #VALUE:',
+          isRequired: false,
+          displayOrder: 10,
+          typeClass: 'controlledVocabulary',
+          displayOnCreate: true,
+          isAdvancedSearchFieldType: false
+        }
+      }
+
+      metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+        .stub()
+        .resolves(metadataBlocksInfoOnCreateMode)
+
       const testTemplate = DatasetTemplateMother.create({
         instructions: [
           {
@@ -2124,6 +2170,14 @@ describe('DatasetMetadataForm', () => {
           {
             instructionField: 'subject',
             instructionText: 'A subject field instruction.'
+          },
+          {
+            instructionField: 'alternativeTitle',
+            instructionText: 'An alternative title field instruction.'
+          },
+          {
+            instructionField: 'vocabNotMultiple',
+            instructionText: 'The vocabNotMultiple field instruction.'
           }
         ]
       })
@@ -2141,6 +2195,8 @@ describe('DatasetMetadataForm', () => {
       cy.findByText('An author field instruction.').should('exist')
       cy.findByText('A title field instruction.').should('exist')
       cy.findByText('A subject field instruction.').should('exist')
+      cy.findByText('An alternative title field instruction.').should('exist')
+      cy.findByText('The vocabNotMultiple field instruction.').should('exist')
     })
   })
 })

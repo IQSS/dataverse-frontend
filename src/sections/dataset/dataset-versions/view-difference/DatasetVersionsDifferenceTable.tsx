@@ -25,6 +25,10 @@ export const DatasetVersionsDifferenceTable = ({
 
   const citationMetadata = metadataChanges?.find((m) => m.blockName === 'Citation Metadata')
 
+  const areFilesAdded = filesAdded && filesAdded.length > 0
+  const areFilesRemoved = filesRemoved && filesRemoved.length > 0
+  const areFileChanges = fileChanges && fileChanges.length > 0
+
   return (
     <div className={styles['dataset-versions-difference-table']}>
       <Table>
@@ -66,7 +70,7 @@ export const DatasetVersionsDifferenceTable = ({
         </Table>
       )}
 
-      {(filesAdded || filesRemoved || fileChanges || filesRemoved) && (
+      {(areFilesAdded || areFilesRemoved || areFileChanges) && (
         <Table bordered>
           <thead>
             <tr>
@@ -74,47 +78,49 @@ export const DatasetVersionsDifferenceTable = ({
             </tr>
           </thead>
           <tbody>
-            {filesRemoved?.map((file) => (
-              <tr key={`removed-${file.fileId}`}>
-                <td>
-                  {t('versions.fileID')} {file.fileId}
-                  <br />
-                  {t('versions.MD5')} {file.MD5}
-                </td>
-                <td>
-                  {t('versions.name')}: {file.fileName}
-                  <br />
-                  {t('versions.type')}: {file.type || ''}
-                  <br />
-                  {t('versions.description')}: {file.description || ''}
-                  <br />
-                  {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
-                </td>
-                <td></td>
-              </tr>
-            ))}
-            {filesAdded?.map((file) => (
-              <tr key={`added-${file.fileId}`}>
-                <td>
-                  {t('versions.fileID')} {file.fileId}
-                  <br />
-                  {t('versions.MD5')} {file.MD5}
-                </td>
-                <td></td>
-                <td>
-                  {t('versions.name')}: {file.fileName}
-                  <br />
-                  {t('versions.type')}: {file.type || ''}
-                  <br />
-                  {t('versions.description')}: {file.description || ''}
-                  <br />
-                  {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
-                </td>
-              </tr>
-            ))}
-            {fileChanges &&
+            {areFilesRemoved &&
+              filesRemoved.map((file) => (
+                <tr key={`removed-${file.fileId}`} data-testid={`file-removed-row-${file.fileId}`}>
+                  <td>
+                    {t('versions.fileID')} {file.fileId}
+                    <br />
+                    {t('versions.MD5')} {file.MD5}
+                  </td>
+                  <td>
+                    {t('versions.name')}: {file.fileName}
+                    <br />
+                    {t('versions.type')}: {file.type || ''}
+                    <br />
+                    {t('versions.description')}: {file.description || ''}
+                    <br />
+                    {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
+                  </td>
+                  <td></td>
+                </tr>
+              ))}
+            {areFilesAdded &&
+              filesAdded.map((file) => (
+                <tr key={`added-${file.fileId}`} data-testid={`file-added-row-${file.fileId}`}>
+                  <td>
+                    {t('versions.fileID')} {file.fileId}
+                    <br />
+                    {t('versions.MD5')} {file.MD5}
+                  </td>
+                  <td></td>
+                  <td>
+                    {t('versions.name')}: {file.fileName}
+                    <br />
+                    {t('versions.type')}: {file.type || ''}
+                    <br />
+                    {t('versions.description')}: {file.description || ''}
+                    <br />
+                    {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
+                  </td>
+                </tr>
+              ))}
+            {areFileChanges &&
               fileChanges.map((file) => (
-                <tr key={`changed-${file.fileId}`}>
+                <tr key={`changed-${file.fileId}`} data-testid={`file-changed-row-${file.fileId}`}>
                   <td>
                     {t('versions.fileID')} {file.fileId}
                     <br />
@@ -145,19 +151,19 @@ export const DatasetVersionsDifferenceTable = ({
           <tbody>
             {filesReplaced.map(({ oldFile, newFile }) => (
               <tr key={`replaced-${oldFile.fileId}-${newFile.fileId}`}>
-                <td>{t('versions.replace')}</td>
+                <td>{t('versions.fileReplaced')}</td>
                 <td>
+                  {t('versions.fileID')} {oldFile.fileId}
+                  <br />
+                  {t('versions.MD5')} {oldFile.MD5}
+                  <br />
                   {t('versions.name')}: {oldFile.fileName}
-                  <br />
-                  {t('versions.type')}: {oldFile.type || ''}
-                  <br />
-                  {t('versions.description')}: {oldFile.description || ''}
-                  <br />
                 </td>
                 <td>
                   {t('versions.fileID')} {newFile.fileId}
                   <br />
-                  {t('versions.MD5')} {newFile.MD5} <br />
+                  {t('versions.MD5')} {newFile.MD5}
+                  <br />
                   {t('versions.name')}: {newFile.fileName}
                 </td>
               </tr>
