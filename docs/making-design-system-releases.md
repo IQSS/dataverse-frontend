@@ -38,18 +38,18 @@ The Design System is published to the npm Package Registry. To publish a new ver
 
 5. **Build the package**
 
-Ensure the design system is built so the dist artifacts are available:
+   Ensure the design system is built so the dist artifacts are available:
 
-```bash
-# from the repo root
-npm run --workspace @iqss/dataverse-design-system build
-# or, from the package folder
-# cd packages/design-system && npm run build
-```
+   ```bash
+   # from the repo root
+   npm run --workspace @iqss/dataverse-design-system build
+   # or, from the package folder
+   # cd packages/design-system && npm run build
+   ```
 
-Note: publishing will also trigger a build automatically via the package's prepublishOnly script, but running it explicitly helps catch issues earlier.
+   Note: publishing will also trigger a build automatically via the package's prepublishOnly script, but running it explicitly helps catch issues earlier.
 
-5. **Publish the package**
+6. **Publish the package**
 
    After the version is updated, you can publish the package running the lerna command:
 
@@ -74,7 +74,7 @@ Note: publishing will also trigger a build automatically via the package's prepu
     @iqss:registry=https://npm.pkg.github.com/
    ```
 
-6. **Review the new version in the npm registry**
+7. **Review the new version in the npm registry**
 
    After publishing the packages, you can review the new version in the [npm registry](https://www.npmjs.com/package/@iqss/dataverse-design-system?activeTab=versions).
 
