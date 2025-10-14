@@ -51,7 +51,7 @@ The Design System is published to the npm Package Registry. To publish a new ver
 
 6. **Publish the package**
 
-   After the version is updated, you can publish the package running the lerna command:
+   After the version is updated and the package is built, you can publish the package running the lerna command:
 
    ```shell
    lerna publish from-package
