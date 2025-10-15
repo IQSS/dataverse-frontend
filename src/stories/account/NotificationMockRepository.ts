@@ -4,29 +4,28 @@ import { NotificationMother } from '@tests/component/notifications/domain/models
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
 export class NotificationMockRepository implements NotificationRepository {
-  getAllNotificationsByUser(): Promise<Notification[]> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(NotificationMother.createManyRealistic())
-      }, FakerHelper.loadingTimout())
-    })
+  private notifications: Notification[] = NotificationMother.createManyRealistic()
+
+  async getAllNotificationsByUser(): Promise<Notification[]> {
+    // Simulate loading delay
+    await new Promise((resolve) => setTimeout(resolve, FakerHelper.loadingTimout()))
+    return this.notifications
   }
 
   getUnreadNotificationsCount(): Promise<number> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(2) // Simulate 2 unread notifications
+        const unreadCount = this.notifications.filter((n) => !n.displayAsRead).length
+        resolve(unreadCount)
       }, FakerHelper.loadingTimout())
     })
   }
 
-  markNotificationAsRead(notificationId: number): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log(`Notification ${notificationId} marked as read.`)
-        resolve()
-      }, FakerHelper.loadingTimout())
-    })
+  async markNotificationAsRead(notificationId: number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, FakerHelper.loadingTimout()))
+    this.notifications = this.notifications.map((n) =>
+      n.id === notificationId ? { ...n, displayAsRead: true } : n
+    )
   }
 
   deleteNotification(notificationId: number): Promise<void> {

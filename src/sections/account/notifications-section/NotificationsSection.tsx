@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, CloseButton } from '@iqss/dataverse-design-system'
 import { getTranslatedNotification } from '@/sections/account/notifications-section/NotificationsHelper'
@@ -6,17 +7,36 @@ import styles from './NotificationsSection.module.scss'
 
 export const NotificationsSection = () => {
   const { t } = useTranslation('account')
-  const { unreadNotifications, isLoading, error, refetch, markAsRead } = useNotificationContext()
+  const { notifications, isLoading, error, refetch, markAsRead, deleteMany } =
+    useNotificationContext()
+  const [readIds, setReadIds] = useState<number[]>([])
 
-  const handleMarkRead = async (id: number) => {
-    await markAsRead([id])
+  useEffect(() => {
+    const unreadIds = notifications
+      .filter((n) => !n.displayAsRead && !readIds.includes(n.id))
+      .map((n) => n.id)
+
+    if (unreadIds.length > 0) {
+      const timer = setTimeout(() => {
+        void (async () => {
+          await markAsRead(unreadIds)
+          setReadIds((prev) => [...prev, ...unreadIds])
+          await refetch()
+        })()
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [notifications, readIds, markAsRead, refetch])
+
+  const handleDelete = async (id: number) => {
+    await deleteMany([id])
     await refetch()
   }
 
   const handleClearAll = async () => {
-    const unreadIds = unreadNotifications.map((n) => n.id)
-    if (unreadIds.length > 0) {
-      await markAsRead(unreadIds)
+    const ids = notifications.map((n) => n.id)
+    if (ids.length > 0) {
+      await deleteMany(ids)
       await refetch()
     }
   }
@@ -27,7 +47,7 @@ export const NotificationsSection = () => {
   return (
     <section>
       <div className="d-flex align-items-center gap-2 mb-2">
-        {unreadNotifications.length > 0 && (
+        {notifications.length > 0 && (
           <Button
             size="sm"
             variant="secondary"
@@ -37,23 +57,30 @@ export const NotificationsSection = () => {
           </Button>
         )}
       </div>
-      {unreadNotifications.length > 0 ? (
+      {notifications.length > 0 ? (
         <div className="d-flex flex-column gap-2">
-          {unreadNotifications.map((notification) => (
-            <div className={styles['notification-item']} key={notification.id}>
-              <div>
-                {getTranslatedNotification(notification, t)}
-                <span className={styles['timestamp']}>{notification.sentTimestamp}</span>
+          {notifications.map((notification) => {
+            const isRead = notification.displayAsRead || readIds.includes(notification.id)
+            return (
+              <div
+                className={`${styles['notification-item']} ${
+                  isRead ? styles['read'] : styles['unread']
+                }`}
+                key={notification.id}>
+                <div>
+                  {getTranslatedNotification(notification, t)}
+                  <span className={styles['timestamp']}>{notification.sentTimestamp}</span>
+                </div>
+                <CloseButton
+                  onClick={async () => {
+                    await handleDelete(notification.id)
+                  }}
+                  aria-label={t('notifications.dismiss')}
+                  data-testid={`dismiss-notification-${notification.id}`}
+                />
               </div>
-              <CloseButton
-                onClick={async () => {
-                  await handleMarkRead(notification.id)
-                }}
-                aria-label={t('notifications.dismiss')}
-                data-testid={`dismiss-notification-${notification.id}`}
-              />
-            </div>
-          ))}
+            )
+          })}
         </div>
       ) : (
         <div>{t('notifications.noNotifications')}</div>

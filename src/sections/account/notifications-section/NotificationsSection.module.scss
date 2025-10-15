@@ -8,6 +8,17 @@
   padding: 0.75rem;
   background-color: color.adjust($dv-secondary-color, $lightness: 8%);
   border-radius: 6px;
+  transition: background 0.3s;
+}
+
+.unread {
+  background-color: #fffbe6;
+  font-weight: bold;
+}
+
+.read {
+  background-color: #f5f5f5;
+  color: #888;
 }
 
 .timestamp {

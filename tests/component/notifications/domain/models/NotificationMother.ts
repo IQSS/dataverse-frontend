@@ -20,7 +20,7 @@ export class NotificationMother {
         id: 2,
         type: NotificationType.ASSIGN_ROLE,
         sentTimestamp: new Date().toISOString(),
-        displayAsRead: false,
+        displayAsRead: true,
         collectionDisplayName: 'Biodiversity Data',
         collectionAlias: 'biodiversity',
         roleAssignments: [

@@ -11,7 +11,7 @@ export class NotificationJSDataverseRepository implements NotificationRepository
 
   getAllNotificationsByUser(): Promise<Notification[]> {
     return getAllNotificationsByUser
-      .execute(true, true)
+      .execute(true, false)
       .then((notifications) =>
         notifications.map((notification) => this.mapper.toNotification(notification))
       )

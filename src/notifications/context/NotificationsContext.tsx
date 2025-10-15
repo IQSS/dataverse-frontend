@@ -6,12 +6,13 @@ import { getAllNotificationsByUser } from '@/notifications/domain/useCases/getAl
 import { SessionContext } from '@/sections/session/SessionContext'
 
 interface NotificationContextValue {
-  unreadNotifications: Notification[]
+  notifications: Notification[]
   unreadCount: number
   isLoading: boolean
   error: string | null
   refetch: () => Promise<void>
   markAsRead: (ids: number[]) => Promise<void>
+  deleteMany(ids: number[]): Promise<void>
 }
 
 const NotificationContext = createContext<NotificationContextValue | undefined>(undefined)
@@ -77,6 +78,17 @@ export const NotificationProvider = ({
     }
   }
 
+  const deleteMany = async (ids: number[]) => {
+    setNotifications((prev) => prev.filter((n) => !ids.includes(n.id)))
+    try {
+      await Promise.all(ids.map((id) => repository.deleteNotification(id)))
+      setError(null)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to delete notifications'
+      setError(message)
+    }
+  }
+
   const unreadNotifications = useMemo(
     () => notifications.filter((n) => !n.displayAsRead),
     [notifications]
@@ -87,12 +99,13 @@ export const NotificationProvider = ({
   return (
     <NotificationContext.Provider
       value={{
-        unreadNotifications,
+        notifications,
         unreadCount,
         isLoading,
         error,
         refetch: fetchNotifications,
-        markAsRead
+        markAsRead,
+        deleteMany
       }}>
       {children}
     </NotificationContext.Provider>
