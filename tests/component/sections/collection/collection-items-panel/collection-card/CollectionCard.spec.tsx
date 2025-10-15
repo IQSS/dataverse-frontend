@@ -45,7 +45,7 @@ describe('CollectionCard', () => {
     cy.customMount(
       <CollectionCard collectionPreview={collectionPreview} parentCollectionAlias="" />
     )
-    
+
     cy.findByTestId('linked-collection-icon').should('exist')
   })
 
@@ -58,7 +58,6 @@ describe('CollectionCard', () => {
     cy.customMount(
       <CollectionCard collectionPreview={collectionPreview} parentCollectionAlias="" />
     )
-
 
     cy.contains(longName).should('exist')
     // Ensure the title wraps within the available width (no horizontal overflow)
