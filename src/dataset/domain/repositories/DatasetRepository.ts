@@ -1,4 +1,4 @@
-import { Dataset, DatasetLock } from '../models/Dataset'
+import { Dataset, DatasetLock, TermsOfAccess } from '../models/Dataset'
 import { DatasetVersionDiff } from '../models/DatasetVersionDiff'
 import { DatasetPaginationInfo } from '../models/DatasetPaginationInfo'
 import { DatasetDTO } from '../useCases/DTOs/DatasetDTO'
@@ -61,4 +61,5 @@ export interface DatasetRepository {
     format: CitationFormat
   ) => Promise<FormattedCitation>
   getTemplates: (collectionIdOrAlias: number | string) => Promise<DatasetTemplate[]>
+  updateTermsOfAccess: (datasetId: string | number, termsOfAccess: TermsOfAccess) => Promise<void>
 }

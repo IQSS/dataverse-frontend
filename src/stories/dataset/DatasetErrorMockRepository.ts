@@ -1,4 +1,4 @@
-import { Dataset, DatasetLock } from '../../dataset/domain/models/Dataset'
+import { Dataset, DatasetLock, TermsOfAccess } from '../../dataset/domain/models/Dataset'
 import { DatasetMockRepository } from './DatasetMockRepository'
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
@@ -162,6 +162,14 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
   }
 
   getTemplates(_collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  updateTermsOfAccess(_datasetId: string | number, _termsOfAccess: TermsOfAccess): Promise<void> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

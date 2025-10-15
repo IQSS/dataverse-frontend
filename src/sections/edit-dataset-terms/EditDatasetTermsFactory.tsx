@@ -4,8 +4,8 @@ import { EditDatasetTermsHelper } from './EditDatasetTermsHelper'
 import { LicenseJSDataverseRepository } from '../../licenses/infrastructure/repositories/LicenseJSDataverseRepository'
 import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { DatasetProvider } from '../dataset/DatasetProvider'
-import { searchParamVersionToDomainVersion } from '../../router'
 import { ReactElement } from 'react'
+import { DatasetNonNumericVersion } from '@/dataset/domain/models/Dataset'
 
 const licenseRepository = new LicenseJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
@@ -20,8 +20,8 @@ function EditDatasetTermsWithSearchParams() {
   const [searchParams] = useSearchParams()
   const defaultActiveTabKey = EditDatasetTermsHelper.defineSelectedTabKey(searchParams)
   const persistentId = searchParams.get('persistentId') ?? undefined
-  const searchParamVersion = searchParams.get('version') ?? undefined
-  const version = searchParamVersionToDomainVersion(searchParamVersion)
+  // Always load the latest version (draft if exists, otherwise latest published)
+  const version = DatasetNonNumericVersion.LATEST
 
   return (
     <DatasetProvider

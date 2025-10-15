@@ -1,42 +1,43 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
-import { DatasetLicenseUpdateRequest } from '../../../dataset/domain/models/DatasetLicenseUpdateRequest'
 import { JSDataverseWriteErrorHandler } from '../../../shared/helpers/JSDataverseWriteErrorHandler'
 import { WriteError } from '@iqss/dataverse-client-javascript'
+import { TermsOfAccess } from '@/dataset/domain/models/Dataset'
 
-export interface UseUpdateDatasetLicense {
+export interface UseUpdateTermsOfAccess {
   datasetRepository: DatasetRepository
-  onSuccessfulUpdateLicense: () => void
+  onSuccessfulUpdateTermsOfAccess: () => void
 }
 
-interface UseUpdateDatasetLicenseReturn {
+interface UseUpdateTermsOfAccessReturn {
   isLoading: boolean
   error: string | null
-  handleUpdateLicense: (
+  handleUpdateTermsOfAccess: (
     datasetId: number | string,
-    licenseUpdateRequest: DatasetLicenseUpdateRequest
+    termsOfAccess: TermsOfAccess
   ) => Promise<void>
 }
 
-export const useUpdateDatasetLicense = ({
+export const useUpdateTermsOfAccess = ({
   datasetRepository,
-  onSuccessfulUpdateLicense
-}: UseUpdateDatasetLicense): UseUpdateDatasetLicenseReturn => {
+  onSuccessfulUpdateTermsOfAccess
+}: UseUpdateTermsOfAccess): UseUpdateTermsOfAccessReturn => {
   const { t } = useTranslation('dataset')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleUpdateLicense = async (
+  const handleUpdateTermsOfAccess = async (
     datasetId: number | string,
-    licenseUpdateRequest: DatasetLicenseUpdateRequest
+    termsOfAccess: TermsOfAccess
   ) => {
     setIsLoading(true)
     setError(null)
-
+    console.log('termsOfAccess', termsOfAccess)
     try {
-      await datasetRepository.updateLicense(datasetId, licenseUpdateRequest)
-      onSuccessfulUpdateLicense()
+      await datasetRepository.updateTermsOfAccess(datasetId, termsOfAccess)
+
+      onSuccessfulUpdateTermsOfAccess()
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {
         const errorHandler = new JSDataverseWriteErrorHandler(err)
@@ -52,7 +53,7 @@ export const useUpdateDatasetLicense = ({
   }
 
   return {
-    handleUpdateLicense,
+    handleUpdateTermsOfAccess,
     isLoading,
     error
   }

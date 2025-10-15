@@ -2,8 +2,8 @@ import { LicenseRepository } from '@/licenses/domain/repositories/LicenseReposit
 import { License } from '@/licenses/domain/models/License'
 
 export class LicenseMockRepository implements LicenseRepository {
-  async getAvailableStandardLicenses(): Promise<License[]> {
-    return [
+  getAvailableStandardLicenses(): Promise<License[]> {
+    return Promise.resolve([
       {
         id: 1,
         name: 'CC0 1.0',
@@ -32,7 +32,7 @@ export class LicenseMockRepository implements LicenseRepository {
         schemeUri: 'https://spdx.org/licenses/',
         languageCode: 'en'
       }
-    ]
+    ])
   }
 }
 

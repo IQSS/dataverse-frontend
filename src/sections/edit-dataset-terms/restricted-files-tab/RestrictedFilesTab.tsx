@@ -1,10 +1,12 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
 import styles from '../dataset-terms-tab/DatasetTermsTab.module.scss'
 import { TermsOfAccess } from '@/dataset/domain/models/Dataset'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { useDataset } from '../../dataset/DatasetContext'
+import { useUpdateTermsOfAccess } from './useUpdateTermsOfAccess'
 
 // Use TermsOfAccess directly from model
 type RestrictedFilesFormData = TermsOfAccess
@@ -32,6 +34,12 @@ export function RestrictedFilesTab({
 }: RestrictedFilesTabProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
+  const { dataset, refreshDataset } = useDataset()
+
+  const { handleUpdateTermsOfAccess, isLoading, error } = useUpdateTermsOfAccess({
+    datasetRepository: _datasetRepository,
+    onSuccessfulUpdateTermsOfAccess: () => refreshDataset()
+  })
 
   const {
     control,
@@ -40,16 +48,25 @@ export function RestrictedFilesTab({
     watch,
     formState: { isValid }
   } = useForm<RestrictedFilesFormData>({
-    defaultValues: initialTermsOfAccess,
+    defaultValues:
+      (dataset?.termsOfUse.termsOfAccess as RestrictedFilesFormData) ?? initialTermsOfAccess,
     mode: 'onChange'
   })
+
+  // When the dataset loads/changes, reset the form to the original terms from dataset first
+  useEffect(() => {
+    const original = (dataset?.termsOfUse.termsOfAccess as RestrictedFilesFormData) ?? null
+    if (original) {
+      reset(original)
+    }
+  }, [dataset, reset])
 
   // Watch the fileAccessRequest field to show/hide info alert
   const watchedFileAccessRequest = watch('fileAccessRequest')
 
-  // TODO: Implement actual save logic using datasetRepository
-  const onSubmit = (data: RestrictedFilesFormData) => {
-    console.log('TODO: Implement actual save logic using datasetRepository', data)
+  const onSubmit = async (data: RestrictedFilesFormData) => {
+    if (!dataset) return
+    await handleUpdateTermsOfAccess(dataset.id, data)
   }
 
   // Generate terms of access fields dynamically from DEFAULT_TERMS_OF_ACCESS (excluding fileAccessRequest)
@@ -148,11 +165,26 @@ export function RestrictedFilesTab({
           </Form.Group>
         ))}
 
+        {error && (
+          <Alert variant="danger" dismissible>
+            {error}
+          </Alert>
+        )}
+
         <div className={styles['form-actions']}>
-          <Button type="submit" disabled={!isValid}>
-            {tShared('saveChanges')}
+          <Button type="submit" disabled={!isValid || isLoading}>
+            {isLoading ? tShared('saving') : tShared('saveChanges')}
           </Button>
-          <Button variant="secondary" type="button" onClick={() => reset(initialTermsOfAccess)}>
+          <Button
+            variant="secondary"
+            type="button"
+            disabled={isLoading}
+            onClick={() =>
+              reset(
+                (dataset?.termsOfUse.termsOfAccess as RestrictedFilesFormData) ??
+                  initialTermsOfAccess
+              )
+            }>
             {tShared('cancel')}
           </Button>
         </div>

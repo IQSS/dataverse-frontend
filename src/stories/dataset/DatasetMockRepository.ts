@@ -1,4 +1,4 @@
-import { Dataset, DatasetLock } from '../../dataset/domain/models/Dataset'
+import { Dataset, DatasetLock, TermsOfAccess } from '../../dataset/domain/models/Dataset'
 import { DatasetVersionDiff } from '../../dataset/domain/models/DatasetVersionDiff'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
@@ -180,6 +180,14 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetTemplateMother.createMany(3))
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  updateTermsOfAccess(_datasetId: string | number, _termsOfAccess: TermsOfAccess): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
       }, FakerHelper.loadingTimout())
     })
   }

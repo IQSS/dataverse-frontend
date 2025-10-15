@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, Tabs } from '@iqss/dataverse-design-system'
+import { Alert, Accordion, Tabs } from '@iqss/dataverse-design-system'
 import { EditDatasetTermsHelper, EditDatasetTermsTabKey } from './EditDatasetTermsHelper'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { DatasetTermsTab } from './dataset-terms-tab/DatasetTermsTab'
@@ -14,6 +14,7 @@ import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { DatasetLicense } from '@/dataset/domain/models/Dataset'
 import styles from './EditDatasetTerms.module.scss'
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
 
 const tabsKeys = EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS
 
@@ -44,6 +45,7 @@ export const EditDatasetTerms = ({
   const [activeKey, setActiveKey] = useState<string>(defaultActiveTabKey)
   const { dataset, isLoading } = useDataset()
   const { setIsLoading } = useLoading()
+  const isMobile = useMediaQuery('(max-width: 576px)')
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -76,38 +78,80 @@ export const EditDatasetTerms = ({
         {t('editTerms.infoAlert.text')}
       </Alert>
 
-      <Tabs activeKey={activeKey} onSelect={updateTabOnSelect}>
-        <Tabs.Tab eventKey={tabsKeys.datasetTerms} title={t('editTerms.tabs.datasetTerms')}>
-          <div className={styles['tab-container']}>
-            <DatasetTermsTab
-              licenseRepository={licenseRepository}
-              datasetRepository={datasetRepository}
-              initialLicense={
-                (dataset.license as DatasetLicense) ||
-                (dataset.termsOfUse.customTerms as CustomTermsData)
-              }
-              isInitialCustomTerms={dataset.termsOfUse.customTerms !== undefined}
-            />
-          </div>
-        </Tabs.Tab>
+      {isMobile ? (
+        <Accordion defaultActiveKey={[tabsKeys.datasetTerms]} alwaysOpen={true}>
+          <Accordion.Item eventKey={tabsKeys.datasetTerms}>
+            <Accordion.Header>{t('editTerms.tabs.datasetTerms')}</Accordion.Header>
+            <Accordion.Body>
+              <div className={styles['tab-container']}>
+                <DatasetTermsTab
+                  licenseRepository={licenseRepository}
+                  datasetRepository={datasetRepository}
+                  initialLicense={
+                    (dataset.license as DatasetLicense) ||
+                    (dataset.termsOfUse.customTerms as CustomTermsData)
+                  }
+                  isInitialCustomTerms={dataset.termsOfUse.customTerms !== undefined}
+                />
+              </div>
+            </Accordion.Body>
+          </Accordion.Item>
 
-        <Tabs.Tab
-          eventKey={tabsKeys.restrictedFilesTerms}
-          title={t('editTerms.tabs.restrictedFilesTerms')}>
-          <div className={styles['tab-container']}>
-            <RestrictedFilesTab
-              datasetRepository={datasetRepository}
-              initialTermsOfAccess={dataset.termsOfUse.termsOfAccess}
-            />
-          </div>
-        </Tabs.Tab>
+          <Accordion.Item eventKey={tabsKeys.restrictedFilesTerms}>
+            <Accordion.Header>{t('editTerms.tabs.restrictedFilesTerms')}</Accordion.Header>
+            <Accordion.Body>
+              <div className={styles['tab-container']}>
+                <RestrictedFilesTab
+                  datasetRepository={datasetRepository}
+                  initialTermsOfAccess={dataset.termsOfUse.termsOfAccess}
+                />
+              </div>
+            </Accordion.Body>
+          </Accordion.Item>
 
-        <Tabs.Tab eventKey={tabsKeys.guestBook} title={t('editTerms.tabs.guestBook')}>
-          <div className={styles['tab-container']}>
-            <GuestBookTab />
-          </div>
-        </Tabs.Tab>
-      </Tabs>
+          <Accordion.Item eventKey={tabsKeys.guestBook}>
+            <Accordion.Header>{t('editTerms.tabs.guestBook')}</Accordion.Header>
+            <Accordion.Body>
+              <div className={styles['tab-container']}>
+                <GuestBookTab />
+              </div>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
+      ) : (
+        <Tabs activeKey={activeKey} onSelect={updateTabOnSelect}>
+          <Tabs.Tab eventKey={tabsKeys.datasetTerms} title={t('editTerms.tabs.datasetTerms')}>
+            <div className={styles['tab-container']}>
+              <DatasetTermsTab
+                licenseRepository={licenseRepository}
+                datasetRepository={datasetRepository}
+                initialLicense={
+                  (dataset.license as DatasetLicense) ||
+                  (dataset.termsOfUse.customTerms as CustomTermsData)
+                }
+                isInitialCustomTerms={dataset.termsOfUse.customTerms !== undefined}
+              />
+            </div>
+          </Tabs.Tab>
+
+          <Tabs.Tab
+            eventKey={tabsKeys.restrictedFilesTerms}
+            title={t('editTerms.tabs.restrictedFilesTerms')}>
+            <div className={styles['tab-container']}>
+              <RestrictedFilesTab
+                datasetRepository={datasetRepository}
+                initialTermsOfAccess={dataset.termsOfUse.termsOfAccess}
+              />
+            </div>
+          </Tabs.Tab>
+
+          <Tabs.Tab eventKey={tabsKeys.guestBook} title={t('editTerms.tabs.guestBook')}>
+            <div className={styles['tab-container']}>
+              <GuestBookTab />
+            </div>
+          </Tabs.Tab>
+        </Tabs>
+      )}
     </section>
   )
 }

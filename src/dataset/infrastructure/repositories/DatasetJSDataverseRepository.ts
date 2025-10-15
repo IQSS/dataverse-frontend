@@ -3,7 +3,8 @@ import {
   CustomTerms,
   Dataset,
   DatasetLock,
-  DatasetNonNumericVersion
+  DatasetNonNumericVersion,
+  TermsOfAccess
 } from '../../domain/models/Dataset'
 import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
@@ -365,44 +366,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  updateLicense(
-    datasetId: string | number,
-    licenseUpdateRequest: DatasetLicenseUpdateRequest
-  ): Promise<void> {
-    // TODO: This method should use updateDatasetLicense from js-dataverse when available
-    // For now, implementing as a direct API call
-
-    // The license API requires numeric dataset ID, not persistentId
-    // We need to use the dataset.id (numeric) for license updates
-    const apiUrl = `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/license`
-
-    const payload: {
-      name?: string
-      customTerms?: CustomTerms
-    } = {}
-
-    if (licenseUpdateRequest.name) {
-      payload.name = licenseUpdateRequest.name
-    }
-
-    if (licenseUpdateRequest.customTerms) {
-      payload.customTerms = licenseUpdateRequest.customTerms
-    }
-
-    return axiosInstance
-      .put(apiUrl, payload)
-      .then((response) => {
-        console.log('🔧 Repository: License update successful')
-        console.log('🔧 Response status:', response.status)
-        console.log('🔧 Response data:', response.data)
-        // Success - no return value needed
-      })
-      .catch((error: unknown) => {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-        throw new Error(`Failed to update dataset license: ${errorMessage}`)
-      })
-  }
-
   deaccession(
     datasetId: string | number,
     version: string,
@@ -461,6 +424,66 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
       .catch(() => {
         return undefined
+      })
+  }
+
+  updateLicense(
+    datasetId: string | number,
+    licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ): Promise<void> {
+    // return updateTermsOfAccess.execute(datasetId, licenseUpdateRequest)
+    // TODO: This method should use updateDatasetLicense from js-dataverse when available
+    // For now, implementing as a direct API call
+
+    // The license API requires numeric dataset ID, not persistentId
+    // We need to use the dataset.id (numeric) for license updates
+    const apiUrl = `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/license`
+
+    const payload: {
+      name?: string
+      customTerms?: CustomTerms
+    } = {}
+
+    if (licenseUpdateRequest.name) {
+      payload.name = licenseUpdateRequest.name
+    }
+
+    if (licenseUpdateRequest.customTerms) {
+      payload.customTerms = licenseUpdateRequest.customTerms
+    }
+
+    return axiosInstance
+      .put(apiUrl, payload)
+      .then(() => undefined)
+      .catch((error: unknown) => {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        throw new Error(`Failed to update dataset license: ${errorMessage}`)
+      })
+  }
+
+  updateTermsOfAccess(datasetId: string | number, termsOfAccess: TermsOfAccess): Promise<void> {
+    // return updateTermsOfAccess.execute(datasetId, termsOfAccess)
+
+    // TODO: This method should use updateDatasetLicense from js-dataverse when available
+    // For now, implementing as a direct API call
+
+    const apiUrl = `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/access`
+
+    // Map client model field to API expected field name
+    const { termsOfAccessForRestrictedFiles, ...rest } = termsOfAccess
+    const payload = {
+      ...rest,
+      ...(termsOfAccessForRestrictedFiles !== undefined
+        ? { termsOfAccess: termsOfAccessForRestrictedFiles }
+        : {})
+    }
+
+    return axiosInstance
+      .put(apiUrl, { customTermsOfAccess: payload })
+      .then(() => undefined)
+      .catch((error: unknown) => {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        throw new Error(`Failed to update dataset terms of access: ${errorMessage}`)
       })
   }
 }

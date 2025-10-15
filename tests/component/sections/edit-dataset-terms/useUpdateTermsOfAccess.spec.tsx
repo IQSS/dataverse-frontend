@@ -1,0 +1,107 @@
+import { renderHook, act, waitFor } from '@testing-library/react'
+import { useUpdateTermsOfAccess } from '@/sections/edit-dataset-terms/restricted-files-tab/useUpdateTermsOfAccess'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { TermsOfAccess } from '@/dataset/domain/models/Dataset'
+import { WriteError } from '@iqss/dataverse-client-javascript'
+
+describe('useUpdateTermsOfAccess', () => {
+  let datasetRepository: DatasetRepository
+  let onSuccessfulUpdateTermsOfAccess: () => void
+
+  const sampleTerms: TermsOfAccess = {
+    fileAccessRequest: true,
+    termsOfAccessForRestrictedFiles: 'Terms text',
+    dataAccessPlace: 'Place',
+    originalArchive: 'Archive',
+    availabilityStatus: 'Available',
+    contactForAccess: 'contact@example.edu',
+    sizeOfCollection: '10GB',
+    studyCompletion: 'Complete'
+  }
+
+  beforeEach(() => {
+    datasetRepository = {} as DatasetRepository
+    onSuccessfulUpdateTermsOfAccess = cy.stub().as('onSuccessfulUpdateTermsOfAccess')
+  })
+
+  it('should initialize with default state', async () => {
+    const { result } = renderHook(() =>
+      useUpdateTermsOfAccess({
+        datasetRepository,
+        onSuccessfulUpdateTermsOfAccess
+      })
+    )
+
+    await waitFor(() => {
+      expect(result.current.isLoading).to.deep.equal(false)
+      expect(result.current.error).to.deep.equal(null)
+      expect(typeof result.current.handleUpdateTermsOfAccess).to.deep.equal('function')
+    })
+  })
+
+  it('should successfully update terms of access', async () => {
+    datasetRepository.updateTermsOfAccess = cy.stub().resolves(undefined)
+
+    const { result } = renderHook(() =>
+      useUpdateTermsOfAccess({
+        datasetRepository,
+        onSuccessfulUpdateTermsOfAccess
+      })
+    )
+
+    await act(async () => {
+      await result.current.handleUpdateTermsOfAccess(123, sampleTerms)
+    })
+
+    expect(datasetRepository.updateTermsOfAccess).to.have.been.calledWith(123, sampleTerms)
+    expect(onSuccessfulUpdateTermsOfAccess).to.have.been.called
+    expect(result.current.isLoading).to.deep.equal(false)
+    expect(result.current.error).to.deep.equal(null)
+  })
+
+  describe('Error handling', () => {
+    it('should handle WriteError and set formatted error message', async () => {
+      const mockWriteError = new WriteError('Test error')
+      datasetRepository.updateTermsOfAccess = cy.stub().rejects(mockWriteError)
+
+      const { result } = renderHook(() =>
+        useUpdateTermsOfAccess({
+          datasetRepository,
+          onSuccessfulUpdateTermsOfAccess
+        })
+      )
+
+      await act(async () => {
+        await result.current.handleUpdateTermsOfAccess(123, sampleTerms)
+      })
+
+      expect(datasetRepository.updateTermsOfAccess).to.have.been.calledWith(123, sampleTerms)
+      expect(onSuccessfulUpdateTermsOfAccess).to.not.have.been.called
+      expect(result.current.isLoading).to.deep.equal(false)
+      expect(result.current.error).to.deep.equal('Test error')
+    })
+
+    it('should handle unknown errors and set default error message', async () => {
+      const unknownError = new Error('Unknown error')
+      datasetRepository.updateTermsOfAccess = cy.stub().rejects(unknownError)
+
+      const { result } = renderHook(() =>
+        useUpdateTermsOfAccess({
+          datasetRepository,
+          onSuccessfulUpdateTermsOfAccess
+        })
+      )
+
+      await act(async () => {
+        await result.current.handleUpdateTermsOfAccess(123, sampleTerms)
+      })
+
+      expect(datasetRepository.updateTermsOfAccess).to.have.been.calledWith(123, sampleTerms)
+      expect(onSuccessfulUpdateTermsOfAccess).to.not.have.been.called
+      expect(result.current.isLoading).to.deep.equal(false)
+      expect(result.current.error).to.deep.equal(
+        'An error occurred while updating the dataset license. Please try again.'
+      )
+    })
+  })
+})
