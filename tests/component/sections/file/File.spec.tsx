@@ -7,6 +7,8 @@ import { ExternalToolsProvider } from '@/shared/contexts/external-tools/External
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { FileExternalToolResolvedMother } from '@tests/component/externalTools/domain/models/FileExternalToolResolvedMother'
 import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
+import { ContactMockRepository } from '@/stories/shared-mock-repositories/contact/ContactMockRepository'
+import { DatasetVersionMother } from '@tests/component/dataset/domain/models/DatasetMother'
 
 const fileRepository: FileRepository = {} as FileRepository
 
@@ -21,6 +23,7 @@ describe('File', () => {
         id={19}
         datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
       />
     )
 
@@ -54,6 +57,7 @@ describe('File', () => {
         id={19}
         datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
       />
     )
 
@@ -71,6 +75,7 @@ describe('File', () => {
         id={19}
         datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
       />
     )
 
@@ -87,6 +92,7 @@ describe('File', () => {
         id={19}
         datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
       />
     )
 
@@ -104,6 +110,7 @@ describe('File', () => {
         datasetVersionNumber={'2.0'}
         datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
       />
     )
 
@@ -115,6 +122,26 @@ describe('File', () => {
     cy.contains('Summary').should('exist')
     cy.contains('Contributors').should('exist')
     cy.contains('Published On').should('exist')
+  })
+
+  it('should not render Share button if the the file dataset version is deaccessioned', () => {
+    const testFile = FileMother.createRealistic({
+      datasetVersion: DatasetVersionMother.createDeaccessioned()
+    })
+    fileRepository.getById = cy.stub().as('getFile').resolves(testFile)
+
+    cy.customMount(
+      <File
+        repository={fileRepository}
+        id={19}
+        datasetVersionNumber={'2.0'}
+        datasetRepository={new DatasetMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+      />
+    )
+    cy.findByText('Deaccessioned').should('exist')
+    cy.findByRole('button', { name: 'Share' }).should('not.exist')
   })
 
   describe('external tools tab', () => {
@@ -139,6 +166,7 @@ describe('File', () => {
             id={19}
             datasetRepository={new DatasetMockRepository()}
             dataverseInfoRepository={new DataverseInfoMockRepository()}
+            contactRepository={new ContactMockRepository()}
           />
         </ExternalToolsProvider>
       )
@@ -158,6 +186,7 @@ describe('File', () => {
             id={19}
             datasetRepository={new DatasetMockRepository()}
             dataverseInfoRepository={new DataverseInfoMockRepository()}
+            contactRepository={new ContactMockRepository()}
           />
         </ExternalToolsProvider>
       )
@@ -180,6 +209,7 @@ describe('File', () => {
             id={19}
             datasetRepository={new DatasetMockRepository()}
             dataverseInfoRepository={new DataverseInfoMockRepository()}
+            contactRepository={new ContactMockRepository()}
           />
         </ExternalToolsProvider>
       )
@@ -197,6 +227,7 @@ describe('File', () => {
             id={19}
             datasetRepository={new DatasetMockRepository()}
             dataverseInfoRepository={new DataverseInfoMockRepository()}
+            contactRepository={new ContactMockRepository()}
           />
         </ExternalToolsProvider>
       )
@@ -217,6 +248,7 @@ describe('File', () => {
             id={19}
             datasetRepository={new DatasetMockRepository()}
             dataverseInfoRepository={new DataverseInfoMockRepository()}
+            contactRepository={new ContactMockRepository()}
           />
         </ExternalToolsProvider>
       )

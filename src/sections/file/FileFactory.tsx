@@ -7,10 +7,12 @@ import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { searchParamVersionToDomainVersion } from '../../router'
 import { QueryParamKey } from '../Route.enum'
 import { DataverseInfoJSDataverseRepository } from '@/info/infrastructure/repositories/DataverseInfoJSDataverseRepository'
+import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 
 const repository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
 const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
+const contactRepository = new ContactJSDataverseRepository()
 
 export class FileFactory {
   static create(): ReactElement {
@@ -39,6 +41,7 @@ function FileWithSearchParams() {
       datasetRepository={datasetRepository}
       toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
       dataverseInfoRepository={dataverseInfoRepository}
+      contactRepository={contactRepository}
     />
   )
 }

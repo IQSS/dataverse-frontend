@@ -85,6 +85,10 @@
         "replace": "Replace",
         "delete": "Delete"
       }
+    },
+    "share": {
+      "title": "Share File",
+      "helpText": "Share this file on your favorite social media networks."
     }
   },
   "deleteFileModal": {
