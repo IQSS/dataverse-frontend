@@ -944,15 +944,14 @@ However, we prioritize user-centric testing over coverage numbers.
 - **Coverage Threshold:** We aim for a test coverage of 95% for the unit tests. This threshold is set in the `.nycrc.json` file.
 - **Coverage Reports:** We use [nyc](https://www.npmjs.com/package/nyc) to generate coverage reports, which are available
   in the `coverage` folder after running the tests. These reports are also published to [Coveralls](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
-  with every pull request and merge. The coverage badge is displayed at the top of the README.
+  with every pull request and merge. The coverage badge is displayed at the top of the README. See "include" and "exclude" in `.nycrc.json` to learn about which source files are included in coverage reports.
 - **Tests included in the coverage:** We include all unit tests in the coverage report.
 
 #### How to run the code coverage
 
-To generate the code coverage, you first need to run the tests with the `test:unit` script. After running the tests, you
-can check the coverage with the `test:coverage` script.
+To generate the code coverage, you first need to run the tests with the `test:unit` script. This can take a while! After running the tests, you can check the coverage with the `test:coverage` script. This will simply report the total coverage.
 
-If you want to see the coverage report in the browser, you can open the `coverage/lcov-report/index.html` file in the browser.
+To see which lines are not covered, you can open the coverage report in the browser: `coverage/lcov-report/index.html`.
 
 ```bash
 # root project directory
@@ -964,7 +963,11 @@ npm run test:unit
 # Check the coverage
 
 npm run test:coverage
+
+# See detailed report at coverage/lcov-report/index.html
 ```
+
+Note that it's easy for the `lcov-report` report to get overwritten. For example, running any test with `npm run cy:open-unit` will overwrite it. For this reason you might want to copy the `lcov-report` directory elsewhere for safe keeping. That’s mainly useful for debugging previous coverage results and improving them.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
