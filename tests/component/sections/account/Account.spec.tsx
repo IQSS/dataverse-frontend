@@ -3,7 +3,6 @@ import { AccountHelper } from '../../../../src/sections/account/AccountHelper'
 import { UserJSDataverseRepository } from '../../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
-import { NotificationProvider } from '@/notifications/context/NotificationsContext'
 import { NotificationType } from '@/notifications/domain/models/Notification'
 
 const mockRepository = {
@@ -49,14 +48,13 @@ const mockRepository = {
 describe('Account', () => {
   it('should render the component', () => {
     cy.mountAuthenticated(
-      <NotificationProvider repository={mockRepository}>
-        <Account
-          defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
-          userRepository={new UserJSDataverseRepository()}
-          collectionRepository={new CollectionMockRepository()}
-          roleRepository={new RoleMockRepository()}
-        />
-      </NotificationProvider>
+      <Account
+        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
+        userRepository={new UserJSDataverseRepository()}
+        collectionRepository={new CollectionMockRepository()}
+        roleRepository={new RoleMockRepository()}
+        notificationRepository={mockRepository}
+      />
     )
 
     cy.get('h1').should('contain.text', 'Account')
@@ -68,14 +66,13 @@ describe('Account', () => {
 
   it('clicks on the Account Information tab', () => {
     cy.mountAuthenticated(
-      <NotificationProvider repository={mockRepository}>
-        <Account
-          collectionRepository={new CollectionMockRepository()}
-          defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
-          userRepository={new UserJSDataverseRepository()}
-          roleRepository={new RoleMockRepository()}
-        />
-      </NotificationProvider>
+      <Account
+        collectionRepository={new CollectionMockRepository()}
+        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
+        userRepository={new UserJSDataverseRepository()}
+        roleRepository={new RoleMockRepository()}
+        notificationRepository={mockRepository}
+      />
     )
 
     cy.findByRole('tab', { name: 'Account Information' }).click()

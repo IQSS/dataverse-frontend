@@ -7,7 +7,6 @@ import { AccountHelper } from '@/sections/account/AccountHelper'
 import { UserMockRepository } from '../../shared-mock-repositories/user/UserMockRepository'
 import { CollectionMockRepository } from '../../collection/CollectionMockRepository'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
-import { NotificationProvider } from '@/notifications/context/NotificationsContext'
 import { NotificationMockRepository } from '@/stories/account/NotificationMockRepository'
 
 const meta: Meta<typeof Account> = {
@@ -25,13 +24,12 @@ type Story = StoryObj<typeof Account>
 
 export const Default: Story = {
   render: () => (
-    <NotificationProvider repository={new NotificationMockRepository()}>
-      <Account
-        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
-        userRepository={new UserMockRepository()}
-        collectionRepository={new CollectionMockRepository()}
-        roleRepository={new RoleMockRepository()} // No roles in this section
-      />
-    </NotificationProvider>
+    <Account
+      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
+      userRepository={new UserMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
+      roleRepository={new RoleMockRepository()}
+      notificationRepository={new NotificationMockRepository()}
+    />
   )
 }

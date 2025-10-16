@@ -122,9 +122,6 @@ const AdvancedSearchPage = lazy(() =>
     default: () => AdvancedSearchFactory.create()
   }))
 )
-import { NotificationJSDataverseRepository } from '@/notifications/infrastructure/repositories/NotificationJSDataverseRepository'
-import { NotificationProvider } from '@/notifications/context/NotificationsContext'
-const notificationRepository = new NotificationJSDataverseRepository()
 
 export const routes: RouteObject[] = [
   {
@@ -132,11 +129,7 @@ export const routes: RouteObject[] = [
     children: [
       {
         path: '/',
-        element: (
-          <NotificationProvider repository={notificationRepository}>
-            <Layout />
-          </NotificationProvider>
-        ),
+        element: <Layout />,
         errorElement: <ErrorPage fullViewport />,
         children: [
           {

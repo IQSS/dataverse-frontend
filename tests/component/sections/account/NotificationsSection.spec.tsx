@@ -1,5 +1,4 @@
 import { NotificationsSection } from '@/sections/account/notifications-section/NotificationsSection'
-import { NotificationProvider } from '@/notifications/context/NotificationsContext'
 import { NotificationMother } from '@tests/component/notifications/domain/models/NotificationMother'
 
 const mockRepository = {
@@ -17,11 +16,7 @@ const mockErrorRepository = {
 describe('NotificationsSection', () => {
   it('renders notifications and handles dismiss', () => {
     cy.spy(mockRepository, 'markNotificationAsRead').as('markNotificationAsRead')
-    cy.mountAuthenticated(
-      <NotificationProvider repository={mockRepository}>
-        <NotificationsSection />
-      </NotificationProvider>
-    )
+    cy.mountAuthenticated(<NotificationsSection notificationRepository={mockRepository} />)
 
     cy.contains('Climate Data was created').should('exist')
     cy.contains('You have been granted the Curator role').should('exist')
@@ -30,11 +25,7 @@ describe('NotificationsSection', () => {
   })
   it('handles Clear All', () => {
     cy.spy(mockRepository, 'markNotificationAsRead').as('markNotificationAsRead')
-    cy.mountAuthenticated(
-      <NotificationProvider repository={mockRepository}>
-        <NotificationsSection />
-      </NotificationProvider>
-    )
+    cy.mountAuthenticated(<NotificationsSection notificationRepository={mockRepository} />)
 
     cy.contains('Climate Data was created').should('exist')
     cy.contains('You have been granted the Curator role').should('exist')
@@ -44,11 +35,7 @@ describe('NotificationsSection', () => {
   })
 
   it('shows loading and error states', () => {
-    cy.mountAuthenticated(
-      <NotificationProvider repository={mockErrorRepository}>
-        <NotificationsSection />
-      </NotificationProvider>
-    )
+    cy.mountAuthenticated(<NotificationsSection notificationRepository={mockRepository} />)
 
     cy.contains('Failed to ').should('exist')
   })

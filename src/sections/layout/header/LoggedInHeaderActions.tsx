@@ -10,19 +10,23 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { AccountHelper } from '@/sections/account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
 import UnreadNotificationBadge from '@/sections/layout/header/UnreadNotificationBadge'
+import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
+import { useUnreadCount } from '@/notifications/domain/hooks/useUnreadCount'
 
 interface LoggedInHeaderActionsProps {
   user: User
   collectionRepository: CollectionRepository
+  notificationRepository: NotificationRepository
 }
 
 export const LoggedInHeaderActions = ({
   user,
-  collectionRepository
+  collectionRepository,
+  notificationRepository
 }: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
   const { logOut } = useContext(AuthContext)
-
+  const unreadCount = useUnreadCount(notificationRepository)
   const { collection } = useCollection(collectionRepository)
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: undefined,
@@ -56,7 +60,7 @@ export const LoggedInHeaderActions = ({
         title={
           <span className="d-inline-flex align-items-center">
             {user.displayName}
-            <UnreadNotificationBadge />
+            <UnreadNotificationBadge unreadCount={unreadCount} />
           </span>
         }
         id="dropdown-user">
@@ -70,7 +74,7 @@ export const LoggedInHeaderActions = ({
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}`}>
           <span className="d-inline-flex align-items-center">
             {t('navigation.notifications')}
-            <UnreadNotificationBadge />
+            <UnreadNotificationBadge unreadCount={unreadCount} />
           </span>
         </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item

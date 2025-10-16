@@ -3,8 +3,6 @@ import { WithI18next } from '../../WithI18next'
 import { Header } from '../../../sections/layout/header/Header'
 import { WithLoggedInUser } from '../../WithLoggedInUser'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
-import { WithNotifications } from '@/stories/WithNotifications'
-import { NotificationProvider } from '@/notifications/context/NotificationsContext'
 import { NotificationMockRepository } from '@/stories/account/NotificationMockRepository'
 
 const meta: Meta<typeof Header> = {
@@ -18,17 +16,23 @@ type Story = StoryObj<typeof Header>
 
 export const LoggedOut: Story = {
   render: () => {
-    return <Header collectionRepository={new CollectionMockRepository()} />
+    return (
+      <Header
+        collectionRepository={new CollectionMockRepository()}
+        notficationRepository={new NotificationMockRepository()}
+      />
+    )
   }
 }
 
 export const LoggedIn: Story = {
-  decorators: [WithLoggedInUser, WithNotifications],
+  decorators: [WithLoggedInUser],
   render: () => {
     return (
-      <NotificationProvider repository={new NotificationMockRepository()}>
-        <Header collectionRepository={new CollectionMockRepository()} />
-      </NotificationProvider>
+      <Header
+        collectionRepository={new CollectionMockRepository()}
+        notficationRepository={new NotificationMockRepository()}
+      />
     )
   }
 }

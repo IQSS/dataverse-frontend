@@ -2,13 +2,19 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, CloseButton } from '@iqss/dataverse-design-system'
 import { getTranslatedNotification } from '@/sections/account/notifications-section/NotificationsHelper'
-import { useNotificationContext } from '@/notifications/context/NotificationsContext'
+import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 import styles from './NotificationsSection.module.scss'
+import { useNotifications } from '@/notifications/domain/hooks/useNotifications'
+import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 
-export const NotificationsSection = () => {
+interface NotificationsSectionProps {
+  notificationRepository: NotificationRepository
+}
+
+export const NotificationsSection = ({ notificationRepository }: NotificationsSectionProps) => {
   const { t } = useTranslation('account')
   const { notifications, isLoading, error, refetch, markAsRead, deleteMany } =
-    useNotificationContext()
+    useNotifications(notificationRepository)
   const [readIds, setReadIds] = useState<number[]>([])
 
   useEffect(() => {
@@ -22,6 +28,7 @@ export const NotificationsSection = () => {
           await markAsRead(unreadIds)
           setReadIds((prev) => [...prev, ...unreadIds])
           await refetch()
+          needsUpdateStore.setNeedsUpdate(true)
         })()
       }, 2000)
       return () => clearTimeout(timer)

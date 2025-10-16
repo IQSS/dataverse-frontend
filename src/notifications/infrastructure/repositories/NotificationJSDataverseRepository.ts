@@ -18,7 +18,10 @@ export class NotificationJSDataverseRepository implements NotificationRepository
   }
 
   getUnreadNotificationsCount(): Promise<number> {
-    return getUnreadNotificationsCount.execute().then((count) => count)
+    return getUnreadNotificationsCount.execute().then((count) => {
+      console.log('Unread notifications count:', count)
+      return count
+    })
   }
 
   markNotificationAsRead(notificationId: number): Promise<void> {

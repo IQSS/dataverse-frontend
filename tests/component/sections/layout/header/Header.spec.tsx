@@ -3,7 +3,6 @@ import { Header } from '../../../../../src/sections/layout/header/Header'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
-import { NotificationProvider } from '@/notifications/context/NotificationsContext'
 
 const testUser = UserMother.create()
 const rootCollection = CollectionMother.create({ id: 'root' })
@@ -17,9 +16,10 @@ describe('Header component', () => {
   })
   it('displays the brand', () => {
     cy.mountAuthenticated(
-      <NotificationProvider repository={notificationRepository}>
-        <Header collectionRepository={collectionRepository} />
-      </NotificationProvider>
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
     )
 
     cy.findByRole('link', { name: /Dataverse/ }).should('exist')
@@ -28,9 +28,10 @@ describe('Header component', () => {
 
   it('displays the user name when the user is logged in', () => {
     cy.mountAuthenticated(
-      <NotificationProvider repository={notificationRepository}>
-        <Header collectionRepository={collectionRepository} />
-      </NotificationProvider>
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
     )
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByText(testUser.displayName).should('be.visible')
@@ -40,9 +41,10 @@ describe('Header component', () => {
 
   it('displays the Add Data Button when the user is logged in', () => {
     cy.mountAuthenticated(
-      <NotificationProvider repository={notificationRepository}>
-        <Header collectionRepository={collectionRepository} />
-      </NotificationProvider>
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
     )
 
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
@@ -55,9 +57,10 @@ describe('Header component', () => {
 
   it('displays the Log In button when the user is not logged in', () => {
     cy.customMount(
-      <NotificationProvider repository={notificationRepository}>
-        <Header collectionRepository={collectionRepository} />
-      </NotificationProvider>
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
     )
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByRole('button', { name: 'Log In' }).should('exist')
@@ -65,9 +68,10 @@ describe('Header component', () => {
 
   it('does not display the Add Data button when the user is not logged in', () => {
     cy.customMount(
-      <NotificationProvider repository={notificationRepository}>
-        <Header collectionRepository={collectionRepository} />
-      </NotificationProvider>
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
     )
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
@@ -79,18 +83,20 @@ describe('Header component', () => {
       { id: 3, message: 'Notification 3', isRead: false, createdAt: new Date().toISOString() }
     ])
     cy.mountAuthenticated(
-      <NotificationProvider repository={notificationRepository}>
-        <Header collectionRepository={collectionRepository} />
-      </NotificationProvider>
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
     )
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
   })
   it('trigger oidcLogin when the Log In button is clicked', () => {
     cy.customMount(
-      <NotificationProvider repository={notificationRepository}>
-        <Header collectionRepository={collectionRepository} />
-      </NotificationProvider>
+      <Header
+        notficationRepository={notificationRepository}
+        collectionRepository={collectionRepository}
+      />
     )
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByRole('button', { name: 'Log In' }).click()

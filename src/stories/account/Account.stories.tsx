@@ -7,12 +7,12 @@ import { AccountHelper } from '../../sections/account/AccountHelper'
 import { UserMockRepository } from '../shared-mock-repositories/user/UserMockRepository'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
-import { WithNotifications } from '@/stories/WithNotifications'
+import { NotificationMockRepository } from '@/stories/account/NotificationMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Pages/Account',
   component: Account,
-  decorators: [WithI18next, WithLayout, WithLoggedInUser, WithNotifications],
+  decorators: [WithI18next, WithLayout, WithLoggedInUser],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -29,6 +29,7 @@ export const Default: Story = {
       userRepository={new UserMockRepository()}
       collectionRepository={new CollectionMockRepository()}
       roleRepository={new RoleMockRepository()}
+      notificationRepository={new NotificationMockRepository()}
     />
   )
 }
