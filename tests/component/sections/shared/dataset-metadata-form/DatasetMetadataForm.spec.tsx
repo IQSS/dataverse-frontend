@@ -241,7 +241,7 @@ describe('DatasetMetadataForm', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         datasetPersistentID={dataset.persistentId}
         datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-        datasetInternalVersionNumber={dataset.internalVersionNumber}
+        datasetLastUpdateTime={dataset.version.lastUpdateTime}
       />
     )
 
@@ -501,7 +501,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
     })
@@ -1255,7 +1255,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
       // Clear title field to undisable the Save button and unfill a required field that is already filled as it is in edit mode
@@ -1307,7 +1307,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
       cy.findByLabelText(/^Title/i)
@@ -1350,7 +1350,7 @@ describe('DatasetMetadataForm', () => {
         .within(() => {
           cy.findByLabelText('Term URI', { exact: true }).type('html://test.com')
 
-          cy.findByText('Keyword Term URI is not a valid URL').should('exist')
+          cy.findByText('Keyword Term URI html://test.com is not a valid URL.').should('exist')
         })
 
       cy.findByText('Description')
@@ -1366,7 +1366,7 @@ describe('DatasetMetadataForm', () => {
         .closest('.row')
         .within(() => {
           cy.findByLabelText(/^E-mail/i).type('test')
-          cy.findByText('Point of Contact E-mail is not a valid email').should('exist')
+          cy.findByText('Point of Contact E-mail test is not a valid email.').should('exist')
         })
     })
 
@@ -1380,13 +1380,13 @@ describe('DatasetMetadataForm', () => {
       cy.findByLabelText(/Object Density/)
         .should('exist')
         .type('30L')
-      cy.findByText('Object Density is not a valid float').should('exist')
+      cy.findByText('Object Density is not a valid float.').should('exist')
 
       cy.findByText('Object Count').should('exist')
       cy.findByLabelText(/Object Count/)
         .should('exist')
         .type('30.5')
-      cy.findByText('Object Count is not a valid integer').should('exist')
+      cy.findByText('Object Count is not a valid integer.').should('exist')
     })
   })
 
@@ -1411,7 +1411,7 @@ describe('DatasetMetadataForm', () => {
         .within(() => {
           cy.findByLabelText('Term URI', { exact: true }).type('http://test.com')
 
-          cy.findByText('Keyword Term URI is not a valid URL').should('not.exist')
+          cy.findByText('Keyword Term URI http://test.com is not a valid URL.').should('not.exist')
         })
 
       cy.findByText('Description')
@@ -1427,7 +1427,9 @@ describe('DatasetMetadataForm', () => {
         .closest('.row')
         .within(() => {
           cy.findByLabelText(/^E-mail/i).type('email@valid.com')
-          cy.findByText('Point of Contact E-mail is not a valid email').should('not.exist')
+          cy.findByText('Point of Contact E-mail email@valid.com is not a valid email.').should(
+            'not.exist'
+          )
         })
     })
 
@@ -1441,13 +1443,13 @@ describe('DatasetMetadataForm', () => {
       cy.findByLabelText(/Object Density/)
         .should('exist')
         .type('30.5')
-      cy.findByText('Object Density is not a valid float').should('not.exist')
+      cy.findByText('Object Density is not a valid float.').should('not.exist')
 
       cy.findByText('Object Count').should('exist')
       cy.findByLabelText(/Object Count/)
         .should('exist')
         .type('30')
-      cy.findByText('Object Count is not a valid integer').should('not.exist')
+      cy.findByText('Object Count is not a valid integer.').should('not.exist')
 
       cy.findByText('Some Date').should('exist')
       cy.findByLabelText(/Some Date/)
@@ -1658,7 +1660,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
 
@@ -1690,7 +1692,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
 
@@ -1719,7 +1721,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
 
@@ -1776,7 +1778,7 @@ describe('DatasetMetadataForm', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         datasetPersistentID={dataset.persistentId}
         datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-        datasetInternalVersionNumber={dataset.internalVersionNumber}
+        datasetLastUpdateTime={dataset.version.lastUpdateTime}
       />
     )
 
@@ -1840,7 +1842,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
 
@@ -1880,7 +1882,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetPersistentID={dataset.persistentId}
           datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetInternalVersionNumber={dataset.internalVersionNumber}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
         />
       )
 
@@ -2109,6 +2111,52 @@ describe('DatasetMetadataForm', () => {
     })
 
     it('should show instructions in the form fields', () => {
+      const metadataBlocksInfoOnCreateMode =
+        MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
+
+      // This is for adding some extra fields to test instructions rendering in a primitive multiple and vocabulary not multiple fields
+      metadataBlocksInfoOnCreateMode[0].metadataFields = {
+        ...metadataBlocksInfoOnCreateMode[0].metadataFields,
+        alternativeTitle: {
+          name: 'alternativeTitle',
+          displayName: 'Alternative Title',
+          title: 'Alternative Title',
+          type: 'TEXT',
+          watermark: '',
+          description:
+            'Either 1) a title commonly used to refer to the Dataset or 2) an abbreviation of the main title',
+          multiple: true,
+          isControlledVocabulary: false,
+          displayFormat: '',
+          isRequired: false,
+          displayOrder: 2,
+          typeClass: 'primitive',
+          displayOnCreate: false,
+          isAdvancedSearchFieldType: false
+        },
+        vocabNotMultiple: {
+          name: 'vocabNotMultiple',
+          displayName: 'Some Vocab Not Multiple',
+          title: 'Vocab not multiple',
+          type: 'TEXT',
+          watermark: '',
+          description: 'Some description',
+          multiple: false,
+          isControlledVocabulary: true,
+          controlledVocabularyValues: ['Type 1', 'Type 2', 'Type 3'],
+          displayFormat: '- #VALUE:',
+          isRequired: false,
+          displayOrder: 10,
+          typeClass: 'controlledVocabulary',
+          displayOnCreate: true,
+          isAdvancedSearchFieldType: false
+        }
+      }
+
+      metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+        .stub()
+        .resolves(metadataBlocksInfoOnCreateMode)
+
       const testTemplate = DatasetTemplateMother.create({
         instructions: [
           {
@@ -2122,6 +2170,14 @@ describe('DatasetMetadataForm', () => {
           {
             instructionField: 'subject',
             instructionText: 'A subject field instruction.'
+          },
+          {
+            instructionField: 'alternativeTitle',
+            instructionText: 'An alternative title field instruction.'
+          },
+          {
+            instructionField: 'vocabNotMultiple',
+            instructionText: 'The vocabNotMultiple field instruction.'
           }
         ]
       })
@@ -2139,6 +2195,8 @@ describe('DatasetMetadataForm', () => {
       cy.findByText('An author field instruction.').should('exist')
       cy.findByText('A title field instruction.').should('exist')
       cy.findByText('A subject field instruction.').should('exist')
+      cy.findByText('An alternative title field instruction.').should('exist')
+      cy.findByText('The vocabNotMultiple field instruction.').should('exist')
     })
   })
 })

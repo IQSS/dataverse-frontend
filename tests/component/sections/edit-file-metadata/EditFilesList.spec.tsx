@@ -1,10 +1,16 @@
-import { EditFilesList } from '@/sections/edit-file-metadata/EditFilesList'
-import { FileMockRepository } from '@/stories/file/FileMockRepository'
+import {
+  EditFileMetadataFormData,
+  EditFilesList
+} from '@/sections/edit-file-metadata/EditFilesList'
 import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
+import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
+
+const datasetLastUpdateTime = '2023-06-01T12:34:56Z'
 
 describe('EditFilesList Component', () => {
-  const fileRepository = new FileMockRepository()
-  const editFileMetadataFormData = {
+  const fileRepository: FileRepository = {} as FileRepository
+  const editFileMetadataFormData: EditFileMetadataFormData = {
     files: [
       {
         id: 1,
@@ -44,6 +50,7 @@ describe('EditFilesList Component', () => {
   }
   beforeEach(() => {
     cy.viewport(1200, 800)
+    fileRepository.updateMetadata = cy.stub().as('editFileMetadataStub').resolves()
   })
   it('renders the form with file metadata', () => {
     cy.customMount(
@@ -51,6 +58,7 @@ describe('EditFilesList Component', () => {
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
         referrer={EditFileMetadataReferrer.FILE}
+        datasetLastUpdateTime={datasetLastUpdateTime}
       />
     )
 
@@ -71,6 +79,7 @@ describe('EditFilesList Component', () => {
         editFileMetadataFormData={multipleFilesFormData}
         referrer={EditFileMetadataReferrer.DATASET}
         datasetPersistentId="dataset-persistent-id"
+        datasetLastUpdateTime={datasetLastUpdateTime}
       />
     )
 
@@ -97,6 +106,7 @@ describe('EditFilesList Component', () => {
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
         referrer={EditFileMetadataReferrer.FILE}
+        datasetLastUpdateTime={datasetLastUpdateTime}
       />
     )
 
@@ -105,76 +115,96 @@ describe('EditFilesList Component', () => {
   })
 
   it('submits the form', () => {
-    const editFileMetadataStub = cy.stub(fileRepository, 'updateMetadata').resolves()
+    fileRepository.updateMetadata = cy.stub().as('editFileMetadataStub').resolves()
     cy.customMount(
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
         referrer={EditFileMetadataReferrer.FILE}
+        datasetLastUpdateTime={datasetLastUpdateTime}
       />
     )
 
+    cy.findByLabelText(/File Name/)
+      .clear()
+      .type('newname.txt')
+
+    cy.findByLabelText(/File Path/)
+      .clear()
+      .type('/newdir')
+
+    cy.findByLabelText('Description').clear().type('New description')
+
     cy.findByTestId('edit-file-metadata-form').submit()
-    cy.wrap(editFileMetadataStub).should('have.been.called')
+
+    cy.get('@editFileMetadataStub').should((spy) => {
+      const editFileMetadataSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+      const fileMetadataDTO = editFileMetadataSpy.getCall(0).args[1] as FileMetadataDTO
+      const sourceLastUpdateTimeArg = editFileMetadataSpy.getCall(0).args[2] as string
+
+      expect(fileMetadataDTO.label).to.equal('newname.txt')
+      expect(fileMetadataDTO.description).to.equal('New description')
+      expect(fileMetadataDTO.directoryLabel).to.equal('/newdir')
+      expect(sourceLastUpdateTimeArg).to.equal(datasetLastUpdateTime)
+    })
   })
 
   it('submits the form when referrer is Dataset', () => {
-    const editFileMetadataStub = cy.stub(fileRepository, 'updateMetadata').resolves()
     cy.customMount(
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
         referrer={EditFileMetadataReferrer.DATASET}
         datasetPersistentId="dataset-persistent-id"
+        datasetLastUpdateTime={datasetLastUpdateTime}
       />
     )
 
     cy.findByTestId('edit-file-metadata-form').submit()
-    cy.wrap(editFileMetadataStub).should('have.been.called')
+    cy.get('@editFileMetadataStub').should('have.been.called')
   })
 
   it('handles error when submitting the form', () => {
-    const editFileMetadataStub = cy
-      .stub(fileRepository, 'updateMetadata')
-      .rejects(new Error('Error'))
+    fileRepository.updateMetadata = cy.stub().as('editFileMetadataStub').rejects(new Error('Error'))
     cy.customMount(
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
         referrer={EditFileMetadataReferrer.FILE}
+        datasetLastUpdateTime={datasetLastUpdateTime}
       />
     )
 
     cy.findByTestId('edit-file-metadata-form').submit()
-    cy.wrap(editFileMetadataStub).should('have.been.called')
+    cy.get('@editFileMetadataStub').should('have.been.called')
     cy.findByText('Error').should('exist')
   })
 
   it('does not submit the form when pressing enter in the description textarea', () => {
-    const editFileMetadataStub = cy.stub(fileRepository, 'updateMetadata').resolves()
     cy.customMount(
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
         referrer={EditFileMetadataReferrer.FILE}
+        datasetLastUpdateTime={datasetLastUpdateTime}
       />
     )
 
     cy.findByLabelText('Description').type('{enter}')
-    cy.wrap(editFileMetadataStub).should('not.have.been.called')
+    cy.get('@editFileMetadataStub').should('not.have.been.called')
   })
 
   it('does submit the form when pressing enter in the Save Changes button', () => {
-    const editFileMetadataStub = cy.stub(fileRepository, 'updateMetadata').resolves()
     cy.customMount(
       <EditFilesList
         fileRepository={fileRepository}
         editFileMetadataFormData={editFileMetadataFormData}
         referrer={EditFileMetadataReferrer.FILE}
+        datasetLastUpdateTime={datasetLastUpdateTime}
       />
     )
 
     cy.findByRole('button', { name: 'Save Changes' }).type('{enter}')
-    cy.wrap(editFileMetadataStub).should('have.been.called')
+    cy.get('@editFileMetadataStub').should('have.been.called')
   })
 })

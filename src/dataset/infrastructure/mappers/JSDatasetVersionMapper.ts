@@ -15,6 +15,7 @@ export class JSDatasetVersionMapper {
     jsDatasetVersionInfo: JSDatasetVersionInfo,
     jsDatasetTitle: string,
     jsDatasetCitation: string,
+    jsDatasetLastUpdateTime: string,
     jsDatasetPublicationDate?: string,
     jsDatasettermsOfAccess?: TermsOfAccess,
     jsDatasetDeaccessionedNote?: string
@@ -29,6 +30,7 @@ export class JSDatasetVersionMapper {
       false, // TODO Connect with dataset version isInReview
       this.toStatus(jsDatasetVersionInfo.state),
       this.toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo, jsDatasetPublicationDate),
+      jsDatasetLastUpdateTime,
       jsDatasettermsOfAccess,
       jsDatasetDeaccessionedNote
     )
