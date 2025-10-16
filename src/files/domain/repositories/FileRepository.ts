@@ -54,7 +54,11 @@ export interface FileRepository {
   delete: (fileId: number | string) => Promise<void>
   replace: (fileId: number | string, uploadedFileDTO: UploadedFileDTO) => Promise<number>
   getFixityAlgorithm: () => Promise<FixityAlgorithm>
-  updateMetadata: (fileId: number | string, fileMetadata: FileMetadataDTO) => Promise<void>
+  updateMetadata: (
+    fileId: number | string,
+    fileMetadata: FileMetadataDTO,
+    sourceLastUpdateTime?: string
+  ) => Promise<void>
   restrict: (fileId: number | string, restrictFileDTO: RestrictFileDTO) => Promise<void>
   updateTabularTags: (
     fileId: number | string,

@@ -40,7 +40,7 @@ export const EditMode: Story = {
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       datasetPersistentID={datasetToEditMock.persistentId}
       datasetMetadaBlocksCurrentValues={datasetToEditMock.metadataBlocks}
-      datasetInternalVersionNumber={1}
+      datasetLastUpdateTime="2023-06-01T12:34:56Z"
     />
   )
 }

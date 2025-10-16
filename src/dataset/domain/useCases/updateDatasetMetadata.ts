@@ -5,10 +5,10 @@ export function updateDatasetMetadata(
   datasetRepository: DatasetRepository,
   datasetId: string | number,
   updatedDataset: DatasetDTO,
-  internalVersionNumber: number
+  sourceLastUpdateTime?: string
 ): Promise<void> {
   return datasetRepository
-    .updateMetadata(datasetId, updatedDataset, internalVersionNumber)
+    .updateMetadata(datasetId, updatedDataset, sourceLastUpdateTime)
     .catch((error: Error) => {
       throw new Error(error.message)
     })

@@ -2,6 +2,7 @@ import { UserMother } from '../../../users/domain/models/UserMother'
 import { LoggedInHeaderActions } from '../../../../../src/sections/layout/header/LoggedInHeaderActions'
 import { CollectionRepository } from '../../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '../../../collection/domain/models/CollectionMother'
+import { AuthContext } from 'react-oauth2-code-pkce'
 
 const testUser = UserMother.create()
 const collectionRepository: CollectionRepository = {} as CollectionRepository
@@ -92,5 +93,31 @@ describe('LoggedInHeaderActions', () => {
     cy.findByRole('link', { name: 'New Dataset' })
       .should('be.visible')
       .should('not.have.attr', 'aria-disabled', 'false')
+  })
+
+  it('calls the logout function when clicking the logout button', () => {
+    collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
+    collectionRepository.getById = cy.stub().resolves(CollectionMother.create())
+
+    cy.customMount(
+      <AuthContext.Provider
+        value={{
+          token: 'fake-token-it-doesnt-matter-just-testing-logout-fn',
+          idToken: undefined,
+          logIn: () => {},
+          logOut: cy.stub().as('logoutStub'),
+          loginInProgress: false,
+          tokenData: undefined,
+          idTokenData: undefined,
+          error: null,
+          login: () => {}
+        }}>
+        <LoggedInHeaderActions user={testUser} collectionRepository={collectionRepository} />
+      </AuthContext.Provider>
+    )
+
+    cy.get('#dropdown-user').should('exist').click()
+    cy.findByTestId('oidc-logout').should('exist').click()
+    cy.get('@logoutStub').should('have.been.calledOnce')
   })
 })
