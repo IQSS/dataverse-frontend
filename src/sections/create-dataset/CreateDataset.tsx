@@ -20,8 +20,11 @@ import { type DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
 import { useGetAvailableDatasetTypes } from '@/dataset/domain/hooks/useGetAvailableDatasetTypes'
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
-import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { DatasetTypeSelect } from './dataset-type-select/DatasetTypeSelect'
+import { DatasetTypeSelect, DatasetTypeSelect2 } from './dataset-type-select/DatasetTypeSelect'
+
+// TODO:ME - Pass dataset type selected to DatasetMetadataForm and use cases.
+// TODO:ME - Remove Review from Add Data dropdown
+// TODO:ME - Remove reading dataset type from url query param.
 
 interface CreateDatasetProps {
   datasetRepository: DatasetRepository
@@ -100,7 +103,7 @@ export function CreateDataset({
   useEffect(() => {
     if (datasetTypes.length > 0) {
       const defaultType: DatasetType | null =
-        datasetTypes.find((type) => type.name === DvObjectType.DATASET) || null
+        datasetTypes.find((type) => type.name === 'dataset') || null
 
       setSelectedType(defaultType)
     }
@@ -151,8 +154,16 @@ export function CreateDataset({
           />
         )}
 
-        {datasetTypes.length > 0 && (
+        {/* {datasetTypes.length > 0 && (
           <DatasetTypeSelect datasetTypes={datasetTypes} onChange={handleDatasetTypeChange} />
+        )} */}
+
+        {datasetTypes.length > 0 && selectedType && (
+          <DatasetTypeSelect2
+            datasetTypes={datasetTypes}
+            onChange={handleDatasetTypeChange}
+            selectedType={selectedType}
+          />
         )}
 
         <DatasetMetadataForm

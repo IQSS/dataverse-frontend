@@ -1,12 +1,13 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Col, Form } from '@iqss/dataverse-design-system'
+import cn from 'classnames'
+import { Card, Col, Form } from '@iqss/dataverse-design-system'
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
-import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import styles from './DatasetTypeSelect.module.scss'
 
 interface DatasetTypeSelectProps {
   datasetTypes: DatasetType[]
-  onChange: (selectedTypeName: string) => void
+  onChange: (selectedTypeId: string) => void
 }
 
 export const DatasetTypeSelect = ({ datasetTypes, onChange }: DatasetTypeSelectProps) => {
@@ -22,7 +23,7 @@ export const DatasetTypeSelect = ({ datasetTypes, onChange }: DatasetTypeSelectP
   )
 
   const defaultType: DatasetType | null = useMemo(
-    () => datasetTypes.find((dt) => dt.name === DvObjectType.DATASET) || null,
+    () => datasetTypes.find((dt) => dt.name === 'dataset') || null,
     [datasetTypes]
   )
 
@@ -43,6 +44,95 @@ export const DatasetTypeSelect = ({ datasetTypes, onChange }: DatasetTypeSelectP
           showPlaceholderOptionInMenu={false}
           locales={{ select: t('datasetType.placeholder') }}
         />
+      </Col>
+    </Form.Group>
+  )
+}
+
+interface DatasetTypeSelect2Props {
+  datasetTypes: DatasetType[]
+  onChange: (selectedTypeId: string) => void
+  selectedType: DatasetType
+}
+
+export const DatasetTypeSelect2 = ({
+  datasetTypes,
+  onChange,
+  selectedType
+}: DatasetTypeSelect2Props) => {
+  const { t } = useTranslation('createDataset')
+  const [isOpen, setIsOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const handleSelectType = (typeId: number) => {
+    onChange(typeId.toString())
+    setIsOpen(false)
+  }
+
+  const capitalizeName = (name: string) => {
+    return name.charAt(0).toUpperCase() + name.slice(1)
+  }
+
+  // Close menu when clicking outside, focusing outside, or pressing Escape
+  useEffect(() => {
+    const handleClose = (event: MouseEvent | FocusEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false)
+    }
+
+    document.addEventListener('mousedown', handleClose)
+    document.addEventListener('focusin', handleClose)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClose)
+      document.removeEventListener('focusin', handleClose)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
+  return (
+    <Form.Group data-testid="dataset-type-select">
+      <Form.Group.Label message={t('datasetType.description')} column sm={3} htmlFor="dataset-type">
+        {t('datasetType.label')}
+      </Form.Group.Label>
+      <Col sm={9}>
+        <Form.Group.Text>{t('datasetType.helpText')}</Form.Group.Text>
+
+        <div className={styles['dataset-type-select']} ref={dropdownRef}>
+          <div className={styles.toggle}>
+            <input type="button" onClick={() => setIsOpen((prev) => !prev)} />
+            <span>{capitalizeName(selectedType.name)}</span>
+          </div>
+
+          <div className={cn(styles.menu, { [styles.open]: isOpen })} role="menu">
+            {datasetTypes.map((dt) => (
+              <Card
+                className={cn(styles['type-option'], {
+                  [styles.selected]: dt.id === selectedType.id
+                })}
+                onClick={() => handleSelectType(dt.id)}
+                tabIndex={0}
+                key={dt.id}>
+                <Card.Body className="p-2">
+                  <span>
+                    <strong>{capitalizeName(dt.name)}</strong>
+                    <br />
+                    <span className="small text-muted">
+                      {dt.name === 'dataset' &&
+                        'The default dataset type. Put more info here. Doloribus facere blanditiis nostrum saepe molestiae eveniet.'}
+                      {dt.name === 'review' &&
+                        'This dataset type is for review purposes. Put more info here maybe. nam temporibus quas saepe, obcaecati accusantium animi eos incidunt voluptatibus laudantium enim ipsa in tenetur, quam necessitatibus.'}
+                    </span>
+                  </span>
+                </Card.Body>
+              </Card>
+            ))}
+          </div>
+        </div>
       </Col>
     </Form.Group>
   )
