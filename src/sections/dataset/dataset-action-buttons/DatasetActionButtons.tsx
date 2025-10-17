@@ -30,7 +30,6 @@ export function DatasetActionButtons({
 
   const isCurrentVersionDeaccessioned =
     dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
-  const canUpdateDataset = dataset.permissions.canUpdateDataset
 
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
@@ -63,7 +62,7 @@ export function DatasetActionButtons({
           contactRepository={contactRepository}
         />
 
-        {(!isCurrentVersionDeaccessioned || canUpdateDataset) && <ShareDatasetButton />}
+        {!isCurrentVersionDeaccessioned && <ShareDatasetButton />}
       </ButtonGroup>
     </ButtonGroup>
   )
