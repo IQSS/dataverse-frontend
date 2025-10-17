@@ -2,6 +2,7 @@ import { UserMother } from '../../../users/domain/models/UserMother'
 import { LoggedInHeaderActions } from '../../../../../src/sections/layout/header/LoggedInHeaderActions'
 import { CollectionRepository } from '../../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '../../../collection/domain/models/CollectionMother'
+import { AuthContext } from 'react-oauth2-code-pkce'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 
 const testUser = UserMother.create()
@@ -137,5 +138,35 @@ describe('LoggedInHeaderActions', () => {
     cy.get('@userBtn').click()
     cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
     cy.get('[data-testid="unread-notifications-badge"]').should('have.length', 2)
+  })
+
+  it('calls the logout function when clicking the logout button', () => {
+    collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
+    collectionRepository.getById = cy.stub().resolves(CollectionMother.create())
+
+    cy.customMount(
+      <AuthContext.Provider
+        value={{
+          token: 'fake-token-it-doesnt-matter-just-testing-logout-fn',
+          idToken: undefined,
+          logIn: () => {},
+          logOut: cy.stub().as('logoutStub'),
+          loginInProgress: false,
+          tokenData: undefined,
+          idTokenData: undefined,
+          error: null,
+          login: () => {}
+        }}>
+        <LoggedInHeaderActions
+          user={testUser}
+          collectionRepository={collectionRepository}
+          notificationRepository={notificationRepository}
+        />
+      </AuthContext.Provider>
+    )
+
+    cy.get('#dropdown-user').should('exist').click()
+    cy.findByTestId('oidc-logout').should('exist').click()
+    cy.get('@logoutStub').should('have.been.calledOnce')
   })
 })

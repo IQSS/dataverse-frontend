@@ -56,7 +56,7 @@ function App() {
 export default App
 ```
 
-For detailed usage instructions and available customization options, refer to the [Storybook](https://646fbe232a8d3b501a1943f3-euwxbewiys.chromatic.com) provided with the package.
+For detailed usage instructions and available customization options, refer to the [Storybook](https://646fbe232a8d3b501a1943f3-mdvdyoulio.chromatic.com) provided with the package.
 
 [//]: # 'COMMING SOON'
 [//]: # '## Contributions'

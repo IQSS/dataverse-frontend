@@ -5,6 +5,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # Non Published Changes
 
+# [2.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.0.2...@iqss/dataverse-design-system@2.1.0) (2025-10-09)
+
+### Added
+
 - **DropdownButton:**
   - Add `customToggle` prop to allow custom toggle components.
   - Add `customToggleClassname` and `customToggleMenuClassname` props to allow custom styling of the custom toggle dropdown wrapper and menu.
@@ -12,9 +16,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
   - Add `size` prop to control the size of the button (e.g., 'sm', 'lg').
 - **DropdownButtonItem:**
   - Add `type` prop to allow specifying the type of the element.
+
+### Changed
+
+- **SelectAdvanced:**
+  - Support for options with a shape of `{ label: string; value: string; }[]` instead of just `string[]`.
+
+### Fixed
+
 - **SelectAdvanced:**
   - Fix word wrapping in options list to prevent overflow and ensure long text is displayed correctly.
-  - Support for options with a shape of `{ label: string; value: string; }[]` instead of just `string[]`.
 - **ButtonGroup:**
   - Fix styles for vertical button groups when using tooltips.
 - **Badge:**:
