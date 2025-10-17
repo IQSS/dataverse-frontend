@@ -1,5 +1,6 @@
-import { Trans, useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import { Trans, useTranslation } from 'react-i18next'
 import { useGetApiToken } from './useGetCurrentApiToken'
 import { useRecreateApiToken } from './useRecreateApiToken'
 import { useRevokeApiToken } from './useRevokeApiToken'
@@ -54,11 +55,14 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
   }
 
   const copyToClipboard = (currentApiToken: string) => {
-    navigator.clipboard.writeText(currentApiToken).catch(
-      /* istanbul ignore next */ (error) => {
-        console.error('Failed to copy text:', error)
-      }
-    )
+    navigator.clipboard
+      .writeText(currentApiToken)
+      .then(() => toast.success(t('copiedToClipboard'), { autoClose: 2_500 }))
+      .catch(
+        /* istanbul ignore next */ (error) => {
+          console.error('Failed to copy text:', error)
+        }
+      )
   }
 
   if (isLoading || isRecreating || isRevoking) {

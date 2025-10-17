@@ -41,7 +41,8 @@ export class DatasetVersionMother {
       props?.isLatest ?? false,
       props?.isInReview ?? false,
       props?.latestVersionPublishingStatus ?? DatasetPublishingStatus.RELEASED,
-      props?.someDatasetVersionHasBeenReleased ?? faker.datatype.boolean()
+      props?.someDatasetVersionHasBeenReleased ?? faker.datatype.boolean(),
+      props?.lastUpdateTime ?? faker.date.recent().toISOString()
     )
   }
 

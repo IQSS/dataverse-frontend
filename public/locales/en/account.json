@@ -13,7 +13,8 @@
     "copyToClipboard": "Copy to Clipboard",
     "recreateToken": "Recreate Token",
     "revokeToken": "Revoke Token",
-    "createToken": "Create Token"
+    "createToken": "Create Token",
+    "copiedToClipboard": "API token copied to clipboard."
   },
   "info": {
     "username": "Username",

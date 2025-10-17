@@ -252,6 +252,12 @@ export class DatasetVersion {
     public readonly isInReview: boolean,
     public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
     public readonly someDatasetVersionHasBeenReleased: boolean,
+    /**
+     * The timestamp of the last update to this dataset version.
+     * Format: ISO 8601 string (e.g., "2023-06-01T12:34:56Z").
+     * Used for optimistic concurrency control to detect concurrent updates.
+     */
+    public readonly lastUpdateTime: string,
     public readonly termsOfAccess?: TermsOfAccess,
     public readonly deaccessionNote?: string
   ) {}
@@ -268,6 +274,7 @@ export class DatasetVersion {
       public readonly isInReview: boolean,
       public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
       public readonly someDatasetVersionHasBeenReleased: boolean,
+      public readonly lastUpdateTime: string,
       public readonly termsOfAccess?: TermsOfAccess,
       public readonly deaccessionNote?: string
     ) {
@@ -336,6 +343,7 @@ export class DatasetVersion {
         this.isInReview,
         this.latestVersionPublishingStatus,
         this.someDatasetVersionHasBeenReleased,
+        this.lastUpdateTime,
         this.termsOfAccess,
         this.deaccessionNote
       )

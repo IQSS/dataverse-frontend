@@ -44,7 +44,7 @@ const jsDataset = {
     majorNumber: 0,
     minorNumber: 0,
     createTime: new Date('2023-09-07T13:40:04.000Z'),
-    lastUpdateTime: new Date('2023-09-07T13:40:04.000Z'),
+    lastUpdateTime: '2023-09-07T13:40:04.000Z',
     releaseTime: undefined,
     deaccessionNote: undefined
   },
@@ -232,6 +232,7 @@ const expectedDataset = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: false,
+    lastUpdateTime: '2023-09-07T13:40:04.000Z',
     termsOfAccess: termsOfAccess,
     deaccessionNote: undefined,
     citation:
@@ -351,6 +352,7 @@ const expectedDatasetWithPublicationDate = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: true,
+    lastUpdateTime: '2023-09-07T13:40:04.000Z',
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
@@ -467,6 +469,7 @@ const expectedDatasetWithNextVersionNumbers = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: true,
+    lastUpdateTime: '2023-09-07T13:40:04.000Z',
     termsOfAccess: termsOfAccess,
     deaccessionNote: undefined,
     citation:
@@ -589,6 +592,7 @@ const expectedDatasetAlternateVersion = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: false,
+    lastUpdateTime: '2023-09-07T13:40:04.000Z',
     termsOfAccess: termsOfAccess,
     deaccessionNote: undefined,
     citation:

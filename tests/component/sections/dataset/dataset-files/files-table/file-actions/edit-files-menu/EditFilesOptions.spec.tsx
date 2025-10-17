@@ -1,4 +1,4 @@
-import { QueryParamKey } from '@/sections/Route.enum'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { EditFilesOptions } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/EditFilesOptions'
 import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
@@ -268,6 +268,44 @@ describe('EditFilesOptions for a single file', () => {
     cy.findByRole('dialog').should('exist')
   })
 
+  it('should delete file and call refreshFiles if delete button clicked in draft version', () => {
+    fileRepository.delete = cy
+      .stub()
+      .as('deleteFileStub')
+      .callsFake(() => {
+        return Cypress.Promise.delay(200).then(() => undefined)
+      })
+    const fileToDelete = FilePreviewMother.createDefault()
+
+    cy.customMount(
+      <EditFilesOptions
+        file={fileToDelete}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+        datasetRepository={datasetRepository}
+      />,
+      [
+        `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetInfo.persistentId}&${QueryParamKey.VERSION}=DRAFT`
+      ]
+    )
+
+    cy.findByRole('button', { name: 'Delete' }).click()
+    cy.findByTestId('deleteButton').click()
+    // The dialog can't be closed while deleting when pressing escape
+    cy.get('body').type('{esc}')
+    cy.findByRole('dialog').should('exist')
+
+    cy.get('@deleteFileStub').then((spy) => {
+      const deleteSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+      const deletedFileId = deleteSpy.getCall(0).args[0] as string
+
+      expect(deletedFileId).to.equal(fileToDelete.id)
+      cy.findByRole('dialog', { timeout: 10_000 }).should('not.exist')
+      cy.findByText(/The file has been deleted./, { timeout: 10_000 }).should('exist')
+    })
+  })
+
   it('should restrict file if restrict button clicked', () => {
     fileRepository.restrict = cy.stub().resolves()
     cy.customMount(
@@ -307,6 +345,28 @@ describe('EditFilesOptions for a single file', () => {
     cy.findByRole('button', { name: /Save Changes/i }).click()
     cy.get('.modal.show', { timeout: 5000 }).should('not.exist')
     cy.findByText(/The file has been unrestricted./).should('exist')
+  })
+
+  it('should restrict file and call refreshFiles if restrict button clicked in draft version', () => {
+    fileRepository.restrict = cy.stub().resolves()
+    cy.customMount(
+      <EditFilesOptions
+        file={FilePreviewMother.createDefault()}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+        datasetRepository={datasetRepository}
+      />,
+      [
+        `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetInfo.persistentId}&${QueryParamKey.VERSION}=DRAFT`
+      ]
+    )
+
+    cy.findByRole('button', { name: 'Restrict' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: /Save Changes/i }).click()
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText(/The file has been restricted./).should('exist')
   })
 
   it('should reset the modal if cancel is clicked in restrict modal', () => {

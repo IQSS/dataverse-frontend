@@ -18,7 +18,7 @@ type DatasetMetadataFormProps =
       datasetPersistentID?: never
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues?: never
-      datasetInternalVersionNumber?: never
+      datasetLastUpdateTime?: never
       datasetTemplate?: DatasetTemplate
       datasetType?: string
     }
@@ -29,7 +29,7 @@ type DatasetMetadataFormProps =
       datasetPersistentID: string
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
-      datasetInternalVersionNumber: number
+      datasetLastUpdateTime?: string
       datasetTemplate?: never
       // changing datasetType is not supported by the backend
       datasetType?: string
@@ -44,7 +44,7 @@ export const DatasetMetadataForm = ({
   datasetPersistentID,
   metadataBlockInfoRepository,
   datasetMetadaBlocksCurrentValues,
-  datasetInternalVersionNumber,
+  datasetLastUpdateTime,
   datasetTemplate,
   datasetType
 }: DatasetMetadataFormProps) => {
@@ -112,7 +112,7 @@ export const DatasetMetadataForm = ({
       metadataBlocksInfo={metadataBlocksInfo}
       datasetRepository={datasetRepository}
       datasetPersistentID={datasetPersistentID}
-      datasetInternalVersionNumber={datasetInternalVersionNumber}
+      datasetLastUpdateTime={datasetLastUpdateTime}
       datasetTemplateInstructions={datasetTemplate?.instructions}
     />
   )

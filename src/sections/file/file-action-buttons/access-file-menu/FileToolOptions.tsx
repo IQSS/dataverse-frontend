@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import {
@@ -83,10 +83,12 @@ const ToolOption = ({
 }: ToolOptionProps) => {
   const [isOpening, setIsOpening] = useState(false)
   const { t, i18n } = useTranslation('shared')
+  const openingRef = useRef(false)
 
   const handleClick = async () => {
     // If already opening, do nothing
-    if (isOpening) return
+    if (openingRef.current) return
+    openingRef.current = true
     setIsOpening(true)
 
     // Open a blank window immediately to avoid popup blockers
@@ -95,8 +97,8 @@ const ToolOption = ({
     // If the window didn't open, likely due to a popup blocker
     if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
       toast.info(t('allowPopups'))
+      openingRef.current = false
       setIsOpening(false)
-      newWindow?.close()
       return
     }
 
@@ -117,6 +119,7 @@ const ToolOption = ({
       toast.error(t('externalToolOpeningFailed'))
       if (!newWindow?.closed) newWindow.close()
     } finally {
+      openingRef.current = false
       setIsOpening(false)
     }
   }
