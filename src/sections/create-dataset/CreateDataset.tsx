@@ -18,6 +18,10 @@ import { CreateDatasetSkeleton } from './CreateDatasetSkeleton'
 import { useGetDatasetTemplates } from '@/dataset/domain/hooks/useGetDatasetTemplates'
 import { type DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
+import { useGetAvailableDatasetTypes } from '@/dataset/domain/hooks/useGetAvailableDatasetTypes'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
+import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { DatasetTypeSelect } from './dataset-type-select/DatasetTypeSelect'
 
 interface CreateDatasetProps {
   datasetRepository: DatasetRepository
@@ -36,6 +40,7 @@ export function CreateDataset({
   const { isModalOpen, hideModal } = useNotImplementedModal()
   const { setIsLoading } = useLoading()
   const [selectedTemplate, setSelectedTemplate] = useState<DatasetTemplate | null>(null)
+  const [selectedType, setSelectedType] = useState<DatasetType | null>(null)
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
@@ -55,14 +60,27 @@ export function CreateDataset({
     collectionIdOrAlias: collectionId
   })
 
+  const { datasetTypes, isLoadingDatasetTypes } = useGetAvailableDatasetTypes({ datasetRepository })
+
   const handleDatasetTemplateChange = (selectedTemplateId: string) => {
     const template: DatasetTemplate | null =
       datasetTemplates.find((template) => template.id.toString() === selectedTemplateId) || null
+
     setSelectedTemplate(template)
   }
 
+  const handleDatasetTypeChange = (selectedTypeId: string) => {
+    const type: DatasetType | null =
+      datasetTypes.find((type) => type.id === Number(selectedTypeId)) || null
+
+    setSelectedType(type)
+  }
+
   const isLoadingData =
-    isLoadingCollectionUserPermissions || isLoadingCollection || isLoadingDatasetTemplates
+    isLoadingCollectionUserPermissions ||
+    isLoadingCollection ||
+    isLoadingDatasetTemplates ||
+    isLoadingDatasetTypes
 
   useEffect(() => {
     setIsLoading(isLoadingData)
@@ -77,6 +95,16 @@ export function CreateDataset({
       setSelectedTemplate(defaultTemplate)
     }
   }, [datasetTemplates])
+
+  // When dataset types are loaded we set the default one to DATASET if available, it should always be there
+  useEffect(() => {
+    if (datasetTypes.length > 0) {
+      const defaultType: DatasetType | null =
+        datasetTypes.find((type) => type.name === DvObjectType.DATASET) || null
+
+      setSelectedType(defaultType)
+    }
+  }, [datasetTypes])
 
   if (!isLoadingCollection && !collection) {
     return <NotFoundPage dvObjectNotFoundType="collection" />
@@ -95,6 +123,11 @@ export function CreateDataset({
       </div>
     )
   }
+
+  // We use the template id and dataset type id as key to force remounting the form when the template or type changes
+  const formKey = `${selectedType ? selectedType.id : 'no-type'}--${
+    selectedTemplate ? selectedTemplate.id : 'no-template'
+  }`
 
   return (
     <>
@@ -118,13 +151,17 @@ export function CreateDataset({
           />
         )}
 
+        {datasetTypes.length > 0 && (
+          <DatasetTypeSelect datasetTypes={datasetTypes} onChange={handleDatasetTypeChange} />
+        )}
+
         <DatasetMetadataForm
           mode="create"
           collectionId={collectionId}
           datasetRepository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetTemplate={selectedTemplate ?? undefined}
-          key={selectedTemplate ? selectedTemplate.id : 'no-template-selected'} // We use the template id as key to force remounting the form when the template changes
+          key={formKey}
         />
       </section>
     </>
