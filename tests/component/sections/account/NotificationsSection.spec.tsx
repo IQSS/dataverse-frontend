@@ -14,28 +14,42 @@ const mockErrorRepository = {
   getUnreadNotificationsCount: () => Promise.resolve(1)
 }
 describe('NotificationsSection', () => {
+  it('should mark notifications as read after delay', () => {
+    cy.clock()
+    cy.spy(mockRepository, 'markNotificationAsRead').as('markAsRead')
+    cy.mountAuthenticated(<NotificationsSection notificationRepository={mockRepository} />)
+
+    cy.contains('Climate Data was created').should('exist')
+    cy.contains('You have been granted the Curator role').should('exist')
+
+    cy.get('@markAsRead').should('not.have.been.called')
+
+    cy.tick(3000)
+
+    cy.get('@markAsRead').should('have.been.calledOnceWith', Cypress.sinon.match.number)
+  })
   it('renders notifications and handles dismiss', () => {
-    cy.spy(mockRepository, 'markNotificationAsRead').as('markNotificationAsRead')
+    cy.spy(mockRepository, 'deleteNotification').as('deleteNotification')
     cy.mountAuthenticated(<NotificationsSection notificationRepository={mockRepository} />)
 
     cy.contains('Climate Data was created').should('exist')
     cy.contains('You have been granted the Curator role').should('exist')
     cy.get('[data-testid="dismiss-notification-1"]').click()
-    cy.get('@markNotificationAsRead').should('have.been.calledOnceWith', 1)
+    cy.get('@deleteNotification').should('have.been.calledOnceWith', 1)
   })
   it('handles Clear All', () => {
-    cy.spy(mockRepository, 'markNotificationAsRead').as('markNotificationAsRead')
+    cy.spy(mockRepository, 'deleteNotification').as('deleteNotification')
     cy.mountAuthenticated(<NotificationsSection notificationRepository={mockRepository} />)
 
     cy.contains('Climate Data was created').should('exist')
     cy.contains('You have been granted the Curator role').should('exist')
 
     cy.findByRole('button', { name: 'Clear All' }).click()
-    cy.get('@markNotificationAsRead').should('have.been.calledTwice')
+    cy.get('@deleteNotification').should('have.been.calledTwice')
   })
 
   it('shows loading and error states', () => {
-    cy.mountAuthenticated(<NotificationsSection notificationRepository={mockRepository} />)
+    cy.mountAuthenticated(<NotificationsSection notificationRepository={mockErrorRepository} />)
 
     cy.contains('Failed to ').should('exist')
   })
