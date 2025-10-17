@@ -92,3 +92,16 @@ export const WithDifferentSelectWord: Story = {
     </CanvasFixedHeight>
   )
 }
+
+export const WithoutPlaceholderOptionInMenu: Story = {
+  render: () => (
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced
+        options={exampleOptions}
+        locales={{ select: 'Select something...' }}
+        showPlaceholderOptionInMenu={false}
+        isSearchable={false}
+      />
+    </CanvasFixedHeight>
+  )
+}

@@ -1317,4 +1317,29 @@ describe('SelectAdvanced', () => {
     toggleOptionsMenu()
     cy.findAllByText('Selezionare...').should('have.length', 2)
   })
+
+  describe('when showPlaceholderOptionInMenu=false in single mode', () => {
+    it('keeps placeholder text in the toggle but hides the placeholder option in the menu', () => {
+      cy.mount(
+        <SelectAdvanced
+          options={['Reading', 'Swimming', 'Running']}
+          locales={{ select: 'Select...' }}
+          showPlaceholderOptionInMenu={false}
+        />
+      )
+
+      // Placeholder still visible in the toggle when no selection
+      cy.findByTestId('toggle-inner-content').should('contain.text', 'Select...')
+
+      // Open menu and assert the placeholder entry is not present
+      toggleOptionsMenu()
+      cy.findAllByRole('option')
+        .should('have.length', 3) // 3 options shown only
+        .spread((firstOpt, secondOpt, thirdOpt) => {
+          cy.get(firstOpt).should('have.text', 'Reading')
+          cy.get(secondOpt).should('have.text', 'Swimming')
+          cy.get(thirdOpt).should('have.text', 'Running')
+        })
+    })
+  })
 })

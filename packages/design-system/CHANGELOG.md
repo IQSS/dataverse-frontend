@@ -5,6 +5,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # Non Published Changes
 
+- **SelectAdvanced:**
+  - Added `showPlaceholderOptionInMenu` prop. This props controls whether to show the select placeholder option in the dropdown menu when in single select mode. Defaults to true to preserve existing behavior.
+
 # [2.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.0.2...@iqss/dataverse-design-system@2.1.0) (2025-10-09)
 
 ### Added

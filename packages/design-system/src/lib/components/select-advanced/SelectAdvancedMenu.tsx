@@ -16,6 +16,7 @@ interface SelectAdvancedMenuProps {
   isSearchable: boolean
   menuId: string
   selectWord: string
+  showPlaceholderOptionInMenu: boolean
 }
 
 export const SelectAdvancedMenu = (props: SelectAdvancedMenuProps) => {
@@ -31,7 +32,8 @@ export const SelectAdvancedMenu = (props: SelectAdvancedMenuProps) => {
     handleClickOption,
     isSearchable,
     menuId,
-    selectWord
+    selectWord,
+    showPlaceholderOptionInMenu
   } = props
 
   const searchInputControlID = useId()
@@ -85,7 +87,7 @@ export const SelectAdvancedMenu = (props: SelectAdvancedMenuProps) => {
         </DropdownBS.Header>
       )}
 
-      {!isMultiple && searchValue === '' && (
+      {!isMultiple && searchValue === '' && showPlaceholderOptionInMenu && selectWord !== '' && (
         <DropdownBS.Item
           as="li"
           role="option"

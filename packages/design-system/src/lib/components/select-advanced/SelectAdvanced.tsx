@@ -29,6 +29,7 @@ type BaseProps = {
   isInvalid?: boolean
   inputButtonId?: string
   locales?: { select?: string }
+  showPlaceholderOptionInMenu?: boolean
 }
 
 type SingleProps = BaseProps & {
@@ -56,7 +57,8 @@ export const SelectAdvanced = forwardRef(
       isDisabled = false,
       isInvalid = false,
       inputButtonId,
-      locales
+      locales,
+      showPlaceholderOptionInMenu = true
     }: SelectAdvancedProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
@@ -194,6 +196,7 @@ export const SelectAdvanced = forwardRef(
           isSearchable={isSearchable}
           menuId={menuId}
           selectWord={locales?.select ?? DEFAULT_LOCALES.select}
+          showPlaceholderOptionInMenu={showPlaceholderOptionInMenu}
         />
       </DropdownBS>
     )
