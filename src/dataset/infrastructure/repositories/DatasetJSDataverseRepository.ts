@@ -38,8 +38,9 @@ import {
   linkDataset,
   unlinkDataset,
   getDatasetLinkedCollections,
+  DatasetType,
   getDatasetAvailableDatasetTypes,
-  DatasetType
+  getDatasetAvailableDatasetType
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -408,9 +409,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   getAvailableCategories(datasetId: string | number): Promise<string[]> {
     return getDatasetAvailableCategories.execute(datasetId)
   }
-  getAvailableDatasetTypes(): Promise<DatasetType[]> {
-    return getDatasetAvailableDatasetTypes.execute()
-  }
 
   getTemplates(collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
     return getDatasetTemplates.execute(collectionIdOrAlias)
@@ -426,6 +424,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   getDatasetLinkedCollections(datasetId: string | number): Promise<CollectionSummary[]> {
     return getDatasetLinkedCollections.execute(datasetId)
+  }
+
+  getAvailableDatasetTypes(): Promise<DatasetType[]> {
+    return getDatasetAvailableDatasetTypes.execute()
+  }
+
+  getDatasetTypeByNameOrId(nameOrId: string | number): Promise<DatasetType> {
+    return getDatasetAvailableDatasetType.execute(nameOrId)
   }
 
   /*

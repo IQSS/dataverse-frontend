@@ -61,9 +61,10 @@ export interface DatasetRepository {
     version: string,
     format: CitationFormat
   ) => Promise<FormattedCitation>
-  getAvailableDatasetTypes: () => Promise<DatasetType[]>
   getTemplates: (collectionIdOrAlias: number | string) => Promise<DatasetTemplate[]>
   link(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
   unlink(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
   getDatasetLinkedCollections: (datasetId: string | number) => Promise<CollectionSummary[]>
+  getAvailableDatasetTypes: () => Promise<DatasetType[]>
+  getDatasetTypeByNameOrId: (nameOrId: string | number) => Promise<DatasetType>
 }
