@@ -39,6 +39,16 @@ describe('CollectionCard', () => {
     })
   })
 
+  it('should render the linked icon when isLinked is true', () => {
+    const collectionPreview = CollectionItemTypePreviewMother.createLinked()
+
+    cy.customMount(
+      <CollectionCard collectionPreview={collectionPreview} parentCollectionAlias="" />
+    )
+
+    cy.findByTestId('linked-collection-icon').should('exist')
+  })
+
   it('should not overflow horizontally with long unspaced titles', () => {
     const longName = 'abc'.repeat(50)
     const collectionPreview = CollectionItemTypePreviewMother.create({

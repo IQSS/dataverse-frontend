@@ -28,6 +28,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
   - Fix word wrapping in options list to prevent overflow and ensure long text is displayed correctly.
 - **ButtonGroup:**
   - Fix styles for vertical button groups when using tooltips.
+- **FormText:** Add `className` prop to allow custom styling.
+- **FormInput:** Add `size` prop to allow different input sizes (e.g., 'sm', 'lg'). Defaults to standard size if not specified.
 
 # [2.0.2](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.0.1...@iqss/dataverse-design-system@2.0.2) (2024-06-23)
 

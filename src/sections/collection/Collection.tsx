@@ -21,6 +21,8 @@ import { Route } from '../Route.enum'
 import { CollectionHelper } from './CollectionHelper'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
+import { LinkCollectionDropdown } from './link-collection-dropdown/LinkCollectionDropdown'
+import { useSession } from '../session/SessionContext'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -44,7 +46,7 @@ export function Collection({
   useScrollTop()
   const { previousPath } = useHistoryTracker()
   const previousPathIsHomepage = previousPath === Route.HOME
-
+  const { user } = useSession()
   const {
     collection,
     isLoading: isLoadingCollection,
@@ -61,8 +63,6 @@ export function Collection({
   const canUserDeleteCollection = Boolean(collectionUserPermissions?.canDeleteCollection)
 
   const showAddDataActions = canUserAddCollection || canUserAddDataset
-  const showPublishButton = !collection?.isReleased && canUserPublishCollection
-  const showEditButton = canUserEditCollection
 
   if (isLoadingCollection) {
     return <CollectionSkeleton />
@@ -110,16 +110,26 @@ export function Collection({
 
                 <ShareCollectionButton />
 
-                {(showPublishButton || showEditButton) && (
+                {(canUserPublishCollection || canUserEditCollection) && (
                   <ButtonGroup>
-                    {showPublishButton && (
+                    {!collection?.isReleased && canUserPublishCollection && (
                       <PublishCollectionButton
                         repository={collectionRepository}
                         collectionId={collection.id}
                         refetchCollection={refetchCollection}
                       />
                     )}
-                    {showEditButton && (
+
+                    {user?.superuser &&
+                      !CollectionHelper.isRootCollection(collection.hierarchy) && (
+                        <LinkCollectionDropdown
+                          collectionId={collection.id}
+                          collectionName={collection.name}
+                          collectionRepository={collectionRepository}
+                        />
+                      )}
+
+                    {canUserEditCollection && (
                       <EditCollectionDropdown
                         collection={collection}
                         canUserDeleteCollection={canUserDeleteCollection}

@@ -14,6 +14,7 @@ export interface FormInputProps extends Omit<React.InputHTMLAttributes<FormInput
   required?: boolean
   autoFocus?: boolean
   autoComplete?: string
+  size?: 'sm' | 'lg'
 }
 
 export const FormInput = React.forwardRef(function FormInput(
@@ -28,6 +29,7 @@ export const FormInput = React.forwardRef(function FormInput(
     required,
     autoFocus,
     autoComplete,
+    size,
     ...props
   }: FormInputProps,
   ref
@@ -45,6 +47,7 @@ export const FormInput = React.forwardRef(function FormInput(
       required={required}
       autoFocus={autoFocus}
       autoComplete={autoComplete}
+      size={size}
       ref={ref as React.ForwardedRef<HTMLInputElement>}
       {...props}
     />

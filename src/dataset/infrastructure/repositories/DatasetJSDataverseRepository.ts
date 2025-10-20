@@ -34,7 +34,10 @@ import {
   deleteDatasetDraft,
   getDatasetCitationInOtherFormats,
   getDatasetAvailableCategories,
-  getDatasetTemplates
+  getDatasetTemplates,
+  linkDataset,
+  unlinkDataset,
+  getDatasetLinkedCollections
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -51,6 +54,7 @@ import { DATAVERSE_BACKEND_URL } from '../../../config'
 import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 
 const includeDeaccessioned = true
 
@@ -400,6 +404,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   getTemplates(collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
     return getDatasetTemplates.execute(collectionIdOrAlias)
+  }
+
+  link(datasetId: string | number, collectionIdOrAlias: string | number) {
+    return linkDataset.execute(datasetId, collectionIdOrAlias)
+  }
+
+  unlink(datasetId: string | number, collectionIdOrAlias: string | number) {
+    return unlinkDataset.execute(datasetId, collectionIdOrAlias)
+  }
+
+  getDatasetLinkedCollections(datasetId: string | number): Promise<CollectionSummary[]> {
+    return getDatasetLinkedCollections.execute(datasetId)
   }
 
   /*
