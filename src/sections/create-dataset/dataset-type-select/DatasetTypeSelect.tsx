@@ -25,10 +25,6 @@ export const DatasetTypeSelect = ({
     setIsOpen(false)
   }
 
-  const capitalizeName = (name: string) => {
-    return name.charAt(0).toUpperCase() + name.slice(1)
-  }
-
   // Close menu when clicking outside, focusing outside, or pressing Escape
   useEffect(() => {
     const handleClose = (event: MouseEvent | FocusEvent) => {
@@ -61,7 +57,7 @@ export const DatasetTypeSelect = ({
         <div className={styles['dataset-type-select']} ref={dropdownRef}>
           <div className={styles.toggle}>
             <input type="button" onClick={() => setIsOpen((prev) => !prev)} />
-            <span>{capitalizeName(selectedType.name)}</span>
+            <span className="text-capitalize">{selectedType.name}</span>
           </div>
 
           <div className={cn(styles.menu, { [styles.open]: isOpen })} role="menu">
@@ -75,7 +71,7 @@ export const DatasetTypeSelect = ({
                 key={dt.id}>
                 <Card.Body className="p-2">
                   <span>
-                    <strong>{capitalizeName(dt.name)}</strong>
+                    <strong className="text-capitalize">{dt.name}</strong>
                     <br />
                     <span className="small text-muted">
                       {dt.name === 'dataset' &&
