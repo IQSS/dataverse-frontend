@@ -17,6 +17,8 @@ import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/mode
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { DatasetTypeMother } from '@tests/component/dataset/domain/models/DatasetTypeMother'
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
@@ -170,6 +172,41 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetTemplateMother.createMany(3))
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  link(_datasetId: string | number, _collectionIdOrAlias: string | number): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  unlink(_datasetId: string | number, _collectionIdOrAlias: string | number): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getDatasetLinkedCollections(_datasetId: string | number): Promise<CollectionSummary[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([
+          CollectionSummaryMother.create({
+            id: 1,
+            displayName: 'Collection Foo',
+            alias: 'collection-foo'
+          }),
+          CollectionSummaryMother.create({
+            id: 2,
+            displayName: 'Collection Bar',
+            alias: 'collection-bar'
+          })
+        ])
       }, FakerHelper.loadingTimout())
     })
   }

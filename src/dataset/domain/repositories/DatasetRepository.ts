@@ -9,6 +9,7 @@ import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
 import { DatasetTemplate } from '../models/DatasetTemplate'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetType } from '../models/DatasetType'
 
 export interface DatasetRepository {
@@ -62,4 +63,7 @@ export interface DatasetRepository {
   ) => Promise<FormattedCitation>
   getAvailableDatasetTypes: () => Promise<DatasetType[]>
   getTemplates: (collectionIdOrAlias: number | string) => Promise<DatasetTemplate[]>
+  link(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
+  unlink(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
+  getDatasetLinkedCollections: (datasetId: string | number) => Promise<CollectionSummary[]>
 }

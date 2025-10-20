@@ -1,9 +1,9 @@
+import { Link45deg } from 'react-bootstrap-icons'
+import { Badge, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
 import { Route } from '@/sections/Route.enum'
 import { DatasetCardHelper } from './DatasetCardHelper'
-import { Badge, Stack } from '@iqss/dataverse-design-system'
 import { DatasetVersion } from '@/dataset/domain/models/Dataset'
 import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { DatasetIcon } from '@/sections/dataset/dataset-icon/DatasetIcon'
 import { LinkToPage } from '@/sections/shared/link-to-page/LinkToPage'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 import styles from './DatasetCard.module.scss'
@@ -13,13 +13,15 @@ interface DatasetCardHeaderProps {
   version: DatasetVersion
   publicationStatuses: PublicationStatus[]
   userRoles?: string[]
+  isLinked?: boolean
 }
 
 export function DatasetCardHeader({
   persistentId,
   version,
   publicationStatuses,
-  userRoles
+  userRoles,
+  isLinked
 }: DatasetCardHeaderProps) {
   const publicationStatusesFiltered = publicationStatuses
     .filter((status) => status !== PublicationStatus.Published)
@@ -63,7 +65,8 @@ export function DatasetCardHeader({
       </div>
 
       <div className={styles['top-right-icon']}>
-        <DatasetIcon />
+        <Icon name={IconName.DATASET} />
+        {isLinked && <Link45deg size={26} title="linked" data-testid="linked-dataset-icon" />}
       </div>
     </header>
   )

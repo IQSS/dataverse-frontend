@@ -11,6 +11,7 @@ import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 export class DatasetErrorMockRepository implements DatasetMockRepository {
@@ -151,6 +152,30 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
   }
 
   getTemplates(_collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  link(_datasetId: string | number, _collectionIdOrAlias: string | number): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  unlink(_datasetId: string | number, _collectionIdOrAlias: string | number): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getDatasetLinkedCollections(_datasetId: string | number): Promise<CollectionSummary[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')
