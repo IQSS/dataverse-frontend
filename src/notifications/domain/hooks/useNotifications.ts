@@ -1,4 +1,3 @@
-// hooks/useNotifications.ts
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { Notification } from '@/notifications/domain/models/Notification'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
