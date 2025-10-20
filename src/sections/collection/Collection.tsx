@@ -22,7 +22,6 @@ import { CollectionHelper } from './CollectionHelper'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import styles from './Collection.module.scss'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface CollectionProps {
   collectionRepository: CollectionRepository
@@ -32,7 +31,6 @@ interface CollectionProps {
   accountCreated: boolean
   infiniteScrollEnabled?: boolean
   contactRepository: ContactRepository
-  datasetRepository: DatasetRepository
 }
 
 export function Collection({
@@ -41,8 +39,7 @@ export function Collection({
   created,
   collectionQueryParams,
   contactRepository,
-  accountCreated,
-  datasetRepository
+  accountCreated
 }: CollectionProps) {
   useScrollTop()
   const { previousPath } = useHistoryTracker()
@@ -145,7 +142,6 @@ export function Collection({
                     collectionId={collection.id}
                     canAddCollection={canUserAddCollection}
                     canAddDataset={canUserAddDataset}
-                    datasetRepository={datasetRepository}
                   />
                 ) : null
               }

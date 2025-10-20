@@ -9,19 +9,15 @@ import { RouteWithParams, Route } from '@/sections//Route.enum'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { AccountHelper } from '@/sections/account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { useGetAvailableDatasetTypes } from '@/dataset/domain/hooks/useGetAvailableDatasetTypes'
 
 interface LoggedInHeaderActionsProps {
   user: User
   collectionRepository: CollectionRepository
-  datasetRepository: DatasetRepository
 }
 
 export const LoggedInHeaderActions = ({
   user,
-  collectionRepository,
-  datasetRepository
+  collectionRepository
 }: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
   const { logOut } = useContext(AuthContext)
@@ -32,10 +28,6 @@ export const LoggedInHeaderActions = ({
     collectionIdOrAlias: undefined,
     collectionRepository: collectionRepository
   })
-
-  const { datasetTypes } = useGetAvailableDatasetTypes({ datasetRepository })
-  // We skip "dataset" because we hard-code it to appear at the top.
-  const nonDatasetDatasetTypes = datasetTypes.filter((type) => type.name !== 'dataset')
 
   if (!collection) {
     return null
@@ -59,21 +51,6 @@ export const LoggedInHeaderActions = ({
         <Navbar.Dropdown.Item as={Link} to={createDatasetRoute} disabled={!canUserAddDatasetToRoot}>
           {t('navigation.newDataset')}
         </Navbar.Dropdown.Item>
-        {/* "Dataset" is hard coded above. Next we show "Software", "Review", etc. */}
-        {...nonDatasetDatasetTypes.map((datasetType) => (
-          <Navbar.Dropdown.Item
-            key={datasetType.name}
-            to={`${createDatasetRoute}?datasetType=${datasetType.name}`}
-            as={Link}
-            disabled={!canUserAddDatasetToRoot}>
-            {/* We capitalize the name because we have modified public/locales/en/header.json to include "newReview: New Review" specifically for the "review" dataset type but what about "software" and "workflow" or others we can't even predict? Should the API return the type in right language? Or should we continue to add types we think we'll want to support in header.json? And what if a name has a space in it? */}
-            {t(
-              `navigation.new${
-                datasetType.name.charAt(0).toUpperCase() + datasetType.name.slice(1)
-              }`
-            )}
-          </Navbar.Dropdown.Item>
-        ))}
       </Navbar.Dropdown>
       <Navbar.Dropdown title={user.displayName} id="dropdown-user">
         <Navbar.Dropdown.Item

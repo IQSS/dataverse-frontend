@@ -9,7 +9,6 @@ import { UnpublishedCollectionMockRepository } from '@/stories/collection/Unpubl
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { ContactMockRepository } from '../shared-mock-repositories/contact/ContactMockRepository'
-import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',
@@ -30,7 +29,6 @@ export const Default: Story = {
       collectionRepository={new CollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
-      datasetRepository={new DatasetMockRepository()}
       created={false}
       accountCreated={false}
       collectionQueryParams={{
@@ -46,7 +44,6 @@ export const Loading: Story = {
   render: () => (
     <Collection
       collectionIdFromParams="collection"
-      datasetRepository={new DatasetMockRepository()}
       collectionRepository={new CollectionLoadingMockRepository()}
       contactRepository={new ContactMockRepository()}
       created={false}
@@ -61,7 +58,6 @@ export const LoggedIn: Story = {
   render: () => (
     <Collection
       collectionIdFromParams="collection"
-      datasetRepository={new DatasetMockRepository()}
       collectionRepository={new CollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       created={false}
@@ -75,7 +71,6 @@ export const Unpublished: Story = {
   render: () => (
     <Collection
       collectionIdFromParams="collection"
-      datasetRepository={new DatasetMockRepository()}
       collectionRepository={new UnpublishedCollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       created={false}
@@ -92,7 +87,6 @@ export const Created: Story = {
       collectionRepository={new CollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
-      datasetRepository={new DatasetMockRepository()}
       created={true}
       accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
@@ -107,7 +101,6 @@ export const AccountCreated: Story = {
       collectionRepository={new CollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
-      datasetRepository={new DatasetMockRepository()}
       created={false}
       accountCreated={true}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
@@ -131,7 +124,6 @@ export const WithFeaturedItems: Story = {
       collectionRepository={collectionRepositoryWithFeaturedItems}
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
-      datasetRepository={new DatasetMockRepository()}
       created={false}
       accountCreated={false}
       collectionQueryParams={{

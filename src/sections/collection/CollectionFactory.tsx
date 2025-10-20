@@ -6,11 +6,9 @@ import { Collection } from './Collection'
 import { INFINITE_SCROLL_ENABLED } from './config'
 import { useGetCollectionQueryParams } from './useGetCollectionQueryParams'
 import { ACCOUNT_CREATED_SESSION_STORAGE_KEY } from './AccountCreatedAlert'
-import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
-const datasetRepository = new DatasetJSDataverseRepository()
 
 export class CollectionFactory {
   static create(): ReactElement {
@@ -41,7 +39,6 @@ function CollectionWithSearchParams() {
       accountCreated={accountCreated}
       infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
       contactRepository={contactRepository}
-      datasetRepository={datasetRepository}
     />
   )
 }

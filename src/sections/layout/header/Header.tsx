@@ -10,13 +10,11 @@ import { LoggedInHeaderActions } from './LoggedInHeaderActions'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
 import styles from './Header.module.scss'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface HeaderProps {
   collectionRepository: CollectionRepository
-  datasetRepository: DatasetRepository
 }
-export function Header({ collectionRepository, datasetRepository }: HeaderProps) {
+export function Header({ collectionRepository }: HeaderProps) {
   const { t } = useTranslation('header')
   const { user } = useSession()
   const { pathname, search } = useLocation()
@@ -38,11 +36,7 @@ export function Header({ collectionRepository, datasetRepository }: HeaderProps)
       }}
       className={styles.navbar}>
       {user ? (
-        <LoggedInHeaderActions
-          user={user}
-          collectionRepository={collectionRepository}
-          datasetRepository={datasetRepository}
-        />
+        <LoggedInHeaderActions user={user} collectionRepository={collectionRepository} />
       ) : (
         <Button
           onClick={handleOidcLogIn}
