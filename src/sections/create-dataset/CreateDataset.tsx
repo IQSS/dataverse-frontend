@@ -165,7 +165,7 @@ export function CreateDataset({
           datasetRepository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetTemplate={selectedTemplate ?? undefined}
-          datasetType={selectedType ?? undefined}
+          datasetTypeName={selectedType ? selectedType.name : undefined}
           key={formKey}
         />
       </section>

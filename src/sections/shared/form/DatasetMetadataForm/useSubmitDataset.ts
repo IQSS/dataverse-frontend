@@ -40,7 +40,7 @@ export function useSubmitDataset(
   onSubmitErrorCallback: () => void,
   datasetPersistentID?: string,
   datasetLastUpdateTime?: string,
-  datasetType?: DatasetType
+  datasetTypeName?: DatasetType['name']
 ): UseSubmitDatasetReturnType {
   const navigate = useNavigate()
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
@@ -62,7 +62,7 @@ export function useSubmitDataset(
     )
 
     if (mode === 'create') {
-      createDataset(datasetRepository, formattedFormValues, collectionId, datasetType?.name)
+      createDataset(datasetRepository, formattedFormValues, collectionId, datasetTypeName)
         .then(({ persistentId }) => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)

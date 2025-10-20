@@ -27,7 +27,7 @@ interface FormProps {
   datasetPersistentID?: string
   datasetLastUpdateTime?: string
   datasetTemplateInstructions?: DatasetTemplateInstruction[]
-  datasetType?: DatasetType
+  datasetTypeName?: DatasetType['name']
 }
 
 export const MetadataForm = ({
@@ -39,7 +39,7 @@ export const MetadataForm = ({
   datasetPersistentID,
   datasetLastUpdateTime,
   datasetTemplateInstructions,
-  datasetType
+  datasetTypeName
 }: FormProps) => {
   const { user } = useSession()
   const navigate = useNavigate()
@@ -61,7 +61,7 @@ export const MetadataForm = ({
     onSubmitDatasetError,
     datasetPersistentID,
     datasetLastUpdateTime,
-    datasetType
+    datasetTypeName
   )
 
   usePrefillFieldsWithUserData({ mode, user, formDefaultValues, setValue })

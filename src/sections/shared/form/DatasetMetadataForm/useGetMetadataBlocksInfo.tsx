@@ -10,7 +10,7 @@ interface Props {
   mode: DatasetMetadataFormMode
   collectionId: string
   metadataBlockInfoRepository: MetadataBlockInfoRepository
-  datasetType?: DatasetType
+  datasetTypeName?: DatasetType['name']
 }
 
 interface UseGetMetadataBlocksInfoReturn {
@@ -23,7 +23,7 @@ export const useGetMetadataBlocksInfo = ({
   mode,
   collectionId,
   metadataBlockInfoRepository,
-  datasetType
+  datasetTypeName
 }: Props): UseGetMetadataBlocksInfoReturn => {
   const [metadataBlocksInfo, setMetadataBlocksInfo] = useState<MetadataBlockInfo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -40,13 +40,13 @@ export const useGetMetadataBlocksInfo = ({
             metadataBlockInfoRepository,
             collectionId,
             false,
-            datasetType?.name
+            datasetTypeName
           )
         } else {
           metadataBlocks = await getDisplayedOnCreateMetadataBlockInfoByCollectionId(
             metadataBlockInfoRepository,
             collectionId,
-            datasetType?.name
+            datasetTypeName
           )
         }
 
@@ -63,7 +63,7 @@ export const useGetMetadataBlocksInfo = ({
     }
 
     void handleGetDatasetMetadataBlockFields()
-  }, [collectionId, metadataBlockInfoRepository, mode, datasetType])
+  }, [collectionId, metadataBlockInfoRepository, mode, datasetTypeName])
 
   return {
     metadataBlocksInfo,
