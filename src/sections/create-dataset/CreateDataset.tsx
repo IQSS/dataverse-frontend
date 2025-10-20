@@ -22,10 +22,6 @@ import { useGetAvailableDatasetTypes } from '@/dataset/domain/hooks/useGetAvaila
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
 import { DatasetTypeSelect } from './dataset-type-select/DatasetTypeSelect'
 
-// TODO:ME - Pass dataset type selected to DatasetMetadataForm and use cases.
-// TODO:ME - Remove Review from Add Data dropdown
-// TODO:ME - Remove reading dataset type from url query param.
-
 interface CreateDatasetProps {
   datasetRepository: DatasetRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository

@@ -177,7 +177,7 @@ export class DatasetMockRepository implements DatasetRepository {
   getAvailableDatasetTypes(): Promise<DatasetType[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(DatasetTypeMother.createMany(3))
+        resolve([DatasetTypeMother.creatDefaultDatasetType(), ...DatasetTypeMother.createMany(2)])
       }, FakerHelper.loadingTimout())
     })
   }
