@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import cn from 'classnames'
 import { Card, Col, Form } from '@iqss/dataverse-design-system'
@@ -8,58 +8,14 @@ import styles from './DatasetTypeSelect.module.scss'
 interface DatasetTypeSelectProps {
   datasetTypes: DatasetType[]
   onChange: (selectedTypeId: string) => void
-}
-
-export const DatasetTypeSelect = ({ datasetTypes, onChange }: DatasetTypeSelectProps) => {
-  const { t } = useTranslation('createDataset')
-
-  const options = useMemo(
-    () =>
-      datasetTypes.map((dt) => ({
-        label: dt.name.charAt(0).toUpperCase() + dt.name.slice(1),
-        value: dt.id.toString()
-      })),
-    [datasetTypes]
-  )
-
-  const defaultType: DatasetType | null = useMemo(
-    () => datasetTypes.find((dt) => dt.name === 'dataset') || null,
-    [datasetTypes]
-  )
-
-  return (
-    <Form.Group data-testid="dataset-type-select">
-      <Form.Group.Label message={t('datasetType.description')} column sm={3} htmlFor="dataset-type">
-        {t('datasetType.label')}
-      </Form.Group.Label>
-      <Col sm={9}>
-        <Form.Group.Text>{t('datasetType.helpText')}</Form.Group.Text>
-        <Form.Group.SelectAdvanced
-          defaultValue={defaultType?.id.toString() ?? undefined}
-          options={options}
-          onChange={onChange}
-          isMultiple={false}
-          isSearchable={false}
-          inputButtonId="dataset-type"
-          showPlaceholderOptionInMenu={false}
-          locales={{ select: t('datasetType.placeholder') }}
-        />
-      </Col>
-    </Form.Group>
-  )
-}
-
-interface DatasetTypeSelect2Props {
-  datasetTypes: DatasetType[]
-  onChange: (selectedTypeId: string) => void
   selectedType: DatasetType
 }
 
-export const DatasetTypeSelect2 = ({
+export const DatasetTypeSelect = ({
   datasetTypes,
   onChange,
   selectedType
-}: DatasetTypeSelect2Props) => {
+}: DatasetTypeSelectProps) => {
   const { t } = useTranslation('createDataset')
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)

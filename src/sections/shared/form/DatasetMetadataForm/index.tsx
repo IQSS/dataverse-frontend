@@ -9,6 +9,7 @@ import { MetadataForm } from './MetadataForm'
 import { DatasetMetadataBlocks } from '../../../../dataset/domain/models/Dataset'
 import { Alert } from '@iqss/dataverse-design-system'
 import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 type DatasetMetadataFormProps =
   | {
@@ -20,7 +21,7 @@ type DatasetMetadataFormProps =
       datasetMetadaBlocksCurrentValues?: never
       datasetLastUpdateTime?: never
       datasetTemplate?: DatasetTemplate
-      datasetType?: string
+      datasetType?: DatasetType
     }
   | {
       mode: 'edit'
@@ -32,7 +33,7 @@ type DatasetMetadataFormProps =
       datasetLastUpdateTime?: string
       datasetTemplate?: never
       // changing datasetType is not supported by the backend
-      datasetType?: string
+      datasetType?: never
     }
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
@@ -114,6 +115,7 @@ export const DatasetMetadataForm = ({
       datasetPersistentID={datasetPersistentID}
       datasetLastUpdateTime={datasetLastUpdateTime}
       datasetTemplateInstructions={datasetTemplate?.instructions}
+      datasetType={datasetType}
     />
   )
 }

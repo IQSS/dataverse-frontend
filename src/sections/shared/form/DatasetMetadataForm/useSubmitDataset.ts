@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
 import { createDataset } from '../../../../dataset/domain/useCases/createDataset'
@@ -9,6 +9,7 @@ import { MetadataFieldsHelper, type DatasetMetadataFormValues } from './Metadata
 import { type DatasetMetadataFormMode } from '.'
 import { QueryParamKey, Route } from '../../../Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '../../../../dataset/domain/models/Dataset'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -38,7 +39,8 @@ export function useSubmitDataset(
   datasetRepository: DatasetRepository,
   onSubmitErrorCallback: () => void,
   datasetPersistentID?: string,
-  datasetLastUpdateTime?: string
+  datasetLastUpdateTime?: string,
+  datasetType?: DatasetType
 ): UseSubmitDatasetReturnType {
   const navigate = useNavigate()
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
@@ -48,8 +50,6 @@ export function useSubmitDataset(
     SubmissionStatus.NotSubmitted
   )
   const [submitError, setSubmitError] = useState<string | null>(null)
-
-  const [searchParams] = useSearchParams()
 
   const submitForm = (formData: DatasetMetadataFormValues): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
@@ -62,12 +62,7 @@ export function useSubmitDataset(
     )
 
     if (mode === 'create') {
-      let datasetType = 'dataset'
-      const datasetTypeIn = searchParams.get(QueryParamKey.DATASET_TYPE)
-      if (datasetTypeIn) {
-        datasetType = datasetTypeIn
-      }
-      createDataset(datasetRepository, formattedFormValues, collectionId, datasetType)
+      createDataset(datasetRepository, formattedFormValues, collectionId, datasetType?.name)
         .then(({ persistentId }) => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)

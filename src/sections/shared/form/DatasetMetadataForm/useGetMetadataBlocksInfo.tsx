@@ -3,15 +3,14 @@ import { getMetadataBlockInfoByCollectionId } from '../../../../metadata-block-i
 import { getDisplayedOnCreateMetadataBlockInfoByCollectionId } from '../../../../metadata-block-info/domain/useCases/getDisplayedOnCreateMetadataBlockInfoByCollectionId'
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 import { DatasetMetadataFormMode } from '.'
-import { useSearchParams } from 'react-router-dom'
-import { QueryParamKey } from '@/sections/Route.enum'
 
 interface Props {
   mode: DatasetMetadataFormMode
   collectionId: string
   metadataBlockInfoRepository: MetadataBlockInfoRepository
-  datasetType?: string
+  datasetType?: DatasetType
 }
 
 interface UseGetMetadataBlocksInfoReturn {
@@ -29,7 +28,6 @@ export const useGetMetadataBlocksInfo = ({
   const [metadataBlocksInfo, setMetadataBlocksInfo] = useState<MetadataBlockInfo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const [searchParams] = useSearchParams()
 
   useEffect(() => {
     const handleGetDatasetMetadataBlockFields = async () => {
@@ -37,22 +35,18 @@ export const useGetMetadataBlocksInfo = ({
       try {
         let metadataBlocks: MetadataBlockInfo[] = []
 
-        const datasetTypeIn = searchParams.get(QueryParamKey.DATASET_TYPE)
-        if (datasetTypeIn) {
-          datasetType = datasetTypeIn
-        }
         if (mode === 'edit') {
           metadataBlocks = await getMetadataBlockInfoByCollectionId(
             metadataBlockInfoRepository,
             collectionId,
             false,
-            datasetType
+            datasetType?.name
           )
         } else {
           metadataBlocks = await getDisplayedOnCreateMetadataBlockInfoByCollectionId(
             metadataBlockInfoRepository,
             collectionId,
-            datasetType
+            datasetType?.name
           )
         }
 
@@ -69,7 +63,7 @@ export const useGetMetadataBlocksInfo = ({
     }
 
     void handleGetDatasetMetadataBlockFields()
-  }, [collectionId, metadataBlockInfoRepository, mode])
+  }, [collectionId, metadataBlockInfoRepository, mode, datasetType])
 
   return {
     metadataBlocksInfo,

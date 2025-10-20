@@ -20,7 +20,7 @@ import { type DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
 import { useGetAvailableDatasetTypes } from '@/dataset/domain/hooks/useGetAvailableDatasetTypes'
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
-import { DatasetTypeSelect, DatasetTypeSelect2 } from './dataset-type-select/DatasetTypeSelect'
+import { DatasetTypeSelect } from './dataset-type-select/DatasetTypeSelect'
 
 // TODO:ME - Pass dataset type selected to DatasetMetadataForm and use cases.
 // TODO:ME - Remove Review from Add Data dropdown
@@ -154,12 +154,9 @@ export function CreateDataset({
           />
         )}
 
-        {/* {datasetTypes.length > 0 && (
-          <DatasetTypeSelect datasetTypes={datasetTypes} onChange={handleDatasetTypeChange} />
-        )} */}
-
-        {datasetTypes.length > 0 && selectedType && (
-          <DatasetTypeSelect2
+        {/* Show the dataset type selector only if there's more than one dataset type (besides 'dataset') */}
+        {datasetTypes.length > 1 && selectedType && (
+          <DatasetTypeSelect
             datasetTypes={datasetTypes}
             onChange={handleDatasetTypeChange}
             selectedType={selectedType}
@@ -172,6 +169,7 @@ export function CreateDataset({
           datasetRepository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetTemplate={selectedTemplate ?? undefined}
+          datasetType={selectedType ?? undefined}
           key={formKey}
         />
       </section>
