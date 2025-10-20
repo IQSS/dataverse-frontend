@@ -17,21 +17,19 @@ export function useUnreadCount(repository: NotificationRepository) {
     if (needsUpdate) {
       void fetchUnread()
     }
-  }, [needsUpdate, repository])
+  }, [needsUpdate, fetchUnread, repository])
   // Polling trigger
   useEffect(() => {
-    console.log('Setting up polling for unread notifications count')
     const interval = setInterval(() => {
-      console.log('calling fetchUnread')
       void fetchUnread()
     }, POLLING_INTERVAL)
 
     return () => clearInterval(interval)
-  }, [repository])
+  }, [fetchUnread, repository])
 
   useEffect(() => {
     void fetchUnread() // run once when the component mounts
-  }, [])
+  }, [fetchUnread])
 
   return unreadCount
 }

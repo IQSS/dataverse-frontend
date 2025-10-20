@@ -139,7 +139,6 @@ function translateGeneric(notification: Notification, key: string, t: TFunction)
       components.relatedLink = <a href={`${id}`} target="_blank" rel="noopener noreferrer"></a>
     } else {
       key = 'notifications.notification.datasetMentionedGeneric'
-      const stringified = JSON.stringify(info, null, 2).replace(/"/g, '')
       values.additionalInfo = JSON.stringify(info)
     }
   }
