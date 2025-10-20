@@ -218,4 +218,12 @@ export class DatasetMockRepository implements DatasetRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  getDatasetTypeByNameOrId(_nameOrId: string | number): Promise<DatasetType> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(DatasetTypeMother.creatDefaultDatasetType())
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

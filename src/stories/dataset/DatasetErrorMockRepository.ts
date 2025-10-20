@@ -190,4 +190,12 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  getDatasetTypeByNameOrId(_nameOrId: string | number): Promise<DatasetType> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }
