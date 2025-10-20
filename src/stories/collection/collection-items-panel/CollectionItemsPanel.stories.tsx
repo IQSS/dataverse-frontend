@@ -8,7 +8,6 @@ import { CollectionMockRepository } from '../CollectionMockRepository'
 import { CollectionLoadingMockRepository } from '../CollectionLoadingMockRepository'
 import { NoCollectionMockRepository } from '../NoCollectionMockRepository'
 import { CollectionErrorMockRepository } from '../CollectionErrorMockRepository'
-import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 
 const meta: Meta<typeof CollectionItemsPanel> = {
   title: 'Sections/Collection Page/CollectionItemsPanel',
@@ -80,12 +79,7 @@ export const WithAddDataButtons: Story = {
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
       collectionRepository={new CollectionMockRepository()}
       addDataSlot={
-        <AddDataActionsButton
-          collectionId={'someCollectionId'}
-          canAddCollection
-          canAddDataset
-          datasetRepository={new DatasetMockRepository()}
-        />
+        <AddDataActionsButton collectionId={'someCollectionId'} canAddCollection canAddDataset />
       }
     />
   )
@@ -147,12 +141,7 @@ export const NoCollectionDatasetsOrFilesAuthenticatedUser: Story = {
       }}
       collectionRepository={new NoCollectionMockRepository()}
       addDataSlot={
-        <AddDataActionsButton
-          collectionId={'collectionId'}
-          canAddCollection
-          canAddDataset
-          datasetRepository={new DatasetMockRepository()}
-        />
+        <AddDataActionsButton collectionId={'collectionId'} canAddCollection canAddDataset />
       }
     />
   )
