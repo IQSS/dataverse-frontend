@@ -322,5 +322,66 @@ describe('Create Dataset', () => {
 
       cy.findByTestId('selected-type').should('have.text', 'foo')
     })
+
+    // This tests are to validate that the dataset type select dropdown is closed when clicking outside, focusing outside or pressing escape
+    it('should close dataset type select when clicking and focusing outside and pressing escape', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo'
+        })
+      ]
+
+      datasetRepository.getAvailableDatasetTypes = cy.stub().resolves(datasetTypesMock)
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist').as('datasetTypeSelect')
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.get('[role="menu"]').should('be.visible')
+      })
+
+      // Click outside test
+      cy.get('body').click(0, 0)
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.get('[role="menu"]').should('not.be.visible')
+      })
+
+      // Open again
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.get('[role="menu"]').should('be.visible')
+      })
+
+      // Focus outside test
+      cy.findByLabelText(/Title/).focus()
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.get('[role="menu"]').should('not.be.visible')
+      })
+
+      // Open again
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.get('[role="menu"]').should('be.visible')
+      })
+
+      // Press escape test
+      cy.get('body').trigger('keydown', { key: 'Escape', force: true })
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.get('[role="menu"]').should('not.be.visible')
+      })
+    })
   })
 })
