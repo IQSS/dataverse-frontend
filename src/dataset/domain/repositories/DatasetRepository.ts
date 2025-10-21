@@ -66,5 +66,4 @@ export interface DatasetRepository {
   unlink(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
   getDatasetLinkedCollections: (datasetId: string | number) => Promise<CollectionSummary[]>
   getAvailableDatasetTypes: () => Promise<DatasetType[]>
-  getDatasetTypeByNameOrId: (nameOrId: string | number) => Promise<DatasetType>
 }
