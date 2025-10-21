@@ -81,9 +81,9 @@ export const DatasetTypeSelect = ({
                     <br />
                     <span className="small text-muted">
                       {dt.name === 'dataset' &&
-                        'The default dataset type. Put more info here. Doloribus facere blanditiis nostrum saepe molestiae eveniet.'}
+                        'A traditional dataset. May include code. Maps to https://schema.org/Dataset'}
                       {dt.name === 'review' &&
-                        'This dataset type is for review purposes. Put more info here maybe. nam temporibus quas saepe, obcaecati accusantium animi eos incidunt voluptatibus laudantium enim ipsa in tenetur, quam necessitatibus.'}
+                        'A review of a research object such as a dataset. Maps to https://schema.org/CriticReview'}
                     </span>
                   </span>
                 </Card.Body>
