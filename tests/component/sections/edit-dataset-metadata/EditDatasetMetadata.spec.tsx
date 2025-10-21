@@ -96,4 +96,18 @@ describe('EditDatasetMetadata', () => {
     cy.findByText(/^Host Collection/i).should('exist')
     cy.findByDisplayValue('Root').should('exist').should('have.attr', 'readonly', 'readonly')
   })
+
+  it('renders the Dataset Type', () => {
+    mountWithDataset(
+      <EditDatasetMetadata
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
+      dataset
+    )
+
+    cy.findByTestId('edit-dataset-metadata-skeleton').should('not.exist')
+    cy.findByText(/^Dataset Type/i).should('exist')
+    cy.findByDisplayValue('dataset').should('exist').should('have.attr', 'readonly', 'readonly')
+  })
 })

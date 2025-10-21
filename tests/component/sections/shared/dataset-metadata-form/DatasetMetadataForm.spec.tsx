@@ -2199,4 +2199,57 @@ describe('DatasetMetadataForm', () => {
       cy.findByText('The vocabNotMultiple field instruction.').should('exist')
     })
   })
+
+  it('should call use cases and submit the form with the selected type', () => {
+    datasetRepository.create = cy
+      .stub()
+      .as('createDatasetStub')
+      .resolves({ persistentId: 'persistentId' })
+    metadataBlockInfoRepository.getByCollectionId = cy
+      .stub()
+      .as('getByCollectionIdStub')
+      .resolves(metadataBlocksInfoOnEditMode)
+    metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+      .stub()
+      .as('getDisplayedOnCreateByCollectionIdStub')
+      .resolves(metadataBlocksInfoOnCreateMode)
+
+    const collectionId = 'root'
+
+    const selectedTypeName = 'foo'
+
+    cy.mountAuthenticated(
+      <DatasetMetadataForm
+        mode="create"
+        collectionId={collectionId}
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        datasetTypeName={selectedTypeName}
+      />
+    )
+
+    cy.get('@getByCollectionIdStub').should(
+      'have.been.calledWith',
+      collectionId,
+      false,
+      selectedTypeName
+    )
+    cy.get('@getDisplayedOnCreateByCollectionIdStub').should(
+      'have.been.calledWith',
+      collectionId,
+      selectedTypeName
+    )
+
+    // Complete title, description text and subject to submit the form
+    fillRequiredFieldsOnCreate()
+
+    cy.findByText(/Save Dataset/i).click()
+
+    cy.get('@createDatasetStub').should(
+      'have.been.calledWith',
+      Cypress.sinon.match.any,
+      Cypress.sinon.match.any,
+      selectedTypeName
+    )
+  })
 })

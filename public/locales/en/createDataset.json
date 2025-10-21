@@ -16,6 +16,7 @@
     "label": "Dataset Type",
     "description": "The type of dataset you are creating.",
     "helpText": "Changing the dataset type will clear any fields you may have entered data into.",
-    "placeholder": "Select a dataset type"
+    "placeholder": "Select a dataset type",
+    "toggleMenu": "Toggle dataset types options menu"
   }
 }

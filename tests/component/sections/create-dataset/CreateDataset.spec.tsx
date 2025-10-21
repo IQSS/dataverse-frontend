@@ -6,6 +6,7 @@ import { NotImplementedModalProvider } from '../../../../src/sections/not-implem
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
+import { DatasetTypeMother } from '@tests/component/dataset/domain/models/DatasetTypeMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -22,10 +23,13 @@ const metadataBlocksInfoOnEditMode =
 const COLLECTION_NAME = 'Collection Name'
 const collection = CollectionMother.create({ name: COLLECTION_NAME, id: 'test-alias' })
 
+const datasetTypesMock = DatasetTypeMother.creatDefaultDatasetType()
+
 describe('Create Dataset', () => {
   beforeEach(() => {
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
     datasetRepository.getTemplates = cy.stub().resolves([])
+    datasetRepository.getAvailableDatasetTypes = cy.stub().resolves([datasetTypesMock])
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
       .resolves(collectionMetadataBlocksInfo)
@@ -228,6 +232,95 @@ describe('Create Dataset', () => {
       })
 
       cy.findAllByText('Template 2').should('exist').should('have.length', 2) // Template 2 is selected, we see two
+    })
+  })
+
+  describe('dataset types functionality', () => {
+    it('should not show dataset types select when there is only one dataset type', () => {
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('not.exist')
+    })
+
+    it('should show dataset type select when there is more than one type', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo'
+        })
+      ]
+
+      datasetRepository.getAvailableDatasetTypes = cy.stub().resolves(datasetTypesMock)
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist')
+    })
+
+    it('should set dataset type with name "dataset" as the default one', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo'
+        })
+      ]
+
+      datasetRepository.getAvailableDatasetTypes = cy.stub().resolves(datasetTypesMock)
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist')
+      cy.findByTestId('selected-type').should('have.text', 'dataset')
+    })
+
+    it('should change dataset type when user selects another one', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo'
+        })
+      ]
+
+      datasetRepository.getAvailableDatasetTypes = cy.stub().resolves(datasetTypesMock)
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist').as('datasetTypeSelect')
+      cy.findByTestId('selected-type').should('have.text', 'dataset')
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.findByText(/foo/).click()
+      })
+
+      cy.findByTestId('selected-type').should('have.text', 'foo')
     })
   })
 })

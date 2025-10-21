@@ -56,8 +56,14 @@ export const DatasetTypeSelect = ({
 
         <div className={styles['dataset-type-select']} ref={dropdownRef}>
           <div className={styles.toggle}>
-            <input type="button" onClick={() => setIsOpen((prev) => !prev)} />
-            <span className="text-capitalize">{selectedType.name}</span>
+            <input
+              type="button"
+              onClick={() => setIsOpen((prev) => !prev)}
+              aria-label={t('datasetType.toggleMenu')}
+            />
+            <span className="text-capitalize" data-testid="selected-type">
+              {selectedType.name}
+            </span>
           </div>
 
           <div className={cn(styles.menu, { [styles.open]: isOpen })} role="menu">
