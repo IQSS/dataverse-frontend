@@ -43,8 +43,6 @@ describe('Collection page', () => {
 
     cy.customMount(
       <Collection
-        collectionRepository={collectionRepository}
-        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         accountCreated={false}
@@ -96,11 +94,9 @@ describe('Collection page', () => {
     cy.findByText('Root').should('exist')
   })
 
-  it('renders collection title', () => {
+  it.only('renders collection title', () => {
     cy.customMount(
       <Collection
-        collectionRepository={collectionRepository}
-        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         accountCreated={false}

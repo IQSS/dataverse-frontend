@@ -3,23 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { Button, Tooltip } from '@iqss/dataverse-design-system'
 import { Envelope } from 'react-bootstrap-icons'
 import { ContactModal } from '@/sections/shared/contact/contact-modal/contact-modal'
-import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 interface ContactButtonProps {
   toContactName: string
   contactObjectType: ContactObjectType
   id: string | number
-  contactRepository: ContactRepository
 }
 
 type ContactObjectType = 'collection' | 'dataset'
 
-export const ContactButton = ({
-  toContactName,
-  contactObjectType,
-  id,
-  contactRepository
-}: ContactButtonProps) => {
+export const ContactButton = ({ toContactName, contactObjectType, id }: ContactButtonProps) => {
   const { t } = useTranslation('shared')
   const [showContactModal, setShowContactModal] = useState(false)
   const openContactModal = () => setShowContactModal(true)
@@ -44,7 +37,6 @@ export const ContactButton = ({
             title={t('contact.contactCollection')}
             toContactName={toContactName}
             id={id}
-            contactRepository={contactRepository}
           />
         </>
       )}
@@ -60,7 +52,6 @@ export const ContactButton = ({
             title={t('contact.contactDataset')}
             toContactName={toContactName}
             id={id}
-            contactRepository={contactRepository}
           />
         </>
       )}

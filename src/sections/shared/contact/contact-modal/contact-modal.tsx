@@ -5,8 +5,8 @@ import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
 import { ContactForm } from '@/sections/shared/form/ContactForm/ContactForm'
 import { useSession } from '@/sections/session/SessionContext'
 import { useSendFeedbacktoOwners } from '@/sections/shared/form/ContactForm/useSendFeedbacktoOwners'
-import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { toast } from 'react-toastify'
+import { useRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface ContactModalProps {
   show: boolean
@@ -14,7 +14,6 @@ interface ContactModalProps {
   title: string
   toContactName: string
   id: string | number
-  contactRepository: ContactRepository
 }
 
 export type ContactFormData = {
@@ -30,11 +29,11 @@ export const ContactModal = ({
   title,
   handleClose,
   toContactName,
-  id,
-  contactRepository
+  id
 }: ContactModalProps) => {
   const { t } = useTranslation('shared')
   const { user } = useSession()
+  const { contactRepository } = useRepositories()
 
   const closeModalAndSentToast = () => {
     handleClose()

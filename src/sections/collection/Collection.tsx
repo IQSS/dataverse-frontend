@@ -1,5 +1,4 @@
 import { ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
@@ -19,30 +18,27 @@ import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectio
 import { FeaturedItems } from './featured-items/FeaturedItems'
 import { Route } from '../Route.enum'
 import { CollectionHelper } from './CollectionHelper'
-import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { LinkCollectionDropdown } from './link-collection-dropdown/LinkCollectionDropdown'
 import { useSession } from '../session/SessionContext'
 import styles from './Collection.module.scss'
+import { useRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface CollectionProps {
-  collectionRepository: CollectionRepository
   collectionIdFromParams: string | undefined
   created: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
   accountCreated: boolean
   infiniteScrollEnabled?: boolean
-  contactRepository: ContactRepository
 }
 
 export function Collection({
   collectionIdFromParams,
-  collectionRepository,
   created,
   collectionQueryParams,
-  contactRepository,
   accountCreated
 }: CollectionProps) {
+  const { collectionRepository } = useRepositories()
   useScrollTop()
   const { previousPath } = useHistoryTracker()
   const previousPathIsHomepage = previousPath === Route.HOME
@@ -105,7 +101,6 @@ export function Collection({
                   toContactName={collection.name}
                   contactObjectType="collection"
                   id={collection.id}
-                  contactRepository={contactRepository}
                 />
 
                 <ShareCollectionButton />

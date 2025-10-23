@@ -52,6 +52,10 @@ import { OIDC_AUTH_CONFIG } from '@/config'
 import { ToastContainer } from 'react-toastify'
 import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
+import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
+import { SearchMockRepository } from '@/stories/shared-mock-repositories/search/SearchMockRepository'
+import { ContactMockRepository } from '@/stories/shared-mock-repositories/contact/ContactMockRepository'
 
 // Define your custom mount function
 
@@ -73,9 +77,14 @@ Cypress.Commands.add(
     return cy.mount(
       <ThemeProvider>
         <I18nextProvider i18n={i18next}>
-          <ExternalToolsProvider externalToolsRepository={new ExternalToolsMockRepository()}>
-            <RouterProvider router={memoryRouter} />
-          </ExternalToolsProvider>
+          <RepositoriesProvider
+            collectionRepository={new CollectionMockRepository()}
+            searchRepository={new SearchMockRepository()}
+            contactRepository={new ContactMockRepository()}>
+            <ExternalToolsProvider externalToolsRepository={new ExternalToolsMockRepository()}>
+              <RouterProvider router={memoryRouter} />
+            </ExternalToolsProvider>
+          </RepositoriesProvider>
         </I18nextProvider>
         <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
       </ThemeProvider>

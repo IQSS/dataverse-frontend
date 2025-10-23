@@ -1,14 +1,9 @@
 import { ReactElement } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
-import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
-import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 import { Collection } from './Collection'
 import { INFINITE_SCROLL_ENABLED } from './config'
 import { useGetCollectionQueryParams } from './useGetCollectionQueryParams'
 import { ACCOUNT_CREATED_SESSION_STORAGE_KEY } from './AccountCreatedAlert'
-
-const collectionRepository = new CollectionJSDataverseRepository()
-const contactRepository = new ContactJSDataverseRepository()
 
 export class CollectionFactory {
   static create(): ReactElement {
@@ -32,13 +27,11 @@ function CollectionWithSearchParams() {
 
   return (
     <Collection
-      collectionRepository={collectionRepository}
       collectionIdFromParams={collectionId}
       created={created}
       collectionQueryParams={collectionQueryParams}
       accountCreated={accountCreated}
       infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
-      contactRepository={contactRepository}
     />
   )
 }

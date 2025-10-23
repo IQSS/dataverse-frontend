@@ -11,6 +11,15 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import './assets/global.scss'
 import './assets/react-toastify-custom.scss'
 import './assets/swal-custom.scss'
+import { CollectionJSDataverseRepository } from './collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import { CollectionRepository } from './collection/domain/repositories/CollectionRepository'
+import {
+  RepositoriesProvider,
+  useRepositories
+} from './shared/contexts/repositories/RepositoriesProvider'
+import { SearchJSRepository } from './search/infrastructure/repositories/SearchJSRepository'
+import { useGetSearchServices } from './search/domain/hooks/useGetSearchServices'
+import { ContactJSDataverseRepository } from './contact/infrastructure/ContactJSDataverseRepository'
 
 if (DATAVERSE_BACKEND_URL === '') {
   throw Error('VITE_DATAVERSE_BACKEND_URL environment variable should be specified.')
@@ -49,14 +58,26 @@ const authConfig: TAuthConfig = {
 }
 
 const externalToolsRepository = new ExternalToolsJSDataverseRepository()
+const collectionRepository = new CollectionJSDataverseRepository()
+const searchRepository = new SearchJSRepository()
+const contactRepository = new ContactJSDataverseRepository()
 
 function App() {
   return (
     <>
       <AuthProvider authConfig={authConfig}>
-        <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
-          <Router />
-        </ExternalToolsProvider>
+        <RepositoriesProvider
+          collectionRepository={collectionRepository}
+          searchRepository={searchRepository}
+          contactRepository={contactRepository}>
+          {/* <Component1 />
+          <Component2 />
+          <Component3 />
+          <NestedComponent /> */}
+          <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
+            <Router />
+          </ExternalToolsProvider>
+        </RepositoriesProvider>
       </AuthProvider>
       <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
     </>
@@ -64,3 +85,39 @@ function App() {
 }
 
 export default App
+
+const Component1 = () => <div>Component 1</div>
+const Component2 = () => <div>Component 2</div>
+const Component3 = () => <div>Component 3</div>
+
+const NestedComponent = () => (
+  <div>
+    Nested Component
+    <AnotherNestedComponent />
+  </div>
+)
+
+const AnotherNestedComponent = () => {
+  return (
+    <div>
+      <p>Another Nested Component</p>
+      <ThirdLevelNestedComponent />
+    </div>
+  )
+}
+
+const ThirdLevelNestedComponent = () => {
+  // Get from a context the collection repository
+  // I need to use a collection use case from the collection repository
+  const { searchRepository } = useRepositories()
+
+  const { searchServices } = useGetSearchServices({ searchRepository })
+
+  console.log(searchServices)
+
+  return (
+    <div>
+      <p>Third Level Nested Component</p>
+    </div>
+  )
+}
