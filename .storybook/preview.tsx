@@ -9,6 +9,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import '../src/assets/global.scss'
 import '../src/assets/swal-custom.scss'
 import '../src/assets/react-toastify-custom.scss'
+import { initAppConfig } from '../src/config'
 
 const preview: Preview = {
   parameters: {
@@ -22,6 +23,13 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => {
+      // Validate runtime app config once when Storybook starts. This will read window.__APP_CONFIG__
+      // that we inject via preview-head.html (/config.js) and cache it for requireAppConfig().
+      const result = initAppConfig()
+      if (!result.ok) {
+        console.error('Storybook runtime config invalid/missing:', result.message)
+      }
+
       FakerHelper.setFakerSeed()
 
       const routes: RouteObject[] = [
