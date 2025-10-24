@@ -15,6 +15,10 @@ import { FeaturedItem } from '@/collection/domain/models/FeaturedItem'
 import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItemsDTO'
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
+import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
+import { CollectionLinks } from '@/collection/domain/models/CollectionLinks'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id?: string): Promise<Collection> {
@@ -187,6 +191,64 @@ export class CollectionMockRepository implements CollectionRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getForLinking(
+    _objectType: LinkingObjectType,
+    _id: number | string,
+    searchTerm?: string
+  ): Promise<CollectionSummary[]> {
+    return new Promise((resolve) => {
+      const items = CollectionSummaryMother.createManyRealistic(5)
+      const filteredItems = items.filter((item) =>
+        searchTerm ? item.displayName.includes(searchTerm) : true
+      )
+      setTimeout(() => {
+        resolve(filteredItems)
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getForUnlinking(
+    _objectType: LinkingObjectType,
+    _id: number | string,
+    searchTerm?: string
+  ): Promise<CollectionSummary[]> {
+    return new Promise((resolve) => {
+      const items = CollectionSummaryMother.createManyRealistic(5)
+      const filteredItems = items.filter((item) =>
+        searchTerm ? item.displayName.includes(searchTerm) : true
+      )
+      setTimeout(() => {
+        resolve(filteredItems)
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  link(
+    _linkedCollectionIdOrAlias: number | string,
+    _linkingCollectionIdOrAlias: number | string
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getLinks(_collectionIdOrAlias: number | string): Promise<CollectionLinks> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          linkedCollections: CollectionSummaryMother.createManyRealistic(2),
+          collectionsLinkingToThis: CollectionSummaryMother.createManyRealistic(2),
+          linkedDatasets: [
+            { persistentId: 'doi:10.1234/linked1', title: 'Linked Dataset 1' },
+            { persistentId: 'doi:10.1234/linked2', title: 'Linked Dataset 2' }
+          ]
+        })
       }, FakerHelper.loadingTimout())
     })
   }

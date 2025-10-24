@@ -69,5 +69,11 @@
   },
   "collectionDeletedSuccess": "Your collection has been deleted.",
   "defaultCollectionDeleteError": "Something went wrong deleting the collection. Try again later.",
-  "description": "Description"
+  "description": "Description",
+  "linkCollection": {
+    "title": "Link Collection",
+    "helper": "Choose which of your collections you would like to link this collection to.",
+    "save": "Save Linked Collection",
+    "success": "<wrapper>{{linkedCollectionName}} has been successfully linked to <a>{{linkingCollectionName}}</a></wrapper>"
+  }
 }

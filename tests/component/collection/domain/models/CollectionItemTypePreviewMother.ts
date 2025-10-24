@@ -98,4 +98,10 @@ export class CollectionItemTypePreviewMother {
       thumbnail: FakerHelper.getImageUrl()
     })
   }
+
+  static createLinked(): CollectionItemTypePreview {
+    return CollectionItemTypePreviewMother.create({
+      isLinked: true
+    })
+  }
 }

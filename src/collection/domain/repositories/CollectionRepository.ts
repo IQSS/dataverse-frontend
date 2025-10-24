@@ -10,6 +10,9 @@ import { CollectionDTO } from '../useCases/DTOs/CollectionDTO'
 import { FeaturedItemsDTO } from '../useCases/DTOs/FeaturedItemsDTO'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import { LinkingObjectType } from '../useCases/getCollectionsForLinking'
+import { CollectionSummary } from '../models/CollectionSummary'
+import { CollectionLinks } from '../models/CollectionLinks'
 
 export interface CollectionRepository {
   getById: (id?: string) => Promise<Collection>
@@ -41,4 +44,19 @@ export interface CollectionRepository {
   ): Promise<FeaturedItem[]>
   deleteFeaturedItems(collectionIdOrAlias: number | string): Promise<void>
   deleteFeaturedItem(featuredItemId: number): Promise<void>
+  getForLinking(
+    objectType: LinkingObjectType,
+    id: number | string,
+    searchTerm?: string
+  ): Promise<CollectionSummary[]>
+  getForUnlinking(
+    objectType: LinkingObjectType,
+    id: number | string,
+    searchTerm?: string
+  ): Promise<CollectionSummary[]>
+  link(
+    linkedCollectionIdOrAlias: number | string,
+    linkingCollectionIdOrAlias: number | string
+  ): Promise<void>
+  getLinks(collectionIdOrAlias: number | string): Promise<CollectionLinks>
 }

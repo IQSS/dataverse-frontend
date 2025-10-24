@@ -51,3 +51,12 @@ export const WithThumbnail: Story = {
     />
   )
 }
+
+export const Linked: Story = {
+  render: () => (
+    <CollectionCard
+      parentCollectionAlias="parentAlias"
+      collectionPreview={CollectionItemTypePreviewMother.createLinked()}
+    />
+  )
+}

@@ -76,14 +76,6 @@ export const WatermarkMetadataFieldOptions = {
 export type WatermarkMetadataField =
   (typeof WatermarkMetadataFieldOptions)[keyof typeof WatermarkMetadataFieldOptions]
 
-export const DateFormatsOptions = {
-  YYYY: 'YYYY',
-  YYYYMM: 'YYYY-MM',
-  YYYYMMDD: 'YYYY-MM-DD'
-} as const
-
-export type DateFormats = (typeof DateFormatsOptions)[keyof typeof DateFormatsOptions]
-
 export interface MetadataBlockInfoDisplayFormat {
   name: string
   displayName: string
