@@ -33,8 +33,12 @@ void i18next
 
 export default i18next
 
+// Set once on initialization and on every language change
+i18next.on('initialized', () => setHtmlLangAndDir(i18next.language))
+i18next.on('languageChanged', (lng) => setHtmlLangAndDir(lng))
+
 /**
- * Detect the initial language to be used by i18next.
+ * Defines the initial language to be used by i18next.
  * The order of precedence is:
  * 1. Language stored in localStorage (if any)
  * 2. Browser language (if supported)
@@ -60,4 +64,21 @@ function defineLanguage(): string {
   }
 
   return defaultLang
+}
+
+/**
+ * Keep the <html> tag's lang/dir in sync with the active i18n language for accessibility and SEO.
+ */
+function setHtmlLangAndDir(lng: string | undefined) {
+  if (!lng) return
+  const html = document.documentElement
+
+  // Get base language (e.g., "en" from "en-US")
+  const baseLang = lng.split('-')[0]
+
+  html.setAttribute('lang', baseLang)
+
+  // This could be the first step into supporting RTL languages, but there is still a lot to do in the UI.
+  const rtlLangs = new Set(['ar', 'fa', 'he', 'iw', 'kd', 'pk', 'ps', 'ug', 'ur', 'yi'])
+  html.setAttribute('dir', rtlLangs.has(baseLang) ? 'rtl' : 'ltr')
 }
