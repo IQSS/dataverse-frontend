@@ -9,7 +9,8 @@ window.__APP_CONFIG__ = {
   },
   languages: [
     { code: 'en', name: 'English' },
-    { code: 'es', name: 'Español' }
+    { code: 'es', name: 'Español' },
+    { code: 'es-ar', name: 'Español (Argentina)' }
   ],
   defaultLanguage: 'en'
 }
