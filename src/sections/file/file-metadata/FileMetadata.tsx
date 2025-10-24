@@ -4,7 +4,7 @@ import TurndownService from 'turndown'
 import { FilePreview } from '../file-preview/FilePreview'
 import { FileLabels } from '../file-labels/FileLabels'
 import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
-import { DATAVERSE_BACKEND_URL } from '../../../config'
+import { requireAppConfig } from '../../../config'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
 import { FilePermissions } from '../../../files/domain/models/FilePermissions'
 import { MarkdownComponent } from '@/sections/dataset/markdown/MarkdownComponent'
@@ -13,6 +13,8 @@ import { ExportMetadataDropdown } from '@/sections/dataset/dataset-metadata/expo
 import { File } from '@/files/domain/models/File'
 import styles from './FileMetadata.module.scss'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
+
+const appConfig = requireAppConfig()
 
 interface FileMetadataProps {
   name: string
@@ -98,7 +100,7 @@ export function FileMetadata({
                     </p>
                   </Trans>
                   <code className={styles.code}>
-                    {DATAVERSE_BACKEND_URL}
+                    {appConfig.backendUrl}
                     {removeQueryParams(metadata.downloadUrls.original)}
                   </code>
                 </Col>

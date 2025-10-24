@@ -59,11 +59,12 @@
     "typescript": "5.7.2",
     "use-deep-compare": "1.2.1",
     "vite-plugin-istanbul": "4.0.1",
-    "web-vitals": "2.1.4"
+    "web-vitals": "2.1.4",
+    "zod": "4.1.12"
   },
   "scripts": {
     "start": "vite --base=/spa",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build -- --base=/spa",
     "build-keycloak-theme": "npm run build && keycloakify build",
     "preview": "vite preview",
     "lint": "npm run typecheck && npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",

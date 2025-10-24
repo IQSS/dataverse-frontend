@@ -47,7 +47,7 @@ import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersio
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 import { axiosInstance } from '@/axiosInstance'
-import { DATAVERSE_BACKEND_URL } from '../../../config'
+import { requireAppConfig } from '../../../config'
 import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
@@ -69,7 +69,9 @@ interface IDatasetDetails {
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
+  static get DATAVERSE_BACKEND_URL(): string {
+    return requireAppConfig().backendUrl
+  }
 
   getAllWithCount(
     collectionId: string,
