@@ -61,7 +61,11 @@ export function initAppConfig(): AppConfigResult {
 
 export function requireAppConfig(): AppConfig {
   if (!CONFIG) {
-    throw new Error('App config not initialized. Call initAppConfig() first.')
+    const result = initAppConfig()
+    if (!result.ok) {
+      const details = result.schemaError ? `\n${result.schemaError}` : ''
+      throw new Error(`${result.message}${details}`)
+    }
   }
-  return CONFIG
+  return CONFIG as AppConfig
 }

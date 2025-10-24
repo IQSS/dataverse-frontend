@@ -48,10 +48,12 @@ import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { Utils } from '@/shared/helpers/Utils'
 import { SessionContext } from '@/sections/session/SessionContext'
 import { User } from '@/users/domain/models/User'
-import { OIDC_AUTH_CONFIG } from '@/config'
+import { requireAppConfig } from '@/config'
 import { ToastContainer } from 'react-toastify'
 import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
+
+const appConfig = requireAppConfig()
 
 // Define your custom mount function
 
@@ -134,7 +136,7 @@ Cypress.Commands.add('login', () => {
     .should('eq', `${Cypress.config().baseUrl as string}/spa`)
     .then(() => {
       const token = Utils.getLocalStorageItem<string>(
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+        `${appConfig.oidc.localStorageKeyPrefix}token`
       )
 
       if (!token) {

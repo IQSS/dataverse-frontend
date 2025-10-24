@@ -13,7 +13,10 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
+// Bootstrap runtime config first so commands (and any imports) can safely requireAppConfig
+import './bootstrapAppConfig'
+
+// Import commands.js using ES2015 syntax (after config is ready):
 import './commands'
 import '@cypress/code-coverage/support'
 import '../../src/assets/global.scss'
