@@ -6,12 +6,11 @@ import { ConfigError } from './ConfigError'
 import { ApiConfig } from '@iqss/dataverse-client-javascript'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 
-// TODO:ME - Fix Tests
-// TODO:ME - Test with folders like es-ar, en-ca
-// TODO:ME - Add a default language config also in AppConfigSchema
-// TODO:ME - Update to latest react-i18next versions if needed
 // TODO:ME - Configure language selector to choose between available languages in config
 // TODO:ME - Persist language selection in localStorage or cookies
+// TODO:ME - Test with folders like es-ar, en-ca
+// TODO:ME - Update github actions to stop using .env file (deploy, deploy-beta-testing and test yml files)
+// TODO:ME - HINT: For easy testing - setting lng to 'cimode' will set t function to always return the key.
 
 const AppEntrypoint = lazy(() => import('./index.app'))
 
