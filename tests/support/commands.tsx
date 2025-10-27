@@ -53,8 +53,6 @@ import { ToastContainer } from 'react-toastify'
 import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 
-const appConfig = requireAppConfig()
-
 // Define your custom mount function
 
 export type RouterInitialEntry = string | Partial<Location>
@@ -135,6 +133,7 @@ Cypress.Commands.add('login', () => {
   cy.url()
     .should('eq', `${Cypress.config().baseUrl as string}/spa`)
     .then(() => {
+      const appConfig = requireAppConfig()
       const token = Utils.getLocalStorageItem<string>(
         `${appConfig.oidc.localStorageKeyPrefix}token`
       )

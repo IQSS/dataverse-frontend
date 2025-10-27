@@ -24,19 +24,26 @@ function buildTestConfig(): AppConfig {
       logoutEndpoint: (Cypress.env('OIDC_LOGOUT_ENDPOINT') as string) || `${realmBase}/logout`,
       localStorageKeyPrefix: (Cypress.env('OIDC_LS_PREFIX') as string) || 'DV_'
     },
-    languages: [
+    languages: (Cypress.env('LANGUAGES') as { code: string; name: string }[]) || [
       { code: 'en', name: 'English' },
       { code: 'es', name: 'Español' }
     ],
-    defaultLanguage: 'en'
+    defaultLanguage: (Cypress.env('DEFAULT_LANGUAGE') as string) || 'en'
   }
 }
 
-if (typeof window !== 'undefined') {
-  window.__APP_CONFIG__ = buildTestConfig()
+export function applyTestAppConfig() {
+  if (typeof window !== 'undefined') {
+    window.__APP_CONFIG__ = buildTestConfig()
+  }
+  const result = initAppConfig()
+  if (!result.ok) {
+    console.error('Cypress bootstrapAppConfig: invalid configuration', result)
+  }
+  return result
 }
 
-const result = initAppConfig()
-if (!result.ok) {
-  console.error('Cypress bootstrapAppConfig: invalid configuration', result)
+// Apply config immediately when this module is loaded
+if (typeof window !== 'undefined') {
+  applyTestAppConfig()
 }

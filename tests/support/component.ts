@@ -13,8 +13,7 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Bootstrap runtime config first so commands (and any imports) can safely requireAppConfig
-import './bootstrapAppConfig'
+import { applyTestAppConfig } from './bootstrapAppConfig'
 
 // Import commands.js using ES2015 syntax (after config is ready):
 import './commands'
@@ -60,6 +59,11 @@ declare global {
 }
 
 Cypress.Commands.add('mount', mount)
+
+// Apply runtime app config before each test
+beforeEach(() => {
+  applyTestAppConfig()
+})
 
 // Example use:
 // cy.mount(<MyComponent />)
