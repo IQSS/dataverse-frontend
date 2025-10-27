@@ -283,7 +283,7 @@
       "added": "Added: {{count}}",
       "removed": "Removed: {{count}}",
       "replaced": "Replaced: {{count}}",
-      "fileMetadataChanged": "File Metadata Changed: {{count}}",
+      "fileMetadataChanged": "Metadata Changed: {{count}}",
       "variableMetadataChanged": "Variable Metadata Changed: {{count}}"
     },
     "termsAccessChanged": "Changed"

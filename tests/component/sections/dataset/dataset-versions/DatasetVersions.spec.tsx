@@ -35,6 +35,8 @@ const versionSummaryInfoDraft: DatasetVersionSummaryInfo[] = [
     publishedOn: ''
   }
 ]
+const versionSummaryInfoDeaccessioned = DatasetVersionsSummariesMother.createDeaccessioned()
+
 const datasetVersionDiff: DatasetVersionDiff = DatasetVersionDiffMother.create()
 
 describe('DatasetVersions', () => {
@@ -52,6 +54,52 @@ describe('DatasetVersions', () => {
     cy.findByText(/View Details/).should('not.exist')
 
     cy.findByText('DRAFT').should('exist').and('have.attr', 'href')
+  })
+
+  it('should not show view detail buttons if the version is deaccessioned', () => {
+    cy.customMount(
+      <DatasetVersions
+        datasetId={'datasetId'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'1.0'}
+        canUpdateDataset={true}
+        isInView
+      />
+    )
+    datasetsRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves(versionSummaryInfoDeaccessioned)
+
+    cy.findByTestId('dataset-versions-table').should('exist')
+    cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('not.exist')
+  })
+
+  it('should show view detail buttons if previous version is deaccessioned', () => {
+    cy.customMount(
+      <DatasetVersions
+        datasetId={'datasetId'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'1.0'}
+        canUpdateDataset={true}
+        isInView
+      />
+    )
+    const versionSummaryInfoNoPreviousVersion = [
+      {
+        id: 12,
+        versionNumber: '5.0',
+        summary: {},
+        contributors: 'Test ',
+        publishedOn: ''
+      },
+      ...versionSummaryInfoDeaccessioned
+    ]
+    datasetsRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves(versionSummaryInfoNoPreviousVersion)
+
+    cy.findByTestId('dataset-versions-table').should('exist')
+    cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('exist')
   })
 
   beforeEach(() => {

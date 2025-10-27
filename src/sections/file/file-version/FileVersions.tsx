@@ -75,11 +75,23 @@ export function FileVersions({
         <tbody>
           {fileVersionSummaries?.map((fileVersion) => {
             const isCurrentVersion = fileVersion.datasetVersion === displayVersion
+            // Helper functions for readability
+            const hasDataFile = fileVersion.datafileId
+            const hasSummaryChanges =
+              fileVersion.fileDifferenceSummary !== undefined &&
+              Object.entries(fileVersion.fileDifferenceSummary).length > 0
+            const isReleased = fileVersion.versionState === DatasetVersionState.RELEASED
+            const isDeaccessionedWithAccess =
+              fileVersion.versionState === DatasetVersionState.DEACCESSIONED && canEditOwnerDataset
+            const isDraftWithAccess =
+              fileVersion.versionState === DatasetVersionState.DRAFT && canEditOwnerDataset
+
             const isLinkable =
-              fileVersion.versionState === DatasetVersionState.RELEASED ||
-              (fileVersion.versionState === DatasetVersionState.DEACCESSIONED &&
-                canEditOwnerDataset) ||
-              (fileVersion.versionState === DatasetVersionState.DRAFT && canEditOwnerDataset)
+              hasDataFile &&
+              hasSummaryChanges &&
+              (isReleased || isDeaccessionedWithAccess || isDraftWithAccess)
+
+            console.log('fileVersion', fileVersion, isLinkable)
 
             return (
               <tr key={fileVersion.datasetVersion}>
@@ -98,7 +110,10 @@ export function FileVersions({
                 </td>
 
                 <td style={{ textAlign: 'left' }}>
-                  <SummaryDescription summary={fileVersion.fileDifferenceSummary} />
+                  <SummaryDescription
+                    summary={fileVersion.fileDifferenceSummary}
+                    isNoVersions={fileVersion.datafileId === undefined}
+                  />
                 </td>
                 <td>{fileVersion.contributors}</td>
                 {fileVersion.publishedDate &&
@@ -116,7 +131,13 @@ export function FileVersions({
   )
 }
 
-export const SummaryDescription = ({ summary }: { summary?: FileDifferenceSummary }) => {
+export const SummaryDescription = ({
+  summary,
+  isNoVersions
+}: {
+  summary?: FileDifferenceSummary
+  isNoVersions?: boolean
+}) => {
   const summaryText: Record<string, string> | string = useFileVersionSummaryDescription(summary)
   const { t } = useTranslation('file')
 
@@ -124,10 +145,18 @@ export const SummaryDescription = ({ summary }: { summary?: FileDifferenceSummar
     return <span style={{ fontStyle: 'italic' }}>{summaryText}</span>
   }
 
+  if (isNoVersions) {
+    return <span style={{ fontStyle: 'italic' }}>{t('fileVersion.noVersions')}</span>
+  }
+
+  if (!summary || !Object.entries(summary).length) {
+    return <span style={{ fontStyle: 'italic' }}>{t('fileVersion.noChange')}</span>
+  }
+
   if (summaryText[t('fileVersion.deaccessionedReason')]) {
     return (
       <span>
-        <strong>Deaccessioned Reason</strong>: {summaryText[t('fileVersion.deaccessionedReason')]}
+        {t('fileVersion.deaccessionedReason')}: {summaryText[t('fileVersion.deaccessionedReason')]}
       </span>
     )
   }

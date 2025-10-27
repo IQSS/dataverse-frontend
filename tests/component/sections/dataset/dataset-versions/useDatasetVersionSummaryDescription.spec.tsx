@@ -29,9 +29,7 @@ describe('useDatasetVersionSummaryDescription', () => {
 
     expect(result.current)
       .haveOwnProperty('Files')
-      .equal(
-        'Added: 2; Removed: 1; Replaced: 1; File Metadata Changed: 3; Variable Metadata Changed: 1'
-      )
+      .equal('Added: 2; Removed: 1; Replaced: 1; Metadata Changed: 3; Variable Metadata Changed: 1')
     expect(result.current)
       .haveOwnProperty('Citation Metadata')
       .equal('Description (Changed); Title (1 Added)')

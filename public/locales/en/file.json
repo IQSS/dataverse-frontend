@@ -12,6 +12,7 @@
     "summary": "Summary",
     "contributors": "Contributors",
     "noChange": "No changes associated with this version.",
+    "noVersions": "File not included in this version.",
     "file": "file",
     "fileChanged": "[File {{name}}]",
     "access": "File Access",
