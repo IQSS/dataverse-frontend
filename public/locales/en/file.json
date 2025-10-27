@@ -29,7 +29,6 @@
     },
     "error": "Error on loading file versions"
   },
-  "fileNotChange": "No changes associated with this version",
   "subtext": "This file is part of \"{{datasetTitle}}\".",
   "datasetCitationTitle": "Dataset Citation",
   "fileCitationTitle": "File Citation",

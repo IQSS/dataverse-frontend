@@ -111,13 +111,11 @@ export function DatasetVersions({
           </thead>
           <tbody>
             {datasetVersionSummaries?.map((dataset, index) => {
-              // Helper function to check if a version is deaccessioned
               const isVersionDeaccessioned = (version: DatasetVersionSummaryInfo) =>
                 typeof version.summary === 'object' &&
                 version.summary !== null &&
                 'deaccessioned' in version.summary
 
-              // Find the last non-deaccessioned previous version
               const findLastNonDeaccessionedPreviousVersion = () => {
                 for (let i = index + 1; i < datasetVersionSummaries.length; i++) {
                   const version = datasetVersionSummaries[i]

@@ -77,9 +77,6 @@ export function FileVersions({
             const isCurrentVersion = fileVersion.datasetVersion === displayVersion
             // Helper functions for readability
             const hasDataFile = fileVersion.datafileId
-            const hasSummaryChanges =
-              fileVersion.fileDifferenceSummary !== undefined &&
-              Object.entries(fileVersion.fileDifferenceSummary).length > 0
             const isReleased = fileVersion.versionState === DatasetVersionState.RELEASED
             const isDeaccessionedWithAccess =
               fileVersion.versionState === DatasetVersionState.DEACCESSIONED && canEditOwnerDataset
@@ -87,11 +84,7 @@ export function FileVersions({
               fileVersion.versionState === DatasetVersionState.DRAFT && canEditOwnerDataset
 
             const isLinkable =
-              hasDataFile &&
-              hasSummaryChanges &&
-              (isReleased || isDeaccessionedWithAccess || isDraftWithAccess)
-
-            console.log('fileVersion', fileVersion, isLinkable)
+              hasDataFile && (isReleased || isDeaccessionedWithAccess || isDraftWithAccess)
 
             return (
               <tr key={fileVersion.datasetVersion}>

@@ -187,6 +187,6 @@ describe('FileVersions', () => {
         isInView
       />
     )
-    cy.contains('No changes associated with this version.').should('exist')
+    cy.contains('File not included in this version.').should('exist')
   })
 })
