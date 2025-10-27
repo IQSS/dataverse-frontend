@@ -14,8 +14,6 @@ import { File } from '@/files/domain/models/File'
 import styles from './FileMetadata.module.scss'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 
-const appConfig = requireAppConfig()
-
 interface FileMetadataProps {
   name: string
   metadata: FileMetadataModel
@@ -39,6 +37,7 @@ export function FileMetadata({
   dataverseInfoRepository
 }: FileMetadataProps) {
   const { t } = useTranslation('file')
+  const appConfig = requireAppConfig()
 
   return (
     <>

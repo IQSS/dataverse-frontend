@@ -6,8 +6,6 @@ import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInf
 import { QueryParamKey } from '@/sections/Route.enum'
 import { requireAppConfig } from '@/config'
 
-const appConfig = requireAppConfig()
-
 interface ExportMetadataDropdownProps {
   datasetPersistentId: string
   datasetIsReleased: boolean
@@ -25,6 +23,8 @@ export const ExportMetadataDropdown = ({
   anonymizedView,
   dataverseInfoRepository
 }: ExportMetadataDropdownProps) => {
+  const appConfig = requireAppConfig()
+
   const { t } = useTranslation('shared')
   const { datasetMetadataExportFormats, isLoadingExportFormats, errorGetExportFormats } =
     useGetAvailableDatasetMetadataExportFormats({ dataverseInfoRepository })

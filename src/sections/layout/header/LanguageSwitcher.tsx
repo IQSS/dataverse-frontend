@@ -4,14 +4,11 @@ import { Translate as TranslateIcon } from 'react-bootstrap-icons'
 import { LANGUAGE_LOCAL_STORAGE_KEY } from '@/i18n'
 import { requireAppConfig } from '@/config'
 
-// TODO:ME - Show screenshots of variants of dropdown title (with icon, only icon, only text, both) and get feedback from team
-
 export const LanguageSwitcher = () => {
   const { i18n, t } = useTranslation('shared')
 
   const appConfig = requireAppConfig()
 
-  // We dont render the language switcher if there is only one language configured
   if (appConfig.languages.length < 2) return null
 
   const handleSelectLanguage = (lang: string) => {
@@ -27,7 +24,7 @@ export const LanguageSwitcher = () => {
       title={
         <div className="d-inline-flex align-items-center gap-1">
           <TranslateIcon />
-          <span>{t('language')}</span>
+          <span data-testid="language-switcher-dropdown-title">{t('language')}</span>
         </div>
       }
       id="language-switcher-dropdown">
