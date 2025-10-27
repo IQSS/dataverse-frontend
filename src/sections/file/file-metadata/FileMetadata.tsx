@@ -90,15 +90,20 @@ export function FileMetadata({
                   <strong>{t('metadata.fields.downloadUrl.title')}</strong>
                 </Col>
                 <Col>
-                  <Trans i18nKey="metadata.fields.downloadUrl.description">
-                    <p className={styles['help-text']}>
-                      Use the Download URL in a Wget command or a download manager to avoid
-                      interrupted downloads, time outs or other failures.{' '}
-                      <a href="https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url">
-                        User Guide - Downloading via URL
-                      </a>
-                    </p>
-                  </Trans>
+                  <p className={styles['help-text']}>
+                    <Trans
+                      t={t}
+                      i18nKey="metadata.fields.downloadUrl.description"
+                      components={{
+                        1: (
+                          <a
+                            href="https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url"
+                            target="_blank"
+                            rel="noreferrer"></a>
+                        )
+                      }}
+                    />
+                  </p>
                   <code className={styles.code}>
                     {appConfig.backendUrl}
                     {removeQueryParams(metadata.downloadUrls.original)}
