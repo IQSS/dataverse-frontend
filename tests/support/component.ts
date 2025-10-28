@@ -13,9 +13,7 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import { applyTestAppConfig } from './bootstrapAppConfig'
-
-// Import commands.js using ES2015 syntax (after config is ready):
+import './bootstrapAppConfig' // Initialize test runtime config before any commands/modules
 import './commands'
 import '@cypress/code-coverage/support'
 import '../../src/assets/global.scss'
@@ -26,6 +24,7 @@ import { mount, MountReturn } from 'cypress/react'
 import { RouterInitialEntry } from './commands'
 import { ReactNode } from 'react'
 import { User } from '@/users/domain/models/User'
+import { applyTestAppConfig } from './bootstrapAppConfig'
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -60,7 +59,7 @@ declare global {
 
 Cypress.Commands.add('mount', mount)
 
-// Apply runtime app config before each test
+// Apply runtime app config also before each test so we can use Cypress.env to override values and test different scenarios
 beforeEach(() => {
   applyTestAppConfig()
 })

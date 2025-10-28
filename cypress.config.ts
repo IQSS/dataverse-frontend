@@ -35,13 +35,8 @@ export default defineConfig({
     }
   },
   env: {
-    // Test runtime config defaults; these are used by tests/support/bootstrapAppConfig.ts and can be override and can be override with http://docs.cypress.io/api/cypress-api/env#Name-and-Value
-    BACKEND_URL: 'http://localhost:8000',
-    OIDC_REALM_BASE: 'http://localhost:8000/realms/test/protocol/openid-connect',
-    OIDC_CLIENT_ID: 'test',
-    OIDC_LS_PREFIX: 'DV_',
     codeCoverage: {
       exclude: ['tests/**/*.*', '**/ErrorPage.tsx']
     }
-  }
+  },
 })
