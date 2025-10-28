@@ -10,7 +10,7 @@ describe('LanguageSwitcher', () => {
     'does not render when only one language is configured',
     {
       env: {
-        LANGUAGES: [{ code: 'en', name: 'English' }]
+        languages: [{ code: 'en', name: 'English' }]
       }
     },
     () => {
@@ -24,7 +24,7 @@ describe('LanguageSwitcher', () => {
     'renders language options correctly when more than one language is configured',
     {
       env: {
-        LANGUAGES: [
+        languages: [
           { code: 'en', name: 'English' },
           { code: 'es', name: 'Español' },
           { code: 'it', name: 'Italiano' }
