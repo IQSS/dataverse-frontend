@@ -10,6 +10,7 @@ import {
 } from '../../../../../../../../dataset/domain/models/DatasetMother'
 import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 
 const file = FilePreviewMother.createDefault()
 const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -35,7 +36,11 @@ describe('FileOptionsMenu', () => {
   it('renders the FileOptionsMenu', () => {
     cy.mountAuthenticated(
       withDataset(
-        <FileOptionsMenu file={file} fileRepository={fileRepository} />,
+        <FileOptionsMenu
+          file={file}
+          fileRepository={fileRepository}
+          datasetRepository={new DatasetMockRepository()}
+        />,
         datasetWithUpdatePermissions
       )
     )
@@ -45,7 +50,11 @@ describe('FileOptionsMenu', () => {
   it('renders the file options menu with tooltip', () => {
     cy.mountAuthenticated(
       withDataset(
-        <FileOptionsMenu file={file} fileRepository={fileRepository} />,
+        <FileOptionsMenu
+          file={file}
+          fileRepository={fileRepository}
+          datasetRepository={new DatasetMockRepository()}
+        />,
         datasetWithUpdatePermissions
       )
     )
@@ -57,7 +66,11 @@ describe('FileOptionsMenu', () => {
   it('renders the dropdown header', () => {
     cy.mountAuthenticated(
       withDataset(
-        <FileOptionsMenu file={file} fileRepository={fileRepository} />,
+        <FileOptionsMenu
+          file={file}
+          fileRepository={fileRepository}
+          datasetRepository={new DatasetMockRepository()}
+        />,
         datasetWithUpdatePermissions
       )
     )
@@ -69,7 +82,11 @@ describe('FileOptionsMenu', () => {
   it('does not render is the user is not authenticated', () => {
     cy.customMount(
       withDataset(
-        <FileOptionsMenu file={file} fileRepository={fileRepository} />,
+        <FileOptionsMenu
+          file={file}
+          fileRepository={fileRepository}
+          datasetRepository={new DatasetMockRepository()}
+        />,
         datasetWithUpdatePermissions
       )
     )
@@ -83,7 +100,11 @@ describe('FileOptionsMenu', () => {
     })
     cy.mountAuthenticated(
       withDataset(
-        <FileOptionsMenu file={file} fileRepository={fileRepository} />,
+        <FileOptionsMenu
+          file={file}
+          fileRepository={fileRepository}
+          datasetRepository={new DatasetMockRepository()}
+        />,
         datasetWithNoUpdatePermissions
       )
     )
@@ -96,7 +117,11 @@ describe('FileOptionsMenu', () => {
     })
     cy.mountAuthenticated(
       withDataset(
-        <FileOptionsMenu file={file} fileRepository={fileRepository} />,
+        <FileOptionsMenu
+          file={file}
+          fileRepository={fileRepository}
+          datasetRepository={new DatasetMockRepository()}
+        />,
         datasetWithNoTermsOfAccess
       )
     )
@@ -111,7 +136,11 @@ describe('FileOptionsMenu', () => {
     })
     cy.mountAuthenticated(
       withDataset(
-        <FileOptionsMenu file={file} fileRepository={fileRepository} />,
+        <FileOptionsMenu
+          file={file}
+          fileRepository={fileRepository}
+          datasetRepository={new DatasetMockRepository()}
+        />,
         datasetLockedFromEdits
       )
     )
@@ -124,7 +153,11 @@ describe('FileOptionsMenu', () => {
 
     cy.mountAuthenticated(
       withDataset(
-        <FileOptionsMenu file={file} fileRepository={fileRepository} />,
+        <FileOptionsMenu
+          file={file}
+          fileRepository={fileRepository}
+          datasetRepository={new DatasetMockRepository()}
+        />,
         datasetWithUpdatePermissions
       )
     )
@@ -135,12 +168,17 @@ describe('FileOptionsMenu', () => {
     cy.findAllByText(
       'This file has already been deleted (or replaced) in the current version. It may not be edited.'
     ).should('exist')
+    cy.findAllByRole('button', { name: 'Close' }).first().should('exist').click()
   })
 
   it('renders the menu options', () => {
     cy.mountAuthenticated(
       withDataset(
-        <FileOptionsMenu file={file} fileRepository={fileRepository} />,
+        <FileOptionsMenu
+          file={file}
+          fileRepository={fileRepository}
+          datasetRepository={new DatasetMockRepository()}
+        />,
         datasetWithUpdatePermissions
       )
     )

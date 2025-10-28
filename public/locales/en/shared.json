@@ -27,6 +27,7 @@
   "dragHandleLabel": "press space to select and keys to drag",
   "unknown": "Unknown",
   "find": "Find",
+  "link": "Link",
   "allowPopups": "You must enable popups in your browser to open external tools in a new window or tab.",
   "externalToolOpeningFailed": "There was a problem opening the external tool. Please try again.",
   "exportMetadata": "Export Metadata",
@@ -62,11 +63,23 @@
     "field": {
       "required": "{{displayName}} is required",
       "invalid": {
-        "url": "{{displayName}} is not a valid URL",
-        "email": "{{displayName}} is not a valid email",
-        "int": "{{displayName}} is not a valid integer",
-        "float": "{{displayName}} is not a valid float",
-        "date": "{{displayName}} is not a valid date. Please use the format {{dateFormat}}"
+        "url": "{{displayName}} {{value}} is not a valid URL.",
+        "email": "{{displayName}} {{value}} is not a valid email.",
+        "int": "{{displayName}} is not a valid integer.",
+        "float": "{{displayName}} is not a valid float.",
+        "date": {
+          "base": "{{displayName}} is not a valid date.",
+          "empty": "The date is empty.",
+          "adDigits": "The AD year must be numeric.",
+          "adRange": "The AD year can't be higher than 9999.",
+          "bracketNotNumeric": "The year in brackets must be numeric.",
+          "bracketNegative": "The year in brackets cannot be negative.",
+          "bracketRange": "The year in brackets is out of range.",
+          "invalidMonth": "The month is out of range.",
+          "invalidDay": "The day is out of range.",
+          "invalidTime": "The time is out of range.",
+          "unrecognized": "The date format is unrecognized."
+        }
       }
     },
     "status": {
@@ -291,6 +304,16 @@
     "truncateLessBtn": "Collapse {{contentName}}",
     "truncateMoreTip": "Click to read the full {{contentName}}",
     "truncateLessTip": "Click to collapse the {{contentName}}"
+  },
+  "collectionLinkSelect": {
+    "label": "Your Collection",
+    "select": "Select a Collection",
+    "placeholder": "Enter Collection Name",
+    "noOptions": "No collections found",
+    "onlyOneCollectionToLink": "You have one collection you can link this {{linkingObjectType}} to.",
+    "onlyOneCollectionToUnlink": "You have one collection you can unlink this {{linkingObjectType}} from.",
+    "noCollectionsToLink": "No collections are showing up to link. They may already be linked, or you might not have any yet. Create a new collection to continue.",
+    "noCollectionsToUnlink": "No collections are showing up to unlink."
   },
   "exploreOptions": "Explore Options",
   "queryOptions": "Query Options",

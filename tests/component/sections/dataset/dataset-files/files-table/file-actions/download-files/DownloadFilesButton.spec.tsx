@@ -136,7 +136,34 @@ describe('DownloadFilesButton', () => {
     )
 
     cy.get('#download-files').click()
+    cy.findByRole('dialog').should('exist')
     cy.findByText('Select File(s)').should('exist')
+    cy.findAllByRole('button', { name: 'Close' }).first().click()
+  })
+
+  it('shows the No Selected Files modal if no tabular files are selected', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
+    })
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={{}} />,
+        datasetWithDownloadFilesPermission
+      )
+    )
+
+    cy.get('#download-files').click()
+
+    cy.findByRole('button', { name: 'Original Format' }).should('exist')
+    cy.findByRole('button', { name: 'Archival Format (.tab)' }).should('exist').click()
+
+    cy.findByRole('dialog').should('exist')
+    cy.findByText('Select File(s)').should('exist')
+    cy.findAllByRole('button', { name: 'Close' }).first().click()
   })
 
   it('renders the download url for the selected files when some files are selected and there are no tabular files', () => {

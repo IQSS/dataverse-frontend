@@ -944,15 +944,14 @@ However, we prioritize user-centric testing over coverage numbers.
 - **Coverage Threshold:** We aim for a test coverage of 95% for the unit tests. This threshold is set in the `.nycrc.json` file.
 - **Coverage Reports:** We use [nyc](https://www.npmjs.com/package/nyc) to generate coverage reports, which are available
   in the `coverage` folder after running the tests. These reports are also published to [Coveralls](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
-  with every pull request and merge. The coverage badge is displayed at the top of the README.
+  with every pull request and merge. The coverage badge is displayed at the top of the README. See "include" and "exclude" in `.nycrc.json` to learn about which source files are included in coverage reports.
 - **Tests included in the coverage:** We include all unit tests in the coverage report.
 
 #### How to run the code coverage
 
-To generate the code coverage, you first need to run the tests with the `test:unit` script. After running the tests, you
-can check the coverage with the `test:coverage` script.
+To generate the code coverage, you first need to run the tests with the `test:unit` script. This can take a while! After running the tests, you can check the coverage with the `test:coverage` script. This will simply report the total coverage.
 
-If you want to see the coverage report in the browser, you can open the `coverage/lcov-report/index.html` file in the browser.
+To see which lines are not covered, you can open the coverage report in the browser: `coverage/lcov-report/index.html`.
 
 ```bash
 # root project directory
@@ -964,7 +963,11 @@ npm run test:unit
 # Check the coverage
 
 npm run test:coverage
+
+# See detailed report at coverage/lcov-report/index.html
 ```
+
+Note that it's easy for the `lcov-report` report to get overwritten. For example, running any test with `npm run cy:open-unit` will overwrite it. For this reason you might want to copy the `lcov-report` directory elsewhere for safe keeping. That’s mainly useful for debugging previous coverage results and improving them.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
@@ -1044,84 +1047,6 @@ application running on Payara, which can potentially be a Dataverse backend. Thi
 path included will redirect to the frontend application.
 
 </details>
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-<br>
-
-## Publishing the Design System
-
-The Design System is published to the npm Package Registry. To publish a new version, follow these steps:
-
-1. **Update the version**
-
-   Update the version running the lerna command:
-
-   ```shell
-   lerna version --no-push
-   ```
-
-   This command will ask you for the new version and will update the `package.json` files and create a new commit with the changes.
-
-2. **Review the auto generated CHANGELOG.md**
-
-   The lerna command will generate a new `CHANGELOG.md` file with the changes for the new version. Review the changes and make sure that the file is correct.
-
-   If it looks good, you can push the changes to the repository.
-
-   ```shell
-   git push && git push --tags
-   ```
-
-   Optional:
-
-   If you need to make any changes to the `CHANGELOG.md` file, you can do it manually.
-
-   After manually updating the `CHANGELOG.md` file, you can commit the changes.
-
-   ```shell
-   git add .
-   git commit --amend --no-edit
-   git push --force && git push --tags --force
-   ```
-
-   This command will amend the lerna commit and push the changes to the repository.
-
-3. **Review the new tag in GitHub**
-
-   After pushing the changes, you can review the new tag in the [GitHub repository](https://github.com/IQSS/dataverse-frontend/tags).
-
-   The tag should be created with the new version.
-
-4. **Publish the package**
-
-   After the version is updated, you can publish the package running the lerna command:
-
-   ```shell
-   lerna publish from-package
-   ```
-
-   This command will publish the package to the npm registry.
-
-   Remember that you need a valid npm token to publish the packages.
-
-   Get a new token from the npm website and update the `.npmrc` file with the new token.
-
-   Open the `.npmrc` file and replace `YOUR_NPM_TOKEN ` with your actual npm token.
-
-   ⚠️ Please ensure that any lines registering the `@iqss` scope with the GitHub Packages registry are commented out. This is important because otherwise, the package would be published there instead of npm.
-
-   ```plaintext
-   legacy-peer-deps=true
-
-    //npm.pkg.github.com/:_authToken=YOUR_NPM_TOKEN
-    @iqss:registry=https://npm.pkg.github.com/
-   ```
-
-5. **Review the new version in the npm registry**
-
-   After publishing the packages, you can review the new version in the [npm registry](https://www.npmjs.com/package/@iqss/dataverse-design-system?activeTab=versions).
-
-   The new version should be available in the npm registry.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>

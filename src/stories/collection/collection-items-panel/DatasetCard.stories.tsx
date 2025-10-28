@@ -37,3 +37,7 @@ export const InReview: Story = {
 export const WithThumbnail: Story = {
   render: () => <DatasetCard datasetPreview={DatasetItemTypePreviewMother.createWithThumbnail()} />
 }
+
+export const Linked: Story = {
+  render: () => <DatasetCard datasetPreview={DatasetItemTypePreviewMother.createLinked()} />
+}

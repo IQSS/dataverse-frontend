@@ -13,4 +13,5 @@ export interface DatasetItemTypePreview {
   parentCollectionName: string
   parentCollectionAlias: string
   userRoles?: string[]
+  isLinked?: boolean
 }

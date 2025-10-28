@@ -10,6 +10,7 @@ import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
 import { DatasetLicenseUpdateRequest } from '../models/DatasetLicenseUpdateRequest'
 import { DatasetTemplate } from '../models/DatasetTemplate'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 
 export interface DatasetRepository {
   getByPersistentId: (
@@ -31,7 +32,7 @@ export interface DatasetRepository {
   updateMetadata: (
     datasetId: string | number,
     datasetDTO: DatasetDTO,
-    internalVersionNumber: number
+    sourceLastUpdateTime?: string
   ) => Promise<void>
   updateLicense: (
     datasetId: string | number,
@@ -62,4 +63,7 @@ export interface DatasetRepository {
   ) => Promise<FormattedCitation>
   getTemplates: (collectionIdOrAlias: number | string) => Promise<DatasetTemplate[]>
   updateTermsOfAccess: (datasetId: string | number, termsOfAccess: TermsOfAccess) => Promise<void>
+  link(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
+  unlink(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
+  getDatasetLinkedCollections: (datasetId: string | number) => Promise<CollectionSummary[]>
 }

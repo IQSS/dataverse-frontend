@@ -31,13 +31,15 @@ type EditFilesListProps = {
   editFileMetadataFormData: EditFileMetadataFormData
   referrer: EditFileMetadataReferrer
   datasetPersistentId?: string
+  datasetLastUpdateTime: string
 }
 
 export const EditFilesList = ({
   fileRepository,
   editFileMetadataFormData,
   referrer,
-  datasetPersistentId
+  datasetPersistentId,
+  datasetLastUpdateTime
 }: EditFilesListProps) => {
   const { t } = useTranslation('shared')
   const navigate = useNavigate()
@@ -56,7 +58,8 @@ export const EditFilesList = ({
   }
   const { submitForm, submissionStatus, submitError } = useSubmitFileMetadata(
     fileRepository,
-    onSubmitSucceed
+    onSubmitSucceed,
+    datasetLastUpdateTime
   )
   const isSaving = submissionStatus === SubmissionStatus.IsSubmitting
   const handleCancel = () => navigate(-1)

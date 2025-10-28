@@ -27,7 +27,8 @@ type UseSubmitFileMetadataReturnType =
 
 export const useSubmitFileMetadata = (
   fileRepository: FileRepository,
-  onSubmitSucceed: () => void
+  onSubmitSucceed: () => void,
+  datasetLastUpdateTime: string
 ) => {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
@@ -45,7 +46,7 @@ export const useSubmitFileMetadata = (
             directoryLabel: file.fileDir,
             label: file.fileName
           }
-          await editFileMetadata(fileRepository, file.id, fileMetadataDTO)
+          await editFileMetadata(fileRepository, file.id, fileMetadataDTO, datasetLastUpdateTime)
         }
 
         setSubmitError(null)
