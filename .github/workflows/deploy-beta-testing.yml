@@ -30,8 +30,10 @@ jobs:
         working-directory: packages/design-system
         run: npm run build
 
-      # Override runtime configuration used by the SPA at /config.js (loaded by index.html)
-      - name: Create runtime config.js
+      - name: Build with base path
+        run: npm run build -- --base=/spa
+
+      - name: Override runtime config.js for BETA
         env:
           DATAVERSE_BACKEND_URL: ${{ secrets.BETA_DATAVERSE_BACKEND_URL }}
           OIDC_CLIENT_ID: ${{ secrets.BETA_OIDC_CLIENT_ID }}
@@ -59,9 +61,6 @@ jobs:
           }
           EOF
         shell: bash
-
-      - name: Build with base path
-        run: npm run build -- --base=/spa
 
       - uses: actions/upload-artifact@v4
         with:
