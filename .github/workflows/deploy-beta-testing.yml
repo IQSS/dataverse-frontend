@@ -3,7 +3,7 @@ name: 'Deploy to Beta Testing'
 on:
   push:
     branches:
-      - 877-spa-runtime-config
+      - develop
 
 jobs:
   build:
