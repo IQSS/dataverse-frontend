@@ -6,9 +6,6 @@ import { ConfigError } from './ConfigError'
 import { ApiConfig } from '@iqss/dataverse-client-javascript'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 
-// TODO:ME - Update github actions to stop using .env file (deploy, deploy-beta-testing and test yml files)
-// TODO:ME - HINT: For easy testing - setting lng to 'cimode' will set t function to always return the key.
-
 const AppEntrypoint = lazy(() => import('./index.app'))
 
 const container = document.getElementById('root') as HTMLElement
