@@ -41,36 +41,7 @@ if (typeof window !== 'undefined') {
 }
 
 /**
- * Builds the body of a config.js response for intercepting in Cypress e2e tests.
- * @example
-  it(
-    'test description',
-    // The second argument let us set Cypress.env variables for this test only
-    // These Cypress.env values will be used by buildTestConfig()
-    {
-      env: {
-        languages: [
-          { code: 'en', name: 'English' },
-          { code: 'it', name: 'Italiano' }
-        ]
-      }
-    },
-    () => {
-      // Then we intercept the config.js request and respond with our custom confige
-      cy.intercept(
-        { method: 'GET', url: 'config.js' },
-        {
-          statusCode: 200,
-          headers: { 'content-type': 'application/javascript' },
-          body: buildConfigJsBody()
-        }
-      )
-
-      cy.visit('/spa/')
-
-      // Test assertions here
-    }
-  )
+ * Builds the body of a config.js response for intercepting in Cypress e2e tests. More info on DEVELOPER_GUIDE.md "Mocking runtime configuration in tests"
  */
 export function buildConfigJsBody(): string {
   const cfg = buildTestConfig()
