@@ -10,7 +10,7 @@ import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
@@ -98,7 +98,11 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
-  getDatasetVersionsSummaries(_datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
+  getDatasetVersionsSummaries(
+    _datasetId: number | string,
+    _limit?: number,
+    _offset?: number
+  ): Promise<DatasetVersionSummarySubset> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetVersionsSummariesMother.create())

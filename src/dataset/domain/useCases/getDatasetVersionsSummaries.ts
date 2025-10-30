@@ -1,11 +1,13 @@
 import { DatasetRepository } from '../repositories/DatasetRepository'
-import { DatasetVersionSummaryInfo } from '../models/DatasetVersionSummaryInfo'
+import { DatasetVersionSummarySubset } from '../models/DatasetVersionSummaryInfo'
 
 export function getDatasetVersionsSummaries(
   datasetRepository: DatasetRepository,
-  datasetId: number | string
-): Promise<DatasetVersionSummaryInfo[]> {
-  return datasetRepository.getDatasetVersionsSummaries(datasetId).catch((error) => {
+  datasetId: number | string,
+  limit?: number,
+  offset?: number
+): Promise<DatasetVersionSummarySubset> {
+  return datasetRepository.getDatasetVersionsSummaries(datasetId, limit, offset).catch((error) => {
     throw error
   })
 }

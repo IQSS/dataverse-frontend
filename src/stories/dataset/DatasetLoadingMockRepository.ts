@@ -1,7 +1,7 @@
 import { DatasetMockRepository } from './DatasetMockRepository'
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 export class DatasetLoadingMockRepository extends DatasetMockRepository {
   getDatasetsWithCount: (
@@ -14,7 +14,11 @@ export class DatasetLoadingMockRepository extends DatasetMockRepository {
     return new Promise(() => {})
   }
 
-  getDatasetVersionsSummaries(_datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
+  getDatasetVersionsSummaries(
+    _datasetId: number | string,
+    _limit?: number,
+    _offset?: number
+  ): Promise<DatasetVersionSummarySubset> {
     return new Promise(() => {})
   }
 }

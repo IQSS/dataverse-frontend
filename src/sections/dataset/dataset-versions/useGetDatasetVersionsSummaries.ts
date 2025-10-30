@@ -7,7 +7,7 @@ interface UseGetDatasetVersionsSummaries {
   datasetVersionSummaries: DatasetVersionSummaryInfo[] | undefined
   error: string | null
   isLoading: boolean
-  fetchSummaries: () => Promise<void>
+  fetchSummaries: (limit?: number, offset?: number) => Promise<void>
 }
 
 interface Props {
@@ -25,23 +25,31 @@ export const useGetDatasetVersionsSummaries = ({
   const [isLoading, setIsLoading] = useState<boolean>(autoFetch)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchSummaries = useCallback(async () => {
-    setIsLoading(true)
-    setError(null)
+  const fetchSummaries = useCallback(
+    async (limit?: number, offset?: number) => {
+      setIsLoading(true)
+      setError(null)
 
-    try {
-      const versionSummaries = await getDatasetVersionsSummaries(datasetRepository, persistentId)
-      setSummaries(versionSummaries)
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error && err.message
-          ? err.message
-          : 'Something went wrong getting the information from the dataset versions summaries. Try again later.'
-      setError(errorMessage)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [datasetRepository, persistentId])
+      try {
+        const versionSummaries = await getDatasetVersionsSummaries(
+          datasetRepository,
+          persistentId,
+          limit,
+          offset
+        )
+        setSummaries(versionSummaries.summaries)
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong getting the information from the dataset versions summaries. Try again later.'
+        setError(errorMessage)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [datasetRepository, persistentId]
+  )
 
   useEffect(() => {
     if (autoFetch) {

@@ -1,18 +1,19 @@
 import { act, renderHook } from '@testing-library/react'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { DatasetVersionSummary } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionsSummariesMother } from '@tests/component/dataset/domain/models/DatasetVersionsSummariesMother'
 import { useGetDatasetVersionsSummaries } from '@/sections/dataset/dataset-versions/useGetDatasetVersionsSummaries'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
-const datasetVersionsSummariesMock: DatasetVersionSummary[] =
-  DatasetVersionsSummariesMother.create() as unknown as DatasetVersionSummary[]
+const datasetVersionsSummariesSubsetMock = DatasetVersionsSummariesMother.create()
+const datasetVersionsSummariesMock = datasetVersionsSummariesSubsetMock.summaries
 
 describe('useGetDatasetVersionsSummaries', () => {
   it('should return dataset version summaries correctly', async () => {
-    datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(datasetVersionsSummariesMock)
+    datasetRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves(datasetVersionsSummariesSubsetMock)
     const { result } = renderHook(() =>
       useGetDatasetVersionsSummaries({
         datasetRepository,
@@ -78,7 +79,9 @@ describe('useGetDatasetVersionsSummaries', () => {
   })
 
   it('should fetch summaries when fetchSummaries is called', () => {
-    datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(datasetVersionsSummariesMock)
+    datasetRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves(datasetVersionsSummariesSubsetMock)
 
     const { result } = renderHook(() =>
       useGetDatasetVersionsSummaries({
@@ -108,7 +111,9 @@ describe('useGetDatasetVersionsSummaries', () => {
   })
 
   it('should not fetch summaries if autoFetch is false', async () => {
-    datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(datasetVersionsSummariesMock)
+    datasetRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves(datasetVersionsSummariesSubsetMock)
 
     const { result } = renderHook(() =>
       useGetDatasetVersionsSummaries({

@@ -46,7 +46,7 @@ import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 import { axiosInstance } from '@/axiosInstance'
@@ -373,10 +373,16 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         throw new Error(error.message)
       })
   }
-  getDatasetVersionsSummaries(datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
-    return getDatasetVersionsSummaries.execute(datasetId).catch((error: ReadError) => {
-      throw error
-    })
+  getDatasetVersionsSummaries(
+    datasetId: number | string,
+    limit?: number,
+    offset?: number
+  ): Promise<DatasetVersionSummarySubset> {
+    return getDatasetVersionsSummaries
+      .execute(datasetId, limit, offset)
+      .catch((error: ReadError) => {
+        throw error
+      })
   }
   getDownloadCount(
     datasetId: string | number,
