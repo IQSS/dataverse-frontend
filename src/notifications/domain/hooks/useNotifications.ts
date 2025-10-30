@@ -1,14 +1,16 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useSession } from '@/sections/session/SessionContext'
 import { Notification } from '@/notifications/domain/models/Notification'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { getAllNotificationsByUser } from '@/notifications/domain/useCases/getAllNotificationsByUser'
-import { SessionContext } from '@/sections/session/SessionContext'
+
+const POLLING_NOTIFICATIONS_INTERVAL_TIME = 30_000
 
 export function useNotifications(repository: NotificationRepository) {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const { user } = useContext(SessionContext)
+  const { user } = useSession()
 
   const fetchNotifications = useCallback(async () => {
     try {
@@ -30,7 +32,7 @@ export function useNotifications(repository: NotificationRepository) {
 
     const interval = setInterval(() => {
       void fetchNotifications()
-    }, 30000)
+    }, POLLING_NOTIFICATIONS_INTERVAL_TIME)
 
     return () => clearInterval(interval)
   }, [fetchNotifications, user])

@@ -11,7 +11,7 @@ export class NotificationJSDataverseRepository implements NotificationRepository
 
   getAllNotificationsByUser(): Promise<Notification[]> {
     return getAllNotificationsByUser
-      .execute(true, false)
+      .execute(true)
       .then((notifications) =>
         notifications.map((notification) => this.mapper.toNotification(notification))
       )
@@ -19,7 +19,6 @@ export class NotificationJSDataverseRepository implements NotificationRepository
 
   getUnreadNotificationsCount(): Promise<number> {
     return getUnreadNotificationsCount.execute().then((count) => {
-      console.log('Unread notifications count:', count)
       return count
     })
   }
