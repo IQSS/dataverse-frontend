@@ -10,25 +10,17 @@ declare global {
 }
 
 function buildTestConfig(): AppConfig {
-  const backendUrl: string = (Cypress.env('backendUrl') as string) || 'http://localhost:8000'
-  const realmBase =
-    (Cypress.env('realmBase') as string) || `${backendUrl}/realms/test/protocol/openid-connect`
-
   return {
-    backendUrl,
+    backendUrl: Cypress.env('backendUrl') as string,
     oidc: {
-      clientId: (Cypress.env('oidcClientId') as string) || 'test',
-      authorizationEndpoint:
-        (Cypress.env('oidcAuthorizationEndpoint') as string) || `${realmBase}/auth`,
-      tokenEndpoint: (Cypress.env('oidcTokenEndpoint') as string) || `${realmBase}/token`,
-      logoutEndpoint: (Cypress.env('oidcLogoutEndpoint') as string) || `${realmBase}/logout`,
-      localStorageKeyPrefix: (Cypress.env('oidcLocalStorageKeyPrefix') as string) || 'DV_'
+      clientId: Cypress.env('oidcClientId') as string,
+      authorizationEndpoint: Cypress.env('oidcAuthorizationEndpoint') as string,
+      tokenEndpoint: Cypress.env('oidcTokenEndpoint') as string,
+      logoutEndpoint: Cypress.env('oidcLogoutEndpoint') as string,
+      localStorageKeyPrefix: Cypress.env('oidcLocalStorageKeyPrefix') as string
     },
-    languages: (Cypress.env('languages') as { code: string; name: string }[]) || [
-      { code: 'en', name: 'English' },
-      { code: 'es', name: 'Español' }
-    ],
-    defaultLanguage: (Cypress.env('defaultLanguage') as string) || 'en'
+    languages: Cypress.env('languages') as { code: string; name: string }[],
+    defaultLanguage: Cypress.env('defaultLanguage') as string
   }
 }
 
@@ -57,7 +49,7 @@ if (typeof window !== 'undefined') {
     // These Cypress.env values will be used by buildTestConfig()
     {
       env: {
-        LANGUAGES: [
+        languages: [
           { code: 'en', name: 'English' },
           { code: 'it', name: 'Italiano' }
         ]
