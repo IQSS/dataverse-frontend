@@ -8,13 +8,6 @@ declare global {
 
 let CONFIG: AppConfig | undefined
 
-/**
- * This function initializes the application configuration by validating and loading it from the global window object.
- * There is a script tag in index.html that loads /config.js at runtime, which sets window.__APP_CONFIG__.
- * This helps changing configuration at runtime without rebuilding the application.
- * It returns an object indicating whether the initialization was successful or not, along with the configuration value or an error message.
- */
-
 const AppConfigSchema = z.object({
   backendUrl: z.url(),
   oidc: z.object({
@@ -39,6 +32,12 @@ export type AppConfigResult =
   | { ok: true; value: AppConfig }
   | { ok: false; message: string; schemaError?: string }
 
+/**
+ * This function initializes the application configuration by validating and loading it from the global window object.
+ * There is a script tag in index.html that loads /config.js at runtime, which sets window.__APP_CONFIG__.
+ * This helps changing configuration at runtime without rebuilding the application.
+ * It returns an object indicating whether the initialization was successful or not, along with the configuration value or an error message.
+ */
 export function initAppConfig(): AppConfigResult {
   const raw = typeof window !== 'undefined' ? window.__APP_CONFIG__ : undefined
 

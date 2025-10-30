@@ -14,7 +14,7 @@ window.__APP_CONFIG__ = {
     // All auth-related storage keys will be prefixed with this string
     localStorageKeyPrefix: 'DV_'
   },
-  // UI languages available to users
+  // UI languages available to users (if more than one is provided a language switcher will be shown)
   languages: [
     { code: 'en', name: 'English' },
     { code: 'es', name: 'Español' }

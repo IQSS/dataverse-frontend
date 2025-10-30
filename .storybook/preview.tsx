@@ -23,8 +23,6 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => {
-      // Validate runtime app config once when Storybook starts. This will read window.__APP_CONFIG__
-      // that we inject via preview-head.html (/config.js) and cache it for requireAppConfig().
       const result = initAppConfig()
       if (!result.ok) {
         console.error('Storybook runtime config invalid/missing:', result.message)

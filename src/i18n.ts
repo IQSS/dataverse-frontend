@@ -44,7 +44,6 @@ i18next.on('languageChanged', (lng) => setHtmlLangAndDir(lng))
  * 2. Browser language (if supported)
  * 3. Default language from app config
  */
-
 function defineLanguage(): string {
   const storedLang = localStorage.getItem(LANGUAGE_LOCAL_STORAGE_KEY)
   const supportedLangs = appConfig.languages.map((l) => l.code.toLowerCase())
@@ -78,7 +77,7 @@ function setHtmlLangAndDir(lng: string | undefined) {
 
   html.setAttribute('lang', baseLang)
 
-  // This could be the first step into supporting RTL languages, but there is still a lot to do in the UI.
+  // This is the first step into supporting RTL languages, but there is still a lot to do in the UI.
   const rtlLangs = new Set(['ar', 'fa', 'he', 'iw', 'kd', 'pk', 'ps', 'ug', 'ur', 'yi'])
   html.setAttribute('dir', rtlLangs.has(baseLang) ? 'rtl' : 'ltr')
 }

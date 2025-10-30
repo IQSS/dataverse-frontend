@@ -1,7 +1,4 @@
-<!-- Load runtime app config before stories so requireAppConfig() can initialize -->
 <script src="/config.js"></script>
 <script>
   window.global = window
-  // Note: /config.js sets window.__APP_CONFIG__ at runtime for Storybook too.
-  // Our preview.tsx will validate it early via initAppConfig().
 </script>

@@ -38,5 +38,5 @@ export default defineConfig({
     codeCoverage: {
       exclude: ['tests/**/*.*', '**/ErrorPage.tsx']
     }
-  },
+  }
 })
