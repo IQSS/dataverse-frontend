@@ -26,6 +26,11 @@ interface DatasetVersionsProps {
   isCurrentVersionDeaccessioned?: boolean
 }
 
+const isVersionDeaccessioned = (version: DatasetVersionSummaryInfo) =>
+  typeof version.summary === 'object' &&
+  version.summary !== null &&
+  'deaccessioned' in version.summary
+
 export function DatasetVersions({
   datasetRepository,
   datasetId,
@@ -61,12 +66,7 @@ export function DatasetVersions({
 
   const selectableVersions =
     datasetVersionSummaries &&
-    datasetVersionSummaries.filter((version) => {
-      const summary = version.summary
-      const isDeaccessioned =
-        typeof summary === 'object' && summary !== null && 'deaccessioned' in summary
-      return !isDeaccessioned
-    })
+    datasetVersionSummaries.filter((version) => !isVersionDeaccessioned(version))
   const isCheckBoxValid = (selectableVersions?.length ?? 0) > 2
 
   useEffect(() => {
@@ -111,11 +111,6 @@ export function DatasetVersions({
           </thead>
           <tbody>
             {datasetVersionSummaries?.map((dataset, index) => {
-              const isVersionDeaccessioned = (version: DatasetVersionSummaryInfo) =>
-                typeof version.summary === 'object' &&
-                version.summary !== null &&
-                'deaccessioned' in version.summary
-
               const findLastNonDeaccessionedPreviousVersion = () => {
                 for (let i = index + 1; i < datasetVersionSummaries.length; i++) {
                   const version = datasetVersionSummaries[i]
@@ -169,7 +164,7 @@ export function DatasetVersions({
                   <td>
                     <p style={{ display: 'flex', flexWrap: 'wrap', margin: 0, textAlign: 'left' }}>
                       <SummaryDescription summary={dataset.summary} />
-                      {showViewDetails && previousVersion && (
+                      {showViewDetails && (
                         <DatasetViewDetailButton
                           datasetRepository={datasetRepository}
                           oldVersionNumber={previousVersion.versionNumber}
@@ -258,7 +253,7 @@ export const SummaryDescription = ({
           </span>
         ) : (
           <span key={key}>
-            <strong>{key}</strong>: {key == 'Files' ? <strong>{value}</strong> : value};&nbsp;
+            <strong>{key}</strong>: {key === 'Files' ? <strong>{value}</strong> : value};&nbsp;
           </span>
         )
       )}

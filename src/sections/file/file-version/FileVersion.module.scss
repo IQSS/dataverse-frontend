@@ -1,3 +1,5 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
 .file-versions-table {
   width: 100%;
   margin: auto;
@@ -15,4 +17,9 @@
     width: auto;
     vertical-align: top;
   }
+}
+
+.no-summary-text {
+  font-style: italic;
+  color: $dv-subtext-color;
 }

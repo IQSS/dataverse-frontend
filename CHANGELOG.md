@@ -23,7 +23,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Add word-break to items text to prevent layout issues when long descriptions without spaces are entered. (#839)
 - Show toast notification when API token is copied to clipboard.
 - Dataset versions: (1) file changes should be `Access: Restricted` instead of `isResticted: true/false`; (2) logic of View Detail button. (#879)
-- File versions: (1) logic of linking to a file version; (2)If file not included, show textFile not included in this version. (#879)
+- File versions: (1) logic of linking to a file version; (2)If file not included, show text information "File not included in this version.". (#879)
 
 ### Removed
 

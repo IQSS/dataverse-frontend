@@ -138,20 +138,22 @@ export const SummaryDescription = ({
     return <span style={{ fontStyle: 'italic' }}>{summaryText}</span>
   }
 
-  if (isNoVersions) {
-    return <span style={{ fontStyle: 'italic' }}>{t('fileVersion.noVersions')}</span>
-  }
+  const deaccessionedReason = summaryText[t('fileVersion.deaccessionedReason')]
 
-  if (!summary || !Object.entries(summary).length) {
-    return <span style={{ fontStyle: 'italic' }}>{t('fileVersion.noChange')}</span>
-  }
-
-  if (summaryText[t('fileVersion.deaccessionedReason')]) {
+  if (deaccessionedReason) {
     return (
       <span>
         {t('fileVersion.deaccessionedReason')}: {summaryText[t('fileVersion.deaccessionedReason')]}
       </span>
     )
+  }
+
+  if (isNoVersions) {
+    return <span className={styles['no-summary-text']}>{t('fileVersion.noVersions')}</span>
+  }
+
+  if (!summary || !Object.entries(summary).length) {
+    return <span className={styles['no-summary-text']}>{t('fileVersion.noChange')}</span>
   }
 
   const summaryTextParts = Object.entries(summaryText).map(([key, value], index) => {
