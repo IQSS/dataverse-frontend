@@ -2,14 +2,14 @@ import { CollectionRepository } from '../repositories/CollectionRepository'
 import { MyDataCollectionItemSubset } from '../models/MyDataCollectionItemSubset'
 import { PublicationStatus } from '../../../shared/core/domain/models/PublicationStatus'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { MyDataCollectionItemsPaginationInfo } from '../models/MyDataCollectionItemsPaginationInfo'
+import { CollectionItemsPaginationInfo } from '../models/CollectionItemsPaginationInfo'
 
 export async function getMyDataCollectionItems(
   collectionRepository: CollectionRepository,
   roleIds: number[],
   collectionItemTypes: CollectionItemType[],
   publicationStatuses: PublicationStatus[],
-  paginationInfo?: MyDataCollectionItemsPaginationInfo,
+  paginationInfo?: CollectionItemsPaginationInfo,
   searchText?: string,
   otherUserName?: string
 ): Promise<MyDataCollectionItemSubset> {

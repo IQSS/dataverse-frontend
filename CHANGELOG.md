@@ -16,7 +16,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Changed
 
 - Add pagination support to the Dataset Version Summaries and File Version Summaries use cases by introducing optional pagination object. #885
-
+- Refactored pagination to use consistent `CollectionItemsPaginationInfo` object in getMyDataColletionItems, instead of individual limit/selectedPage parameters.
 - Use of the new `sourceLastUpdateTime` query parameter from update dataset and file metadata endpoints to support optimistic concurrency control during editing operations. See [Edit Dataset Metadata](https://guides.dataverse.org/en/6.8/api/native-api.html#edit-dataset-metadata) and [Updating File Metadata](https://guides.dataverse.org/en/6.8/api/native-api.html#updating-file-metadata) guides for more details.
 - Changed the way we were handling DATE type metadata field validation to better match the backend validation and give users better error messages. For example, for an input like “foo AD”, we now show “Production Date is not a valid date. The AD year must be numeric.“. For an input like “99999 AD”, we now show “Production Date is not a valid date. The AD year cant be higher than 9999.“. For an input like “[-9999?], we now show “Production Date is not a valid date. The year in brackets cannot be negative.“, etc.
 

@@ -19,7 +19,6 @@ import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { CollectionLinks } from '@/collection/domain/models/CollectionLinks'
-import { MyDataCollectionItemsPaginationInfo } from '@/collection/domain/models/MyDataCollectionItemsPaginationInfo'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id?: string): Promise<Collection> {
@@ -102,7 +101,7 @@ export class CollectionMockRepository implements CollectionRepository {
     _roleIds: number[],
     collectionItemTypes: CollectionItemType[],
     _publicationStatuses: string[],
-    paginationInfo?: MyDataCollectionItemsPaginationInfo,
+    paginationInfo?: CollectionItemsPaginationInfo,
     _searchText?: string,
     _otherUserName?: string
   ): Promise<MyDataCollectionItemSubset> {
