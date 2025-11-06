@@ -2,12 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { getDatasetVersionsSummaries } from '@/dataset/domain/useCases/getDatasetVersionsSummaries'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 
 interface UseGetDatasetVersionsSummaries {
   datasetVersionSummaries: DatasetVersionSummaryInfo[] | undefined
   error: string | null
   isLoading: boolean
-  fetchSummaries: (limit?: number, offset?: number) => Promise<void>
+  fetchSummaries: (paginationInfo?: DatasetVersionPaginationInfo) => Promise<void>
 }
 
 interface Props {
@@ -26,7 +27,7 @@ export const useGetDatasetVersionsSummaries = ({
   const [error, setError] = useState<string | null>(null)
 
   const fetchSummaries = useCallback(
-    async (limit?: number, offset?: number) => {
+    async (paginationInfo?: DatasetVersionPaginationInfo) => {
       setIsLoading(true)
       setError(null)
 
@@ -34,8 +35,7 @@ export const useGetDatasetVersionsSummaries = ({
         const versionSummaries = await getDatasetVersionsSummaries(
           datasetRepository,
           persistentId,
-          limit,
-          offset
+          paginationInfo
         )
         setSummaries(versionSummaries.summaries)
       } catch (err) {

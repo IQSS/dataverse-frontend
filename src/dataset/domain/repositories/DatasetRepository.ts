@@ -10,6 +10,7 @@ import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
 import { DatasetTemplate } from '../models/DatasetTemplate'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { DatasetVersionPaginationInfo } from '../models/DatasetVersionPaginationInfo'
 
 export interface DatasetRepository {
   getByPersistentId: (
@@ -46,8 +47,7 @@ export interface DatasetRepository {
   publish(persistentId: string, versionUpdateType: VersionUpdateType): Promise<void>
   getDatasetVersionsSummaries: (
     datasetId: number | string,
-    limit?: number,
-    offset?: number
+    paginationInfo?: DatasetVersionPaginationInfo
   ) => Promise<DatasetVersionSummarySubset>
   getDownloadCount: (
     datasetId: string | number,

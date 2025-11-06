@@ -18,6 +18,7 @@ import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 import { RestrictFileDTO } from '@/files/domain/useCases/restrictFileDTO'
 import { FileVersionSummarySubset } from '@/files/domain/models/FileVersionSummaryInfo'
+import { FileVersionPaginationInfo } from '@/files/domain/models/FileVersionPaginationInfo'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -160,8 +161,7 @@ export class FileMockRepository implements FileRepository {
 
   getFileVersionSummaries(
     _id: number | string,
-    _limit?: number,
-    _offset?: number
+    _paginationInfo?: FileVersionPaginationInfo
   ): Promise<FileVersionSummarySubset> {
     return new Promise((resolve) => {
       setTimeout(() => {

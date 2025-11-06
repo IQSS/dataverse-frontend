@@ -46,6 +46,7 @@ import { RestrictFileDTO } from '../domain/useCases/restrictFileDTO'
 import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { FileVersionSummarySubset } from '../domain/models/FileVersionSummaryInfo'
+import { FileVersionPaginationInfo } from '../domain/models/FileVersionPaginationInfo'
 
 const includeDeaccessioned = true
 
@@ -251,10 +252,9 @@ export class FileJSDataverseRepository implements FileRepository {
   }
   getFileVersionSummaries(
     fileId: number | string,
-    limit?: number,
-    offset?: number
+    paginationInfo?: FileVersionPaginationInfo
   ): Promise<FileVersionSummarySubset> {
-    return getFileVersionSummaries.execute(fileId, limit, offset)
+    return getFileVersionSummaries.execute(fileId, paginationInfo?.pageSize, paginationInfo?.offset)
   }
 
   getById(id: number, datasetVersionNumber?: string): Promise<File> {

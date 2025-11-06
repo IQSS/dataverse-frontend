@@ -19,6 +19,7 @@ import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -100,8 +101,7 @@ export class DatasetMockRepository implements DatasetRepository {
 
   getDatasetVersionsSummaries(
     _datasetId: number | string,
-    _limit?: number,
-    _offset?: number
+    _paginationInfo?: DatasetVersionPaginationInfo
   ): Promise<DatasetVersionSummarySubset> {
     return new Promise((resolve) => {
       setTimeout(() => {

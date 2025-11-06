@@ -12,6 +12,7 @@ import { FixityAlgorithm } from '../models/FixityAlgorithm'
 import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 import { RestrictFileDTO } from '../useCases/restrictFileDTO'
 import { FileVersionSummarySubset } from '../models/FileVersionSummaryInfo'
+import { FileVersionPaginationInfo } from '../models/FileVersionPaginationInfo'
 
 export interface FileRepository {
   getAllByDatasetPersistentId: (
@@ -34,8 +35,7 @@ export interface FileRepository {
   ) => Promise<number>
   getFileVersionSummaries: (
     fileId: number | string,
-    limit?: number,
-    offset?: number
+    paginationInfo?: FileVersionPaginationInfo
   ) => Promise<FileVersionSummarySubset>
   getById: (id: number, datasetVersionNumber?: string) => Promise<File | undefined>
   getMultipleFileDownloadUrl: (ids: number[], downloadMode: FileDownloadMode) => string

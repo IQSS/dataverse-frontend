@@ -2,12 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { FileVersionSummaryInfo } from '@/files/domain/models/FileVersionSummaryInfo'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { getFileVersionSummaries } from '@/files/domain/useCases/getFileVersionSummaries'
+import { FileVersionPaginationInfo } from '@/files/domain/models/FileVersionPaginationInfo'
 
 interface UseGetFileVersionsSummaries {
   fileVersionSummaries: FileVersionSummaryInfo[] | undefined
   error: string | null
   isLoading: boolean
-  fetchSummaries: (limit?: number, offset?: number) => Promise<void>
+  fetchSummaries: (paginationInfo?: FileVersionPaginationInfo) => Promise<void>
 }
 
 interface Props {
@@ -26,15 +27,14 @@ export const useGetFileVersionsSummaries = ({
   const [error, setError] = useState<string | null>(null)
 
   const fetchSummaries = useCallback(
-    async (limit?: number, offset?: number) => {
+    async (paginationInfo?: FileVersionPaginationInfo) => {
       setIsLoading(true)
       setError(null)
       try {
         const versionSummaries = await getFileVersionSummaries(
           fileRepository,
           fileId,
-          limit,
-          offset
+          paginationInfo
         )
         setSummaries(versionSummaries.summaries)
       } catch (err) {
