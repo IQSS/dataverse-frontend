@@ -12,7 +12,7 @@ import { useDataset } from '../dataset/DatasetContext'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
-import { DatasetLicense } from '@/dataset/domain/models/Dataset'
+import { DatasetLicense, CustomTerms } from '@/dataset/domain/models/Dataset'
 import styles from './EditDatasetTerms.module.scss'
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
 
@@ -22,18 +22,6 @@ interface EditDatasetTermsProps {
   defaultActiveTabKey: EditDatasetTermsTabKey
   licenseRepository: LicenseRepository
   datasetRepository: DatasetRepository
-}
-
-// TODO: Remove this interface and use from model
-interface CustomTermsData {
-  termsOfUse: string
-  confidentialityDeclaration?: string
-  specialPermissions?: string
-  restrictions?: string
-  citationRequirements?: string
-  depositorRequirements?: string
-  conditions?: string
-  disclaimer?: string
 }
 
 export const EditDatasetTerms = ({
@@ -89,7 +77,7 @@ export const EditDatasetTerms = ({
                   datasetRepository={datasetRepository}
                   initialLicense={
                     (dataset.license as DatasetLicense) ||
-                    (dataset.termsOfUse.customTerms as CustomTermsData)
+                    (dataset.termsOfUse.customTerms as CustomTerms)
                   }
                   isInitialCustomTerms={dataset.termsOfUse.customTerms !== undefined}
                 />
@@ -127,7 +115,7 @@ export const EditDatasetTerms = ({
                 datasetRepository={datasetRepository}
                 initialLicense={
                   (dataset.license as DatasetLicense) ||
-                  (dataset.termsOfUse.customTerms as CustomTermsData)
+                  (dataset.termsOfUse.customTerms as CustomTerms)
                 }
                 isInitialCustomTerms={dataset.termsOfUse.customTerms !== undefined}
               />

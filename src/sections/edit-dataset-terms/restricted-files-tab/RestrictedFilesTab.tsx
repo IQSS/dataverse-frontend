@@ -123,7 +123,7 @@ export function RestrictedFilesTab({
                       id="fileAccessRequest"
                       checked={value}
                       onChange={onChange}
-                      label={t('editTerms.restrictedFiles.enableAccessRequest')}
+                      label={t('termsTab.enableAccessRequest')}
                     />
                   </Form.Group>
                 )}

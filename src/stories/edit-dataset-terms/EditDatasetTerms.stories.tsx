@@ -14,7 +14,6 @@ const meta: Meta<typeof EditDatasetTerms> = {
   component: EditDatasetTerms,
   decorators: [WithI18next, WithLayout, WithDataset],
   parameters: {
-    // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
   }
 }

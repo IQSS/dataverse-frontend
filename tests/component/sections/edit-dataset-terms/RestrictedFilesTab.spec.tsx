@@ -105,7 +105,6 @@ describe('RestrictedFilesTab', () => {
         )
       )
 
-      // Check that fields are pre-filled
       cy.findByDisplayValue('Access requires approval').should('exist')
       cy.findByDisplayValue('Main office').should('exist')
       cy.findByDisplayValue('University archive').should('exist')
@@ -234,7 +233,6 @@ describe('RestrictedFilesTab', () => {
       )
     )
 
-    // Should render without errors
     cy.findByLabelText('Enable access request').should('exist')
     cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
   })
@@ -261,8 +259,59 @@ describe('RestrictedFilesTab', () => {
       )
     )
 
-    // Should render without errors and fields should be empty
     cy.findByLabelText('Terms of Access for Restricted Files').should('have.value', '')
     cy.findByLabelText('Data Access Place').should('have.value', '')
+  })
+
+  describe('Toast Notifications', () => {
+    it('displays success toast when terms of access are updated successfully', () => {
+      const termsOfAccess = TermsOfAccessMother.create({
+        fileAccessRequest: false
+      })
+      datasetRepository.updateTermsOfAccess = cy.stub().resolves()
+
+      cy.customMount(
+        withProviders(
+          <RestrictedFilesTab
+            datasetRepository={datasetRepository}
+            initialTermsOfAccess={termsOfAccess}
+          />,
+          mockDataset
+        )
+      )
+
+      cy.findByLabelText('Enable access request').check()
+      cy.findByLabelText('Terms of Access for Restricted Files').type(
+        'Please contact for access'
+      )
+
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+
+      cy.findByText('The terms for this dataset have been updated.').should('exist')
+    })
+
+    it('displays success toast when request access checkbox is toggled', () => {
+      const termsOfAccess = TermsOfAccessMother.create({
+        fileAccessRequest: true
+      })
+      datasetRepository.updateTermsOfAccess = cy.stub().resolves()
+
+      cy.customMount(
+        withProviders(
+          <RestrictedFilesTab
+            datasetRepository={datasetRepository}
+            initialTermsOfAccess={termsOfAccess}
+          />,
+          mockDataset
+        )
+      )
+
+      cy.findByLabelText('Enable access request').should('be.checked')
+      cy.findByLabelText('Enable access request').uncheck()
+
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+
+      cy.findByText('The terms for this dataset have been updated.').should('exist')
+    })
   })
 })

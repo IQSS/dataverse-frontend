@@ -223,14 +223,9 @@ describe('DatasetTermsTab', () => {
         )
       )
 
-      // Change license
       cy.get('select').select('CC BY 4.0')
       cy.get('select').should('have.value', '2')
-
-      // Click cancel
       cy.findByRole('button', { name: 'Cancel' }).click()
-
-      // Should reset to original value
       cy.get('select').should('have.value', '1')
     })
   })
@@ -257,7 +252,6 @@ describe('DatasetTermsTab', () => {
 
     it('shows saving state during form submission', () => {
       const license = mockLicenses[0]
-      // Set up stub that never resolves to test loading state
       datasetRepository.updateDatasetLicense = cy.stub().returns(new Promise(() => {}))
 
       cy.customMount(
@@ -272,13 +266,10 @@ describe('DatasetTermsTab', () => {
         )
       )
 
-      // Wait for component to load
       cy.findByDisplayValue('CC0 1.0').should('exist')
 
-      // Submit form to trigger loading state
       cy.findByRole('button', { name: 'Save Changes' }).click()
 
-      // Check that button shows saving state
       cy.findByRole('button', { name: 'Saving' }).should('exist')
       cy.findByRole('button', { name: 'Saving' }).should('be.disabled')
     })
@@ -328,6 +319,54 @@ describe('DatasetTermsTab', () => {
       cy.findByText(
         /An error occurred while updating the dataset license. Please try again./i
       ).should('exist')
+    })
+  })
+
+  describe('Toast Notifications', () => {
+    it('displays success toast when license is updated successfully', () => {
+      const license = mockLicenses[0]
+      datasetRepository.updateDatasetLicense = cy.stub().resolves()
+
+      cy.customMount(
+        withProviders(
+          <DatasetTermsTab
+            initialLicense={license}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+            isInitialCustomTerms={false}
+          />,
+          mockDataset
+        )
+      )
+
+      cy.findByDisplayValue('CC0 1.0').should('exist')
+
+      cy.get('select').select('CC BY 4.0')
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+
+      cy.findByText('The license for this dataset has been updated.').should('exist')
+    })
+
+    it('displays success toast when custom terms are updated successfully', () => {
+      const customTerms = CustomTermsMother.create()
+      datasetRepository.updateDatasetLicense = cy.stub().resolves()
+
+      cy.customMount(
+        withProviders(
+          <DatasetTermsTab
+            initialLicense={customTerms}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+            isInitialCustomTerms={true}
+          />,
+          mockDataset
+        )
+      )
+
+      cy.findByTestId('customTerms.termsOfUse').clear().type('Updated custom terms')
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+
+      cy.findByText('The license for this dataset has been updated.').should('exist')
     })
   })
 })
