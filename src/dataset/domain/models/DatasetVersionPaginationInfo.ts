@@ -5,4 +5,3 @@ export class DatasetVersionPaginationInfo extends PaginationInfo<DatasetVersionP
     super(page, pageSize, totalItems, itemName)
   }
 }
-
