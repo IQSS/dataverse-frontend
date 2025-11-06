@@ -243,6 +243,7 @@ export function DatasetTermsTab({
                       <Row>
                         <Col>
                           <Form.Group.TextArea
+                            data-testid={`customTerms.${field.name}`}
                             value={value as string}
                             onChange={onChange}
                             isInvalid={invalid}

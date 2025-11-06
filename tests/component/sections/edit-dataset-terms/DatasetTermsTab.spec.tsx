@@ -140,37 +140,32 @@ describe('DatasetTermsTab', () => {
       cy.findByText(customTerms?.disclaimer as string).should('exist')
     })
 
-    //  it('validates required fields in custom terms', () => {
-    //    // Create custom terms with empty termsOfUse to trigger validation
-    //    const customTerms = CustomTermsMother.create({
-    //      termsOfUse: ''
-    //    })
-    //    datasetRepository.updateLicense = cy.stub().resolves()
+    it('validates required fields in custom terms', () => {
+      const customTerms = CustomTermsMother.create({
+        termsOfUse: ''
+      })
+      datasetRepository.updateDatasetLicense = cy.stub().resolves()
 
-    //    cy.customMount(
-    //      withProviders(
-    //        <DatasetTermsTab
-    //          initialLicense={customTerms}
-    //          licenseRepository={licenseRepository}
-    //          datasetRepository={datasetRepository}
-    //          isInitialCustomTerms={true}
-    //        />,
-    //        mockDataset
-    //      )
-    //    )
+      cy.customMount(
+        withProviders(
+          <DatasetTermsTab
+            initialLicense={customTerms}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+            isInitialCustomTerms={true}
+          />,
+          mockDataset
+        )
+      )
 
-    //    cy.findByLabelText('Terms of Use').should('exist')
-    //    cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+      cy.findByTestId('customTerms.termsOfUse').should('exist')
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+      cy.findByTestId('customTerms.termsOfUse').type('temp').clear()
+      cy.findByText('Terms of use is required.').should('exist')
 
-    //    cy.findByRole('button', { name: 'Save Changes' }).click()
-
-    //    cy.findByText('Custom terms are required when Custom Dataset Terms is selected').should(
-    //      'exist'
-    //    )
-
-    //    cy.findByLabelText('Terms of Use').type('Some custom terms')
-    //    cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
-    //  })
+      cy.findByTestId('customTerms.termsOfUse').type('Some custom terms')
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
+    })
 
     it('allows switching between license and custom terms', () => {
       const license = mockLicenses[0]
@@ -263,7 +258,7 @@ describe('DatasetTermsTab', () => {
     it('shows saving state during form submission', () => {
       const license = mockLicenses[0]
       // Set up stub that never resolves to test loading state
-      datasetRepository.updateLicense = cy.stub().returns(new Promise(() => {}))
+      datasetRepository.updateDatasetLicense = cy.stub().returns(new Promise(() => {}))
 
       cy.customMount(
         withProviders(
@@ -308,12 +303,12 @@ describe('DatasetTermsTab', () => {
         )
       )
 
-      cy.findByText('Error').should('exist')
+      cy.findByText(/Something went wrong getting the licenses. Try again later./i).should('exist')
     })
 
     it('displays error message when license update fails', () => {
       const license = mockLicenses[0]
-      datasetRepository.updateLicense = cy.stub().rejects(new Error())
+      datasetRepository.updateDatasetLicense = cy.stub().rejects(new Error())
 
       cy.customMount(
         withProviders(
@@ -327,14 +322,12 @@ describe('DatasetTermsTab', () => {
         )
       )
 
-      // Wait for component to load
       cy.findByDisplayValue('CC0 1.0').should('exist')
 
-      // Submit form
       cy.findByRole('button', { name: 'Save Changes' }).click()
-
-      // Should show error message
-      cy.findByText('Error').should('exist')
+      cy.findByText(
+        /An error occurred while updating the dataset license. Please try again./i
+      ).should('exist')
     })
   })
 })

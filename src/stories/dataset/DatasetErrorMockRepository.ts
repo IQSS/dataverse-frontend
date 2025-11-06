@@ -88,7 +88,7 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     })
   }
 
-  updateLicense(
+  updateDatasetLicense(
     _datasetId: string | number,
     _licenseUpdateRequest: DatasetLicenseUpdateRequest
   ): Promise<void> {

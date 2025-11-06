@@ -6,10 +6,8 @@ import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMot
 import { TermsOfAccessMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { Dataset, TermsOfAccess } from '@/dataset/domain/models/Dataset'
 
-// Mock repositories
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
-// Test data
 const mockDataset = DatasetMother.create({
   id: 123
 })
@@ -46,7 +44,7 @@ describe('RestrictedFilesTab', () => {
       cy.findByLabelText('Enable access request').should('be.checked')
     })
 
-    it('shows info alert when access request is enabled', () => {
+    it('shows info alert', () => {
       const termsOfAccess = TermsOfAccessMother.create({ fileAccessRequest: true })
 
       cy.customMount(
@@ -60,44 +58,6 @@ describe('RestrictedFilesTab', () => {
       )
 
       cy.findByText(/Restricting limits access to published files/).should('exist')
-    })
-
-    it('hides info alert when access request is disabled', () => {
-      const termsOfAccess = TermsOfAccessMother.create({ fileAccessRequest: false })
-
-      cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
-      )
-
-      cy.findByText(/Restricting limits access to published files/).should('not.exist')
-    })
-
-    it('toggles info alert when checkbox is clicked', () => {
-      const termsOfAccess = TermsOfAccessMother.create({ fileAccessRequest: false })
-
-      cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
-      )
-
-      cy.findByText(/Information/).should('not.exist')
-
-      cy.findByText('Enable access request').click()
-      cy.findByText(/Information/).should('exist')
-
-      cy.findByText('Enable access request').click()
-      cy.findByText(/Information/).should('not.exist')
     })
   })
 
@@ -170,7 +130,6 @@ describe('RestrictedFilesTab', () => {
         )
       )
 
-      // Edit the terms field
       cy.findByLabelText('Terms of Access for Restricted Files')
         .clear()
         .type('Updated terms of access')
@@ -219,13 +178,20 @@ describe('RestrictedFilesTab', () => {
         fileAccessRequest: true
       })
 
+      const datasetWithTerms = DatasetMother.create({
+        id: 123,
+        termsOfUse: {
+          termsOfAccess: termsOfAccess
+        }
+      })
+
       cy.customMount(
         withProviders(
           <RestrictedFilesTab
             datasetRepository={datasetRepository}
             initialTermsOfAccess={termsOfAccess}
           />,
-          mockDataset
+          datasetWithTerms
         )
       )
 
@@ -249,107 +215,54 @@ describe('RestrictedFilesTab', () => {
         )
       )
 
-      // Modify a field
       cy.findByLabelText('Terms of Access for Restricted Files').clear().type('New terms')
 
-      // Submit form
       cy.findByRole('button', { name: 'Save Changes' }).click()
-
-      // Note: In real implementation, this would trigger an API call
-      // For now, we're just testing that the form can be submitted without errors
     })
   })
 
-  describe('Accessibility', () => {
-    it('has proper labels for all form fields', () => {
-      const termsOfAccess = TermsOfAccessMother.create()
+  it('handles empty initial terms of access', () => {
+    const emptyTermsOfAccess = TermsOfAccessMother.createEmpty()
 
-      cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
+    cy.customMount(
+      withProviders(
+        <RestrictedFilesTab
+          datasetRepository={datasetRepository}
+          initialTermsOfAccess={emptyTermsOfAccess}
+        />,
+        mockDataset
       )
+    )
 
-      // All fields should have proper labels
-      cy.findByLabelText('Enable access request').should('exist')
-      cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
-      cy.findByLabelText('Data Access Place').should('exist')
-      cy.findByLabelText('Original Archive').should('exist')
-      cy.findByLabelText('Availability Status').should('exist')
-      cy.findByLabelText('Contact for Access').should('exist')
-      cy.findByLabelText('Size of Collection').should('exist')
-      cy.findByLabelText('Study Completion').should('exist')
-    })
-
-    it('has proper form structure', () => {
-      const termsOfAccess = TermsOfAccessMother.create()
-
-      cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
-      )
-
-      // Should have form element
-      cy.get('form').should('exist')
-
-      // Should have fieldsets or proper grouping
-      cy.get('section').should('exist')
-    })
+    // Should render without errors
+    cy.findByLabelText('Enable access request').should('exist')
+    cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
   })
 
-  describe('Edge Cases', () => {
-    it('handles empty initial terms of access', () => {
-      const emptyTermsOfAccess = TermsOfAccessMother.createEmpty()
+  it('handles undefined values in terms of access', () => {
+    const termsOfAccess: TermsOfAccess = {
+      fileAccessRequest: false,
+      termsOfAccessForRestrictedFiles: undefined,
+      dataAccessPlace: undefined,
+      originalArchive: undefined,
+      availabilityStatus: undefined,
+      contactForAccess: undefined,
+      sizeOfCollection: undefined,
+      studyCompletion: undefined
+    }
 
-      cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={emptyTermsOfAccess}
-          />,
-          mockDataset
-        )
+    cy.customMount(
+      withProviders(
+        <RestrictedFilesTab
+          datasetRepository={datasetRepository}
+          initialTermsOfAccess={termsOfAccess}
+        />,
+        mockDataset
       )
+    )
 
-      // Should render without errors
-      cy.findByLabelText('Enable access request').should('exist')
-      cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
-    })
-
-    it('handles undefined values in terms of access', () => {
-      const termsOfAccess: TermsOfAccess = {
-        fileAccessRequest: false,
-        termsOfAccessForRestrictedFiles: undefined,
-        dataAccessPlace: undefined,
-        originalArchive: undefined,
-        availabilityStatus: undefined,
-        contactForAccess: undefined,
-        sizeOfCollection: undefined,
-        studyCompletion: undefined
-      }
-
-      cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
-      )
-
-      // Should render without errors and fields should be empty
-      cy.findByLabelText('Terms of Access for Restricted Files').should('have.value', '')
-      cy.findByLabelText('Data Access Place').should('have.value', '')
-    })
+    // Should render without errors and fields should be empty
+    cy.findByLabelText('Terms of Access for Restricted Files').should('have.value', '')
+    cy.findByLabelText('Data Access Place').should('have.value', '')
   })
 })

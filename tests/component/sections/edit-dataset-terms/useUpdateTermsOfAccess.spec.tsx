@@ -61,7 +61,7 @@ describe('useUpdateTermsOfAccess', () => {
 
   describe('Error handling', () => {
     it('should handle WriteError and set formatted error message', async () => {
-      const mockWriteError = new WriteError('Test error')
+      const mockWriteError = new WriteError()
       datasetRepository.updateTermsOfAccess = cy.stub().rejects(mockWriteError)
 
       const { result } = renderHook(() =>
@@ -78,7 +78,9 @@ describe('useUpdateTermsOfAccess', () => {
       expect(datasetRepository.updateTermsOfAccess).to.have.been.calledWith(123, sampleTerms)
       expect(onSuccessfulUpdateTermsOfAccess).to.not.have.been.called
       expect(result.current.isLoading).to.deep.equal(false)
-      expect(result.current.error).to.deep.equal('Test error')
+      expect(result.current.error).to.deep.equal(
+        'An error occurred while updating the dataset license. Please try again.'
+      )
     })
 
     it('should handle unknown errors and set default error message', async () => {

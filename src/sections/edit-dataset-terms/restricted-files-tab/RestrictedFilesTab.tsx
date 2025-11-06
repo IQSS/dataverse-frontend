@@ -9,9 +9,6 @@ import { DatasetRepository } from '@/dataset/domain/repositories/DatasetReposito
 import { useDataset } from '../../dataset/DatasetContext'
 import { useUpdateTermsOfAccess } from './useUpdateTermsOfAccess'
 
-// Use TermsOfAccess directly from model
-type RestrictedFilesFormData = TermsOfAccess
-
 interface RestrictedFilesTabProps {
   datasetRepository: DatasetRepository
   initialTermsOfAccess: TermsOfAccess
@@ -37,26 +34,21 @@ export function RestrictedFilesTab({
     }
   })
 
-  const form = useForm<RestrictedFilesFormData>({
-    defaultValues:
-      (dataset?.termsOfUse.termsOfAccess as RestrictedFilesFormData) ?? initialTermsOfAccess,
+  const form = useForm<TermsOfAccess>({
+    defaultValues: (dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? initialTermsOfAccess,
     mode: 'onChange'
   })
 
   const { control, handleSubmit, reset, watch } = form
 
-  // When the dataset loads/changes, reset the form to the original terms from dataset first
   useEffect(() => {
-    const original = (dataset?.termsOfUse.termsOfAccess as RestrictedFilesFormData) ?? null
+    const original = (dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? null
     if (original) {
       reset(original)
     }
   }, [dataset, reset])
 
-  // Watch the fileAccessRequest field to show/hide info alert
-  const watchedFileAccessRequest = watch('fileAccessRequest')
-
-  const onSubmit = async (data: RestrictedFilesFormData) => {
+  const onSubmit = async (data: TermsOfAccess) => {
     if (!dataset) return
 
     setIsSubmitting(true)
@@ -91,7 +83,7 @@ export function RestrictedFilesTab({
   // Generate terms of access fields dynamically from the actual termsOfAccess (excluding fileAccessRequest)
   const termsOfAccessFields = useMemo(() => {
     const termsOfAccess =
-      (dataset?.termsOfUse.termsOfAccess as RestrictedFilesFormData) ?? initialTermsOfAccess
+      (dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? initialTermsOfAccess
     return Object.keys(termsOfAccess)
       .filter((fieldName) => fieldName !== 'fileAccessRequest') // Exclude checkbox field
       .map((fieldName) => ({
@@ -107,12 +99,11 @@ export function RestrictedFilesTab({
 
   return (
     <div ref={formContainerRef}>
-      {/* Show info alert when access request is enabled */}
-      {watchedFileAccessRequest && (
+      {
         <Alert variant="info" dismissible={false}>
           {t('termsTab.termsOfAccessInfo')}
         </Alert>
-      )}
+      }
 
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)} onKeyDown={preventEnterSubmit} noValidate={true}>
@@ -127,12 +118,12 @@ export function RestrictedFilesTab({
                 name="fileAccessRequest"
                 control={control}
                 render={({ field: { onChange, value } }) => (
-                  <Form.Group>
+                  <Form.Group style={{ margin: '5px' }}>
                     <Form.Group.Checkbox
                       id="fileAccessRequest"
                       checked={value}
                       onChange={onChange}
-                      label={t('termsTab.requestAccess')}
+                      label={t('editTerms.restrictedFiles.enableAccessRequest')}
                     />
                   </Form.Group>
                 )}
@@ -150,7 +141,7 @@ export function RestrictedFilesTab({
                 {t(`termsTab.${field.translationKey}`)}
               </Form.Group.Label>
               <Controller
-                name={field.name as keyof RestrictedFilesFormData}
+                name={field.name as keyof TermsOfAccess}
                 control={control}
                 rules={field.rules}
                 render={({ field: { onChange, value, ref }, fieldState: { invalid, error } }) => (
@@ -202,10 +193,7 @@ export function RestrictedFilesTab({
               type="button"
               disabled={isSubmitting}
               onClick={() =>
-                reset(
-                  (dataset?.termsOfUse.termsOfAccess as RestrictedFilesFormData) ??
-                    initialTermsOfAccess
-                )
+                reset((dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? initialTermsOfAccess)
               }>
               {tShared('cancel')}
             </Button>
