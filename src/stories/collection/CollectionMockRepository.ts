@@ -19,6 +19,7 @@ import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { CollectionLinks } from '@/collection/domain/models/CollectionLinks'
+import { MyDataCollectionItemsPaginationInfo } from '@/collection/domain/models/MyDataCollectionItemsPaginationInfo'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id?: string): Promise<Collection> {
@@ -101,14 +102,11 @@ export class CollectionMockRepository implements CollectionRepository {
     _roleIds: number[],
     collectionItemTypes: CollectionItemType[],
     _publicationStatuses: string[],
-    limit?: number,
-    _selectedPage?: number,
+    paginationInfo?: MyDataCollectionItemsPaginationInfo,
     _searchText?: string,
     _otherUserName?: string
   ): Promise<MyDataCollectionItemSubset> {
-    if (!limit) {
-      limit = 10
-    }
+    const limit = paginationInfo?.pageSize ?? 10
     const numberOfCollections = Math.floor(limit / 3)
     const numberOfDatasets = Math.floor(limit / 3)
     const numberOfFiles = limit - numberOfCollections - numberOfDatasets

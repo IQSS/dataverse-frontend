@@ -13,6 +13,7 @@ import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus
 import { LinkingObjectType } from '../useCases/getCollectionsForLinking'
 import { CollectionSummary } from '../models/CollectionSummary'
 import { CollectionLinks } from '../models/CollectionLinks'
+import { MyDataCollectionItemsPaginationInfo } from '../models/MyDataCollectionItemsPaginationInfo'
 
 export interface CollectionRepository {
   getById: (id?: string) => Promise<Collection>
@@ -31,8 +32,7 @@ export interface CollectionRepository {
     roleIds: number[],
     collectionItemTypes: CollectionItemType[],
     publicationStatuses: PublicationStatus[],
-    limit?: number,
-    selectedPage?: number,
+    paginationInfo?: MyDataCollectionItemsPaginationInfo,
     searchText?: string,
     otherUserName?: string
   ) => Promise<MyDataCollectionItemSubset>

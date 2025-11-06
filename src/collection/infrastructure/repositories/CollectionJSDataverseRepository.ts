@@ -34,6 +34,7 @@ import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
 import { CollectionLinks } from '@/collection/domain/models/CollectionLinks'
+import { MyDataCollectionItemsPaginationInfo } from '@/collection/domain/models/MyDataCollectionItemsPaginationInfo'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -93,8 +94,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     roleIds: number[],
     collectionItemTypes: CollectionItemType[],
     publicationStatuses: PublicationStatus[],
-    limit?: number,
-    selectedPage?: number,
+    paginationInfo?: MyDataCollectionItemsPaginationInfo,
     searchText?: string,
     otherUserName?: string
   ): Promise<MyDataCollectionItemSubset> {
@@ -103,8 +103,8 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
         roleIds,
         collectionItemTypes,
         publicationStatuses,
-        limit,
-        selectedPage,
+        paginationInfo?.pageSize,
+        paginationInfo?.page,
         searchText,
         otherUserName
       )

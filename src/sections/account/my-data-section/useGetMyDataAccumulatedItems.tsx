@@ -8,6 +8,7 @@ import {
   MyDataCollectionItemSubset,
   PublicationStatusCount
 } from '@/collection/domain/models/MyDataCollectionItemSubset'
+import { MyDataCollectionItemsPaginationInfo } from '@/collection/domain/models/MyDataCollectionItemsPaginationInfo'
 
 export const NO_COLLECTION_ITEMS = 0
 
@@ -120,13 +121,17 @@ async function loadNextItems(
   searchCriteria: MyDataSearchCriteria
 ): Promise<MyDataCollectionItemSubset> {
   const publicationStatuses = searchCriteria.publicationStatuses ?? []
+  const myDataPaginationInfo = new MyDataCollectionItemsPaginationInfo(
+    paginationInfo.page,
+    paginationInfo.pageSize,
+    paginationInfo.totalItems
+  )
   return await getMyDataCollectionItems(
     collectionRepository,
     searchCriteria.roleIds,
     searchCriteria.itemTypes,
     publicationStatuses,
-    paginationInfo.pageSize,
-    paginationInfo.page,
+    myDataPaginationInfo,
     searchCriteria.searchText,
     searchCriteria.otherUserName
   )
