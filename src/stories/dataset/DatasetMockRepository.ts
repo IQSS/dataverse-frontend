@@ -99,7 +99,7 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
-  updateLicense(
+  updateDatasetLicense(
     _datasetId: string | number,
     _licenseUpdateRequest: DatasetLicenseUpdateRequest
   ): Promise<void> {

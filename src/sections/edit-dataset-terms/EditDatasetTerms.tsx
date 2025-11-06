@@ -120,7 +120,10 @@ export const EditDatasetTerms = ({
         </Accordion>
       ) : (
         <Tabs activeKey={activeKey} onSelect={updateTabOnSelect}>
-          <Tabs.Tab eventKey={tabsKeys.datasetTerms} title={t('editTerms.tabs.datasetTerms')}>
+          <Tabs.Tab
+            eventKey={tabsKeys.datasetTerms}
+            title={t('editTerms.tabs.datasetTerms')}
+            disabled={true}>
             <div className={styles['tab-container']}>
               <DatasetTermsTab
                 licenseRepository={licenseRepository}
@@ -145,7 +148,10 @@ export const EditDatasetTerms = ({
             </div>
           </Tabs.Tab>
 
-          <Tabs.Tab eventKey={tabsKeys.guestBook} title={t('editTerms.tabs.guestBook')}>
+          <Tabs.Tab
+            eventKey={tabsKeys.guestBook}
+            title={t('editTerms.tabs.guestBook')}
+            disabled={true}>
             <div className={styles['tab-container']}>
               <GuestBookTab />
             </div>

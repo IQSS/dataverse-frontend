@@ -1,6 +1,5 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
 import {
-  CustomTerms,
   Dataset,
   DatasetLock,
   DatasetNonNumericVersion,
@@ -43,7 +42,9 @@ import {
   getDatasetTemplates,
   linkDataset,
   unlinkDataset,
-  getDatasetLinkedCollections
+  getDatasetLinkedCollections,
+  updateTermsOfAccess,
+  updateDatasetLicense
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -52,7 +53,7 @@ import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetLicenseUpdateRequest } from '../../domain/models/DatasetLicenseUpdateRequest'
@@ -381,10 +382,16 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         throw new Error(error.message)
       })
   }
-  getDatasetVersionsSummaries(datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
-    return getDatasetVersionsSummaries.execute(datasetId).catch((error: ReadError) => {
-      throw error
-    })
+  getDatasetVersionsSummaries(
+    datasetId: number | string,
+    limit?: number,
+    offset?: number
+  ): Promise<DatasetVersionSummarySubset> {
+    return getDatasetVersionsSummaries
+      .execute(datasetId, limit, offset)
+      .catch((error: ReadError) => {
+        throw error
+      })
   }
   getDownloadCount(
     datasetId: string | number,
@@ -455,63 +462,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  updateLicense(
+  updateDatasetLicense(
     datasetId: string | number,
     licenseUpdateRequest: DatasetLicenseUpdateRequest
   ): Promise<void> {
-    // return updateTermsOfAccess.execute(datasetId, licenseUpdateRequest)
-    // TODO: This method should use updateDatasetLicense from js-dataverse when available
-    // For now, implementing as a direct API call
-
-    // The license API requires numeric dataset ID, not persistentId
-    // We need to use the dataset.id (numeric) for license updates
-    const apiUrl = `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/license`
-
-    const payload: {
-      name?: string
-      customTerms?: CustomTerms
-    } = {}
-
-    if (licenseUpdateRequest.name) {
-      payload.name = licenseUpdateRequest.name
-    }
-
-    if (licenseUpdateRequest.customTerms) {
-      payload.customTerms = licenseUpdateRequest.customTerms
-    }
-
-    return axiosInstance
-      .put(apiUrl, payload)
-      .then(() => undefined)
-      .catch((error: unknown) => {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-        throw new Error(`Failed to update dataset license: ${errorMessage}`)
-      })
+    return updateDatasetLicense.execute(datasetId, licenseUpdateRequest)
   }
 
   updateTermsOfAccess(datasetId: string | number, termsOfAccess: TermsOfAccess): Promise<void> {
-    // return updateTermsOfAccess.execute(datasetId, termsOfAccess)
-
-    // TODO: This method should use updateDatasetLicense from js-dataverse when available
-    // For now, implementing as a direct API call
-
-    const apiUrl = `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/access`
-
-    // Map client model field to API expected field name
-    const { termsOfAccessForRestrictedFiles, ...rest } = termsOfAccess
-    const payload = {
-      ...rest,
-      ...(termsOfAccessForRestrictedFiles !== undefined
-        ? { termsOfAccess: termsOfAccessForRestrictedFiles }
-        : {})
-    }
-
-    return axiosInstance
-      .put(apiUrl, { customTermsOfAccess: payload })
-      .then(() => undefined)
-      .catch((error: unknown) => {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-        throw new Error(`Failed to update dataset terms of access: ${errorMessage}`)
-      })
+    return updateTermsOfAccess.execute(datasetId, termsOfAccess)
   }
 }

@@ -4,6 +4,7 @@ import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetR
 import { DatasetLicenseUpdateRequest } from '../../../dataset/domain/models/DatasetLicenseUpdateRequest'
 import { JSDataverseWriteErrorHandler } from '../../../shared/helpers/JSDataverseWriteErrorHandler'
 import { WriteError } from '@iqss/dataverse-client-javascript'
+import { updateDatasetLicense } from '@/dataset/domain/useCases/updateDatasetLicense'
 
 export interface UseUpdateDatasetLicense {
   datasetRepository: DatasetRepository
@@ -35,7 +36,7 @@ export const useUpdateDatasetLicense = ({
     setError(null)
 
     try {
-      await datasetRepository.updateLicense(datasetId, licenseUpdateRequest)
+      await updateDatasetLicense(datasetRepository, datasetId, licenseUpdateRequest)
       onSuccessfulUpdateLicense()
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {

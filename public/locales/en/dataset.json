@@ -104,6 +104,10 @@
       "heading": "Success!",
       "alertText": "The terms for this dataset have been updated."
     },
+    "licenseUpdated": {
+      "heading": "Success!",
+      "alertText": "The license for this dataset has been updated."
+    },
     "thumbnailUpdated": {
       "heading": "Success!",
       "alertText": "Dataset thumbnail updated."

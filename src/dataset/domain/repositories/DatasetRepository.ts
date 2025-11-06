@@ -34,10 +34,6 @@ export interface DatasetRepository {
     datasetDTO: DatasetDTO,
     sourceLastUpdateTime?: string
   ) => Promise<void>
-  updateLicense: (
-    datasetId: string | number,
-    licenseUpdateRequest: DatasetLicenseUpdateRequest
-  ) => Promise<void>
   deaccession: (
     datasetId: string | number,
     version: string,
@@ -63,6 +59,10 @@ export interface DatasetRepository {
   ) => Promise<FormattedCitation>
   getTemplates: (collectionIdOrAlias: number | string) => Promise<DatasetTemplate[]>
   updateTermsOfAccess: (datasetId: string | number, termsOfAccess: TermsOfAccess) => Promise<void>
+  updateDatasetLicense: (
+    datasetId: string | number,
+    licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ) => Promise<void>
   link(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
   unlink(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
   getDatasetLinkedCollections: (datasetId: string | number) => Promise<CollectionSummary[]>

@@ -4,6 +4,7 @@ import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetR
 import { JSDataverseWriteErrorHandler } from '../../../shared/helpers/JSDataverseWriteErrorHandler'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { TermsOfAccess } from '@/dataset/domain/models/Dataset'
+import { updateTermsOfAccess } from '@/dataset/domain/useCases/updateTermsOfAccess'
 
 export interface UseUpdateTermsOfAccess {
   datasetRepository: DatasetRepository
@@ -35,7 +36,8 @@ export const useUpdateTermsOfAccess = ({
     setError(null)
     console.log('termsOfAccess', termsOfAccess)
     try {
-      await datasetRepository.updateTermsOfAccess(datasetId, termsOfAccess)
+      const response = await updateTermsOfAccess(datasetRepository, datasetId, termsOfAccess)
+      console.log('response', response)
 
       onSuccessfulUpdateTermsOfAccess()
     } catch (err: WriteError | unknown) {
