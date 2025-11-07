@@ -4,10 +4,7 @@ import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
 import { LicenseRepository } from '@/licenses/domain/repositories/LicenseRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
-import {
-  TermsOfUseMother,
-  CustomTermsMother
-} from '@tests/component/dataset/domain/models/TermsOfUseMother'
+import { TermsOfUseMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { License } from '@/licenses/domain/models/License'
 
@@ -50,6 +47,11 @@ const mockDataset = DatasetMother.create({
   termsOfUse: TermsOfUseMother.create()
 })
 
+const mockDatasetWithLicense = DatasetMother.create({
+  id: 123,
+  license: mockLicenses[0]
+})
+
 describe('DatasetTermsTab', () => {
   const withProviders = (component: ReactNode, dataset: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
@@ -70,39 +72,29 @@ describe('DatasetTermsTab', () => {
 
   describe('License Selection', () => {
     it('renders license dropdown with available licenses', () => {
-      const license = mockLicenses[0]
-
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={license}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={false}
           />,
           mockDataset
         )
       )
 
-      cy.findByDisplayValue('CC0 1.0').should('exist')
-
-      cy.get('select').should('contain.html', 'CC0 1.0')
-      cy.get('select').should('contain.html', 'CC BY 4.0')
-      cy.get('select').should('contain.html', 'Custom Dataset Terms')
+      cy.findByRole('option', { name: 'CC0 1.0' }).should('exist')
+      cy.findByRole('option', { name: 'CC BY 4.0' }).should('exist')
+      cy.findByRole('option', { name: 'Custom Dataset Terms' }).should('exist')
     })
 
     it('allows user to change license selection', () => {
-      const license = mockLicenses[0]
-
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={license}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={false}
           />,
-          mockDataset
+          mockDatasetWithLicense
         )
       )
 
@@ -115,68 +107,53 @@ describe('DatasetTermsTab', () => {
 
   describe('Custom Terms', () => {
     it('shows custom terms fields when "Custom Dataset Terms" is selected', () => {
-      const customTerms = CustomTermsMother.create()
-
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={customTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={true}
-          />,
-          mockDataset
-        )
-      )
-
-      cy.findByText('Terms of Use').should('exist')
-      cy.findByText(customTerms.termsOfUse).should('exist')
-      cy.findByText(customTerms?.confidentialityDeclaration as string).should('exist')
-      cy.findByText(customTerms?.specialPermissions as string).should('exist')
-      cy.findByText(customTerms?.restrictions as string).should('exist')
-      cy.findByText(customTerms?.citationRequirements as string).should('exist')
-      cy.findByText(customTerms?.depositorRequirements as string).should('exist')
-      cy.findByText(customTerms?.conditions as string).should('exist')
-      cy.findByText(customTerms?.disclaimer as string).should('exist')
-    })
-
-    it('validates required fields in custom terms', () => {
-      const customTerms = CustomTermsMother.create({
-        termsOfUse: ''
-      })
-      datasetRepository.updateDatasetLicense = cy.stub().resolves()
-
-      cy.customMount(
-        withProviders(
-          <DatasetTermsTab
-            initialLicense={customTerms}
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-            isInitialCustomTerms={true}
           />,
           mockDataset
         )
       )
 
       cy.findByTestId('customTerms.termsOfUse').should('exist')
+      cy.findByTestId('customTerms.confidentialityDeclaration').should('exist')
+      cy.findByTestId('customTerms.specialPermissions').should('exist')
+      cy.findByTestId('customTerms.restrictions').should('exist')
+      cy.findByTestId('customTerms.citationRequirements').should('exist')
+      cy.findByTestId('customTerms.depositorRequirements').should('exist')
+      cy.findByTestId('customTerms.conditions').should('exist')
+      cy.findByTestId('customTerms.disclaimer').should('exist')
+    })
+
+    it('validates required fields in custom terms', () => {
+      datasetRepository.updateDatasetLicense = cy.stub().resolves()
+
+      cy.customMount(
+        withProviders(
+          <DatasetTermsTab
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          mockDataset
+        )
+      )
+
+      cy.findByTestId('customTerms.termsOfUse').clear()
+      cy.findByText(/Terms of use is required./i).should('exist')
       cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
-      cy.findByTestId('customTerms.termsOfUse').type('temp').clear()
-      cy.findByText('Terms of use is required.').should('exist')
 
       cy.findByTestId('customTerms.termsOfUse').type('Some custom terms')
       cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
     })
 
     it('allows switching between license and custom terms', () => {
-      const license = mockLicenses[0]
-
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={license}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={false}
           />,
           mockDataset
         )
@@ -191,15 +168,11 @@ describe('DatasetTermsTab', () => {
 
   describe('Form Actions', () => {
     it('enables save button when form is valid', () => {
-      const license = mockLicenses[0]
-
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={license}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={false}
           />,
           mockDataset
         )
@@ -209,64 +182,59 @@ describe('DatasetTermsTab', () => {
     })
 
     it('resets form when cancel is clicked', () => {
-      const license = mockLicenses[0]
-
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={license}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={false}
           />,
           mockDataset
         )
       )
 
-      cy.get('select').select('CC BY 4.0')
-      cy.get('select').should('have.value', '2')
+      cy.findByRole('option', { name: 'Custom Dataset Terms' }).should('be.selected')
+      cy.findByTestId('customTerms.confidentialityDeclaration')
+        .clear()
+        .type('test confidentiality declaration')
+
       cy.findByRole('button', { name: 'Cancel' }).click()
-      cy.get('select').should('have.value', '1')
+      cy.findByText('test confidentiality declaration').should('not.exist')
     })
   })
 
   describe('Loading States', () => {
     it('shows loading state while fetching licenses', () => {
-      const license = mockLicenses[0]
       licenseRepository.getAvailableStandardLicenses = cy.stub().returns(new Promise(() => {})) // Never resolves
 
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={license}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={false}
           />,
           mockDataset
         )
       )
 
-      cy.findByText('Loading...').should('exist')
+      cy.findByRole('option', { name: 'Custom Dataset Terms' }).should('exist')
+      cy.findAllByRole('button', { name: 'Save Changes' }).should('exist')
+      cy.findAllByRole('button', { name: 'Save Changes' }).should('be.disabled')
     })
 
     it('shows saving state during form submission', () => {
-      const license = mockLicenses[0]
       datasetRepository.updateDatasetLicense = cy.stub().returns(new Promise(() => {}))
 
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={license}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={false}
           />,
           mockDataset
         )
       )
 
-      cy.findByDisplayValue('CC0 1.0').should('exist')
+      cy.findByRole('option', { name: 'Custom Dataset Terms' }).should('exist')
 
       cy.findByRole('button', { name: 'Save Changes' }).click()
 
@@ -277,7 +245,6 @@ describe('DatasetTermsTab', () => {
 
   describe('Error Handling', () => {
     it('displays error message when license loading fails', () => {
-      const license = mockLicenses[0]
       licenseRepository.getAvailableStandardLicenses = cy
         .stub()
         .rejects(new Error('Failed to load licenses'))
@@ -285,10 +252,8 @@ describe('DatasetTermsTab', () => {
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={license}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={false}
           />,
           mockDataset
         )
@@ -298,22 +263,19 @@ describe('DatasetTermsTab', () => {
     })
 
     it('displays error message when license update fails', () => {
-      const license = mockLicenses[0]
       datasetRepository.updateDatasetLicense = cy.stub().rejects(new Error())
 
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={license}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={false}
           />,
           mockDataset
         )
       )
 
-      cy.findByDisplayValue('CC0 1.0').should('exist')
+      cy.findByRole('option', { name: 'Custom Dataset Terms' }).should('exist')
 
       cy.findByRole('button', { name: 'Save Changes' }).click()
       cy.findByText(
@@ -324,18 +286,15 @@ describe('DatasetTermsTab', () => {
 
   describe('Toast Notifications', () => {
     it('displays success toast when license is updated successfully', () => {
-      const license = mockLicenses[0]
       datasetRepository.updateDatasetLicense = cy.stub().resolves()
 
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={license}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={false}
           />,
-          mockDataset
+          mockDatasetWithLicense
         )
       )
 
@@ -348,16 +307,13 @@ describe('DatasetTermsTab', () => {
     })
 
     it('displays success toast when custom terms are updated successfully', () => {
-      const customTerms = CustomTermsMother.create()
       datasetRepository.updateDatasetLicense = cy.stub().resolves()
 
       cy.customMount(
         withProviders(
           <DatasetTermsTab
-            initialLicense={customTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
-            isInitialCustomTerms={true}
           />,
           mockDataset
         )

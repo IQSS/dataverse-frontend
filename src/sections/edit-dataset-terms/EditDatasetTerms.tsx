@@ -12,9 +12,8 @@ import { useDataset } from '../dataset/DatasetContext'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
-import { DatasetLicense, CustomTerms } from '@/dataset/domain/models/Dataset'
-import styles from './EditDatasetTerms.module.scss'
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
+import styles from './EditDatasetTerms.module.scss'
 
 const tabsKeys = EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS
 
@@ -67,7 +66,7 @@ export const EditDatasetTerms = ({
       </Alert>
 
       {isMobile ? (
-        <Accordion defaultActiveKey={[tabsKeys.datasetTerms]} alwaysOpen={true}>
+        <Accordion defaultActiveKey={[tabsKeys.datasetTerms]}>
           <Accordion.Item eventKey={tabsKeys.datasetTerms}>
             <Accordion.Header>{t('editTerms.tabs.datasetTerms')}</Accordion.Header>
             <Accordion.Body>
@@ -75,11 +74,6 @@ export const EditDatasetTerms = ({
                 <DatasetTermsTab
                   licenseRepository={licenseRepository}
                   datasetRepository={datasetRepository}
-                  initialLicense={
-                    (dataset.license as DatasetLicense) ||
-                    (dataset.termsOfUse.customTerms as CustomTerms)
-                  }
-                  isInitialCustomTerms={dataset.termsOfUse.customTerms !== undefined}
                 />
               </div>
             </Accordion.Body>
@@ -89,10 +83,7 @@ export const EditDatasetTerms = ({
             <Accordion.Header>{t('editTerms.tabs.restrictedFilesTerms')}</Accordion.Header>
             <Accordion.Body>
               <div className={styles['tab-container']}>
-                <RestrictedFilesTab
-                  datasetRepository={datasetRepository}
-                  initialTermsOfAccess={dataset.termsOfUse.termsOfAccess}
-                />
+                <RestrictedFilesTab datasetRepository={datasetRepository} />
               </div>
             </Accordion.Body>
           </Accordion.Item>
@@ -113,11 +104,6 @@ export const EditDatasetTerms = ({
               <DatasetTermsTab
                 licenseRepository={licenseRepository}
                 datasetRepository={datasetRepository}
-                initialLicense={
-                  (dataset.license as DatasetLicense) ||
-                  (dataset.termsOfUse.customTerms as CustomTerms)
-                }
-                isInitialCustomTerms={dataset.termsOfUse.customTerms !== undefined}
               />
             </div>
           </Tabs.Tab>
@@ -126,10 +112,7 @@ export const EditDatasetTerms = ({
             eventKey={tabsKeys.restrictedFilesTerms}
             title={t('editTerms.tabs.restrictedFilesTerms')}>
             <div className={styles['tab-container']}>
-              <RestrictedFilesTab
-                datasetRepository={datasetRepository}
-                initialTermsOfAccess={dataset.termsOfUse.termsOfAccess}
-              />
+              <RestrictedFilesTab datasetRepository={datasetRepository} />
             </div>
           </Tabs.Tab>
 

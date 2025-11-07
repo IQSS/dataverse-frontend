@@ -34,11 +34,9 @@ export const useUpdateTermsOfAccess = ({
   ) => {
     setIsLoading(true)
     setError(null)
-    console.log('termsOfAccess', termsOfAccess)
-    try {
-      const response = await updateTermsOfAccess(datasetRepository, datasetId, termsOfAccess)
-      console.log('response', response)
 
+    try {
+      await updateTermsOfAccess(datasetRepository, datasetId, termsOfAccess)
       onSuccessfulUpdateTermsOfAccess()
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {

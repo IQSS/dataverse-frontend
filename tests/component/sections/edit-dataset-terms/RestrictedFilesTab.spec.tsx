@@ -3,13 +3,28 @@ import { RestrictedFilesTab } from '@/sections/edit-dataset-terms/restricted-fil
 import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
-import { TermsOfAccessMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
-import { Dataset, TermsOfAccess } from '@/dataset/domain/models/Dataset'
+import {
+  TermsOfAccessMother,
+  TermsOfUseMother
+} from '@tests/component/dataset/domain/models/TermsOfUseMother'
+import { Dataset } from '@/dataset/domain/models/Dataset'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
 const mockDataset = DatasetMother.create({
-  id: 123
+  id: 123,
+  termsOfUse: TermsOfUseMother.withoutCustomTerms({
+    termsOfAccess: TermsOfAccessMother.create({
+      fileAccessRequest: true,
+      termsOfAccessForRestrictedFiles: 'Access requires approval',
+      dataAccessPlace: 'Main office',
+      originalArchive: 'University archive',
+      availabilityStatus: 'Available',
+      contactForAccess: 'contact@example.com',
+      sizeOfCollection: '100 MB',
+      studyCompletion: '2023-12-31'
+    })
+  })
 })
 
 describe('RestrictedFilesTab', () => {
@@ -28,16 +43,8 @@ describe('RestrictedFilesTab', () => {
 
   describe('Request Access Section', () => {
     it('renders the request access checkbox', () => {
-      const termsOfAccess = TermsOfAccessMother.create({ fileAccessRequest: true })
-
       cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
+        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByLabelText('Enable access request').should('exist')
@@ -45,16 +52,8 @@ describe('RestrictedFilesTab', () => {
     })
 
     it('shows info alert', () => {
-      const termsOfAccess = TermsOfAccessMother.create({ fileAccessRequest: true })
-
       cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
+        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByText(/Restricting limits access to published files/).should('exist')
@@ -63,16 +62,8 @@ describe('RestrictedFilesTab', () => {
 
   describe('Terms of Access Fields', () => {
     it('renders all terms of access fields', () => {
-      const termsOfAccess = TermsOfAccessMother.create()
-
       cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
+        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
@@ -85,26 +76,9 @@ describe('RestrictedFilesTab', () => {
     })
 
     it('pre-fills fields with initial values', () => {
-      const termsOfAccess = TermsOfAccessMother.create({
-        termsOfAccessForRestrictedFiles: 'Access requires approval',
-        dataAccessPlace: 'Main office',
-        originalArchive: 'University archive',
-        availabilityStatus: 'Available',
-        contactForAccess: 'contact@example.com',
-        sizeOfCollection: '100 MB',
-        studyCompletion: '2023-12-31'
-      })
-
       cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
+        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
       )
-
       cy.findByDisplayValue('Access requires approval').should('exist')
       cy.findByDisplayValue('Main office').should('exist')
       cy.findByDisplayValue('University archive').should('exist')
@@ -115,18 +89,8 @@ describe('RestrictedFilesTab', () => {
     })
 
     it('allows editing of terms of access fields', () => {
-      const termsOfAccess = TermsOfAccessMother.create({
-        termsOfAccessForRestrictedFiles: 'Initial terms'
-      })
-
       cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
+        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByLabelText('Terms of Access for Restricted Files')
@@ -139,16 +103,8 @@ describe('RestrictedFilesTab', () => {
 
   describe('Form Actions', () => {
     it('renders save and cancel buttons', () => {
-      const termsOfAccess = TermsOfAccessMother.create()
-
       cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
+        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByRole('button', { name: 'Save Changes' }).should('exist')
@@ -156,18 +112,25 @@ describe('RestrictedFilesTab', () => {
     })
 
     it('enables save button when form is valid', () => {
-      const termsOfAccess = TermsOfAccessMother.create()
+      const termsOfAccess = TermsOfAccessMother.create({
+        fileAccessRequest: true,
+        termsOfAccessForRestrictedFiles: 'Terms already provided'
+      })
 
       cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
+        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
       )
 
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
+    })
+
+    it('disables save button when request access is disabled and terms are empty', () => {
+      cy.customMount(
+        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+      )
+
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+      cy.findByLabelText(/Terms of Access for Restricted Files/i).type('Provide contact details')
       cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
     })
 
@@ -186,10 +149,7 @@ describe('RestrictedFilesTab', () => {
 
       cy.customMount(
         withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
+          <RestrictedFilesTab datasetRepository={datasetRepository} />,
           datasetWithTerms
         )
       )
@@ -202,16 +162,8 @@ describe('RestrictedFilesTab', () => {
     })
 
     it('submits form data when save is clicked', () => {
-      const termsOfAccess = TermsOfAccessMother.create()
-
       cy.customMount(
-        withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
-        )
+        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByLabelText('Terms of Access for Restricted Files').clear().type('New terms')
@@ -221,46 +173,12 @@ describe('RestrictedFilesTab', () => {
   })
 
   it('handles empty initial terms of access', () => {
-    const emptyTermsOfAccess = TermsOfAccessMother.createEmpty()
-
     cy.customMount(
-      withProviders(
-        <RestrictedFilesTab
-          datasetRepository={datasetRepository}
-          initialTermsOfAccess={emptyTermsOfAccess}
-        />,
-        mockDataset
-      )
+      withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
     )
 
     cy.findByLabelText('Enable access request').should('exist')
     cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
-  })
-
-  it('handles undefined values in terms of access', () => {
-    const termsOfAccess: TermsOfAccess = {
-      fileAccessRequest: false,
-      termsOfAccessForRestrictedFiles: undefined,
-      dataAccessPlace: undefined,
-      originalArchive: undefined,
-      availabilityStatus: undefined,
-      contactForAccess: undefined,
-      sizeOfCollection: undefined,
-      studyCompletion: undefined
-    }
-
-    cy.customMount(
-      withProviders(
-        <RestrictedFilesTab
-          datasetRepository={datasetRepository}
-          initialTermsOfAccess={termsOfAccess}
-        />,
-        mockDataset
-      )
-    )
-
-    cy.findByLabelText('Terms of Access for Restricted Files').should('have.value', '')
-    cy.findByLabelText('Data Access Place').should('have.value', '')
   })
 
   describe('Toast Notifications', () => {
@@ -272,11 +190,11 @@ describe('RestrictedFilesTab', () => {
 
       cy.customMount(
         withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
+          <RestrictedFilesTab datasetRepository={datasetRepository} />,
+          DatasetMother.create({
+            id: 123,
+            termsOfUse: { termsOfAccess }
+          })
         )
       )
 
@@ -296,11 +214,11 @@ describe('RestrictedFilesTab', () => {
 
       cy.customMount(
         withProviders(
-          <RestrictedFilesTab
-            datasetRepository={datasetRepository}
-            initialTermsOfAccess={termsOfAccess}
-          />,
-          mockDataset
+          <RestrictedFilesTab datasetRepository={datasetRepository} />,
+          DatasetMother.create({
+            id: 123,
+            termsOfUse: { termsOfAccess }
+          })
         )
       )
 

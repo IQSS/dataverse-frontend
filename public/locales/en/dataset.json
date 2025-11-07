@@ -152,6 +152,7 @@
     "restrictedFiles": "Restricted Files",
     "termsOfAccess": "Terms of Access for Restricted Files",
     "termsOfAccessInfo": "Restricting limits access to published files. People who want to use the restricted files can request access by default. If you disable request access, you must add information about access to the Terms of Access field. Learn about restricting files and dataset access in the User Guide.",
+    "termsOfAccessRequiredWhenRequestDisabled": "Add information about terms of access for restricted files when request access is disabled.",
     "requestAccess": "Request Access",
     "enableAccessRequest": "Enable access request",
     "dataAccessPlace": "Data Access Place",

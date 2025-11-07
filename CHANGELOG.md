@@ -12,6 +12,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Contact Owner button in File Page.
 - Share button in File Page.
 - Link Collection and Link Dataset features.
+- Edit Terms Integration
 
 ### Changed
 

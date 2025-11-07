@@ -238,6 +238,55 @@ describe('EditDatasetTerms', () => {
       cy.findByDisplayValue('Access requires approval').should('exist')
       cy.findByText(/Restricting limits access to published files/).should('exist')
     })
+
+    it('requires terms of access when request access is disabled', () => {
+      const termsOfAccess = TermsOfAccessMother.create({
+        fileAccessRequest: true,
+        termsOfAccessForRestrictedFiles: 'Existing access terms'
+      })
+      const dataset = DatasetMother.create({
+        license: mockLicenses[0],
+        termsOfUse: TermsOfUseMother.withoutCustomTerms({ termsOfAccess })
+      })
+      datasetRepository.updateTermsOfAccess = cy.stub().resolves()
+
+      cy.customMount(
+        withProviders(
+          <EditDatasetTerms
+            defaultActiveTabKey={
+              EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.restrictedFilesTerms
+            }
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).should(
+        'have.attr',
+        'aria-selected',
+        'true'
+      )
+
+      cy.findByLabelText('Enable access request').should('be.checked')
+      cy.findByLabelText('Enable access request').uncheck()
+      cy.findByLabelText('Enable access request').should('not.be.checked')
+
+      cy.findByLabelText(/Terms of Access for Restricted Files/i).clear()
+
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+
+      cy.findByText(
+        'Add information about terms of access for restricted files when request access is disabled.'
+      ).should('exist')
+
+      cy.wrap(datasetRepository.updateTermsOfAccess).should('not.have.been.called')
+
+      cy.findByLabelText(/Terms of Access for Restricted Files/i).type('Provide contact details')
+
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
+    })
   })
 
   describe('Breadcrumbs', () => {

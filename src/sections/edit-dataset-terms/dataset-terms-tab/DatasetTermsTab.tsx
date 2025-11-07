@@ -1,14 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, Controller, FormProvider } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { Form, Row, Col, Button, Alert, Spinner } from '@iqss/dataverse-design-system'
-import { DatasetLicense, CustomTerms } from '../../../dataset/domain/models/Dataset'
+import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
+import { CustomTerms } from '../../../dataset/domain/models/Dataset'
 import { LicenseRepository } from '../../../licenses/domain/repositories/LicenseRepository'
 import { useGetLicenses } from './useGetLicenses'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useDataset } from '../../dataset/DatasetContext'
-import { updateDatasetLicense } from '@/dataset/domain/useCases/updateDatasetLicense'
+import { useUpdateDatasetLicense } from './useUpdateDatasetLicense'
 import styles from './DatasetTermsTab.module.scss'
 
 interface DatasetTermsFormData {
@@ -17,34 +17,33 @@ interface DatasetTermsFormData {
 }
 
 interface DatasetTermsTabProps {
-  initialLicense: DatasetLicense | CustomTerms
   licenseRepository: LicenseRepository
   datasetRepository: DatasetRepository
-  isInitialCustomTerms: boolean
 }
 
-export function DatasetTermsTab({
-  initialLicense,
-  licenseRepository,
-  datasetRepository,
-  isInitialCustomTerms
-}: DatasetTermsTabProps) {
+export function DatasetTermsTab({ licenseRepository, datasetRepository }: DatasetTermsTabProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const { dataset, refreshDataset } = useDataset()
 
   const formContainerRef = useRef<HTMLDivElement>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const { licenses, isLoadingLicenses, errorLicenses } = useGetLicenses({
     licenseRepository,
     autoFetch: true
   })
 
+  const { handleUpdateLicense, isLoading, error } = useUpdateDatasetLicense({
+    datasetRepository,
+    onSuccessfulUpdateLicense: () => {
+      toast.success(t('alerts.licenseUpdated.alertText'))
+      refreshDataset()
+    }
+  })
+
   const initialCustomTerms = useMemo((): CustomTerms => {
-    if (isInitialCustomTerms) {
-      return initialLicense as CustomTerms
+    if (dataset?.termsOfUse.customTerms) {
+      return dataset.termsOfUse.customTerms
     }
     return {
       termsOfUse: '',
@@ -56,11 +55,10 @@ export function DatasetTermsTab({
       conditions: '',
       disclaimer: ''
     }
-  }, [initialLicense, isInitialCustomTerms])
+  }, [dataset?.termsOfUse.customTerms])
 
   const licenseOptions = useMemo(() => {
     const dynamicOptions = licenses
-      .filter((license) => license.active)
       .sort((a, b) => a.sortOrder - b.sortOrder)
       .map((license) => ({
         value: license.id.toString(),
@@ -75,23 +73,23 @@ export function DatasetTermsTab({
       label: t('editTerms.datasetTerms.customTermsLabel'),
       uri: '',
       iconUri: '',
-      isDefault: isInitialCustomTerms
+      isDefault: dataset?.termsOfUse.customTerms !== undefined
     })
 
     return dynamicOptions
-  }, [licenses, t, isInitialCustomTerms])
+  }, [licenses, t, dataset?.termsOfUse.customTerms])
 
   // Determine the default license value based on initial state and available options
   const defaultLicenseValue = useMemo(() => {
-    if (isInitialCustomTerms) {
+    if (dataset?.termsOfUse.customTerms !== undefined) {
       return 'CUSTOM'
     } else {
       const matchingLicense = licenseOptions.find(
-        (option) => option.label === (initialLicense as DatasetLicense).name
+        (option) => option.label === dataset?.license?.name
       )
       return matchingLicense?.value
     }
-  }, [licenseOptions, initialLicense, isInitialCustomTerms])
+  }, [licenseOptions, dataset?.license?.name, dataset?.termsOfUse.customTerms])
 
   const form = useForm<DatasetTermsFormData>({
     defaultValues: {
@@ -135,56 +133,27 @@ export function DatasetTermsTab({
     }))
   }, [initialCustomTerms, isCustomTerms, t])
 
-  const onSubmit = async (data: DatasetTermsFormData) => {
+  const onSubmit = (data: DatasetTermsFormData) => {
     if (!dataset) return
 
-    setIsSubmitting(true)
-    setSubmitError(null)
-
-    try {
-      if (data.license === 'CUSTOM') {
-        await updateDatasetLicense(datasetRepository, dataset.id, {
-          customTerms: data.customTerms
+    if (data.license === 'CUSTOM') {
+      void handleUpdateLicense(dataset.id, {
+        customTerms: data.customTerms
+      })
+    } else {
+      const selectedLicense = licenseOptions.find((option) => option.value === data.license)
+      if (selectedLicense) {
+        void handleUpdateLicense(dataset.id, {
+          name: selectedLicense.label
         })
-      } else {
-        const selectedLicense = licenseOptions.find((option) => option.value === data.license)
-        if (selectedLicense) {
-          await updateDatasetLicense(datasetRepository, dataset.id, {
-            name: selectedLicense.label
-          })
-        }
       }
-      toast.success(t('alerts.licenseUpdated.alertText'))
-      refreshDataset()
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error && err.message ? err.message : t('editTerms.defaultLicenseUpdateError')
-      setSubmitError(errorMessage)
-      onSubmitError()
-    } finally {
-      setIsSubmitting(false)
     }
-  }
-
-  function onSubmitError() {
-    if (formContainerRef.current) {
-      formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }
-
-  const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
-    if (e.key !== 'Enter') return
-
-    const isButton = e.target instanceof HTMLButtonElement
-    const isButtonTypeSubmit = isButton ? (e.target as HTMLButtonElement).type === 'submit' : false
-
-    if (!isButton && !isButtonTypeSubmit) e.preventDefault()
   }
 
   return (
     <div ref={formContainerRef} className={styles['dataset-terms-tab']}>
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} onKeyDown={preventEnterSubmit} noValidate={true}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate={true}>
           {/* License/Data Use Agreement Section */}
           <Row style={{ marginBottom: '1rem' }}>
             <Col sm={4}>
@@ -206,17 +175,11 @@ export function DatasetTermsTab({
                         onChange={onChange}
                         isInvalid={invalid}
                         disabled={isLoadingLicenses}>
-                        {isLoadingLicenses ? (
-                          <Spinner variant="light" animation="border" size="sm" />
-                        ) : errorLicenses ? (
-                          <Alert variant="danger">{tShared('loading')}</Alert>
-                        ) : (
-                          licenseOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))
-                        )}
+                        {licenseOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
                       </Form.Group.Select>
                       <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
                     </Col>
@@ -261,10 +224,7 @@ export function DatasetTermsTab({
                     name={`customTerms.${field.name}` as keyof DatasetTermsFormData}
                     control={control}
                     rules={field.rules}
-                    render={({
-                      field: { onChange, value, ref },
-                      fieldState: { invalid, error }
-                    }) => (
+                    render={({ field: { onChange, value }, fieldState: { invalid, error } }) => (
                       <Col sm={8}>
                         <Row>
                           <Col>
@@ -275,7 +235,6 @@ export function DatasetTermsTab({
                               isInvalid={invalid}
                               rows={field.rows}
                               aria-required={field.required}
-                              ref={ref}
                             />
                             {field.required && (
                               <Form.Group.Feedback type="invalid">
@@ -292,20 +251,20 @@ export function DatasetTermsTab({
             </>
           )}
 
-          {submitError && (
+          {error && (
             <Alert variant="danger" dismissible={false}>
-              {submitError}
+              {error}
             </Alert>
           )}
 
           <div className={styles['form-actions']}>
-            <Button type="submit" disabled={!isValid || isSubmitting}>
-              {isSubmitting ? tShared('saving') : tShared('saveChanges')}
+            <Button type="submit" disabled={!isValid || isLoading}>
+              {isLoading ? tShared('saving') : tShared('saveChanges')}
             </Button>
             <Button
               variant="secondary"
               type="button"
-              disabled={isSubmitting}
+              disabled={isLoading}
               onClick={() =>
                 reset({
                   license: defaultLicenseValue,

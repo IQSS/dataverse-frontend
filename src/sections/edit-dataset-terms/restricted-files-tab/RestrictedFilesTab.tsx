@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useForm, Controller, FormProvider } from 'react-hook-form'
+import { useForm, Controller, FormProvider, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
 import styles from '../dataset-terms-tab/DatasetTermsTab.module.scss'
@@ -11,22 +11,31 @@ import { useUpdateTermsOfAccess } from './useUpdateTermsOfAccess'
 
 interface RestrictedFilesTabProps {
   datasetRepository: DatasetRepository
-  initialTermsOfAccess: TermsOfAccess
 }
 
 export function RestrictedFilesTab({
-  datasetRepository: _datasetRepository,
-  initialTermsOfAccess
+  datasetRepository: _datasetRepository
 }: RestrictedFilesTabProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const { dataset, refreshDataset } = useDataset()
 
-  const formContainerRef = useRef<HTMLDivElement>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const defaultTermsOfAccess: TermsOfAccess = {
+    fileAccessRequest: false,
+    termsOfAccessForRestrictedFiles: undefined,
+    dataAccessPlace: undefined,
+    originalArchive: undefined,
+    availabilityStatus: undefined,
+    contactForAccess: undefined,
+    sizeOfCollection: undefined,
+    studyCompletion: undefined
+  }
 
-  const { handleUpdateTermsOfAccess } = useUpdateTermsOfAccess({
+  const initialTermsOfAccess =
+    (dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? defaultTermsOfAccess
+  const formContainerRef = useRef<HTMLDivElement>(null)
+
+  const { handleUpdateTermsOfAccess, isLoading, error } = useUpdateTermsOfAccess({
     datasetRepository: _datasetRepository,
     onSuccessfulUpdateTermsOfAccess: () => {
       toast.success(t('alerts.termsUpdated.alertText'))
@@ -35,57 +44,36 @@ export function RestrictedFilesTab({
   })
 
   const form = useForm<TermsOfAccess>({
-    defaultValues: (dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? initialTermsOfAccess,
+    defaultValues: initialTermsOfAccess,
     mode: 'onChange'
   })
 
-  const { control, handleSubmit, reset, watch } = form
+  const { control, handleSubmit, reset } = form
 
   useEffect(() => {
-    const original = (dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? null
-    if (original) {
-      reset(original)
+    if (dataset?.termsOfUse.termsOfAccess) {
+      reset(dataset.termsOfUse.termsOfAccess)
     }
-  }, [dataset, reset])
+  }, [dataset?.termsOfUse.termsOfAccess, reset])
 
-  const onSubmit = async (data: TermsOfAccess) => {
-    if (!dataset) return
+  const fileAccessRequestValue = useWatch({
+    control,
+    name: 'fileAccessRequest'
+  })
+  const termsOfAccessForRestrictedFilesValue = useWatch({
+    control,
+    name: 'termsOfAccessForRestrictedFiles'
+  })
+  const isRequestAccessEnabled =
+    fileAccessRequestValue === undefined ? true : Boolean(fileAccessRequestValue)
+  const isTermsOfAccessProvided =
+    typeof termsOfAccessForRestrictedFilesValue === 'string' &&
+    termsOfAccessForRestrictedFilesValue.trim().length > 0
 
-    setIsSubmitting(true)
-    setSubmitError(null)
-
-    try {
-      await handleUpdateTermsOfAccess(dataset.id, data)
-    } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : t('editTerms.defaultUpdateError'))
-      onSubmitError()
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  function onSubmitError() {
-    if (formContainerRef.current) {
-      formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }
-
-  const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
-    // When pressing Enter, only submit the form if the user is focused on the submit button itself
-    if (e.key !== 'Enter') return
-
-    const isButton = e.target instanceof HTMLButtonElement
-    const isButtonTypeSubmit = isButton ? (e.target as HTMLButtonElement).type === 'submit' : false
-
-    if (!isButton && !isButtonTypeSubmit) e.preventDefault()
-  }
-
-  // Generate terms of access fields dynamically from the actual termsOfAccess (excluding fileAccessRequest)
   const termsOfAccessFields = useMemo(() => {
-    const termsOfAccess =
-      (dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? initialTermsOfAccess
+    const termsOfAccess = initialTermsOfAccess
     return Object.keys(termsOfAccess)
-      .filter((fieldName) => fieldName !== 'fileAccessRequest') // Exclude checkbox field
+      .filter((fieldName) => fieldName !== 'fileAccessRequest')
       .map((fieldName) => ({
         name: fieldName,
         translationKey:
@@ -95,7 +83,23 @@ export function RestrictedFilesTab({
         type: 'textarea',
         rules: {}
       }))
-  }, [dataset?.termsOfUse.termsOfAccess, initialTermsOfAccess])
+      .map((field) => {
+        if (field.name === 'termsOfAccessForRestrictedFiles') {
+          const required = !isRequestAccessEnabled
+          return {
+            ...field,
+            required,
+            rules: {
+              validate: (value: string | boolean | undefined) =>
+                isRequestAccessEnabled ||
+                (typeof value === 'string' && value.trim().length > 0) ||
+                t('termsTab.termsOfAccessRequiredWhenRequestDisabled')
+            }
+          }
+        }
+        return field
+      })
+  }, [initialTermsOfAccess, isRequestAccessEnabled, t])
 
   return (
     <div ref={formContainerRef}>
@@ -106,7 +110,12 @@ export function RestrictedFilesTab({
       }
 
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} onKeyDown={preventEnterSubmit} noValidate={true}>
+        <form
+          onSubmit={handleSubmit((data) => {
+            if (!dataset) return
+            void handleUpdateTermsOfAccess(dataset.id, data)
+          })}
+          noValidate={true}>
           <Form.Group controlId="fileAccessRequest" as={Row}>
             <Col sm={4}>
               <Form.Group.Label message={t(`termsTab.requestAccessTip`)}>
@@ -178,23 +187,26 @@ export function RestrictedFilesTab({
             </Form.Group>
           ))}
 
-          {submitError && (
+          {error && (
             <Alert variant="danger" dismissible={false}>
-              {submitError}
+              {error}
             </Alert>
           )}
 
           <div className={styles['form-actions']}>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? tShared('saving') : tShared('saveChanges')}
+            <Button
+              type="submit"
+              disabled={isLoading || (!isRequestAccessEnabled && !isTermsOfAccessProvided)}>
+              {isLoading ? tShared('saving') : tShared('saveChanges')}
             </Button>
             <Button
               variant="secondary"
               type="button"
-              disabled={isSubmitting}
-              onClick={() =>
-                reset((dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? initialTermsOfAccess)
-              }>
+              onClick={() => {
+                const resetValues =
+                  (dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? initialTermsOfAccess
+                reset(resetValues)
+              }}>
               {tShared('cancel')}
             </Button>
           </div>
