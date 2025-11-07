@@ -281,9 +281,7 @@ describe('RestrictedFilesTab', () => {
       )
 
       cy.findByLabelText('Enable access request').check()
-      cy.findByLabelText('Terms of Access for Restricted Files').type(
-        'Please contact for access'
-      )
+      cy.findByLabelText('Terms of Access for Restricted Files').type('Please contact for access')
 
       cy.findByRole('button', { name: 'Save Changes' }).click()
 

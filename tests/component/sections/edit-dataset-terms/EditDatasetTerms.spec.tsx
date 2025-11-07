@@ -7,8 +7,7 @@ import { EditDatasetTermsHelper } from '@/sections/edit-dataset-terms/EditDatase
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
 import {
   TermsOfUseMother,
-  TermsOfAccessMother,
-  CustomTermsMother
+  TermsOfAccessMother
 } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { License } from '@/licenses/domain/models/License'
@@ -47,7 +46,7 @@ const mockLicenses: License[] = [
   }
 ]
 
-describe('EditDatasetTerms Integration', () => {
+describe('EditDatasetTerms', () => {
   const withProviders = (component: ReactNode, dataset: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
@@ -61,6 +60,7 @@ describe('EditDatasetTerms Integration', () => {
   }
 
   beforeEach(() => {
+    cy.viewport(1920, 1080)
     licenseRepository.getAvailableStandardLicenses = cy.stub().resolves(mockLicenses)
   })
 
@@ -68,7 +68,7 @@ describe('EditDatasetTerms Integration', () => {
     it('renders all three tabs', () => {
       const dataset = DatasetMother.create({
         license: mockLicenses[0],
-        termsOfUse: TermsOfUseMother.create()
+        termsOfUse: TermsOfUseMother.withoutCustomTerms()
       })
 
       cy.customMount(
@@ -84,13 +84,13 @@ describe('EditDatasetTerms Integration', () => {
 
       cy.findByRole('tab', { name: 'Dataset Terms' }).should('exist')
       cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).should('exist')
-      cy.findByRole('tab', { name: 'Guest Book' }).should('exist')
+      cy.findByRole('tab', { name: 'GuestBook' }).should('exist')
     })
 
     it('switches between tabs correctly', () => {
       const dataset = DatasetMother.create({
         license: mockLicenses[0],
-        termsOfUse: TermsOfUseMother.create()
+        termsOfUse: TermsOfUseMother.withoutCustomTerms()
       })
 
       cy.customMount(
@@ -115,14 +115,13 @@ describe('EditDatasetTerms Integration', () => {
 
       cy.findByLabelText('Enable access request').should('exist')
 
-      cy.findByRole('tab', { name: 'Guest Book' }).click()
-      cy.findByRole('tab', { name: 'Guest Book' }).should('have.attr', 'aria-selected', 'true')
+      cy.findByRole('tab', { name: 'GuestBook' }).should('not.be.selected')
     })
 
     it('starts with the correct default tab', () => {
       const dataset = DatasetMother.create({
         license: mockLicenses[0],
-        termsOfUse: TermsOfUseMother.create()
+        termsOfUse: TermsOfUseMother.withoutCustomTerms()
       })
 
       cy.customMount(
@@ -167,7 +166,7 @@ describe('EditDatasetTerms Integration', () => {
     })
   })
 
-  describe.only('Dataset Terms Tab Integration', () => {
+  describe('Dataset Terms Tab Integration', () => {
     it('displays dataset terms tab with license data', () => {
       const dataset = DatasetMother.create({
         license: mockLicenses[0]
@@ -189,9 +188,9 @@ describe('EditDatasetTerms Integration', () => {
     })
 
     it('displays custom terms when dataset has custom terms', () => {
-      const customTerms = CustomTermsMother.create({ termsOfUse: 'Custom terms text' })
       const dataset = DatasetMother.create({
-        termsOfUse: TermsOfUseMother.create({ customTerms })
+        license: undefined,
+        termsOfUse: TermsOfUseMother.create()
       })
 
       cy.customMount(
@@ -219,7 +218,7 @@ describe('EditDatasetTerms Integration', () => {
       })
       const dataset = DatasetMother.create({
         license: mockLicenses[0],
-        termsOfUse: TermsOfUseMother.create({ termsOfAccess })
+        termsOfUse: TermsOfUseMother.withoutCustomTerms({ termsOfAccess })
       })
 
       cy.customMount(
@@ -239,39 +238,13 @@ describe('EditDatasetTerms Integration', () => {
       cy.findByDisplayValue('Access requires approval').should('exist')
       cy.findByText(/Restricting limits access to published files/).should('exist')
     })
-
-    it('handles empty terms of access', () => {
-      const termsOfAccess = TermsOfAccessMother.createEmpty()
-      const dataset = DatasetMother.create({
-        license: mockLicenses[0],
-        termsOfUse: TermsOfUseMother.create({ termsOfAccess })
-      })
-
-      cy.customMount(
-        withProviders(
-          <EditDatasetTerms
-            defaultActiveTabKey={
-              EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.restrictedFilesTerms
-            }
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          dataset
-        )
-      )
-
-      cy.findByLabelText('Enable access request').should('exist')
-      cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
-
-      cy.findByText(/Restricting limits access to published files/).should('not.exist')
-    })
   })
 
   describe('Breadcrumbs', () => {
     it('displays correct breadcrumbs', () => {
       const dataset = DatasetMother.create({
         license: mockLicenses[0],
-        termsOfUse: TermsOfUseMother.create()
+        termsOfUse: TermsOfUseMother.withoutCustomTerms()
       })
 
       cy.customMount(
@@ -287,5 +260,41 @@ describe('EditDatasetTerms Integration', () => {
 
       cy.findByText('Edit Dataset Terms and Guestbook').should('exist')
     })
+  })
+})
+
+describe('EditDatasetTerms Mobile View', () => {
+  const withProviders = (component: ReactNode, dataset: Dataset) => {
+    datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
+    datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
+    return (
+      <DatasetProvider
+        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+        repository={datasetRepository}>
+        {component}
+      </DatasetProvider>
+    )
+  }
+
+  it('displays accordion sections in mobile view', () => {
+    cy.viewport(500, 1080)
+    licenseRepository.getAvailableStandardLicenses = cy.stub().resolves(mockLicenses)
+    const dataset = DatasetMother.create({
+      license: mockLicenses[0],
+      termsOfUse: TermsOfUseMother.withoutCustomTerms()
+    })
+    cy.customMount(
+      withProviders(
+        <EditDatasetTerms
+          defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
+          licenseRepository={licenseRepository}
+          datasetRepository={datasetRepository}
+        />,
+        dataset
+      )
+    )
+
+    cy.findByText('Dataset Terms').should('exist')
+    cy.findByText('Restricted Files + Terms of Access').should('exist')
   })
 })

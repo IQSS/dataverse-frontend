@@ -347,7 +347,7 @@
     "tabs": {
       "datasetTerms": "Dataset Terms",
       "restrictedFilesTerms": "Restricted Files + Terms of Access",
-      "guestBook": "Guest Book"
+      "guestBook": "GuestBook"
     },
     "datasetTerms": {
       "title": "Dataset Terms",
@@ -364,7 +364,7 @@
       "description": "Set up access restrictions and terms for restricted files in this dataset."
     },
     "guestBook": {
-      "title": "Guest Book",
+      "title": "GuestBook",
       "description": "Select a guestbook to have a user provide additional information when downloading a file.",
       "testGuestbook": "Test Guestbook",
       "previewButton": "Preview Guestbook"
