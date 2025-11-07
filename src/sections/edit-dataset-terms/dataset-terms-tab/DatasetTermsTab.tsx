@@ -209,9 +209,7 @@ export function DatasetTermsTab({
                         {isLoadingLicenses ? (
                           <Spinner variant="light" animation="border" size="sm" />
                         ) : errorLicenses ? (
-                          <Alert variant="danger">
-                            {t('editTerms.datasetTerms.errorLoadingLicenses')}
-                          </Alert>
+                          <Alert variant="danger">{tShared('loading')}</Alert>
                         ) : (
                           licenseOptions.map((option) => (
                             <option key={option.value} value={option.value}>

@@ -10,10 +10,8 @@
   "license": {
     "title": "License/Data Use Agreement",
     "altTextPrefix": "License image for ",
-    "description": "This dataset will be published under the terms specified below. Our Community Norms as well as good scientific practices expect that proper credit is given via citation.",
-    "moreInfo": "More information"
+    "description": "This dataset will be published under the terms specified below. Our Community Norms as well as good scientific practices expect that proper credit is given via citation."
   },
-  "loading": "Loading...",
   "citation": {
     "status": {
       "draft": {
@@ -273,7 +271,6 @@
     "deaccessionedReason": "Deaccessioned Reason",
     "error": "Error on loading dataset versions"
   },
-  "getDatasetVersionDiffError": "Error Fetching Dataset Version Differences",
   "datasetVersionSummary": {
     "firstPublished": "This is the First Published Version.",
     "firstDraft": "This is a draft version.",
@@ -355,9 +352,7 @@
       "licenseRequired": "Please select a license for this dataset",
       "customTermsRequired": "Terms of use is required.",
       "customTermsLabel": "Custom Dataset Terms",
-      "licenseDescription": "This dataset will be published under the terms specified below. Our Community Norms as well as good scientific practices expect that proper credit is given via citation.",
-      "errorLoadingLicenses": "Error loading licenses",
-      "saveSuccessMessage": "Dataset terms saved! License: {{license}}, Custom Terms: {{customTerms}}"
+      "licenseDescription": "This dataset will be published under the terms specified below. Our Community Norms as well as good scientific practices expect that proper credit is given via citation."
     },
     "restrictedFilesTerms": {
       "title": "Restricted Files + Terms of Access",
