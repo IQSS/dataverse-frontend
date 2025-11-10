@@ -112,11 +112,6 @@ describe('RestrictedFilesTab', () => {
     })
 
     it('enables save button when form is valid', () => {
-      const termsOfAccess = TermsOfAccessMother.create({
-        fileAccessRequest: true,
-        termsOfAccessForRestrictedFiles: 'Terms already provided'
-      })
-
       cy.customMount(
         withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
       )
@@ -167,7 +162,6 @@ describe('RestrictedFilesTab', () => {
       )
 
       cy.findByLabelText('Terms of Access for Restricted Files').clear().type('New terms')
-
       cy.findByRole('button', { name: 'Save Changes' }).click()
     })
   })

@@ -45,7 +45,7 @@ export const useUpdateTermsOfAccess = ({
           errorHandler.getReasonWithoutStatusCode() ?? errorHandler.getErrorMessage()
         setError(formattedError)
       } else {
-        setError(t('editTerms.defaultLicenseUpdateError'))
+        setError(t('editTerms.defaultTermsOfAccessUpdateError'))
       }
     } finally {
       setIsLoading(false)
