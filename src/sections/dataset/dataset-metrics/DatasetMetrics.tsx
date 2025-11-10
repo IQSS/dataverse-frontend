@@ -11,7 +11,7 @@ interface DatasetMetricsProps {
 }
 
 export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsProps) => {
-  const { t } = useTranslation('dataset')
+  const { t, i18n } = useTranslation('dataset')
   const {
     downloadCount: downloadCountIncludingMDC,
     isLoadingDownloadCount: isLoadingDownloadCountIncludingMDC,
@@ -29,6 +29,10 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
   }
 
   const isMDCenabled = checkIsMDCenabled(downloadCountIncludingMDC?.MDCStartDate)
+  const classicCount = downloadCountNotIncludingMDC?.downloadCount ?? 0
+  const mdcCount = downloadCountIncludingMDC?.downloadCount ?? 0
+  const formatNumber = (value: number) =>
+    new Intl.NumberFormat(i18n.languages[0] || undefined).format(value)
 
   if (isLoadingDownloadCountIncludingMDC || isLoadingDownloadCountNotIncludingMDC) {
     return <DatasetMetricsSkeleton />
@@ -66,7 +70,8 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
         {!isMDCenabled && (
           <span data-testid="classic-download-count">
             {t('metrics.downloads.count.default', {
-              count: downloadCountNotIncludingMDC?.downloadCount
+              count: classicCount,
+              formattedCount: formatNumber(classicCount)
             })}{' '}
             <QuestionMarkTooltip placement="top" message={t('metrics.downloads.defaultTip')} />
           </span>
@@ -77,7 +82,8 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
           <div className={styles['mdc-count']} data-testid="mdc-download-count">
             <span>
               {t('metrics.downloads.count.default', {
-                count: downloadCountIncludingMDC.downloadCount
+                count: mdcCount,
+                formattedCount: formatNumber(mdcCount)
               })}{' '}
               <QuestionMarkTooltip
                 placement="top"
@@ -86,10 +92,11 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
             </span>
 
             {/* If we have downloads before MDC was enabled, we show them also. */}
-            {downloadCountNotIncludingMDC && downloadCountNotIncludingMDC.downloadCount > 0 && (
+            {classicCount > 0 && (
               <small>
                 {`(+${t('metrics.downloads.count.preMDC', {
-                  count: downloadCountNotIncludingMDC.downloadCount
+                  count: classicCount,
+                  formattedCount: formatNumber(classicCount)
                 })})`}{' '}
                 <QuestionMarkTooltip
                   placement="top"
