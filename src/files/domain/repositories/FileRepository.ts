@@ -11,7 +11,8 @@ import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 import { FixityAlgorithm } from '../models/FixityAlgorithm'
 import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 import { RestrictFileDTO } from '../useCases/restrictFileDTO'
-import { FileVersionSummaryInfo } from '../models/FileVersionSummaryInfo'
+import { FileVersionSummarySubset } from '../models/FileVersionSummaryInfo'
+import { FileVersionPaginationInfo } from '../models/FileVersionPaginationInfo'
 
 export interface FileRepository {
   getAllByDatasetPersistentId: (
@@ -32,7 +33,10 @@ export interface FileRepository {
     criteria?: FileCriteria,
     includeDeaccessioned?: boolean
   ) => Promise<number>
-  getFileVersionSummaries: (fileId: number | string) => Promise<FileVersionSummaryInfo[]>
+  getFileVersionSummaries: (
+    fileId: number | string,
+    paginationInfo?: FileVersionPaginationInfo
+  ) => Promise<FileVersionSummarySubset>
   getById: (id: number, datasetVersionNumber?: string) => Promise<File | undefined>
   getMultipleFileDownloadUrl: (ids: number[], downloadMode: FileDownloadMode) => string
   getFileDownloadUrl: (id: number, downloadMode: FileDownloadMode) => string

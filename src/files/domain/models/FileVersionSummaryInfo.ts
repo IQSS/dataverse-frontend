@@ -1,5 +1,10 @@
 import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 
+export interface FileVersionSummarySubset {
+  summaries: FileVersionSummaryInfo[]
+  totalCount: number
+}
+
 export interface FileVersionSummaryInfo {
   datasetVersion: string
   contributors?: string
