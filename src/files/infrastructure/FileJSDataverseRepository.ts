@@ -33,7 +33,7 @@ import { JSFileMapper } from './mappers/JSFileMapper'
 import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { File } from '../domain/models/File'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
-import { DATAVERSE_BACKEND_URL } from '../../config'
+import { requireAppConfig } from '../../config'
 import { FilePreview } from '../domain/models/FilePreview'
 import { JSFilesCountInfoMapper } from './mappers/JSFilesCountInfoMapper'
 import { JSFileMetadataMapper } from './mappers/JSFileMetadataMapper'
@@ -51,7 +51,9 @@ import { FileVersionPaginationInfo } from '../domain/models/FileVersionPaginatio
 const includeDeaccessioned = true
 
 export class FileJSDataverseRepository implements FileRepository {
-  static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
+  static get DATAVERSE_BACKEND_URL(): string {
+    return requireAppConfig().backendUrl
+  }
 
   getAllByDatasetPersistentId(
     datasetPersistentId: string,
@@ -369,7 +371,7 @@ export class FileJSDataverseRepository implements FileRepository {
   }
   // TODO - Not a priority but could be nice to implement this use case in js-dataverse when having time
   getFixityAlgorithm(): Promise<FixityAlgorithm> {
-    return fetch(`${DATAVERSE_BACKEND_URL}/api/files/fixityAlgorithm`)
+    return fetch(`${FileJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/files/fixityAlgorithm`)
       .then((response) => {
         if (!response.ok) {
           console.log('Did not get fixityAlgorithm from Dataverse, using MD5')
