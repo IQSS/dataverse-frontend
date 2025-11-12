@@ -98,7 +98,7 @@ describe('DatasetVersions', () => {
         contributors: 'Test ',
         publishedOn: ''
       },
-      ...(versionSummaryInfoDeaccessioned.summaries as DatasetVersionSummaryInfo[])
+      ...versionSummaryInfoDeaccessioned.summaries
     ]
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves({
       summaries: versionSummaryInfoNoPreviousVersion,
