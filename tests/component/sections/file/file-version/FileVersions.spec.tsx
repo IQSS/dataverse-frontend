@@ -5,11 +5,15 @@ import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 
 const fileVersionSummaries = FileMother.createFileVersionSummary()
+const fileVersionSummariesSubset = {
+  summaries: fileVersionSummaries,
+  totalCount: fileVersionSummaries.length
+}
 const fileRepository: FileRepository = {} as FileRepository
 
 describe('FileVersions', () => {
   it('renders version rows and metadata correctly', () => {
-    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummaries)
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummariesSubset)
     cy.customMount(
       <FileVersions
         fileId={1}
@@ -48,7 +52,9 @@ describe('FileVersions', () => {
         versionState: DatasetVersionState.DEACCESSIONED
       }
     ]
-    fileRepository.getFileVersionSummaries = cy.stub().resolves(deaccessionedFile)
+    fileRepository.getFileVersionSummaries = cy
+      .stub()
+      .resolves({ summaries: deaccessionedFile, totalCount: deaccessionedFile.length })
     cy.customMount(
       <FileVersions
         fileId={1}
@@ -75,7 +81,9 @@ describe('FileVersions', () => {
         versionState: DatasetVersionState.DEACCESSIONED
       }
     ]
-    fileRepository.getFileVersionSummaries = cy.stub().resolves(deaccessionedFile)
+    fileRepository.getFileVersionSummaries = cy
+      .stub()
+      .resolves({ summaries: deaccessionedFile, totalCount: deaccessionedFile.length })
     cy.customMount(
       <FileVersions
         fileId={1}
@@ -98,7 +106,9 @@ describe('FileVersions', () => {
         versionState: DatasetVersionState.DRAFT
       }
     ]
-    fileRepository.getFileVersionSummaries = cy.stub().resolves(draftFile)
+    fileRepository.getFileVersionSummaries = cy
+      .stub()
+      .resolves({ summaries: draftFile, totalCount: draftFile.length })
     cy.customMount(
       <FileVersions
         fileId={1}
@@ -147,7 +157,9 @@ describe('FileVersions', () => {
   it('the version number should be disable and bold if it is the current version', () => {
     const currentFile = [{ ...fileVersionSummaries[0], datasetVersion: '2.0' }]
 
-    fileRepository.getFileVersionSummaries = cy.stub().resolves(currentFile)
+    fileRepository.getFileVersionSummaries = cy
+      .stub()
+      .resolves({ summaries: currentFile, totalCount: currentFile.length })
     cy.customMount(
       <FileVersions
         fileId={1}

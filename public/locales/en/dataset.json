@@ -300,12 +300,12 @@
     },
     "downloads": {
       "count": {
-        "default_zero": "{{count}} Downloads",
-        "default_one": "{{count}} Download",
-        "default_other": "{{count}} Downloads",
-        "preMDC_zero": "{{count}} Downloads pre-MDC",
-        "preMDC_one": "{{count}} Download pre-MDC",
-        "preMDC_other": "{{count}} Downloads pre-MDC"
+        "default_zero": "{{formattedCount}} Downloads",
+        "default_one": "{{formattedCount}} Download",
+        "default_other": "{{formattedCount}} Downloads",
+        "preMDC_zero": "{{formattedCount}} Downloads pre-MDC",
+        "preMDC_one": "{{formattedCount}} Download pre-MDC",
+        "preMDC_other": "{{formattedCount}} Downloads pre-MDC"
       },
       "defaultTip": "Total aggregated downloads of files in this dataset.",
       "preMakeDataCountTip": "Downloads prior to enabling MDC. Counts do not have the same filtering and detail as MDC metrics.",

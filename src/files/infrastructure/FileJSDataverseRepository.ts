@@ -45,7 +45,8 @@ import { FixityAlgorithm } from '../domain/models/FixityAlgorithm'
 import { RestrictFileDTO } from '../domain/useCases/restrictFileDTO'
 import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
-import { FileVersionSummaryInfo } from '../domain/models/FileVersionSummaryInfo'
+import { FileVersionSummarySubset } from '../domain/models/FileVersionSummaryInfo'
+import { FileVersionPaginationInfo } from '../domain/models/FileVersionPaginationInfo'
 
 const includeDeaccessioned = true
 
@@ -249,8 +250,11 @@ export class FileJSDataverseRepository implements FileRepository {
         throw new Error(error.message)
       })
   }
-  getFileVersionSummaries(fileId: number | string): Promise<FileVersionSummaryInfo[]> {
-    return getFileVersionSummaries.execute(fileId)
+  getFileVersionSummaries(
+    fileId: number | string,
+    paginationInfo?: FileVersionPaginationInfo
+  ): Promise<FileVersionSummarySubset> {
+    return getFileVersionSummaries.execute(fileId, paginationInfo?.pageSize, paginationInfo?.offset)
   }
 
   getById(id: number, datasetVersionNumber?: string): Promise<File> {
