@@ -98,11 +98,12 @@ describe('DatasetVersions', () => {
         contributors: 'Test ',
         publishedOn: ''
       },
-      ...versionSummaryInfoDeaccessioned
+      ...(versionSummaryInfoDeaccessioned.summaries as DatasetVersionSummaryInfo[])
     ]
-    datasetsRepository.getDatasetVersionsSummaries = cy
-      .stub()
-      .resolves(versionSummaryInfoNoPreviousVersion)
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves({
+      summaries: versionSummaryInfoNoPreviousVersion,
+      totalCount: versionSummaryInfoNoPreviousVersion.length
+    })
 
     cy.findByTestId('dataset-versions-table').should('exist')
     cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('exist')

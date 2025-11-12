@@ -163,7 +163,10 @@ export function DatasetVersions({
                   </td>
                   <td>
                     <p style={{ display: 'flex', flexWrap: 'wrap', margin: 0, textAlign: 'left' }}>
-                      <SummaryDescription summary={dataset.summary} />
+                      <SummaryDescription
+                        summary={dataset.summary}
+                        versionNumber={dataset.versionNumber}
+                      />
                       {showViewDetails && (
                         <DatasetViewDetailButton
                           datasetRepository={datasetRepository}
@@ -235,12 +238,17 @@ export const DatasetVersionsLoadingSkeleton = () => {
 }
 
 export const SummaryDescription = ({
-  summary
+  summary,
+  versionNumber
 }: {
   summary?: DatasetVersionSummary | DatasetVersionSummaryStringValues
+  versionNumber?: string
 }) => {
   const { t } = useTranslation('dataset')
-  const summaryText: Record<string, string> = useDatasetVersionSummaryDescription(summary)
+  const summaryText: Record<string, string> = useDatasetVersionSummaryDescription(
+    summary,
+    versionNumber
+  )
 
   return (
     <>

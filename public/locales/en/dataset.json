@@ -257,7 +257,6 @@
     "type": "Type",
     "description": "Description",
     "access": "Access",
-    "needTwoVersions": "Please select two versions to view the differences.",
     "viewDetails": "View Details",
     "fileReplaced": "File Replaced",
     "termsOfUseandAccess": "Terms of Use/Access",
@@ -270,6 +269,8 @@
     "firstDraft": "This is a draft version.",
     "versionDeaccessioned": "Deaccessioned Reason: The research article has been retracted.",
     "previousVersionDeaccessioned": "Due to the previous version being deaccessioned, there are no difference notes available for this published version.",
+    "thisIsADraftVersion": "This is a draft version.",
+    "noVersionDifferences": "There are no differences between version {{oldVersion}} and version {{newVersion}}.",
     "citationMetadata": {
       "changed": "Changed",
       "added": "{{count}} Added"

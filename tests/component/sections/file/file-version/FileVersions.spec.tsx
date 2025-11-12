@@ -123,7 +123,10 @@ describe('FileVersions', () => {
   })
 
   it('disables the link button for version without datafileId', () => {
-    const file = [{ ...fileVersionSummaries[0], datafileId: undefined }]
+    const file = {
+      summaries: [{ ...fileVersionSummaries[0], datafileId: undefined }],
+      totalCount: 1
+    }
     fileRepository.getFileVersionSummaries = cy.stub().resolves(file)
     cy.customMount(
       <FileVersions
@@ -139,7 +142,10 @@ describe('FileVersions', () => {
   })
 
   it('disables the link button for version with empty fileDifferenceSummary', () => {
-    const file = [{ ...fileVersionSummaries[0], fileDifferenceSummary: {}, datafileId: 1 }]
+    const file = {
+      summaries: [{ ...fileVersionSummaries[0], fileDifferenceSummary: {}, datafileId: 1 }],
+      totalCount: 1
+    }
     fileRepository.getFileVersionSummaries = cy.stub().resolves(file)
     cy.customMount(
       <FileVersions
@@ -173,7 +179,10 @@ describe('FileVersions', () => {
   })
 
   it('returns correctly when summary is empty', () => {
-    const file = [{ ...fileVersionSummaries[0], fileDifferenceSummary: {}, datafileId: 1 }]
+    const file = {
+      summaries: [{ ...fileVersionSummaries[0], fileDifferenceSummary: {}, datafileId: 1 }],
+      totalCount: 1
+    }
     fileRepository.getFileVersionSummaries = cy.stub().resolves(file)
     cy.customMount(
       <FileVersions
@@ -188,7 +197,10 @@ describe('FileVersions', () => {
   })
 
   it('returns correctly when datafileId is undefined', () => {
-    const file = [{ ...fileVersionSummaries[0], datafileId: undefined }]
+    const file = {
+      summaries: [{ ...fileVersionSummaries[0], datafileId: undefined }],
+      totalCount: 1
+    }
     fileRepository.getFileVersionSummaries = cy.stub().resolves(file)
     cy.customMount(
       <FileVersions
