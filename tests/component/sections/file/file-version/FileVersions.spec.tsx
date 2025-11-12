@@ -122,6 +122,44 @@ describe('FileVersions', () => {
     cy.get('span').contains('DRAFT').should('exist')
   })
 
+  it('disables the link button for version without datafileId', () => {
+    const file = {
+      summaries: [{ ...fileVersionSummaries[0], datafileId: undefined }],
+      totalCount: 1
+    }
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(file)
+    cy.customMount(
+      <FileVersions
+        fileId={1}
+        datasetVersionNumber={'2.0'}
+        fileRepository={fileRepository}
+        canEditOwnerDataset={true}
+        isInView
+      />
+    )
+    cy.findByText('2.0').should('exist')
+    cy.findByTestId('file-version-link-2.0').should('not.exist')
+  })
+
+  it('disables the link button for version with empty fileDifferenceSummary', () => {
+    const file = {
+      summaries: [{ ...fileVersionSummaries[0], fileDifferenceSummary: {}, datafileId: 1 }],
+      totalCount: 1
+    }
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(file)
+    cy.customMount(
+      <FileVersions
+        fileId={1}
+        datasetVersionNumber={'2.0'}
+        fileRepository={fileRepository}
+        canEditOwnerDataset={true}
+        isInView
+      />
+    )
+    cy.findByText('2.0').should('exist')
+    cy.findByTestId('file-version-link-2.0').should('not.exist')
+  })
+
   it('the version number should be disable and bold if it is the current version', () => {
     const currentFile = [{ ...fileVersionSummaries[0], datasetVersion: '2.0' }]
 
@@ -138,5 +176,41 @@ describe('FileVersions', () => {
       />
     )
     cy.get('strong').contains('2.0')
+  })
+
+  it('returns correctly when summary is empty', () => {
+    const file = {
+      summaries: [{ ...fileVersionSummaries[0], fileDifferenceSummary: {}, datafileId: 1 }],
+      totalCount: 1
+    }
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(file)
+    cy.customMount(
+      <FileVersions
+        fileId={1}
+        datasetVersionNumber={'2.0'}
+        fileRepository={fileRepository}
+        canEditOwnerDataset={true}
+        isInView
+      />
+    )
+    cy.findByText('No changes associated with this version.').should('exist')
+  })
+
+  it('returns correctly when datafileId is undefined', () => {
+    const file = {
+      summaries: [{ ...fileVersionSummaries[0], datafileId: undefined }],
+      totalCount: 1
+    }
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(file)
+    cy.customMount(
+      <FileVersions
+        fileId={1}
+        datasetVersionNumber={'2.0'}
+        fileRepository={fileRepository}
+        canEditOwnerDataset={true}
+        isInView
+      />
+    )
+    cy.contains('File not included in this version.').should('exist')
   })
 })

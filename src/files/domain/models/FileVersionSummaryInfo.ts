@@ -17,6 +17,7 @@ export interface FileVersionSummaryInfo {
 }
 
 export type FileDifferenceSummary = {
+  datafileId?: number
   file?: FileChangeType
   fileAccess?: 'Restricted' | 'Unrestricted'
   fileMetadata?: FileMetadataChange[]
