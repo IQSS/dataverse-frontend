@@ -221,4 +221,15 @@ export class DatasetMockRepository implements DatasetRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  updateDatasetLicense(
+    _datasetId: string | number,
+    _licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }
