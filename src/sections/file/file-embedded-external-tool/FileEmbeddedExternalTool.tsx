@@ -61,7 +61,7 @@ export const FileEmbeddedExternalTool = ({
           externalToolsRepository,
           file.id,
           toolIdSelected,
-          { preview: true, locale: i18n.language }
+          { preview: true, locale: i18n.languages[0] }
         )
 
         setFileExternalToolResolved(fileExternalTool)
@@ -78,7 +78,7 @@ export const FileEmbeddedExternalTool = ({
     }
 
     void fetchFileExternalToolResolved()
-  }, [isInView, toolIdSelected, externalToolsRepository, file.id, t, i18n.language])
+  }, [isInView, toolIdSelected, externalToolsRepository, file.id, t, i18n.languages])
 
   return (
     <section>

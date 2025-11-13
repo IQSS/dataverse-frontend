@@ -12,6 +12,7 @@ export const DatasetVersionsDifferenceTable = ({
   differences
 }: datasetVersionsDifferenceTableProps) => {
   const { t } = useTranslation('dataset')
+  const { t: tFile } = useTranslation('file')
   const {
     oldVersion,
     newVersion,
@@ -129,14 +130,26 @@ export const DatasetVersionsDifferenceTable = ({
                   <td>
                     {file.changed.map((change) => (
                       <div key={change.fieldName}>
-                        {change.fieldName}: {change.oldValue || ''}
+                        {change.fieldName === 'isRestricted'
+                          ? `${t('versions.access')}: ${
+                              change.oldValue === 'true'
+                                ? tFile('fileAccess.restricted.name')
+                                : tFile('fileAccess.public.name')
+                            }`
+                          : `${change.fieldName}: ${change.oldValue || ''}`}
                       </div>
                     ))}
                   </td>
                   <td>
                     {file.changed.map((change) => (
                       <div key={change.fieldName}>
-                        {change.fieldName}: {change.newValue || ''}
+                        {change.fieldName === 'isRestricted'
+                          ? `${t('versions.access')}: ${
+                              change.newValue === 'true'
+                                ? tFile('fileAccess.restricted.name')
+                                : tFile('fileAccess.public.name')
+                            }`
+                          : `${change.fieldName}: ${change.newValue || ''}`}
                       </div>
                     ))}
                   </td>

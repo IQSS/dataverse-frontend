@@ -6,24 +6,27 @@ import {
   SummaryUpdates,
   Deaccessioned
 } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 
 export const useDatasetVersionSummaryDescription = (
-  summary?: DatasetVersionSummary | DatasetVersionSummaryStringValues
+  summary?: DatasetVersionSummary | DatasetVersionSummaryStringValues,
+  versionState?: string
 ): Record<string, string> => {
   const { t } = useTranslation('dataset')
 
   if (!summary) return {}
 
   if (typeof summary === 'string') {
-    const stringSummaryMap: Record<DatasetVersionSummaryStringValues, string> = {
+    const stringSummaryMap: Record<string, string> = {
       [DatasetVersionSummaryStringValues.firstPublished]: t('datasetVersionSummary.firstPublished'),
       [DatasetVersionSummaryStringValues.firstDraft]: t('datasetVersionSummary.firstDraft'),
       [DatasetVersionSummaryStringValues.versionDeaccessioned]: t(
         'datasetVersionSummary.versionDeaccessioned'
       ),
-      [DatasetVersionSummaryStringValues.previousVersionDeaccessioned]: t(
-        'datasetVersionSummary.previousVersionDeaccessioned'
-      )
+      [DatasetVersionSummaryStringValues.previousVersionDeaccessioned]:
+        versionState === DatasetVersionState.DRAFT
+          ? t('datasetVersionSummary.thisIsADraftVersion')
+          : t('datasetVersionSummary.previousVersionDeaccessioned')
     }
     return { [summary]: stringSummaryMap[summary] }
   }

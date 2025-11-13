@@ -6,13 +6,14 @@ import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
+import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLicenseUpdateRequest'
 import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 
 export class DatasetErrorMockRepository implements DatasetMockRepository {
   getAllWithCount: (
@@ -88,18 +89,10 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     })
   }
 
-  updateDatasetLicense(
-    _datasetId: string | number,
-    _licenseUpdateRequest: DatasetLicenseUpdateRequest
-  ): Promise<void> {
-    return new Promise((_resolve, reject) => {
-      setTimeout(() => {
-        reject('Error thrown from mock')
-      }, FakerHelper.loadingTimout())
-    })
-  }
-
-  getDatasetVersionsSummaries(_datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
+  getDatasetVersionsSummaries(
+    _datasetId: number | string,
+    _paginationInfo?: DatasetVersionPaginationInfo
+  ): Promise<DatasetVersionSummarySubset> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

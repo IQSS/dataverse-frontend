@@ -10,7 +10,7 @@ import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
@@ -20,6 +20,7 @@ import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -99,18 +100,10 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
-  updateDatasetLicense(
-    _datasetId: string | number,
-    _licenseUpdateRequest: DatasetLicenseUpdateRequest
-  ): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve()
-      }, FakerHelper.loadingTimout())
-    })
-  }
-
-  getDatasetVersionsSummaries(_datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
+  getDatasetVersionsSummaries(
+    _datasetId: number | string,
+    _paginationInfo?: DatasetVersionPaginationInfo
+  ): Promise<DatasetVersionSummarySubset> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetVersionsSummariesMother.create())

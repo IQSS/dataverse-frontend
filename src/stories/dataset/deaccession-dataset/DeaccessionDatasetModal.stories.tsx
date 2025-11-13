@@ -37,15 +37,18 @@ export const WithOneVersion: Story = {
     datasetMockRepository.getDatasetVersionsSummaries = () => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve([
-            {
-              id: 1,
-              contributors: 'contributors',
-              versionNumber: '1.0',
-              publishedOn: '2023-01-01',
-              summary: DatasetVersionSummaryStringValues.firstPublished
-            }
-          ])
+          resolve({
+            summaries: [
+              {
+                id: 1,
+                contributors: 'contributors',
+                versionNumber: '1.0',
+                publishedOn: '2023-01-01',
+                summary: DatasetVersionSummaryStringValues.firstPublished
+              }
+            ],
+            totalCount: 1
+          })
         }, 1_000)
       })
     }

@@ -1,5 +1,6 @@
 import { useDatasetVersionSummaryDescription } from '@/sections/dataset/dataset-versions/useDatasetVersionSummaryDescription'
 import { DatasetVersionSummaryStringValues } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 import { renderHook } from '@testing-library/react'
 
 describe('useDatasetVersionSummaryDescription', () => {
@@ -29,9 +30,7 @@ describe('useDatasetVersionSummaryDescription', () => {
 
     expect(result.current)
       .haveOwnProperty('Files')
-      .equal(
-        'Added: 2; Removed: 1; Replaced: 1; File Metadata Changed: 3; Variable Metadata Changed: 1'
-      )
+      .equal('Added: 2; Removed: 1; Replaced: 1; Metadata Changed: 3; Variable Metadata Changed: 1')
     expect(result.current)
       .haveOwnProperty('Citation Metadata')
       .equal('Description (Changed); Title (1 Added)')
@@ -70,6 +69,18 @@ describe('useDatasetVersionSummaryDescription', () => {
     expect(result.current).to.deep.equal({
       previousVersionDeaccessioned:
         'Due to the previous version being deaccessioned, there are no difference notes available for this published version.'
+    })
+  })
+
+  it('returns draft version message when previous version deaccessioned and version is draft', () => {
+    const { result } = renderHook(() =>
+      useDatasetVersionSummaryDescription(
+        DatasetVersionSummaryStringValues.previousVersionDeaccessioned,
+        DatasetVersionState.DRAFT
+      )
+    )
+    expect(result.current).to.deep.equal({
+      previousVersionDeaccessioned: 'This is a draft version.'
     })
   })
 

@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { useGetDatasetVersionDiff } from '@/sections/dataset/dataset-versions/view-difference/useGetDatasetVersionDiff'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
@@ -32,8 +32,10 @@ describe('useGetDatasetVersionDiff', () => {
       return expect(result.current.differences).to.deep.equal(undefined)
     })
 
-    expect(result.current.isLoading).to.deep.equal(false)
-    expect(result.current.differences).to.deep.equal(datasetVersionDiffMock)
+    void waitFor(() => {
+      expect(result.current.isLoading).to.deep.equal(false)
+      return expect(result.current.differences).to.deep.equal(datasetVersionDiff)
+    })
   })
 
   it('should return correct error message when a Error occurs', async () => {

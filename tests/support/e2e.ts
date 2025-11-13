@@ -13,7 +13,10 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
+// Initialize test runtime config before any commands/modules use requireAppConfig
+import './bootstrapAppConfig'
+
+// Import commands.js using ES2015 syntax (after config is ready):
 import '../../tests/support/commands'
 
 // This global declaration is to get automatic typescript inferring for wrap https://github.com/cypress-io/cypress/issues/18182

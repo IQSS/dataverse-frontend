@@ -86,7 +86,7 @@ const ToolOption = ({
         externalToolsRepository,
         persistentId,
         toolId,
-        { preview: false, locale: i18n.language }
+        { preview: false, locale: i18n.languages[0] }
       )
 
       // Change the location of the new window to the tool URL

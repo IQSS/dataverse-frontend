@@ -648,7 +648,9 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset Version tab', () => {
-    datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+    datasetRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves({ summaries: versionSummaryInfo, totalCount: versionSummaryInfo.length })
 
     mountWithDataset(
       <Dataset
