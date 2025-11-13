@@ -366,6 +366,7 @@
       "testGuestbook": "Test Guestbook",
       "previewButton": "Preview Guestbook"
     },
-    "defaultLicenseUpdateError": "An error occurred while updating the dataset license. Please try again."
+    "defaultLicenseUpdateError": "An error occurred while updating the dataset license. Please try again.",
+    "defaultTermsOfAccessUpdateError": "An error occurred while updating the dataset terms of access. Please try again."
   }
 }

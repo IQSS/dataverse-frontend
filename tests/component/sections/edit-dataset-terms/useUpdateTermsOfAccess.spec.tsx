@@ -79,7 +79,7 @@ describe('useUpdateTermsOfAccess', () => {
       expect(onSuccessfulUpdateTermsOfAccess).to.not.have.been.called
       expect(result.current.isLoading).to.deep.equal(false)
       expect(result.current.error).to.deep.equal(
-        'An error occurred while updating the dataset license. Please try again.'
+        'An error occurred while updating the dataset terms of access. Please try again.'
       )
     })
 
@@ -102,7 +102,7 @@ describe('useUpdateTermsOfAccess', () => {
       expect(onSuccessfulUpdateTermsOfAccess).to.not.have.been.called
       expect(result.current.isLoading).to.deep.equal(false)
       expect(result.current.error).to.deep.equal(
-        'An error occurred while updating the dataset license. Please try again.'
+        'An error occurred while updating the dataset terms of access. Please try again.'
       )
     })
   })
