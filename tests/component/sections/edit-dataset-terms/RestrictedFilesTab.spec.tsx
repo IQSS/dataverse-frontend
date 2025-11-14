@@ -129,33 +129,6 @@ describe('RestrictedFilesTab', () => {
       cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
     })
 
-    it('resets form to initial values when cancel is clicked', () => {
-      const termsOfAccess = TermsOfAccessMother.create({
-        termsOfAccessForRestrictedFiles: 'Original terms',
-        fileAccessRequest: true
-      })
-
-      const datasetWithTerms = DatasetMother.create({
-        id: 123,
-        termsOfUse: {
-          termsOfAccess: termsOfAccess
-        }
-      })
-
-      cy.customMount(
-        withProviders(
-          <RestrictedFilesTab datasetRepository={datasetRepository} />,
-          datasetWithTerms
-        )
-      )
-
-      cy.findByLabelText('Terms of Access for Restricted Files').clear().type('Modified terms')
-      cy.findByDisplayValue('Modified terms').should('exist')
-
-      cy.findByRole('button', { name: 'Cancel' }).click()
-      cy.findByDisplayValue('Original terms').should('exist')
-    })
-
     it('submits form data when save is clicked', () => {
       cy.customMount(
         withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)

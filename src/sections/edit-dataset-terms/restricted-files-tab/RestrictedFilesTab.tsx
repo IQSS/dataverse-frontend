@@ -4,21 +4,28 @@ import { useForm, Controller, FormProvider, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
 import styles from '../dataset-terms-tab/DatasetTermsTab.module.scss'
-import { TermsOfAccess } from '@/dataset/domain/models/Dataset'
+import {
+  DatasetNonNumericVersionSearchParam,
+  DatasetPublishingStatus,
+  TermsOfAccess
+} from '@/dataset/domain/models/Dataset'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useDataset } from '../../dataset/DatasetContext'
 import { useUpdateTermsOfAccess } from './useUpdateTermsOfAccess'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
+import { useNavigate } from 'react-router-dom'
 
 interface RestrictedFilesTabProps {
   datasetRepository: DatasetRepository
 }
 
 export function RestrictedFilesTab({
-  datasetRepository: _datasetRepository
+  datasetRepository: datasetRepository
 }: RestrictedFilesTabProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const { dataset, refreshDataset } = useDataset()
+  const navigate = useNavigate()
 
   const defaultTermsOfAccess: TermsOfAccess = {
     fileAccessRequest: false,
@@ -36,7 +43,7 @@ export function RestrictedFilesTab({
   const formContainerRef = useRef<HTMLDivElement>(null)
 
   const { handleUpdateTermsOfAccess, isLoading, error } = useUpdateTermsOfAccess({
-    datasetRepository: _datasetRepository,
+    datasetRepository: datasetRepository,
     onSuccessfulUpdateTermsOfAccess: () => {
       toast.success(t('alerts.termsUpdated.alertText'))
       refreshDataset()
@@ -101,6 +108,20 @@ export function RestrictedFilesTab({
       })
   }, [initialTermsOfAccess, isRequestAccessEnabled, t])
 
+  const handleCancel = () => {
+    if (!dataset) return
+
+    const searchParams = new URLSearchParams()
+    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+
+    if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
+      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+    } else {
+      searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
+    }
+
+    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+  }
   return (
     <div ref={formContainerRef}>
       {
@@ -199,14 +220,7 @@ export function RestrictedFilesTab({
               disabled={isLoading || (!isRequestAccessEnabled && !isTermsOfAccessProvided)}>
               {isLoading ? tShared('saving') : tShared('saveChanges')}
             </Button>
-            <Button
-              variant="secondary"
-              type="button"
-              onClick={() => {
-                const resetValues =
-                  (dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? initialTermsOfAccess
-                reset(resetValues)
-              }}>
+            <Button variant="secondary" type="button" onClick={handleCancel}>
               {tShared('cancel')}
             </Button>
           </div>

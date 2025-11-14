@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { useForm, Controller, FormProvider } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
@@ -9,6 +10,11 @@ import { useGetLicenses } from './useGetLicenses'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useDataset } from '../../dataset/DatasetContext'
 import { useUpdateDatasetLicense } from './useUpdateDatasetLicense'
+import { Route, QueryParamKey } from '../../Route.enum'
+import {
+  DatasetNonNumericVersionSearchParam,
+  DatasetPublishingStatus
+} from '../../../dataset/domain/models/Dataset'
 import styles from './DatasetTermsTab.module.scss'
 
 interface DatasetTermsFormData {
@@ -25,6 +31,7 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const { dataset, refreshDataset } = useDataset()
+  const navigate = useNavigate()
 
   const formContainerRef = useRef<HTMLDivElement>(null)
 
@@ -150,6 +157,21 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
     }
   }
 
+  const handleCancel = () => {
+    if (!dataset) return
+
+    const searchParams = new URLSearchParams()
+    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+
+    if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
+      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+    } else {
+      searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
+    }
+
+    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+  }
+
   return (
     <div ref={formContainerRef} className={styles['dataset-terms-tab']}>
       <FormProvider {...form}>
@@ -190,7 +212,7 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
               {errorLicenses && <Alert variant="danger">{errorLicenses}</Alert>}
 
               {currentLicenseOption && !isCustomTerms && (
-                <>
+                <div className={styles['license-icon']}>
                   {currentLicenseOption.iconUri && (
                     <img
                       src={currentLicenseOption.iconUri}
@@ -203,7 +225,7 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
                       {currentLicenseOption.label}
                     </a>
                   )}
-                </>
+                </div>
               )}
             </Col>
           </Row>
@@ -261,16 +283,7 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
             <Button type="submit" disabled={!isValid || isLoading}>
               {isLoading ? tShared('saving') : tShared('saveChanges')}
             </Button>
-            <Button
-              variant="secondary"
-              type="button"
-              disabled={isLoading}
-              onClick={() =>
-                reset({
-                  license: defaultLicenseValue,
-                  customTerms: initialCustomTerms
-                })
-              }>
+            <Button variant="secondary" type="button" disabled={isLoading} onClick={handleCancel}>
               {tShared('cancel')}
             </Button>
           </div>

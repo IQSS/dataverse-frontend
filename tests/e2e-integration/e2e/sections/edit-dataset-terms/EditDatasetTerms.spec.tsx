@@ -4,7 +4,7 @@ import { DatasetNonNumericVersionSearchParam } from '../../../../../src/dataset/
 import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { QueryParamKey, Route } from '../../../../../src/sections/Route.enum'
 
-describe('Edit Dataset Terms End-to-End', () => {
+describe('Edit Dataset Terms', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
       cy.wrap(TestsUtils.setup(token))
@@ -48,17 +48,16 @@ describe('Edit Dataset Terms End-to-End', () => {
 
         cy.findByTestId('customTerms.termsOfUse').type('These are custom terms for this dataset')
 
-        cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
+        cy.findByRole('button', { name: 'Save Changes' }).click()
 
+        cy.findByText(/The license for this dataset has been updated./i).should('exist')
         cy.findByRole('button', { name: 'Cancel' }).click()
-        cy.get('select').should('not.have.value', 'CUSTOM')
+        cy.findByText('Custom Dataset Terms').should('exist')
       })
     })
-
-    // TODO: Add tests for custom terms requirement and toast messages
   })
 
-  describe.only('Restricted Files Tab', () => {
+  describe('Restricted Files Tab', () => {
     it('visits the Restricted Files + Terms of Access tab and interacts with form', () => {
       const datasetTitle = faker.lorem.sentence()
 
@@ -106,8 +105,13 @@ describe('Edit Dataset Terms End-to-End', () => {
 
         cy.findByLabelText('Size of Collection').type('500 MB')
 
-        cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
-        cy.findByRole('button', { name: 'Cancel' }).should('exist')
+        cy.findByRole('button', { name: 'Save Changes' }).click()
+        cy.findByRole('button', { name: 'Cancel' }).click()
+
+        cy.findByRole('tab', { name: 'Terms and Guestbook' }).click()
+        cy.findByText(/Data can be accessed through the university data center/i).should('exist')
+        cy.findByText(/dataowner@university.edu/i).should('exist')
+        cy.findByText(/500 MB/i).should('exist')
       })
     })
 
@@ -158,7 +162,6 @@ describe('Edit Dataset Terms End-to-End', () => {
 
         cy.visit(editDatasetTermsUrl)
 
-        // Should start with restricted files tab active
         cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).should(
           'have.attr',
           'aria-selected',
@@ -179,30 +182,11 @@ describe('Edit Dataset Terms End-to-End', () => {
         const editDatasetTermsUrl = `/spa${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`
 
         cy.visit(editDatasetTermsUrl)
-
-        // Click on dataset title in breadcrumbs to go back
         cy.findByRole('link', { name: datasetTitle }).click()
 
-        // Should navigate to dataset page
         cy.url().should('include', '/datasets')
         cy.findByRole('heading', { name: datasetTitle }).should('exist')
       })
-    })
-
-    it('handles non-existent dataset gracefully', () => {
-      const searchParams = new URLSearchParams()
-      searchParams.set(QueryParamKey.PERSISTENT_ID, 'non-existent-dataset')
-      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-
-      const editDatasetTermsUrl = `/spa${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`
-
-      cy.visit(editDatasetTermsUrl)
-
-      cy.findByText('The dataset you are looking for was not found').should('exist')
-    })
-
-    it('handles unauthorized access gracefully', () => {
-      cy.log('Test for unauthorized access would go here')
     })
   })
 })

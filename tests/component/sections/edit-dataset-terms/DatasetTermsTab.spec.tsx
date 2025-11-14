@@ -180,26 +180,6 @@ describe('DatasetTermsTab', () => {
 
       cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
     })
-
-    it('resets form when cancel is clicked', () => {
-      cy.customMount(
-        withProviders(
-          <DatasetTermsTab
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
-      )
-
-      cy.findByRole('option', { name: 'Custom Dataset Terms' }).should('be.selected')
-      cy.findByTestId('customTerms.confidentialityDeclaration')
-        .clear()
-        .type('test confidentiality declaration')
-
-      cy.findByRole('button', { name: 'Cancel' }).click()
-      cy.findByText('test confidentiality declaration').should('not.exist')
-    })
   })
 
   describe('Loading States', () => {
