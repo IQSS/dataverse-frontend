@@ -159,8 +159,7 @@ describe('MyDataItemsPanel', () => {
         Cypress.sinon.match.any,
         Cypress.sinon.match.any,
         Cypress.sinon.match.any,
-        10,
-        1,
+        Cypress.sinon.match.has('pageSize', 10).and(Cypress.sinon.match.has('page', 1)),
         undefined,
         otherUsername
       )
@@ -185,8 +184,7 @@ describe('MyDataItemsPanel', () => {
         Cypress.sinon.match.any,
         Cypress.sinon.match.any,
         Cypress.sinon.match.any,
-        10,
-        1,
+        Cypress.sinon.match.has('pageSize', 10).and(Cypress.sinon.match.has('page', 1)),
         undefined,
         'testUserName'
       )

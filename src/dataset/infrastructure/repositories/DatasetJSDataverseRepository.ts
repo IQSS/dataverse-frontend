@@ -34,7 +34,10 @@ import {
   deleteDatasetDraft,
   getDatasetCitationInOtherFormats,
   getDatasetAvailableCategories,
-  getDatasetTemplates
+  getDatasetTemplates,
+  linkDataset,
+  unlinkDataset,
+  getDatasetLinkedCollections
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -43,14 +46,16 @@ import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 import { axiosInstance } from '@/axiosInstance'
-import { DATAVERSE_BACKEND_URL } from '../../../config'
+import { requireAppConfig } from '../../../config'
 import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 
 const includeDeaccessioned = true
 
@@ -69,7 +74,9 @@ interface IDatasetDetails {
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
+  static get DATAVERSE_BACKEND_URL(): string {
+    return requireAppConfig().backendUrl
+  }
 
   getAllWithCount(
     collectionId: string,
@@ -369,10 +376,15 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         throw new Error(error.message)
       })
   }
-  getDatasetVersionsSummaries(datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
-    return getDatasetVersionsSummaries.execute(datasetId).catch((error: ReadError) => {
-      throw error
-    })
+  getDatasetVersionsSummaries(
+    datasetId: number | string,
+    paginationInfo?: DatasetVersionPaginationInfo
+  ): Promise<DatasetVersionSummarySubset> {
+    return getDatasetVersionsSummaries
+      .execute(datasetId, paginationInfo?.pageSize, paginationInfo?.offset)
+      .catch((error: ReadError) => {
+        throw error
+      })
   }
   getDownloadCount(
     datasetId: string | number,
@@ -400,6 +412,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   getTemplates(collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
     return getDatasetTemplates.execute(collectionIdOrAlias)
+  }
+
+  link(datasetId: string | number, collectionIdOrAlias: string | number) {
+    return linkDataset.execute(datasetId, collectionIdOrAlias)
+  }
+
+  unlink(datasetId: string | number, collectionIdOrAlias: string | number) {
+    return unlinkDataset.execute(datasetId, collectionIdOrAlias)
+  }
+
+  getDatasetLinkedCollections(datasetId: string | number): Promise<CollectionSummary[]> {
+    return getDatasetLinkedCollections.execute(datasetId)
   }
 
   /*

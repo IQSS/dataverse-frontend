@@ -10,13 +10,16 @@ import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -96,7 +99,10 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
-  getDatasetVersionsSummaries(_datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
+  getDatasetVersionsSummaries(
+    _datasetId: number | string,
+    _paginationInfo?: DatasetVersionPaginationInfo
+  ): Promise<DatasetVersionSummarySubset> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetVersionsSummariesMother.create())
@@ -168,6 +174,41 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetTemplateMother.createMany(3))
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  link(_datasetId: string | number, _collectionIdOrAlias: string | number): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  unlink(_datasetId: string | number, _collectionIdOrAlias: string | number): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getDatasetLinkedCollections(_datasetId: string | number): Promise<CollectionSummary[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([
+          CollectionSummaryMother.create({
+            id: 1,
+            displayName: 'Collection Foo',
+            alias: 'collection-foo'
+          }),
+          CollectionSummaryMother.create({
+            id: 2,
+            displayName: 'Collection Bar',
+            alias: 'collection-bar'
+          })
+        ])
       }, FakerHelper.loadingTimout())
     })
   }

@@ -10,6 +10,7 @@ import { LoggedInHeaderActions } from './LoggedInHeaderActions'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
+import { LanguageSwitcher } from './LanguageSwitcher'
 import styles from './Header.module.scss'
 
 interface HeaderProps {
@@ -37,6 +38,7 @@ export function Header({ collectionRepository, notficationRepository }: HeaderPr
         logoImgSrc: dataverse_logo
       }}
       className={styles.navbar}>
+      <LanguageSwitcher />
       {user ? (
         <LoggedInHeaderActions
           user={user}

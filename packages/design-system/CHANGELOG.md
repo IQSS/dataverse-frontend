@@ -28,6 +28,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
   - Fix word wrapping in options list to prevent overflow and ensure long text is displayed correctly.
 - **ButtonGroup:**
   - Fix styles for vertical button groups when using tooltips.
+- **FormText:** Add `className` prop to allow custom styling.
+- **FormInput:** Add `size` prop to allow different input sizes (e.g., 'sm', 'lg'). Defaults to standard size if not specified.
 - **Badge:**:
   - Add `pill` prop to allow pill-shaped badges.
   - Add `dataTestId` prop to facilitate testing.

@@ -30,9 +30,13 @@ describe('DeaccessionDatasetButton', () => {
       summary: {}
     })
   ]
+  const versionSummariesSubset = {
+    summaries: versionSummaries,
+    totalCount: versionSummaries.length
+  }
 
   beforeEach(() => {
-    repository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaries)
+    repository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummariesSubset)
   })
 
   it('renders the DeaccessionDatasetButton if the user has publish dataset permissions and the dataset is released', () => {
@@ -118,7 +122,9 @@ describe('DeaccessionDatasetButton', () => {
         })
       ]
 
-      repository.getDatasetVersionsSummaries = cy.stub().resolves(singleVersionList)
+      repository.getDatasetVersionsSummaries = cy
+        .stub()
+        .resolves({ summaries: singleVersionList, totalCount: singleVersionList.length })
 
       const dataset = DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
@@ -156,7 +162,9 @@ describe('DeaccessionDatasetButton', () => {
           summary: {}
         }
       ]
-      repository.getDatasetVersionsSummaries = cy.stub().resolves(singleVersionList)
+      repository.getDatasetVersionsSummaries = cy
+        .stub()
+        .resolves({ summaries: singleVersionList, totalCount: singleVersionList.length })
 
       const dataset = DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
@@ -249,9 +257,10 @@ describe('DeaccessionDatasetButton', () => {
         publishedOn: '2021-01-02',
         id: 2
       })
-      repository.getDatasetVersionsSummaries = cy
-        .stub()
-        .resolves([versionSummary1, versionSummary2])
+      repository.getDatasetVersionsSummaries = cy.stub().resolves({
+        summaries: [versionSummary1, versionSummary2],
+        totalCount: 2
+      })
       repository.deaccession = cy.stub().resolves()
       const dataset = DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
@@ -300,7 +309,9 @@ describe('DeaccessionDatasetButton', () => {
           summary: {}
         }
       ]
-      repository.getDatasetVersionsSummaries = cy.stub().resolves(versionsSummaries)
+      repository.getDatasetVersionsSummaries = cy
+        .stub()
+        .resolves({ summaries: versionsSummaries, totalCount: versionsSummaries.length })
       const dataset = DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
         version: DatasetVersionMother.createReleased()
@@ -339,7 +350,9 @@ describe('DeaccessionDatasetButton', () => {
         }
       ]
 
-      repository.getDatasetVersionsSummaries = cy.stub().resolves(versionsSummaries)
+      repository.getDatasetVersionsSummaries = cy
+        .stub()
+        .resolves({ summaries: versionsSummaries, totalCount: versionsSummaries.length })
 
       const dataset = DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),

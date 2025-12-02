@@ -19,6 +19,6 @@ export class Alert {
   constructor(
     public readonly variant: AlertVariant,
     public readonly messageKey: AlertMessageKey,
-    public dynamicFields?: object
+    public dynamicFields?: Record<string, unknown>
   ) {}
 }

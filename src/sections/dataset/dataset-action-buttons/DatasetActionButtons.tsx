@@ -7,10 +7,10 @@ import { AccessDatasetMenu } from './access-dataset-menu/AccessDatasetMenu'
 import { PublishDatasetMenu } from './publish-dataset-menu/PublishDatasetMenu'
 import { SubmitForReviewButton } from './submit-for-review-button/SubmitForReviewButton'
 import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
-import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
 import { ContactButton } from '@/sections/shared/contact/ContactButton'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { LinkAndUnlinkActions } from './link-and-unlink-actions/LinkAndUnlinkActions'
 import styles from './DatasetActionButtons.module.scss'
 
 interface DatasetActionButtonsProps {
@@ -49,7 +49,11 @@ export function DatasetActionButtons({
       />
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} datasetRepository={datasetRepository} />
-      <LinkDatasetButton dataset={dataset} />
+      <LinkAndUnlinkActions
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+      />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
         <ContactButton
           toContactName={dataset.metadataBlocks[0].fields.title}

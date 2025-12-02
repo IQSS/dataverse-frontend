@@ -32,3 +32,34 @@ export const WithoutMakeDataCountEnabled: Story = {
 export const WithMakeDataCountEnabled: Story = {
   render: () => <DatasetMetrics datasetRepository={new DatasetMockRepository()} datasetId={1} />
 }
+
+export const WithBigNumbersMDCEnabled: Story = {
+  render: () => {
+    const datasetMockRepoWithBigNumbers = new DatasetMockRepository()
+
+    datasetMockRepoWithBigNumbers.getDownloadCount = (
+      _datasetId: number | string,
+      includeMDC: boolean
+    ) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          if (includeMDC) {
+            resolve(
+              DatasetDownloadCountMother.createWithMDCStartDate({
+                downloadCount: 1495020
+              })
+            )
+          } else {
+            resolve(
+              DatasetDownloadCountMother.createWithoutMDCStartDate({
+                downloadCount: 365900
+              })
+            )
+          }
+        }, FakerHelper.loadingTimout())
+      })
+    }
+
+    return <DatasetMetrics datasetRepository={datasetMockRepoWithBigNumbers} datasetId={1} />
+  }
+}
