@@ -1,7 +1,13 @@
 import { FileRepository } from '../repositories/FileRepository'
 
+/**
+ * Minimal repository type for uploadFile.
+ * Only requires the uploadFile method.
+ */
+type UploadFileRepository = Pick<FileRepository, 'uploadFile'>
+
 export function uploadFile(
-  fileRepository: FileRepository,
+  fileRepository: UploadFileRepository,
   datasetId: number | string,
   file: File,
   done: () => void,

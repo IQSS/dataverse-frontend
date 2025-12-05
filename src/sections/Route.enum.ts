@@ -1,5 +1,5 @@
-import { ReplaceFileReferrer } from './replace-file/ReplaceFile'
-import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
+import { ReplaceFileReferrer } from './replace-file/ReplaceFileReferrer'
+import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadataReferrer'
 
 export enum Route {
   HOME = '/',

@@ -1,6 +1,6 @@
 import { File as FileModel } from '@/files/domain/models/File'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
+import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFileReferrer'
 import { FileUploaderProvider } from './context/FileUploaderContext'
 import { useGetFixityAlgorithm } from './useGetFixityAlgorithm'
 import { FileUploaderGlobalConfig } from './context/fileUploaderReducer'

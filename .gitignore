@@ -21,6 +21,7 @@
 
 # production
 /dist
+/dist-uploader
 
 # storybook
 /storybook-static

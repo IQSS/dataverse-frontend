@@ -1,27 +1,23 @@
-import { ChangeEventHandler, DragEventHandler, memo, useRef, useState } from 'react'
+import { ChangeEventHandler, DragEventHandler, memo, useCallback, useRef, useState } from 'react'
 import { Accordion, Button, Card, ProgressBar } from '@iqss/dataverse-design-system'
 import { ExclamationTriangle, Plus, XLg } from 'react-bootstrap-icons'
 import { Trans, useTranslation } from 'react-i18next'
-import { Semaphore } from 'async-mutex'
 import { toast } from 'react-toastify'
 import cn from 'classnames'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
-import { uploadFile } from '@/files/domain/useCases/uploadFile'
 import { useFileUploaderContext } from '../context/FileUploaderContext'
-import { FileUploadState, FileUploadStatus } from '../context/fileUploaderReducer'
+import { FileUploadStatus } from '../context/fileUploaderReducer'
 import { OperationType } from '../FileUploader'
 import { FileUploaderHelper } from '../FileUploaderHelper'
+import { useFileUploadOperations } from '../useFileUploadOperations'
 import { SwalModal } from '../../swal-modal/SwalModal'
+import { UploaderFileRepository } from '../types'
 import styles from './FileUploadInput.module.scss'
 
 type FileUploadInputProps = {
-  fileRepository: FileRepository
+  fileRepository: UploaderFileRepository
   datasetPersistentId: string
 }
-
-const limit = 6
-const semaphore = new Semaphore(limit)
 
 const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInputProps) => {
   const {
@@ -54,81 +50,56 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
   const canKeepUploading =
     operationType === OperationType.ADD_FILES_TO_DATASET ? true : totalFiles === 0
 
-  const onFileUploadFailed = (file: File) => {
-    removeUploadingToCancel(FileUploaderHelper.getFileKey(file))
-    semaphore.release(1)
-  }
+  // File type validation for replace operation
+  const validateBeforeUpload = useCallback(
+    async (file: File): Promise<boolean> => {
+      if (
+        operationType === OperationType.REPLACE_FILE &&
+        originalFile.metadata.type.value !== file.type
+      ) {
+        const shouldContinue = await requestFileTypeDifferentConfirmation(
+          originalFile.metadata.type.value,
+          file.type
+        )
 
-  const onFileUploadFinished = async (file: File) => {
-    const fileKey = FileUploaderHelper.getFileKey(file)
-
-    try {
-      const checksumValue = await FileUploaderHelper.getChecksum(file, checksumAlgorithm)
-      updateFile(fileKey, { checksumValue })
-    } finally {
-      removeUploadingToCancel(fileKey)
-      semaphore.release(1)
-    }
-  }
-
-  const uploadOneFile = async (file: File) => {
-    if (FileUploaderHelper.isDS_StoreFile(file)) {
-      toast.info(t('fileUploader.fileUploadSkipped.dsStore'))
-      return
-    }
-
-    if (
-      operationType === OperationType.REPLACE_FILE &&
-      originalFile.metadata.type.value !== file.type
-    ) {
-      const shouldContinue = await requestFileTypeDifferentConfirmation(
-        originalFile.metadata.type.value,
-        file.type
-      )
-
-      if (!shouldContinue) {
-        // Reset the file input, otherwise in case user cancels but then tries to upload the same file again, the input will not trigger the change event
-        if (inputRef.current) {
-          inputRef.current.value = ''
+        if (!shouldContinue) {
+          // Reset the file input
+          if (inputRef.current) {
+            inputRef.current.value = ''
+          }
+          return false
         }
-        // Stop the upload process for this file
-        return
+      }
+      return true
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- requestFileTypeDifferentConfirmation is stable within the component
+    [operationType, originalFile]
+  )
+
+  // Use the shared upload operations hook
+  const { uploadOneFile, handleDroppedItems } = useFileUploadOperations({
+    fileRepository,
+    datasetPersistentId,
+    checksumAlgorithm,
+    addFile,
+    updateFile,
+    getFileByKey,
+    addUploadingToCancel,
+    removeUploadingToCancel,
+    validateBeforeUpload,
+    onFileSkipped: (reason, file) => {
+      if (reason === 'ds_store') {
+        toast.info(t('fileUploader.fileUploadSkipped.dsStore'))
+      } else if (reason === 'already_uploaded') {
+        const fileInfo = getFileByKey(FileUploaderHelper.getFileKey(file))
+        if (fileInfo) {
+          toast.info(
+            t('fileUploader.fileUploadSkipped.alreadyUploaded', { fileName: fileInfo.fileName })
+          )
+        }
       }
     }
-    // File already uploaded
-    if (getFileByKey(FileUploaderHelper.getFileKey(file))) {
-      const fileInfo = getFileByKey(FileUploaderHelper.getFileKey(file)) as FileUploadState
-      toast.info(
-        t('fileUploader.fileUploadSkipped.alreadyUploaded', { fileName: fileInfo.fileName })
-      )
-
-      return
-    }
-
-    await semaphore.acquire(1)
-
-    const fileKey = FileUploaderHelper.getFileKey(file)
-
-    addFile(file)
-
-    const cancelFunction = uploadFile(
-      fileRepository,
-      datasetPersistentId,
-      file,
-      () => {
-        updateFile(fileKey, { status: FileUploadStatus.DONE })
-        void onFileUploadFinished(file)
-      },
-      () => {
-        updateFile(fileKey, { status: FileUploadStatus.FAILED })
-        onFileUploadFailed(file)
-      },
-      (now) => updateFile(fileKey, { progress: now }),
-      (storageId) => updateFile(fileKey, { storageId })
-    )
-
-    addUploadingToCancel(fileKey, cancelFunction)
-  }
+  })
 
   const handleInputFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const filesArray = Array.from(event.target.files || [])
@@ -142,35 +113,6 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
     if (inputRef.current) {
       inputRef.current.value = ''
     }
-  }
-
-  // waiting on the possibility to test folder drop: https://github.com/cypress-io/cypress/issues/19696
-  const addFromDir = (dir: FileSystemDirectoryEntry) => {
-    /* istanbul ignore next */
-    const reader = dir.createReader()
-
-    reader.readEntries((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isFile) {
-          const fse = entry as FileSystemFileEntry
-          fse.file((file) => {
-            const fileWithPath = new File([file], file.name, {
-              type: file.type,
-              lastModified: file.lastModified
-            })
-
-            Object.defineProperty(fileWithPath, 'webkitRelativePath', {
-              value: entry.fullPath,
-              writable: true
-            })
-
-            void uploadOneFile(fileWithPath)
-          })
-        } else if (entry.isDirectory) {
-          addFromDir(entry as FileSystemDirectoryEntry)
-        }
-      })
-    })
   }
 
   const handleDropFiles: DragEventHandler<HTMLDivElement> = (event) => {
@@ -193,16 +135,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
         return
       }
 
-      Array.from(droppedItems).forEach((droppedFile) => {
-        if (droppedFile.webkitGetAsEntry()?.isDirectory) {
-          addFromDir(droppedFile.webkitGetAsEntry() as FileSystemDirectoryEntry)
-        } else if (droppedFile.webkitGetAsEntry()?.isFile) {
-          const fse = droppedFile.webkitGetAsEntry() as FileSystemFileEntry
-          fse.file((file) => {
-            void uploadOneFile(file)
-          })
-        }
-      })
+      handleDroppedItems(droppedItems)
     }
   }
 
