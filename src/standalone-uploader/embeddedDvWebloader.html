@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Files</title>
+    <!-- DVWebloader V2 Embedded Mode - for use in iframe within Dataverse JSF pages -->
+    <!-- Configuration: useS3Tagging comes from URL param (from Dataverse JVM setting) -->
+    <script>
+        window.dvWebloaderConfig = {
+            maxRetries: 3,
+            uploadTimeoutMs: 300000,
+            disableMD5Checksum: false
+        };
+    </script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 10px; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: transparent;
+        }
+    </style>
+    <script type="module" src="dvwebloader-v2.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>

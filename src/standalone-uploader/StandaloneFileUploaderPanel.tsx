@@ -6,9 +6,11 @@
  */
 
 import { useEffect, useCallback } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { UploaderFileRepository } from '@/sections/shared/file-uploader/types'
 import { useFileUploaderContext } from '@/sections/shared/file-uploader/context/FileUploaderContext'
 import { FileUploaderPanelCore } from '@/sections/shared/file-uploader/FileUploaderPanelCore'
+import styles from './StandaloneFileUploaderPanel.module.scss'
 
 interface StandaloneFileUploaderPanelProps {
   fileRepository: UploaderFileRepository
@@ -21,6 +23,7 @@ export const StandaloneFileUploaderPanel = ({
   datasetPersistentId,
   siteUrl
 }: StandaloneFileUploaderPanelProps) => {
+  const { t } = useTranslation('shared')
   const {
     fileUploaderState: { files, isSaving, uploadingToCancelMap }
   } = useFileUploaderContext()
@@ -62,11 +65,28 @@ export const StandaloneFileUploaderPanel = ({
   }, [getDatasetUrl])
 
   return (
-    <FileUploaderPanelCore
-      fileRepository={fileRepository}
-      datasetPersistentId={datasetPersistentId}
-      onCancel={handleCancel}
-      onFilesAddedSuccess={handleFilesAddedSuccess}
-    />
+    <>
+      <p className={styles.helper_text}>
+        <Trans
+          t={t}
+          i18nKey="fileUploader.supportedFiles"
+          components={{
+            anchor: (
+              <a
+                href="https://guides.dataverse.org/en/latest/user/dataset-management.html#tabular-data-files"
+                target="_blank"
+                rel="noreferrer"
+              />
+            )
+          }}
+        />
+      </p>
+      <FileUploaderPanelCore
+        fileRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        onCancel={handleCancel}
+        onFilesAddedSuccess={handleFilesAddedSuccess}
+      />
+    </>
   )
 }

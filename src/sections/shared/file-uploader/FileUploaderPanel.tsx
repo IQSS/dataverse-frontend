@@ -6,6 +6,7 @@
  */
 
 import { useMemo, useCallback } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useBlocker, useNavigate } from 'react-router-dom'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
@@ -14,6 +15,7 @@ import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFileReferrer
 import { useFileUploaderContext } from './context/FileUploaderContext'
 import { FileUploaderPanelCore } from './FileUploaderPanelCore'
 import { ConfirmLeaveModal } from './confirm-leave-modal/ConfirmLeaveModal'
+import styles from './FileUploaderPanel.module.scss'
 
 interface FileUploaderPanelProps {
   fileRepository: FileRepository
@@ -27,6 +29,7 @@ const FileUploaderPanel = ({
   referrer
 }: FileUploaderPanelProps) => {
   const navigate = useNavigate()
+  const { t } = useTranslation('shared')
 
   const {
     fileUploaderState: { files, isSaving, uploadingToCancelMap },
@@ -80,6 +83,21 @@ const FileUploaderPanel = ({
 
   return (
     <>
+      <p className={styles.helper_text}>
+        <Trans
+          t={t}
+          i18nKey="fileUploader.supportedFiles"
+          components={{
+            anchor: (
+              <a
+                href="https://guides.dataverse.org/en/latest/user/dataset-management.html#tabular-data-files"
+                target="_blank"
+                rel="noreferrer"
+              />
+            )
+          }}
+        />
+      </p>
       <FileUploaderPanelCore
         fileRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}

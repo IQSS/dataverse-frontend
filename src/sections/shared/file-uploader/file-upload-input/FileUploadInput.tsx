@@ -1,7 +1,7 @@
 import { ChangeEventHandler, DragEventHandler, memo, useCallback, useRef, useState } from 'react'
 import { Accordion, Button, Card, ProgressBar } from '@iqss/dataverse-design-system'
 import { ExclamationTriangle, Plus, XLg } from 'react-bootstrap-icons'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import cn from 'classnames'
 import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
@@ -180,22 +180,6 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
 
   return (
     <div>
-      <p className={styles.helper_text}>
-        <Trans
-          t={t}
-          i18nKey="fileUploader.supportedFiles"
-          components={{
-            anchor: (
-              <a
-                href="https://guides.dataverse.org/en/latest/user/dataset-management.html#tabular-data-files"
-                target="_blank"
-                rel="noreferrer"
-              />
-            )
-          }}
-        />
-      </p>
-
       <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">
           <Accordion.Header>{t('fileUploader.accordionTitle')}</Accordion.Header>
