@@ -14,14 +14,35 @@
         };
     </script>
     <style>
-        body { 
+        html, body { 
             margin: 0; 
-            padding: 10px; 
+            padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: transparent;
         }
+        #root {
+            padding: 10px;
+        }
     </style>
     <script type="module" src="dvwebloader-v2.js"></script>
+    <script>
+        // Send height to parent for dynamic iframe sizing
+        function sendHeightToParent() {
+            const height = document.documentElement.scrollHeight;
+            window.parent.postMessage({ type: 'dvwebloader-resize', height: height }, '*');
+        }
+        
+        // Observe DOM changes to detect when content size changes
+        const resizeObserver = new ResizeObserver(sendHeightToParent);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            resizeObserver.observe(document.body);
+            sendHeightToParent();
+        });
+        
+        // Also send on window resize
+        window.addEventListener('resize', sendHeightToParent);
+    </script>
 </head>
 <body>
     <div id="root"></div>
