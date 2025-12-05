@@ -160,12 +160,6 @@ async function init() {
     <StrictMode>
       <div className="standalone-uploader-container">
         <ToastContainer position="top-right" autoClose={5000} />
-        <header className="standalone-uploader-header">
-          <h1>Upload Files</h1>
-          <p className="standalone-uploader-dataset-info">
-            Uploading to dataset: <code>{config.datasetPid}</code>
-          </p>
-        </header>
         <StandaloneUploaderWrapper
           fileRepository={fileRepository}
           datasetPersistentId={config.datasetPid}
