@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { NotImplementedModal } from '../../not-implemented/NotImplementedModal'
-import styles from '../dataset-terms-tab/DatasetTermsTab.module.scss'
+import styles from './EditGuestBook.module.scss'
 
-interface GuestBookTabProps {
+interface EditGuestBookProps {
   onPreview?: () => void
 }
 
-export function GuestBookTab({ onPreview }: GuestBookTabProps) {
+export function EditGuestBook({ onPreview }: EditGuestBookProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const [showNotImplementedModal, setShowNotImplementedModal] = useState(false)
@@ -20,8 +20,9 @@ export function GuestBookTab({ onPreview }: GuestBookTabProps) {
       setShowNotImplementedModal(true)
     }
   }
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     setShowNotImplementedModal(true)
   }
 
@@ -30,7 +31,7 @@ export function GuestBookTab({ onPreview }: GuestBookTabProps) {
   }
 
   return (
-    <div>
+    <div className={styles['edit-guest-book']}>
       <form onSubmit={handleSubmit}>
         <Row style={{ marginBottom: '1rem' }}>
           <Col sm={4}>
@@ -60,7 +61,6 @@ export function GuestBookTab({ onPreview }: GuestBookTabProps) {
           </Col>
         </Row>
 
-        {/* Form Actions */}
         <div className={styles['form-actions']}>
           <Button type="submit">{tShared('saveChanges')}</Button>
           <Button variant="secondary" type="button">
@@ -69,7 +69,6 @@ export function GuestBookTab({ onPreview }: GuestBookTabProps) {
         </div>
       </form>
 
-      {/* Not Implemented Modal */}
       <NotImplementedModal show={showNotImplementedModal} handleClose={handleCloseModal} />
     </div>
   )

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useForm, Controller, FormProvider } from 'react-hook-form'
@@ -15,19 +15,24 @@ import {
   DatasetNonNumericVersionSearchParam,
   DatasetPublishingStatus
 } from '../../../dataset/domain/models/Dataset'
-import styles from './DatasetTermsTab.module.scss'
+import styles from './EditLicenseAndTerms.module.scss'
 
-interface DatasetTermsFormData {
+const CUSTOM_LICENSE_VALUE = 'CUSTOM' as const
+
+interface EditLicenseAndTermsFormData {
   license: string
   customTerms?: CustomTerms
 }
 
-interface DatasetTermsTabProps {
+interface EditLicenseAndTermsProps {
   licenseRepository: LicenseRepository
   datasetRepository: DatasetRepository
 }
 
-export function DatasetTermsTab({ licenseRepository, datasetRepository }: DatasetTermsTabProps) {
+export function EditLicenseAndTerms({
+  licenseRepository,
+  datasetRepository
+}: EditLicenseAndTermsProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const { dataset, refreshDataset } = useDataset()
@@ -40,13 +45,29 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
     autoFetch: true
   })
 
-  const { handleUpdateLicense, isLoading, error } = useUpdateDatasetLicense({
-    datasetRepository,
-    onSuccessfulUpdateLicense: () => {
-      toast.success(t('alerts.licenseUpdated.alertText'))
-      refreshDataset()
-    }
-  })
+    const navigateToDatasetView = useCallback(() => {
+      if (!dataset) return
+
+      const searchParams = new URLSearchParams()
+      searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+
+      if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
+        searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+      } else {
+        searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
+      }
+
+      navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+    }, [dataset, navigate])
+
+    const { handleUpdateLicense, isLoading, error } = useUpdateDatasetLicense({
+      datasetRepository,
+      onSuccessfulUpdateLicense: () => {
+        toast.success(t('alerts.licenseUpdated.alertText'))
+        refreshDataset()
+        navigateToDatasetView()
+      }
+    })
 
   const initialCustomTerms = useMemo((): CustomTerms => {
     if (dataset?.termsOfUse.customTerms) {
@@ -76,7 +97,7 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
       }))
 
     dynamicOptions.push({
-      value: 'CUSTOM',
+      value: CUSTOM_LICENSE_VALUE,
       label: t('editTerms.datasetTerms.customTermsLabel'),
       uri: '',
       iconUri: '',
@@ -86,19 +107,16 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
     return dynamicOptions
   }, [licenses, t, dataset?.termsOfUse.customTerms])
 
-  // Determine the default license value based on initial state and available options
   const defaultLicenseValue = useMemo(() => {
     if (dataset?.termsOfUse.customTerms !== undefined) {
-      return 'CUSTOM'
-    } else {
-      const matchingLicense = licenseOptions.find(
-        (option) => option.label === dataset?.license?.name
-      )
-      return matchingLicense?.value
+      return CUSTOM_LICENSE_VALUE
     }
+
+    const matchingLicense = licenseOptions.find((option) => option.label === dataset?.license?.name)
+    return matchingLicense?.value
   }, [licenseOptions, dataset?.license?.name, dataset?.termsOfUse.customTerms])
 
-  const form = useForm<DatasetTermsFormData>({
+  const form = useForm<EditLicenseAndTermsFormData>({
     defaultValues: {
       license: defaultLicenseValue,
       customTerms: initialCustomTerms
@@ -125,7 +143,7 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
 
   const watchedLicense = watch('license')
   const currentLicenseOption = licenseOptions.find((option) => option.value === watchedLicense)
-  const isCustomTerms = watchedLicense === 'CUSTOM'
+  const isCustomTerms = watchedLicense === CUSTOM_LICENSE_VALUE
 
   const customTermsFields = useMemo(() => {
     return Object.keys(initialCustomTerms).map((fieldName) => ({
@@ -140,10 +158,10 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
     }))
   }, [initialCustomTerms, isCustomTerms, t])
 
-  const onSubmit = (data: DatasetTermsFormData) => {
+  const onSubmit = (data: EditLicenseAndTermsFormData) => {
     if (!dataset) return
 
-    if (data.license === 'CUSTOM') {
+    if (data.license === CUSTOM_LICENSE_VALUE) {
       void handleUpdateLicense(dataset.id, {
         customTerms: data.customTerms
       })
@@ -158,25 +176,13 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
   }
 
   const handleCancel = () => {
-    if (!dataset) return
-
-    const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
-
-    if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-    } else {
-      searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
-    }
-
-    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+    navigateToDatasetView()
   }
 
   return (
-    <div ref={formContainerRef} className={styles['dataset-terms-tab']}>
+    <div ref={formContainerRef} className={styles['edit-license-and-terms']}>
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate={true}>
-          {/* License/Data Use Agreement Section */}
           <Row style={{ marginBottom: '1rem' }}>
             <Col sm={4}>
               <Form.Group.Label>{t('license.title')}</Form.Group.Label>
@@ -184,7 +190,6 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
             <Col sm={8}>
               <Form.Group.Text>{t('editTerms.datasetTerms.licenseDescription')}</Form.Group.Text>
 
-              {/* License Selection Dropdown */}
               <Controller
                 name="license"
                 control={control}
@@ -230,7 +235,6 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
             </Col>
           </Row>
 
-          {/* Custom Terms Section */}
           {isCustomTerms && (
             <>
               {customTermsFields.map((field) => (
@@ -243,7 +247,7 @@ export function DatasetTermsTab({ licenseRepository, datasetRepository }: Datase
                     {t(`termsTab.${field.translationKey}`)}
                   </Form.Group.Label>
                   <Controller
-                    name={`customTerms.${field.name}` as keyof DatasetTermsFormData}
+                    name={`customTerms.${field.name}` as keyof EditLicenseAndTermsFormData}
                     control={control}
                     rules={field.rules}
                     render={({ field: { onChange, value }, fieldState: { invalid, error } }) => (

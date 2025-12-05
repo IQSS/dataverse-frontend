@@ -33,6 +33,20 @@ export class TermsOfAccessMother {
       termsOfAccessForRestrictedFiles: undefined
     }
   }
+
+  static createRealistic(props?: Partial<TermsOfAccess>): TermsOfAccess {
+    const defaultTerms: TermsOfAccess = {
+      termsOfAccessForRestrictedFiles: 'Restricted files require special access permissions.',
+      fileAccessRequest: true,
+      dataAccessPlace: 'Data can be accessed at the main office.',
+      originalArchive: 'Original archive is available upon request.',
+      availabilityStatus: 'Available for research purposes.',
+      contactForAccess: 'foo@bar.com',
+      sizeOfCollection: '50 GB',
+      studyCompletion: '2023-10-01'
+    }
+    return { ...defaultTerms, ...props }
+  }
 }
 
 export class CustomTermsMother {

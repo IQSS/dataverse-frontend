@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { DatasetTermsTab } from '@/sections/edit-dataset-terms/dataset-terms-tab/DatasetTermsTab'
+import { EditLicenseAndTerms } from '@/sections/edit-dataset-terms/edit-license-and-terms/EditLicenseAndTerms'
 import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
 import { LicenseRepository } from '@/licenses/domain/repositories/LicenseRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
@@ -52,7 +52,7 @@ const mockDatasetWithLicense = DatasetMother.create({
   license: mockLicenses[0]
 })
 
-describe('DatasetTermsTab', () => {
+describe('EditLicenseAndTerms', () => {
   const withProviders = (component: ReactNode, dataset: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
@@ -74,7 +74,7 @@ describe('DatasetTermsTab', () => {
     it('renders license dropdown with available licenses', () => {
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -90,7 +90,7 @@ describe('DatasetTermsTab', () => {
     it('allows user to change license selection', () => {
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -109,7 +109,7 @@ describe('DatasetTermsTab', () => {
     it('shows custom terms fields when "Custom Dataset Terms" is selected', () => {
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -132,7 +132,7 @@ describe('DatasetTermsTab', () => {
 
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -151,7 +151,7 @@ describe('DatasetTermsTab', () => {
     it('allows switching between license and custom terms', () => {
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -170,7 +170,7 @@ describe('DatasetTermsTab', () => {
     it('enables save button when form is valid', () => {
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -184,11 +184,11 @@ describe('DatasetTermsTab', () => {
 
   describe('Loading States', () => {
     it('shows loading state while fetching licenses', () => {
-      licenseRepository.getAvailableStandardLicenses = cy.stub().returns(new Promise(() => {})) // Never resolves
+      licenseRepository.getAvailableStandardLicenses = cy.stub().returns(new Promise(() => {}))
 
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -206,7 +206,7 @@ describe('DatasetTermsTab', () => {
 
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -231,7 +231,7 @@ describe('DatasetTermsTab', () => {
 
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -247,7 +247,7 @@ describe('DatasetTermsTab', () => {
 
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -270,7 +270,7 @@ describe('DatasetTermsTab', () => {
 
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,
@@ -291,7 +291,7 @@ describe('DatasetTermsTab', () => {
 
       cy.customMount(
         withProviders(
-          <DatasetTermsTab
+          <EditLicenseAndTerms
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
           />,

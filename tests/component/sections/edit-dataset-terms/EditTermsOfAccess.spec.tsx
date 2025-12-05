@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { RestrictedFilesTab } from '@/sections/edit-dataset-terms/restricted-files-tab/RestrictedFilesTab'
+import { EditTermsOfAccess } from '@/sections/edit-dataset-terms/edit-terms-of-access/EditTermsOfAccess'
 import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
@@ -27,7 +27,7 @@ const mockDataset = DatasetMother.create({
   })
 })
 
-describe('RestrictedFilesTab', () => {
+describe('EditTermsOfAccess', () => {
   const withProviders = (component: ReactNode, dataset: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
@@ -44,7 +44,7 @@ describe('RestrictedFilesTab', () => {
   describe('Request Access Section', () => {
     it('renders the request access checkbox', () => {
       cy.customMount(
-        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByLabelText('Enable access request').should('exist')
@@ -53,7 +53,7 @@ describe('RestrictedFilesTab', () => {
 
     it('shows info alert', () => {
       cy.customMount(
-        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByText(/Restricting limits access to published files/).should('exist')
@@ -63,7 +63,7 @@ describe('RestrictedFilesTab', () => {
   describe('Terms of Access Fields', () => {
     it('renders all terms of access fields', () => {
       cy.customMount(
-        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
@@ -77,7 +77,7 @@ describe('RestrictedFilesTab', () => {
 
     it('pre-fills fields with initial values', () => {
       cy.customMount(
-        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
       )
       cy.findByDisplayValue('Access requires approval').should('exist')
       cy.findByDisplayValue('Main office').should('exist')
@@ -90,7 +90,7 @@ describe('RestrictedFilesTab', () => {
 
     it('allows editing of terms of access fields', () => {
       cy.customMount(
-        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByLabelText('Terms of Access for Restricted Files')
@@ -104,7 +104,7 @@ describe('RestrictedFilesTab', () => {
   describe('Form Actions', () => {
     it('renders save and cancel buttons', () => {
       cy.customMount(
-        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByRole('button', { name: 'Save Changes' }).should('exist')
@@ -113,7 +113,7 @@ describe('RestrictedFilesTab', () => {
 
     it('enables save button when form is valid', () => {
       cy.customMount(
-        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
@@ -121,7 +121,7 @@ describe('RestrictedFilesTab', () => {
 
     it('disables save button when request access is disabled and terms are empty', () => {
       cy.customMount(
-        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
@@ -131,7 +131,7 @@ describe('RestrictedFilesTab', () => {
 
     it('submits form data when save is clicked', () => {
       cy.customMount(
-        withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
       )
 
       cy.findByLabelText('Terms of Access for Restricted Files').clear().type('New terms')
@@ -141,7 +141,7 @@ describe('RestrictedFilesTab', () => {
 
   it('handles empty initial terms of access', () => {
     cy.customMount(
-      withProviders(<RestrictedFilesTab datasetRepository={datasetRepository} />, mockDataset)
+      withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
     )
 
     cy.findByLabelText('Enable access request').should('exist')
@@ -157,7 +157,7 @@ describe('RestrictedFilesTab', () => {
 
       cy.customMount(
         withProviders(
-          <RestrictedFilesTab datasetRepository={datasetRepository} />,
+          <EditTermsOfAccess datasetRepository={datasetRepository} />,
           DatasetMother.create({
             id: 123,
             termsOfUse: { termsOfAccess }
@@ -181,7 +181,7 @@ describe('RestrictedFilesTab', () => {
 
       cy.customMount(
         withProviders(
-          <RestrictedFilesTab datasetRepository={datasetRepository} />,
+          <EditTermsOfAccess datasetRepository={datasetRepository} />,
           DatasetMother.create({
             id: 123,
             termsOfUse: { termsOfAccess }

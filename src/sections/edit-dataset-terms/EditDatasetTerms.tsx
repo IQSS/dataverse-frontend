@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { Alert, Accordion, Tabs } from '@iqss/dataverse-design-system'
 import { EditDatasetTermsHelper, EditDatasetTermsTabKey } from './EditDatasetTermsHelper'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
-import { DatasetTermsTab } from './dataset-terms-tab/DatasetTermsTab'
-import { RestrictedFilesTab } from './restricted-files-tab/RestrictedFilesTab'
+import { EditLicenseAndTerms } from './edit-license-and-terms/EditLicenseAndTerms'
+import { EditTermsOfAccess } from './edit-terms-of-access/EditTermsOfAccess'
 import { LicenseRepository } from '../../licenses/domain/repositories/LicenseRepository'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { GuestBookTab } from './guest-book-tab/GuestBookTab'
+import { EditGuestBook } from './edit-guest-book/EditGuestBook'
 import { useDataset } from '../dataset/DatasetContext'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
@@ -71,7 +71,7 @@ export const EditDatasetTerms = ({
             <Accordion.Header>{t('editTerms.tabs.datasetTerms')}</Accordion.Header>
             <Accordion.Body>
               <div className={styles['tab-container']}>
-                <DatasetTermsTab
+                <EditLicenseAndTerms
                   licenseRepository={licenseRepository}
                   datasetRepository={datasetRepository}
                 />
@@ -83,7 +83,7 @@ export const EditDatasetTerms = ({
             <Accordion.Header>{t('editTerms.tabs.restrictedFilesTerms')}</Accordion.Header>
             <Accordion.Body>
               <div className={styles['tab-container']}>
-                <RestrictedFilesTab datasetRepository={datasetRepository} />
+                <EditTermsOfAccess datasetRepository={datasetRepository} />
               </div>
             </Accordion.Body>
           </Accordion.Item>
@@ -92,7 +92,7 @@ export const EditDatasetTerms = ({
             <Accordion.Header>{t('editTerms.tabs.guestBook')}</Accordion.Header>
             <Accordion.Body>
               <div className={styles['tab-container']}>
-                <GuestBookTab />
+                <EditGuestBook />
               </div>
             </Accordion.Body>
           </Accordion.Item>
@@ -101,7 +101,7 @@ export const EditDatasetTerms = ({
         <Tabs activeKey={activeKey} onSelect={updateTabOnSelect}>
           <Tabs.Tab eventKey={tabsKeys.datasetTerms} title={t('editTerms.tabs.datasetTerms')}>
             <div className={styles['tab-container']}>
-              <DatasetTermsTab
+              <EditLicenseAndTerms
                 licenseRepository={licenseRepository}
                 datasetRepository={datasetRepository}
               />
@@ -112,7 +112,7 @@ export const EditDatasetTerms = ({
             eventKey={tabsKeys.restrictedFilesTerms}
             title={t('editTerms.tabs.restrictedFilesTerms')}>
             <div className={styles['tab-container']}>
-              <RestrictedFilesTab datasetRepository={datasetRepository} />
+              <EditTermsOfAccess datasetRepository={datasetRepository} />
             </div>
           </Tabs.Tab>
 
@@ -121,7 +121,7 @@ export const EditDatasetTerms = ({
             title={t('editTerms.tabs.guestBook')}
             disabled={true}>
             <div className={styles['tab-container']}>
-              <GuestBookTab />
+              <EditGuestBook />
             </div>
           </Tabs.Tab>
         </Tabs>

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useForm, Controller, FormProvider, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
-import styles from '../dataset-terms-tab/DatasetTermsTab.module.scss'
+import styles from '../edit-license-and-terms/EditLicenseAndTerms.module.scss'
 import {
   DatasetNonNumericVersionSearchParam,
   DatasetPublishingStatus,
@@ -15,13 +15,11 @@ import { useUpdateTermsOfAccess } from './useUpdateTermsOfAccess'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { useNavigate } from 'react-router-dom'
 
-interface RestrictedFilesTabProps {
+interface EditTermsOfAccessProps {
   datasetRepository: DatasetRepository
 }
 
-export function RestrictedFilesTab({
-  datasetRepository: datasetRepository
-}: RestrictedFilesTabProps) {
+export function EditTermsOfAccess({ datasetRepository }: EditTermsOfAccessProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const { dataset, refreshDataset } = useDataset()
@@ -43,7 +41,7 @@ export function RestrictedFilesTab({
   const formContainerRef = useRef<HTMLDivElement>(null)
 
   const { handleUpdateTermsOfAccess, isLoading, error } = useUpdateTermsOfAccess({
-    datasetRepository: datasetRepository,
+    datasetRepository,
     onSuccessfulUpdateTermsOfAccess: () => {
       toast.success(t('alerts.termsUpdated.alertText'))
       refreshDataset()
@@ -122,13 +120,12 @@ export function RestrictedFilesTab({
 
     navigate(`${Route.DATASETS}?${searchParams.toString()}`)
   }
+
   return (
     <div ref={formContainerRef}>
-      {
-        <Alert variant="info" dismissible={false}>
-          {t('termsTab.termsOfAccessInfo')}
-        </Alert>
-      }
+      <Alert variant="info" dismissible={false}>
+        {t('termsTab.termsOfAccessInfo')}
+      </Alert>
 
       <FormProvider {...form}>
         <form

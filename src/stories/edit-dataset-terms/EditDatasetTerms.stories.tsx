@@ -24,7 +24,7 @@ type Story = StoryObj<typeof EditDatasetTerms>
 const licenseRepository: LicenseRepository = new LicenseMockRepository() as LicenseRepository
 const datasetRepository: DatasetRepository = new DatasetMockRepository() as DatasetRepository
 
-export const Default: Story = {
+export const EditLicenseAndTermsTab: Story = {
   render: () => (
     <EditDatasetTerms
       defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
@@ -34,7 +34,7 @@ export const Default: Story = {
   )
 }
 
-export const RestrictedFilesTermsTab: Story = {
+export const EditTermsOfAccessTab: Story = {
   render: () => (
     <EditDatasetTerms
       defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.restrictedFilesTerms}
@@ -44,20 +44,10 @@ export const RestrictedFilesTermsTab: Story = {
   )
 }
 
-export const GuestBookTab: Story = {
+export const EditGuestBookTab: Story = {
   render: () => (
     <EditDatasetTerms
       defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestBook}
-      licenseRepository={licenseRepository}
-      datasetRepository={datasetRepository}
-    />
-  )
-}
-
-export const AllTabs: Story = {
-  render: () => (
-    <EditDatasetTerms
-      defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
       licenseRepository={licenseRepository}
       datasetRepository={datasetRepository}
     />

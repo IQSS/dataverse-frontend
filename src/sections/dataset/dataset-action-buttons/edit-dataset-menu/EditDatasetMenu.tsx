@@ -57,16 +57,8 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
       return
     }
     if (eventKey === EditDatasetMenuItems.TERMS) {
-      const searchParams = new URLSearchParams()
-      searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
-
-      if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-        searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-      } else {
-        searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
-      }
-
       navigate(`${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`)
+      return
     }
     if (eventKey === EditDatasetMenuItems.PERMISSIONS) {
       showModal()

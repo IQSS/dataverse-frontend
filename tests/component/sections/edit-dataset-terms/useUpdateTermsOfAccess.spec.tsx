@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
-import { useUpdateTermsOfAccess } from '@/sections/edit-dataset-terms/restricted-files-tab/useUpdateTermsOfAccess'
+import { useUpdateTermsOfAccess } from '@/sections/edit-dataset-terms/edit-terms-of-access/useUpdateTermsOfAccess'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { TermsOfAccess } from '@/dataset/domain/models/Dataset'
 import { WriteError } from '@iqss/dataverse-client-javascript'

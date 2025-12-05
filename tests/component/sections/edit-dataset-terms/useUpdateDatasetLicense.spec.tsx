@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
-import { useUpdateDatasetLicense } from '@/sections/edit-dataset-terms/dataset-terms-tab/useUpdateDatasetLicense'
+import { useUpdateDatasetLicense } from '@/sections/edit-dataset-terms/edit-license-and-terms/useUpdateDatasetLicense'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLicenseUpdateRequest'
 
