@@ -1,17 +1,37 @@
 /**
  * Standalone Uploader Configuration
  *
- * Parses URL parameters for the standalone file uploader.
- * Compatible with DVWebloader v1 URL params:
+ * Configuration can be set in two ways:
+ * 1. Window variables (set via script tag in HTML before the bundle loads):
+ *    - window.dvWebloaderConfig = { useS3Tagging: false, maxRetries: 5, ... }
+ * 2. URL parameters (for siteUrl, datasetPid, key, dvLocale)
+ *
+ * URL Parameters (passed by Dataverse):
  *   - siteUrl: Base URL of the Dataverse instance
  *   - datasetPid: Persistent ID of the dataset
  *   - key: API key for authentication
  *   - dvLocale: Optional locale code (e.g., 'en', 'de')
- *   - useS3Tagging: Optional, set to 'false' to disable S3 tagging (for S3-compatible storage that doesn't support tagging)
- *   - maxRetries: Optional, maximum number of retries for multipart upload parts (default: 3)
- *   - uploadTimeoutMs: Optional, timeout in milliseconds for file upload operations (default: 0 = unlimited)
- *   - disableMD5Checksum: Optional, set to 'true' to disable MD5 checksum calculation
+ *
+ * Window config options (set in HTML):
+ *   - useS3Tagging: Set to false to disable S3 tagging (default: true)
+ *   - maxRetries: Maximum retries for multipart upload parts (default: 3)
+ *   - uploadTimeoutMs: Timeout in ms for uploads, 0 = unlimited (default: 0)
+ *   - disableMD5Checksum: Set to true to skip checksum calculation (default: false)
  */
+
+/** Window config interface for type safety */
+interface DvWebloaderWindowConfig {
+  useS3Tagging?: boolean
+  maxRetries?: number
+  uploadTimeoutMs?: number
+  disableMD5Checksum?: boolean
+}
+
+declare global {
+  interface Window {
+    dvWebloaderConfig?: DvWebloaderWindowConfig
+  }
+}
 
 export interface StandaloneUploaderConfig {
   siteUrl: string
@@ -42,31 +62,28 @@ export interface ConfigError {
 export type ConfigParseResult = ConfigResult | ConfigError
 
 /**
- * Parse URL parameters and return configuration for the standalone uploader.
+ * Parse URL parameters and window config, return configuration for the standalone uploader.
  */
 export function parseUrlConfig(): ConfigParseResult {
   const queryParams = new URLSearchParams(window.location.search)
+  const windowConfig = window.dvWebloaderConfig || {}
 
   const siteUrl = queryParams.get('siteUrl')
   const datasetPid = queryParams.get('datasetPid')
   const apiKey = queryParams.get('key')
   const dvLocale = queryParams.get('dvLocale') || 'en'
 
-  // Parse useS3Tagging - default to true (enabled), only false if explicitly set to 'false'
-  const useS3TaggingParam = queryParams.get('useS3Tagging')
-  const useS3Tagging = useS3TaggingParam !== 'false'
+  // Parse useS3Tagging - window config takes precedence, then default to true
+  const useS3Tagging = windowConfig.useS3Tagging ?? true
 
-  // Parse maxRetries - default to 3
-  const maxRetriesParam = queryParams.get('maxRetries')
-  const maxRetries = maxRetriesParam ? parseInt(maxRetriesParam, 10) : 3
+  // Parse maxRetries - window config takes precedence, then default to 3
+  const maxRetries = windowConfig.maxRetries ?? 3
 
-  // Parse uploadTimeoutMs - default to 0 (unlimited)
-  const uploadTimeoutMsParam = queryParams.get('uploadTimeoutMs')
-  const uploadTimeoutMs = uploadTimeoutMsParam ? parseInt(uploadTimeoutMsParam, 10) : 0
+  // Parse uploadTimeoutMs - window config takes precedence, then default to 0 (unlimited)
+  const uploadTimeoutMs = windowConfig.uploadTimeoutMs ?? 0
 
-  // Parse disableMD5Checksum - default to false
-  const disableMD5ChecksumParam = queryParams.get('disableMD5Checksum')
-  const disableMD5Checksum = disableMD5ChecksumParam === 'true'
+  // Parse disableMD5Checksum - window config takes precedence, then default to false
+  const disableMD5Checksum = windowConfig.disableMD5Checksum ?? false
 
   const missingParams: string[] = []
 
