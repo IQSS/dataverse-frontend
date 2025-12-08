@@ -51,8 +51,10 @@ describe('Edit Dataset Terms', () => {
         cy.findByRole('button', { name: 'Save Changes' }).click()
 
         cy.findByText(/The license for this dataset has been updated./i).should('exist')
-        cy.findByRole('button', { name: 'Cancel' }).click()
-        cy.findByText('Custom Dataset Terms').should('exist')
+
+        const datasetPage = `/spa${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+        cy.url().should('include', datasetPage)
+        cy.findByRole('heading', { name: datasetTitle }).should('exist')
       })
     })
   })
