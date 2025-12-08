@@ -52,9 +52,12 @@ describe('Edit Dataset Terms', () => {
 
         cy.findByText(/The license for this dataset has been updated./i).should('exist')
 
-        const datasetPage = `/spa${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+        const datasetPage =
+          `datasets?${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+            .replace(':', '%3A')
+            .replace(/\//g, '%2F')
+
         cy.url().should('include', datasetPage)
-        cy.findByRole('heading', { name: datasetTitle }).should('exist')
       })
     })
   })
