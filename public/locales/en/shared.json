@@ -218,6 +218,7 @@
     "accordionTitle": "Upload with HTTP via your browser",
     "selectFileSingle": "Select file to add",
     "selectFileMultiple": "Select files to add",
+    "selectFolder": "Select folder to add",
     "dragDropSingle": "Drag and drop file here.",
     "dragDropMultiple": "Drag and drop files and/or directories here.",
     "cancelUpload": "Cancel upload",

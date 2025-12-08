@@ -38,6 +38,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
 
   const { t } = useTranslation('shared')
   const inputRef = useRef<HTMLInputElement>(null)
+  const folderInputRef = useRef<HTMLInputElement>(null)
 
   const [isDragging, setIsDragging] = useState(false)
 
@@ -112,6 +113,20 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
 
     if (inputRef.current) {
       inputRef.current.value = ''
+    }
+  }
+
+  const handleFolderInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const filesArray = Array.from(event.target.files || [])
+
+    if (filesArray && filesArray.length > 0) {
+      for (const file of filesArray) {
+        void uploadOneFile(file)
+      }
+    }
+
+    if (folderInputRef.current) {
+      folderInputRef.current.value = ''
     }
   }
 
@@ -195,6 +210,15 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
                     ? t('fileUploader.selectFileMultiple')
                     : t('fileUploader.selectFileSingle')}
                 </Button>
+                {operationType === OperationType.ADD_FILES_TO_DATASET && (
+                  <Button
+                    onClick={() => folderInputRef.current?.click()}
+                    disabled={!canKeepUploading || isSaving}
+                    size="sm"
+                    className="ms-2">
+                    <Plus size={22} /> {t('fileUploader.selectFolder')}
+                  </Button>
+                )}
               </Card.Header>
               <Card.Body>
                 <div
@@ -214,6 +238,15 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
                     type="file"
                     onChange={handleInputFileChange}
                     multiple={operationType === OperationType.ADD_FILES_TO_DATASET}
+                    hidden
+                    disabled={!canKeepUploading || isSaving}
+                  />
+                  <input
+                    ref={folderInputRef}
+                    type="file"
+                    onChange={handleFolderInputChange}
+                    // @ts-expect-error webkitdirectory is a non-standard attribute but widely supported
+                    webkitdirectory=""
                     hidden
                     disabled={!canKeepUploading || isSaving}
                   />
