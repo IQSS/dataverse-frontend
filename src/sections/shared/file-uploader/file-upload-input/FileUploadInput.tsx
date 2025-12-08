@@ -143,6 +143,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
     }
 
     const droppedItems = event.dataTransfer.items
+    const droppedFiles = event.dataTransfer.files
 
     if (droppedItems.length > 0) {
       if (operationType === OperationType.REPLACE_FILE && droppedItems.length > 1) {
@@ -150,7 +151,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
         return
       }
 
-      handleDroppedItems(droppedItems)
+      handleDroppedItems(droppedItems, droppedFiles)
     }
   }
 

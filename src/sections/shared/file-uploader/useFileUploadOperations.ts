@@ -174,7 +174,7 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
               })
 
               Object.defineProperty(fileWithPath, 'webkitRelativePath', {
-                value: entry.fullPath,
+                value: entry.fullPath.startsWith('/') ? entry.fullPath.slice(1) : entry.fullPath,
                 writable: true
               })
 
@@ -202,7 +202,16 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
           handledViaEntry = true
           const fse = entry as FileSystemFileEntry
           fse.file((file) => {
-            void uploadOneFile(file)
+            // Create a new File with webkitRelativePath set for consistency
+            const fileWithPath = new File([file], file.name, {
+              type: file.type,
+              lastModified: file.lastModified
+            })
+            Object.defineProperty(fileWithPath, 'webkitRelativePath', {
+              value: entry.fullPath.startsWith('/') ? entry.fullPath.slice(1) : entry.fullPath,
+              writable: true
+            })
+            void uploadOneFile(fileWithPath)
           })
         }
       })
