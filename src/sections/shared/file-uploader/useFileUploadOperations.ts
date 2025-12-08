@@ -45,8 +45,8 @@ export interface FileUploadOperations {
   uploadOneFile: (file: File) => Promise<void>
   /** Recursively upload files from a directory */
   addFromDir: (dir: FileSystemDirectoryEntry) => void
-  /** Handle dropped items (files or directories) */
-  handleDroppedItems: (items: DataTransferItemList) => void
+  /** Handle dropped items (files or directories), with optional fallback FileList */
+  handleDroppedItems: (items: DataTransferItemList, fallbackFiles?: FileList) => void
   /** Retry a failed upload */
   retryUpload: (file: File) => Promise<void>
   /** The semaphore used to limit concurrent uploads */
@@ -190,18 +190,29 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
   )
 
   const handleDroppedItems = useCallback(
-    (items: DataTransferItemList) => {
+    (items: DataTransferItemList, fallbackFiles?: FileList) => {
+      let handledViaEntry = false
+
       Array.from(items).forEach((item) => {
         const entry = item.webkitGetAsEntry()
         if (entry?.isDirectory) {
+          handledViaEntry = true
           addFromDir(entry as FileSystemDirectoryEntry)
         } else if (entry?.isFile) {
+          handledViaEntry = true
           const fse = entry as FileSystemFileEntry
           fse.file((file) => {
             void uploadOneFile(file)
           })
         }
       })
+
+      // Fallback for browsers where webkitGetAsEntry() returns null (e.g., Firefox in some cases)
+      if (!handledViaEntry && fallbackFiles && fallbackFiles.length > 0) {
+        Array.from(fallbackFiles).forEach((file) => {
+          void uploadOneFile(file)
+        })
+      }
     },
     [addFromDir, uploadOneFile]
   )
