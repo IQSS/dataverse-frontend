@@ -74,6 +74,7 @@ jobs:
           EOF
 
       - name: Override runtime config.js for QA
+        if: ${{ github.event.inputs.environment == 'qa' }}
         env:
           DATAVERSE_BACKEND_URL: ${{ secrets.QA_DATAVERSE_BACKEND_URL }}
           OIDC_CLIENT_ID: ${{ secrets.QA_OIDC_CLIENT_ID }}
