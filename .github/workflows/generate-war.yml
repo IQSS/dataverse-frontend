@@ -1,0 +1,169 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        type: choice
+        required: true
+        options:
+          - beta
+          - qa
+          - demo
+      basepath:
+        description: 'Server base path (without slashes) for serving the application (e.g., spa). If left blank, it will try to deploy to the root base path.'
+        type: string
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Create .npmrc
+        run: |
+          cp .npmrc.example .npmrc
+          sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Dataverse UI Library
+        working-directory: packages/design-system
+        run: npm run build
+
+      - name: Build with base path
+        run: npm run build -- --base=/${{ github.event.inputs.basepath }}
+
+      - name: Override runtime config.js for BETA
+        if: ${{ github.event.inputs.environment == 'beta' }}
+        env:
+          DATAVERSE_BACKEND_URL: ${{ secrets.BETA_DATAVERSE_BACKEND_URL }}
+          OIDC_CLIENT_ID: ${{ secrets.BETA_OIDC_CLIENT_ID }}
+          OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.BETA_OIDC_AUTHORIZATION_ENDPOINT }}
+          OIDC_TOKEN_ENDPOINT: ${{ secrets.BETA_OIDC_TOKEN_ENDPOINT }}
+          OIDC_LOGOUT_ENDPOINT: ${{ secrets.BETA_OIDC_LOGOUT_ENDPOINT }}
+          OIDC_STORAGE_KEY_PREFIX: ${{ secrets.BETA_OIDC_STORAGE_KEY_PREFIX }}
+        run: |
+          mkdir -p ./dist
+          cat > ./dist/config.js <<EOF
+          window.__APP_CONFIG__ = {
+            backendUrl: "${DATAVERSE_BACKEND_URL}",
+            oidc: {
+              clientId: "${OIDC_CLIENT_ID}",
+              authorizationEndpoint: "${OIDC_AUTHORIZATION_ENDPOINT}",
+              tokenEndpoint: "${OIDC_TOKEN_ENDPOINT}",
+              logoutEndpoint: "${OIDC_LOGOUT_ENDPOINT}",
+              localStorageKeyPrefix: "${OIDC_STORAGE_KEY_PREFIX}"
+            },
+            languages: [
+              { code: 'en', name: 'English' },
+              { code: 'es', name: 'Español' },
+            ],
+            defaultLanguage: 'en'
+          }
+          EOF
+
+      - name: Override runtime config.js for QA
+        if: ${{ github.event.inputs.environment == 'qa' }}
+        env:
+          DATAVERSE_BACKEND_URL: ${{ secrets.QA_DATAVERSE_BACKEND_URL }}
+          OIDC_CLIENT_ID: ${{ secrets.QA_OIDC_CLIENT_ID }}
+          OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.QA_OIDC_AUTHORIZATION_ENDPOINT }}
+          OIDC_TOKEN_ENDPOINT: ${{ secrets.QA_OIDC_TOKEN_ENDPOINT }}
+          OIDC_LOGOUT_ENDPOINT: ${{ secrets.QA_OIDC_LOGOUT_ENDPOINT }}
+          OIDC_STORAGE_KEY_PREFIX: ${{ secrets.QA_OIDC_STORAGE_KEY_PREFIX }}
+        run: |
+          mkdir -p ./dist
+          cat > ./dist/config.js <<EOF
+          window.__APP_CONFIG__ = {
+            backendUrl: "${DATAVERSE_BACKEND_URL}",
+            oidc: {
+              clientId: "${OIDC_CLIENT_ID}",
+              authorizationEndpoint: "${OIDC_AUTHORIZATION_ENDPOINT}",
+              tokenEndpoint: "${OIDC_TOKEN_ENDPOINT}",
+              logoutEndpoint: "${OIDC_LOGOUT_ENDPOINT}",
+              localStorageKeyPrefix: "${OIDC_STORAGE_KEY_PREFIX}"
+            },
+            languages: [
+              { code: 'en', name: 'English' },
+              { code: 'es', name: 'Español' },
+            ],
+            defaultLanguage: 'en'
+          }
+          EOF
+
+      - name: Override runtime config.js for DEMO
+        if: ${{ github.event.inputs.environment == 'demo' }}
+        env:
+          DATAVERSE_BACKEND_URL: ${{ secrets.DEMO_DATAVERSE_BACKEND_URL }}
+          OIDC_CLIENT_ID: ${{ secrets.DEMO_OIDC_CLIENT_ID }}
+          OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.DEMO_OIDC_AUTHORIZATION_ENDPOINT }}
+          OIDC_TOKEN_ENDPOINT: ${{ secrets.DEMO_OIDC_TOKEN_ENDPOINT }}
+          OIDC_LOGOUT_ENDPOINT: ${{ secrets.DEMO_OIDC_LOGOUT_ENDPOINT }}
+          OIDC_STORAGE_KEY_PREFIX: ${{ secrets.DEMO_OIDC_STORAGE_KEY_PREFIX }}
+        run: |
+          mkdir -p ./dist
+          cat > ./dist/config.js <<EOF
+          window.__APP_CONFIG__ = {
+            backendUrl: "${DATAVERSE_BACKEND_URL}",
+            oidc: {
+              clientId: "${OIDC_CLIENT_ID}",
+              authorizationEndpoint: "${OIDC_AUTHORIZATION_ENDPOINT}",
+              tokenEndpoint: "${OIDC_TOKEN_ENDPOINT}",
+              logoutEndpoint: "${OIDC_LOGOUT_ENDPOINT}",
+              localStorageKeyPrefix: "${OIDC_STORAGE_KEY_PREFIX}"
+            },
+            languages: [
+              { code: 'en', name: 'English' },
+              { code: 'es', name: 'Español' },
+            ],
+            defaultLanguage: 'en'
+          }
+          EOF
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: built-site
+          path: ./dist
+          include-hidden-files: true
+
+  generate-war:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: built-site
+          path: ./dist
+
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v6
+
+      - name: Build war file
+        working-directory: ./deployment/payara
+        run: mvn package "-Dversion=${{ steps.branch-name.outputs.current_branch }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: war-file
+          path: ./deployment/payara/target/*.war
+      
