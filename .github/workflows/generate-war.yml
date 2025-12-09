@@ -14,6 +14,7 @@ on:
         description: Target environment
         type: choice
         required: true
+        default: qa
         options:
           - beta
           - qa
