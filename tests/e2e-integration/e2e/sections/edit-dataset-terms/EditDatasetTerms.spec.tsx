@@ -134,12 +134,20 @@ describe('Edit Dataset Terms', () => {
 
         cy.get('select').select('Custom Dataset Terms')
         cy.findByTestId('customTerms.termsOfUse').type('Custom terms text')
-        cy.findByText('Leave without saving').should('exist').click()
         cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).click()
+
+        cy.findByRole('button', { name: /Leave without saving/i })
+          .should('exist')
+          .click()
+
         cy.findByLabelText('Enable access request').check()
         cy.findByLabelText('Terms of Access for Restricted Files').type('Restricted access terms')
 
         cy.findByRole('tab', { name: 'Dataset Terms' }).click()
+
+        cy.findByRole('button', { name: /Leave without saving/i })
+          .should('exist')
+          .click()
 
         cy.get('select').should('have.value', 'CUSTOM')
         cy.findByTestId('customTerms.termsOfUse').should('have.value', 'Custom terms text')
