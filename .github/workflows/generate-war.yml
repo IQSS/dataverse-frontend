@@ -1,6 +1,9 @@
 name: generate-war
 
 on:
+  push:
+    branches:
+      - make_war_not_love
   pull_request:
     branches:
       - develop
