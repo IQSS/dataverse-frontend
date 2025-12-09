@@ -1,4 +1,4 @@
-name: deploy
+name: generate-war
 
 on:
   workflow_dispatch:
