@@ -366,6 +366,12 @@
       "testGuestbook": "Test Guestbook",
       "previewButton": "Preview Guestbook"
     },
+    "unsavedChangesModal": {
+      "title": "Unsaved Changes",
+      "message": "You have unsaved changes on this tab. If you leave now, they'll be lost.",
+      "stay": "Stay on this page",
+      "leave": "Leave without saving"
+    },
     "defaultLicenseUpdateError": "An error occurred while updating the dataset license. Please try again.",
     "defaultTermsOfAccessUpdateError": "An error occurred while updating the dataset terms of access. Please try again."
   }

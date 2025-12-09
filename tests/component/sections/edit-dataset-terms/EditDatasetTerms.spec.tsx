@@ -164,6 +164,78 @@ describe('EditDatasetTerms', () => {
 
       cy.findByText('Edit Dataset Terms').should('exist')
     })
+
+    it('show unsaved changed modal when the editing form is dirty and switching tabs', () => {
+      const dataset = DatasetMother.create({
+        license: mockLicenses[0],
+        termsOfUse: TermsOfUseMother.withoutCustomTerms()
+      })
+      cy.customMount(
+        withProviders(
+          <EditDatasetTerms
+            defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.findByRole('tab', { name: 'Dataset Terms' }).should('have.attr', 'aria-selected', 'true')
+
+      cy.get('select').select('CC BY 4.0')
+
+      cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).click()
+
+      cy.findByText('Unsaved Changes').should('exist')
+      cy.findByText('Stay on this page').should('exist').click()
+
+      cy.findByRole('tab', { name: 'Dataset Terms' }).should('have.attr', 'aria-selected', 'true')
+
+      cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).click()
+
+      cy.findByText('Unsaved Changes').should('exist')
+      cy.findByText('Leave without saving').click()
+
+      cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).should(
+        'have.attr',
+        'aria-selected',
+        'true'
+      )
+    })
+
+    it('show unsaved changed modal and switch tab without saving', () => {
+      const dataset = DatasetMother.create({
+        license: mockLicenses[0],
+        termsOfUse: TermsOfUseMother.withoutCustomTerms()
+      })
+      cy.customMount(
+        withProviders(
+          <EditDatasetTerms
+            defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.findByRole('tab', { name: 'Dataset Terms' }).should('have.attr', 'aria-selected', 'true')
+
+      cy.get('select').select('CC BY 4.0')
+
+      cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).click()
+
+      cy.findByText('Unsaved Changes').should('exist')
+      cy.findByText('Stay on this page').should('exist')
+      cy.findByText('Leave without saving').click()
+
+      cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).should(
+        'have.attr',
+        'aria-selected',
+        'true'
+      )
+    })
   })
 
   describe('Dataset Terms Tab Integration', () => {

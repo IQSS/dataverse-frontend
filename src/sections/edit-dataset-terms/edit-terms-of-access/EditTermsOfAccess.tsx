@@ -17,9 +17,13 @@ import { useNavigate } from 'react-router-dom'
 
 interface EditTermsOfAccessProps {
   datasetRepository: DatasetRepository
+  onFormStateChange?: (isDirty: boolean) => void
 }
 
-export function EditTermsOfAccess({ datasetRepository }: EditTermsOfAccessProps) {
+export function EditTermsOfAccess({
+  datasetRepository,
+  onFormStateChange
+}: EditTermsOfAccessProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const { dataset, refreshDataset } = useDataset()
@@ -53,7 +57,16 @@ export function EditTermsOfAccess({ datasetRepository }: EditTermsOfAccessProps)
     mode: 'onChange'
   })
 
-  const { control, handleSubmit, reset } = form
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty }
+  } = form
+
+  useEffect(() => {
+    onFormStateChange?.(isDirty)
+  }, [isDirty, onFormStateChange])
 
   useEffect(() => {
     if (dataset?.termsOfUse.termsOfAccess) {

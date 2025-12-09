@@ -137,6 +137,7 @@ describe('Edit Dataset Terms', () => {
 
         cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).click()
 
+        cy.findByText('Leave without Saving').should('exist').click()
         cy.findByLabelText('Enable access request').check()
         cy.findByLabelText('Terms of Access for Restricted Files').type('Restricted access terms')
 

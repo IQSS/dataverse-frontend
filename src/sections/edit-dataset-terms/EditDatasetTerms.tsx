@@ -13,6 +13,7 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
+import { ConfirmLeaveModal } from './confirm-leave-modal/ConfirmLeaveModal'
 import styles from './EditDatasetTerms.module.scss'
 
 const tabsKeys = EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS
@@ -34,6 +35,13 @@ export const EditDatasetTerms = ({
   const { setIsLoading } = useLoading()
   const isMobile = useMediaQuery('(max-width: 576px)')
 
+  const [showUnsavedChangesModal, setShowUnsavedChangesModal] = useState(false)
+  const [pendingTabKey, setPendingTabKey] = useState<string | null>(null)
+
+  const [licenseFormIsDirty, setLicenseFormIsDirty] = useState(false)
+  const [termsOfAccessFormIsDirty, setTermsOfAccessFormIsDirty] = useState(false)
+  const [guestBookFormIsDirty, setGuestBookFormIsDirty] = useState(false)
+
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
@@ -46,8 +54,39 @@ export const EditDatasetTerms = ({
     return <NotFoundPage dvObjectNotFoundType="dataset" />
   }
 
+  const getCurrentFormDirtyState = (): boolean => {
+    switch (activeKey) {
+      case tabsKeys.datasetTerms:
+        return licenseFormIsDirty
+      case tabsKeys.restrictedFilesTerms:
+        return termsOfAccessFormIsDirty
+      case tabsKeys.guestBook:
+        return guestBookFormIsDirty
+      default:
+        return false
+    }
+  }
+
+  const handleModalDiscardChanges = () => {
+    setShowUnsavedChangesModal(false)
+    if (pendingTabKey) {
+      setActiveKey(pendingTabKey)
+    }
+    setPendingTabKey(null)
+  }
+
+  const handleModalKeepEditing = () => {
+    setShowUnsavedChangesModal(false)
+    setPendingTabKey(null)
+  }
+
   const updateTabOnSelect = (keySelected: string | null) => {
-    if (keySelected) {
+    if (!keySelected || keySelected === activeKey) return
+
+    if (getCurrentFormDirtyState()) {
+      setPendingTabKey(keySelected)
+      setShowUnsavedChangesModal(true)
+    } else {
       setActiveKey(keySelected)
     }
   }
@@ -74,6 +113,7 @@ export const EditDatasetTerms = ({
                 <EditLicenseAndTerms
                   licenseRepository={licenseRepository}
                   datasetRepository={datasetRepository}
+                  onFormStateChange={setLicenseFormIsDirty}
                 />
               </div>
             </Accordion.Body>
@@ -83,7 +123,10 @@ export const EditDatasetTerms = ({
             <Accordion.Header>{t('editTerms.tabs.restrictedFilesTerms')}</Accordion.Header>
             <Accordion.Body>
               <div className={styles['tab-container']}>
-                <EditTermsOfAccess datasetRepository={datasetRepository} />
+                <EditTermsOfAccess
+                  datasetRepository={datasetRepository}
+                  onFormStateChange={setTermsOfAccessFormIsDirty}
+                />
               </div>
             </Accordion.Body>
           </Accordion.Item>
@@ -104,6 +147,7 @@ export const EditDatasetTerms = ({
               <EditLicenseAndTerms
                 licenseRepository={licenseRepository}
                 datasetRepository={datasetRepository}
+                onFormStateChange={setLicenseFormIsDirty}
               />
             </div>
           </Tabs.Tab>
@@ -112,7 +156,10 @@ export const EditDatasetTerms = ({
             eventKey={tabsKeys.restrictedFilesTerms}
             title={t('editTerms.tabs.restrictedFilesTerms')}>
             <div className={styles['tab-container']}>
-              <EditTermsOfAccess datasetRepository={datasetRepository} />
+              <EditTermsOfAccess
+                datasetRepository={datasetRepository}
+                onFormStateChange={setTermsOfAccessFormIsDirty}
+              />
             </div>
           </Tabs.Tab>
 
@@ -126,6 +173,12 @@ export const EditDatasetTerms = ({
           </Tabs.Tab>
         </Tabs>
       )}
+
+      <ConfirmLeaveModal
+        show={showUnsavedChangesModal}
+        onStay={handleModalKeepEditing}
+        onLeave={handleModalDiscardChanges}
+      />
     </section>
   )
 }

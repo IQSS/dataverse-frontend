@@ -27,11 +27,13 @@ interface EditLicenseAndTermsFormData {
 interface EditLicenseAndTermsProps {
   licenseRepository: LicenseRepository
   datasetRepository: DatasetRepository
+  onFormStateChange?: (isDirty: boolean) => void
 }
 
 export function EditLicenseAndTerms({
   licenseRepository,
-  datasetRepository
+  datasetRepository,
+  onFormStateChange
 }: EditLicenseAndTermsProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
@@ -129,8 +131,12 @@ export function EditLicenseAndTerms({
     handleSubmit,
     watch,
     reset,
-    formState: { isValid }
+    formState: { isValid, isDirty }
   } = form
+
+  useEffect(() => {
+    onFormStateChange?.(isDirty)
+  }, [isDirty, onFormStateChange])
 
   useEffect(() => {
     if (!isLoadingLicenses && licenseOptions.length > 0) {
