@@ -165,4 +165,3 @@ jobs:
         with:
           name: war-file
           path: ./deployment/payara/target/*.war
-      
