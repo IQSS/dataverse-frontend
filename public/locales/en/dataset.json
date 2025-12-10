@@ -368,7 +368,7 @@
     },
     "unsavedChangesModal": {
       "title": "Unsaved Changes",
-      "message": "You have unsaved changes on this tab. If you leave now, they'll be lost.",
+      "message": "You have unsaved changes on this tab. If you leave now, your changes on this tab won't be saved.",
       "stay": "Stay on this page",
       "leave": "Leave without saving"
     },
