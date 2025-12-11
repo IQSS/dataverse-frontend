@@ -62,6 +62,15 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
 
+  // compute display range
+  const total = paginationInfo?.totalItems ?? notifications.length
+  const page = Math.max(1, paginationInfo?.page ?? 1)
+  const pageSize = Math.max(1, paginationInfo?.pageSize ?? (notifications.length || 1))
+  const start = notifications.length === 0 ? 0 : (page - 1) * pageSize + 1
+  const end = notifications.length === 0 ? 0 : Math.min(start + notifications.length - 1, total)
+  const clearAllKey =
+    total > pageSize ? 'notifications.clearAllOnThisPage' : 'notifications.clearAll'
+
   return (
     <section>
       <div className="d-flex align-items-center gap-2 mb-2">
@@ -72,7 +81,7 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
             aria-label={t('notifications.clearAll')}
             onClick={handleClearAll}
             disabled={isLoading}>
-            {t('notifications.clearAll')}
+            {t(clearAllKey)}
           </Button>
         )}
 
@@ -81,6 +90,11 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
 
       {notifications.length > 0 ? (
         <div className="d-flex flex-column gap-2">
+          <div
+            className={
+              styles['range-info']
+            }>{`Displaying ${start}-${end} of ${total} Notifications`}</div>
+
           {notifications.map((notification) => {
             const isRead = notification.displayAsRead || readIds.includes(notification.id)
             return (
