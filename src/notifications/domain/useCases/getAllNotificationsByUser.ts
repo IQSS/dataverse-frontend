@@ -1,10 +1,10 @@
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
-import { Notification } from '@/notifications/domain/models/Notification'
 import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
+import { NotificationSubset } from '@/notifications/domain/models/NotificationSubset'
 
 export function getAllNotificationsByUser(
   notificationRepository: NotificationRepository,
   paginationInfo: NotificationsPaginationInfo
-): Promise<Notification[]> {
+): Promise<NotificationSubset> {
   return notificationRepository.getAllNotificationsByUser(paginationInfo)
 }
