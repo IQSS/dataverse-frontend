@@ -11,7 +11,7 @@ export function PageSizeSelector({
   setPageSize: (pageSize: number) => void
 }) {
   const { t } = useTranslation('shared', { keyPrefix: 'pagination' })
-  const availableSizes = [10, 25, 50]
+  const availableSizes = [pageSize, 10, 25, 50]
 
   return (
     <div className={styles['size-selector-container']}>

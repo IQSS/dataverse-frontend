@@ -7,24 +7,26 @@ import { getAllNotificationsByUser } from '@/notifications/domain/useCases/getAl
 
 const POLLING_NOTIFICATIONS_INTERVAL_TIME = 30_000
 
-export function useNotifications(repository: NotificationRepository) {
+export function useNotifications(
+  repository: NotificationRepository,
+  paginationInfo: NotificationsPaginationInfo,
+  setPaginationInfo: (pagination: NotificationsPaginationInfo) => void
+) {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { user } = useSession()
-  const [pagination, setPagination] = useState<NotificationsPaginationInfo>(
-    new NotificationsPaginationInfo()
-  )
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const fetched = await getAllNotificationsByUser(repository, pagination)
+      setIsLoading(true)
+      const fetched = await getAllNotificationsByUser(repository, paginationInfo)
       setError(null)
-      setPagination(
+      setPaginationInfo(
         new NotificationsPaginationInfo(
-          pagination.pageSize,
-          pagination.offset,
-          pagination.totalItems
+          paginationInfo.page,
+          paginationInfo.pageSize,
+          fetched.totalItemCount
         )
       )
       setNotifications(fetched.items)
@@ -34,7 +36,7 @@ export function useNotifications(repository: NotificationRepository) {
     } finally {
       setIsLoading(false)
     }
-  }, [repository])
+  }, [repository, paginationInfo.page, paginationInfo.pageSize])
 
   useEffect(() => {
     if (!user) return
@@ -46,7 +48,7 @@ export function useNotifications(repository: NotificationRepository) {
     }, POLLING_NOTIFICATIONS_INTERVAL_TIME)
 
     return () => clearInterval(interval)
-  }, [fetchNotifications, user])
+  }, [fetchNotifications, user, paginationInfo.page, paginationInfo.pageSize])
 
   const markAsRead = async (ids: number[]) => {
     setNotifications((prev) =>
@@ -78,7 +80,6 @@ export function useNotifications(repository: NotificationRepository) {
     error,
     refetch: fetchNotifications,
     markAsRead,
-    deleteMany,
-    pagination
+    deleteMany
   }
 }

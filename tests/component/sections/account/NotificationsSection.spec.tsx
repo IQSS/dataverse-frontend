@@ -21,7 +21,7 @@ const multipleNotificationSubset = {
 }
 const paginationNotificationSubset = {
   totalItemCount: 25,
-  items: NotificationMother.createMany(25)
+  items: NotificationMother.createMany(10)
 }
 
 const singleNotificationRepository = {
@@ -106,5 +106,25 @@ describe('multiple notifications', () => {
 
     cy.findByRole('button', { name: 'Clear All' }).click()
     cy.get('@deleteNotification').should('have.been.calledThrice')
+  })
+})
+
+describe('pagination', () => {
+  before(() => {
+    notificationsRepository.getAllNotificationsByUser = cy
+      .stub()
+      .resolves(paginationNotificationSubset)
+  })
+
+  it.only('navigates through pages', () => {
+    cy.mountAuthenticated(<NotificationsSection notificationRepository={notificationsRepository} />)
+
+    cy.get('[data-testid="notifications-page-indicator"]').contains('Page 1')
+
+    cy.get('[data-testid="notifications-next-page"]').click()
+    cy.get('[data-testid="notifications-page-indicator"]').contains('Page 2')
+
+    cy.get('[data-testid="notifications-prev-page"]').click()
+    cy.get('[data-testid="notifications-page-indicator"]').contains('Page 1')
   })
 })
