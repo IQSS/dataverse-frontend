@@ -8,7 +8,6 @@ import { PaginationControls } from '../../shared/pagination/PaginationControls'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
@@ -33,12 +32,7 @@ export function DatasetFiles({
     paginationInfo,
     criteria
   )
-  // wrapper that logs whenever pagination info is set
-  const handlePaginationInfoChange = (info: NotificationsPaginationInfo) => {
-    // eslint-disable-next-line no-console
-    console.log('setPaginationInfo called with', info)
-    setPaginationInfo(info)
-  }
+
   return (
     <>
       <FileCriteriaForm
@@ -57,7 +51,7 @@ export function DatasetFiles({
       />
       <PaginationControls
         initialPaginationInfo={paginationInfo}
-        onPaginationInfoChange={handlePaginationInfoChange}
+        onPaginationInfoChange={setPaginationInfo}
       />
     </>
   )
