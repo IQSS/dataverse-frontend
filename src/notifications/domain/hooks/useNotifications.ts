@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSession } from '@/sections/session/SessionContext'
 import { Notification } from '@/notifications/domain/models/Notification'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
+import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
 import { getAllNotificationsByUser } from '@/notifications/domain/useCases/getAllNotificationsByUser'
 
 const POLLING_NOTIFICATIONS_INTERVAL_TIME = 30_000
@@ -11,10 +12,13 @@ export function useNotifications(repository: NotificationRepository) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { user } = useSession()
+  const [pagination, setPagination] = useState<NotificationsPaginationInfo>(
+    new NotificationsPaginationInfo()
+  )
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const fetched = await getAllNotificationsByUser(repository)
+      const fetched = await getAllNotificationsByUser(repository, pagination)
       setError(null)
       setNotifications(fetched)
     } catch (err) {
@@ -67,6 +71,7 @@ export function useNotifications(repository: NotificationRepository) {
     error,
     refetch: fetchNotifications,
     markAsRead,
-    deleteMany
+    deleteMany,
+    pagination
   }
 }

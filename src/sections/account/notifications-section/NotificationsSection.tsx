@@ -1,3 +1,4 @@
+// TypeScript
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, CloseButton } from '@iqss/dataverse-design-system'
@@ -13,8 +14,9 @@ interface NotificationsSectionProps {
 
 export const NotificationsSection = ({ notificationRepository }: NotificationsSectionProps) => {
   const { t } = useTranslation('account')
-  const { notifications, isLoading, error, refetch, markAsRead, deleteMany } =
+  const { notifications, isLoading, error, refetch, markAsRead, deleteMany, pagination } =
     useNotifications(notificationRepository)
+
   const [readIds, setReadIds] = useState<number[]>([])
 
   useEffect(() => {
@@ -48,6 +50,8 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
     }
   }
 
+  const currentPage = pagination.page ?? 1
+
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
 
@@ -59,11 +63,37 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
             size="sm"
             variant="secondary"
             aria-label={t('notifications.clearAll')}
-            onClick={handleClearAll}>
+            onClick={handleClearAll}
+            disabled={isLoading}>
             {t('notifications.clearAll')}
           </Button>
         )}
+
+        <div className="ms-auto d-flex align-items-center gap-2">
+          <Button
+            size="sm"
+            variant="primary"
+            aria-label={t('notifications.prevPage')}
+            onClick={() => pagination.goToPage(Math.max(1, currentPage - 1))}
+            disabled={!pagination.hasPreviousPage || isLoading}
+            data-testid="notifications-prev-page">
+            {t('pagination.prev')}
+          </Button>
+          <span data-testid="notifications-page-indicator">
+            {t('pagination.page')} {currentPage}
+          </span>
+          <Button
+            size="sm"
+            variant="primary"
+            aria-label={t('notifications.nextPage')}
+            onClick={() => pagination.goToPage(currentPage + 1)}
+            disabled={!pagination.hasNextPage || isLoading}
+            data-testid="notifications-next-page">
+            {t('pagination.next')}
+          </Button>
+        </div>
       </div>
+
       {notifications.length > 0 ? (
         <div className="d-flex flex-column gap-2">
           {notifications.map((notification) => {
