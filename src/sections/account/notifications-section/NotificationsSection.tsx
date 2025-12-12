@@ -69,7 +69,6 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
   const pageSize = Math.max(1, paginationInfo?.pageSize ?? (notifications.length || 1))
   const start = notifications.length === 0 ? 0 : (page - 1) * pageSize + 1
   const end = notifications.length === 0 ? 0 : Math.min(start + notifications.length - 1, total)
-  const totalPages = Math.ceil(total / pageSize)
   const clearAllKey =
     total > pageSize ? 'notifications.clearAllOnThisPage' : 'notifications.clearAll'
 
@@ -80,11 +79,7 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
           direction="horizontal"
           gap={2}
           style={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-          {totalPages >= 2 ? (
-            <div>{t('notifications.displayingNotifications', { start, end, total })}</div>
-          ) : (
-            <div /> /* placeholder to keep spacing when there's no range text */
-          )}
+          <div>{t('notifications.displayingNotifications', { start, end, total })}</div>
 
           {notifications.length > 0 && (
             <Button

@@ -9,6 +9,7 @@ const createDatasetNotification = NotificationMother.create({
   datasetDisplayName: 'Climate Data',
   datasetPersistentIdentifier: 'doi:10.5072/FK2/CLIMATE',
   type: NotificationType.CREATE_DATASET,
+  displayAsRead: false,
   id: 1
 })
 const createDatasetNotificationSubset = {
@@ -49,7 +50,54 @@ const mockErrorRepository = {
   getAllNotificationsByUser: () => Promise.reject(new Error('Failed to fetch')),
   getUnreadNotificationsCount: () => Promise.resolve(1)
 }
+describe('multiple page notifications', () => {
+  before(() => {
+    notificationsRepository.getAllNotificationsByUser = cy
+      .stub()
+      .resolves(paginationNotificationSubset)
+  })
 
+  it('renders Pagination controls', () => {
+    cy.mountAuthenticated(<NotificationsSection notificationRepository={notificationsRepository} />)
+    cy.findByText('Displaying 1 - 10 of 25 Notifications').should('exist')
+    cy.findByRole('button', { name: 'Clear Notifications' }).should('exist')
+    cy.findByTestId('pagination-controls').should('exist')
+  })
+})
+
+describe('single page notifications', () => {
+  before(() => {
+    notificationsRepository.getAllNotificationsByUser = cy.stub().resolves({
+      totalItemCount: 3,
+      items: [
+        createDatasetNotification,
+        NotificationMother.create({ id: 2 }),
+        NotificationMother.create({ id: 3 })
+      ]
+    })
+  })
+
+  it('handles Clear All', () => {
+    cy.spy(multipleNotificationRepository, 'deleteNotification').as('deleteNotification')
+
+    cy.mountAuthenticated(
+      <NotificationsSection notificationRepository={multipleNotificationRepository} />
+    )
+
+    cy.contains('Climate Data was created').should('exist')
+
+    cy.findByRole('button', { name: 'Clear All' }).click()
+    cy.get('@deleteNotification').should('have.been.calledThrice')
+  })
+  it("doesn't display pagination controls", () => {
+    cy.mountAuthenticated(
+      <NotificationsSection notificationRepository={multipleNotificationRepository} />
+    )
+
+    cy.findByText('Displaying 1 - 3 of 3 Notifications').should('exist')
+    cy.findByTestId('pagination-controls').should('not.exist')
+  })
+})
 describe('NotificationsSection', () => {
   it('renders notifications and handles dismiss', () => {
     cy.spy(singleNotificationRepository, 'deleteNotification').as('deleteNotification')
@@ -80,51 +128,5 @@ describe('NotificationsSection', () => {
     cy.tick(2500)
 
     cy.get('@markAsRead').should('have.been.calledOnceWith', Cypress.sinon.match.number)
-  })
-})
-
-describe('multiple notifications', () => {
-  before(() => {
-    notificationsRepository.getAllNotificationsByUser = cy.stub().resolves({
-      totalItemCount: 3,
-      items: [
-        createDatasetNotification,
-        NotificationMother.create({ id: 2 }),
-        NotificationMother.create({ id: 3 })
-      ]
-    })
-  })
-
-  it('handles Clear All', () => {
-    cy.spy(multipleNotificationRepository, 'deleteNotification').as('deleteNotification')
-
-    cy.mountAuthenticated(
-      <NotificationsSection notificationRepository={multipleNotificationRepository} />
-    )
-
-    cy.contains('Climate Data was created').should('exist')
-
-    cy.findByRole('button', { name: 'Clear All' }).click()
-    cy.get('@deleteNotification').should('have.been.calledThrice')
-  })
-})
-
-describe('pagination', () => {
-  before(() => {
-    notificationsRepository.getAllNotificationsByUser = cy
-      .stub()
-      .resolves(paginationNotificationSubset)
-  })
-
-  it.only('navigates through pages', () => {
-    cy.mountAuthenticated(<NotificationsSection notificationRepository={notificationsRepository} />)
-
-    cy.get('[data-testid="notifications-page-indicator"]').contains('Page 1')
-
-    cy.get('[data-testid="notifications-next-page"]').click()
-    cy.get('[data-testid="notifications-page-indicator"]').contains('Page 2')
-
-    cy.get('[data-testid="notifications-prev-page"]').click()
-    cy.get('[data-testid="notifications-page-indicator"]').contains('Page 1')
   })
 })

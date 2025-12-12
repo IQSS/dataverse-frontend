@@ -65,7 +65,7 @@ export function PaginationControls({
   return (
     <Row className={styles.row}>
       <Col md="auto">
-        <div className={styles.container}>
+        <div data-testid="pagination-controls" className={styles.container}>
           <Pagination>
             <Pagination.First
               onClick={() => goToPage(1)}
