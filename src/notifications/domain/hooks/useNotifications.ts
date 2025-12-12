@@ -17,34 +17,37 @@ export function useNotifications(
   const [error, setError] = useState<string | null>(null)
   const { user } = useSession()
 
-  const fetchNotifications = useCallback(async () => {
-    try {
-      setIsLoading(true)
-      const fetched = await getAllNotificationsByUser(repository, paginationInfo)
-      setError(null)
-      setPaginationInfo(
-        new NotificationsPaginationInfo(
-          paginationInfo.page,
-          paginationInfo.pageSize,
-          fetched.totalItemCount
+  const fetchNotifications = useCallback(
+    async (silent = false) => {
+      if (!silent) setIsLoading(true)
+      try {
+        const fetched = await getAllNotificationsByUser(repository, paginationInfo)
+        setError(null)
+        setPaginationInfo(
+          new NotificationsPaginationInfo(
+            paginationInfo.page,
+            paginationInfo.pageSize,
+            fetched.totalItemCount
+          )
         )
-      )
-      setNotifications(fetched.items)
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to fetch notifications'
-      setError(message)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [repository, paginationInfo.page, paginationInfo.pageSize])
+        setNotifications(fetched.items)
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to fetch notifications'
+        setError(message)
+      } finally {
+        if (!silent) setIsLoading(false)
+      }
+    },
+    [repository, paginationInfo.page, paginationInfo.pageSize]
+  )
 
   useEffect(() => {
     if (!user) return
 
-    void fetchNotifications()
+    void fetchNotifications(false)
 
     const interval = setInterval(() => {
-      void fetchNotifications()
+      void fetchNotifications(true)
     }, POLLING_NOTIFICATIONS_INTERVAL_TIME)
 
     return () => clearInterval(interval)
