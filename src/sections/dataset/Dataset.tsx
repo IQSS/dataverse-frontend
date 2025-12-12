@@ -20,6 +20,7 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
+import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
 import useCheckPublishCompleted from './useCheckPublishCompleted'
 import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
 import { QueryParamKey, Route } from '../Route.enum'
@@ -186,12 +187,23 @@ export function Dataset({
               <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
                 <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                   <div className={styles['tab-container']}>
-                    <DatasetFiles
-                      filesRepository={fileRepository}
-                      datasetPersistentId={dataset.persistentId}
-                      datasetVersion={dataset.version}
-                      datasetRepository={datasetRepository}
-                    />
+                    {filesTabInfiniteScrollEnabled ? (
+                      <DatasetFilesScrollable
+                        filesRepository={fileRepository}
+                        datasetPersistentId={dataset.persistentId}
+                        datasetVersion={dataset.version}
+                        canUpdateDataset={canUpdateDataset}
+                        key={dataset.version.publishingStatus}
+                        datasetRepository={datasetRepository}
+                      />
+                    ) : (
+                      <DatasetFiles
+                        filesRepository={fileRepository}
+                        datasetPersistentId={dataset.persistentId}
+                        datasetVersion={dataset.version}
+                        datasetRepository={datasetRepository}
+                      />
+                    )}
                   </div>
                 </Tabs.Tab>
 
