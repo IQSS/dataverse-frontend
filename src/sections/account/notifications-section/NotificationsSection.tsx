@@ -1,7 +1,7 @@
 // TypeScript
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, CloseButton } from '@iqss/dataverse-design-system'
+import { Button, CloseButton, Stack } from '@iqss/dataverse-design-system'
 import { getTranslatedNotification } from '@/sections/account/notifications-section/NotificationsHelper'
 import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 import styles from './NotificationsSection.module.scss'
@@ -32,12 +32,13 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
     const unreadIds = notifications
       .filter((n) => !n.displayAsRead && !readIds.includes(n.id))
       .map((n) => n.id)
-
+    console.log('in useEffect, unreadIds:', unreadIds)
     if (unreadIds.length > 0) {
       const timer = setTimeout(() => {
         void (async () => {
           await markAsRead(unreadIds)
           setReadIds((prev) => [...prev, ...unreadIds])
+          console.log('calling refetch after marking as read')
           await refetch()
           needsUpdateStore.setNeedsUpdate(true)
         })()
@@ -68,63 +69,68 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
   const pageSize = Math.max(1, paginationInfo?.pageSize ?? (notifications.length || 1))
   const start = notifications.length === 0 ? 0 : (page - 1) * pageSize + 1
   const end = notifications.length === 0 ? 0 : Math.min(start + notifications.length - 1, total)
+  const totalPages = Math.ceil(total / pageSize)
   const clearAllKey =
     total > pageSize ? 'notifications.clearAllOnThisPage' : 'notifications.clearAll'
 
   return (
     <section>
-      <div className="d-flex align-items-center gap-2 mb-2">
-        {notifications.length > 0 && (
-          <Button
-            size="sm"
-            variant="secondary"
-            aria-label={t('notifications.clearAll')}
-            onClick={handleClearAll}
-            disabled={isLoading}>
-            {t(clearAllKey)}
-          </Button>
-        )}
+      <Stack gap={3} style={{ width: '100%' }}>
+        <Stack
+          direction="horizontal"
+          gap={2}
+          style={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+          {totalPages >= 2 ? (
+            <div>{t('notifications.displayingNotifications', { start, end, total })}</div>
+          ) : (
+            <div /> /* placeholder to keep spacing when there's no range text */
+          )}
 
-        <div className="ms-auto d-flex align-items-center gap-2"></div>
-      </div>
+          {notifications.length > 0 && (
+            <Button
+              size="sm"
+              variant="secondary"
+              aria-label={t(clearAllKey)}
+              onClick={handleClearAll}
+              disabled={isLoading}>
+              {t(clearAllKey)}
+            </Button>
+          )}
+        </Stack>
 
-      {notifications.length > 0 ? (
-        <div className="d-flex flex-column gap-2">
-          <div
-            className={
-              styles['range-info']
-            }>{`Displaying ${start}-${end} of ${total} Notifications`}</div>
-
-          {notifications.map((notification) => {
-            const isRead = notification.displayAsRead || readIds.includes(notification.id)
-            return (
-              <div
-                className={`${styles['notification-item']} ${
-                  isRead ? styles['read'] : styles['unread']
-                }`}
-                key={notification.id}>
-                <div>
-                  {getTranslatedNotification(notification, t)}
-                  <span className={styles['timestamp']}>{notification.sentTimestamp}</span>
+        {notifications.length > 0 ? (
+          <div className="d-flex flex-column gap-2">
+            {notifications.map((notification) => {
+              const isRead = notification.displayAsRead || readIds.includes(notification.id)
+              return (
+                <div
+                  className={`${styles['notification-item']} ${
+                    isRead ? styles['read'] : styles['unread']
+                  }`}
+                  key={notification.id}>
+                  <div>
+                    {getTranslatedNotification(notification, t)}
+                    <span className={styles['timestamp']}>{notification.sentTimestamp}</span>
+                  </div>
+                  <CloseButton
+                    onClick={async () => {
+                      await handleDelete(notification.id)
+                    }}
+                    aria-label={t('notifications.dismiss')}
+                    data-testid={`dismiss-notification-${notification.id}`}
+                  />
                 </div>
-                <CloseButton
-                  onClick={async () => {
-                    await handleDelete(notification.id)
-                  }}
-                  aria-label={t('notifications.dismiss')}
-                  data-testid={`dismiss-notification-${notification.id}`}
-                />
-              </div>
-            )
-          })}
-          <PaginationControls
-            initialPaginationInfo={paginationInfo}
-            onPaginationInfoChange={setPaginationInfo}
-          />
-        </div>
-      ) : (
-        <div>{t('notifications.noNotifications')}</div>
-      )}
+              )
+            })}
+            <PaginationControls
+              initialPaginationInfo={paginationInfo}
+              onPaginationInfoChange={setPaginationInfo}
+            />
+          </div>
+        ) : (
+          <div>{t('notifications.noNotifications')}</div>
+        )}
+      </Stack>
     </section>
   )
 }
