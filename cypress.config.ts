@@ -35,6 +35,17 @@ export default defineConfig({
     }
   },
   env: {
+    backendUrl: 'http://localhost:8000',
+    oidcClientId: 'test',
+    oidcAuthorizationEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/auth',
+    oidcTokenEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/token',
+    oidcLogoutEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/logout',
+    oidcLocalStorageKeyPrefix: 'DV_',
+    languages: [
+      { code: 'en', name: 'English' },
+      { code: 'es', name: 'Español' }
+    ],
+    defaultLanguage: 'en',
     codeCoverage: {
       exclude: ['tests/**/*.*', '**/ErrorPage.tsx']
     }

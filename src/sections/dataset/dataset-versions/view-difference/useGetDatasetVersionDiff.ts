@@ -26,7 +26,7 @@ export const useGetDatasetVersionDiff = ({
   oldVersion,
   newVersion
 }: getDatasetVersionDiffProps): UseGetDatasetVersionDiff => {
-  const [differences, setDifferences] = useState<DatasetVersionDiff>()
+  const [differences, setDifferences] = useState<DatasetVersionDiff | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -43,7 +43,20 @@ export const useGetDatasetVersionDiff = ({
             : newVersion,
           true
         )
-        setDifferences(response)
+
+        if (response) {
+          const hasAnyChanges =
+            response.metadataChanges !== undefined ||
+            response.filesAdded !== undefined ||
+            response.filesRemoved !== undefined ||
+            response.fileChanges !== undefined ||
+            response.filesReplaced !== undefined ||
+            response.termsOfAccess !== undefined
+
+          setDifferences(hasAnyChanges ? response : undefined)
+        } else {
+          setDifferences(undefined)
+        }
         setError(null)
       } catch (err) {
         const errorMessage =

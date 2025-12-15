@@ -54,6 +54,7 @@
             <li><a href="#1-unit-tests-or-component-tests">Unit Tests or Component tests</a></li>
             <li><a href="#2-integration-tests">Integration Tests</a></li>
             <li><a href="#3-end-to-end-e2e-tests">End-to-End (e2e) Tests</a></li>
+            <li><a href="#mocking-runtime-configuration-in-tests">Mocking runtime configuration in tests</a></li>
             <li><a href="#patterns-and-conventions">Patterns and Conventions</a></li>
             <li><a href="#continuous-integration-ci">Continuous Integration (CI)</a></li>
             <li><a href="#test-coverage">Test Coverage</a></li>
@@ -135,12 +136,6 @@ cd packages/design-system && npm run build
 ```
 
 **Running &amp; Building the App:**
-
-Set up your environment file.
-
-```bash
-cp .env.example .env
-```
 
 Run the app in the development mode. Open [http://localhost:5173][dv_app_localhost_build_url] to view it in your browser.
 
@@ -826,11 +821,82 @@ describe('Create Dataset', () => {
 
 </details>
 
-> **Note:** Some end-to-end (e2e) tests are failing in local development environments despite passing in GitHub Actions.
-> This discrepancy appears to be due to variations in machine resources.
->
-> We need to investigate and potentially optimize several aspects of our local setup. Check the issue
-> [here](https://github.com/IQSS/dataverse-frontend/issues/371).
+### Mocking runtime configuration in tests
+
+The SPA reads its runtime configuration from `window.__APP_CONFIG__` in `src/config.ts` file, which is provided by `public/config.js`.
+In Cypress tests we bootstrap a test-safe config and allow you to override any field per test.
+
+#### Component (unit) tests: override with Cypress.env
+
+Component tests automatically get a runtime config via the bootstrap file; you only need to set `env` on a per-test basis to customize values.
+
+Example: overriding languages for a component test
+
+```ts
+// tests/component/sections/layout/header/LanguageSwitcher.spec.tsx
+it(
+  'renders language options correctly when more than one language is configured',
+  {
+    env: {
+      languages: [
+        { code: 'en', name: 'English' },
+        { code: 'es', name: 'Español' },
+        { code: 'it', name: 'Italiano' }
+      ]
+    }
+  },
+  () => {
+    cy.customMount(<LanguageSwitcher />)
+    cy.get('#language-switcher-dropdown').click()
+    cy.findByText('English').should('exist')
+    cy.findByText('Español').should('exist')
+    cy.findByText('Italiano').should('exist')
+  }
+)
+```
+
+#### E2E tests: intercept public/config.js
+
+In e2e tests, the app fetches `public/config.js`. Intercept that request and respond with a body built from your `Cypress.env()` settings using the provided helper.
+
+```ts
+// Example e2e spec
+import { buildConfigJsBody } from '../tests/support/bootstrapAppConfig'
+
+it(
+  'test description',
+  {
+    env: {
+      languages: [
+        { code: 'en', name: 'English' },
+        { code: 'it', name: 'Italiano' }
+      ],
+      defaultLanguage: 'en'
+    }
+  },
+  () => {
+    // We intercept config.js request and the body will read from the updated Cypress.env() defined in this test above.
+    cy.intercept(
+      { method: 'GET', url: 'config.js' },
+      {
+        statusCode: 200,
+        headers: { 'content-type': 'application/javascript' },
+        body: buildConfigJsBody()
+      }
+    )
+
+    cy.visit('/spa/')
+
+    // Assertions that rely on your overridden config
+    cy.findByText('English').should('exist')
+    cy.findByText('Italiano').should('exist')
+  }
+)
+```
+
+Notes
+
+- If you don't intercept `config.js` in e2e tests, the app will use the real file from `public/config.js` and ignore your `Cypress.env()` overrides.
 
 ### Patterns and Conventions
 
@@ -944,15 +1010,14 @@ However, we prioritize user-centric testing over coverage numbers.
 - **Coverage Threshold:** We aim for a test coverage of 95% for the unit tests. This threshold is set in the `.nycrc.json` file.
 - **Coverage Reports:** We use [nyc](https://www.npmjs.com/package/nyc) to generate coverage reports, which are available
   in the `coverage` folder after running the tests. These reports are also published to [Coveralls](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
-  with every pull request and merge. The coverage badge is displayed at the top of the README.
+  with every pull request and merge. The coverage badge is displayed at the top of the README. See "include" and "exclude" in `.nycrc.json` to learn about which source files are included in coverage reports.
 - **Tests included in the coverage:** We include all unit tests in the coverage report.
 
 #### How to run the code coverage
 
-To generate the code coverage, you first need to run the tests with the `test:unit` script. After running the tests, you
-can check the coverage with the `test:coverage` script.
+To generate the code coverage, you first need to run the tests with the `test:unit` script. This can take a while! After running the tests, you can check the coverage with the `test:coverage` script. This will simply report the total coverage.
 
-If you want to see the coverage report in the browser, you can open the `coverage/lcov-report/index.html` file in the browser.
+To see which lines are not covered, you can open the coverage report in the browser: `coverage/lcov-report/index.html`.
 
 ```bash
 # root project directory
@@ -964,7 +1029,11 @@ npm run test:unit
 # Check the coverage
 
 npm run test:coverage
+
+# See detailed report at coverage/lcov-report/index.html
 ```
+
+Note that it's easy for the `lcov-report` report to get overwritten. For example, running any test with `npm run cy:open-unit` will overwrite it. For this reason you might want to copy the `lcov-report` directory elsewhere for safe keeping. That’s mainly useful for debugging previous coverage results and improving them.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
@@ -1044,84 +1113,6 @@ application running on Payara, which can potentially be a Dataverse backend. Thi
 path included will redirect to the frontend application.
 
 </details>
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-<br>
-
-## Publishing the Design System
-
-The Design System is published to the npm Package Registry. To publish a new version, follow these steps:
-
-1. **Update the version**
-
-   Update the version running the lerna command:
-
-   ```shell
-   lerna version --no-push
-   ```
-
-   This command will ask you for the new version and will update the `package.json` files and create a new commit with the changes.
-
-2. **Review the auto generated CHANGELOG.md**
-
-   The lerna command will generate a new `CHANGELOG.md` file with the changes for the new version. Review the changes and make sure that the file is correct.
-
-   If it looks good, you can push the changes to the repository.
-
-   ```shell
-   git push && git push --tags
-   ```
-
-   Optional:
-
-   If you need to make any changes to the `CHANGELOG.md` file, you can do it manually.
-
-   After manually updating the `CHANGELOG.md` file, you can commit the changes.
-
-   ```shell
-   git add .
-   git commit --amend --no-edit
-   git push --force && git push --tags --force
-   ```
-
-   This command will amend the lerna commit and push the changes to the repository.
-
-3. **Review the new tag in GitHub**
-
-   After pushing the changes, you can review the new tag in the [GitHub repository](https://github.com/IQSS/dataverse-frontend/tags).
-
-   The tag should be created with the new version.
-
-4. **Publish the package**
-
-   After the version is updated, you can publish the package running the lerna command:
-
-   ```shell
-   lerna publish from-package
-   ```
-
-   This command will publish the package to the npm registry.
-
-   Remember that you need a valid npm token to publish the packages.
-
-   Get a new token from the npm website and update the `.npmrc` file with the new token.
-
-   Open the `.npmrc` file and replace `YOUR_NPM_TOKEN ` with your actual npm token.
-
-   ⚠️ Please ensure that any lines registering the `@iqss` scope with the GitHub Packages registry are commented out. This is important because otherwise, the package would be published there instead of npm.
-
-   ```plaintext
-   legacy-peer-deps=true
-
-    //npm.pkg.github.com/:_authToken=YOUR_NPM_TOKEN
-    @iqss:registry=https://npm.pkg.github.com/
-   ```
-
-5. **Review the new version in the npm registry**
-
-   After publishing the packages, you can review the new version in the [npm registry](https://www.npmjs.com/package/@iqss/dataverse-design-system?activeTab=versions).
-
-   The new version should be available in the npm registry.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>

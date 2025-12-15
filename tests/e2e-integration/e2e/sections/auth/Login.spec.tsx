@@ -1,6 +1,8 @@
-import { OIDC_AUTH_CONFIG } from '@/config'
 import { Utils } from '@/shared/helpers/Utils'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
+import { requireAppConfig } from '@/config'
+
+const appConfig = requireAppConfig()
 
 describe('Login', () => {
   it('successfully log in with a user that exists in dataverse and not in the OIDC provider', () => {
@@ -16,7 +18,7 @@ describe('Login', () => {
       .should('eq', `${Cypress.config().baseUrl as string}/spa`)
       .then(() => {
         const token = Utils.getLocalStorageItem<string>(
-          `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+          `${appConfig.oidc.localStorageKeyPrefix}token`
         )
 
         expect(token).to.not.be.empty

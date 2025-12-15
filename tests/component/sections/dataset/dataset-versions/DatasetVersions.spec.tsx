@@ -1,13 +1,17 @@
 import { DatasetVersions } from '@/sections/dataset/dataset-versions/DatasetVersions'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import {
+  DatasetVersionSummaryInfo,
+  DatasetVersionSummarySubset
+} from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
+import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 import { DatasetVersionsSummariesMother } from '../../../dataset/domain/models/DatasetVersionsSummariesMother'
 import { DatasetVersionDiffMother } from '../../../dataset/domain/models/DatasetVersionDiffMother'
 
 const datasetsRepository: DatasetRepository = {} as DatasetRepository
 
-const versionSummaryInfo: DatasetVersionSummaryInfo[] = DatasetVersionsSummariesMother.create()
+const versionSummariesSubset = DatasetVersionsSummariesMother.create()
 
 const versionSummaryInfoDraft: DatasetVersionSummaryInfo[] = [
   {
@@ -34,11 +38,16 @@ const versionSummaryInfoDraft: DatasetVersionSummaryInfo[] = [
     publishedOn: ''
   }
 ]
+const versionSummaryInfoDeaccessioned = DatasetVersionsSummariesMother.createDeaccessioned()
+
 const datasetVersionDiff: DatasetVersionDiff = DatasetVersionDiffMother.create()
 
 describe('DatasetVersions', () => {
   it('should render the dataset versions table without view differences button and checkbox', () => {
-    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfoDraft)
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves({
+      summaries: versionSummaryInfoDraft,
+      totalCount: versionSummaryInfoDraft.length
+    })
     cy.findByTestId('dataset-versions-table').should('exist')
 
     cy.contains('th', 'Dataset Version').should('exist')
@@ -53,6 +62,53 @@ describe('DatasetVersions', () => {
     cy.findByText('DRAFT').should('exist').and('have.attr', 'href')
   })
 
+  it('should not show view detail buttons if the version is deaccessioned', () => {
+    cy.customMount(
+      <DatasetVersions
+        datasetId={'datasetId'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'1.0'}
+        canUpdateDataset={true}
+        isInView
+      />
+    )
+    datasetsRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves(versionSummaryInfoDeaccessioned)
+
+    cy.findByTestId('dataset-versions-table').should('exist')
+    cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('not.exist')
+  })
+
+  it('should show view detail buttons if previous version is deaccessioned', () => {
+    cy.customMount(
+      <DatasetVersions
+        datasetId={'datasetId'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'1.0'}
+        canUpdateDataset={true}
+        isInView
+      />
+    )
+    const versionSummaryInfoNoPreviousVersion = [
+      {
+        id: 12,
+        versionNumber: '5.0',
+        summary: {},
+        contributors: 'Test ',
+        publishedOn: ''
+      },
+      ...versionSummaryInfoDeaccessioned.summaries
+    ]
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves({
+      summaries: versionSummaryInfoNoPreviousVersion,
+      totalCount: versionSummaryInfoNoPreviousVersion.length
+    })
+
+    cy.findByTestId('dataset-versions-table').should('exist')
+    cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('exist')
+  })
+
   beforeEach(() => {
     cy.customMount(
       <DatasetVersions
@@ -63,7 +119,7 @@ describe('DatasetVersions', () => {
         isInView
       />
     )
-    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummariesSubset)
     datasetsRepository.getVersionDiff = cy.stub().resolves(datasetVersionDiff)
   })
 
@@ -80,7 +136,7 @@ describe('DatasetVersions', () => {
 
     cy.findByRole('button', { name: 'View Differences' }).should('exist')
 
-    versionSummaryInfo.forEach((version) => {
+    versionSummariesSubset.summaries.forEach((version) => {
       cy.contains('td', version.versionNumber).should('exist')
       cy.contains('td', version.contributors).should('exist')
       if (version.publishedOn) {
@@ -101,7 +157,7 @@ describe('DatasetVersions', () => {
   })
 
   it('should render the dataset versions table without view differences button if less than 2 versions being selected', () => {
-    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummariesSubset)
 
     cy.findByTestId('dataset-versions-table').should('exist')
     cy.contains('th', 'Dataset Version').should('exist')
@@ -120,14 +176,14 @@ describe('DatasetVersions', () => {
   })
 
   it('should not show view detail buttons if there is only one version', () => {
-    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummariesSubset)
 
     cy.findByTestId('dataset-versions-table').should('exist')
     cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('exist').click()
   })
 
   it('should open dataset versions detail modal', () => {
-    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummariesSubset)
 
     cy.findByTestId('dataset-versions-table').should('exist')
     cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('exist').click()
@@ -135,7 +191,7 @@ describe('DatasetVersions', () => {
   })
 
   it('should close dataset versions detail modal', () => {
-    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummariesSubset)
 
     cy.findByTestId('dataset-versions-table').should('exist')
     cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('exist').click()
@@ -158,7 +214,9 @@ describe('DatasetVersions', () => {
   })
 
   it('should render loading skeleton if the dataset version is loading', () => {
-    datasetsRepository.getDatasetVersionsSummaries = cy.stub().returns(new Promise(() => {}))
+    datasetsRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .returns(new Promise<DatasetVersionSummarySubset>(() => {}))
     cy.customMount(
       <DatasetVersions
         datasetId={'datasetId'}
@@ -247,5 +305,97 @@ describe('DatasetVersions', () => {
 
     cy.get('input[type="checkbox"]').first().should('be.disabled')
     cy.findByText('4.0').should('exist').and('not.have.attr', 'href')
+  })
+
+  it('computes newVersionNumber from second element and oldVersionNumber from first element', () => {
+    const ascendingVersions: DatasetVersionSummaryInfo[] = [
+      { id: 1, versionNumber: '1.0', contributors: '' },
+      { id: 2, versionNumber: '2.0', contributors: '' },
+      { id: 3, versionNumber: '3.0', contributors: '' }
+    ]
+    datasetsRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves({ summaries: ascendingVersions, totalCount: ascendingVersions.length })
+    const diffStub = (datasetsRepository.getVersionDiff = cy
+      .stub()
+      .callsFake((pid: string, oldV: string, newV: string) =>
+        Promise.resolve({
+          oldVersion: {
+            versionNumber: oldV,
+            lastUpdatedDate: '2025-01-01T00:00:00Z',
+            versionState: DatasetVersionState.RELEASED
+          },
+          newVersion: {
+            versionNumber: newV,
+            lastUpdatedDate: '2025-01-02T00:00:00Z',
+            versionState: DatasetVersionState.RELEASED
+          }
+        })
+      ))
+
+    cy.customMount(
+      <DatasetVersions
+        datasetId={'pid'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'3.0'}
+        canUpdateDataset={true}
+        isInView
+      />
+    )
+
+    cy.findAllByTestId('select-checkbox').eq(0).check().should('be.checked')
+    cy.findAllByTestId('select-checkbox').eq(1).check().should('be.checked')
+
+    cy.findByRole('button', { name: 'View Differences' }).click()
+    cy.findByRole('dialog').should('exist')
+
+    // Assert ordering: oldVersion '1.0', newVersion '2.0'
+    cy.wrap(diffStub).should('have.been.calledWith', 'pid', '1.0', '2.0', true)
+  })
+
+  it('computes newVersionNumber from first element and oldVersionNumber from second element (opposite branch)', () => {
+    const descendingVersions: DatasetVersionSummaryInfo[] = [
+      { id: 5, versionNumber: '5.0', contributors: '' },
+      { id: 4, versionNumber: '4.0', contributors: '' },
+      { id: 3, versionNumber: '3.0', contributors: '' }
+    ]
+    datasetsRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves({ summaries: descendingVersions, totalCount: descendingVersions.length })
+    const diffStub = (datasetsRepository.getVersionDiff = cy
+      .stub()
+      .callsFake((pid: string, oldV: string, newV: string) =>
+        Promise.resolve({
+          oldVersion: {
+            versionNumber: oldV,
+            lastUpdatedDate: '2025-01-01T00:00:00Z',
+            versionState: DatasetVersionState.RELEASED
+          },
+          newVersion: {
+            versionNumber: newV,
+            lastUpdatedDate: '2025-01-02T00:00:00Z',
+            versionState: DatasetVersionState.RELEASED
+          }
+        })
+      ))
+
+    cy.customMount(
+      <DatasetVersions
+        datasetId={'pid'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'5.0'}
+        canUpdateDataset={true}
+        isInView
+      />
+    )
+
+    cy.findAllByTestId('select-checkbox').eq(0).check().should('be.checked')
+    cy.findAllByTestId('select-checkbox').eq(1).check().should('be.checked')
+
+    cy.findByRole('button', { name: 'View Differences' }).click()
+    cy.findByRole('dialog').should('exist')
+
+    // Assert ordering: oldVersion '4.0', newVersion '5.0'
+    cy.wrap(diffStub).should('have.been.calledWith', 'pid', '4.0', '5.0', true)
   })
 })

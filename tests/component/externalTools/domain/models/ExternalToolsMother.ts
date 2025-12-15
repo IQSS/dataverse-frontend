@@ -1,5 +1,4 @@
-import { ToolScope, ToolType } from '@/externalTools/domain/models/ExternalTool'
-import { ExternalTool } from '@iqss/dataverse-client-javascript'
+import { ExternalTool, ToolScope, ToolType } from '@/externalTools/domain/models/ExternalTool'
 
 export class ExternalToolsMother {
   static createList(props?: Partial<ExternalTool>): ExternalTool[] {

@@ -73,8 +73,10 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Share' }).should('exist')
   })
 
-  it('should not render Share button if the the dataset is deaccessioned and user has no edit permission', () => {
-    const dataset = DatasetMother.createDeaccessionedwithNoEditPermission()
+  it('should not render Share button if the the dataset is deaccessioned', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDeaccessioned()
+    })
     cy.mountAuthenticated(
       <DatasetActionButtons
         dataset={dataset}

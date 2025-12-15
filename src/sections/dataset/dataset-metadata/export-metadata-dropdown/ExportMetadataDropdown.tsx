@@ -4,7 +4,7 @@ import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-syste
 import { useGetAvailableDatasetMetadataExportFormats } from '@/info/domain/hooks/useGetAvailableDatasetMetadataExportFormats'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { QueryParamKey } from '@/sections/Route.enum'
-import { DATAVERSE_BACKEND_URL } from '@/config'
+import { requireAppConfig } from '@/config'
 
 interface ExportMetadataDropdownProps {
   datasetPersistentId: string
@@ -23,6 +23,8 @@ export const ExportMetadataDropdown = ({
   anonymizedView,
   dataverseInfoRepository
 }: ExportMetadataDropdownProps) => {
+  const appConfig = requireAppConfig()
+
   const { t } = useTranslation('shared')
   const { datasetMetadataExportFormats, isLoadingExportFormats, errorGetExportFormats } =
     useGetAvailableDatasetMetadataExportFormats({ dataverseInfoRepository })
@@ -50,7 +52,7 @@ export const ExportMetadataDropdown = ({
       {Object.entries(datasetMetadataExportFormats).map(([key, exportFormat]) => {
         if (!exportFormat.isVisibleInUserInterface) return null
 
-        const href = `${DATAVERSE_BACKEND_URL}/api/datasets/export?exporter=${key}&${
+        const href = `${appConfig.backendUrl}/api/datasets/export?exporter=${key}&${
           QueryParamKey.PERSISTENT_ID
         }=${encodeURIComponent(datasetPersistentId)}`
 

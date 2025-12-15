@@ -125,8 +125,7 @@ async function loadNextItems(
     searchCriteria.roleIds,
     searchCriteria.itemTypes,
     publicationStatuses,
-    paginationInfo.pageSize,
-    paginationInfo.page,
+    paginationInfo,
     searchCriteria.searchText,
     searchCriteria.otherUserName
   )

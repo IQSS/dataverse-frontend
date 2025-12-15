@@ -36,7 +36,17 @@
       "removeCurrentStatus": "Remove Current Status"
     },
     "linkDataset": {
-      "title": "Link Dataset"
+      "title": "Link Dataset",
+      "helper": "Choose which of your collections you would like to link this dataset to.",
+      "linkedCollections": "Note: This dataset is already linked to the following collections:",
+      "save": "Link",
+      "success": "<wrapper>Dataset from {{parentCollection}} has been successfully linked to <a>{{linkingCollectionName}}</a></wrapper>"
+    },
+    "unlinkDataset": {
+      "title": "Unlink Dataset",
+      "helper": "Choose which of your collections you would like to unlink this dataset from.",
+      "save": "Unlink",
+      "success": "<wrapper>Dataset unlinked from <a>{{unlinkingCollectionName}}</a></wrapper>"
     },
     "editDataset": {
       "title": "Edit Dataset",
@@ -247,9 +257,8 @@
     "type": "Type",
     "description": "Description",
     "access": "Access",
-    "needTwoVersions": "Please select two versions to view the differences.",
     "viewDetails": "View Details",
-    "replace": "File Replace",
+    "fileReplaced": "File Replaced",
     "termsOfUseandAccess": "Terms of Use/Access",
     "deaccessionedReason": "Deaccessioned Reason",
     "error": "Error on loading dataset versions"
@@ -260,6 +269,8 @@
     "firstDraft": "This is a draft version.",
     "versionDeaccessioned": "Deaccessioned Reason: The research article has been retracted.",
     "previousVersionDeaccessioned": "Due to the previous version being deaccessioned, there are no difference notes available for this published version.",
+    "thisIsADraftVersion": "This is a draft version.",
+    "noVersionDifferences": "There are no differences between version {{oldVersion}} and version {{newVersion}}.",
     "citationMetadata": {
       "changed": "Changed",
       "added": "{{count}} Added"
@@ -273,7 +284,7 @@
       "added": "Added: {{count}}",
       "removed": "Removed: {{count}}",
       "replaced": "Replaced: {{count}}",
-      "fileMetadataChanged": "File Metadata Changed: {{count}}",
+      "fileMetadataChanged": "Metadata Changed: {{count}}",
       "variableMetadataChanged": "Variable Metadata Changed: {{count}}"
     },
     "termsAccessChanged": "Changed"
@@ -290,12 +301,12 @@
     },
     "downloads": {
       "count": {
-        "default_zero": "{{count}} Downloads",
-        "default_one": "{{count}} Download",
-        "default_other": "{{count}} Downloads",
-        "preMDC_zero": "{{count}} Downloads pre-MDC",
-        "preMDC_one": "{{count}} Download pre-MDC",
-        "preMDC_other": "{{count}} Downloads pre-MDC"
+        "default_zero": "{{formattedCount}} Downloads",
+        "default_one": "{{formattedCount}} Download",
+        "default_other": "{{formattedCount}} Downloads",
+        "preMDC_zero": "{{formattedCount}} Downloads pre-MDC",
+        "preMDC_one": "{{formattedCount}} Download pre-MDC",
+        "preMDC_other": "{{formattedCount}} Downloads pre-MDC"
       },
       "defaultTip": "Total aggregated downloads of files in this dataset.",
       "preMakeDataCountTip": "Downloads prior to enabling MDC. Counts do not have the same filtering and detail as MDC metrics.",

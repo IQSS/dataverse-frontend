@@ -10,6 +10,7 @@
   padding: 6px 10px;
   border: 1px solid $dv-dataset-border-color;
   border-radius: 4px;
+  word-break: break-word;
 }
 
 .card-header-container {
@@ -35,8 +36,12 @@
   }
 
   .top-right-icon {
+    display: flex;
+    gap: 2px;
     height: fit-content;
+    color: $dv-dataset-border-color;
     font-size: 1.3em;
+    line-height: 1.1;
 
     & span {
       margin-right: 0;

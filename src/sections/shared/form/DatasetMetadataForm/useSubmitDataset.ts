@@ -6,7 +6,6 @@ import { DatasetRepository } from '../../../../dataset/domain/repositories/Datas
 import { createDataset } from '../../../../dataset/domain/useCases/createDataset'
 import { updateDatasetMetadata } from '../../../../dataset/domain/useCases/updateDatasetMetadata'
 import { MetadataFieldsHelper, type DatasetMetadataFormValues } from './MetadataFieldsHelper'
-import { getValidationFailedFieldError } from '../../../../metadata-block-info/domain/models/fieldValidations'
 import { type DatasetMetadataFormMode } from '.'
 import { QueryParamKey, Route } from '../../../Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '../../../../dataset/domain/models/Dataset'
@@ -39,7 +38,7 @@ export function useSubmitDataset(
   datasetRepository: DatasetRepository,
   onSubmitErrorCallback: () => void,
   datasetPersistentID?: string,
-  datasetInternalVersionNumber?: number
+  datasetLastUpdateTime?: string
 ): UseSubmitDatasetReturnType {
   const navigate = useNavigate()
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
@@ -74,7 +73,7 @@ export function useSubmitDataset(
         .catch((err) => {
           const errorMessage =
             err instanceof Error && err.message
-              ? getValidationFailedFieldError(err.message) ?? err.message
+              ? MetadataFieldsHelper.getValidationFailedFieldError(err.message) ?? err.message
               : t('validationAlert.content')
 
           setSubmitError(errorMessage)
@@ -89,7 +88,7 @@ export function useSubmitDataset(
         datasetRepository,
         currentEditedDatasetPersistentID,
         formattedFormValues,
-        datasetInternalVersionNumber as number
+        datasetLastUpdateTime as string
       )
         .then(() => {
           setSubmitError(null)
@@ -104,7 +103,7 @@ export function useSubmitDataset(
         .catch((err) => {
           const errorMessage =
             err instanceof Error && err.message
-              ? getValidationFailedFieldError(err.message) ?? err.message
+              ? MetadataFieldsHelper.getValidationFailedFieldError(err.message) ?? err.message
               : t('validationAlert.content')
 
           setSubmitError(errorMessage)

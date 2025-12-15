@@ -26,6 +26,17 @@ export function DatasetViewDetailButton({
     newVersion: newVersionNumber
   })
 
+  if (!differences) {
+    return (
+      <span>
+        {t('datasetVersionSummary.noVersionDifferences', {
+          oldVersion: oldVersionNumber,
+          newVersion: newVersionNumber
+        })}
+      </span>
+    )
+  }
+
   return (
     <>
       <Button variant="link" onClick={() => setShowModal(true)} style={{ padding: 0 }}>

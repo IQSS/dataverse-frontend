@@ -12,4 +12,5 @@ export interface CollectionItemTypePreview {
   parentCollectionName: string
   parentCollectionAlias: string
   userRoles?: string[]
+  isLinked?: boolean
 }

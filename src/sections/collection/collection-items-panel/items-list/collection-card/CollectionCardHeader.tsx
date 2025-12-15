@@ -1,3 +1,4 @@
+import { Link45deg } from 'react-bootstrap-icons'
 import { Badge, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
 import { Route } from '@/sections/Route.enum'
 import { CollectionItemTypePreview } from '@/collection/domain/models/CollectionItemTypePreview'
@@ -42,6 +43,9 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
 
       <div className={styles['top-right-icon']}>
         <Icon name={IconName.COLLECTION} />
+        {collectionPreview.isLinked && (
+          <Link45deg size={26} title="linked" data-testid="linked-collection-icon" />
+        )}
       </div>
     </header>
   )

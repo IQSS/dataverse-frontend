@@ -128,6 +128,10 @@ const datasetVersionDiff: DatasetVersionDiff | undefined = {
 }
 
 describe('DatasetVersions', () => {
+  beforeEach(() => {
+    cy.viewport('macbook-15')
+  })
+
   it('should render a table with neccessary information for comparison of two versions', () => {
     cy.customMount(
       <VersionDetailModal
@@ -253,5 +257,151 @@ describe('DatasetVersions', () => {
 
     cy.get('table').should('not.exist')
     cy.findByRole('button', { name: 'Cancel' }).should('be.disabled')
+  })
+
+  it('should render added files', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={{
+          ...datasetVersionDiff,
+          filesRemoved: [],
+          filesAdded: datasetVersionDiff.filesAdded,
+          fileChanges: [],
+          filesReplaced: []
+        }}
+      />
+    )
+
+    datasetVersionDiff.filesAdded?.forEach((file) => {
+      cy.findByTestId(`file-added-row-${file.fileId}`).should('exist')
+    })
+  })
+
+  it('should render removed files', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={{
+          ...datasetVersionDiff,
+          filesRemoved: datasetVersionDiff.filesRemoved,
+          filesAdded: [],
+          fileChanges: [],
+          filesReplaced: []
+        }}
+      />
+    )
+
+    datasetVersionDiff.filesRemoved?.forEach((file) => {
+      cy.findByTestId(`file-removed-row-${file.fileId}`).should('exist')
+    })
+  })
+
+  it('should render changed files', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={{
+          ...datasetVersionDiff,
+          filesRemoved: [],
+          filesAdded: [],
+          fileChanges: datasetVersionDiff.fileChanges,
+          filesReplaced: []
+        }}
+      />
+    )
+
+    datasetVersionDiff.fileChanges?.forEach((file) => {
+      cy.findByTestId(`file-changed-row-${file.fileId}`).should('exist')
+    })
+  })
+
+  it('should render replaced files', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={{
+          ...datasetVersionDiff,
+          filesReplaced: [
+            {
+              oldFile: {
+                fileName: 'foo',
+                MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+                type: 'text/plain',
+                fileId: 40,
+                description: '',
+                isRestricted: false,
+                filePath: '',
+                tags: [],
+                categories: []
+              },
+              newFile: {
+                fileName: 'bar',
+                MD5: '53d3d10e00812f7c55e0c9c3935f3732',
+                type: 'text/plain',
+                fileId: 41,
+                description: '',
+                isRestricted: false,
+                filePath: '',
+                tags: [],
+                categories: []
+              }
+            }
+          ]
+        }}
+      />
+    )
+
+    cy.findAllByText('File Replaced').should('have.length', 1)
+
+    datasetVersionDiff.filesReplaced?.forEach((file) => {
+      cy.findByTestId(`file-replaced-row-${file.newFile.fileId}`).should('exist')
+    })
+  })
+
+  it('should show Access Granted for restricted files', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={{
+          ...datasetVersionDiff,
+          fileChanges: [
+            {
+              fileName: 'blob (2)',
+              md5: '53d3d10e00812f7c55e0c9c3935f3769',
+              fileId: 40,
+              changed: [
+                {
+                  fieldName: 'isRestricted',
+                  oldValue: 'false',
+                  newValue: 'true'
+                }
+              ]
+            }
+          ]
+        }}
+      />
+    )
+
+    cy.findByTestId(`file-changed-row-40`).find('td').eq(1).should('have.text', 'Access: Public')
+    cy.findByTestId(`file-changed-row-40`)
+      .find('td')
+      .eq(2)
+      .should('have.text', 'Access: Restricted')
   })
 })
