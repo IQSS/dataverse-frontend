@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSession } from '@/sections/session/SessionContext'
 import { Notification } from '@/notifications/domain/models/Notification'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
@@ -17,18 +17,23 @@ export function useNotifications(
   const [error, setError] = useState<string | null>(null)
   const { user } = useSession()
 
+  const { page, pageSize } = paginationInfo
+
+  const setPaginationInfoRef = useRef(setPaginationInfo)
+  useEffect(() => {
+    setPaginationInfoRef.current = setPaginationInfo
+  }, [setPaginationInfo])
+
   const fetchNotifications = useCallback(
     async (silent = false) => {
       if (!silent) setIsLoading(true)
       try {
-        const fetched = await getAllNotificationsByUser(repository, paginationInfo)
+        const currentPagination = new NotificationsPaginationInfo(page, pageSize)
+        const fetched = await getAllNotificationsByUser(repository, currentPagination)
         setError(null)
-        setPaginationInfo(
-          new NotificationsPaginationInfo(
-            paginationInfo.page,
-            paginationInfo.pageSize,
-            fetched.totalItemCount
-          )
+
+        setPaginationInfoRef.current(
+          new NotificationsPaginationInfo(page, pageSize, fetched.totalItemCount)
         )
         setNotifications(fetched.items)
       } catch (err) {
@@ -38,7 +43,7 @@ export function useNotifications(
         if (!silent) setIsLoading(false)
       }
     },
-    [repository, paginationInfo.page, paginationInfo.pageSize]
+    [repository, page, pageSize]
   )
 
   useEffect(() => {
@@ -51,7 +56,7 @@ export function useNotifications(
     }, POLLING_NOTIFICATIONS_INTERVAL_TIME)
 
     return () => clearInterval(interval)
-  }, [fetchNotifications, user, paginationInfo.page, paginationInfo.pageSize])
+  }, [fetchNotifications, user])
 
   const markAsRead = async (ids: number[]) => {
     setNotifications((prev) =>
