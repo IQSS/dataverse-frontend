@@ -34,10 +34,6 @@
   }
 
   .content {
-    display: -webkit-box;
-    -webkit-line-clamp: 8;
-    line-clamp: 8;
-    -webkit-box-orient: vertical;
     width: 100%;
     overflow: hidden;
     pointer-events: none;
@@ -46,9 +42,15 @@
       pointer-events: none;
     }
 
+    min-height: 0;
+    min-width: 0;
+
+    /* Height-based clamp */
+    line-height: 1.25rem;
+    max-height: calc(1.25rem * 8);
+
     &.with_image {
-      -webkit-line-clamp: 4;
-      line-clamp: 4;
+      max-height: calc(1.25rem * 4);
     }
 
     h1 {
