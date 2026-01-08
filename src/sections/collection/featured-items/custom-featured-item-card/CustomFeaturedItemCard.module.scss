@@ -34,8 +34,17 @@
   }
 
   .content {
+    box-sizing: border-box;
+    padding-bottom: 0.25rem;
+
+    --line-height: 1.25rem;
+
+    --lines: 8;
+
+    max-height: calc(var(--line-height) * var(--lines));
     width: 100%;
     overflow: hidden;
+    position: relative;
     pointer-events: none;
 
     & * {
@@ -44,13 +53,12 @@
 
     min-height: 0;
     min-width: 0;
-
-    /* Height-based clamp */
     line-height: 1.25rem;
-    max-height: calc(1.25rem * 8);
 
     &.with_image {
-      max-height: calc(1.25rem * 4);
+      --lines: 4;
+
+      max-height: calc(var(--line-height) * var(--lines));
     }
 
     h1 {
@@ -74,7 +82,6 @@
       word-break: break-all;
     }
 
-    // Both of these are only beacuse block codes make card overflow
     :global .rte-code-block {
       white-space: pre-wrap;
       word-break: break-word;
@@ -83,6 +90,20 @@
     :global .rte-code-block code {
       white-space: pre-wrap;
       word-break: break-word;
+    }
+
+    mask-image: linear-gradient(top, rgb(0 0 0 / 100%) 60%, rgb(0 0 0 / 0%) 100%);
+    mask-image: linear-gradient(180deg, rgb(0 0 0 / 100%) 60%, rgb(0 0 0 / 0%) 100%);
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0.5rem;
+      bottom: 0;
+      pointer-events: none;
+      color: inherit;
+      background: linear-gradient(to right, rgb(255 255 255 / 0%), var(--card-bg, #fff));
+      padding-left: 0.25rem;
     }
   }
 }
