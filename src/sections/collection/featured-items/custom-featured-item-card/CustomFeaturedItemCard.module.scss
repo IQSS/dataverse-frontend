@@ -38,7 +38,6 @@
     padding-bottom: 0.25rem;
 
     --line-height: 1.25rem;
-
     --lines: 8;
 
     max-height: calc(var(--line-height) * var(--lines));
@@ -92,8 +91,7 @@
       word-break: break-word;
     }
 
-    mask-image: linear-gradient(top, rgb(0 0 0 / 100%) 60%, rgb(0 0 0 / 0%) 100%);
-    mask-image: linear-gradient(180deg, rgb(0 0 0 / 100%) 60%, rgb(0 0 0 / 0%) 100%);
+    mask-image: linear-gradient(to bottom, rgb(0 0 0 / 100%) 60%, rgb(0 0 0 / 0%) 100%);
 
     &::after {
       content: '';
