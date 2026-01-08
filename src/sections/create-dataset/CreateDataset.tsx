@@ -18,9 +18,11 @@ import { CreateDatasetSkeleton } from './CreateDatasetSkeleton'
 import { useGetDatasetTemplates } from '@/dataset/domain/hooks/useGetDatasetTemplates'
 import { type DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
+import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 
 interface CreateDatasetProps {
   datasetRepository: DatasetRepository
+  templateRepository: TemplateRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionRepository: CollectionRepository
   collectionId: string
@@ -28,6 +30,7 @@ interface CreateDatasetProps {
 
 export function CreateDataset({
   datasetRepository,
+  templateRepository,
   metadataBlockInfoRepository,
   collectionRepository,
   collectionId
@@ -51,7 +54,7 @@ export function CreateDataset({
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
 
   const { datasetTemplates, isLoadingDatasetTemplates } = useGetDatasetTemplates({
-    datasetRepository,
+    templateRepository,
     collectionIdOrAlias: collectionId
   })
 

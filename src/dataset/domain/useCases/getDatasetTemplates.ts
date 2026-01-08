@@ -1,9 +1,9 @@
-import { DatasetRepository } from '../repositories/DatasetRepository'
+import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { DatasetTemplate } from '../models/DatasetTemplate'
 
 export function getDatasetTemplates(
-  datasetRepository: DatasetRepository,
+  templateRepository: TemplateRepository,
   collectionIdOrAlias: number | string
 ): Promise<DatasetTemplate[]> {
-  return datasetRepository.getTemplates(collectionIdOrAlias)
+  return templateRepository.getDatasetTemplates(collectionIdOrAlias)
 }

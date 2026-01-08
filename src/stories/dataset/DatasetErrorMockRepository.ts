@@ -10,7 +10,6 @@ import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
-import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 
@@ -147,14 +146,6 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     _version: string,
     _format: CitationFormat
   ) => {
-    return new Promise((_resolve, reject) => {
-      setTimeout(() => {
-        reject('Error thrown from mock')
-      }, FakerHelper.loadingTimout())
-    })
-  }
-
-  getTemplates(_collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

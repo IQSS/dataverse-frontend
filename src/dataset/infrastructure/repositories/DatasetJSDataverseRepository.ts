@@ -34,7 +34,6 @@ import {
   deleteDatasetDraft,
   getDatasetCitationInOtherFormats,
   getDatasetAvailableCategories,
-  getDatasetTemplates,
   linkDataset,
   unlinkDataset,
   getDatasetLinkedCollections
@@ -54,7 +53,6 @@ import { axiosInstance } from '@/axiosInstance'
 import { requireAppConfig } from '../../../config'
 import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
-import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 
 const includeDeaccessioned = true
@@ -408,10 +406,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   }
   getAvailableCategories(datasetId: string | number): Promise<string[]> {
     return getDatasetAvailableCategories.execute(datasetId)
-  }
-
-  getTemplates(collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
-    return getDatasetTemplates.execute(collectionIdOrAlias)
   }
 
   link(datasetId: string | number, collectionIdOrAlias: string | number) {

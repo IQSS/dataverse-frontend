@@ -15,8 +15,6 @@ import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
-import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
-import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
@@ -166,14 +164,6 @@ export class DatasetMockRepository implements DatasetRepository {
           content: 'Formatted citation content',
           contentType: 'text/plain'
         })
-      }, FakerHelper.loadingTimout())
-    })
-  }
-
-  getTemplates(_collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(DatasetTemplateMother.createMany(3))
       }, FakerHelper.loadingTimout())
     })
   }

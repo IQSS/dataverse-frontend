@@ -2,11 +2,13 @@ import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { CreateDataset } from './CreateDataset'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
+import { TemplateJSDataverseRepository } from '../../templates/infrastructure/repositories/TemplateJSDataverseRepository'
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
 import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
 
 const datasetRepository = new DatasetJSDataverseRepository()
+const templateRepository = new TemplateJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 const collectionRepository = new CollectionJSDataverseRepository()
 
@@ -26,6 +28,7 @@ function CreateDatasetWithSearchParams() {
   return (
     <CreateDataset
       datasetRepository={datasetRepository}
+      templateRepository={templateRepository}
       metadataBlockInfoRepository={metadataBlockInfoRepository}
       collectionRepository={collectionRepository}
       collectionId={collectionId}

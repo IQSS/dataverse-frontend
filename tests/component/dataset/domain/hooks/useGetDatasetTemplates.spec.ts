@@ -1,19 +1,19 @@
 import { act, renderHook } from '@testing-library/react'
 import { DatasetTemplateMother } from '../models/DatasetTemplateMother'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { useGetDatasetTemplates } from '@/dataset/domain/hooks/useGetDatasetTemplates'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 
-const datasetRepository: DatasetRepository = {} as DatasetRepository
+const templateRepository: TemplateRepository = {} as TemplateRepository
 const datasetTemplatesMock = DatasetTemplateMother.createMany(3)
 
 describe('useGetDatasetTemplates', () => {
   it('should return dataset templates', async () => {
-    datasetRepository.getTemplates = cy.stub().resolves(datasetTemplatesMock)
+    templateRepository.getDatasetTemplates = cy.stub().resolves(datasetTemplatesMock)
 
     const { result } = renderHook(() =>
       useGetDatasetTemplates({
-        datasetRepository,
+        templateRepository,
         collectionIdOrAlias: 'collection-alias'
       })
     )
@@ -32,11 +32,11 @@ describe('useGetDatasetTemplates', () => {
 
   describe('Error handling', () => {
     it('should return correct error message when it is a ReadError instance from js-dataverse', async () => {
-      datasetRepository.getTemplates = cy.stub().rejects(new ReadError('Error message'))
+      templateRepository.getDatasetTemplates = cy.stub().rejects(new ReadError('Error message'))
 
       const { result } = renderHook(() =>
         useGetDatasetTemplates({
-          datasetRepository,
+          templateRepository,
           collectionIdOrAlias: 'collection-alias'
         })
       )
@@ -53,11 +53,11 @@ describe('useGetDatasetTemplates', () => {
     })
 
     it('should return correct default error message when it is not a ReadError instance from js-dataverse', async () => {
-      datasetRepository.getTemplates = cy.stub().rejects('Error message')
+      templateRepository.getDatasetTemplates = cy.stub().rejects('Error message')
 
       const { result } = renderHook(() =>
         useGetDatasetTemplates({
-          datasetRepository,
+          templateRepository,
           collectionIdOrAlias: 'collection-alias'
         })
       )
