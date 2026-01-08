@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
-import { DatasetTemplate } from '../models/DatasetTemplate'
+import { Template } from '../models/DatasetTemplate'
 import { getDatasetTemplates } from '../useCases/getDatasetTemplates'
 
 interface useGetDatasetTemplatesProps {
@@ -16,7 +16,7 @@ export const useGetDatasetTemplates = ({
   collectionIdOrAlias,
   autoFetch = true
 }: useGetDatasetTemplatesProps) => {
-  const [datasetTemplates, setDatasetTemplates] = useState<DatasetTemplate[]>([])
+  const [datasetTemplates, setDatasetTemplates] = useState<Template[]>([])
   const [isLoadingDatasetTemplates, setIsLoadingDatasetTemplates] = useState<boolean>(autoFetch)
   const [errorGetDatasetTemplates, setErrorGetDatasetTemplates] = useState<string | null>(null)
 
@@ -25,7 +25,7 @@ export const useGetDatasetTemplates = ({
     setErrorGetDatasetTemplates(null)
 
     try {
-      const response: DatasetTemplate[] = await getDatasetTemplates(
+      const response: Template[] = await getDatasetTemplates(
         templateRepository,
         collectionIdOrAlias
       )

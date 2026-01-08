@@ -16,7 +16,7 @@ import { useCollection } from '../collection/useCollection'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { CreateDatasetSkeleton } from './CreateDatasetSkeleton'
 import { useGetDatasetTemplates } from '@/dataset/domain/hooks/useGetDatasetTemplates'
-import { type DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
+import { type Template } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 
@@ -38,7 +38,7 @@ export function CreateDataset({
   const { t } = useTranslation('createDataset')
   const { isModalOpen, hideModal } = useNotImplementedModal()
   const { setIsLoading } = useLoading()
-  const [selectedTemplate, setSelectedTemplate] = useState<DatasetTemplate | null>(null)
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
@@ -59,7 +59,7 @@ export function CreateDataset({
   })
 
   const handleDatasetTemplateChange = (selectedTemplateId: string) => {
-    const template: DatasetTemplate | null =
+    const template: Template | null =
       datasetTemplates.find((template) => template.id.toString() === selectedTemplateId) || null
     setSelectedTemplate(template)
   }
@@ -74,7 +74,7 @@ export function CreateDataset({
   // When dataset templates are loaded we set the default one if any
   useEffect(() => {
     if (datasetTemplates.length > 0) {
-      const defaultTemplate: DatasetTemplate | null =
+      const defaultTemplate: Template | null =
         datasetTemplates.find((template) => template.isDefault) || null
 
       setSelectedTemplate(defaultTemplate)
