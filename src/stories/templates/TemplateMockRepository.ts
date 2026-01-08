@@ -5,7 +5,7 @@ import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/Da
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
 export class TemplateMockRepository implements TemplateRepository {
-  createDatasetTemplate(
+  createTemplate(
     _template: CreateDatasetTemplateDTO,
     _collectionIdOrAlias: number | string
   ): Promise<void> {

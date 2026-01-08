@@ -9,7 +9,7 @@ import { Template } from '@/dataset/domain/models/DatasetTemplate'
 import { TemplateRepository } from '../../domain/repositories/TemplateRepository'
 
 export class TemplateJSDataverseRepository implements TemplateRepository {
-  createDatasetTemplate(
+  createTemplate(
     template: CreateDatasetTemplateDTO,
     collectionIdOrAlias: number | string
   ): Promise<void> {

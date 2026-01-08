@@ -2,7 +2,7 @@ import { CreateDatasetTemplateDTO } from '@iqss/dataverse-client-javascript'
 import { Template } from '@/dataset/domain/models/DatasetTemplate'
 
 export interface TemplateRepository {
-  createDatasetTemplate: (
+  createTemplate: (
     template: CreateDatasetTemplateDTO,
     collectionIdOrAlias: number | string
   ) => Promise<void>

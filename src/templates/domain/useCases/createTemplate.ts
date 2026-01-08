@@ -6,5 +6,5 @@ export function createTemplate(
   template: CreateDatasetTemplateDTO,
   collectionIdOrAlias: number | string
 ): Promise<void> {
-  return templateRepository.createDatasetTemplate(template, collectionIdOrAlias)
+  return templateRepository.createTemplate(template, collectionIdOrAlias)
 }
