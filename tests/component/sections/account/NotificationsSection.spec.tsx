@@ -54,7 +54,7 @@ describe('multiple page notifications', () => {
   it('renders Pagination controls', () => {
     cy.mountAuthenticated(<NotificationsSection notificationRepository={notificationsRepository} />)
     cy.findByText('Displaying 1 - 10 of 25 Notifications').should('exist')
-    cy.findByRole('button', { name: 'Clear Notifications' }).should('exist')
+    cy.findByRole('button', { name: 'Clear Notifications 1 - 10' }).should('exist')
     cy.findByTestId('pagination-controls').should('exist')
   })
 })
@@ -71,7 +71,7 @@ describe('single page notifications', () => {
     })
   })
 
-  it('handles Clear All', () => {
+  it('handles Clear All Notifications', () => {
     cy.spy(multipleNotificationRepository, 'deleteNotification').as('deleteNotification')
 
     cy.mountAuthenticated(
@@ -80,7 +80,7 @@ describe('single page notifications', () => {
 
     cy.contains('Climate Data was created').should('exist')
 
-    cy.findByRole('button', { name: 'Clear All' }).click()
+    cy.findByRole('button', { name: 'Clear All Notifications' }).click()
     cy.get('@deleteNotification').should('have.been.calledThrice')
   })
   it("doesn't display pagination controls", () => {
