@@ -52,6 +52,7 @@
   "editCollection": {
     "edit": "Edit",
     "generalInfo": "General Information",
+    "datasetTemplates": "Dataset Templates",
     "deleteCollection": "Delete Collection"
   },
   "featuredItems": {

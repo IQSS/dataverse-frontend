@@ -1,0 +1,23 @@
+{
+  "pageTitle": "Plantillas de conjuntos de datos",
+  "infoAlert": {
+    "title": "Gestionar plantillas de conjuntos de datos",
+    "text": "Cree una plantilla precargada con valores estándar de campos de metadatos, como Afiliación del autor, o agregue instrucciones en los campos de metadatos para dar a los depositantes más información sobre qué metadatos se esperan."
+  },
+  "actions": {
+    "create": "Crear plantilla de conjunto de datos",
+    "makeDefault": "Hacer predeterminada",
+    "default": "Predeterminada",
+    "view": "Ver",
+    "copy": "Copiar",
+    "edit": "Editar plantilla",
+    "delete": "Eliminar"
+  },
+  "table": {
+    "name": "Nombre de la plantilla",
+    "created": "Fecha de creación",
+    "usage": "Uso",
+    "action": "Acción"
+  },
+  "emptyState": "Esta colección aún no tiene plantillas de conjuntos de datos."
+}

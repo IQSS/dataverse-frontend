@@ -85,6 +85,14 @@ const EditFeaturedItems = lazy(() =>
   )
 )
 
+const DatasetTemplatesPage = lazy(() =>
+  import('../sections/dataset-templates/DatasetTemplatesFactory').then(
+    ({ DatasetTemplatesFactory }) => ({
+      default: () => DatasetTemplatesFactory.create()
+    })
+  )
+)
+
 const ReplaceFile = lazy(() =>
   import('../sections/replace-file/ReplaceFileFactory').then(({ ReplaceFileFactory }) => ({
     default: () => ReplaceFileFactory.create()
@@ -271,6 +279,15 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <EditFeaturedItems />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.COLLECTION_TEMPLATES,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <DatasetTemplatesPage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

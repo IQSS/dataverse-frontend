@@ -1,0 +1,23 @@
+{
+  "pageTitle": "Dataset Templates",
+  "infoAlert": {
+    "title": "Manage Dataset Templates",
+    "text": "Create a template prefilled with metadata fields standard values, such as Author Affiliation, or add instructions in the metadata fields to give depositors more information on what metadata is expected."
+  },
+  "actions": {
+    "create": "Create Dataset Template",
+    "makeDefault": "Make Default",
+    "default": "Default",
+    "view": "View",
+    "copy": "Copy",
+    "edit": "Edit Template",
+    "delete": "Delete"
+  },
+  "table": {
+    "name": "Template Name",
+    "created": "Date Created",
+    "usage": "Usage",
+    "action": "Action"
+  },
+  "emptyState": "This collection has no dataset templates yet."
+}
