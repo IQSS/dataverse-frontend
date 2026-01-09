@@ -32,13 +32,11 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
     const unreadIds = notifications
       .filter((n) => !n.displayAsRead && !readIds.includes(n.id))
       .map((n) => n.id)
-    console.log('in useEffect, unreadIds:', unreadIds)
     if (unreadIds.length > 0) {
       const timer = setTimeout(() => {
         void (async () => {
           await markAsRead(unreadIds)
           setReadIds((prev) => [...prev, ...unreadIds])
-          console.log('calling refetch after marking as read')
           await refetch()
           needsUpdateStore.setNeedsUpdate(true)
         })()
@@ -69,9 +67,10 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
   const pageSize = Math.max(1, paginationInfo?.pageSize ?? (notifications.length || 1))
   const start = notifications.length === 0 ? 0 : (page - 1) * pageSize + 1
   const end = notifications.length === 0 ? 0 : Math.min(start + notifications.length - 1, total)
-  const clearAllKey =
-    total > pageSize ? 'notifications.clearAllOnThisPage' : 'notifications.clearAll'
-
+  const clearAllKeyTranslation =
+    total > pageSize
+      ? t('notifications.clearAllOnThisPage', { start, end })
+      : t('notifications.clearAllNotifications')
   return (
     <section>
       <Stack gap={3} style={{ width: '100%' }}>
@@ -85,10 +84,10 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
             <Button
               size="sm"
               variant="secondary"
-              aria-label={t(clearAllKey)}
+              aria-label={clearAllKeyTranslation}
               onClick={handleClearAll}
               disabled={isLoading}>
-              {t(clearAllKey)}
+              {clearAllKeyTranslation}
             </Button>
           )}
         </Stack>
