@@ -19,5 +19,24 @@
     "usage": "Uso",
     "action": "Acción"
   },
-  "emptyState": "Esta colección aún no tiene plantillas de conjuntos de datos."
+  "emptyState": "Esta colección aún no tiene plantillas de conjuntos de datos.",
+  "deleteModal": {
+    "title": "Eliminar plantilla",
+    "message": "¿Está seguro de que desea eliminar esta plantilla? Un nuevo conjunto de datos no podrá usar esta plantilla."
+  },
+  "alerts": {
+    "deleteSuccess": "Plantilla eliminada.",
+    "deleteError": "Algo salió mal al eliminar la plantilla. Inténtelo de nuevo más tarde."
+  },
+  "preview": {
+    "title": "Vista previa de plantilla de conjunto de datos",
+    "templateLabel": "Plantilla de conjunto de datos",
+    "sections": {
+      "metadata": "Metadatos de citación",
+      "terms": "Términos del conjunto de datos",
+      "access": "Archivos restringidos + términos de acceso"
+    },
+    "noMetadata": "No hay metadatos de citación disponibles para esta plantilla.",
+    "error": "No se pudo cargar la vista previa de la plantilla. Inténtelo de nuevo más tarde."
+  }
 }

@@ -19,5 +19,24 @@
     "usage": "Usage",
     "action": "Action"
   },
-  "emptyState": "This collection has no dataset templates yet."
+  "emptyState": "This collection has no dataset templates yet.",
+  "deleteModal": {
+    "title": "Delete Template",
+    "message": "Are you sure you want to delete this template? A new dataset will not be able to use this template."
+  },
+  "alerts": {
+    "deleteSuccess": "Template deleted.",
+    "deleteError": "Something went wrong deleting the template. Try again later."
+  },
+  "preview": {
+    "title": "Dataset Template Preview",
+    "templateLabel": "Dataset Template",
+    "sections": {
+      "metadata": "Citation Metadata",
+      "terms": "Dataset Terms",
+      "access": "Restricted Files + Terms of Access"
+    },
+    "noMetadata": "No citation metadata is available for this template.",
+    "error": "Unable to load the template preview. Try again later."
+  }
 }

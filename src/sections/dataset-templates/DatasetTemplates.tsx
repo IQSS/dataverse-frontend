@@ -5,13 +5,16 @@ import {
   CaretDown,
   CaretUp,
   ChevronExpand,
+  CheckLg,
   Eye,
   Files,
   Pencil,
   PlusLg,
   Trash
 } from 'react-bootstrap-icons'
+import { toast } from 'react-toastify'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { useCollection } from '../collection/useCollection'
 import { useGetDatasetTemplates } from '@/dataset/domain/hooks/useGetDatasetTemplates'
@@ -21,33 +24,45 @@ import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { Template } from '@/dataset/domain/models/DatasetTemplate'
+import { ConfirmDeleteTemplateModal } from './confirm-delete-template-modal/ConfirmDeleteTemplateModal'
+import { DatasetTemplatePreviewModal } from './dataset-template-preview-modal/DatasetTemplatePreviewModal'
 import styles from './DatasetTemplates.module.scss'
 
 interface DatasetTemplatesProps {
   collectionRepository: CollectionRepository
   templateRepository: TemplateRepository
+  metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionIdFromParams: string | undefined
 }
 
 export const DatasetTemplates = ({
   collectionRepository,
   templateRepository,
+  metadataBlockInfoRepository,
   collectionIdFromParams
 }: DatasetTemplatesProps) => {
   const { t } = useTranslation('datasetTemplates')
   const { isModalOpen, hideModal, showModal } = useNotImplementedModal()
   const [sortBy, setSortBy] = useState<'name' | 'created' | 'usage' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [templateToDelete, setTemplateToDelete] = useState<Template | null>(null)
+  const [templateToPreview, setTemplateToPreview] = useState<Template | null>(null)
+  const [isDeletingTemplate, setIsDeletingTemplate] = useState(false)
+  const [errorDeletingTemplate, setErrorDeletingTemplate] = useState<string | null>(null)
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionIdFromParams
   )
-  const { datasetTemplates, isLoadingDatasetTemplates, errorGetDatasetTemplates } =
-    useGetDatasetTemplates({
-      templateRepository,
-      collectionIdOrAlias: collectionIdFromParams ?? '',
-      autoFetch: Boolean(collectionIdFromParams)
-    })
+  const {
+    datasetTemplates,
+    isLoadingDatasetTemplates,
+    errorGetDatasetTemplates,
+    fetchDatasetTemplates
+  } = useGetDatasetTemplates({
+    templateRepository,
+    collectionIdOrAlias: collectionIdFromParams ?? '',
+    autoFetch: Boolean(collectionIdFromParams)
+  })
 
   const isLoadingData = isLoadingCollection || isLoadingDatasetTemplates
   const formatCreateDate = (template: Template) => template.createDate || template.createTime || ''
@@ -98,6 +113,41 @@ export const DatasetTemplates = ({
   const sortHeaderClass = (column: 'name' | 'created' | 'usage') =>
     sortBy === column ? styles['sort-header-active'] : ''
 
+  const handleOpenDeleteModal = (template: Template) => {
+    setTemplateToDelete(template)
+    setErrorDeletingTemplate(null)
+  }
+
+  const handleCloseDeleteModal = () => {
+    if (isDeletingTemplate) return
+    setTemplateToDelete(null)
+    setErrorDeletingTemplate(null)
+  }
+
+  const handleDeleteTemplate = async () => {
+    if (!templateToDelete) return
+    setIsDeletingTemplate(true)
+    setErrorDeletingTemplate(null)
+    try {
+      await templateRepository.deleteTemplate(templateToDelete.id)
+      await fetchDatasetTemplates()
+      toast.success(t('alerts.deleteSuccess'))
+      setTemplateToDelete(null)
+    } catch (error) {
+      setErrorDeletingTemplate(t('alerts.deleteError'))
+    } finally {
+      setIsDeletingTemplate(false)
+    }
+  }
+
+  const handleOpenPreviewModal = (template: Template) => {
+    setTemplateToPreview(template)
+  }
+
+  const handleClosePreviewModal = () => {
+    setTemplateToPreview(null)
+  }
+
   if (!isLoadingCollection && !collection) {
     return <NotFoundPage dvObjectNotFoundType="collection" />
   }
@@ -113,6 +163,22 @@ export const DatasetTemplates = ({
   return (
     <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
+      <ConfirmDeleteTemplateModal
+        show={Boolean(templateToDelete)}
+        handleClose={handleCloseDeleteModal}
+        handleDelete={handleDeleteTemplate}
+        templateName={templateToDelete?.name ?? ''}
+        isDeleting={isDeletingTemplate}
+        errorDeleting={errorDeletingTemplate}
+      />
+      <DatasetTemplatePreviewModal
+        show={Boolean(templateToPreview)}
+        handleClose={handleClosePreviewModal}
+        templateId={templateToPreview?.id ?? null}
+        templateName={templateToPreview?.name ?? ''}
+        templateRepository={templateRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
       <section>
         <BreadcrumbsGenerator
           hierarchy={collection.hierarchy}
@@ -194,6 +260,7 @@ export const DatasetTemplates = ({
                     <ButtonGroup className={styles['action-group']} aria-label={t('table.action')}>
                       {template.isDefault ? (
                         <Button variant="secondary" size="sm" disabled>
+                          <CheckLg className={styles['action-icon']} />
                           {t('actions.default')}
                         </Button>
                       ) : (
@@ -209,7 +276,7 @@ export const DatasetTemplates = ({
                         <Button
                           variant="secondary"
                           size="sm"
-                          onClick={showModal}
+                          onClick={() => handleOpenPreviewModal(template)}
                           aria-label={t('actions.view')}>
                           <Eye className={styles['action-icon']} />
                         </Button>
@@ -237,7 +304,7 @@ export const DatasetTemplates = ({
                         <Button
                           variant="secondary"
                           size="sm"
-                          onClick={showModal}
+                          onClick={() => handleOpenDeleteModal(template)}
                           aria-label={t('actions.delete')}>
                           <Trash className={styles['action-icon']} />
                         </Button>

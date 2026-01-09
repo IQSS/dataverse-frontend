@@ -2,11 +2,13 @@ import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { TemplateJSDataverseRepository } from '@/templates/infrastructure/repositories/TemplateJSDataverseRepository'
+import { MetadataBlockInfoJSDataverseRepository } from '@/metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
 import { DatasetTemplates } from './DatasetTemplates'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const templateRepository = new TemplateJSDataverseRepository()
+const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 
 export class DatasetTemplatesFactory {
   static create(): ReactElement {
@@ -25,6 +27,7 @@ function DatasetTemplatesWithParams() {
     <DatasetTemplates
       collectionRepository={collectionRepository}
       templateRepository={templateRepository}
+      metadataBlockInfoRepository={metadataBlockInfoRepository}
       collectionIdFromParams={collectionId}
     />
   )
