@@ -53,7 +53,7 @@
     "userGuideLinkText": "User Guide",
     "demoServerLinkText": "Demo Site",
     "clearAllNotifications": "Clear All Notifications",
-    "clearAllOnThisPage": "Clear Notifications {{start}} - {{end}}",
+    "clearAllOnThisPage": "Clear All Notifications on this Page",
     "displayingNotifications": "Displaying {{start}} - {{end}} of {{total}} Notifications",
     "dismiss": "Dismiss",
     "noNotifications": "No notifications available.",

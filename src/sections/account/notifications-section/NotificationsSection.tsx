@@ -69,7 +69,7 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
   const end = notifications.length === 0 ? 0 : Math.min(start + notifications.length - 1, total)
   const clearAllKeyTranslation =
     total > pageSize
-      ? t('notifications.clearAllOnThisPage', { start, end })
+      ? t('notifications.clearAllOnThisPage')
       : t('notifications.clearAllNotifications')
   return (
     <section>

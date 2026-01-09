@@ -54,7 +54,7 @@ describe('multiple page notifications', () => {
   it('renders Pagination controls', () => {
     cy.mountAuthenticated(<NotificationsSection notificationRepository={notificationsRepository} />)
     cy.findByText('Displaying 1 - 10 of 25 Notifications').should('exist')
-    cy.findByRole('button', { name: 'Clear Notifications 1 - 10' }).should('exist')
+    cy.findByRole('button', { name: 'Clear All Notifications on this Page' }).should('exist')
     cy.findByTestId('pagination-controls').should('exist')
   })
 })
