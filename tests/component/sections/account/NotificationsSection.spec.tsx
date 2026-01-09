@@ -37,12 +37,6 @@ const multipleNotificationRepository = {
   deleteNotification: (_id: number) => Promise.resolve(),
   getUnreadNotificationsCount: () => Promise.resolve(1)
 }
-const mockRepository = {
-  getAllNotificationsByUser: () => Promise.resolve(NotificationMother.createManyRealistic()),
-  markNotificationAsRead: (_id: number) => Promise.resolve(),
-  deleteNotification: (_id: number) => Promise.resolve(),
-  getUnreadNotificationsCount: () => Promise.resolve(5)
-}
 
 const mockErrorRepository = {
   markNotificationAsRead: (_id: number) => Promise.resolve(),
