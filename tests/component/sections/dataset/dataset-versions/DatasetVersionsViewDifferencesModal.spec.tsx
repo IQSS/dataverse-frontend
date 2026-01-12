@@ -370,4 +370,38 @@ describe('DatasetVersions', () => {
       cy.findByTestId(`file-replaced-row-${file.newFile.fileId}`).should('exist')
     })
   })
+
+  it('should show Access Granted for restricted files', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={{
+          ...datasetVersionDiff,
+          fileChanges: [
+            {
+              fileName: 'blob (2)',
+              md5: '53d3d10e00812f7c55e0c9c3935f3769',
+              fileId: 40,
+              changed: [
+                {
+                  fieldName: 'isRestricted',
+                  oldValue: 'false',
+                  newValue: 'true'
+                }
+              ]
+            }
+          ]
+        }}
+      />
+    )
+
+    cy.findByTestId(`file-changed-row-40`).find('td').eq(1).should('have.text', 'Access: Public')
+    cy.findByTestId(`file-changed-row-40`)
+      .find('td')
+      .eq(2)
+      .should('have.text', 'Access: Restricted')
+  })
 })

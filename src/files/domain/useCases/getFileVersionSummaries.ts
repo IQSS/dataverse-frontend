@@ -1,9 +1,11 @@
 import { FileRepository } from '../repositories/FileRepository'
-import { FileVersionSummaryInfo } from '../models/FileVersionSummaryInfo'
+import { FileVersionSummarySubset } from '../models/FileVersionSummaryInfo'
+import { FileVersionPaginationInfo } from '../models/FileVersionPaginationInfo'
 
 export function getFileVersionSummaries(
   fileRepository: FileRepository,
-  fileId: number | string
-): Promise<FileVersionSummaryInfo[]> {
-  return fileRepository.getFileVersionSummaries(fileId)
+  fileId: number | string,
+  paginationInfo?: FileVersionPaginationInfo
+): Promise<FileVersionSummarySubset> {
+  return fileRepository.getFileVersionSummaries(fileId, paginationInfo)
 }

@@ -10,11 +10,9 @@ export const useFileVersionSummaryDescription = (
 ): Record<string, string> | string => {
   const { t } = useTranslation('file')
 
-  if (!summary || !Object.entries(summary).length) return t('fileVersion.noChange')
-
   const description: Record<string, string> = {}
 
-  Object.entries(summary).forEach(([key, value]) => {
+  Object.entries(summary ?? {}).forEach(([key, value]) => {
     switch (key) {
       case 'file': {
         if ((value as FileChangeType) && typeof value === 'string') {

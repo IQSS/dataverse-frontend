@@ -93,8 +93,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     roleIds: number[],
     collectionItemTypes: CollectionItemType[],
     publicationStatuses: PublicationStatus[],
-    limit?: number,
-    selectedPage?: number,
+    paginationInfo?: CollectionItemsPaginationInfo,
     searchText?: string,
     otherUserName?: string
   ): Promise<MyDataCollectionItemSubset> {
@@ -103,8 +102,8 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
         roleIds,
         collectionItemTypes,
         publicationStatuses,
-        limit,
-        selectedPage,
+        paginationInfo?.pageSize,
+        paginationInfo?.page,
         searchText,
         otherUserName
       )

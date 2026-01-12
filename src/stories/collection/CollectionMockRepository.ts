@@ -101,14 +101,11 @@ export class CollectionMockRepository implements CollectionRepository {
     _roleIds: number[],
     collectionItemTypes: CollectionItemType[],
     _publicationStatuses: string[],
-    limit?: number,
-    _selectedPage?: number,
+    paginationInfo?: CollectionItemsPaginationInfo,
     _searchText?: string,
     _otherUserName?: string
   ): Promise<MyDataCollectionItemSubset> {
-    if (!limit) {
-      limit = 10
-    }
+    const limit = paginationInfo?.pageSize ?? 10
     const numberOfCollections = Math.floor(limit / 3)
     const numberOfDatasets = Math.floor(limit / 3)
     const numberOfFiles = limit - numberOfCollections - numberOfDatasets

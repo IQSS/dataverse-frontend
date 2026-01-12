@@ -317,5 +317,6 @@
   },
   "exploreOptions": "Explore Options",
   "queryOptions": "Query Options",
-  "configureOptions": "Configure Options"
+  "configureOptions": "Configure Options",
+  "language": "Language"
 }

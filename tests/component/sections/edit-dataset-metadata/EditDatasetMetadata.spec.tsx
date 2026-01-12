@@ -27,7 +27,9 @@ describe('EditDatasetMetadata', () => {
       .stub()
       .resolves(metadataBlocksInfoOnCreateMode)
     datasetRepository.updateMetadata = cy.stub().resolves(undefined)
-    datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(undefined)
+    datasetRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves({ summaries: [], totalCount: 0 })
 
     cy.customMount(
       <LoadingProvider>

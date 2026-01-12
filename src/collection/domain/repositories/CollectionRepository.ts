@@ -31,8 +31,7 @@ export interface CollectionRepository {
     roleIds: number[],
     collectionItemTypes: CollectionItemType[],
     publicationStatuses: PublicationStatus[],
-    limit?: number,
-    selectedPage?: number,
+    paginationInfo?: CollectionItemsPaginationInfo,
     searchText?: string,
     otherUserName?: string
   ) => Promise<MyDataCollectionItemSubset>

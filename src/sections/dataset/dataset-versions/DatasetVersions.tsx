@@ -26,6 +26,11 @@ interface DatasetVersionsProps {
   isCurrentVersionDeaccessioned?: boolean
 }
 
+const isVersionDeaccessioned = (version: DatasetVersionSummaryInfo) =>
+  typeof version.summary === 'object' &&
+  version.summary !== null &&
+  'deaccessioned' in version.summary
+
 export function DatasetVersions({
   datasetRepository,
   datasetId,
@@ -61,12 +66,7 @@ export function DatasetVersions({
 
   const selectableVersions =
     datasetVersionSummaries &&
-    datasetVersionSummaries.filter((version) => {
-      const summary = version.summary
-      const isDeaccessioned =
-        typeof summary === 'object' && summary !== null && 'deaccessioned' in summary
-      return !isDeaccessioned
-    })
+    datasetVersionSummaries.filter((version) => !isVersionDeaccessioned(version))
   const isCheckBoxValid = (selectableVersions?.length ?? 0) > 2
 
   useEffect(() => {
@@ -111,23 +111,19 @@ export function DatasetVersions({
           </thead>
           <tbody>
             {datasetVersionSummaries?.map((dataset, index) => {
-              const previousVersion =
-                index < datasetVersionSummaries.length - 1
-                  ? datasetVersionSummaries[index + 1]
-                  : null
+              const findLastNonDeaccessionedPreviousVersion = () => {
+                for (let i = index + 1; i < datasetVersionSummaries.length; i++) {
+                  const version = datasetVersionSummaries[i]
+                  if (!isVersionDeaccessioned(version)) {
+                    return version
+                  }
+                }
+                return null
+              }
 
-              const isPreviousVersionDeaccessioned =
-                previousVersion &&
-                typeof previousVersion.summary === 'object' &&
-                previousVersion.summary !== null &&
-                'deaccessioned' in previousVersion.summary
-
+              const previousVersion = findLastNonDeaccessionedPreviousVersion()
               const isCurrentVersion = dataset.versionNumber === currentVersionNumber
-
-              const isCurrentVersionDeaccessioned =
-                typeof dataset.summary === 'object' &&
-                dataset.summary !== null &&
-                'deaccessioned' in dataset.summary
+              const isCurrentVersionDeaccessioned = isVersionDeaccessioned(dataset)
 
               const isLinkable =
                 (dataset.versionNumber !== DatasetVersionState.DRAFT &&
@@ -135,12 +131,7 @@ export function DatasetVersions({
                 ((dataset.versionNumber === DatasetVersionState.DRAFT ||
                   isCurrentVersionDeaccessioned) &&
                   canUpdateDataset)
-
-              const showViewDetails =
-                previousVersion &&
-                typeof dataset.summary !== 'string' &&
-                !isCurrentVersionDeaccessioned &&
-                !isPreviousVersionDeaccessioned
+              const showViewDetails = !isCurrentVersionDeaccessioned && previousVersion
 
               return (
                 <tr key={dataset.id}>
@@ -172,7 +163,10 @@ export function DatasetVersions({
                   </td>
                   <td>
                     <p style={{ display: 'flex', flexWrap: 'wrap', margin: 0, textAlign: 'left' }}>
-                      <SummaryDescription summary={dataset.summary} />
+                      <SummaryDescription
+                        summary={dataset.summary}
+                        versionNumber={dataset.versionNumber}
+                      />
                       {showViewDetails && (
                         <DatasetViewDetailButton
                           datasetRepository={datasetRepository}
@@ -244,20 +238,30 @@ export const DatasetVersionsLoadingSkeleton = () => {
 }
 
 export const SummaryDescription = ({
-  summary
+  summary,
+  versionNumber
 }: {
   summary?: DatasetVersionSummary | DatasetVersionSummaryStringValues
+  versionNumber?: string
 }) => {
-  const summaryText: Record<string, string> = useDatasetVersionSummaryDescription(summary)
+  const { t } = useTranslation('dataset')
+  const summaryText: Record<string, string> = useDatasetVersionSummaryDescription(
+    summary,
+    versionNumber
+  )
 
   return (
     <>
       {Object.entries(summaryText).map(([key, value]) =>
         typeof summary === 'string' ? (
           <span key={key}>{value}</span>
+        ) : key === t('versions.deaccessionedReason') ? (
+          <span key={key}>
+            {key}: {value}
+          </span>
         ) : (
           <span key={key}>
-            <strong>{key}</strong>: {key == 'Files' ? <strong>{value}</strong> : value};&nbsp;
+            <strong>{key}</strong>: {key === 'Files' ? <strong>{value}</strong> : value};&nbsp;
           </span>
         )
       )}

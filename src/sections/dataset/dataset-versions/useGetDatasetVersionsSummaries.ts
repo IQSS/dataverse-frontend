@@ -2,12 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { getDatasetVersionsSummaries } from '@/dataset/domain/useCases/getDatasetVersionsSummaries'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 
 interface UseGetDatasetVersionsSummaries {
   datasetVersionSummaries: DatasetVersionSummaryInfo[] | undefined
   error: string | null
   isLoading: boolean
-  fetchSummaries: () => Promise<void>
+  fetchSummaries: (paginationInfo?: DatasetVersionPaginationInfo) => Promise<void>
 }
 
 interface Props {
@@ -25,23 +26,30 @@ export const useGetDatasetVersionsSummaries = ({
   const [isLoading, setIsLoading] = useState<boolean>(autoFetch)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchSummaries = useCallback(async () => {
-    setIsLoading(true)
-    setError(null)
+  const fetchSummaries = useCallback(
+    async (paginationInfo?: DatasetVersionPaginationInfo) => {
+      setIsLoading(true)
+      setError(null)
 
-    try {
-      const versionSummaries = await getDatasetVersionsSummaries(datasetRepository, persistentId)
-      setSummaries(versionSummaries)
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error && err.message
-          ? err.message
-          : 'Something went wrong getting the information from the dataset versions summaries. Try again later.'
-      setError(errorMessage)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [datasetRepository, persistentId])
+      try {
+        const versionSummaries = await getDatasetVersionsSummaries(
+          datasetRepository,
+          persistentId,
+          paginationInfo
+        )
+        setSummaries(versionSummaries.summaries)
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong getting the information from the dataset versions summaries. Try again later.'
+        setError(errorMessage)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [datasetRepository, persistentId]
+  )
 
   useEffect(() => {
     if (autoFetch) {

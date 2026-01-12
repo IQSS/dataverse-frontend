@@ -12,16 +12,22 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Contact Owner button in File Page.
 - Share button in File Page.
 - Link Collection and Link Dataset features.
+- With the addition of the new runtime configuration approach, we now support dynamic configuration for languages. If more than one language is configured, the Language Switcher will be shown in the header to allow users to change the language.
 
 ### Changed
 
+- Add pagination support to the Dataset Version Summaries and File Version Summaries use cases by introducing optional pagination object. #885
+- Refactored pagination to use consistent `CollectionItemsPaginationInfo` object in getMyDataCollectionItems, instead of individual limit/selectedPage parameters.
 - Use of the new `sourceLastUpdateTime` query parameter from update dataset and file metadata endpoints to support optimistic concurrency control during editing operations. See [Edit Dataset Metadata](https://guides.dataverse.org/en/6.8/api/native-api.html#edit-dataset-metadata) and [Updating File Metadata](https://guides.dataverse.org/en/6.8/api/native-api.html#updating-file-metadata) guides for more details.
 - Changed the way we were handling DATE type metadata field validation to better match the backend validation and give users better error messages. For example, for an input like “foo AD”, we now show “Production Date is not a valid date. The AD year must be numeric.“. For an input like “99999 AD”, we now show “Production Date is not a valid date. The AD year cant be higher than 9999.“. For an input like “[-9999?], we now show “Production Date is not a valid date. The year in brackets cannot be negative.“, etc.
+- The SPA now fetches the runtime configuration from `config.js` on each load, allowing configurations without rebuilding the app. We don't use `.env` variables at build time anymore.
 
 ### Fixed
 
 - Add word-break to items text to prevent layout issues when long descriptions without spaces are entered. (#839)
 - Show toast notification when API token is copied to clipboard.
+- Dataset versions: (1) file changes should be `Access: Restricted` instead of `isResticted: true/false`; (2) logic of View Detail button. (#879)
+- File versions: (1) logic of linking to a file version; (2)If file not included, show text information "File not included in this version.". (#879)
 
 ### Removed
 
