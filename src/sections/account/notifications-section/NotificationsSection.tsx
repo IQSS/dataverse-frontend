@@ -1,14 +1,13 @@
-// TypeScript
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, CloseButton, Stack } from '@iqss/dataverse-design-system'
 import { getTranslatedNotification } from '@/sections/account/notifications-section/NotificationsHelper'
 import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
-import styles from './NotificationsSection.module.scss'
 import { useNotifications } from '@/notifications/domain/hooks/useNotifications'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
 import { PaginationControls } from '@/sections/shared/pagination/PaginationControls'
+import styles from './NotificationsSection.module.scss'
 
 interface NotificationsSectionProps {
   notificationRepository: NotificationRepository
