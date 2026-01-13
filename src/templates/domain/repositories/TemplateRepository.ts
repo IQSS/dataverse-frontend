@@ -1,12 +1,12 @@
-import { CreateDatasetTemplateDTO } from '@iqss/dataverse-client-javascript'
+import { CreateTemplateDTO } from '@iqss/dataverse-client-javascript'
 import { Template } from '@/dataset/domain/models/DatasetTemplate'
 
 export interface TemplateRepository {
   createTemplate: (
-    template: CreateDatasetTemplateDTO,
+    template: CreateTemplateDTO,
     collectionIdOrAlias: number | string
   ) => Promise<void>
   getTemplate: (templateId: number) => Promise<Template>
-  getDatasetTemplates: (collectionIdOrAlias: number | string) => Promise<Template[]>
+  getTemplatesByCollectionId: (collectionIdOrAlias: number | string) => Promise<Template[]>
   deleteTemplate: (templateId: number) => Promise<void>
 }

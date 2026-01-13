@@ -3,19 +3,19 @@ import { ReadError } from '@iqss/dataverse-client-javascript'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { Template } from '../models/DatasetTemplate'
-import { getDatasetTemplates } from '../useCases/getDatasetTemplates'
+import { getTemplatesByCollectionId } from '../useCases/getTemplatesByCollectionId'
 
-interface useGetDatasetTemplatesProps {
+interface useGetTemplatesByCollectionIdProps {
   templateRepository: TemplateRepository
   collectionIdOrAlias: number | string
   autoFetch?: boolean
 }
 
-export const useGetDatasetTemplates = ({
+export const useGetTemplatesByCollectionId = ({
   templateRepository,
   collectionIdOrAlias,
   autoFetch = true
-}: useGetDatasetTemplatesProps) => {
+}: useGetTemplatesByCollectionIdProps) => {
   const [datasetTemplates, setDatasetTemplates] = useState<Template[]>([])
   const [isLoadingDatasetTemplates, setIsLoadingDatasetTemplates] = useState<boolean>(autoFetch)
   const [errorGetDatasetTemplates, setErrorGetDatasetTemplates] = useState<string | null>(null)
@@ -25,7 +25,7 @@ export const useGetDatasetTemplates = ({
     setErrorGetDatasetTemplates(null)
 
     try {
-      const response: Template[] = await getDatasetTemplates(
+      const response: Template[] = await getTemplatesByCollectionId(
         templateRepository,
         collectionIdOrAlias
       )

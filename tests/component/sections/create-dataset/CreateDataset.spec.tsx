@@ -27,7 +27,7 @@ const collection = CollectionMother.create({ name: COLLECTION_NAME, id: 'test-al
 describe('Create Dataset', () => {
   beforeEach(() => {
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
-    templateRepository.getDatasetTemplates = cy.stub().resolves([])
+    templateRepository.getTemplatesByCollectionId = cy.stub().resolves([])
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
       .resolves(collectionMetadataBlocksInfo)
@@ -166,7 +166,7 @@ describe('Create Dataset', () => {
         name: 'Template 1',
         isDefault: false
       })
-      templateRepository.getDatasetTemplates = cy.stub().resolves([testDatasetTemplate1])
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([testDatasetTemplate1])
 
       cy.customMount(
         <CreateDataset
@@ -191,7 +191,7 @@ describe('Create Dataset', () => {
         name: 'Template 2',
         isDefault: true
       })
-      templateRepository.getDatasetTemplates = cy
+      templateRepository.getTemplatesByCollectionId = cy
         .stub()
         .resolves([testDatasetTemplate1, testDatasetTemplate2])
 
@@ -218,7 +218,7 @@ describe('Create Dataset', () => {
         name: 'Template 2',
         isDefault: false
       })
-      templateRepository.getDatasetTemplates = cy
+      templateRepository.getTemplatesByCollectionId = cy
         .stub()
         .resolves([testDatasetTemplate1, testDatasetTemplate2])
 

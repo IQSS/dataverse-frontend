@@ -1,4 +1,4 @@
-import { CreateDatasetTemplateDTO } from '@iqss/dataverse-client-javascript'
+import { CreateTemplateDTO } from '@iqss/dataverse-client-javascript'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { Template } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
@@ -6,7 +6,7 @@ import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
 export class TemplateMockRepository implements TemplateRepository {
   createTemplate(
-    _template: CreateDatasetTemplateDTO,
+    _template: CreateTemplateDTO,
     _collectionIdOrAlias: number | string
   ): Promise<void> {
     return new Promise((resolve) => {
@@ -24,7 +24,7 @@ export class TemplateMockRepository implements TemplateRepository {
     })
   }
 
-  getDatasetTemplates(_collectionIdOrAlias: number | string): Promise<Template[]> {
+  getTemplatesByCollectionId(_collectionIdOrAlias: number | string): Promise<Template[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetTemplateMother.createMany(3))

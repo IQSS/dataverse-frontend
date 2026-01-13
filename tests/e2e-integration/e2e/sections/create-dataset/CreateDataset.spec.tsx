@@ -49,8 +49,8 @@ describe('Create Dataset', () => {
     let datasetTemplateId: number
 
     beforeEach(async () => {
-      await DatasetHelper.createDatasetTemplate()
-      const templates = await DatasetHelper.getDatasetTemplates()
+      await DatasetHelper.createTemplate()
+      const templates = await DatasetHelper.getTemplatesByCollectionId()
 
       const { id } = templates[0]
       datasetTemplateId = id
