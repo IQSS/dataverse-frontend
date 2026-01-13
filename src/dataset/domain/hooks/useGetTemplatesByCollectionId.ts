@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
+import { getTemplatesByCollectionId } from '@/templates/domain/useCases/getTemplatesByCollectionId'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { Template } from '../models/DatasetTemplate'
-import { getTemplatesByCollectionId } from '../useCases/getTemplatesByCollectionId'
 
 interface useGetTemplatesByCollectionIdProps {
   templateRepository: TemplateRepository

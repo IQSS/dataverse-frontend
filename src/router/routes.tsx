@@ -93,6 +93,14 @@ const DatasetTemplatesPage = lazy(() =>
   )
 )
 
+const CreateDatasetTemplatePage = lazy(() =>
+  import('../sections/dataset-templates/create-template/CreateDatasetTemplateFactory').then(
+    ({ CreateDatasetTemplateFactory }) => ({
+      default: () => CreateDatasetTemplateFactory.create()
+    })
+  )
+)
+
 const ReplaceFile = lazy(() =>
   import('../sections/replace-file/ReplaceFileFactory').then(({ ReplaceFileFactory }) => ({
     default: () => ReplaceFileFactory.create()
@@ -288,6 +296,15 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <DatasetTemplatesPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.TEMPLATES_CREATE,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <CreateDatasetTemplatePage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

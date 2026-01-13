@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { Trans, useTranslation } from 'react-i18next'
 import { Alert, Button, ButtonGroup, Table, Tooltip } from '@iqss/dataverse-design-system'
 import {
   CaretDown,
@@ -17,7 +18,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { useCollection } from '../collection/useCollection'
-import { useGetDatasetTemplates } from '@/dataset/domain/hooks/useGetDatasetTemplates'
+import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
@@ -27,6 +28,7 @@ import { Template } from '@/dataset/domain/models/DatasetTemplate'
 import { ConfirmDeleteTemplateModal } from './confirm-delete-template-modal/ConfirmDeleteTemplateModal'
 import { DatasetTemplatePreviewModal } from './dataset-template-preview-modal/DatasetTemplatePreviewModal'
 import styles from './DatasetTemplates.module.scss'
+import { RouteWithParams } from '@/sections/Route.enum'
 
 interface DatasetTemplatesProps {
   collectionRepository: CollectionRepository
@@ -42,6 +44,7 @@ export const DatasetTemplates = ({
   collectionIdFromParams
 }: DatasetTemplatesProps) => {
   const { t } = useTranslation('datasetTemplates')
+  const navigate = useNavigate()
   const { isModalOpen, hideModal, showModal } = useNotImplementedModal()
   const [sortBy, setSortBy] = useState<'name' | 'created' | 'usage' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
@@ -58,7 +61,7 @@ export const DatasetTemplates = ({
     isLoadingDatasetTemplates,
     errorGetDatasetTemplates,
     fetchDatasetTemplates
-  } = useGetDatasetTemplates({
+  } = useGetTemplatesByCollectionId({
     templateRepository,
     collectionIdOrAlias: collectionIdFromParams ?? '',
     autoFetch: Boolean(collectionIdFromParams)
@@ -112,6 +115,21 @@ export const DatasetTemplates = ({
     `${styles['sort-button']}${sortBy === column ? ` ${styles['sort-button-active']}` : ''}`
   const sortHeaderClass = (column: 'name' | 'created' | 'usage') =>
     sortBy === column ? styles['sort-header-active'] : ''
+
+  const emptyStateWhyBullets = t('emptyState.whyBullets', {
+    returnObjects: true
+  }) as string[]
+  const emptyStateHowBullets = t('emptyState.howBullets', {
+    returnObjects: true
+  }) as string[]
+  const collectionId = collectionIdFromParams ?? collection?.id ?? ''
+  const generalInfoUrl = `/spa${RouteWithParams.EDIT_COLLECTION(collectionId)}`
+  const templatesGuideUrl =
+    'https://guides.dataverse.org/en/6.9/user/dataverse-management.html#dataset-templates'
+
+  const handleCreateTemplate = () => {
+    navigate('create', { relative: 'path' })
+  }
 
   const handleOpenDeleteModal = (template: Template) => {
     setTemplateToDelete(template)
@@ -194,128 +212,164 @@ export const DatasetTemplates = ({
           </div>
         </header>
 
-        <Alert variant="info" customHeading={t('infoAlert.title')} dismissible>
-          {t('infoAlert.text')}
-        </Alert>
-
         <div className={styles['table-actions']}>
-          <Button variant="primary" onClick={showModal} className={styles['create-button']}>
+          <Button
+            variant="primary"
+            onClick={handleCreateTemplate}
+            className={styles['create-button']}>
             <PlusLg className={styles['button-icon']} />
             {t('actions.create')}
           </Button>
         </div>
 
-        <Table>
-          <thead>
-            <tr>
-              <th scope="col" className={`${styles['name-column']} ${sortHeaderClass('name')}`}>
-                <Button
-                  variant="link"
-                  onClick={() => handleSort('name')}
-                  className={sortButtonClass('name')}
-                  aria-pressed={sortBy === 'name'}>
-                  <span>{t('table.name')}</span>
-                  <span className={styles['sort-indicator']}>{sortIndicator('name')}</span>
-                </Button>
-              </th>
-              <th scope="col" className={sortHeaderClass('created')}>
-                <Button
-                  variant="link"
-                  onClick={() => handleSort('created')}
-                  className={sortButtonClass('created')}
-                  aria-pressed={sortBy === 'created'}>
-                  <span>{t('table.created')}</span>
-                  <span className={styles['sort-indicator']}>{sortIndicator('created')}</span>
-                </Button>
-              </th>
-              <th scope="col" className={sortHeaderClass('usage')}>
-                <Button
-                  variant="link"
-                  onClick={() => handleSort('usage')}
-                  className={sortButtonClass('usage')}
-                  aria-pressed={sortBy === 'usage'}>
-                  <span>{t('table.usage')}</span>
-                  <span className={styles['sort-indicator']}>{sortIndicator('usage')}</span>
-                </Button>
-              </th>
-              <th scope="col" className={styles['action-column']}>
-                {t('table.action')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {datasetTemplates.length === 0 ? (
-              <tr>
-                <td colSpan={4} className={styles['empty-state']}>
-                  {t('emptyState')}
-                </td>
-              </tr>
-            ) : (
-              sortedTemplates.map((template) => (
-                <tr key={template.id}>
-                  <td>{template.name}</td>
-                  <td>{formatCreateDate(template)}</td>
-                  <td>{template.usageCount}</td>
-                  <td className={styles['action-cell']}>
-                    <ButtonGroup className={styles['action-group']} aria-label={t('table.action')}>
-                      {template.isDefault ? (
-                        <Button variant="secondary" size="sm" disabled>
-                          <CheckLg className={styles['action-icon']} />
-                          {t('actions.default')}
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={showModal}
-                          className={styles['make-default-button']}>
-                          {t('actions.makeDefault')}
-                        </Button>
-                      )}
-                      <Tooltip placement="top" overlay={t('actions.view')}>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => handleOpenPreviewModal(template)}
-                          aria-label={t('actions.view')}>
-                          <Eye className={styles['action-icon']} />
-                        </Button>
-                      </Tooltip>
-                      <Tooltip placement="top" overlay={t('actions.copy')}>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={showModal}
-                          aria-label={t('actions.copy')}>
-                          <Files className={styles['action-icon']} />
-                        </Button>
-                      </Tooltip>
-                      <Tooltip placement="top" overlay={t('actions.edit')}>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={showModal}
-                          aria-label={t('actions.edit')}>
-                          <Pencil className={styles['action-icon']} />
-                          <span className={styles['action-label']}>{t('actions.edit')}</span>
-                        </Button>
-                      </Tooltip>
-                      <Tooltip placement="top" overlay={t('actions.delete')}>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => handleOpenDeleteModal(template)}
-                          aria-label={t('actions.delete')}>
-                          <Trash className={styles['action-icon']} />
-                        </Button>
-                      </Tooltip>
-                    </ButtonGroup>
-                  </td>
+        {datasetTemplates.length === 0 ? (
+          <div className={styles['empty-state']}>
+            <div>
+              <h2>{t('emptyState.whyTitle')}</h2>
+              <ul>
+                {emptyStateWhyBullets.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <h2>{t('emptyState.howTitle')}</h2>
+              <ul>
+                {emptyStateHowBullets.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+                <li>
+                  <Trans
+                    t={t}
+                    i18nKey="emptyState.howNote"
+                    components={{
+                      anchor: <a href={generalInfoUrl} target="_blank" rel="noreferrer" />
+                    }}
+                  />
+                </li>
+              </ul>
+              <p>
+                <Trans
+                  t={t}
+                  i18nKey="emptyState.footer"
+                  components={{
+                    anchor: <a href={templatesGuideUrl} target="_blank" rel="noreferrer" />
+                  }}
+                />
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <Alert variant="info" customHeading={t('infoAlert.title')} dismissible>
+              {t('infoAlert.text')}
+            </Alert>
+
+            <Table>
+              <thead>
+                <tr>
+                  <th scope="col" className={`${styles['name-column']} ${sortHeaderClass('name')}`}>
+                    <Button
+                      variant="link"
+                      onClick={() => handleSort('name')}
+                      className={sortButtonClass('name')}
+                      aria-pressed={sortBy === 'name'}>
+                      <span>{t('table.name')}</span>
+                      <span className={styles['sort-indicator']}>{sortIndicator('name')}</span>
+                    </Button>
+                  </th>
+                  <th scope="col" className={sortHeaderClass('created')}>
+                    <Button
+                      variant="link"
+                      onClick={() => handleSort('created')}
+                      className={sortButtonClass('created')}
+                      aria-pressed={sortBy === 'created'}>
+                      <span>{t('table.created')}</span>
+                      <span className={styles['sort-indicator']}>{sortIndicator('created')}</span>
+                    </Button>
+                  </th>
+                  <th scope="col" className={sortHeaderClass('usage')}>
+                    <Button
+                      variant="link"
+                      onClick={() => handleSort('usage')}
+                      className={sortButtonClass('usage')}
+                      aria-pressed={sortBy === 'usage'}>
+                      <span>{t('table.usage')}</span>
+                      <span className={styles['sort-indicator']}>{sortIndicator('usage')}</span>
+                    </Button>
+                  </th>
+                  <th scope="col" className={styles['action-column']}>
+                    {t('table.action')}
+                  </th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </Table>
+              </thead>
+              <tbody>
+                {sortedTemplates.map((template) => (
+                  <tr key={template.id}>
+                    <td>{template.name}</td>
+                    <td>{formatCreateDate(template)}</td>
+                    <td>{template.usageCount}</td>
+                    <td className={styles['action-cell']}>
+                      <ButtonGroup
+                        className={styles['action-group']}
+                        aria-label={t('table.action')}>
+                        {template.isDefault ? (
+                          <Button variant="secondary" size="sm" disabled>
+                            <CheckLg className={styles['action-icon']} />
+                            {t('actions.default')}
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={showModal}
+                            className={styles['make-default-button']}>
+                            {t('actions.makeDefault')}
+                          </Button>
+                        )}
+                        <Tooltip placement="top" overlay={t('actions.view')}>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => handleOpenPreviewModal(template)}
+                            aria-label={t('actions.view')}>
+                            <Eye className={styles['action-icon']} />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip placement="top" overlay={t('actions.copy')}>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={showModal}
+                            aria-label={t('actions.copy')}>
+                            <Files className={styles['action-icon']} />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip placement="top" overlay={t('actions.edit')}>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={showModal}
+                            aria-label={t('actions.edit')}>
+                            <Pencil className={styles['action-icon']} />
+                            <span className={styles['action-label']}>{t('actions.edit')}</span>
+                          </Button>
+                        </Tooltip>
+                        <Tooltip placement="top" overlay={t('actions.delete')}>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => handleOpenDeleteModal(template)}
+                            aria-label={t('actions.delete')}>
+                            <Trash className={styles['action-icon']} />
+                          </Button>
+                        </Tooltip>
+                      </ButtonGroup>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </>
+        )}
       </section>
     </>
   )

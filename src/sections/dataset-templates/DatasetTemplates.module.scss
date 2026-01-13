@@ -23,7 +23,6 @@
   margin: $spacer 0;
 }
 
-.th,
 td {
   text-align: center;
 }
@@ -110,11 +109,9 @@ td {
   vertical-align: middle;
 }
 
-.default-badge {
-  margin-left: 0.5rem;
-}
-
 .empty-state {
-  text-align: center;
   color: $dv-subtext-color;
+  padding: 2rem;
+  border: 1px solid rgba($dv-subtext-color, 0.2);
+  border-radius: 0.5rem;
 }
