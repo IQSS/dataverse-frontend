@@ -15,7 +15,7 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useCollection } from '../collection/useCollection'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { CreateDatasetSkeleton } from './CreateDatasetSkeleton'
-import { useGetDatasetTemplates } from '@/dataset/domain/hooks/useGetDatasetTemplates'
+import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
 import { type Template } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
@@ -53,7 +53,7 @@ export function CreateDataset({
 
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
 
-  const { datasetTemplates, isLoadingDatasetTemplates } = useGetDatasetTemplates({
+  const { datasetTemplates, isLoadingDatasetTemplates } = useGetTemplatesByCollectionId({
     templateRepository,
     collectionIdOrAlias: collectionId
   })
