@@ -111,6 +111,24 @@ describe('EditCollectionDropdown', () => {
     )
   })
 
+  it('shows the Dataset Templates button with the correct link', () => {
+    cy.mountAuthenticated(
+      <EditCollectionDropdown
+        collection={rootCollection}
+        collectionRepository={collectionRepository}
+        canUserDeleteCollection={false}
+      />
+    )
+
+    openDropdown()
+
+    cy.findByRole('link', { name: 'Dataset Templates' }).should(
+      'have.attr',
+      'href',
+      '/root/templates'
+    )
+  })
+
   describe('delete button', () => {
     it('shows the delete button if user can delete collection, collection is not root and collection has no data', () => {
       cy.mountAuthenticated(

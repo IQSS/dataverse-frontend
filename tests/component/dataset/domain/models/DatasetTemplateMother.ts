@@ -2,6 +2,12 @@ import { faker } from '@faker-js/faker'
 import { Template } from '@/dataset/domain/models/DatasetTemplate'
 
 export class DatasetTemplateMother {
+  static createTemplates(
+    overrides: Array<Partial<Template> & Pick<Template, 'id' | 'name'>>
+  ): Template[] {
+    return overrides.map((props) => this.create(props))
+  }
+
   static createMany(count: number, props?: Partial<Template>): Template[] {
     return Array.from({ length: count }, () => this.create(props))
   }
