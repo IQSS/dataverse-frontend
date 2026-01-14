@@ -11,6 +11,7 @@ import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import { DatasetTermsRow } from '@/sections/dataset/dataset-terms/DatasetTermsRow'
 import styles from '../create-template/CreateDatasetTemplate.module.scss'
+import { EditDatasetTemplateTermsSkeleton } from './EditDatasetTemplateTermsSkeleton'
 
 interface EditDatasetTemplateTermsProps {
   collectionId: string
@@ -34,6 +35,10 @@ export const EditDatasetTemplateTerms = ({
     templateId
   })
   const showCreateSuccess = Boolean((location.state as { fromCreateTemplate?: boolean } | null)?.fromCreateTemplate)
+
+  if (isLoadingTemplate) {
+    return <EditDatasetTemplateTermsSkeleton />
+  }
 
   return (
     <>

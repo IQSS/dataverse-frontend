@@ -30,7 +30,7 @@ import {
 import { SubmissionStatus, useSubmitTemplate } from '@/sections/shared/form/useSubmitTemplate'
 import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
 import styles from './CreateDatasetTemplate.module.scss'
-import Skeleton from 'react-loading-skeleton'
+import { CreateDatasetTemplateSkeleton } from './CreateDatasetTemplateSkeleton'
 
 interface CreateDatasetTemplateProps {
   collectionId: string
@@ -261,7 +261,7 @@ export const CreateDatasetTemplate = ({
   }
 
   if (isLoadingData || !collection) {
-    return <Skeleton height={500} />
+    return <CreateDatasetTemplateSkeleton />
   }
 
   if (errorLoadingData) {

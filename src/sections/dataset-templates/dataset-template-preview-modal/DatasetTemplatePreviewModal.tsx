@@ -11,7 +11,7 @@ import { DatasetTermsRow } from '@/sections/dataset/dataset-terms/DatasetTermsRo
 import { Template } from '@/dataset/domain/models/DatasetTemplate'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import Skeleton from 'react-loading-skeleton'
+import { DatasetTemplatePreviewModalSkeleton } from './DatasetTemplatePreviewModalSkeleton'
 
 interface DatasetTemplatePreviewModalProps {
   show: boolean
@@ -103,7 +103,7 @@ export const DatasetTemplatePreviewModal = ({
           </span>
         </div>
 
-        {isLoading && <Skeleton height={200} />}
+        {isLoading && <DatasetTemplatePreviewModalSkeleton />}
 
         {error && <Alert variant="danger">{error}</Alert>}
 
@@ -112,7 +112,7 @@ export const DatasetTemplatePreviewModal = ({
             <Accordion.Item eventKey="0">
               <Accordion.Header>{t('preview.sections.metadata')}</Accordion.Header>
               <Accordion.Body>
-                {isLoadingBlockInfo && <Skeleton height={200} />}
+                {isLoadingBlockInfo && <DatasetTemplatePreviewModalSkeleton />}
                 {errorBlockInfo && <Alert variant="danger">{errorBlockInfo}</Alert>}
                 {!isLoadingBlockInfo &&
                 !errorBlockInfo &&

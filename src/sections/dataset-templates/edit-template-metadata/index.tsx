@@ -25,6 +25,7 @@ import { useCollection } from '@/sections/collection/useCollection'
 import { NotFoundPage } from '@/sections/not-found-page/NotFoundPage'
 import { RequiredFieldText } from '@/sections/shared/form/RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
+import { EditDatasetTemplateMetadataSkeleton } from './EditDatasetTemplateMetadataSkeleton'
 import styles from '../create-template/CreateDatasetTemplate.module.scss'
 
 interface EditDatasetTemplateMetadataProps {
@@ -115,6 +116,10 @@ export const EditDatasetTemplateMetadata = ({
 
   if (!isLoadingCollection && !collection) {
     return <NotFoundPage dvObjectNotFoundType="collection" />
+  }
+
+  if (isLoadingData) {
+    return <EditDatasetTemplateMetadataSkeleton />
   }
 
   if (errorLoadingData) {

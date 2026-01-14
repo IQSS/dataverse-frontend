@@ -36,7 +36,7 @@ import { ConfirmDeleteTemplateModal } from './confirm-delete-template-modal/Conf
 import { DatasetTemplatePreviewModal } from './dataset-template-preview-modal/DatasetTemplatePreviewModal'
 import styles from './DatasetTemplates.module.scss'
 import { RouteWithParams } from '@/sections/Route.enum'
-import Skeleton from 'react-loading-skeleton'
+import { DatasetTemplatesSkeleton } from './DatasetTemplatesSkeleton'
 
 interface DatasetTemplatesProps {
   collectionRepository: CollectionRepository
@@ -185,7 +185,7 @@ export const DatasetTemplates = ({
   }
 
   if (isLoadingData || !collection) {
-    return <Skeleton height={500} />
+    return <DatasetTemplatesSkeleton />
   }
 
   if (errorGetDatasetTemplates) {
