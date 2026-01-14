@@ -32,9 +32,11 @@ export function useNotifications(
         const fetched = await getAllNotificationsByUser(repository, currentPagination)
         setError(null)
 
-        setPaginationInfoRef.current(
-          new NotificationsPaginationInfo(page, pageSize, fetched.totalItemCount)
-        )
+        const total = fetched.totalItemCount ?? 0
+        const endPage = Math.max(1, Math.ceil(total / pageSize))
+        const adjustedPage = Math.min(page, endPage)
+
+        setPaginationInfoRef.current(new NotificationsPaginationInfo(adjustedPage, pageSize, total))
         setNotifications(fetched.items)
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to fetch notifications'
