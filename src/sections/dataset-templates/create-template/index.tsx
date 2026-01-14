@@ -11,19 +11,15 @@ import {
   Form,
   RequiredInputSymbol
 } from '@iqss/dataverse-design-system'
-import {
-  CreateTemplateDTO,
-  MetadataFieldTypeClass,
-  TemplateFieldDTO
-} from '@iqss/dataverse-client-javascript'
+import { TemplateFieldInfo, TemplateInfo } from '@/templates/domain/models/TemplateInfo'
 import { MetadataBlockName } from '@/dataset/domain/models/Dataset'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useGetMetadataBlocksInfo } from '@/sections/shared/form/DatasetMetadataForm/useGetMetadataBlocksInfo'
 import { MetadataFieldsHelper } from '@/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 import { MetadataBlockFormFields } from '@/sections/shared/form/DatasetMetadataForm/MetadataForm/MetadataBlockFormFields'
 import { useCollection } from '@/sections/collection/useCollection'
-import { AppLoader } from '@/sections/shared/layout/app-loader/AppLoader'
 import { NotFoundPage } from '@/sections/not-found-page/NotFoundPage'
 import { RequiredFieldText } from '@/sections/shared/form/RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
@@ -32,17 +28,21 @@ import {
   type MetadataField
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { SubmissionStatus, useSubmitTemplate } from '@/sections/shared/form/useSubmitTemplate'
+import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
 import styles from './CreateDatasetTemplate.module.scss'
+import Skeleton from 'react-loading-skeleton'
 
 interface CreateDatasetTemplateProps {
   collectionId: string
   collectionRepository: CollectionRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  templateRepository: TemplateRepository
 }
 
 export const CreateDatasetTemplate = ({
   collectionId,
   collectionRepository,
+  templateRepository,
   metadataBlockInfoRepository
 }: CreateDatasetTemplateProps) => {
   const { t } = useTranslation('datasetTemplates')
@@ -53,6 +53,11 @@ export const CreateDatasetTemplate = ({
     collectionRepository,
     collectionId
   )
+
+  const { datasetTemplates: templates, fetchDatasetTemplates } = useGetTemplatesByCollectionId({
+    templateRepository,
+    collectionIdOrAlias: collectionId
+  })
 
   const {
     metadataBlocksInfo: metadataBlocksInfoForEdit,
@@ -82,6 +87,28 @@ export const CreateDatasetTemplate = ({
   )
 
   const [templateName, setTemplateName] = useState('')
+  const [navigateToTermsPending, setNavigateToTermsPending] = useState(false)
+
+  const currentTemplateId = useMemo(() => {
+    const normalizedName = templateName.trim().toLowerCase()
+    if (!normalizedName) return null
+
+    const match = templates.find(
+      (template) => template.name.trim().toLowerCase() === normalizedName
+    )
+    return match?.id ?? null
+  }, [templates, templateName])
+
+  useEffect(() => {
+    if (!navigateToTermsPending) return
+    if (currentTemplateId === null) return
+
+    setNavigateToTermsPending(false)
+    navigate(RouteWithParams.TEMPLATES_EDIT_TERMS(collectionId, currentTemplateId), {
+      state: { fromCreateTemplate: true }
+    })
+  }, [collectionId, currentTemplateId, navigate, navigateToTermsPending])
+
   const formDefaultValues = useMemo(
     () => MetadataFieldsHelper.getFormDefaultValues(citationBlock ? [citationBlock] : []),
     [citationBlock]
@@ -185,8 +212,8 @@ export const CreateDatasetTemplate = ({
     return compoundValues
   }
 
-  const buildTemplateFields = (fieldValues: Record<string, unknown>): TemplateFieldDTO[] => {
-    const templateFields: TemplateFieldDTO[] = []
+  const buildTemplateFields = (fieldValues: Record<string, unknown>): TemplateFieldInfo[] => {
+    const templateFields: TemplateFieldInfo[] = []
 
     Object.entries(fieldValues).forEach(([fieldName, fieldValue]) => {
       const fieldInfo = metadataFieldsByName.get(fieldName)
@@ -204,8 +231,8 @@ export const CreateDatasetTemplate = ({
         templateFields.push({
           typeName: fieldInfo.name,
           multiple: fieldInfo.multiple,
-          typeClass: fieldInfo.typeClass as MetadataFieldTypeClass,
-          value: valuePayload as unknown as TemplateFieldDTO['value']
+          typeClass: fieldInfo.typeClass,
+          value: valuePayload as unknown as TemplateFieldInfo['value']
         })
 
         return
@@ -220,8 +247,8 @@ export const CreateDatasetTemplate = ({
         templateFields.push({
           typeName: fieldInfo.name,
           multiple: fieldInfo.multiple,
-          typeClass: fieldInfo.typeClass as MetadataFieldTypeClass,
-          value: valuePayload as unknown as TemplateFieldDTO['value']
+          typeClass: fieldInfo.typeClass,
+          value: valuePayload as unknown as TemplateFieldInfo['value']
         })
       }
     })
@@ -234,7 +261,7 @@ export const CreateDatasetTemplate = ({
   }
 
   if (isLoadingData || !collection) {
-    return <AppLoader />
+    return <Skeleton height={500} />
   }
 
   if (errorLoadingData) {
@@ -271,12 +298,16 @@ export const CreateDatasetTemplate = ({
         datasetDto.metadataBlocks.find((block) => block.name === MetadataBlockName.CITATION)
           ?.fields ?? {}
 
-      const templatePayload: CreateTemplateDTO = {
+      const templatePayload: TemplateInfo = {
         name: templateName.trim(),
         fields: buildTemplateFields(citationValues)
       }
 
-      await submitTemplate(templatePayload)
+      const didSubmit = await submitTemplate(templatePayload)
+      if (!didSubmit) return
+
+      await fetchDatasetTemplates()
+      setNavigateToTermsPending(true)
     })()
   }
 

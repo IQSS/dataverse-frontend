@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Alert, Button, Modal, Spinner, Stack } from '@iqss/dataverse-design-system'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
-import styles from './ConfirmDeleteTemplateModal.module.scss'
 
 interface ConfirmDeleteTemplateModalProps {
   show: boolean
@@ -30,7 +29,7 @@ export const ConfirmDeleteTemplateModal = ({
       </Modal.Header>
       <Modal.Body>
         <Stack gap={2}>
-          <Stack direction="horizontal" gap={2} className={styles.message}>
+          <Stack direction="horizontal" gap={2} style={{ color: '#8a6d3b' }}>
             <ExclamationTriangle />
             <span>{t('deleteModal.message', { name: templateName })}</span>
           </Stack>

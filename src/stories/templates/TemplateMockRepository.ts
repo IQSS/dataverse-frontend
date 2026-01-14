@@ -1,14 +1,11 @@
-import { CreateTemplateDTO } from '@iqss/dataverse-client-javascript'
+import { TemplateInfo } from '@/templates/domain/models/TemplateInfo'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { Template } from '@/dataset/domain/models/DatasetTemplate'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
 export class TemplateMockRepository implements TemplateRepository {
-  createTemplate(
-    _template: CreateTemplateDTO,
-    _collectionIdOrAlias: number | string
-  ): Promise<void> {
+  createTemplate(_template: TemplateInfo, _collectionIdOrAlias: number | string): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()

@@ -1,7 +1,15 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Trans, useTranslation } from 'react-i18next'
-import { Alert, Button, ButtonGroup, Table, Tooltip } from '@iqss/dataverse-design-system'
+import {
+  Alert,
+  Button,
+  ButtonGroup,
+  DropdownButton,
+  DropdownButtonItem,
+  Table,
+  Tooltip
+} from '@iqss/dataverse-design-system'
 import {
   CaretDown,
   CaretUp,
@@ -21,7 +29,6 @@ import { useCollection } from '../collection/useCollection'
 import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
-import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { Template } from '@/dataset/domain/models/DatasetTemplate'
@@ -29,6 +36,7 @@ import { ConfirmDeleteTemplateModal } from './confirm-delete-template-modal/Conf
 import { DatasetTemplatePreviewModal } from './dataset-template-preview-modal/DatasetTemplatePreviewModal'
 import styles from './DatasetTemplates.module.scss'
 import { RouteWithParams } from '@/sections/Route.enum'
+import Skeleton from 'react-loading-skeleton'
 
 interface DatasetTemplatesProps {
   collectionRepository: CollectionRepository
@@ -44,6 +52,7 @@ export const DatasetTemplates = ({
   collectionIdFromParams
 }: DatasetTemplatesProps) => {
   const { t } = useTranslation('datasetTemplates')
+  const { t: tDataset } = useTranslation('dataset')
   const navigate = useNavigate()
   const { isModalOpen, hideModal, showModal } = useNotImplementedModal()
   const [sortBy, setSortBy] = useState<'name' | 'created' | 'usage' | null>(null)
@@ -68,11 +77,8 @@ export const DatasetTemplates = ({
   })
 
   const isLoadingData = isLoadingCollection || isLoadingDatasetTemplates
-  const formatCreateDate = (template: Template) => template.createDate || template.createTime || ''
   const resolveCreateDate = (template: Template) => {
-    const value = formatCreateDate(template)
-    const time = Date.parse(value)
-    return Number.isNaN(time) ? 0 : time
+    return Date.parse(template.createDate)
   }
 
   const sortedTemplates = useMemo(() => {
@@ -158,6 +164,14 @@ export const DatasetTemplates = ({
     }
   }
 
+  const handleEditTemplateAction = (template: Template, action: 'metadata' | 'terms') => {
+    if (action === 'metadata') {
+      navigate(RouteWithParams.TEMPLATES_EDIT_METADATA(collectionId, template.id))
+      return
+    }
+    navigate(RouteWithParams.TEMPLATES_EDIT_TERMS(collectionId, template.id))
+  }
+
   const handleOpenPreviewModal = (template: Template) => {
     setTemplateToPreview(template)
   }
@@ -171,7 +185,7 @@ export const DatasetTemplates = ({
   }
 
   if (isLoadingData || !collection) {
-    return <AppLoader />
+    return <Skeleton height={500} />
   }
 
   if (errorGetDatasetTemplates) {
@@ -305,7 +319,7 @@ export const DatasetTemplates = ({
                 {sortedTemplates.map((template) => (
                   <tr key={template.id}>
                     <td>{template.name}</td>
-                    <td>{formatCreateDate(template)}</td>
+                    <td>{template.createDate}</td>
                     <td>{template.usageCount}</td>
                     <td className={styles['action-cell']}>
                       <ButtonGroup
@@ -343,16 +357,28 @@ export const DatasetTemplates = ({
                             <Files className={styles['action-icon']} />
                           </Button>
                         </Tooltip>
-                        <Tooltip placement="top" overlay={t('actions.edit')}>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={showModal}
-                            aria-label={t('actions.edit')}>
-                            <Pencil className={styles['action-icon']} />
-                            <span className={styles['action-label']}>{t('actions.edit')}</span>
-                          </Button>
-                        </Tooltip>
+                        <DropdownButton
+                          id={`edit-template-${template.id}`}
+                          title={t('actions.edit')}
+                          icon={
+                            <Pencil
+                              className={styles['action-icon']}
+                              style={{ marginRight: '5px' }}
+                            />
+                          }
+                          variant="secondary"
+                          size="sm"
+                          onSelect={(eventKey) =>
+                            handleEditTemplateAction(template, eventKey as 'metadata' | 'terms')
+                          }>
+                          {/* waiting for Edit Template api support */}
+                          <DropdownButtonItem eventKey="metadata" as="button" disabled>
+                            {tDataset('datasetActionButtons.editDataset.metadata')}
+                          </DropdownButtonItem>
+                          <DropdownButtonItem eventKey="terms" as="button" disabled>
+                            {tDataset('datasetActionButtons.editDataset.terms')}
+                          </DropdownButtonItem>
+                        </DropdownButton>
                         <Tooltip placement="top" overlay={t('actions.delete')}>
                           <Button
                             variant="secondary"

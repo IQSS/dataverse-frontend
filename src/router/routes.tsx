@@ -101,6 +101,22 @@ const CreateDatasetTemplatePage = lazy(() =>
   )
 )
 
+const EditDatasetTemplateMetadataPage = lazy(() =>
+  import(
+    '../sections/dataset-templates/edit-template-metadata/EditDatasetTemplateMetadataFactory'
+  ).then(({ EditDatasetTemplateMetadataFactory }) => ({
+    default: () => EditDatasetTemplateMetadataFactory.create()
+  }))
+)
+
+const EditDatasetTemplateTermsPage = lazy(() =>
+  import('../sections/dataset-templates/edit-template-terms/EditDatasetTemplateTermsFactory').then(
+    ({ EditDatasetTemplateTermsFactory }) => ({
+      default: () => EditDatasetTemplateTermsFactory.create()
+    })
+  )
+)
+
 const ReplaceFile = lazy(() =>
   import('../sections/replace-file/ReplaceFileFactory').then(({ ReplaceFileFactory }) => ({
     default: () => ReplaceFileFactory.create()
@@ -305,6 +321,24 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <CreateDatasetTemplatePage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.TEMPLATES_EDIT_METADATA,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditDatasetTemplateMetadataPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.TEMPLATES_EDIT_TERMS,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditDatasetTemplateTermsPage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

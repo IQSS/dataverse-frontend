@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Accordion, Alert, Button, Modal, Spinner, Stack } from '@iqss/dataverse-design-system'
+import { Accordion, Alert, Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { MetadataBlockName } from '@/dataset/domain/models/Dataset'
 import { DatasetMetadataFields } from '@/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFields'
 import { useGetMetadataBlockDisplayFormatInfo } from '@/sections/dataset/useGetMetadataBlockDisplayFormatInfo'
@@ -11,7 +11,7 @@ import { DatasetTermsRow } from '@/sections/dataset/dataset-terms/DatasetTermsRo
 import { Template } from '@/dataset/domain/models/DatasetTemplate'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import styles from './DatasetTemplatePreviewModal.module.scss'
+import Skeleton from 'react-loading-skeleton'
 
 interface DatasetTemplatePreviewModalProps {
   show: boolean
@@ -96,32 +96,23 @@ export const DatasetTemplatePreviewModal = ({
         <Modal.Title>{t('preview.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div className={styles['template-row']}>
-          <span className={styles['template-label']}>{t('preview.templateLabel')}</span>
-          <span className={styles['template-name']}>{template?.name ?? templateName}</span>
+        <div>
+          <span style={{ margin: '10px', fontWeight: 'bold' }}>{t('preview.templateLabel')}</span>
+          <span style={{ display: 'inline-grid', margin: '10px', fontWeight: 'bold' }}>
+            {template?.name ?? templateName}
+          </span>
         </div>
 
-        {isLoading && (
-          <div className={styles['loading-state']}>
-            <Spinner animation="border" />
-          </div>
-        )}
+        {isLoading && <Skeleton height={200} />}
 
         {error && <Alert variant="danger">{error}</Alert>}
 
         {!isLoading && template && (
-          <Accordion
-            className={styles['preview-accordion']}
-            defaultActiveKey={['0', '1', '2']}
-            alwaysOpen>
+          <Accordion defaultActiveKey={['0', '1', '2']} alwaysOpen>
             <Accordion.Item eventKey="0">
               <Accordion.Header>{t('preview.sections.metadata')}</Accordion.Header>
               <Accordion.Body>
-                {isLoadingBlockInfo && (
-                  <div className={styles['loading-state']}>
-                    <Spinner animation="border" />
-                  </div>
-                )}
+                {isLoadingBlockInfo && <Skeleton height={200} />}
                 {errorBlockInfo && <Alert variant="danger">{errorBlockInfo}</Alert>}
                 {!isLoadingBlockInfo &&
                 !errorBlockInfo &&

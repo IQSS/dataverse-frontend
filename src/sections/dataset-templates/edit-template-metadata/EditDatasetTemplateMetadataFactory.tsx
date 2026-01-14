@@ -3,27 +3,34 @@ import { useParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { MetadataBlockInfoJSDataverseRepository } from '@/metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { TemplateJSDataverseRepository } from '@/templates/infrastructure/repositories/TemplateJSDataverseRepository'
-import { CreateDatasetTemplate } from './index'
+import { EditDatasetTemplateMetadata } from './index'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 const templateRepository = new TemplateJSDataverseRepository()
 
-export class CreateDatasetTemplateFactory {
+export class EditDatasetTemplateMetadataFactory {
   static create(): ReactElement {
-    return <CreateDatasetTemplateWithParams />
+    return <EditDatasetTemplateMetadataWithParams />
   }
 }
 
-function CreateDatasetTemplateWithParams() {
-  const { collectionId } = useParams<{ collectionId: string }>() as { collectionId: string }
+function EditDatasetTemplateMetadataWithParams() {
+  const { collectionId, templateId } = useParams<{
+    collectionId: string
+    templateId: string
+  }>() as {
+    collectionId: string
+    templateId: string
+  }
 
   return (
-    <CreateDatasetTemplate
+    <EditDatasetTemplateMetadata
       collectionId={collectionId}
+      templateId={Number(templateId)}
       collectionRepository={collectionRepository}
-      metadataBlockInfoRepository={metadataBlockInfoRepository}
       templateRepository={templateRepository}
+      metadataBlockInfoRepository={metadataBlockInfoRepository}
     />
   )
 }
