@@ -8,6 +8,7 @@ import { NotificationRepository } from '@/notifications/domain/repositories/Noti
 import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
 import { PaginationControls } from '@/sections/shared/pagination/PaginationControls'
 import styles from './NotificationsSection.module.scss'
+import { DateHelper } from '@/shared/helpers/DateHelper'
 
 interface NotificationsSectionProps {
   notificationRepository: NotificationRepository
@@ -103,7 +104,9 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
                   key={notification.id}>
                   <div>
                     {getTranslatedNotification(notification, t)}
-                    <span className={styles['timestamp']}>{notification.sentTimestamp}</span>
+                    <span className={styles['timestamp']}>
+                      {DateHelper.toDisplayFormatWithTime(new Date(notification.sentTimestamp))}
+                    </span>
                   </div>
                   <CloseButton
                     onClick={async () => {
