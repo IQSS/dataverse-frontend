@@ -86,33 +86,33 @@ const EditFeaturedItems = lazy(() =>
 )
 
 const DatasetTemplatesPage = lazy(() =>
-  import('../sections/dataset-templates/DatasetTemplatesFactory').then(
+  import('../sections/templates/DatasetTemplatesFactory').then(
     ({ DatasetTemplatesFactory }) => ({
       default: () => DatasetTemplatesFactory.create()
     })
   )
 )
 
-const CreateDatasetTemplatePage = lazy(() =>
-  import('../sections/dataset-templates/create-template/CreateDatasetTemplateFactory').then(
-    ({ CreateDatasetTemplateFactory }) => ({
-      default: () => CreateDatasetTemplateFactory.create()
+const CreateTemplatePage = lazy(() =>
+  import('../sections/templates/create-template/CreateTemplateFactory').then(
+    ({ CreateTemplateFactory }) => ({
+      default: () => CreateTemplateFactory.create()
     })
   )
 )
 
 const EditDatasetTemplateMetadataPage = lazy(() =>
-  import(
-    '../sections/dataset-templates/edit-template-metadata/EditDatasetTemplateMetadataFactory'
-  ).then(({ EditDatasetTemplateMetadataFactory }) => ({
-    default: () => EditDatasetTemplateMetadataFactory.create()
-  }))
+  import('../sections/templates/edit-template-metadata/EditTemplateMetadataFactory').then(
+    ({ EditTemplateMetadataFactory }) => ({
+      default: () => EditTemplateMetadataFactory.create()
+    })
+  )
 )
 
 const EditDatasetTemplateTermsPage = lazy(() =>
-  import('../sections/dataset-templates/edit-template-terms/EditDatasetTemplateTermsFactory').then(
-    ({ EditDatasetTemplateTermsFactory }) => ({
-      default: () => EditDatasetTemplateTermsFactory.create()
+  import('../sections/templates/edit-template-terms/EditTemplateTermsFactory').then(
+    ({ EditTemplateTermsFactory }) => ({
+      default: () => EditTemplateTermsFactory.create()
     })
   )
 )
@@ -320,7 +320,7 @@ export const routes: RouteObject[] = [
                 path: Route.TEMPLATES_CREATE,
                 element: (
                   <Suspense fallback={<AppLoader />}>
-                    <CreateDatasetTemplatePage />
+                    <CreateTemplatePage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

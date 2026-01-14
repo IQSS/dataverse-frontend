@@ -29,22 +29,22 @@ import {
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { SubmissionStatus, useSubmitTemplate } from '@/sections/shared/form/useSubmitTemplate'
 import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
-import styles from './CreateDatasetTemplate.module.scss'
-import { CreateDatasetTemplateSkeleton } from './CreateDatasetTemplateSkeleton'
+import styles from './CreateTemplate.module.scss'
+import { CreateTemplateSkeleton } from './CreateTemplateSkeleton'
 
-interface CreateDatasetTemplateProps {
+interface CreateTemplateProps {
   collectionId: string
   collectionRepository: CollectionRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   templateRepository: TemplateRepository
 }
 
-export const CreateDatasetTemplate = ({
+export const CreateTemplate = ({
   collectionId,
   collectionRepository,
   templateRepository,
   metadataBlockInfoRepository
-}: CreateDatasetTemplateProps) => {
+}: CreateTemplateProps) => {
   const { t } = useTranslation('datasetTemplates')
   const navigate = useNavigate()
   const [validationError, setValidationError] = useState<string | null>(null)
@@ -261,7 +261,7 @@ export const CreateDatasetTemplate = ({
   }
 
   if (isLoadingData || !collection) {
-    return <CreateDatasetTemplateSkeleton />
+    return <CreateTemplateSkeleton />
   }
 
   if (errorLoadingData) {

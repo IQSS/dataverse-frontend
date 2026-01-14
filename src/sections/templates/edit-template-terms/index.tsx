@@ -10,20 +10,20 @@ import { License } from '@/sections/dataset/dataset-terms/License'
 import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import { DatasetTermsRow } from '@/sections/dataset/dataset-terms/DatasetTermsRow'
-import styles from '../create-template/CreateDatasetTemplate.module.scss'
-import { EditDatasetTemplateTermsSkeleton } from './EditDatasetTemplateTermsSkeleton'
+import styles from '../create-template/CreateTemplate.module.scss'
+import { EditTemplateTermsSkeleton } from './EditTemplateTermsSkeleton'
 
-interface EditDatasetTemplateTermsProps {
+interface EditTemplateTermsProps {
   collectionId: string
   templateId: number
   templateRepository: TemplateRepository
 }
 
-export const EditDatasetTemplateTerms = ({
+export const EditTemplateTerms = ({
   collectionId,
   templateId,
   templateRepository
-}: EditDatasetTemplateTermsProps) => {
+}: EditTemplateTermsProps) => {
   const { t } = useTranslation('datasetTemplates')
   const { t: tDataset } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
@@ -34,10 +34,12 @@ export const EditDatasetTemplateTerms = ({
     templateRepository,
     templateId
   })
-  const showCreateSuccess = Boolean((location.state as { fromCreateTemplate?: boolean } | null)?.fromCreateTemplate)
+  const showCreateSuccess = Boolean(
+    (location.state as { fromCreateTemplate?: boolean } | null)?.fromCreateTemplate
+  )
 
   if (isLoadingTemplate) {
-    return <EditDatasetTemplateTermsSkeleton />
+    return <EditTemplateTermsSkeleton />
   }
 
   return (

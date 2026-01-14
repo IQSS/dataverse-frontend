@@ -1,17 +1,17 @@
 import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { TemplateJSDataverseRepository } from '@/templates/infrastructure/repositories/TemplateJSDataverseRepository'
-import { EditDatasetTemplateTerms } from './index'
+import { EditTemplateTerms } from './index'
 
 const templateRepository = new TemplateJSDataverseRepository()
 
-export class EditDatasetTemplateTermsFactory {
+export class EditTemplateTermsFactory {
   static create(): ReactElement {
-    return <EditDatasetTemplateTermsWithParams />
+    return <EditTemplateTermsWithParams />
   }
 }
 
-function EditDatasetTemplateTermsWithParams() {
+function EditTemplateTermsWithParams() {
   const { collectionId, templateId } = useParams<{
     collectionId: string
     templateId: string
@@ -21,7 +21,7 @@ function EditDatasetTemplateTermsWithParams() {
   }
 
   return (
-    <EditDatasetTemplateTerms
+    <EditTemplateTerms
       collectionId={collectionId}
       templateId={Number(templateId)}
       templateRepository={templateRepository}

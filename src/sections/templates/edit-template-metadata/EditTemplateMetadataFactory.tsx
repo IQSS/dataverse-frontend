@@ -9,13 +9,13 @@ const collectionRepository = new CollectionJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 const templateRepository = new TemplateJSDataverseRepository()
 
-export class EditDatasetTemplateMetadataFactory {
+export class EditTemplateMetadataFactory {
   static create(): ReactElement {
-    return <EditDatasetTemplateMetadataWithParams />
+    return <EditTemplateMetadataWithParams />
   }
 }
 
-function EditDatasetTemplateMetadataWithParams() {
+function EditTemplateMetadataWithParams() {
   const { collectionId, templateId } = useParams<{
     collectionId: string
     templateId: string

@@ -3,9 +3,9 @@ import { Col, Row } from '@iqss/dataverse-design-system'
 import { BreadcrumbsSkeleton } from '@/sections/shared/hierarchy/BreadcrumbsSkeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
-export const EditDatasetTemplateMetadataSkeleton = () => (
+export const EditTemplateMetadataSkeleton = () => (
   <SkeletonTheme>
-    <section data-testid="edit-dataset-template-metadata-skeleton">
+    <section data-testid="edit-template-metadata-skeleton">
       <BreadcrumbsSkeleton />
       <Skeleton height={32} width={260} style={{ marginBottom: 16 }} />
 

@@ -25,10 +25,10 @@ import { useCollection } from '@/sections/collection/useCollection'
 import { NotFoundPage } from '@/sections/not-found-page/NotFoundPage'
 import { RequiredFieldText } from '@/sections/shared/form/RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
-import { EditDatasetTemplateMetadataSkeleton } from './EditDatasetTemplateMetadataSkeleton'
-import styles from '../create-template/CreateDatasetTemplate.module.scss'
+import { EditTemplateMetadataSkeleton } from './EditTemplateMetadataSkeleton'
+import styles from '../create-template/CreateTemplate.module.scss'
 
-interface EditDatasetTemplateMetadataProps {
+interface EditTemplateMetadataProps {
   collectionId: string
   templateId: number
   collectionRepository: CollectionRepository
@@ -42,7 +42,7 @@ export const EditDatasetTemplateMetadata = ({
   collectionRepository,
   templateRepository,
   metadataBlockInfoRepository
-}: EditDatasetTemplateMetadataProps) => {
+}: EditTemplateMetadataProps) => {
   const { t } = useTranslation('datasetTemplates')
   const { t: tShared } = useTranslation('shared')
   const navigate = useNavigate()
@@ -119,7 +119,7 @@ export const EditDatasetTemplateMetadata = ({
   }
 
   if (isLoadingData) {
-    return <EditDatasetTemplateMetadataSkeleton />
+    return <EditTemplateMetadataSkeleton />
   }
 
   if (errorLoadingData) {
