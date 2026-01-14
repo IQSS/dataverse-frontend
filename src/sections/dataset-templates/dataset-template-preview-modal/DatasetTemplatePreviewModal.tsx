@@ -7,6 +7,7 @@ import { useGetMetadataBlockDisplayFormatInfo } from '@/sections/dataset/useGetM
 import { License } from '@/sections/dataset/dataset-terms/License'
 import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
+import { DatasetTermsRow } from '@/sections/dataset/dataset-terms/DatasetTermsRow'
 import { Template } from '@/dataset/domain/models/DatasetTemplate'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
@@ -31,6 +32,7 @@ export const DatasetTemplatePreviewModal = ({
 }: DatasetTemplatePreviewModalProps) => {
   const { t } = useTranslation('datasetTemplates')
   const { t: tShared } = useTranslation('shared')
+  const { t: tDataset } = useTranslation('dataset')
   const [template, setTemplate] = useState<Template | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -152,6 +154,15 @@ export const DatasetTemplatePreviewModal = ({
                   termsOfAccess={template.termsOfUse.termsOfAccess}
                   filesCountInfo={undefined}
                   restrictedFilesCount={0}
+                />
+                <DatasetTermsRow
+                  title={tDataset('termsTab.requestAccess')}
+                  tooltipMessage={tDataset('termsTab.requestAccessTip')}
+                  value={
+                    template?.termsOfUse?.termsOfAccess?.fileAccessRequest
+                      ? tDataset('termsTab.requestAccessTrue')
+                      : tDataset('termsTab.requestAccessFalse')
+                  }
                 />
               </Accordion.Body>
             </Accordion.Item>

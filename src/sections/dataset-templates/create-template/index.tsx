@@ -11,7 +11,11 @@ import {
   Form,
   RequiredInputSymbol
 } from '@iqss/dataverse-design-system'
-import { CreateTemplateDTO, MetadataFieldTypeClass, TemplateFieldDTO } from '@iqss/dataverse-client-javascript'
+import {
+  CreateTemplateDTO,
+  MetadataFieldTypeClass,
+  TemplateFieldDTO
+} from '@iqss/dataverse-client-javascript'
 import { MetadataBlockName } from '@/dataset/domain/models/Dataset'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
