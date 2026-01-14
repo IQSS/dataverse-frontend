@@ -9,6 +9,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Added
 
 - Added the value entered by the user in the error messages for metadata field validation errors in EMAIL and URL type fields. For example, instead of showing “Point of Contact E-mail is not a valid email address.“, we now show “Point of Contact E-mail foo is not a valid email address.”
+- Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Contact Owner button in File Page.
 - Share button in File Page.
 - Link Collection and Link Dataset features.

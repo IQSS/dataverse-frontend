@@ -25,7 +25,7 @@
       "Templates are useful when you have several datasets that have the same information in multiple metadata fields that you would prefer not to have to keep manually typing in.",
       "Templates can be used to input instructions for those uploading datasets into your dataverse if you have a specific way you want a metadata field to be filled out."
     ],
-    "howTitle": "How To Use Templates",
+    "howTitle": "How To Use Templates?",
     "howBullets": [
       "Templates are created at the dataverse level, can be deleted (so it does not show for future datasets), set to default (not required), and can be copied so you do not have to start over when creating a new template with similar metadata from another template. When a template is deleted, it does not impact the datasets that have used the template already."
     ],
