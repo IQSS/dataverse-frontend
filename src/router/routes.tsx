@@ -86,11 +86,9 @@ const EditFeaturedItems = lazy(() =>
 )
 
 const DatasetTemplatesPage = lazy(() =>
-  import('../sections/templates/DatasetTemplatesFactory').then(
-    ({ DatasetTemplatesFactory }) => ({
-      default: () => DatasetTemplatesFactory.create()
-    })
-  )
+  import('../sections/templates/DatasetTemplatesFactory').then(({ DatasetTemplatesFactory }) => ({
+    default: () => DatasetTemplatesFactory.create()
+  }))
 )
 
 const CreateTemplatePage = lazy(() =>
