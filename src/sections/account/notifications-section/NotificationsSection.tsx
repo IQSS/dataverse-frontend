@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, CloseButton, Stack } from '@iqss/dataverse-design-system'
+import { Alert, Button, CloseButton, Stack } from '@iqss/dataverse-design-system'
 import { getTranslatedNotification } from '@/sections/account/notifications-section/NotificationsHelper'
 import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 import { useNotifications } from '@/notifications/domain/hooks/useNotifications'
@@ -9,6 +9,7 @@ import { NotificationsPaginationInfo } from '@/notifications/domain/models/Notif
 import { PaginationControls } from '@/sections/shared/pagination/PaginationControls'
 import styles from './NotificationsSection.module.scss'
 import { DateHelper } from '@/shared/helpers/DateHelper'
+import NotificationSkeleton from '@/sections/account/notifications-section/NotificationsSkeleton'
 
 interface NotificationsSectionProps {
   notificationRepository: NotificationRepository
@@ -58,8 +59,15 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
     }
   }
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>{error}</div>
+  if (isLoading) return <NotificationSkeleton rows={5} />
+
+  if (error) {
+    return (
+      <Alert variant="danger" dismissible={false}>
+        {error}
+      </Alert>
+    )
+  }
 
   // compute display range
   const total = paginationInfo?.totalItems ?? notifications.length
