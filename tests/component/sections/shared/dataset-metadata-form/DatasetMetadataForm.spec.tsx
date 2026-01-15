@@ -8,7 +8,7 @@ import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { UserMother } from '../../../users/domain/models/UserMother'
-import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
+import { TemplateMother } from '@tests/component/sections/templates/TemplateMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -1921,7 +1921,7 @@ describe('DatasetMetadataForm', () => {
     const userDisplayName = `${testUser.lastName}, ${testUser.firstName}`
 
     it('should pre-fill the form fields with template values when a template is selected', () => {
-      const testTemplate = DatasetTemplateMother.create({
+      const testTemplate = TemplateMother.create({
         datasetMetadataBlocks: [
           {
             name: 'citation',
@@ -1965,7 +1965,7 @@ describe('DatasetMetadataForm', () => {
     })
 
     it('should add the subtitle field if it is included in the template and it is not part of the fields for display on create', () => {
-      const testTemplate = DatasetTemplateMother.create({
+      const testTemplate = TemplateMother.create({
         datasetMetadataBlocks: [
           {
             name: 'citation',
@@ -2002,7 +2002,7 @@ describe('DatasetMetadataForm', () => {
         .stub()
         .resolves([MetadataBlockInfoMother.getCitationBlock()])
 
-      const testTemplate = DatasetTemplateMother.create({
+      const testTemplate = TemplateMother.create({
         datasetMetadataBlocks: [
           {
             name: MetadataBlockName.ASTROPHYSICS,
@@ -2044,7 +2044,7 @@ describe('DatasetMetadataForm', () => {
     })
 
     it('should not pre-fill the form fields with user data when those fields are included in the template', () => {
-      const testTemplate = DatasetTemplateMother.create({
+      const testTemplate = TemplateMother.create({
         datasetMetadataBlocks: [
           {
             name: 'citation',
@@ -2156,7 +2156,7 @@ describe('DatasetMetadataForm', () => {
         .stub()
         .resolves(metadataBlocksInfoOnCreateMode)
 
-      const testTemplate = DatasetTemplateMother.create({
+      const testTemplate = TemplateMother.create({
         instructions: [
           {
             instructionField: 'author',

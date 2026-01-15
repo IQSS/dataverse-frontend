@@ -3,7 +3,7 @@ import { CollectionRepository } from '../../../../src/collection/domain/reposito
 import { TemplateRepository } from '../../../../src/templates/domain/repositories/TemplateRepository'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
-import { DatasetTemplateMother } from '../../dataset/domain/models/DatasetTemplateMother'
+import { TemplateMother } from './TemplateMother'
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 
@@ -12,7 +12,7 @@ const templateRepository: TemplateRepository = {} as TemplateRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 
 const collection = CollectionMother.create({ name: 'Root', id: 'root' })
-const [templateAlpha, templateBeta, templateGamma] = DatasetTemplateMother.createTemplates([
+const [templateAlpha, templateBeta, templateGamma] = TemplateMother.createTemplates([
   { id: 1, name: 'Alpha', isDefault: false, usageCount: 2, createDate: 'Sep 1, 2025' },
   { id: 2, name: 'Beta', isDefault: true, usageCount: 10, createDate: 'Sep 3, 2025' },
   { id: 3, name: 'Gamma', isDefault: false, usageCount: 5, createDate: 'Sep 2, 2025' }
@@ -45,7 +45,7 @@ describe('Dataset Templates', () => {
   })
 
   it('renders the info alert and templates table when templates exist', () => {
-    const template = DatasetTemplateMother.create({
+    const template = TemplateMother.create({
       name: 'Template A',
       isDefault: false,
       createDate: 'Sep 2, 2025',
@@ -66,7 +66,7 @@ describe('Dataset Templates', () => {
   })
 
   it('shows Default as disabled and hides Make Default for the default template', () => {
-    const [templateDefault, templateOther] = DatasetTemplateMother.createTemplates([
+    const [templateDefault, templateOther] = TemplateMother.createTemplates([
       { id: 1, name: 'Template Default', isDefault: true },
       { id: 2, name: 'Template Other', isDefault: false }
     ])
@@ -85,7 +85,7 @@ describe('Dataset Templates', () => {
   })
 
   it('shows Metadata and Terms in the edit dropdown', () => {
-    const template = DatasetTemplateMother.create({
+    const template = TemplateMother.create({
       id: 1,
       name: 'Template Edit',
       isDefault: false
@@ -100,7 +100,7 @@ describe('Dataset Templates', () => {
   })
 
   it('deletes a template from the list', () => {
-    const template = DatasetTemplateMother.create({
+    const template = TemplateMother.create({
       id: 1,
       name: 'Template To Delete',
       isDefault: false
@@ -126,7 +126,7 @@ describe('Dataset Templates', () => {
   })
 
   it('opens the template preview modal', () => {
-    const template = DatasetTemplateMother.create({
+    const template = TemplateMother.create({
       id: 1,
       name: 'Template Preview',
       isDefault: false

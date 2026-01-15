@@ -1,5 +1,5 @@
-import { CreateTemplateDTO } from '@iqss/dataverse-client-javascript'
 import { Template } from '@/templates/domain/models/Template'
+import { TemplateInfo } from '@/templates/domain/models/TemplateInfo'
 
 export interface TemplateRepository {
   createTemplate: (template: TemplateInfo, collectionIdOrAlias: number | string) => Promise<void>

@@ -3,7 +3,7 @@ import { ReadError } from '@iqss/dataverse-client-javascript'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { getTemplate } from '@/templates/domain/useCases/getTemplate'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
-import { Template } from '../models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 
 interface UseGetTemplateProps {
   templateRepository: TemplateRepository

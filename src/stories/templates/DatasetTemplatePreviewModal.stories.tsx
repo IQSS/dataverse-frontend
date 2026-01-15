@@ -3,7 +3,7 @@ import { DatasetTemplatePreviewModal } from '@/sections/templates/dataset-templa
 import { WithI18next } from '../WithI18next'
 import { TemplateMockRepository } from './TemplateMockRepository'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
-import { Template } from '@/dataset/domain/models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 
 const meta: Meta<typeof DatasetTemplatePreviewModal> = {
   title: 'Sections/Templates/DatasetTemplatePreviewModal',

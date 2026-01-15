@@ -8,7 +8,7 @@ import { CollectionMockRepository } from '../collection/CollectionMockRepository
 import { CollectionLoadingMockRepository } from '../collection/CollectionLoadingMockRepository'
 import { TemplateMockRepository } from './TemplateMockRepository'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
-import { Template } from '@/dataset/domain/models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 
 const meta: Meta<typeof DatasetTemplates> = {
   title: 'Pages/Dataset Templates',

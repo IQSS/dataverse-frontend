@@ -1,7 +1,7 @@
 import { TemplateInfo } from '@/templates/domain/models/TemplateInfo'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { Template } from '@/templates/domain/models/Template'
-import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
+import { TemplateMother } from '@tests/component/sections/templates/TemplateMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
 export class TemplateMockRepository implements TemplateRepository {
@@ -16,7 +16,7 @@ export class TemplateMockRepository implements TemplateRepository {
   getTemplate(_templateId: number): Promise<Template> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(DatasetTemplateMother.create())
+        resolve(TemplateMother.create())
       }, FakerHelper.loadingTimout())
     })
   }
@@ -24,7 +24,7 @@ export class TemplateMockRepository implements TemplateRepository {
   getTemplatesByCollectionId(_collectionIdOrAlias: number | string): Promise<Template[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(DatasetTemplateMother.createMany(3))
+        resolve(TemplateMother.createMany(3))
       }, FakerHelper.loadingTimout())
     })
   }

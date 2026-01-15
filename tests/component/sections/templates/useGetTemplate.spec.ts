@@ -1,11 +1,11 @@
 import { act, renderHook } from '@testing-library/react'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { useGetTemplate } from '@/dataset/domain/hooks/useGetTemplate'
+import { TemplateMother } from './TemplateMother'
 import { ReadError } from '@iqss/dataverse-client-javascript'
-import { DatasetTemplateMother } from '../models/DatasetTemplateMother'
 
 const templateRepository: TemplateRepository = {} as TemplateRepository
-const templateMock = DatasetTemplateMother.create({ id: 1, name: 'Template One' })
+const templateMock = TemplateMother.create({ id: 1, name: 'Template One' })
 
 describe('useGetTemplate', () => {
   it('should return the template', async () => {

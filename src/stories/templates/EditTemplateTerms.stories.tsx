@@ -4,7 +4,7 @@ import { WithLayout } from '../WithLayout'
 import { WithI18next } from '../WithI18next'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { TemplateMockRepository } from './TemplateMockRepository'
-import { Template } from '@/dataset/domain/models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 
 const meta: Meta<typeof EditTemplateTerms> = {
   title: 'Pages/Edit Template Terms',
