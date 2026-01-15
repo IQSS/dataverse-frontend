@@ -44,14 +44,14 @@ interface DatasetTemplatesProps {
   collectionRepository: CollectionRepository
   templateRepository: TemplateRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
-  collectionIdFromParams: string
+  collectionId: string
 }
 
 export const DatasetTemplates = ({
   collectionRepository,
   templateRepository,
   metadataBlockInfoRepository,
-  collectionIdFromParams
+  collectionId
 }: DatasetTemplatesProps) => {
   const { t } = useTranslation('datasetTemplates')
   const { t: tDataset } = useTranslation('dataset')
@@ -66,7 +66,7 @@ export const DatasetTemplates = ({
   const [includeParentTemplates, setIncludeParentTemplates] = useState(true)
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
-    collectionIdFromParams
+    collectionId
   )
   const {
     datasetTemplates,
@@ -75,15 +75,13 @@ export const DatasetTemplates = ({
     fetchDatasetTemplates
   } = useGetTemplatesByCollectionId({
     templateRepository,
-    collectionIdOrAlias: collectionIdFromParams,
-    autoFetch: Boolean(collectionIdFromParams)
+    collectionIdOrAlias: collectionId
   })
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
-    collectionIdOrAlias: collectionIdFromParams,
+    collectionIdOrAlias: collectionId,
     collectionRepository
   })
   const canUserEditTemplate = Boolean(collectionUserPermissions?.canEditCollection)
-  const collectionId = collectionIdFromParams ?? collection?.id ?? ''
   const rootCollectionNames = collection?.hierarchy?.toArray().map((node) => node.name) ?? []
 
   const isLoadingData = isLoadingCollection || isLoadingDatasetTemplates

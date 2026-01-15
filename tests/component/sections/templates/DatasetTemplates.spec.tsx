@@ -54,7 +54,7 @@ describe('Dataset Templates', () => {
           collectionRepository={collectionRepository}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
-          collectionIdFromParams="root"
+          collectionId="root"
         />
       </NotImplementedModalProvider>
     )

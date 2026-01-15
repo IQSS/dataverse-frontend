@@ -13,11 +13,10 @@ interface useGetTemplatesByCollectionIdProps {
 
 export const useGetTemplatesByCollectionId = ({
   templateRepository,
-  collectionIdOrAlias,
-  autoFetch = true
+  collectionIdOrAlias
 }: useGetTemplatesByCollectionIdProps) => {
   const [datasetTemplates, setDatasetTemplates] = useState<Template[]>([])
-  const [isLoadingDatasetTemplates, setIsLoadingDatasetTemplates] = useState<boolean>(autoFetch)
+  const [isLoadingDatasetTemplates, setIsLoadingDatasetTemplates] = useState<boolean>(false)
   const [errorGetDatasetTemplates, setErrorGetDatasetTemplates] = useState<string | null>(null)
 
   const fetchDatasetTemplates = useCallback(async () => {
@@ -49,10 +48,8 @@ export const useGetTemplatesByCollectionId = ({
   }, [templateRepository, collectionIdOrAlias])
 
   useEffect(() => {
-    if (autoFetch) {
-      void fetchDatasetTemplates()
-    }
-  }, [autoFetch, fetchDatasetTemplates])
+    void fetchDatasetTemplates()
+  }, [fetchDatasetTemplates])
 
   return {
     datasetTemplates,

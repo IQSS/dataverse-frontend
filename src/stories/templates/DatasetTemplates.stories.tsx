@@ -40,7 +40,7 @@ export const Default: Story = {
       collectionRepository={new CollectionMockRepository()}
       templateRepository={new TemplateMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      collectionIdFromParams="root"
+      collectionId="root"
     />
   )
 }
@@ -51,7 +51,7 @@ export const EmptyState: Story = {
       collectionRepository={new CollectionMockRepository()}
       templateRepository={new EmptyTemplateMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      collectionIdFromParams="root"
+      collectionId="root"
     />
   )
 }
@@ -62,7 +62,7 @@ export const Loading: Story = {
       collectionRepository={new CollectionLoadingMockRepository()}
       templateRepository={new TemplateLoadingMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      collectionIdFromParams="root"
+      collectionId="root"
     />
   )
 }

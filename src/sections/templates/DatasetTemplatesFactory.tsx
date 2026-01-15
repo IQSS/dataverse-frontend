@@ -28,7 +28,7 @@ function DatasetTemplatesWithParams() {
       collectionRepository={collectionRepository}
       templateRepository={templateRepository}
       metadataBlockInfoRepository={metadataBlockInfoRepository}
-      collectionIdFromParams={collectionId}
+      collectionId={collectionId ?? 'root'}
     />
   )
 }
