@@ -1,6 +1,6 @@
 import { CreateTemplateDTO } from '@iqss/dataverse-client-javascript'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
-import { Template } from '@/dataset/domain/models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 

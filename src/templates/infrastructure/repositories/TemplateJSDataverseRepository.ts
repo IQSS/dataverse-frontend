@@ -5,7 +5,7 @@ import {
   getTemplate,
   getTemplatesByCollectionId
 } from '@iqss/dataverse-client-javascript'
-import { Template } from '@/dataset/domain/models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 import { TemplateRepository } from '../../domain/repositories/TemplateRepository'
 
 export class TemplateJSDataverseRepository implements TemplateRepository {

@@ -16,7 +16,7 @@ import { useCollection } from '../collection/useCollection'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { CreateDatasetSkeleton } from './CreateDatasetSkeleton'
 import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
-import { type Template } from '@/dataset/domain/models/DatasetTemplate'
+import { type Template } from '@/templates/domain/models/Template'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 

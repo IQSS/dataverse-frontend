@@ -1,5 +1,5 @@
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
-import { Template } from '../models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 
 export function getTemplatesByCollectionId(
   templateRepository: TemplateRepository,

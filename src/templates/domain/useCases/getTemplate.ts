@@ -1,4 +1,4 @@
-import { Template } from '@/dataset/domain/models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 import { TemplateRepository } from '../repositories/TemplateRepository'
 
 export function getTemplate(

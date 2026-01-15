@@ -1,5 +1,5 @@
 import { CreateTemplateDTO } from '@iqss/dataverse-client-javascript'
-import { Template } from '@/dataset/domain/models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 
 export interface TemplateRepository {
   createTemplate: (
