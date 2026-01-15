@@ -12,7 +12,7 @@ import {
   type MetadataField,
   type TypeMetadataField
 } from '../../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { DatasetTemplateInstruction } from '@/dataset/domain/models/DatasetTemplate'
+import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
 import { MetadataFieldsHelper } from '../../../MetadataFieldsHelper'
 
 export interface CommonFieldProps {

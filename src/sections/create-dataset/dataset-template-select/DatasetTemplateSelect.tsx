@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Col, Form } from '@iqss/dataverse-design-system'
-import { Template } from '@/dataset/domain/models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 
 interface DatasetTemplateSelectProps {
   datasetTemplates: Template[]
