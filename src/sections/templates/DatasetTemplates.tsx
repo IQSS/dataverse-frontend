@@ -7,6 +7,7 @@ import {
   ButtonGroup,
   DropdownButton,
   DropdownButtonItem,
+  Form,
   Table,
   Tooltip
 } from '@iqss/dataverse-design-system'
@@ -37,12 +38,13 @@ import { DatasetTemplatePreviewModal } from './dataset-template-preview-modal/Da
 import styles from './DatasetTemplates.module.scss'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { DatasetTemplatesSkeleton } from './DatasetTemplatesSkeleton'
+import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
 
 interface DatasetTemplatesProps {
   collectionRepository: CollectionRepository
   templateRepository: TemplateRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
-  collectionIdFromParams: string | undefined
+  collectionIdFromParams: string
 }
 
 export const DatasetTemplates = ({
@@ -61,6 +63,7 @@ export const DatasetTemplates = ({
   const [templateToPreview, setTemplateToPreview] = useState<Template | null>(null)
   const [isDeletingTemplate, setIsDeletingTemplate] = useState(false)
   const [errorDeletingTemplate, setErrorDeletingTemplate] = useState<string | null>(null)
+  const [includeParentTemplates, setIncludeParentTemplates] = useState(true)
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionIdFromParams
@@ -72,20 +75,34 @@ export const DatasetTemplates = ({
     fetchDatasetTemplates
   } = useGetTemplatesByCollectionId({
     templateRepository,
-    collectionIdOrAlias: collectionIdFromParams ?? '',
+    collectionIdOrAlias: collectionIdFromParams,
     autoFetch: Boolean(collectionIdFromParams)
   })
+  const { collectionUserPermissions } = useGetCollectionUserPermissions({
+    collectionIdOrAlias: collectionIdFromParams,
+    collectionRepository
+  })
+  const canUserEditTemplate = Boolean(collectionUserPermissions?.canEditCollection)
+  const collectionId = collectionIdFromParams ?? collection?.id ?? ''
+  const rootCollectionNames = collection?.hierarchy?.toArray().map((node) => node.name) ?? []
 
   const isLoadingData = isLoadingCollection || isLoadingDatasetTemplates
   const resolveCreateDate = (template: Template) => {
     return Date.parse(template.createDate)
   }
 
-  const sortedTemplates = useMemo(() => {
-    if (!sortBy) {
+  const filteredTemplates = useMemo(() => {
+    if (includeParentTemplates) {
       return datasetTemplates
     }
-    const sorted = [...datasetTemplates]
+    return datasetTemplates.filter((template) => template.collectionAlias === collectionId)
+  }, [datasetTemplates, includeParentTemplates, collectionId])
+
+  const sortedTemplates = useMemo(() => {
+    if (!sortBy) {
+      return filteredTemplates
+    }
+    const sorted = [...filteredTemplates]
     sorted.sort((first, second) => {
       if (sortBy === 'name') {
         return first.name.localeCompare(second.name, undefined, { sensitivity: 'base' })
@@ -96,7 +113,7 @@ export const DatasetTemplates = ({
       return first.usageCount - second.usageCount
     })
     return sortDirection === 'asc' ? sorted : sorted.reverse()
-  }, [datasetTemplates, sortBy, sortDirection])
+  }, [filteredTemplates, sortBy, sortDirection])
 
   const handleSort = (column: 'name' | 'created' | 'usage') => {
     if (sortBy === column) {
@@ -128,7 +145,7 @@ export const DatasetTemplates = ({
   const emptyStateHowBullets = t('emptyState.howBullets', {
     returnObjects: true
   }) as string[]
-  const collectionId = collectionIdFromParams ?? collection?.id ?? ''
+
   const generalInfoUrl = `/spa${RouteWithParams.EDIT_COLLECTION(collectionId)}`
   const templatesGuideUrl =
     'https://guides.dataverse.org/en/6.9/user/dataverse-management.html#dataset-templates'
@@ -226,12 +243,31 @@ export const DatasetTemplates = ({
           </div>
         </header>
 
+        {datasetTemplates.length !== 0 && (
+          <Alert variant="info" customHeading={t('infoAlert.title')} dismissible>
+            {t('infoAlert.text')}
+          </Alert>
+        )}
+
         <div className={styles['table-actions']}>
+          <div className={styles['table-actions-left']}>
+            {rootCollectionNames.length > 1 && (
+              <Form.Group.Checkbox
+                id="include-parent-templates"
+                label={t('filters.includeTemplatesFromRoot', {
+                  root: rootCollectionNames[0] ?? 'Root'
+                })}
+                checked={includeParentTemplates}
+                onChange={() => setIncludeParentTemplates((current) => !current)}
+                className={styles['include-templates-filter']}
+              />
+            )}
+          </div>
           <Button
             variant="primary"
             onClick={handleCreateTemplate}
             className={styles['create-button']}>
-            <PlusLg className={styles['button-icon']} />
+            <PlusLg />
             {t('actions.create')}
           </Button>
         </div>
@@ -273,10 +309,6 @@ export const DatasetTemplates = ({
           </div>
         ) : (
           <>
-            <Alert variant="info" customHeading={t('infoAlert.title')} dismissible>
-              {t('infoAlert.text')}
-            </Alert>
-
             <Table>
               <thead>
                 <tr>
@@ -287,7 +319,7 @@ export const DatasetTemplates = ({
                       className={sortButtonClass('name')}
                       aria-pressed={sortBy === 'name'}>
                       <span>{t('table.name')}</span>
-                      <span className={styles['sort-indicator']}>{sortIndicator('name')}</span>
+                      <span>{sortIndicator('name')}</span>
                     </Button>
                   </th>
                   <th scope="col" className={sortHeaderClass('created')}>
@@ -297,7 +329,7 @@ export const DatasetTemplates = ({
                       className={sortButtonClass('created')}
                       aria-pressed={sortBy === 'created'}>
                       <span>{t('table.created')}</span>
-                      <span className={styles['sort-indicator']}>{sortIndicator('created')}</span>
+                      <span>{sortIndicator('created')}</span>
                     </Button>
                   </th>
                   <th scope="col" className={sortHeaderClass('usage')}>
@@ -307,7 +339,7 @@ export const DatasetTemplates = ({
                       className={sortButtonClass('usage')}
                       aria-pressed={sortBy === 'usage'}>
                       <span>{t('table.usage')}</span>
-                      <span className={styles['sort-indicator']}>{sortIndicator('usage')}</span>
+                      <span>{sortIndicator('usage')}</span>
                     </Button>
                   </th>
                   <th scope="col" className={styles['action-column']}>
@@ -322,12 +354,19 @@ export const DatasetTemplates = ({
                     <td>{template.createDate}</td>
                     <td>{template.usageCount}</td>
                     <td className={styles['action-cell']}>
+                      {template.collectionAlias !== collectionId && (
+                        <span className={styles['template-origin']}>
+                          {t('table.templateCreatedAt', {
+                            alias: template.collectionAlias
+                          })}
+                        </span>
+                      )}
                       <ButtonGroup
                         className={styles['action-group']}
                         aria-label={t('table.action')}>
                         {template.isDefault ? (
                           <Button variant="secondary" size="sm" disabled>
-                            <CheckLg className={styles['action-icon']} />
+                            <CheckLg />
                             {t('actions.default')}
                           </Button>
                         ) : (
@@ -345,7 +384,7 @@ export const DatasetTemplates = ({
                             size="sm"
                             onClick={() => handleOpenPreviewModal(template)}
                             aria-label={t('actions.view')}>
-                            <Eye className={styles['action-icon']} />
+                            <Eye />
                           </Button>
                         </Tooltip>
                         <Tooltip placement="top" overlay={t('actions.copy')}>
@@ -354,40 +393,44 @@ export const DatasetTemplates = ({
                             size="sm"
                             onClick={showModal}
                             aria-label={t('actions.copy')}>
-                            <Files className={styles['action-icon']} />
+                            <Files />
                           </Button>
                         </Tooltip>
-                        <DropdownButton
-                          id={`edit-template-${template.id}`}
-                          title={t('actions.edit')}
-                          icon={
-                            <Pencil
-                              className={styles['action-icon']}
-                              style={{ marginRight: '5px' }}
-                            />
-                          }
-                          variant="secondary"
-                          size="sm"
-                          onSelect={(eventKey) =>
-                            handleEditTemplateAction(template, eventKey as 'metadata' | 'terms')
-                          }>
-                          {/* waiting for Edit Template api support */}
-                          <DropdownButtonItem eventKey="metadata" as="button" disabled>
-                            {tDataset('datasetActionButtons.editDataset.metadata')}
-                          </DropdownButtonItem>
-                          <DropdownButtonItem eventKey="terms" as="button" disabled>
-                            {tDataset('datasetActionButtons.editDataset.terms')}
-                          </DropdownButtonItem>
-                        </DropdownButton>
-                        <Tooltip placement="top" overlay={t('actions.delete')}>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => handleOpenDeleteModal(template)}
-                            aria-label={t('actions.delete')}>
-                            <Trash className={styles['action-icon']} />
-                          </Button>
-                        </Tooltip>
+                        {canUserEditTemplate && template.collectionAlias === collectionId && (
+                          <>
+                            <DropdownButton
+                              id={`edit-template-${template.id}`}
+                              title={t('actions.edit')}
+                              icon={
+                                <Pencil
+                                  className={styles['action-icon']}
+                                  style={{ marginRight: '5px' }}
+                                />
+                              }
+                              variant="secondary"
+                              size="sm"
+                              onSelect={(eventKey) =>
+                                handleEditTemplateAction(template, eventKey as 'metadata' | 'terms')
+                              }>
+                              {/* waiting for Edit Template api support */}
+                              <DropdownButtonItem eventKey="metadata" as="button" disabled>
+                                {tDataset('datasetActionButtons.editDataset.metadata')}
+                              </DropdownButtonItem>
+                              <DropdownButtonItem eventKey="terms" as="button" disabled>
+                                {tDataset('datasetActionButtons.editDataset.terms')}
+                              </DropdownButtonItem>
+                            </DropdownButton>
+                            <Tooltip placement="top" overlay={t('actions.delete')}>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => handleOpenDeleteModal(template)}
+                                aria-label={t('actions.delete')}>
+                                <Trash />
+                              </Button>
+                            </Tooltip>
+                          </>
+                        )}
                       </ButtonGroup>
                     </td>
                   </tr>

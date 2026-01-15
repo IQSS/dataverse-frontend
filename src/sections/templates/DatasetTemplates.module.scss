@@ -19,13 +19,36 @@
 
 .table-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin: $spacer 0;
 }
 
-td {
-  text-align: center;
+.table-actions-left {
+  flex: 1;
 }
+
+.include-templates-filter {
+  margin-bottom: 0;
+}
+
+@media (max-width: 576px) {
+  .table-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .table-actions-left {
+    width: 100%;
+  }
+
+  .create-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 
 .create-button {
   display: inline-flex;
@@ -33,25 +56,29 @@ td {
   gap: 0.5rem;
 }
 
-.button-icon {
-  font-size: 1.1rem;
-}
-
 .action-group {
   flex-wrap: wrap;
-  gap: 0;
 }
 
-.action-icon {
+.action-group .btn {
+  min-height: 2.25rem;
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.action-label {
-  margin-left: 0.4rem;
-}
-
-.action-cell {
+td {
   text-align: center;
+  vertical-align: middle;
+}
+
+.template-origin {
+  display: block;
+  color: $dv-subtext-color;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  word-break: break-word;
 }
 
 .make-default-button {
@@ -74,7 +101,6 @@ td {
   border: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
   font-size: inherit;
   font-weight: inherit;
 }
@@ -98,10 +124,6 @@ td {
 .sort-header-active {
   background-color: rgba($dv-subtext-color, 0.08);
   color: $dv-subtext-color;
-}
-
-.sort-indicator {
-  font-size: 0.75rem;
 }
 
 .sort-icon {

@@ -1,9 +1,10 @@
-import { CreateTemplate } from '../../../../src/sections/templates/create-template'
-import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
-import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { TemplateRepository } from '../../../../src/templates/domain/repositories/TemplateRepository'
-import { CollectionMother } from '../../collection/domain/models/CollectionMother'
-import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { CreateTemplate } from '../../../../../src/sections/templates/create-template'
+import { CollectionRepository } from '../../../../../src/collection/domain/repositories/CollectionRepository'
+import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { TemplateRepository } from '../../../../../src/templates/domain/repositories/TemplateRepository'
+import { CollectionMother } from '../../../collection/domain/models/CollectionMother'
+import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 const templateRepository: TemplateRepository = {} as TemplateRepository

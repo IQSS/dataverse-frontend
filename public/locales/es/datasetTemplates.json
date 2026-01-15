@@ -13,11 +13,15 @@
     "edit": "Editar plantilla",
     "delete": "Eliminar"
   },
+  "filters": {
+    "includeTemplatesFromRoot": "Incluir plantillas de {{root}}"
+  },
   "table": {
     "name": "Nombre de la plantilla",
     "created": "Fecha de creación",
     "usage": "Uso",
-    "action": "Acción"
+    "action": "Acción",
+    "templateCreatedAt": "Plantilla creada en {{alias}}"
   },
   "emptyState": {
     "whyTitle": "¿Por qué usar plantillas?",

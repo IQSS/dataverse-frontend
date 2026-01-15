@@ -13,11 +13,15 @@
     "edit": "Edit Template",
     "delete": "Delete"
   },
+  "filters": {
+    "includeTemplatesFromRoot": "Include Templates from {{root}}"
+  },
   "table": {
     "name": "Template Name",
     "created": "Date Created",
     "usage": "Usage",
-    "action": "Action"
+    "action": "Action",
+    "templateCreatedAt": "Template created at {{alias}}"
   },
   "emptyState": {
     "whyTitle": "Why Use Templates?",
@@ -49,7 +53,7 @@
       "access": "Restricted Files + Terms of Access"
     },
     "noMetadata": "No citation metadata is available for this template.",
-    "error": "Unable to load the template preview. Try again later."
+    "error": "Something went wrong loading the template preview. Please try again."
   },
   "createTemplate": {
     "pageTitle": "Create Dataset Template",

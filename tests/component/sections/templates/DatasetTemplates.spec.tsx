@@ -6,21 +6,44 @@ import { CollectionMother } from '../../collection/domain/models/CollectionMothe
 import { TemplateMother } from './TemplateMother'
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { UpwardHierarchyNodeMother } from '../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const templateRepository: TemplateRepository = {} as TemplateRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 
-const collection = CollectionMother.create({ name: 'Root', id: 'root' })
+const collection = CollectionMother.create({
+  name: 'Scientific Research',
+  id: 'sci-research',
+  hierarchy: UpwardHierarchyNodeMother.createSubCollection({
+    name: 'Scientific Research',
+    id: 'root'
+  })
+})
+
 const [templateAlpha, templateBeta, templateGamma] = TemplateMother.createTemplates([
   { id: 1, name: 'Alpha', isDefault: false, usageCount: 2, createDate: 'Sep 1, 2025' },
   { id: 2, name: 'Beta', isDefault: true, usageCount: 10, createDate: 'Sep 3, 2025' },
   { id: 3, name: 'Gamma', isDefault: false, usageCount: 5, createDate: 'Sep 2, 2025' }
 ])
 
+const template = TemplateMother.create({
+  id: 1,
+  name: 'Template',
+  isDefault: false
+})
 describe('Dataset Templates', () => {
   beforeEach(() => {
     collectionRepository.getById = cy.stub().resolves(collection)
+    collectionRepository.getUserPermissions = cy.stub().resolves({
+      canAddCollection: false,
+      canAddDataset: false,
+      canViewUnpublishedCollection: false,
+      canEditCollection: true,
+      canManageCollectionPermissions: true,
+      canPublishCollection: false,
+      canDeleteCollection: false
+    })
     templateRepository.getTemplatesByCollectionId = cy.stub().resolves([])
   })
 
@@ -45,12 +68,6 @@ describe('Dataset Templates', () => {
   })
 
   it('renders the info alert and templates table when templates exist', () => {
-    const template = TemplateMother.create({
-      name: 'Template A',
-      isDefault: false,
-      createDate: 'Sep 2, 2025',
-      usageCount: 4
-    })
     templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
 
     mountDatasetTemplates()
@@ -84,64 +101,83 @@ describe('Dataset Templates', () => {
       })
   })
 
-  it('shows Metadata and Terms in the edit dropdown', () => {
-    const template = TemplateMother.create({
-      id: 1,
-      name: 'Template Edit',
-      isDefault: false
+  it('hides the edit dropdown when the user cannot edit the collection', () => {
+    collectionRepository.getUserPermissions = cy.stub().resolves({
+      canAddCollection: false,
+      canAddDataset: false,
+      canViewUnpublishedCollection: false,
+      canEditCollection: false,
+      canManageCollectionPermissions: false,
+      canPublishCollection: false,
+      canDeleteCollection: false
     })
     templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
 
     mountDatasetTemplates()
 
-    cy.findByRole('button', { name: 'Edit Template' }).click({ force: true })
-    cy.findByText('Metadata').should('exist')
-    cy.findByText('Terms').should('exist')
+    cy.findByRole('button', { name: 'Edit Template' }).should('not.exist')
   })
 
-  it('deletes a template from the list', () => {
-    const template = TemplateMother.create({
-      id: 1,
-      name: 'Template To Delete',
-      isDefault: false
+  it('hides the edit dropdown for templates from parent collections', () => {
+    const otherTemplate = TemplateMother.create({
+      name: 'Template From Other',
+      collectionAlias: 'other'
+    })
+    templateRepository.getTemplatesByCollectionId = cy.stub().resolves([otherTemplate])
+
+    mountDatasetTemplates()
+
+    cy.findByRole('button', { name: 'Edit Template' }).should('not.exist')
+  })
+
+  it('shows the template origin when the template comes from another collection', () => {
+    const otherTemplate = TemplateMother.create({
+      name: 'Template From Other',
+      collectionAlias: 'other'
+    })
+    templateRepository.getTemplatesByCollectionId = cy.stub().resolves([otherTemplate])
+
+    mountDatasetTemplates()
+
+    cy.findByText('Template created at other').should('exist')
+  })
+
+  it('hides the include templates checkbox at the top-level collection', () => {
+    const rootCollection = CollectionMother.create({
+      name: 'Root',
+      id: 'root',
+      hierarchy: UpwardHierarchyNodeMother.createCollection({
+        name: 'Root',
+        id: 'root'
+      })
+    })
+    collectionRepository.getById = cy.stub().resolves(rootCollection)
+    templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
+
+    mountDatasetTemplates()
+
+    cy.findByLabelText('Include Templates from Root').should('not.exist')
+  })
+
+  it('filters out templates from parent collections when unchecked', () => {
+    const rootTemplate = TemplateMother.create({
+      name: 'Template Root',
+      collectionAlias: 'root'
+    })
+    const otherTemplate = TemplateMother.create({
+      name: 'Template From Other',
+      collectionAlias: 'other'
     })
     templateRepository.getTemplatesByCollectionId = cy
       .stub()
-      .onFirstCall()
-      .resolves([template])
-      .onSecondCall()
-      .resolves([])
-    templateRepository.deleteTemplate = cy.stub().resolves()
+      .resolves([rootTemplate, otherTemplate])
 
     mountDatasetTemplates()
 
-    cy.findByRole('button', { name: 'Delete' }).click({ force: true })
-    cy.findByRole('dialog').within(() => {
-      cy.findByText('Delete Template').should('exist')
-      cy.findByRole('button', { name: 'Delete' }).click({ force: true })
-    })
-
-    cy.wrap(templateRepository.deleteTemplate).should('have.been.calledWith', template.id)
-    cy.findByRole('heading', { name: 'Why Use Templates?' }).should('exist')
-  })
-
-  it('opens the template preview modal', () => {
-    const template = TemplateMother.create({
-      id: 1,
-      name: 'Template Preview',
-      isDefault: false
-    })
-    templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
-    templateRepository.getTemplate = cy.stub().resolves(template)
-    metadataBlockInfoRepository.getByName = cy.stub().resolves(MetadataBlockInfoMother.create())
-
-    mountDatasetTemplates()
-
-    cy.findByRole('button', { name: 'View' }).click({ force: true })
-    cy.findByRole('dialog').within(() => {
-      cy.findByText('Dataset Template Preview').should('exist')
-      cy.findByText('No citation metadata is available for this template.').should('exist')
-    })
+    cy.findByText('Template From Other').should('exist')
+    cy.findByLabelText('Include Templates from Root').click()
+    cy.findByText('Template Root').should('exist')
+    cy.findByText('Template From Other').should('not.exist')
   })
 
   it('sorts templates by name and toggles direction', () => {
@@ -205,5 +241,172 @@ describe('Dataset Templates', () => {
     cy.findByRole('button', { name: 'Usage' }).click()
     cy.findByRole('button', { name: 'Usage' }).click()
     getTableUsage().should('deep.equal', ['10', '5', '2'])
+  })
+
+  describe('Edit/Delete actions with edit permission at root', () => {
+    beforeEach(() => {
+      const rootCollection = CollectionMother.create({
+        name: 'Root',
+        id: 'root',
+        hierarchy: UpwardHierarchyNodeMother.createCollection({
+          name: 'Root',
+          id: 'root'
+        })
+      })
+      collectionRepository.getById = cy.stub().resolves(rootCollection)
+      collectionRepository.getUserPermissions = cy.stub().resolves({
+        canAddCollection: false,
+        canAddDataset: false,
+        canViewUnpublishedCollection: false,
+        canEditCollection: true,
+        canManageCollectionPermissions: false,
+        canPublishCollection: false,
+        canDeleteCollection: false
+      })
+
+      const rootTemplate = TemplateMother.create({
+        name: 'Template Root',
+        collectionAlias: 'root'
+      })
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([rootTemplate])
+
+      mountDatasetTemplates()
+    })
+
+    it('shows edit and delete buttons for root templates', () => {
+      cy.findByRole('button', { name: 'Edit Template' }).should('exist')
+      cy.findByRole('button', { name: 'Delete' }).should('exist')
+    })
+
+    it('deletes a template from the list', () => {
+      templateRepository.deleteTemplate = cy.stub().resolves()
+
+      cy.findByRole('button', { name: 'Delete' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByText('Delete Template').should('exist')
+        cy.findByRole('button', { name: 'Delete' }).click()
+      })
+
+      cy.findByText(/Template deleted./).should('exist')
+    })
+
+    it('keeps the delete modal open while deleting', () => {
+      let resolveDelete: (() => void) | undefined
+      templateRepository.deleteTemplate = cy.stub().callsFake(
+        () =>
+          new Promise<void>((resolve) => {
+            resolveDelete = resolve
+          })
+      )
+      cy.findByRole('button', { name: 'Delete' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByRole('button', { name: 'Delete' }).click({ force: true })
+        cy.findByRole('button', { name: 'Cancel' }).should('be.disabled')
+      })
+
+      cy.get('body').type('{esc}', { force: true })
+      cy.findByRole('dialog').should('exist')
+
+      cy.then(() => {
+        resolveDelete?.()
+      })
+    })
+
+    it('shows an error message if deletion fails', () => {
+      templateRepository.deleteTemplate = cy.stub().rejects(new Error('Deletion failed'))
+
+      cy.findByRole('button', { name: 'Delete' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByText('Delete Template').should('exist')
+        cy.findByRole('button', { name: 'Delete' }).click({ force: true })
+      })
+      cy.findByText(/Something went wrong deleting the template. Try again later./).should('exist')
+    })
+
+    it('closes the delete modal and clears the error', () => {
+      templateRepository.deleteTemplate = cy.stub().rejects(new Error('Deletion failed'))
+
+      cy.findByRole('button', { name: 'Delete' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByRole('button', { name: 'Delete' }).click({ force: true })
+      })
+      cy.findByText(/Something went wrong deleting the template. Try again later./).should('exist')
+
+      cy.findByRole('button', { name: 'Cancel' }).click({ force: true })
+      cy.findByRole('dialog').should('not.exist')
+
+      cy.findByRole('button', { name: 'Delete' }).click({ force: true })
+      cy.findByText(/Something went wrong deleting the template. Try again later./).should(
+        'not.exist'
+      )
+    })
+
+    it('does not call delete when the modal is dismissed', () => {
+      templateRepository.deleteTemplate = cy.stub().resolves()
+
+      cy.findByRole('button', { name: 'Delete' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByRole('button', { name: 'Cancel' }).click({ force: true })
+      })
+
+      cy.wrap(templateRepository.deleteTemplate).should('not.have.been.called')
+    })
+  })
+
+  describe('Preview Template', () => {
+    it('opens the template preview modal', () => {
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
+      templateRepository.getTemplate = cy.stub().resolves(template)
+      metadataBlockInfoRepository.getByName = cy.stub().resolves(MetadataBlockInfoMother.create())
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByText('Dataset Template Preview').should('exist')
+        cy.findByText('No citation metadata is available for this template.').should('exist')
+      })
+    })
+
+    it('closes the template preview modal', () => {
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
+      templateRepository.getTemplate = cy.stub().resolves(template)
+      metadataBlockInfoRepository.getByName = cy.stub().resolves(MetadataBlockInfoMother.create())
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'View' }).click()
+      cy.findByText('Close').click()
+      cy.findByRole('dialog').should('not.exist')
+    })
+
+    it('shows an error message if preview fails', () => {
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
+      templateRepository.getTemplate = cy.stub().rejects(new Error('Preview failed'))
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByText(/Something went wrong loading the template preview. Please try again./).should(
+        'exist'
+      )
+    })
+
+    it('shows loading state while fetching preview data', () => {
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
+      templateRepository.getTemplate = cy.stub().callsFake(
+        () =>
+          new Promise((resolve) => {
+            setTimeout(() => resolve(template), 100)
+          })
+      )
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByTestId('preview-modal-skeleton').should('exist')
+      })
+    })
   })
 })
