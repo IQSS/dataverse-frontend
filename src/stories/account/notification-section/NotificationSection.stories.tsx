@@ -8,6 +8,8 @@ import { UserMockRepository } from '../../shared-mock-repositories/user/UserMock
 import { CollectionMockRepository } from '../../collection/CollectionMockRepository'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
 import { NotificationMockRepository } from '@/stories/account/NotificationMockRepository'
+import { UserMockErrorRepository } from '@/stories/shared-mock-repositories/user/UserMockErrorRepository'
+import { NotificationErrorMockRepository } from '@/stories/account/NotificationErrorMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Sections/Account Page/NotificationsSection',
@@ -30,6 +32,17 @@ export const Default: Story = {
       collectionRepository={new CollectionMockRepository()}
       roleRepository={new RoleMockRepository()}
       notificationRepository={new NotificationMockRepository()}
+    />
+  )
+}
+export const Error: Story = {
+  render: () => (
+    <Account
+      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
+      userRepository={new UserMockErrorRepository()}
+      collectionRepository={new CollectionMockRepository()}
+      roleRepository={new RoleMockRepository()}
+      notificationRepository={new NotificationErrorMockRepository()}
     />
   )
 }

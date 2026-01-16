@@ -20,9 +20,15 @@ export const ConfirmDeleteCollectionModal = ({
 }: ConfirmDeleteCollectionModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('collection')
+  const modalTitle = t('deleteCollectionModal.title')
 
   return (
-    <Modal show={show} onHide={isDeletingCollection ? () => {} : handleClose} centered size="lg">
+    <Modal
+      ariaLabel={modalTitle}
+      show={show}
+      onHide={isDeletingCollection ? () => {} : handleClose}
+      centered
+      size="lg">
       <Modal.Header>
         <Modal.Title>{t('deleteCollectionModal.title')}</Modal.Title>
       </Modal.Header>
