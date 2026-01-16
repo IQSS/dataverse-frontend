@@ -19,9 +19,10 @@ export function ConfirmationModal({
 }: ConfirmationModalProps) {
   const { t } = useTranslation(['dataset', 'shared'])
   const isDeaccessioning = submissionStatus === SubmissionStatus.IsSubmitting
+  const modalTitle = t('confirmDeaccession.title')
 
   return (
-    <Modal size={'lg'} show={show} onHide={onCancel}>
+    <Modal ariaLabel={modalTitle} size={'lg'} show={show} onHide={onCancel}>
       <Modal.Header>
         <Modal.Title>{t('confirmDeaccession.title')}</Modal.Title>
       </Modal.Header>

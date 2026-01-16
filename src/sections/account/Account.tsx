@@ -5,12 +5,14 @@ import { Tabs } from '@iqss/dataverse-design-system'
 import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { AccountInfoSection } from './account-info-section/AccountInfoSection'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
 import { RoleJSDataverseRepository } from '@/roles/infrastructure/repositories/RoleJSDataverseRepository'
 import styles from './Account.module.scss'
+import NotificationsSection from '@/sections/account/notifications-section/NotificationsSection'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 
@@ -19,13 +21,15 @@ interface AccountProps {
   userRepository: UserJSDataverseRepository
   collectionRepository: CollectionRepository
   roleRepository: RoleJSDataverseRepository
+  notificationRepository: NotificationRepository
 }
 
 export const Account = ({
   defaultActiveTabKey,
   userRepository,
   collectionRepository,
-  roleRepository
+  roleRepository,
+  notificationRepository
 }: AccountProps) => {
   const { t } = useTranslation('account')
   const [_, setSearchParams] = useSearchParams()
@@ -56,8 +60,10 @@ export const Account = ({
             />
           </div>
         </Tabs.Tab>
-        <Tabs.Tab eventKey={tabsKeys.notifications} title={t('tabs.notifications')} disabled>
-          <div className={styles['tab-container']}></div>
+        <Tabs.Tab eventKey={tabsKeys.notifications} title={t('tabs.notifications')}>
+          <div className={styles['tab-container']}>
+            <NotificationsSection notificationRepository={notificationRepository} />
+          </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.accountInformation} title={t('tabs.accountInformation')}>
           <div className={styles['tab-container']}>
