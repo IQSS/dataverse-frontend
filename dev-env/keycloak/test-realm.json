@@ -440,7 +440,7 @@
     {
       "id": "e5531496-cfb8-498c-a902-50c98d649e79",
       "createdTimestamp": 1684755721064,
-      "username": "curator",
+      "username": "dataverse-curator",
       "enabled": true,
       "totp": false,
       "emailVerified": true,
@@ -450,6 +450,31 @@
       "credentials": [
         {
           "id": "664546b4-b936-45cf-a4cf-5e98b743fc7f",
+          "type": "password",
+          "userLabel": "My password",
+          "createdDate": 1684755740776,
+          "secretData": "{\"value\":\"AvVqybCNtCBVAdLEeJKresy9tc3c4BBUQvu5uHVQw4IjVagN6FpKGlDEKOrxhzdSM8skEvthOEqJkloPo1w+NQ==\",\"salt\":\"2em2DDRRlNEYsNR3xDqehw==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["default-roles-test"],
+      "notBefore": 0,
+      "groups": ["/curators"]
+    }, {
+      "id": "e5531496-cfb8-498c-a902-50c98d6a2703",
+      "createdTimestamp": 1684755721064,
+      "username": "dataverse-curator-email-as-username@mailinator.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Dataverse",
+      "lastName": "Curator",
+      "email": "dataverse-curator-email-as-username@mailinator.com",
+      "credentials": [
+        {
+          "id": "664546b4-b936-45cf-a4cf-5e98b74e2703",
           "type": "password",
           "userLabel": "My password",
           "createdDate": 1684755740776,
