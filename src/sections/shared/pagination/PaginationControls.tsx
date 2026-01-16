@@ -6,12 +6,17 @@ import { PaginationInfo } from '../../../shared/pagination/domain/models/Paginat
 import { useEffect, useState } from 'react'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
+import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
 
 interface PaginationProps {
   onPaginationInfoChange: (
-    paginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
+    paginationInfo: PaginationInfo<
+      DatasetPaginationInfo | FilePaginationInfo | NotificationsPaginationInfo
+    >
   ) => void
-  initialPaginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
+  initialPaginationInfo: PaginationInfo<
+    DatasetPaginationInfo | FilePaginationInfo | NotificationsPaginationInfo
+  >
   showPageSizeSelector?: boolean
 }
 const MINIMUM_NUMBER_OF_PAGES_TO_DISPLAY_PAGINATION = 2
@@ -20,9 +25,9 @@ export function PaginationControls({
   initialPaginationInfo,
   showPageSizeSelector = true
 }: PaginationProps) {
-  const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo | FilePaginationInfo>(
-    initialPaginationInfo
-  )
+  const [paginationInfo, setPaginationInfo] = useState<
+    DatasetPaginationInfo | FilePaginationInfo | NotificationsPaginationInfo
+  >(initialPaginationInfo)
   const goToPage = (newPage: number) => {
     setPaginationInfo(paginationInfo.goToPage(newPage))
   }
@@ -60,7 +65,7 @@ export function PaginationControls({
   return (
     <Row className={styles.row}>
       <Col md="auto">
-        <div className={styles.container}>
+        <div data-testid="pagination-controls" className={styles.container}>
           <Pagination>
             <Pagination.First
               onClick={() => goToPage(1)}

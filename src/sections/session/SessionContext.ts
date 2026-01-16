@@ -5,7 +5,7 @@ interface SessionContextProps {
   user: User | null
   isLoadingUser: boolean
   sessionError: SessionError | null
-  setUser: (user: User) => void
+  setUser: (user: User | null) => void
   refetchUserSession: () => Promise<void>
 }
 export const SessionContext = createContext<SessionContextProps>({

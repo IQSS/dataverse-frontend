@@ -9,6 +9,21 @@ export class DateHelper {
       day: 'numeric'
     })
   }
+  static toDisplayFormatWithTime(date: Date | undefined): string {
+    if (!date) {
+      return ''
+    }
+    const locale = Intl.DateTimeFormat().resolvedOptions().locale
+    return date.toLocaleString(locale, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZone: 'UTC',
+      timeZoneName: 'short'
+    })
+  }
 
   static toDisplayFormatYYYYMMDD(date: Date | undefined): string {
     if (!date) {
