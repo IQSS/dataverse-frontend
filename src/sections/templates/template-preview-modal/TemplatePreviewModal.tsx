@@ -17,6 +17,7 @@ interface TemplatePreviewModalProps {
   show: boolean
   handleClose: () => void
   templateId: number
+  templateName: string
   templateRepository: TemplateRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
@@ -25,6 +26,7 @@ export const TemplatePreviewModal = ({
   show,
   handleClose,
   templateId,
+  templateName,
   templateRepository,
   metadataBlockInfoRepository
 }: TemplatePreviewModalProps) => {
@@ -66,7 +68,7 @@ export const TemplatePreviewModal = ({
         <div>
           <span style={{ margin: '10px', fontWeight: 'bold' }}>{t('preview.templateLabel')}</span>
           <span style={{ display: 'inline-grid', margin: '10px', fontWeight: 'bold' }}>
-            {template?.name ?? ''}
+            {template?.name ?? templateName}
           </span>
         </div>
 

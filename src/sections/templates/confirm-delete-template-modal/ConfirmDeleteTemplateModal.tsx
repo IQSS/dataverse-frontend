@@ -40,7 +40,11 @@ export const ConfirmDeleteTemplateModal = ({
         <Button variant="secondary" onClick={handleClose} disabled={isDeleting}>
           {tShared('cancel')}
         </Button>
-        <Button variant="danger" onClick={handleDelete} disabled={isDeleting}>
+        <Button
+          variant="danger"
+          onClick={handleDelete}
+          disabled={isDeleting}
+          data-testid="confirm-delete-template-button">
           <Stack direction="horizontal" gap={1}>
             {tShared('delete')}
             {isDeleting && <Spinner variant="light" animation="border" size="sm" />}

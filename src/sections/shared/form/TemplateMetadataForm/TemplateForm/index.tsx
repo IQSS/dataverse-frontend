@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -46,33 +46,12 @@ export const TemplateForm = ({
   const navigate = useNavigate()
   const [validationError, setValidationError] = useState<string | null>(null)
   const [templateName, setTemplateName] = useState('')
-  const [navigateToTermsPending, setNavigateToTermsPending] = useState(false)
   const { submissionStatus, submitError, submitTemplate } = useSubmitTemplate(collectionId)
 
-  const { datasetTemplates: templates, fetchDatasetTemplates } = useGetTemplatesByCollectionId({
+  const { fetchDatasetTemplates } = useGetTemplatesByCollectionId({
     templateRepository,
     collectionIdOrAlias: collectionId
   })
-
-  const currentTemplateId = useMemo(() => {
-    const normalizedName = templateName.trim().toLowerCase()
-    if (!normalizedName) return null
-
-    const match = templates.find(
-      (template) => template.name.trim().toLowerCase() === normalizedName
-    )
-    return match?.id ?? null
-  }, [templates, templateName])
-
-  useEffect(() => {
-    if (!navigateToTermsPending) return
-    if (currentTemplateId === null) return
-
-    setNavigateToTermsPending(false)
-    navigate(RouteWithParams.TEMPLATES_EDIT_TERMS(collectionId, currentTemplateId), {
-      state: { fromCreateTemplate: true }
-    })
-  }, [collectionId, currentTemplateId, navigate, navigateToTermsPending])
 
   const form = useForm({ mode: 'onChange', defaultValues: formDefaultValues })
 
@@ -109,8 +88,17 @@ export const TemplateForm = ({
       const didSubmit = await submitTemplate(templatePayload)
       if (!didSubmit) return
 
-      await fetchDatasetTemplates()
-      setNavigateToTermsPending(true)
+      const updatedTemplates = await fetchDatasetTemplates()
+      const normalizedName = templateName.trim().toLowerCase()
+      const createdTemplate = updatedTemplates.find(
+        (template) => template.name.trim().toLowerCase() === normalizedName
+      )
+
+      if (!createdTemplate) return
+
+      navigate(RouteWithParams.TEMPLATES_EDIT_TERMS(collectionId, createdTemplate.id), {
+        state: { fromCreateTemplate: true }
+      })
     })()
   }
 

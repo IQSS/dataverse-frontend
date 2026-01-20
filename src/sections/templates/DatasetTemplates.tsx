@@ -106,7 +106,9 @@ export const DatasetTemplates = ({
         return first.name.localeCompare(second.name, undefined, { sensitivity: 'base' })
       }
       if (sortBy === 'created') {
-        return new Date(first.createDate).getTime() - new Date(second.createDate).getTime()
+        const firstTime = first.createTime ? new Date(first.createTime).getTime() : 0
+        const secondTime = second.createTime ? new Date(second.createTime).getTime() : 0
+        return firstTime - secondTime
       }
       return first.usageCount - second.usageCount
     })
@@ -207,13 +209,16 @@ export const DatasetTemplates = ({
         isDeleting={isDeletingTemplate}
         errorDeleting={errorDeletingTemplate}
       />
-      <TemplatePreviewModal
-        show={Boolean(templateToPreview)}
-        handleClose={handleClosePreviewModal}
-        templateId={templateToPreview?.id ?? 0}
-        templateRepository={templateRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      {templateToPreview && (
+        <TemplatePreviewModal
+          show={true}
+          handleClose={handleClosePreviewModal}
+          templateId={templateToPreview.id}
+          templateName={templateToPreview.name}
+          templateRepository={templateRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )}
       <section>
         <BreadcrumbsGenerator
           hierarchy={collection.hierarchy}
