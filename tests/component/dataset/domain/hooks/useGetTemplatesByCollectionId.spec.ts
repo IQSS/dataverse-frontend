@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
 import { TemplateMother } from '../../../sections/templates/TemplateMother'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
-import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
+import { useGetTemplatesByCollectionId } from '@/templates/domain/hooks/useGetTemplatesByCollectionId'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 
 const templateRepository: TemplateRepository = {} as TemplateRepository

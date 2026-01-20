@@ -13,6 +13,7 @@ const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 export class DatasetTemplatesFactory {
   static create(): ReactElement {
     return (
+      // NotImplementedModalProvider should be removed after all features are implemented
       <NotImplementedModalProvider>
         <DatasetTemplatesWithParams />
       </NotImplementedModalProvider>

@@ -465,7 +465,7 @@ describe('Dataset Templates', () => {
     //     null
     //   )
     // }, [template])
-    it('shows loading skeleton while fetching templates', () => {
+    it('shows loading state while fetching the template', () => {
       templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
       templateRepository.getTemplate = cy.stub().callsFake(
         () =>
@@ -473,34 +473,10 @@ describe('Dataset Templates', () => {
             setTimeout(() => resolve(template), 100)
           })
       )
-      metadataBlockInfoRepository.getByName = cy.stub().resolves(MetadataBlockInfoMother.create())
-
-      mountDatasetTemplates()
-
-      cy.findByRole('button', { name: 'View' }).click({ force: true })
-      cy.findByRole('dialog').within(() => {
-        cy.findByTestId('preview-modal-skeleton').should('exist')
-      })
-    })
-
-    it('shows an error message if preview fails', () => {
-      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
-      templateRepository.getTemplate = cy.stub().rejects(new Error('Preview failed'))
-
-      mountDatasetTemplates()
-
-      cy.findByRole('button', { name: 'View' }).click({ force: true })
-      cy.findByText(/Something went wrong loading the template preview. Please try again./).should(
-        'exist'
-      )
-    })
-
-    it('shows loading state while fetching preview data', () => {
-      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
-      templateRepository.getTemplate = cy.stub().callsFake(
+      metadataBlockInfoRepository.getByName = cy.stub().callsFake(
         () =>
           new Promise((resolve) => {
-            setTimeout(() => resolve(template), 100)
+            setTimeout(() => resolve(MetadataBlockInfoMother.create()), 100)
           })
       )
 

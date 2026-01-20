@@ -22,7 +22,7 @@ import { MetadataBlockFormFields } from '../../DatasetMetadataForm/MetadataForm/
 import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
-import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
+import { useGetTemplatesByCollectionId } from '@/templates/domain/hooks/useGetTemplatesByCollectionId'
 import { SubmissionStatus, useSubmitTemplate } from '../../useSubmitTemplate'
 import { TemplateInfo } from '@/templates/domain/models/TemplateInfo'
 import styles from './index.module.scss'

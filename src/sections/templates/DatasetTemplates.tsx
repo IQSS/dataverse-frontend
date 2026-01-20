@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import {
   Alert,
   Button,
@@ -23,22 +23,24 @@ import {
   Trash
 } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
+import { RouteWithParams } from '@/sections/Route.enum'
+import { DatasetTemplatesSkeleton } from './DatasetTemplatesSkeleton'
+import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
+import { DatasetTemplatesEmptyState } from './DatasetTemplatesEmptyState'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { useCollection } from '../collection/useCollection'
-import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
+import { useGetTemplatesByCollectionId } from '@/templates/domain/hooks/useGetTemplatesByCollectionId'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { Template } from '@/templates/domain/models/Template'
 import { ConfirmDeleteTemplateModal } from './confirm-delete-template-modal/ConfirmDeleteTemplateModal'
-import { DatasetTemplatePreviewModal } from './dataset-template-preview-modal/DatasetTemplatePreviewModal'
+import { TemplatePreviewModal } from './template-preview-modal/TemplatePreviewModal'
+
 import styles from './DatasetTemplates.module.scss'
-import { RouteWithParams } from '@/sections/Route.enum'
-import { DatasetTemplatesSkeleton } from './DatasetTemplatesSkeleton'
-import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
 
 interface DatasetTemplatesProps {
   collectionRepository: CollectionRepository
@@ -59,8 +61,8 @@ export const DatasetTemplates = ({
   const { isModalOpen, hideModal, showModal } = useNotImplementedModal()
   const [sortBy, setSortBy] = useState<'name' | 'created' | 'usage' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
-  const [templateToDelete, setTemplateToDelete] = useState<Template | null>(null)
-  const [templateToPreview, setTemplateToPreview] = useState<Template | null>(null)
+  const [templateToDelete, setTemplateToDelete] = useState<Template | undefined>(undefined)
+  const [templateToPreview, setTemplateToPreview] = useState<Template | undefined>(undefined)
   const [isDeletingTemplate, setIsDeletingTemplate] = useState(false)
   const [errorDeletingTemplate, setErrorDeletingTemplate] = useState<string | null>(null)
   const [includeParentTemplates, setIncludeParentTemplates] = useState(true)
@@ -77,6 +79,7 @@ export const DatasetTemplates = ({
     templateRepository,
     collectionIdOrAlias: collectionId
   })
+
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: collectionId,
     collectionRepository
@@ -85,9 +88,6 @@ export const DatasetTemplates = ({
   const rootCollectionNames = collection?.hierarchy?.toArray().map((node) => node.name) ?? []
 
   const isLoadingData = isLoadingCollection || isLoadingDatasetTemplates
-  const resolveCreateDate = (template: Template) => {
-    return Date.parse(template.createDate)
-  }
 
   const filteredTemplates = useMemo(() => {
     if (includeParentTemplates) {
@@ -106,7 +106,7 @@ export const DatasetTemplates = ({
         return first.name.localeCompare(second.name, undefined, { sensitivity: 'base' })
       }
       if (sortBy === 'created') {
-        return resolveCreateDate(first) - resolveCreateDate(second)
+        return new Date(first.createDate).getTime() - new Date(second.createDate).getTime()
       }
       return first.usageCount - second.usageCount
     })
@@ -137,17 +137,6 @@ export const DatasetTemplates = ({
   const sortHeaderClass = (column: 'name' | 'created' | 'usage') =>
     sortBy === column ? styles['sort-header-active'] : ''
 
-  const emptyStateWhyBullets = t('emptyState.whyBullets', {
-    returnObjects: true
-  }) as string[]
-  const emptyStateHowBullets = t('emptyState.howBullets', {
-    returnObjects: true
-  }) as string[]
-
-  const generalInfoUrl = `/spa${RouteWithParams.EDIT_COLLECTION(collectionId)}`
-  const templatesGuideUrl =
-    'https://guides.dataverse.org/en/6.9/user/dataverse-management.html#dataset-templates'
-
   const handleCreateTemplate = () => {
     navigate('create', { relative: 'path' })
   }
@@ -159,7 +148,7 @@ export const DatasetTemplates = ({
 
   const handleCloseDeleteModal = () => {
     if (isDeletingTemplate) return
-    setTemplateToDelete(null)
+    setTemplateToDelete(undefined)
     setErrorDeletingTemplate(null)
   }
 
@@ -171,7 +160,7 @@ export const DatasetTemplates = ({
       await templateRepository.deleteTemplate(templateToDelete.id)
       await fetchDatasetTemplates()
       toast.success(t('alerts.deleteSuccess'))
-      setTemplateToDelete(null)
+      setTemplateToDelete(undefined)
     } catch (error) {
       setErrorDeletingTemplate(t('alerts.deleteError'))
     } finally {
@@ -192,7 +181,7 @@ export const DatasetTemplates = ({
   }
 
   const handleClosePreviewModal = () => {
-    setTemplateToPreview(null)
+    setTemplateToPreview(undefined)
   }
 
   if (!isLoadingCollection && !collection) {
@@ -218,11 +207,10 @@ export const DatasetTemplates = ({
         isDeleting={isDeletingTemplate}
         errorDeleting={errorDeletingTemplate}
       />
-      <DatasetTemplatePreviewModal
+      <TemplatePreviewModal
         show={Boolean(templateToPreview)}
         handleClose={handleClosePreviewModal}
-        templateId={templateToPreview?.id ?? null}
-        templateName={templateToPreview?.name ?? ''}
+        templateId={templateToPreview?.id ?? 0}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
@@ -271,40 +259,7 @@ export const DatasetTemplates = ({
         </div>
 
         {datasetTemplates.length === 0 ? (
-          <div className={styles['empty-state']}>
-            <div>
-              <h2>{t('emptyState.whyTitle')}</h2>
-              <ul>
-                {emptyStateWhyBullets.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              <h2>{t('emptyState.howTitle')}</h2>
-              <ul>
-                {emptyStateHowBullets.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-                <li>
-                  <Trans
-                    t={t}
-                    i18nKey="emptyState.howNote"
-                    components={{
-                      anchor: <a href={generalInfoUrl} target="_blank" rel="noreferrer" />
-                    }}
-                  />
-                </li>
-              </ul>
-              <p>
-                <Trans
-                  t={t}
-                  i18nKey="emptyState.footer"
-                  components={{
-                    anchor: <a href={templatesGuideUrl} target="_blank" rel="noreferrer" />
-                  }}
-                />
-              </p>
-            </div>
-          </div>
+          <DatasetTemplatesEmptyState collectionId={collectionId} />
         ) : (
           <>
             <Table>

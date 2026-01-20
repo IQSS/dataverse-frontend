@@ -1,22 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { EditTemplateTerms } from '@/sections/templates/edit-template-terms'
-import { WithLayout } from '../WithLayout'
+import { TemplatePreviewModal } from '@/sections/templates/template-preview-modal/TemplatePreviewModal'
 import { WithI18next } from '../WithI18next'
-import { WithLoggedInUser } from '../WithLoggedInUser'
 import { TemplateMockRepository } from './TemplateMockRepository'
+import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { Template } from '@/templates/domain/models/Template'
 
-const meta: Meta<typeof EditTemplateTerms> = {
-  title: 'Pages/Edit Template Terms',
-  component: EditTemplateTerms,
-  decorators: [WithI18next, WithLayout, WithLoggedInUser],
+const meta: Meta<typeof TemplatePreviewModal> = {
+  title: 'Sections/Templates/TemplatePreviewModal',
+  component: TemplatePreviewModal,
+  decorators: [WithI18next],
   parameters: {
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
   }
 }
 export default meta
 
-type Story = StoryObj<typeof EditTemplateTerms>
+type Story = StoryObj<typeof TemplatePreviewModal>
 
 class TemplateLoadingMockRepository extends TemplateMockRepository {
   getTemplate(_templateId: number): Promise<Template> {
@@ -26,20 +25,24 @@ class TemplateLoadingMockRepository extends TemplateMockRepository {
 
 export const Default: Story = {
   render: () => (
-    <EditTemplateTerms
-      collectionId="root"
+    <TemplatePreviewModal
+      show={true}
+      handleClose={() => {}}
       templateId={1}
       templateRepository={new TemplateMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
     />
   )
 }
 
 export const Loading: Story = {
   render: () => (
-    <EditTemplateTerms
-      collectionId="root"
+    <TemplatePreviewModal
+      show={true}
+      handleClose={() => {}}
       templateId={1}
       templateRepository={new TemplateLoadingMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
     />
   )
 }

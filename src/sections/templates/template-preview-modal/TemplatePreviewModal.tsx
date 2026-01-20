@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Accordion, Alert, Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { MetadataBlockName } from '@/dataset/domain/models/Dataset'
@@ -8,68 +8,35 @@ import { License } from '@/sections/dataset/dataset-terms/License'
 import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import { DatasetTermsRow } from '@/sections/dataset/dataset-terms/DatasetTermsRow'
-import { Template } from '@/templates/domain/models/Template'
+import { useGetTemplate } from '@/templates/domain/hooks/useGetTemplate'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { DatasetTemplatePreviewModalSkeleton } from './DatasetTemplatePreviewModalSkeleton'
+import { TemplatePreviewModalSkeleton } from './TemplatePreviewModalSkeleton'
 
-interface DatasetTemplatePreviewModalProps {
+interface TemplatePreviewModalProps {
   show: boolean
   handleClose: () => void
-  templateId: number | null
-  templateName: string
+  templateId: number
   templateRepository: TemplateRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
-export const DatasetTemplatePreviewModal = ({
+export const TemplatePreviewModal = ({
   show,
   handleClose,
   templateId,
-  templateName,
   templateRepository,
   metadataBlockInfoRepository
-}: DatasetTemplatePreviewModalProps) => {
+}: TemplatePreviewModalProps) => {
   const { t } = useTranslation('datasetTemplates')
   const { t: tShared } = useTranslation('shared')
   const { t: tDataset } = useTranslation('dataset')
-  const [template, setTemplate] = useState<Template | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!show || !templateId) {
-      setTemplate(null)
-      setError(null)
-      return
-    }
-
-    let isMounted = true
-    setIsLoading(true)
-    setError(null)
-
-    templateRepository
-      .getTemplate(templateId)
-      .then((response) => {
-        if (isMounted) {
-          setTemplate(response)
-        }
-      })
-      .catch(() => {
-        if (isMounted) {
-          setError(t('preview.error'))
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false)
-        }
-      })
-
-    return () => {
-      isMounted = false
-    }
-  }, [show, templateId, templateRepository, t])
+  const { template, isLoadingTemplate, errorGetTemplate } = useGetTemplate({
+    templateRepository,
+    templateId,
+    autoFetch: show
+  })
 
   const citationBlock = useMemo(() => {
     if (!template?.datasetMetadataBlocks) return null
@@ -91,7 +58,7 @@ export const DatasetTemplatePreviewModal = ({
   const hasCitationFields = citationBlock && Object.keys(citationBlock.fields ?? {}).length > 0
 
   return (
-    <Modal show={show} onHide={isLoading ? () => {} : handleClose} centered size="lg">
+    <Modal show={show} onHide={isLoadingTemplate ? () => {} : handleClose} centered size="lg">
       <Modal.Header>
         <Modal.Title>{t('preview.title')}</Modal.Title>
       </Modal.Header>
@@ -99,20 +66,20 @@ export const DatasetTemplatePreviewModal = ({
         <div>
           <span style={{ margin: '10px', fontWeight: 'bold' }}>{t('preview.templateLabel')}</span>
           <span style={{ display: 'inline-grid', margin: '10px', fontWeight: 'bold' }}>
-            {template?.name ?? templateName}
+            {template?.name ?? ''}
           </span>
         </div>
 
-        {isLoading && <DatasetTemplatePreviewModalSkeleton />}
+        {isLoadingTemplate && <TemplatePreviewModalSkeleton />}
 
-        {error && <Alert variant="danger">{error}</Alert>}
+        {errorGetTemplate && <Alert variant="danger">{errorGetTemplate}</Alert>}
 
-        {!isLoading && template && (
+        {!isLoadingTemplate && template && (
           <Accordion defaultActiveKey={['0', '1', '2']} alwaysOpen>
             <Accordion.Item eventKey="0">
               <Accordion.Header>{t('preview.sections.metadata')}</Accordion.Header>
               <Accordion.Body>
-                {isLoadingBlockInfo && <DatasetTemplatePreviewModalSkeleton />}
+                {isLoadingBlockInfo && <TemplatePreviewModalSkeleton />}
                 {errorBlockInfo && <Alert variant="danger">{errorBlockInfo}</Alert>}
                 {!isLoadingBlockInfo &&
                 !errorBlockInfo &&
@@ -161,7 +128,7 @@ export const DatasetTemplatePreviewModal = ({
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose} disabled={isLoading}>
+        <Button variant="secondary" onClick={handleClose} disabled={isLoadingTemplate}>
           <Stack direction="horizontal" gap={1}>
             {tShared('close')}
           </Stack>

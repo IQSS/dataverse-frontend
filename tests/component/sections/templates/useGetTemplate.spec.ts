@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
-import { useGetTemplate } from '@/dataset/domain/hooks/useGetTemplate'
+import { useGetTemplate } from '@/templates/domain/hooks/useGetTemplate'
 import { TemplateMother } from './TemplateMother'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 

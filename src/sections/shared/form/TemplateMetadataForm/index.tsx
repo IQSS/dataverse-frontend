@@ -20,9 +20,9 @@ export const TemplateMetadataForm = ({
   templateRepository
 }: TemplateMetadataFormProps) => {
   const {
-    metadataBlocksInfo: metadataBlocksInfoForDisplayOnEdit,
-    isLoading: isLoadingMetadataBlocksInfoForDisplayOnEdit,
-    error: errorLoadingMetadataBlocksInfoForDisplayOnEdit
+    metadataBlocksInfo: metadataBlocksInfoForDisplay,
+    isLoading,
+    error
   } = useGetMetadataBlocksInfo({
     mode: 'edit',
     collectionId,
@@ -32,21 +32,21 @@ export const TemplateMetadataForm = ({
   const metadataBlocksInfo = useMemo(
     () =>
       MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(
-        metadataBlocksInfoForDisplayOnEdit
+        metadataBlocksInfoForDisplay
       ),
-    [metadataBlocksInfoForDisplayOnEdit]
+    [metadataBlocksInfoForDisplay]
   )
 
   const metadataFieldsForMapping = useMemo(
     () =>
-      metadataBlocksInfoForDisplayOnEdit.reduce<Record<string, Record<string, MetadataField>>>(
+      metadataBlocksInfoForDisplay.reduce<Record<string, Record<string, MetadataField>>>(
         (acc, block) => {
           acc[block.name] = block.metadataFields ?? {}
           return acc
         },
         {}
       ),
-    [metadataBlocksInfoForDisplayOnEdit]
+    [metadataBlocksInfoForDisplay]
   )
 
   const formDefaultValues = useMemo(
@@ -54,17 +54,14 @@ export const TemplateMetadataForm = ({
     [metadataBlocksInfo]
   )
 
-  const isLoadingData = isLoadingMetadataBlocksInfoForDisplayOnEdit
-  const errorLoadingData = errorLoadingMetadataBlocksInfoForDisplayOnEdit
-
-  if (isLoadingData) {
+  if (isLoading) {
     return <MetadataFormSkeleton onEditMode={false} />
   }
 
-  if (errorLoadingData) {
+  if (error) {
     return (
       <Alert variant="danger" dismissible={false}>
-        {errorLoadingData}
+        {error}
       </Alert>
     )
   }

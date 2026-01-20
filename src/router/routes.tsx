@@ -99,14 +99,6 @@ const CreateTemplatePage = lazy(() =>
   )
 )
 
-const EditDatasetTemplateMetadataPage = lazy(() =>
-  import('../sections/templates/edit-template-metadata/EditTemplateMetadataFactory').then(
-    ({ EditTemplateMetadataFactory }) => ({
-      default: () => EditTemplateMetadataFactory.create()
-    })
-  )
-)
-
 const EditDatasetTemplateTermsPage = lazy(() =>
   import('../sections/templates/edit-template-terms/EditTemplateTermsFactory').then(
     ({ EditTemplateTermsFactory }) => ({
@@ -319,15 +311,6 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <CreateTemplatePage />
-                  </Suspense>
-                ),
-                errorElement: <ErrorPage />
-              },
-              {
-                path: Route.TEMPLATES_EDIT_METADATA,
-                element: (
-                  <Suspense fallback={<AppLoader />}>
-                    <EditDatasetTemplateMetadataPage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

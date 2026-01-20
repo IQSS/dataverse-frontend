@@ -8,8 +8,8 @@ import { useCollection } from '@/sections/collection/useCollection'
 import { NotFoundPage } from '@/sections/not-found-page/NotFoundPage'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { TemplateMetadataForm } from '@/sections/shared/form/TemplateMetadataForm'
-import styles from './CreateTemplate.module.scss'
 import { CreateTemplateSkeleton } from './CreateTemplateSkeleton'
+import styles from './CreateTemplate.module.scss'
 
 interface CreateTemplateProps {
   collectionId: string
