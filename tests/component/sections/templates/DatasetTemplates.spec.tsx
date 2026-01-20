@@ -59,6 +59,39 @@ describe('Dataset Templates', () => {
       </NotImplementedModalProvider>
     )
 
+  it('shows not found when the collection does not exist', () => {
+    collectionRepository.getById = cy.stub().resolves(null)
+
+    mountDatasetTemplates()
+
+    cy.findByTestId('not-found-page').should('exist')
+  })
+
+  it('shows loading skeleton while loading data', () => {
+    const delayedTime = 200
+    collectionRepository.getById = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(delayedTime).then(() => collection)
+    })
+
+    mountDatasetTemplates()
+
+    cy.clock()
+    cy.findByTestId('dataset-templates-skeleton').should('exist')
+
+    cy.tick(delayedTime)
+    cy.findByTestId('dataset-templates-skeleton').should('not.exist')
+  })
+
+  it('shows an error alert when templates fail to load', () => {
+    templateRepository.getTemplatesByCollectionId = cy.stub().rejects(new Error('Load failed'))
+
+    mountDatasetTemplates()
+
+    cy.findByText(/Something went wrong getting the dataset templates. Try again later./i).should(
+      'exist'
+    )
+  })
+
   it('shows the empty state when there are no templates', () => {
     mountDatasetTemplates()
 
@@ -205,6 +238,25 @@ describe('Dataset Templates', () => {
 
     cy.findByRole('button', { name: 'Template Name' }).click()
     getTableNames().should('deep.equal', ['Gamma', 'Beta', 'Alpha'])
+  })
+
+  it('resets sorting direction when selecting a different column', () => {
+    templateRepository.getTemplatesByCollectionId = cy
+      .stub()
+      .resolves([templateAlpha, templateBeta, templateGamma])
+
+    mountDatasetTemplates()
+
+    const getTableDates = () =>
+      cy
+        .findByRole('table')
+        .find('tbody td:nth-child(2)')
+        .then((cells) => Cypress._.map(cells, (cell) => cell.textContent?.trim()))
+
+    cy.findByRole('button', { name: 'Template Name' }).click()
+    cy.findByRole('button', { name: 'Template Name' }).click()
+    cy.findByRole('button', { name: 'Date Created' }).click()
+    getTableDates().should('deep.equal', ['Sep 1, 2025', 'Sep 2, 2025', 'Sep 3, 2025'])
   })
 
   it('sorts templates by date descending', () => {
@@ -368,6 +420,30 @@ describe('Dataset Templates', () => {
       })
     })
 
+    it('shows citation metadata when the template includes citation fields', () => {
+      const templateWithCitation = TemplateMother.create({
+        datasetMetadataBlocks: [
+          {
+            name: 'citation',
+            fields: {
+              title: 'Test Title'
+            }
+          }
+        ]
+      })
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([templateWithCitation])
+      templateRepository.getTemplate = cy.stub().resolves(templateWithCitation)
+      metadataBlockInfoRepository.getByName = cy.stub().resolves(MetadataBlockInfoMother.create())
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByText('Test Title').should('exist')
+        cy.findByText('No citation metadata is available for this template.').should('not.exist')
+      })
+    })
+
     it('closes the template preview modal', () => {
       templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
       templateRepository.getTemplate = cy.stub().resolves(template)
@@ -378,6 +454,33 @@ describe('Dataset Templates', () => {
       cy.findByRole('button', { name: 'View' }).click()
       cy.findByText('Close').click()
       cy.findByRole('dialog').should('not.exist')
+    })
+
+    // write test for citation block useMemo if needed
+
+    //    const citationBlock = useMemo(() => {
+    //   if (!template?.datasetMetadataBlocks) return null
+    //   return (
+    //     template.datasetMetadataBlocks.find((block) => block.name === MetadataBlockName.CITATION) ||
+    //     null
+    //   )
+    // }, [template])
+    it('shows loading skeleton while fetching templates', () => {
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
+      templateRepository.getTemplate = cy.stub().callsFake(
+        () =>
+          new Promise((resolve) => {
+            setTimeout(() => resolve(template), 100)
+          })
+      )
+      metadataBlockInfoRepository.getByName = cy.stub().resolves(MetadataBlockInfoMother.create())
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByTestId('preview-modal-skeleton').should('exist')
+      })
     })
 
     it('shows an error message if preview fails', () => {

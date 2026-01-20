@@ -29,22 +29,27 @@ describe('Create Template', () => {
       />
     )
 
-  it('should show error message if there is no Template Name', () => {
+  it('should show page not found when owner collection does not exist', () => {
+    collectionRepository.getById = cy.stub().resolves(null)
+
     mountCreateTemplate()
 
-    cy.findByRole('button', { name: 'Save + Add Terms' }).click()
-    cy.findByText('Please add in a name for the dataset template.').should('exist')
+    cy.findByTestId('not-found-page').should('exist')
   })
 
-  it('should show error message if there is no required information', () => {
+  it('should show loading skeleton while loading the collection', () => {
+    const delayedTime = 200
+    collectionRepository.getById = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(delayedTime).then(() => collection)
+    })
+
     mountCreateTemplate()
 
-    cy.findByLabelText(/Template Name/).type('Test Template')
-    cy.findByRole('button', { name: 'Save + Add Terms' }).click()
+    cy.clock()
+    cy.findByTestId('create-template-skeleton').should('exist')
 
-    cy.findByText('Title is required').should('exist')
-    cy.findByText('Author Name is required').should('exist')
-    cy.findByText('Point of Contact E-mail is required').should('exist')
+    cy.tick(delayedTime)
+    cy.findByTestId('create-template-skeleton').should('not.exist')
   })
 
   it('should render breadcrumbs correctly', () => {

@@ -7,7 +7,9 @@ import {
 import {
   DatasetDTO,
   DatasetMetadataBlockValuesDTO,
-  DatasetMetadataChildFieldValueDTO
+  DatasetMetadataFieldValueDTO,
+  DatasetMetadataChildFieldValueDTO,
+  DatasetMetadataFieldsDTO
 } from '../../../../dataset/domain/useCases/DTOs/DatasetDTO'
 import {
   DatasetMetadataBlock,
@@ -16,6 +18,7 @@ import {
   DatasetMetadataSubField,
   defaultLicense
 } from '../../../../dataset/domain/models/Dataset'
+import { TemplateFieldInfo } from '../../../../templates/domain/models/TemplateInfo'
 
 export type DatasetMetadataFormValues = Record<string, MetadataBlockFormValues>
 
@@ -33,6 +36,21 @@ type ComposedFieldValues = ComposedSingleFieldValue | ComposedSingleFieldValue[]
 export type ComposedSingleFieldValue = Record<string, string>
 
 export type DateLikeKind = 'Y' | 'YM' | 'YMD' | 'AD' | 'BC' | 'BRACKET' | 'TIMESTAMP'
+
+type TemplateFieldValuePayload =
+  | string
+  | string[]
+  | TemplateFieldCompoundValue
+  | TemplateFieldCompoundValue[]
+
+type TemplateFieldCompoundValue = Record<string, TemplateFieldCompoundChildValue>
+
+type TemplateFieldCompoundChildValue = {
+  value: string | string[]
+  typeName: string
+  multiple: boolean
+  typeClass: string
+}
 
 /** Stable error codes for i18n mapping */
 export const dateKeyMessageErrorMap = {
@@ -407,6 +425,86 @@ export class MetadataFieldsHelper {
       metadataBlocks.push(formattedMetadataBlock)
     }
     return { licence: defaultLicense, metadataBlocks }
+  }
+
+  public static buildTemplateFieldsFromMetadataValues(
+    fieldValues: DatasetMetadataFieldsDTO,
+    metadataFields: Record<string, MetadataField>
+  ): TemplateFieldInfo[] {
+    const templateFields: TemplateFieldInfo[] = []
+
+    Object.entries(fieldValues).forEach(([fieldName, fieldValue]) => {
+      const fieldInfo = metadataFields[fieldName]
+      if (!fieldInfo) return
+
+      if (fieldInfo.typeClass === 'primitive' || fieldInfo.typeClass === 'controlledVocabulary') {
+        if (fieldValue === '' || fieldValue === undefined || fieldValue === null) return
+
+        const valuePayload =
+          fieldInfo.multiple && Array.isArray(fieldValue) ? fieldValue : (fieldValue as string)
+
+        templateFields.push({
+          typeName: fieldInfo.name,
+          multiple: fieldInfo.multiple,
+          typeClass: fieldInfo.typeClass,
+          value: valuePayload as unknown as TemplateFieldInfo['value']
+        })
+
+        return
+      }
+
+      if (fieldInfo.typeClass === 'compound') {
+        const compoundValues = this.buildTemplateCompoundValues(fieldInfo, fieldValue)
+        if (compoundValues.length === 0) return
+
+        const valuePayload = fieldInfo.multiple ? compoundValues : compoundValues[0]
+
+        templateFields.push({
+          typeName: fieldInfo.name,
+          multiple: fieldInfo.multiple,
+          typeClass: fieldInfo.typeClass,
+          value: valuePayload as unknown as TemplateFieldInfo['value']
+        })
+      }
+    })
+
+    return templateFields
+  }
+
+  private static buildTemplateCompoundValues(
+    fieldInfo: MetadataField,
+    fieldValue: DatasetMetadataFieldValueDTO
+  ): TemplateFieldValuePayload[] {
+    if (fieldInfo.typeClass !== 'compound') {
+      return []
+    }
+    const valueArray = Array.isArray(fieldValue) ? fieldValue : [fieldValue]
+    const compoundValues: TemplateFieldValuePayload[] = []
+
+    valueArray.forEach((compoundValue) => {
+      if (!compoundValue || typeof compoundValue !== 'object' || Array.isArray(compoundValue)) {
+        return
+      }
+      const entry: Record<string, TemplateFieldCompoundChildValue> = {}
+
+      Object.entries(compoundValue).forEach(([childName, childValue]) => {
+        const childInfo = fieldInfo.childMetadataFields?.[childName]
+        if (!childInfo) return
+        if (childValue === '' || childValue === undefined || childValue === null) return
+
+        entry[childInfo.name] = {
+          value: childValue as string | string[],
+          typeName: childInfo.name,
+          multiple: childInfo.multiple,
+          typeClass: childInfo.typeClass
+        }
+      })
+      if (Object.keys(entry).length > 0) {
+        compoundValues.push(entry)
+      }
+    })
+
+    return compoundValues
   }
 
   public static addFieldValuesToMetadataBlocksInfo(

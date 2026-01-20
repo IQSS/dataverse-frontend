@@ -10,9 +10,9 @@ export interface DatasetMetadataBlockValuesDTO {
   fields: DatasetMetadataFieldsDTO
 }
 
-type DatasetMetadataFieldsDTO = Record<string, DatasetMetadataFieldValueDTO>
+export type DatasetMetadataFieldsDTO = Record<string, DatasetMetadataFieldValueDTO>
 
-type DatasetMetadataFieldValueDTO =
+export type DatasetMetadataFieldValueDTO =
   | string
   | string[]
   | DatasetMetadataChildFieldValueDTO
