@@ -106,9 +106,7 @@ export const DatasetTemplates = ({
         return first.name.localeCompare(second.name, undefined, { sensitivity: 'base' })
       }
       if (sortBy === 'created') {
-        const firstTime = first.createTime ? new Date(first.createTime).getTime() : 0
-        const secondTime = second.createTime ? new Date(second.createTime).getTime() : 0
-        return firstTime - secondTime
+        return new Date(first.createDate).getTime() - new Date(second.createDate).getTime()
       }
       return first.usageCount - second.usageCount
     })
