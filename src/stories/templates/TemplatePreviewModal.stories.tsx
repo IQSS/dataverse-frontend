@@ -29,6 +29,7 @@ export const Default: Story = {
       show={true}
       handleClose={() => {}}
       templateId={1}
+      templateName={'Template'}
       templateRepository={new TemplateMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
     />
@@ -41,6 +42,7 @@ export const Loading: Story = {
       show={true}
       handleClose={() => {}}
       templateId={1}
+      templateName={'Template'}
       templateRepository={new TemplateLoadingMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
     />
