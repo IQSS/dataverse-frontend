@@ -1,12 +1,10 @@
-import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Breadcrumb } from '@iqss/dataverse-design-system'
+import { BreadcrumbsGenerator } from '../../shared/hierarchy/BreadcrumbsGenerator'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useCollection } from '@/sections/collection/useCollection'
 import { NotFoundPage } from '@/sections/not-found-page/NotFoundPage'
-import { RouteWithParams } from '@/sections/Route.enum'
 import { TemplateMetadataForm } from '@/sections/shared/form/TemplateMetadataForm'
 import { CreateTemplateSkeleton } from './CreateTemplateSkeleton'
 import styles from './CreateTemplate.module.scss'
@@ -42,19 +40,7 @@ export const CreateTemplate = ({
 
   return (
     <section className={styles.container}>
-      <Breadcrumb className={styles.breadcrumb}>
-        <Breadcrumb.Item
-          linkAs={Link}
-          linkProps={{ to: RouteWithParams.COLLECTIONS(collectionId) }}>
-          {collection.name}
-        </Breadcrumb.Item>
-        <Breadcrumb.Item
-          linkAs={Link}
-          linkProps={{ to: RouteWithParams.COLLECTION_TEMPLATES(collectionId) }}>
-          {t('pageTitle')}
-        </Breadcrumb.Item>
-        <Breadcrumb.Item active>{t('createTemplate.breadcrumb')}</Breadcrumb.Item>
-      </Breadcrumb>
+      <BreadcrumbsGenerator hierarchy={collection.hierarchy}></BreadcrumbsGenerator>
       <header className={styles.header}>
         <h1>{t('createTemplate.pageTitle')}</h1>
       </header>

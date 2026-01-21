@@ -24,6 +24,7 @@ import {
 } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
 import { RouteWithParams } from '@/sections/Route.enum'
+import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { DatasetTemplatesSkeleton } from './DatasetTemplatesSkeleton'
 import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
 import { DatasetTemplatesEmptyState } from './DatasetTemplatesEmptyState'
@@ -32,7 +33,6 @@ import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/reposi
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { useCollection } from '../collection/useCollection'
 import { useGetTemplatesByCollectionId } from '@/templates/domain/hooks/useGetTemplatesByCollectionId'
-import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
@@ -218,11 +218,7 @@ export const DatasetTemplates = ({
         />
       )}
       <section>
-        <BreadcrumbsGenerator
-          hierarchy={collection.hierarchy}
-          withActionItem
-          actionItemText={t('pageTitle')}
-        />
+        <BreadcrumbsGenerator hierarchy={collection.hierarchy} />
         <header className={styles.header}>
           <div className={styles['header-title']}>
             <h1>{collection.name}</h1>

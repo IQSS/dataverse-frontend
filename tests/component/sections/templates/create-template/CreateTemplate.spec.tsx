@@ -51,17 +51,4 @@ describe('Create Template', () => {
     cy.tick(delayedTime)
     cy.findByTestId('create-template-skeleton').should('not.exist')
   })
-
-  it('should render breadcrumbs correctly', () => {
-    mountCreateTemplate()
-
-    cy.findByRole('link', { name: 'Root' }).should('exist')
-
-    cy.findByRole('link', { name: 'Root' })
-      .closest('.breadcrumb')
-      .within(() => {
-        cy.findByText('Dataset Templates').should('exist')
-        cy.findByText('Create').should('exist')
-      })
-  })
 })

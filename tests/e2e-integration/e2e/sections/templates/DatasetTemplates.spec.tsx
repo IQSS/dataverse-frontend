@@ -74,7 +74,7 @@ describe('Dataset Templates', () => {
     cy.findByText(/Close/i).click({ force: true })
   })
 
-  it.only('deletes a template', () => {
+  it('deletes a template', () => {
     cy.visit(CREATE_TEMPLATE_PAGE_URL)
 
     cy.findByLabelText(/Template Name/).type(templateName, { force: true })
