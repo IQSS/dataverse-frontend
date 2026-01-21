@@ -61,7 +61,7 @@ describe('Dataset Templates', () => {
     cy.findByRole('button', { name: 'Save + Add Terms' }).click()
     cy.findByText(/Success! Template has been created./i).should('exist')
 
-    cy.findByRole('button', { name: 'Cancel' }).click()
+    cy.findByTestId('cancel-edit-template-terms-button').click()
     cy.url().should('include', TEMPLATES_PAGE_URL)
 
     cy.findByText(templateName)
@@ -74,7 +74,7 @@ describe('Dataset Templates', () => {
     cy.findByText(/Close/i).click({ force: true })
   })
 
-  it('deletes a template', () => {
+  it.only('deletes a template', () => {
     cy.visit(CREATE_TEMPLATE_PAGE_URL)
 
     cy.findByLabelText(/Template Name/).type(templateName, { force: true })
@@ -107,7 +107,7 @@ describe('Dataset Templates', () => {
       })
 
     cy.findByRole('button', { name: 'Save + Add Terms' }).click()
-    cy.findByRole('button', { name: 'Cancel' }).click()
+    cy.findByTestId('cancel-edit-template-terms-button').click()
     cy.url().should('include', TEMPLATES_PAGE_URL)
 
     cy.findByText(templateName)

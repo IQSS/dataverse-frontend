@@ -108,6 +108,7 @@ export const EditTemplateTerms = ({
           <Button
             type="button"
             variant="secondary"
+            data-testid="cancel-edit-template-terms-button"
             withSpacing
             onClick={() => navigate(RouteWithParams.COLLECTION_TEMPLATES(collectionId))}>
             {tShared('cancel')}
