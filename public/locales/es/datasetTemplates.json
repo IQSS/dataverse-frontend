@@ -42,8 +42,11 @@
   },
   "alerts": {
     "deleteSuccess": "Plantilla eliminada.",
-    "deleteError": "Algo salió mal al eliminar la plantilla. Inténtelo de nuevo más tarde."
+    "deleteError": "Algo salió mal al eliminar la plantilla. Inténtelo de nuevo más tarde.",
+    "copySuccess": "Plantilla copiada.",
+    "copyError": "Algo salió mal al copiar la plantilla. Inténtelo de nuevo más tarde."
   },
+  "copyNamePrefix": "copia {{name}}",
   "preview": {
     "title": "Vista previa de plantilla de conjunto de datos",
     "templateLabel": "Plantilla de conjunto de datos",

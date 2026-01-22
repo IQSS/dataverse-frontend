@@ -42,8 +42,11 @@
   },
   "alerts": {
     "deleteSuccess": "Template deleted.",
-    "deleteError": "Something went wrong deleting the template. Try again later."
+    "deleteError": "Something went wrong deleting the template. Try again later.",
+    "copySuccess": "Template copied.",
+    "copyError": "Something went wrong copying the template. Try again later."
   },
+  "copyNamePrefix": "copy {{name}}",
   "preview": {
     "title": "Dataset Template Preview",
     "templateLabel": "Dataset Template",

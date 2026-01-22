@@ -39,6 +39,7 @@ import { useNotImplementedModal } from '../not-implemented/NotImplementedModalCo
 import { Template } from '@/templates/domain/models/Template'
 import { ConfirmDeleteTemplateModal } from './confirm-delete-template-modal/ConfirmDeleteTemplateModal'
 import { TemplatePreviewModal } from './template-preview-modal/TemplatePreviewModal'
+import { useCopyTemplate } from './useCopyTemplate'
 
 import styles from './DatasetTemplates.module.scss'
 
@@ -78,6 +79,11 @@ export const DatasetTemplates = ({
   } = useGetTemplatesByCollectionId({
     templateRepository,
     collectionIdOrAlias: collectionId
+  })
+  const { copyTemplate, isCopyingTemplate } = useCopyTemplate({
+    collectionId,
+    templateRepository,
+    metadataBlockInfoRepository
   })
 
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
@@ -182,6 +188,13 @@ export const DatasetTemplates = ({
 
   const handleClosePreviewModal = () => {
     setTemplateToPreview(undefined)
+  }
+
+  const handleCopyTemplate = async (template: Template) => {
+    const didCopy = await copyTemplate(template.id)
+    if (didCopy) {
+      await fetchDatasetTemplates()
+    }
   }
 
   if (!isLoadingCollection && !collection) {
@@ -343,8 +356,9 @@ export const DatasetTemplates = ({
                           <Button
                             variant="secondary"
                             size="sm"
-                            onClick={showModal}
-                            aria-label={t('actions.copy')}>
+                            onClick={() => handleCopyTemplate(template)}
+                            aria-label={t('actions.copy')}
+                            disabled={isCopyingTemplate}>
                             <Files />
                           </Button>
                         </Tooltip>

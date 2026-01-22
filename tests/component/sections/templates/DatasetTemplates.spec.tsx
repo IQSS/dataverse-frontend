@@ -2,10 +2,12 @@ import { DatasetTemplates } from '../../../../src/sections/templates/DatasetTemp
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { TemplateRepository } from '../../../../src/templates/domain/repositories/TemplateRepository'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { ReadError } from '@iqss/dataverse-client-javascript'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 import { TemplateMother } from './TemplateMother'
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { CitationMetadataBlockInfoMother } from '../../metadata-block-info/domain/models/CitationMetadataBlockInfoMother'
 import { UpwardHierarchyNodeMother } from '../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
@@ -402,6 +404,119 @@ describe('Dataset Templates', () => {
       })
 
       cy.wrap(templateRepository.deleteTemplate).should('not.have.been.called')
+    })
+  })
+
+  describe('Copy Template', () => {
+    it('copies a template and refreshes the list', () => {
+      const templateWithMetadata = TemplateMother.create({
+        id: 10,
+        name: 'Template Copy',
+        collectionAlias: 'root',
+        isDefault: false,
+        datasetMetadataBlocks: [
+          {
+            name: 'citation',
+            fields: {
+              title: 'My Title'
+            }
+          }
+        ],
+        instructions: [
+          {
+            instructionField: 'title',
+            instructionText: 'Provide a clear title.'
+          }
+        ]
+      })
+
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([templateWithMetadata])
+      templateRepository.getTemplate = cy.stub().resolves(templateWithMetadata)
+      templateRepository.createTemplate = cy.stub().resolves()
+      metadataBlockInfoRepository.getByCollectionId = cy
+        .stub()
+        .resolves([CitationMetadataBlockInfoMother.get()])
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'Copy' }).click({ force: true })
+
+      cy.findByText('Template copied.').should('exist')
+      cy.wrap(templateRepository.createTemplate).should(
+        'have.been.calledWith',
+        {
+          name: 'copy Template Copy',
+          isDefault: false,
+          fields: [
+            {
+              typeName: 'title',
+              multiple: false,
+              typeClass: 'primitive',
+              value: 'My Title'
+            }
+          ],
+          instructions: templateWithMetadata.instructions
+        },
+        'root'
+      )
+      cy.wrap(templateRepository.getTemplatesByCollectionId).should('have.been.calledTwice')
+    })
+
+    it('shows an error toast when fetching the template fails', () => {
+      const templateWithMetadata = TemplateMother.create({
+        id: 10,
+        name: 'Template Copy',
+        collectionAlias: 'root'
+      })
+
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([templateWithMetadata])
+      templateRepository.getTemplate = cy
+        .stub()
+        .rejects(new ReadError('Something went wrong getting the template. Try again later.'))
+      templateRepository.createTemplate = cy.stub().resolves()
+      metadataBlockInfoRepository.getByCollectionId = cy
+        .stub()
+        .resolves([CitationMetadataBlockInfoMother.get()])
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'Copy' }).click({ force: true })
+
+      cy.findByText(/Something went wrong copying the template. Try again later./i).should('exist')
+      cy.wrap(templateRepository.createTemplate).should('not.have.been.called')
+      cy.wrap(templateRepository.getTemplatesByCollectionId).should('have.been.calledOnce')
+    })
+
+    it('shows an error toast when creating the template fails', () => {
+      const templateWithMetadata = TemplateMother.create({
+        id: 10,
+        name: 'Template Copy',
+        collectionAlias: 'root',
+        datasetMetadataBlocks: [
+          {
+            name: 'citation',
+            fields: {
+              title: 'My Title'
+            }
+          }
+        ]
+      })
+
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([templateWithMetadata])
+      templateRepository.getTemplate = cy.stub().resolves(templateWithMetadata)
+      templateRepository.createTemplate = cy
+        .stub()
+        .rejects(new Error('Something went wrong copying the template. Try again later.'))
+      metadataBlockInfoRepository.getByCollectionId = cy
+        .stub()
+        .resolves([CitationMetadataBlockInfoMother.get()])
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'Copy' }).click({ force: true })
+
+      cy.findByText(/Something went wrong copying the template. Try again later./i).should('exist')
+      cy.wrap(templateRepository.getTemplatesByCollectionId).should('have.been.calledOnce')
     })
   })
 
