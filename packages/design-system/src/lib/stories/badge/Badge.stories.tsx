@@ -25,3 +25,28 @@ export const AllVariantsAtAGlance: Story = {
     </>
   )
 }
+
+export const WithPillShape: Story = {
+  render: () => (
+    <>
+      <Badge variant="primary" pill>
+        Primary
+      </Badge>
+      <Badge variant="secondary" pill>
+        Secondary
+      </Badge>
+      <Badge variant="success" pill>
+        Success
+      </Badge>
+      <Badge variant="danger" pill>
+        Danger
+      </Badge>
+      <Badge variant="warning" pill>
+        Warning
+      </Badge>
+      <Badge variant="info" pill>
+        Info
+      </Badge>
+    </>
+  )
+}

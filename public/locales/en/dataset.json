@@ -192,6 +192,7 @@
     "studyCompletionTip": "Relationship of the data collected to the amount of data coded and stored in the Dataset. Information as to why certain items of collected information were not included in the dataset or a specific data file should be provided."
   },
   "publish": {
+    "title": "Publish Dataset",
     "draftQuestion": "Are you sure you want to publish this dataset? Once you do so, it must remain published.",
     "draftSubtext": "This version of the dataset will be published with the following terms:",
     "previouslyReleasedQuestion": "Are you sure you want to republish this dataset?",
