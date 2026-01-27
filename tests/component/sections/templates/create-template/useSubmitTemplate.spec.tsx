@@ -3,12 +3,26 @@ import { I18nextProvider } from 'react-i18next'
 import i18next, { i18n as I18nInstance } from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { createTemplate, WriteError } from '@iqss/dataverse-client-javascript'
-import { TemplateInfo } from '@/templates/domain/models/TemplateInfo'
-import { SubmissionStatus, useSubmitTemplate } from '@/sections/shared/form/useSubmitTemplate'
+import { TemplateInfo, TemplateInstructionInfo } from '@/templates/domain/models/TemplateInfo'
+import {
+  SubmissionStatus,
+  useSubmitTemplate
+} from '@/sections/shared/form/TemplateMetadataForm/useSubmitTemplate'
 
 const templatePayload: TemplateInfo = {
   name: 'Template One',
   fields: []
+}
+
+const templateInstructions: TemplateInstructionInfo[] = [
+  { instructionField: 'title', instructionText: 'Use the official dataset title' },
+  { instructionField: 'author', instructionText: 'List all contributing authors' }
+]
+
+const templatePayloadWithInstructions: TemplateInfo = {
+  name: 'Template With Instructions',
+  fields: [],
+  instructions: templateInstructions
 }
 
 const createI18n = (): I18nInstance => {
@@ -96,6 +110,23 @@ describe('useSubmitTemplate', () => {
 
     expect(result.current.submissionStatus).to.equal(SubmissionStatus.Errored)
     expect(result.current.submitError).to.equal('Save failed.')
+
+    executeStub.restore()
+  })
+
+  it('should submit template with instructions', async () => {
+    const executeStub = cy.stub(createTemplate, 'execute').resolves()
+
+    const { result } = renderHook(() => useSubmitTemplate('root'), {
+      wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+    })
+
+    await act(async () => {
+      const didSubmit = await result.current.submitTemplate(templatePayloadWithInstructions)
+      expect(didSubmit).to.equal(true)
+    })
+
+    cy.wrap(executeStub).should('have.been.calledWith', templatePayloadWithInstructions, 'root')
 
     executeStub.restore()
   })

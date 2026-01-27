@@ -5,6 +5,7 @@ import useWatchFieldsThatTriggerRequired from '../useWatchFieldsThatTriggerRequi
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { type CommonFieldProps } from '..'
+import { CustomInstructionsEditor } from '../CustomInstructionsEditor'
 import styles from '../index.module.scss'
 
 interface VocabularyProps extends CommonFieldProps {
@@ -29,7 +30,8 @@ export const Vocabulary = ({
   fieldsArrayIndex,
   isFieldThatMayBecomeRequired,
   childFieldNamesThatTriggerRequired,
-  fieldInstructions
+  fieldInstructions,
+  instructionEditor
 }: VocabularyProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
 
@@ -91,7 +93,15 @@ export const Vocabulary = ({
             {title}
           </Form.Group.Label>
           <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
-            {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
+            {instructionEditor ? (
+              <CustomInstructionsEditor
+                value={instructionEditor.value}
+                onSave={instructionEditor.onSave}
+                fieldKey={instructionEditor.fieldKey}
+              />
+            ) : (
+              fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>
+            )}
             <Row>
               <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
                 {showSelectWithSearch ? (

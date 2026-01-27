@@ -1,5 +1,5 @@
 import { createTemplate } from '@iqss/dataverse-client-javascript'
-import { TemplateMetadataForm } from '@/sections/shared/form/TemplateMetadataForm'
+import { TemplateMetadataForm } from '@/sections/shared/form/TemplateMetadataForm/TemplateMetadataForm'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { TypeMetadataFieldOptions } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
@@ -179,6 +179,43 @@ describe('TemplateMetadataForm', () => {
           cy.findByText('Point of Contact E-mail test is not a valid email.').should('exist')
         })
     })
+  })
+
+  it('should save custom instructions for template fields', () => {
+    const executeStub = cy.stub(createTemplate, 'execute').resolves()
+
+    mountTemplateMetadataForm()
+
+    cy.findByLabelText(/Template Name/).type('Test Template')
+    fillRequiredTemplateFields()
+
+    cy.findByTestId('custom-instructions-toggle-title').click()
+    cy.findByTestId('custom-instructions-input-title').type('Use the official dataset title')
+    cy.findByTestId('custom-instructions-save-title').click()
+
+    cy.findByTestId('custom-instructions-toggle-author').click()
+    cy.findByTestId('custom-instructions-input-author').type('List all contributing authors')
+    cy.findByTestId('custom-instructions-save-author').click()
+
+    cy.findByTestId('custom-instructions-toggle-authorName').should('not.exist')
+
+    cy.findByRole('button', { name: 'Save + Add Terms' }).click()
+    cy.wrap(executeStub).should('have.been.calledOnce')
+  })
+
+  it('should discard custom instructions when canceling edit', () => {
+    mountTemplateMetadataForm()
+
+    cy.findByTestId('custom-instructions-toggle-title').click()
+    cy.findByTestId('custom-instructions-input-title').type('Draft instructions')
+    cy.findByTestId('custom-instructions-cancel-title').click()
+
+    cy.findByTestId('custom-instructions-toggle-title')
+      .should('exist')
+      .and('contain.text', '(None - click to add)')
+
+    cy.findByTestId('custom-instructions-toggle-title').click()
+    cy.findByTestId('custom-instructions-input-title').should('have.value', '')
   })
 
   it('shows an error message when metadata blocks fail to load', () => {

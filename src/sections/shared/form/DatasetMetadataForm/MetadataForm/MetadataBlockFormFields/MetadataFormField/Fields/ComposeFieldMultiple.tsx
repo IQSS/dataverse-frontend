@@ -5,6 +5,8 @@ import { type MetadataField } from '../../../../../../../../metadata-block-info/
 import { MetadataFormField, type CommonFieldProps } from '..'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { DynamicFieldsButtons } from '../../../../../DynamicFieldsButtons/DynamicFieldsButtons'
+import { CustomInstructionsEditor } from '../CustomInstructionsEditor'
+import { TemplateInstructionInfo } from '@/templates/domain/models/TemplateInfo'
 import cn from 'classnames'
 import styles from '../index.module.scss'
 
@@ -14,6 +16,8 @@ interface ComposedFieldMultipleProps extends CommonFieldProps {
   compoundParentName?: string
   fieldsArrayIndex?: number
   notRequiredWithChildFieldsRequired: boolean
+  templateInstructionValues?: Record<string, TemplateInstructionInfo>
+  onTemplateInstructionChange?: (instruction: TemplateInstructionInfo) => void
 }
 
 export const ComposedFieldMultiple = ({
@@ -24,7 +28,10 @@ export const ComposedFieldMultiple = ({
   childMetadataFields,
   rulesToApply,
   notRequiredWithChildFieldsRequired,
-  fieldInstructions
+  fieldInstructions,
+  instructionEditor,
+  templateInstructionValues,
+  onTemplateInstructionChange
 }: ComposedFieldMultipleProps) => {
   const { control } = useFormContext()
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
@@ -80,7 +87,15 @@ export const ComposedFieldMultiple = ({
       message={description}
       required={Boolean(rulesToApply?.required)}
       titleClassName={styles['composed-field-title']}>
-      {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
+      {instructionEditor ? (
+        <CustomInstructionsEditor
+          value={instructionEditor.value}
+          onSave={instructionEditor.onSave}
+          fieldKey={instructionEditor.fieldKey}
+        />
+      ) : (
+        fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>
+      )}
       {notRequiredWithChildFieldsRequired && (
         <Col sm={9} className={styles['may-become-required-help-text']}>
           <Form.Group.Text>{t('mayBecomeRequired')}</Form.Group.Text>
@@ -107,6 +122,9 @@ export const ComposedFieldMultiple = ({
                       compoundParentIsRequired={Boolean(rulesToApply?.required)}
                       isFieldThatMayBecomeRequired={isFieldThatMayBecomeRequired}
                       childFieldNamesThatTriggerRequired={childFieldNamesThatTriggerRequired}
+                      templateInstructionValues={templateInstructionValues}
+                      onTemplateInstructionChange={onTemplateInstructionChange}
+                      suppressInstructionEditor={true}
                     />
                   )
                 }

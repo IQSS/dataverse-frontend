@@ -1,4 +1,4 @@
-import { CreateTemplate } from '../../../../../src/sections/templates/create-template'
+import { CreateTemplate } from '../../../../../src/sections/templates/create-template/CreateTemplate'
 import { CollectionRepository } from '../../../../../src/collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { TemplateRepository } from '../../../../../src/templates/domain/repositories/TemplateRepository'
@@ -50,5 +50,11 @@ describe('Create Template', () => {
 
     cy.tick(delayedTime)
     cy.findByTestId('create-template-skeleton').should('not.exist')
+  })
+
+  it('should render custom instructions toggle for template fields', () => {
+    mountCreateTemplate()
+
+    cy.findByTestId('custom-instructions-toggle-title').should('exist')
   })
 })

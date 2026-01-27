@@ -1,13 +1,21 @@
 import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
+import { TemplateInstructionInfo } from '@/templates/domain/models/TemplateInfo'
 import { type MetadataBlockInfo } from '../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataFormField } from './MetadataFormField'
 
 interface Props {
   metadataBlock: MetadataBlockInfo
   datasetTemplateInstructions?: DatasetTemplateInstruction[]
+  templateInstructionValues?: Record<string, TemplateInstructionInfo>
+  onTemplateInstructionChange?: (instruction: TemplateInstructionInfo) => void
 }
 
-export const MetadataBlockFormFields = ({ metadataBlock, datasetTemplateInstructions }: Props) => {
+export const MetadataBlockFormFields = ({
+  metadataBlock,
+  datasetTemplateInstructions,
+  templateInstructionValues,
+  onTemplateInstructionChange
+}: Props) => {
   const { metadataFields, name: metadataBlockName } = metadataBlock
 
   return (
@@ -19,6 +27,8 @@ export const MetadataBlockFormFields = ({ metadataBlock, datasetTemplateInstruct
             metadataFieldInfo={metadataFieldInfo}
             metadataBlockName={metadataBlockName}
             datasetTemplateInstructions={datasetTemplateInstructions}
+            templateInstructionValues={templateInstructionValues}
+            onTemplateInstructionChange={onTemplateInstructionChange}
           />
         )
       })}

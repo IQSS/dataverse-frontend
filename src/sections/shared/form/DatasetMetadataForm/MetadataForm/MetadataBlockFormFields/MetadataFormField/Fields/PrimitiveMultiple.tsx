@@ -5,6 +5,7 @@ import { TypeMetadataFieldOptions } from '../../../../../../../../metadata-block
 import { DynamicFieldsButtons } from '../../../../../DynamicFieldsButtons/DynamicFieldsButtons'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { type CommonFieldProps } from '..'
+import { CustomInstructionsEditor } from '../CustomInstructionsEditor'
 import cn from 'classnames'
 import styles from '../index.module.scss'
 
@@ -22,7 +23,8 @@ export const PrimitiveMultiple = ({
   rulesToApply,
   metadataBlockName,
   compoundParentName,
-  fieldInstructions
+  fieldInstructions,
+  instructionEditor
 }: PrimitiveMultipleProps) => {
   const { control } = useFormContext()
 
@@ -77,7 +79,15 @@ export const PrimitiveMultiple = ({
         {title}
       </Form.Group.Label>
       <Col sm={9}>
-        {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
+        {instructionEditor ? (
+          <CustomInstructionsEditor
+            value={instructionEditor.value}
+            onSave={instructionEditor.onSave}
+            fieldKey={instructionEditor.fieldKey}
+          />
+        ) : (
+          fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>
+        )}
         {(fieldsArray as { id: string; value: string }[]).map((field, index) => (
           <Row className="mb-3" key={field.id}>
             <Controller

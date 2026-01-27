@@ -73,6 +73,15 @@
       "nameRequired": "Please add in a name for the dataset template.",
       "saveFailed": "Something went wrong creating the template. Try again later."
     },
+    "customInstructions": {
+      "label": "Custom Instructions:",
+      "none": "(None - click to add)",
+      "addAria": "Add custom instructions",
+      "editAria": "Edit custom instructions",
+      "inputAriaLabel": "Custom instructions",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
     "terms": {
       "datasetTermsTitle": "Dataset Terms",
       "licenseLabel": "License/Data Use Agreement",

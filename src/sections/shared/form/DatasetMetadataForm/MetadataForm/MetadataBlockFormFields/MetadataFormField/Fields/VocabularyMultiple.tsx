@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { Form, Row, Col } from '@iqss/dataverse-design-system'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { type CommonFieldProps } from '..'
+import { CustomInstructionsEditor } from '../CustomInstructionsEditor'
 import styles from '../index.module.scss'
 
 interface VocabularyProps extends CommonFieldProps {
@@ -20,7 +21,8 @@ export const VocabularyMultiple = ({
   metadataBlockName,
   compoundParentName,
   fieldsArrayIndex,
-  fieldInstructions
+  fieldInstructions,
+  instructionEditor
 }: VocabularyProps) => {
   const { control } = useFormContext()
 
@@ -52,7 +54,15 @@ export const VocabularyMultiple = ({
             {title}
           </Form.Group.Label>
           <Col sm={9}>
-            {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
+            {instructionEditor ? (
+              <CustomInstructionsEditor
+                value={instructionEditor.value}
+                onSave={instructionEditor.onSave}
+                fieldKey={instructionEditor.fieldKey}
+              />
+            ) : (
+              fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>
+            )}
             <Row>
               <Col sm={9}>
                 <Form.Group.SelectAdvanced

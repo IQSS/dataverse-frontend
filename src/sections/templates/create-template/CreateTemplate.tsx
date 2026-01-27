@@ -5,7 +5,7 @@ import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepo
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useCollection } from '@/sections/collection/useCollection'
 import { NotFoundPage } from '@/sections/not-found-page/NotFoundPage'
-import { TemplateMetadataForm } from '@/sections/shared/form/TemplateMetadataForm'
+import { TemplateMetadataForm } from '@/sections/shared/form/TemplateMetadataForm/TemplateMetadataForm'
 import { CreateTemplateSkeleton } from './CreateTemplateSkeleton'
 import styles from './CreateTemplate.module.scss'
 

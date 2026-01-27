@@ -73,6 +73,15 @@
       "nameRequired": "Por favor, añade un nombre para la plantilla del conjunto de datos.",
       "saveFailed": "Algo salió mal al crear la plantilla. Inténtelo de nuevo más tarde."
     },
+    "customInstructions": {
+      "label": "Instrucciones personalizadas:",
+      "none": "(Ninguna: haz clic para añadir)",
+      "addAria": "Agregar instrucciones personalizadas",
+      "editAria": "Editar instrucciones personalizadas",
+      "inputAriaLabel": "Instrucciones personalizadas",
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    },
     "terms": {
       "datasetTermsTitle": "Términos del conjunto de datos",
       "licenseLabel": "Licencia/Acuerdo de uso de datos",

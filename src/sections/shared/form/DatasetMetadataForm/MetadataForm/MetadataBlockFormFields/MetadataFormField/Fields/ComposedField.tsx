@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { type MetadataField } from '../../../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataFormField, type CommonFieldProps } from '..'
+import { CustomInstructionsEditor } from '../CustomInstructionsEditor'
+import { TemplateInstructionInfo } from '@/templates/domain/models/TemplateInfo'
 import styles from '../index.module.scss'
 
 interface ComposedFieldProps extends CommonFieldProps {
@@ -11,6 +13,8 @@ interface ComposedFieldProps extends CommonFieldProps {
   compoundParentName?: string
   fieldsArrayIndex?: number
   notRequiredWithChildFieldsRequired: boolean
+  templateInstructionValues?: Record<string, TemplateInstructionInfo>
+  onTemplateInstructionChange?: (instruction: TemplateInstructionInfo) => void
 }
 
 export const ComposedField = ({
@@ -21,7 +25,10 @@ export const ComposedField = ({
   childMetadataFields,
   rulesToApply,
   notRequiredWithChildFieldsRequired,
-  fieldInstructions
+  fieldInstructions,
+  instructionEditor,
+  templateInstructionValues,
+  onTemplateInstructionChange
 }: ComposedFieldProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
 
@@ -57,7 +64,15 @@ export const ComposedField = ({
         </Col>
       )}
       <Row>
-        {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
+        {instructionEditor ? (
+          <CustomInstructionsEditor
+            value={instructionEditor.value}
+            onSave={instructionEditor.onSave}
+            fieldKey={instructionEditor.fieldKey}
+          />
+        ) : (
+          fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>
+        )}
         <Col sm={9} className={styles['composed-fields-grid']}>
           {Object.entries(childMetadataFields).map(
             ([childMetadataFieldKey, childMetadataFieldInfo]) => {
@@ -75,6 +90,9 @@ export const ComposedField = ({
                   compoundParentIsRequired={Boolean(rulesToApply?.required)}
                   isFieldThatMayBecomeRequired={isFieldThatMayBecomeRequired}
                   childFieldNamesThatTriggerRequired={childFieldNamesThatTriggerRequired}
+                  templateInstructionValues={templateInstructionValues}
+                  onTemplateInstructionChange={onTemplateInstructionChange}
+                  suppressInstructionEditor={true}
                 />
               )
             }

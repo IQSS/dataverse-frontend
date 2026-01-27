@@ -23,8 +23,8 @@ import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { useGetTemplatesByCollectionId } from '@/templates/domain/hooks/useGetTemplatesByCollectionId'
-import { SubmissionStatus, useSubmitTemplate } from '../../useSubmitTemplate'
-import { TemplateInfo } from '@/templates/domain/models/TemplateInfo'
+import { SubmissionStatus, useSubmitTemplate } from '../useSubmitTemplate'
+import { TemplateInfo, TemplateInstructionInfo } from '@/templates/domain/models/TemplateInfo'
 import styles from './index.module.scss'
 
 interface TemplateFormProps {
@@ -46,6 +46,9 @@ export const TemplateForm = ({
   const navigate = useNavigate()
   const [validationError, setValidationError] = useState<string | null>(null)
   const [templateName, setTemplateName] = useState('')
+  const [templateInstructions, setTemplateInstructions] = useState<
+    Record<string, TemplateInstructionInfo>
+  >({})
   const { submissionStatus, submitError, submitTemplate } = useSubmitTemplate(collectionId)
 
   const { fetchDatasetTemplates } = useGetTemplatesByCollectionId({
@@ -58,6 +61,19 @@ export const TemplateForm = ({
   useEffect(() => {
     form.reset(formDefaultValues)
   }, [form, formDefaultValues])
+
+  const handleTemplateInstructionChange = (instruction: TemplateInstructionInfo) => {
+    setTemplateInstructions((current) => {
+      const next = { ...current }
+      const { instructionField, instructionText } = instruction
+      if (!instructionText) {
+        delete next[instructionField]
+        return next
+      }
+      next[instructionField] = instruction
+      return next
+    })
+  }
 
   const handleSaveAndAddTerms = () => {
     if (!templateName.trim()) {
@@ -80,9 +96,12 @@ export const TemplateForm = ({
         )
       )
 
+      const instructions = Object.values(templateInstructions)
+
       const templatePayload: TemplateInfo = {
         name: templateName.trim(),
-        fields: templateFields
+        fields: templateFields,
+        ...(instructions.length > 0 ? { instructions } : {})
       }
 
       const didSubmit = await submitTemplate(templatePayload)
@@ -148,7 +167,11 @@ export const TemplateForm = ({
               key={metadataBlock.id}>
               <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
               <Accordion.Body>
-                <MetadataBlockFormFields metadataBlock={metadataBlock} />
+                <MetadataBlockFormFields
+                  metadataBlock={metadataBlock}
+                  templateInstructionValues={templateInstructions}
+                  onTemplateInstructionChange={handleTemplateInstructionChange}
+                />
               </Accordion.Body>
             </Accordion.Item>
           ))}

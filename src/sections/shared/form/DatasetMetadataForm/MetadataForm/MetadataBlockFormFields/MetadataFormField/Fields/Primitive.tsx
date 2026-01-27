@@ -6,6 +6,7 @@ import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { TypeMetadataFieldOptions } from '../../../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { type CommonFieldProps } from '..'
+import { CustomInstructionsEditor } from '../CustomInstructionsEditor'
 import styles from '../index.module.scss'
 
 interface PrimitiveProps extends CommonFieldProps {
@@ -30,7 +31,8 @@ export const Primitive = ({
   fieldsArrayIndex,
   isFieldThatMayBecomeRequired,
   childFieldNamesThatTriggerRequired,
-  fieldInstructions
+  fieldInstructions,
+  instructionEditor
 }: PrimitiveProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
   const { control } = useFormContext()
@@ -89,7 +91,15 @@ export const Primitive = ({
         rules={updatedRulesToApply}
         render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
           <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
-            {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
+            {instructionEditor ? (
+              <CustomInstructionsEditor
+                value={instructionEditor.value}
+                onSave={instructionEditor.onSave}
+                fieldKey={instructionEditor.fieldKey}
+              />
+            ) : (
+              fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>
+            )}
             <Row>
               <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
                 {isTextArea ? (
