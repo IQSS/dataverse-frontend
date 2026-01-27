@@ -31,7 +31,8 @@ export const ComposedFieldMultiple = ({
   fieldInstructions,
   instructionEditor,
   templateInstructionValues,
-  onTemplateInstructionChange
+  onTemplateInstructionChange,
+  requiredIndicator
 }: ComposedFieldMultipleProps) => {
   const { control } = useFormContext()
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
@@ -85,7 +86,7 @@ export const ComposedFieldMultiple = ({
     <Form.GroupWithMultipleFields
       title={title}
       message={description}
-      required={Boolean(rulesToApply?.required)}
+      required={requiredIndicator}
       titleClassName={styles['composed-field-title']}>
       {instructionEditor ? (
         <CustomInstructionsEditor

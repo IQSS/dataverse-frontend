@@ -62,9 +62,6 @@
 .custom-instructions-content {
   flex: 1 1 auto;
   min-width: 0;
-  .custom-instructions-toggle:hover {
-    color: var(--bs-link-hover-color, #0a58ca);
-  }
 }
 
 .custom-instructions-toggle {
@@ -79,6 +76,10 @@
 
 .custom-instructions-toggle:hover {
   text-decoration: underline;
+}
+
+.custom-instructions-content .custom-instructions-toggle:hover {
+  color: var(--bs-link-hover-color, #0a58ca);
 }
 
 .custom-instructions-editor {

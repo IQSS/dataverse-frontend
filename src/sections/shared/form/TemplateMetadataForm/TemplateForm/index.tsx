@@ -158,6 +158,7 @@ export const TemplateForm = ({
             )}
           </Col>
         </Form.Group>
+        <RequiredFieldText i18nKey="asterisksRequiredDatasetFields" />
         <RequiredFieldText />
         <Accordion defaultActiveKey="0" className={styles.accordion}>
           {metadataBlocksInfo.map((metadataBlock, index) => (
@@ -171,6 +172,7 @@ export const TemplateForm = ({
                   metadataBlock={metadataBlock}
                   templateInstructionValues={templateInstructions}
                   onTemplateInstructionChange={handleTemplateInstructionChange}
+                  disableRequiredValidation={true}
                 />
               </Accordion.Body>
             </Accordion.Item>

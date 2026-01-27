@@ -22,7 +22,8 @@ export const VocabularyMultiple = ({
   compoundParentName,
   fieldsArrayIndex,
   fieldInstructions,
-  instructionEditor
+  instructionEditor,
+  requiredIndicator
 }: VocabularyProps) => {
   const { control } = useFormContext()
 
@@ -47,7 +48,7 @@ export const VocabularyMultiple = ({
           <Form.Group.Label
             message={description}
             htmlFor={builtFieldName}
-            required={Boolean(rulesToApply?.required)}
+            required={requiredIndicator}
             className={styles['field-label']}
             column
             sm={3}>

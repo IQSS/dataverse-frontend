@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { CreateTemplate } from '@/sections/templates/create-template'
+import { CreateTemplate } from '@/sections/templates/create-template/CreateTemplate'
 import { WithLayout } from '../WithLayout'
 import { WithI18next } from '../WithI18next'
 import { WithLoggedInUser } from '../WithLoggedInUser'

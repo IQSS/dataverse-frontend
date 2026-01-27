@@ -120,26 +120,12 @@ describe('TemplateMetadataForm', () => {
     cy.findByText('Please add in a name for the dataset template.').should('exist')
   })
 
-  it('should display required errors when submitting with required fields empty', () => {
-    mountTemplateMetadataForm()
-    cy.findByLabelText(/Template Name/).type('Test Template')
-    cy.findByRole('button', { name: 'Save + Add Terms' }).click()
-
-    cy.findByText('Title is required').should('exist')
-    cy.findByText('Author Name is required').should('exist')
-    cy.findByText('Point of Contact E-mail is required').should('exist')
-    cy.findByText('Description Text is required').should('exist')
-    cy.findByText('Subject is required').should('exist')
-  })
-
-  it('should not display required errors when submitting with required fields filled', () => {
+  it('should not enforce required validation when creating a template', () => {
     const executeStub = cy.stub(createTemplate, 'execute').resolves()
 
     mountTemplateMetadataForm()
 
     cy.findByLabelText(/Template Name/).type('Test Template')
-    fillRequiredTemplateFields()
-
     cy.findByRole('button', { name: 'Save + Add Terms' }).click()
 
     cy.findByText('Title is required').should('not.exist')

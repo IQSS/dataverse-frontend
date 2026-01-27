@@ -24,6 +24,8 @@ export interface CommonFieldProps {
   description: string
   type: TypeMetadataField
   rulesToApply: DefinedRules
+  requiredIndicator: boolean
+  disableRequiredValidation?: boolean
   fieldInstructions?: string
   instructionEditor?: {
     value?: string
@@ -46,6 +48,7 @@ type DynamicMetadataFormFieldProps =
       templateInstructionValues?: Record<string, TemplateInstructionInfo>
       onTemplateInstructionChange?: (instruction: TemplateInstructionInfo) => void
       suppressInstructionEditor?: boolean
+      disableRequiredValidation?: boolean
     }
   | {
       metadataFieldInfo: MetadataField
@@ -60,6 +63,7 @@ type DynamicMetadataFormFieldProps =
       templateInstructionValues?: Record<string, TemplateInstructionInfo>
       onTemplateInstructionChange?: (instruction: TemplateInstructionInfo) => void
       suppressInstructionEditor?: boolean
+      disableRequiredValidation?: boolean
     }
 
 export const MetadataFormField = ({
@@ -74,7 +78,8 @@ export const MetadataFormField = ({
   datasetTemplateInstructions,
   templateInstructionValues,
   onTemplateInstructionChange,
-  suppressInstructionEditor
+  suppressInstructionEditor,
+  disableRequiredValidation
 }: DynamicMetadataFormFieldProps) => {
   const {
     name,
@@ -114,6 +119,14 @@ export const MetadataFormField = ({
 
   const instructionFieldKey = MetadataFieldsHelper.replaceSlashWithDot(name)
 
+  const requiredIndicator = disableRequiredValidation
+    ? Boolean(isRequired)
+    : Boolean(rulesToApply?.required)
+
+  const validationRules = disableRequiredValidation
+    ? { ...rulesToApply, required: undefined }
+    : rulesToApply
+
   const fieldInstructions: string | undefined = datasetTemplateInstructions?.find(
     (i) => i.instructionField === instructionFieldKey
   )?.instructionText
@@ -122,7 +135,8 @@ export const MetadataFormField = ({
     onTemplateInstructionChange !== undefined && !suppressInstructionEditor
       ? {
           value: templateInstructionValues?.[instructionFieldKey]?.instructionText,
-          onSave: (instruction: TemplateInstructionInfo) => onTemplateInstructionChange(instruction),
+          onSave: (instruction: TemplateInstructionInfo) =>
+            onTemplateInstructionChange(instruction),
           fieldKey: instructionFieldKey
         }
       : undefined
@@ -137,7 +151,9 @@ export const MetadataFormField = ({
           watermark={watermark}
           displayName={displayName}
           description={description}
-          rulesToApply={rulesToApply}
+          rulesToApply={validationRules}
+          requiredIndicator={requiredIndicator}
+          disableRequiredValidation={disableRequiredValidation}
           metadataBlockName={metadataBlockName}
           fieldInstructions={fieldInstructions}
           instructionEditor={instructionEditor}
@@ -152,7 +168,9 @@ export const MetadataFormField = ({
         watermark={watermark}
         displayName={displayName}
         description={description}
-        rulesToApply={rulesToApply}
+        rulesToApply={validationRules}
+        requiredIndicator={requiredIndicator}
+        disableRequiredValidation={disableRequiredValidation}
         fieldsArrayIndex={fieldsArrayIndex}
         metadataBlockName={metadataBlockName}
         compoundParentName={compoundParentName}
@@ -175,7 +193,9 @@ export const MetadataFormField = ({
           watermark={watermark}
           displayName={displayName}
           description={description}
-          rulesToApply={rulesToApply}
+          rulesToApply={validationRules}
+          requiredIndicator={requiredIndicator}
+          disableRequiredValidation={disableRequiredValidation}
           options={controlledVocabularyValues}
           compoundParentName={compoundParentName}
           metadataBlockName={metadataBlockName}
@@ -192,7 +212,9 @@ export const MetadataFormField = ({
         watermark={watermark}
         description={description}
         displayName={displayName}
-        rulesToApply={rulesToApply}
+        rulesToApply={validationRules}
+        requiredIndicator={requiredIndicator}
+        disableRequiredValidation={disableRequiredValidation}
         options={controlledVocabularyValues}
         fieldsArrayIndex={fieldsArrayIndex}
         metadataBlockName={metadataBlockName}
@@ -214,7 +236,9 @@ export const MetadataFormField = ({
           watermark={watermark}
           description={description}
           displayName={displayName}
-          rulesToApply={rulesToApply}
+          rulesToApply={validationRules}
+          requiredIndicator={requiredIndicator}
+          disableRequiredValidation={disableRequiredValidation}
           metadataBlockName={metadataBlockName}
           compoundParentName={compoundParentName}
           childMetadataFields={childMetadataFields}
@@ -235,7 +259,9 @@ export const MetadataFormField = ({
         watermark={watermark}
         description={description}
         displayName={displayName}
-        rulesToApply={rulesToApply}
+        rulesToApply={validationRules}
+        requiredIndicator={requiredIndicator}
+        disableRequiredValidation={disableRequiredValidation}
         metadataBlockName={metadataBlockName}
         compoundParentName={compoundParentName}
         childMetadataFields={childMetadataFields}

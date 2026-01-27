@@ -8,13 +8,15 @@ interface Props {
   datasetTemplateInstructions?: DatasetTemplateInstruction[]
   templateInstructionValues?: Record<string, TemplateInstructionInfo>
   onTemplateInstructionChange?: (instruction: TemplateInstructionInfo) => void
+  disableRequiredValidation?: boolean
 }
 
 export const MetadataBlockFormFields = ({
   metadataBlock,
   datasetTemplateInstructions,
   templateInstructionValues,
-  onTemplateInstructionChange
+  onTemplateInstructionChange,
+  disableRequiredValidation
 }: Props) => {
   const { metadataFields, name: metadataBlockName } = metadataBlock
 
@@ -29,6 +31,7 @@ export const MetadataBlockFormFields = ({
             datasetTemplateInstructions={datasetTemplateInstructions}
             templateInstructionValues={templateInstructionValues}
             onTemplateInstructionChange={onTemplateInstructionChange}
+            disableRequiredValidation={disableRequiredValidation}
           />
         )
       })}

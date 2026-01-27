@@ -32,7 +32,9 @@ export const Primitive = ({
   isFieldThatMayBecomeRequired,
   childFieldNamesThatTriggerRequired,
   fieldInstructions,
-  instructionEditor
+  instructionEditor,
+  requiredIndicator,
+  disableRequiredValidation
 }: PrimitiveProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
   const { control } = useFormContext()
@@ -64,13 +66,23 @@ export const Primitive = ({
 
   const updatedRulesToApply = useMemo(() => {
     if (isFieldThatMayBecomeRequired && fieldShouldBecomeRequired) {
+      if (disableRequiredValidation) {
+        return rulesToApply
+      }
       return {
         ...rulesToApply,
         required: t('field.required', { displayName, interpolation: { escapeValue: false } })
       }
     }
     return rulesToApply
-  }, [rulesToApply, fieldShouldBecomeRequired, displayName, isFieldThatMayBecomeRequired, t])
+  }, [
+    rulesToApply,
+    fieldShouldBecomeRequired,
+    displayName,
+    isFieldThatMayBecomeRequired,
+    t,
+    disableRequiredValidation
+  ])
 
   const isTextArea = type === TypeMetadataFieldOptions.Textbox
 
@@ -78,7 +90,7 @@ export const Primitive = ({
     <Form.Group controlId={builtFieldName} as={withinMultipleFieldsGroup ? Col : undefined}>
       <Form.Group.Label
         message={description}
-        required={Boolean(updatedRulesToApply?.required)}
+        required={requiredIndicator}
         className={styles['field-label']}
         column={!withinMultipleFieldsGroup}
         sm={3}>
@@ -109,7 +121,7 @@ export const Primitive = ({
                     isInvalid={invalid}
                     placeholder={watermark}
                     data-fieldtype={type}
-                    aria-required={Boolean(updatedRulesToApply?.required)}
+                    aria-required={requiredIndicator}
                     ref={ref}
                   />
                 ) : (
@@ -120,7 +132,7 @@ export const Primitive = ({
                     isInvalid={invalid}
                     placeholder={watermark}
                     data-fieldtype={type}
-                    aria-required={Boolean(updatedRulesToApply?.required)}
+                    aria-required={requiredIndicator}
                     ref={ref}
                   />
                 )}

@@ -24,7 +24,8 @@ export const PrimitiveMultiple = ({
   metadataBlockName,
   compoundParentName,
   fieldInstructions,
-  instructionEditor
+  instructionEditor,
+  requiredIndicator
 }: PrimitiveMultipleProps) => {
   const { control } = useFormContext()
 
@@ -71,7 +72,7 @@ export const PrimitiveMultiple = ({
     <Form.Group as={Row}>
       <Form.Group.Label
         message={description}
-        required={Boolean(rulesToApply?.required)}
+        required={requiredIndicator}
         htmlFor={controlID}
         className={styles['field-label']}
         column
@@ -104,7 +105,7 @@ export const PrimitiveMultiple = ({
                         isInvalid={invalid}
                         placeholder={watermark}
                         data-fieldtype={type}
-                        aria-required={Boolean(rulesToApply?.required)}
+                        aria-required={requiredIndicator}
                         ref={ref}
                         id={builtFieldNameWithIndex(index)}
                       />
@@ -116,7 +117,7 @@ export const PrimitiveMultiple = ({
                         isInvalid={invalid}
                         placeholder={watermark}
                         data-fieldtype={type}
-                        aria-required={Boolean(rulesToApply?.required)}
+                        aria-required={requiredIndicator}
                         ref={ref}
                         id={builtFieldNameWithIndex(index)}
                       />

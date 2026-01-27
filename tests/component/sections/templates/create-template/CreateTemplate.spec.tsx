@@ -57,4 +57,13 @@ describe('Create Template', () => {
 
     cy.findByTestId('custom-instructions-toggle-title').should('exist')
   })
+
+  it('should render asterisks tips under template name', () => {
+    mountCreateTemplate()
+
+    cy.findByText(
+      'Asterisks indicate metadata fields that users will be required to fill out while adding a dataset to this dataverse.'
+    ).should('exist')
+    cy.findByText('Asterisks indicate required fields').should('exist')
+  })
 })

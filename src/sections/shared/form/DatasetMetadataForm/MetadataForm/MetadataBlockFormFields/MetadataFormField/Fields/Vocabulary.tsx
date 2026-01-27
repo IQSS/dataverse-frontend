@@ -31,7 +31,9 @@ export const Vocabulary = ({
   isFieldThatMayBecomeRequired,
   childFieldNamesThatTriggerRequired,
   fieldInstructions,
-  instructionEditor
+  instructionEditor,
+  requiredIndicator,
+  disableRequiredValidation
 }: VocabularyProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
 
@@ -64,13 +66,23 @@ export const Vocabulary = ({
 
   const updatedRulesToApply = useMemo(() => {
     if (isFieldThatMayBecomeRequired && fieldShouldBecomeRequired) {
+      if (disableRequiredValidation) {
+        return rulesToApply
+      }
       return {
         ...rulesToApply,
         required: t('field.required', { displayName, interpolation: { escapeValue: false } })
       }
     }
     return rulesToApply
-  }, [rulesToApply, fieldShouldBecomeRequired, displayName, isFieldThatMayBecomeRequired, t])
+  }, [
+    rulesToApply,
+    fieldShouldBecomeRequired,
+    displayName,
+    isFieldThatMayBecomeRequired,
+    t,
+    disableRequiredValidation
+  ])
 
   const showSelectWithSearch = options.length > 10
 
@@ -85,7 +97,7 @@ export const Vocabulary = ({
           as={withinMultipleFieldsGroup ? Col : Row}>
           <Form.Group.Label
             message={description}
-            required={Boolean(updatedRulesToApply?.required)}
+            required={requiredIndicator}
             column={!withinMultipleFieldsGroup}
             className={styles['field-label']}
             htmlFor={showSelectWithSearch ? builtFieldName : undefined}
@@ -118,7 +130,7 @@ export const Vocabulary = ({
                     onChange={onChange}
                     value={value as string}
                     isInvalid={invalid}
-                    aria-required={Boolean(updatedRulesToApply?.required)}
+                    aria-required={requiredIndicator}
                     ref={ref}>
                     <option value="">Select</option>
                     {options.map((option) => (
