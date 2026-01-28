@@ -66,7 +66,6 @@ describe('TemplateMetadataForm', () => {
       cy.findByText('Title').should('exist')
       cy.findByLabelText(/^Title/i)
         .should('exist')
-        .should('have.attr', 'aria-required', 'true')
         .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
       cy.findByText('Author')
@@ -75,7 +74,6 @@ describe('TemplateMetadataForm', () => {
         .within(() => {
           cy.findByLabelText(/Name/)
             .should('exist')
-            .should('have.attr', 'aria-required', 'true')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
         })
 
@@ -83,9 +81,7 @@ describe('TemplateMetadataForm', () => {
         .should('exist')
         .closest('.row')
         .within(() => {
-          cy.findByLabelText(/^E-mail/i)
-            .should('exist')
-            .should('have.attr', 'aria-required', 'true')
+          cy.findByLabelText(/^E-mail/i).should('exist')
         })
     })
   })

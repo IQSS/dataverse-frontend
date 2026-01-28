@@ -83,7 +83,9 @@ export const Vocabulary = ({
     t,
     disableRequiredValidation
   ])
-
+  const labelRequired = disableRequiredValidation
+    ? requiredIndicator
+    : Boolean(updatedRulesToApply?.required)
   const showSelectWithSearch = options.length > 10
 
   return (
@@ -97,7 +99,7 @@ export const Vocabulary = ({
           as={withinMultipleFieldsGroup ? Col : Row}>
           <Form.Group.Label
             message={description}
-            required={requiredIndicator}
+            required={labelRequired}
             column={!withinMultipleFieldsGroup}
             className={styles['field-label']}
             htmlFor={showSelectWithSearch ? builtFieldName : undefined}
@@ -130,7 +132,7 @@ export const Vocabulary = ({
                     onChange={onChange}
                     value={value as string}
                     isInvalid={invalid}
-                    aria-required={requiredIndicator}
+                    aria-required={labelRequired}
                     ref={ref}>
                     <option value="">Select</option>
                     {options.map((option) => (

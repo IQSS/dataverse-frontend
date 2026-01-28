@@ -84,13 +84,16 @@ export const Primitive = ({
     disableRequiredValidation
   ])
 
+  const labelRequired = disableRequiredValidation
+    ? requiredIndicator
+    : Boolean(updatedRulesToApply?.required)
   const isTextArea = type === TypeMetadataFieldOptions.Textbox
 
   return (
     <Form.Group controlId={builtFieldName} as={withinMultipleFieldsGroup ? Col : undefined}>
       <Form.Group.Label
         message={description}
-        required={requiredIndicator}
+        required={labelRequired}
         className={styles['field-label']}
         column={!withinMultipleFieldsGroup}
         sm={3}>
@@ -121,7 +124,7 @@ export const Primitive = ({
                     isInvalid={invalid}
                     placeholder={watermark}
                     data-fieldtype={type}
-                    aria-required={requiredIndicator}
+                    aria-required={labelRequired}
                     ref={ref}
                   />
                 ) : (
