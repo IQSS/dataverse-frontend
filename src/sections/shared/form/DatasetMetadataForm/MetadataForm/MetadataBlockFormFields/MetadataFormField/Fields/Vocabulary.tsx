@@ -83,9 +83,11 @@ export const Vocabulary = ({
     t,
     disableRequiredValidation
   ])
+  const dynamicRequired =
+    !disableRequiredValidation && isFieldThatMayBecomeRequired && fieldShouldBecomeRequired
   const labelRequired = disableRequiredValidation
     ? requiredIndicator
-    : Boolean(updatedRulesToApply?.required)
+    : Boolean(rulesToApply?.required) || requiredIndicator || dynamicRequired
   const showSelectWithSearch = options.length > 10
 
   return (
@@ -132,7 +134,7 @@ export const Vocabulary = ({
                     onChange={onChange}
                     value={value as string}
                     isInvalid={invalid}
-                    aria-required={labelRequired}
+                    aria-required={labelRequired ? 'true' : 'false'}
                     ref={ref}>
                     <option value="">Select</option>
                     {options.map((option) => (

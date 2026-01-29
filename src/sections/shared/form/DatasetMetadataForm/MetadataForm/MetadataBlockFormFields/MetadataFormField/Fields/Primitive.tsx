@@ -84,9 +84,12 @@ export const Primitive = ({
     disableRequiredValidation
   ])
 
+  const dynamicRequired =
+    !disableRequiredValidation && isFieldThatMayBecomeRequired && fieldShouldBecomeRequired
+
   const labelRequired = disableRequiredValidation
     ? requiredIndicator
-    : Boolean(updatedRulesToApply?.required)
+    : Boolean(rulesToApply?.required) || requiredIndicator || dynamicRequired
   const isTextArea = type === TypeMetadataFieldOptions.Textbox
 
   return (
@@ -124,7 +127,7 @@ export const Primitive = ({
                     isInvalid={invalid}
                     placeholder={watermark}
                     data-fieldtype={type}
-                    aria-required={labelRequired}
+                    aria-required={labelRequired ? 'true' : 'false'}
                     ref={ref}
                   />
                 ) : (
@@ -135,7 +138,7 @@ export const Primitive = ({
                     isInvalid={invalid}
                     placeholder={watermark}
                     data-fieldtype={type}
-                    aria-required={requiredIndicator}
+                    aria-required={labelRequired ? 'true' : 'false'}
                     ref={ref}
                   />
                 )}
