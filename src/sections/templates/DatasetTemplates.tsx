@@ -386,12 +386,23 @@ export const DatasetTemplates = ({
                                 {tDataset('datasetActionButtons.editDataset.terms')}
                               </DropdownButtonItem>
                             </DropdownButton>
-                            <Tooltip placement="top" overlay={t('actions.delete')}>
+                            <Tooltip
+                              placement="top"
+                              overlay={
+                                template.usageCount > 0
+                                  ? t('actions.deleteDisabledTip')
+                                  : t('actions.delete')
+                              }>
                               <Button
                                 variant="secondary"
                                 size="sm"
                                 onClick={() => handleOpenDeleteModal(template)}
-                                aria-label={t('actions.delete')}>
+                                aria-label={
+                                  template.usageCount > 0
+                                    ? t('actions.deleteDisabledTip')
+                                    : t('actions.delete')
+                                }
+                                disabled={template.usageCount > 0}>
                                 <Trash />
                               </Button>
                             </Tooltip>

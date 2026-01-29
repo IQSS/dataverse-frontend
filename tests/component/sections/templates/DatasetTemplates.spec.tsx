@@ -320,7 +320,8 @@ describe('Dataset Templates', () => {
 
       const rootTemplate = TemplateMother.create({
         name: 'Template Root',
-        collectionAlias: 'root'
+        collectionAlias: 'root',
+        usageCount: 0
       })
       templateRepository.getTemplatesByCollectionId = cy.stub().resolves([rootTemplate])
 
@@ -329,7 +330,26 @@ describe('Dataset Templates', () => {
 
     it('shows edit and delete buttons for root templates', () => {
       cy.findByRole('button', { name: 'Edit Template' }).should('exist')
-      cy.findByRole('button', { name: 'Delete' }).should('exist')
+      cy.findByRole('button', { name: 'Delete' }).should('exist').and('not.be.disabled')
+    })
+
+    it('disables delete when the template has been used in a dataset', () => {
+      const usedTemplate = TemplateMother.create({
+        name: 'Used Template',
+        collectionAlias: 'root',
+        usageCount: 3
+      })
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([usedTemplate])
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: /Delete/i })
+        .should('exist')
+        .and('be.disabled')
+        .click({ force: true })
+      cy.findByText(/This template is already used by datasets and cannot be deleted./i).should(
+        'exist'
+      )
     })
 
     it('deletes a template from the list', () => {

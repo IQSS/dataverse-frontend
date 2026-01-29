@@ -11,7 +11,8 @@
     "view": "View",
     "copy": "Copy",
     "edit": "Edit Template",
-    "delete": "Delete"
+    "delete": "Delete",
+    "deleteDisabledTip": "This template is already used by datasets and cannot be deleted."
   },
   "filters": {
     "includeTemplatesFromRoot": "Include Templates from {{root}}"
