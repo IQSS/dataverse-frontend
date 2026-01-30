@@ -42,8 +42,7 @@ export const ConfirmDeleteDraftDatasetModal = ({
       <Modal.Body>
         <Stack gap={2}>
           <Stack direction="horizontal" gap={2} className={styles.message}>
-            <ExclamationTriangle />{' '}
-            <span>{modalMessage}</span>
+            <ExclamationTriangle /> <span>{modalMessage}</span>
           </Stack>
           {errorDeletingDataset && (
             <Stack direction="horizontal" gap={2} className={`${styles.message} ${styles.error}`}>
