@@ -18,7 +18,12 @@ import {
   DatasetMetadataSubField,
   defaultLicense
 } from '../../../../dataset/domain/models/Dataset'
-import { TemplateFieldInfo } from '../../../../templates/domain/models/TemplateInfo'
+import {
+  TemplateFieldCompoundChildValue,
+  TemplateFieldCompoundValue,
+  TemplateFieldInfo,
+  TemplateFieldValue
+} from '../../../../templates/domain/models/TemplateInfo'
 
 export type DatasetMetadataFormValues = Record<string, MetadataBlockFormValues>
 
@@ -36,21 +41,6 @@ type ComposedFieldValues = ComposedSingleFieldValue | ComposedSingleFieldValue[]
 export type ComposedSingleFieldValue = Record<string, string>
 
 export type DateLikeKind = 'Y' | 'YM' | 'YMD' | 'AD' | 'BC' | 'BRACKET' | 'TIMESTAMP'
-
-type TemplateFieldValuePayload =
-  | string
-  | string[]
-  | TemplateFieldCompoundValue
-  | TemplateFieldCompoundValue[]
-
-type TemplateFieldCompoundValue = Record<string, TemplateFieldCompoundChildValue>
-
-type TemplateFieldCompoundChildValue = {
-  value: string | string[]
-  typeName: string
-  multiple: boolean
-  typeClass: string
-}
 
 /** Stable error codes for i18n mapping */
 export const dateKeyMessageErrorMap = {
@@ -440,15 +430,26 @@ export class MetadataFieldsHelper {
       if (fieldInfo.typeClass === 'primitive' || fieldInfo.typeClass === 'controlledVocabulary') {
         if (fieldValue === '' || fieldValue === undefined || fieldValue === null) return
 
-        const valuePayload =
-          fieldInfo.multiple && Array.isArray(fieldValue) ? fieldValue : (fieldValue as string)
+        if (Array.isArray(fieldValue)) {
+          if (!fieldValue.every((item) => typeof item === 'string')) return
 
-        templateFields.push({
-          typeName: fieldInfo.name,
-          multiple: fieldInfo.multiple,
-          typeClass: fieldInfo.typeClass,
-          value: valuePayload as unknown as TemplateFieldInfo['value']
-        })
+          templateFields.push({
+            typeName: fieldInfo.name,
+            multiple: fieldInfo.multiple,
+            typeClass: fieldInfo.typeClass,
+            value: fieldValue as TemplateFieldValue
+          })
+          return
+        }
+
+        if (typeof fieldValue === 'string') {
+          templateFields.push({
+            typeName: fieldInfo.name,
+            multiple: fieldInfo.multiple,
+            typeClass: fieldInfo.typeClass,
+            value: fieldValue
+          })
+        }
 
         return
       }
@@ -457,13 +458,15 @@ export class MetadataFieldsHelper {
         const compoundValues = this.buildTemplateCompoundValues(fieldInfo, fieldValue)
         if (compoundValues.length === 0) return
 
-        const valuePayload = fieldInfo.multiple ? compoundValues : compoundValues[0]
+        const valuePayload: TemplateFieldValue = fieldInfo.multiple
+          ? compoundValues
+          : compoundValues[0]
 
         templateFields.push({
           typeName: fieldInfo.name,
           multiple: fieldInfo.multiple,
           typeClass: fieldInfo.typeClass,
-          value: valuePayload as unknown as TemplateFieldInfo['value']
+          value: valuePayload
         })
       }
     })
@@ -474,12 +477,12 @@ export class MetadataFieldsHelper {
   private static buildTemplateCompoundValues(
     fieldInfo: MetadataField,
     fieldValue: DatasetMetadataFieldValueDTO
-  ): TemplateFieldValuePayload[] {
+  ): TemplateFieldCompoundValue[] {
     if (fieldInfo.typeClass !== 'compound') {
       return []
     }
     const valueArray = Array.isArray(fieldValue) ? fieldValue : [fieldValue]
-    const compoundValues: TemplateFieldValuePayload[] = []
+    const compoundValues: TemplateFieldCompoundValue[] = []
 
     valueArray.forEach((compoundValue) => {
       if (!compoundValue || typeof compoundValue !== 'object' || Array.isArray(compoundValue)) {

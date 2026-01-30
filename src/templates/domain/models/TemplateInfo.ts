@@ -1,7 +1,4 @@
-import {
-  TypeClassMetadataFieldOptions,
-  type TypeClassMetadataField
-} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { type TypeClassMetadataField } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 
 export interface TemplateInfo {
   name: string
@@ -14,32 +11,22 @@ export interface TemplateFieldInfo {
   typeName: string
   multiple: boolean
   typeClass?: TypeClassMetadataField
-  value?: TemplateFieldValueInfo[]
+  value?: TemplateFieldValue
 }
 
-export interface TemplateFieldValueInfo {
-  [key: string]:
-    | TemplateFieldValuePrimitiveInfo
-    | TemplateFieldValueCompoundInfo
-    | TemplateFieldValueControlledVocabularyInfo
-}
+export type TemplateFieldValue =
+  | string
+  | string[]
+  | TemplateFieldCompoundValue
+  | TemplateFieldCompoundValue[]
 
-export interface TemplateFieldValuePrimitiveInfo {
-  typeName: string
-  typeClass: typeof TypeClassMetadataFieldOptions.Primitive
+export type TemplateFieldCompoundValue = Record<string, TemplateFieldCompoundChildValue>
+
+export interface TemplateFieldCompoundChildValue {
   value: string | string[]
-}
-
-export interface TemplateFieldValueCompoundInfo {
   typeName: string
-  typeClass: typeof TypeClassMetadataFieldOptions.Compound
-  value: TemplateFieldValueInfo[]
-}
-
-export interface TemplateFieldValueControlledVocabularyInfo {
-  typeName: string
-  typeClass: typeof TypeClassMetadataFieldOptions.ControlledVocabulary
-  value: string
+  multiple: boolean
+  typeClass: TypeClassMetadataField
 }
 
 export interface TemplateInstructionInfo {
