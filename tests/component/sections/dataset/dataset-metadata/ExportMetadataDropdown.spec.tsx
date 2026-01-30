@@ -1,8 +1,10 @@
-import { DATAVERSE_BACKEND_URL } from '@/config'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { ExportMetadataDropdown } from '@/sections/dataset/dataset-metadata/export-metadata-dropdown/ExportMetadataDropdown'
 import { QueryParamKey } from '@/sections/Route.enum'
 import { DatasetMetadataExportFormatsMother } from '@tests/component/info/domain/models/DatasetMetadataExportFormatsMother'
+import { requireAppConfig } from '@/config'
+
+const appConfig = requireAppConfig()
 
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
 
@@ -43,7 +45,7 @@ describe('ExportMetadataDropdown', () => {
         ? cy.findByText(value.displayName).should('exist')
         : cy.findByText(value.displayName).should('not.exist')
 
-      const href = `${DATAVERSE_BACKEND_URL}/api/datasets/export?exporter=${key}&${
+      const href = `${appConfig.backendUrl}/api/datasets/export?exporter=${key}&${
         QueryParamKey.PERSISTENT_ID
       }=${encodeURIComponent(testDatasetPersistentId)}`
 

@@ -79,11 +79,12 @@ export function PublishDatasetModal({
     )
     handleClose()
   }
+  const modalTitle = t('publish.title')
 
   return (
-    <Modal show={show} onHide={handleClose} size="xl">
+    <Modal show={show} onHide={handleClose} size="xl" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>Publish Dataset</Modal.Title>
+        <Modal.Title>{t('publish.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Stack direction="vertical">

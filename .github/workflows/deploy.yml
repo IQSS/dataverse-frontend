@@ -41,8 +41,10 @@ jobs:
         working-directory: packages/design-system
         run: npm run build
 
-      # For BETA environment
-      - name: Create and populate .env file for BETA
+      - name: Build with base path
+        run: npm run build -- --base=/${{ github.event.inputs.basepath }}
+
+      - name: Override runtime config.js for BETA
         if: ${{ github.event.inputs.environment == 'beta' }}
         env:
           DATAVERSE_BACKEND_URL: ${{ secrets.BETA_DATAVERSE_BACKEND_URL }}
@@ -52,17 +54,26 @@ jobs:
           OIDC_LOGOUT_ENDPOINT: ${{ secrets.BETA_OIDC_LOGOUT_ENDPOINT }}
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.BETA_OIDC_STORAGE_KEY_PREFIX }}
         run: |
-          touch .env
-          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
-          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
-          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
-          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
-          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
-          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
-        shell: bash
+          mkdir -p ./dist
+          cat > ./dist/config.js <<EOF
+          window.__APP_CONFIG__ = {
+            backendUrl: "${DATAVERSE_BACKEND_URL}",
+            oidc: {
+              clientId: "${OIDC_CLIENT_ID}",
+              authorizationEndpoint: "${OIDC_AUTHORIZATION_ENDPOINT}",
+              tokenEndpoint: "${OIDC_TOKEN_ENDPOINT}",
+              logoutEndpoint: "${OIDC_LOGOUT_ENDPOINT}",
+              localStorageKeyPrefix: "${OIDC_STORAGE_KEY_PREFIX}"
+            },
+            languages: [
+              { code: 'en', name: 'English' },
+              { code: 'es', name: 'Español' },
+            ],
+            defaultLanguage: 'en'
+          }
+          EOF
 
-      # For QA environment
-      - name: Create and populate .env file for QA
+      - name: Override runtime config.js for QA
         if: ${{ github.event.inputs.environment == 'qa' }}
         env:
           DATAVERSE_BACKEND_URL: ${{ secrets.QA_DATAVERSE_BACKEND_URL }}
@@ -72,17 +83,26 @@ jobs:
           OIDC_LOGOUT_ENDPOINT: ${{ secrets.QA_OIDC_LOGOUT_ENDPOINT }}
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.QA_OIDC_STORAGE_KEY_PREFIX }}
         run: |
-          touch .env
-          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
-          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
-          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
-          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
-          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
-          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
-        shell: bash
+          mkdir -p ./dist
+          cat > ./dist/config.js <<EOF
+          window.__APP_CONFIG__ = {
+            backendUrl: "${DATAVERSE_BACKEND_URL}",
+            oidc: {
+              clientId: "${OIDC_CLIENT_ID}",
+              authorizationEndpoint: "${OIDC_AUTHORIZATION_ENDPOINT}",
+              tokenEndpoint: "${OIDC_TOKEN_ENDPOINT}",
+              logoutEndpoint: "${OIDC_LOGOUT_ENDPOINT}",
+              localStorageKeyPrefix: "${OIDC_STORAGE_KEY_PREFIX}"
+            },
+            languages: [
+              { code: 'en', name: 'English' },
+              { code: 'es', name: 'Español' },
+            ],
+            defaultLanguage: 'en'
+          }
+          EOF
 
-      # For DEMO environment
-      - name: Create and populate .env file for DEMO
+      - name: Override runtime config.js for DEMO
         if: ${{ github.event.inputs.environment == 'demo' }}
         env:
           DATAVERSE_BACKEND_URL: ${{ secrets.DEMO_DATAVERSE_BACKEND_URL }}
@@ -92,17 +112,24 @@ jobs:
           OIDC_LOGOUT_ENDPOINT: ${{ secrets.DEMO_OIDC_LOGOUT_ENDPOINT }}
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.DEMO_OIDC_STORAGE_KEY_PREFIX }}
         run: |
-          touch .env
-          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
-          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
-          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
-          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
-          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
-          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
-        shell: bash
-
-      - name: Build with base path
-        run: npm run build -- --base=/${{ github.event.inputs.basepath }}
+          mkdir -p ./dist
+          cat > ./dist/config.js <<EOF
+          window.__APP_CONFIG__ = {
+            backendUrl: "${DATAVERSE_BACKEND_URL}",
+            oidc: {
+              clientId: "${OIDC_CLIENT_ID}",
+              authorizationEndpoint: "${OIDC_AUTHORIZATION_ENDPOINT}",
+              tokenEndpoint: "${OIDC_TOKEN_ENDPOINT}",
+              logoutEndpoint: "${OIDC_LOGOUT_ENDPOINT}",
+              localStorageKeyPrefix: "${OIDC_STORAGE_KEY_PREFIX}"
+            },
+            languages: [
+              { code: 'en', name: 'English' },
+              { code: 'es', name: 'Español' },
+            ],
+            defaultLanguage: 'en'
+          }
+          EOF
 
       - uses: actions/upload-artifact@v4
         with:

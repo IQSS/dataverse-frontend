@@ -54,6 +54,7 @@
             <li><a href="#1-unit-tests-or-component-tests">Unit Tests or Component tests</a></li>
             <li><a href="#2-integration-tests">Integration Tests</a></li>
             <li><a href="#3-end-to-end-e2e-tests">End-to-End (e2e) Tests</a></li>
+            <li><a href="#mocking-runtime-configuration-in-tests">Mocking runtime configuration in tests</a></li>
             <li><a href="#patterns-and-conventions">Patterns and Conventions</a></li>
             <li><a href="#continuous-integration-ci">Continuous Integration (CI)</a></li>
             <li><a href="#test-coverage">Test Coverage</a></li>
@@ -135,12 +136,6 @@ cd packages/design-system && npm run build
 ```
 
 **Running &amp; Building the App:**
-
-Set up your environment file.
-
-```bash
-cp .env.example .env
-```
 
 Run the app in the development mode. Open [http://localhost:5173][dv_app_localhost_build_url] to view it in your browser.
 
@@ -826,11 +821,82 @@ describe('Create Dataset', () => {
 
 </details>
 
-> **Note:** Some end-to-end (e2e) tests are failing in local development environments despite passing in GitHub Actions.
-> This discrepancy appears to be due to variations in machine resources.
->
-> We need to investigate and potentially optimize several aspects of our local setup. Check the issue
-> [here](https://github.com/IQSS/dataverse-frontend/issues/371).
+### Mocking runtime configuration in tests
+
+The SPA reads its runtime configuration from `window.__APP_CONFIG__` in `src/config.ts` file, which is provided by `public/config.js`.
+In Cypress tests we bootstrap a test-safe config and allow you to override any field per test.
+
+#### Component (unit) tests: override with Cypress.env
+
+Component tests automatically get a runtime config via the bootstrap file; you only need to set `env` on a per-test basis to customize values.
+
+Example: overriding languages for a component test
+
+```ts
+// tests/component/sections/layout/header/LanguageSwitcher.spec.tsx
+it(
+  'renders language options correctly when more than one language is configured',
+  {
+    env: {
+      languages: [
+        { code: 'en', name: 'English' },
+        { code: 'es', name: 'Español' },
+        { code: 'it', name: 'Italiano' }
+      ]
+    }
+  },
+  () => {
+    cy.customMount(<LanguageSwitcher />)
+    cy.get('#language-switcher-dropdown').click()
+    cy.findByText('English').should('exist')
+    cy.findByText('Español').should('exist')
+    cy.findByText('Italiano').should('exist')
+  }
+)
+```
+
+#### E2E tests: intercept public/config.js
+
+In e2e tests, the app fetches `public/config.js`. Intercept that request and respond with a body built from your `Cypress.env()` settings using the provided helper.
+
+```ts
+// Example e2e spec
+import { buildConfigJsBody } from '../tests/support/bootstrapAppConfig'
+
+it(
+  'test description',
+  {
+    env: {
+      languages: [
+        { code: 'en', name: 'English' },
+        { code: 'it', name: 'Italiano' }
+      ],
+      defaultLanguage: 'en'
+    }
+  },
+  () => {
+    // We intercept config.js request and the body will read from the updated Cypress.env() defined in this test above.
+    cy.intercept(
+      { method: 'GET', url: 'config.js' },
+      {
+        statusCode: 200,
+        headers: { 'content-type': 'application/javascript' },
+        body: buildConfigJsBody()
+      }
+    )
+
+    cy.visit('/spa/')
+
+    // Assertions that rely on your overridden config
+    cy.findByText('English').should('exist')
+    cy.findByText('Italiano').should('exist')
+  }
+)
+```
+
+Notes
+
+- If you don't intercept `config.js` in e2e tests, the app will use the real file from `public/config.js` and ignore your `Cypress.env()` overrides.
 
 ### Patterns and Conventions
 

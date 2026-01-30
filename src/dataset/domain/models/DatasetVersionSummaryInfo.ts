@@ -1,3 +1,8 @@
+export interface DatasetVersionSummarySubset {
+  summaries: DatasetVersionSummaryInfo[]
+  totalCount: number
+}
+
 export interface DatasetVersionSummaryInfo {
   id: number
   versionNumber: string

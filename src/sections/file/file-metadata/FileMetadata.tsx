@@ -4,7 +4,7 @@ import TurndownService from 'turndown'
 import { FilePreview } from '../file-preview/FilePreview'
 import { FileLabels } from '../file-labels/FileLabels'
 import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
-import { DATAVERSE_BACKEND_URL } from '../../../config'
+import { requireAppConfig } from '../../../config'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
 import { FilePermissions } from '../../../files/domain/models/FilePermissions'
 import { MarkdownComponent } from '@/sections/dataset/markdown/MarkdownComponent'
@@ -37,6 +37,7 @@ export function FileMetadata({
   dataverseInfoRepository
 }: FileMetadataProps) {
   const { t } = useTranslation('file')
+  const appConfig = requireAppConfig()
 
   return (
     <>
@@ -88,17 +89,22 @@ export function FileMetadata({
                   <strong>{t('metadata.fields.downloadUrl.title')}</strong>
                 </Col>
                 <Col>
-                  <Trans i18nKey="metadata.fields.downloadUrl.description">
-                    <p className={styles['help-text']}>
-                      Use the Download URL in a Wget command or a download manager to avoid
-                      interrupted downloads, time outs or other failures.{' '}
-                      <a href="https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url">
-                        User Guide - Downloading via URL
-                      </a>
-                    </p>
-                  </Trans>
+                  <p className={styles['help-text']}>
+                    <Trans
+                      t={t}
+                      i18nKey="metadata.fields.downloadUrl.description"
+                      components={{
+                        1: (
+                          <a
+                            href="https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url"
+                            target="_blank"
+                            rel="noreferrer"></a>
+                        )
+                      }}
+                    />
+                  </p>
                   <code className={styles.code}>
-                    {DATAVERSE_BACKEND_URL}
+                    {appConfig.backendUrl}
                     {removeQueryParams(metadata.downloadUrls.original)}
                   </code>
                 </Col>
