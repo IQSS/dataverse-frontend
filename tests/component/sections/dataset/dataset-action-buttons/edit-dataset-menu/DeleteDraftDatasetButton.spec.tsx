@@ -83,7 +83,7 @@ describe('DeleteDraftDatasetButton', () => {
     cy.findByRole('button', { name: 'Delete Dataset' }).click()
 
     cy.findByRole('dialog').should('exist')
-    cy.findByText(/Are you sure you want to delete this draft version?/i).should('exist')
+    cy.findByText(/Are you sure you want to delete this dataset\?/i).should('exist')
   })
 
   it('closes confirmation modal when cancel is clicked', () => {
@@ -118,6 +118,26 @@ describe('DeleteDraftDatasetButton', () => {
     cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: 'Delete' }).click()
     cy.findByRole('dialog').should('not.exist')
+    cy.findByText(/The dataset has been deleted./).should('exist')
+  })
+
+  it('shows draft-specific messaging and toast when a released dataset draft is deleted', () => {
+    repository.deleteDatasetDraft = cy.stub().resolves()
+    cy.customMount(
+      <DeleteDraftDatasetButton
+        datasetRepository={repository}
+        dataset={DatasetMother.create({
+          permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
+          locks: [],
+          version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
+        })}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Delete Draft Version' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByText(/Are you sure you want to delete this draft version\?/i).should('exist')
+    cy.findByRole('button', { name: 'Delete' }).click()
     cy.findByText(/The dataset draft has been deleted./).should('exist')
   })
 

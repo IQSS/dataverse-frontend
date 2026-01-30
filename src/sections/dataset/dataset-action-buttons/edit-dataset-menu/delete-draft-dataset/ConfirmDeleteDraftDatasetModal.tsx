@@ -9,6 +9,7 @@ interface ConfirmDeleteDraftDatasetModalProps {
   handleDelete: () => void
   isDeletingDataset: boolean
   errorDeletingDataset: string | null
+  hasReleasedVersion: boolean
 }
 
 export const ConfirmDeleteDraftDatasetModal = ({
@@ -16,11 +17,17 @@ export const ConfirmDeleteDraftDatasetModal = ({
   handleClose,
   handleDelete,
   isDeletingDataset,
-  errorDeletingDataset
+  errorDeletingDataset,
+  hasReleasedVersion
 }: ConfirmDeleteDraftDatasetModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('dataset')
-  const modalTitle = t('datasetActionButtons.editDataset.deleteDatasetModal.title')
+  const modalTitle = hasReleasedVersion
+    ? t('datasetActionButtons.editDataset.delete.draft')
+    : t('datasetActionButtons.editDataset.delete.released')
+  const modalMessage = hasReleasedVersion
+    ? t('datasetActionButtons.editDataset.deleteDatasetModal.messageDraft')
+    : t('datasetActionButtons.editDataset.deleteDatasetModal.messageDataset')
 
   return (
     <Modal
@@ -36,7 +43,7 @@ export const ConfirmDeleteDraftDatasetModal = ({
         <Stack gap={2}>
           <Stack direction="horizontal" gap={2} className={styles.message}>
             <ExclamationTriangle />{' '}
-            <span>{t('datasetActionButtons.editDataset.deleteDatasetModal.message')}</span>
+            <span>{modalMessage}</span>
           </Stack>
           {errorDeletingDataset && (
             <Stack direction="horizontal" gap={2} className={`${styles.message} ${styles.error}`}>
