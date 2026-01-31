@@ -304,9 +304,9 @@ describe('Dataset', () => {
 
           cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
           cy.findByRole('button', { name: 'Delete Dataset' }).should('exist').click()
-          cy.findByText(/Are you sure you want to delete this draft version?/i).should('exist')
+          cy.findByText(/Are you sure you want to delete this dataset\?/i).should('exist')
           cy.findByRole('button', { name: 'Delete' }).should('exist').click()
-          cy.findByText(/The dataset draft has been deleted./i).should('exist')
+          cy.findByText(/The dataset has been deleted./i).should('exist')
         })
     })
   })

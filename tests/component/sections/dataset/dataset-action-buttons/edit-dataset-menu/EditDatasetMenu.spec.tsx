@@ -203,9 +203,9 @@ describe('EditDatasetMenu', () => {
     )
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
     cy.findByRole('button', { name: /Delete/ }).click()
-    cy.findByText(/Are you sure you want to delete this draft version?/i).should('exist')
+    cy.findByText(/Are you sure you want to delete this dataset\?/i).should('exist')
     cy.findByRole('button', { name: 'Delete' }).click()
-    cy.findByText(/The dataset draft has been deleted./).should('exist')
+    cy.findByText(/The dataset has been deleted./).should('exist')
 
     const searchParams = new URLSearchParams({
       [QueryParamKey.PERSISTENT_ID]: dataset.persistentId,
