@@ -100,9 +100,9 @@ export function Dataset({
     setActiveTab('terms')
     const newParams = new URLSearchParams(searchParams)
     newParams.set('tab', 'terms')
-    // Update URL without reloading
+    // Update and reload to show the terms tab
     navigate(`?${newParams.toString()}`, { replace: true })
-    termsTabRef.current?.scrollIntoView({ behavior: 'smooth' })
+    navigate(0)
   }
 
   const handleTabSelect = (key: string | null) => {
