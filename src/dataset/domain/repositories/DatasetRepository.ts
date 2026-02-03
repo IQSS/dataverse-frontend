@@ -1,4 +1,4 @@
-import { Dataset, DatasetLock } from '../models/Dataset'
+import { Dataset, DatasetLock, TermsOfAccess } from '../models/Dataset'
 import { DatasetVersionDiff } from '../models/DatasetVersionDiff'
 import { DatasetPaginationInfo } from '../models/DatasetPaginationInfo'
 import { DatasetDTO } from '../useCases/DTOs/DatasetDTO'
@@ -8,6 +8,7 @@ import { DatasetVersionSummarySubset } from '../models/DatasetVersionSummaryInfo
 import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
+import { DatasetLicenseUpdateRequest } from '../models/DatasetLicenseUpdateRequest'
 import { DatasetTemplate } from '../models/DatasetTemplate'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetVersionPaginationInfo } from '../models/DatasetVersionPaginationInfo'
@@ -61,6 +62,11 @@ export interface DatasetRepository {
     format: CitationFormat
   ) => Promise<FormattedCitation>
   getTemplates: (collectionIdOrAlias: number | string) => Promise<DatasetTemplate[]>
+  updateTermsOfAccess: (datasetId: string | number, termsOfAccess: TermsOfAccess) => Promise<void>
+  updateDatasetLicense: (
+    datasetId: string | number,
+    licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ) => Promise<void>
   link(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
   unlink(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
   getDatasetLinkedCollections: (datasetId: string | number) => Promise<CollectionSummary[]>

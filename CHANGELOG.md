@@ -12,6 +12,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Contact Owner button in File Page.
 - Share button in File Page.
 - Link Collection and Link Dataset features.
+- Edit Terms Integration.
 - With the addition of the new runtime configuration approach, we now support dynamic configuration for languages. If more than one language is configured, the Language Switcher will be shown in the header to allow users to change the language.
 - Added Notifications tab in Account Page
 

@@ -1,0 +1,30 @@
+.edit-license-and-terms {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.guestbook-option {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin: 0.5rem;
+  margin-left: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bs-light);
+  border-radius: 4px;
+}
+
+.license-icon {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}

@@ -1,4 +1,5 @@
 import { DatasetLicense } from '../../../../../src/dataset/domain/models/Dataset'
+
 export class LicenseMother {
   static create(props?: Partial<DatasetLicense>): DatasetLicense {
     const defaultLicense: DatasetLicense = {
