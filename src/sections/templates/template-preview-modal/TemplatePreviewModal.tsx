@@ -91,6 +91,7 @@ export const TemplatePreviewModal = ({
                     metadataBlockName={MetadataBlockName.CITATION}
                     metadataFields={citationBlock.fields}
                     metadataBlockDisplayFormatInfo={metadataBlockDisplayFormatInfo}
+                    datasetTemplateInstructions={template.instructions}
                   />
                 ) : null}
                 {!isLoadingBlockInfo &&

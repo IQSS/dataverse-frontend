@@ -579,6 +579,51 @@ describe('Dataset Templates', () => {
       })
     })
 
+    it.only('shows custom instructions above the field value when the template includes instructions', () => {
+      const templateWithCitationAndInstructions = TemplateMother.create({
+        datasetMetadataBlocks: [
+          {
+            name: 'citation',
+            fields: {
+              title: 'Test Title'
+            }
+          }
+        ],
+        instructions: [
+          {
+            instructionField: 'title',
+            instructionText: 'instruction for title field'
+          }
+        ]
+      })
+      templateRepository.getTemplatesByCollectionId = cy
+        .stub()
+        .resolves([templateWithCitationAndInstructions])
+      templateRepository.getTemplate = cy.stub().resolves(templateWithCitationAndInstructions)
+      metadataBlockInfoRepository.getByName = cy.stub().resolves(MetadataBlockInfoMother.create())
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByText('Title')
+          .closest('.row')
+          .within(() => {
+            cy.findByText('Custom Instructions:')
+              .parent()
+              .should('contain.text', 'instruction for title field')
+
+            cy.findByText('Custom Instructions:').then(($instructionsLabel) => {
+              const instructionTop = $instructionsLabel[0].getBoundingClientRect().top
+              cy.findByText('Test Title').then(($value) => {
+                const valueTop = $value[0].getBoundingClientRect().top
+                expect(instructionTop).to.be.lessThan(valueTop)
+              })
+            })
+          })
+      })
+    })
+
     it('closes the template preview modal', () => {
       templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
       templateRepository.getTemplate = cy.stub().resolves(template)
@@ -591,15 +636,6 @@ describe('Dataset Templates', () => {
       cy.findByRole('dialog').should('not.exist')
     })
 
-    // write test for citation block useMemo if needed
-
-    //    const citationBlock = useMemo(() => {
-    //   if (!template?.datasetMetadataBlocks) return null
-    //   return (
-    //     template.datasetMetadataBlocks.find((block) => block.name === MetadataBlockName.CITATION) ||
-    //     null
-    //   )
-    // }, [template])
     it('shows loading state while fetching the template', () => {
       templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
       templateRepository.getTemplate = cy.stub().callsFake(
