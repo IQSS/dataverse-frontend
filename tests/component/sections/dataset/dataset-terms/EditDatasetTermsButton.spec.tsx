@@ -31,7 +31,7 @@ describe('EditDatasetTermsButton', () => {
 
     cy.mountAuthenticated(withProviders(<EditDatasetTermsButton />, dataset))
 
-    cy.findByRole('button', { name: 'Edit Term Requirements' }).should('exist')
+    cy.findByRole('button', { name: 'Edit Terms and Guestbook' }).should('exist')
   })
 
   it('does not render the EditDatasetTermsButton if the user does not have permission to update the dataset', () => {
@@ -41,7 +41,7 @@ describe('EditDatasetTermsButton', () => {
 
     cy.mountAuthenticated(withProviders(<EditDatasetTermsButton />, dataset))
 
-    cy.findByRole('button', { name: 'Edit Term Requirements' }).should('not.exist')
+    cy.findByRole('button', { name: 'Edit Terms and Guestbook' }).should('not.exist')
   })
 
   it('does not render the EditDatasetTermsButton if there is no user', () => {
@@ -51,7 +51,7 @@ describe('EditDatasetTermsButton', () => {
 
     cy.customMount(withProviders(<EditDatasetTermsButton />, dataset))
 
-    cy.findByRole('button', { name: 'Edit Term Requirements' }).should('not.exist')
+    cy.findByRole('button', { name: 'Edit Terms and Guestbook' }).should('not.exist')
   })
 
   it('calls showModal when the button is clicked', () => {
@@ -61,6 +61,6 @@ describe('EditDatasetTermsButton', () => {
     cy.mountAuthenticated(withProviders(<EditDatasetTermsButton />, dataset))
 
     cy.spy(console, 'log').as('consoleLogSpy')
-    cy.findByRole('button', { name: 'Edit Term Requirements' }).click()
+    cy.findByRole('button', { name: 'Edit Terms and Guestbook' }).click()
   })
 })

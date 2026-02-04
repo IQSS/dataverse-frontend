@@ -25,7 +25,7 @@ describe('EditDatasetMenu', () => {
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').should('be.enabled').click()
     cy.findByRole('button', { name: 'Files (Upload)' }).should('exist')
     cy.findByRole('button', { name: 'Metadata' }).should('exist')
-    cy.findByRole('button', { name: 'Terms' }).should('exist')
+    cy.findByRole('button', { name: 'Terms and Guestbook' }).should('exist')
     cy.findByRole('button', { name: 'Thumbnails + Widgets' }).should('exist')
     cy.findByRole('button', { name: /Delete/ }).should('exist')
     cy.findByRole('button', { name: 'Permissions' }).should('exist')
@@ -217,7 +217,7 @@ describe('EditDatasetMenu', () => {
     )
   })
 
-  it('clicks on the Terms button', () => {
+  it('clicks on the Terms and Guestbook button', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createReleased(),
       permissions: DatasetPermissionsMother.createWithAllAllowed(),
@@ -230,7 +230,7 @@ describe('EditDatasetMenu', () => {
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
-    cy.findByRole('button', { name: 'Terms' }).click()
+    cy.findByRole('button', { name: 'Terms and Guestbook' }).click()
   })
 
   it('does not render the upload files button if dataset file store does not start with "s3"', () => {

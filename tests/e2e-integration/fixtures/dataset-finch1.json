@@ -7,7 +7,7 @@
     },
     "termsOfUse": {
       "fileAccessRequest": true,
-      "termsOfAccess": "Terms of access",
+      "termsOfAccessForRestrictedFiles": "Terms of access",
       "dataAccessPlace": "Data access place",
       "originalArchive": "Original archive",
       "availabilityStatus": "Availability status",

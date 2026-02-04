@@ -1,5 +1,10 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
-import { Dataset, DatasetLock, DatasetNonNumericVersion } from '../../domain/models/Dataset'
+import {
+  Dataset,
+  DatasetLock,
+  DatasetNonNumericVersion,
+  TermsOfAccess
+} from '../../domain/models/Dataset'
 import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
   createDataset,
@@ -36,7 +41,9 @@ import {
   getDatasetAvailableCategories,
   linkDataset,
   unlinkDataset,
-  getDatasetLinkedCollections
+  getDatasetLinkedCollections,
+  updateTermsOfAccess,
+  updateDatasetLicense
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -49,6 +56,7 @@ import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVers
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
+import { DatasetLicenseUpdateRequest } from '../../domain/models/DatasetLicenseUpdateRequest'
 import { axiosInstance } from '@/axiosInstance'
 import { requireAppConfig } from '../../../config'
 import { AxiosResponse } from 'axios'
@@ -363,6 +371,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         throw new Error(error.message)
       })
   }
+
   deaccession(
     datasetId: string | number,
     version: string,
@@ -447,5 +456,16 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .catch(() => {
         return undefined
       })
+  }
+
+  updateDatasetLicense(
+    datasetId: string | number,
+    licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ): Promise<void> {
+    return updateDatasetLicense.execute(datasetId, licenseUpdateRequest)
+  }
+
+  updateTermsOfAccess(datasetId: string | number, termsOfAccess: TermsOfAccess): Promise<void> {
+    return updateTermsOfAccess.execute(datasetId, termsOfAccess)
   }
 }

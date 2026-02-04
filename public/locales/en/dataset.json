@@ -1,7 +1,7 @@
 {
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
-  "termsTabTitle": "Terms",
+  "termsTabTitle": "Terms and Guestbook",
   "anonymizedFieldValue": "withheld",
   "customTerms": {
     "title": "Custom Dataset Terms",
@@ -9,7 +9,8 @@
   },
   "license": {
     "title": "License/Data Use Agreement",
-    "altTextPrefix": "License image for "
+    "altTextPrefix": "License image for ",
+    "description": "This dataset will be published under the terms specified below. Our Community Norms as well as good scientific practices expect that proper credit is given via citation."
   },
   "citation": {
     "status": {
@@ -53,7 +54,7 @@
       "filesUpload": "Files (Upload)",
       "metadata": "Metadata",
       "tags": "Tags",
-      "terms": "Terms",
+      "terms": "Terms and Guestbook",
       "privateUrl": "Private URL",
       "thumbnailsPlusWidgets": "Thumbnails + Widgets",
       "delete": {
@@ -101,6 +102,10 @@
       "heading": "Success!",
       "alertText": "The terms for this dataset have been updated."
     },
+    "licenseUpdated": {
+      "heading": "Success!",
+      "alertText": "The license for this dataset has been updated."
+    },
     "thumbnailUpdated": {
       "heading": "Success!",
       "alertText": "Dataset thumbnail updated."
@@ -140,13 +145,16 @@
     "datasetDeletedSuccess": "The dataset has been deleted."
   },
   "termsTab": {
-    "editTermsButton": "Edit Term Requirements",
+    "editTermsButton": "Edit Terms and Guestbook",
     "licenseTitle": "Dataset Terms",
     "termsTitle": "Restricted Files + Terms of Access",
     "licenseHelpText": "Our <anchor>Community Norms</anchor> as well as good scientific practices expect that proper credit is given via citation. Please use the data citation shown on the dataset page.",
     "restrictedFiles": "Restricted Files",
     "termsOfAccess": "Terms of Access for Restricted Files",
+    "termsOfAccessInfo": "Restricting limits access to published files. People who want to use the restricted files can request access by default. If you disable request access, you must add information about access to the Terms of Access field. Learn about restricting files and dataset access in the User Guide.",
+    "termsOfAccessRequiredWhenRequestDisabled": "Add information about terms of access for restricted files when request access is disabled.",
     "requestAccess": "Request Access",
+    "enableAccessRequest": "Enable access request",
     "dataAccessPlace": "Data Access Place",
     "originalArchive": "Original Archive",
     "availabilityStatus": "Availability Status",
@@ -264,7 +272,6 @@
     "deaccessionedReason": "Deaccessioned Reason",
     "error": "Error on loading dataset versions"
   },
-  "getDatasetVersionDiffError": "Error Fetching Dataset Version Differences",
   "datasetVersionSummary": {
     "firstPublished": "This is the First Published Version.",
     "firstDraft": "This is a draft version.",
@@ -329,5 +336,44 @@
   },
   "contact": {
     "tip": "Use email button above to contact."
+  },
+  "editTerms": {
+    "pageTitle": "Edit Dataset Terms",
+    "breadcrumbActionItem": "Edit Dataset Terms and Guestbook",
+    "infoAlert": {
+      "heading": "Edit Dataset Terms",
+      "text": "Add the terms of use for this dataset to explain how to access and use your data."
+    },
+    "tabs": {
+      "datasetTerms": "Dataset Terms",
+      "restrictedFilesTerms": "Restricted Files + Terms of Access",
+      "guestBook": "GuestBook"
+    },
+    "datasetTerms": {
+      "title": "Dataset Terms",
+      "description": "Configure the license and custom terms for this dataset.",
+      "licenseRequired": "Please select a license for this dataset",
+      "customTermsRequired": "Terms of use is required.",
+      "customTermsLabel": "Custom Dataset Terms",
+      "licenseDescription": "This dataset will be published under the terms specified below. Our Community Norms as well as good scientific practices expect that proper credit is given via citation."
+    },
+    "restrictedFilesTerms": {
+      "title": "Restricted Files + Terms of Access",
+      "description": "Set up access restrictions and terms for restricted files in this dataset."
+    },
+    "guestBook": {
+      "title": "GuestBook",
+      "description": "Select a guestbook to have a user provide additional information when downloading a file.",
+      "testGuestbook": "Test Guestbook",
+      "previewButton": "Preview Guestbook"
+    },
+    "unsavedChangesModal": {
+      "title": "Unsaved Changes",
+      "message": "You have unsaved changes on this tab. If you leave now, your changes on this tab won't be saved.",
+      "stay": "Stay on this page",
+      "leave": "Leave without saving"
+    },
+    "defaultLicenseUpdateError": "An error occurred while updating the dataset license. Please try again.",
+    "defaultTermsOfAccessUpdateError": "An error occurred while updating the dataset terms of access. Please try again."
   }
 }

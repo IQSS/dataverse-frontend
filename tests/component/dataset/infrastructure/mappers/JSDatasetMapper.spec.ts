@@ -11,7 +11,7 @@ import {
   CitationMetadataBlock,
   DatasetMetadataBlock
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
-import { DatasetLockReason } from '../../../../../src/dataset/domain/models/Dataset'
+import { DatasetLockReason, TermsOfAccess } from '../../../../../src/dataset/domain/models/Dataset'
 import {
   FileDownloadMode,
   FileDownloadSize,
@@ -25,9 +25,9 @@ import {
 chai.use(chaiAsPromised)
 const expect = chai.expect
 
-const termsOfAccess = {
+const termsOfAccess: TermsOfAccess = {
   fileAccessRequest: true,
-  termsOfAccess: 'New terms',
+  termsOfAccessForRestrictedFiles: 'New terms',
   dataAccessPlace: 'New place',
   originalArchive: 'New archive',
   availabilityStatus: 'New status',
@@ -50,16 +50,7 @@ const jsDataset = {
   },
   internalVersionNumber: 1,
   termsOfUse: {
-    termsOfAccess: {
-      fileAccessRequest: true,
-      termsOfAccess: 'New terms',
-      dataAccessPlace: 'New place',
-      originalArchive: 'New archive',
-      availabilityStatus: 'New status',
-      contactForAccess: 'New contact',
-      sizeOfCollection: 'New size',
-      studyCompletion: 'New completion'
-    }
+    termsOfAccess: termsOfAccess
   },
   metadataBlocks: [
     {
@@ -261,16 +252,7 @@ const expectedDataset = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    termsOfAccess: {
-      fileAccessRequest: true,
-      termsOfAccess: 'New terms',
-      dataAccessPlace: 'New place',
-      originalArchive: 'New archive',
-      availabilityStatus: 'New status',
-      contactForAccess: 'New contact',
-      sizeOfCollection: 'New size',
-      studyCompletion: 'New completion'
-    }
+    termsOfAccess: termsOfAccess
   },
   metadataBlocks: [
     {
@@ -378,16 +360,7 @@ const expectedDatasetWithPublicationDate = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    termsOfAccess: {
-      fileAccessRequest: true,
-      termsOfAccess: 'New terms',
-      dataAccessPlace: 'New place',
-      originalArchive: 'New archive',
-      availabilityStatus: 'New status',
-      contactForAccess: 'New contact',
-      sizeOfCollection: 'New size',
-      studyCompletion: 'New completion'
-    }
+    termsOfAccess: termsOfAccess
   },
   metadataBlocks: [
     {
@@ -496,16 +469,7 @@ const expectedDatasetWithNextVersionNumbers = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    termsOfAccess: {
-      fileAccessRequest: true,
-      termsOfAccess: 'New terms',
-      dataAccessPlace: 'New place',
-      originalArchive: 'New archive',
-      availabilityStatus: 'New status',
-      contactForAccess: 'New contact',
-      sizeOfCollection: 'New size',
-      studyCompletion: 'New completion'
-    }
+    termsOfAccess: termsOfAccess
   },
   metadataBlocks: [
     {
@@ -637,16 +601,7 @@ const expectedDatasetAlternateVersion = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    termsOfAccess: {
-      fileAccessRequest: true,
-      termsOfAccess: 'New terms',
-      dataAccessPlace: 'New place',
-      originalArchive: 'New archive',
-      availabilityStatus: 'New status',
-      contactForAccess: 'New contact',
-      sizeOfCollection: 'New size',
-      studyCompletion: 'New completion'
-    }
+    termsOfAccess: termsOfAccess
   },
   locks: [
     {

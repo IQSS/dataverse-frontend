@@ -1,4 +1,4 @@
-import { Dataset, DatasetLock } from '../../dataset/domain/models/Dataset'
+import { Dataset, DatasetLock, TermsOfAccess } from '../../dataset/domain/models/Dataset'
 import { DatasetVersionDiff } from '../../dataset/domain/models/DatasetVersionDiff'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
@@ -15,6 +15,9 @@ import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
+import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLicenseUpdateRequest'
+import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
+import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
@@ -168,6 +171,22 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
+  getTemplates(_collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(DatasetTemplateMother.createMany(3))
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  updateTermsOfAccess(_datasetId: string | number, _termsOfAccess: TermsOfAccess): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
   link(_datasetId: string | number, _collectionIdOrAlias: string | number): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -199,6 +218,17 @@ export class DatasetMockRepository implements DatasetRepository {
             alias: 'collection-bar'
           })
         ])
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  updateDatasetLicense(
+    _datasetId: string | number,
+    _licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
       }, FakerHelper.loadingTimout())
     })
   }
