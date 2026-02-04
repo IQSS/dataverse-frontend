@@ -7,6 +7,7 @@ import { AccountHelper } from '@/sections/account/AccountHelper'
 import { UserMockRepository } from '../../shared-mock-repositories/user/UserMockRepository'
 import { CollectionMockRepository } from '../../collection/CollectionMockRepository'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
+import { NotificationMockRepository } from '@/stories/account/NotificationMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Sections/Account Page/AccountInfoSection',
@@ -27,7 +28,8 @@ export const Default: Story = {
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
       userRepository={new UserMockRepository()}
       collectionRepository={new CollectionMockRepository()}
-      roleRepository={new RoleMockRepository()} // No roles in this section
+      roleRepository={new RoleMockRepository()}
+      notificationRepository={new NotificationMockRepository()}
     />
   )
 }

@@ -20,11 +20,17 @@ export const ConfirmDeleteDraftDatasetModal = ({
 }: ConfirmDeleteDraftDatasetModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('dataset')
+  const modalTitle = t('datasetActionButtons.editDataset.deleteDatasetModal.title')
 
   return (
-    <Modal show={show} onHide={isDeletingDataset ? () => {} : handleClose} centered size="lg">
+    <Modal
+      ariaLabel={modalTitle}
+      show={show}
+      onHide={isDeletingDataset ? () => {} : handleClose}
+      centered
+      size="lg">
       <Modal.Header>
-        <Modal.Title>{t('datasetActionButtons.editDataset.deleteDatasetModal.title')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Stack gap={2}>

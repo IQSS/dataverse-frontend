@@ -71,6 +71,14 @@ const EditDatasetMetadataPage = lazy(() =>
   )
 )
 
+const EditDatasetTermsPage = lazy(() =>
+  import('../sections/edit-dataset-terms/EditDatasetTermsFactory').then(
+    ({ EditDatasetTermsFactory }) => ({
+      default: () => EditDatasetTermsFactory.create()
+    })
+  )
+)
+
 const AccountPage = lazy(() =>
   import('../sections/account/AccountFactory').then(({ AccountFactory }) => ({
     default: () => AccountFactory.create()
@@ -275,6 +283,15 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <EditDatasetMetadataPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.EDIT_DATASET_TERMS,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditDatasetTermsPage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

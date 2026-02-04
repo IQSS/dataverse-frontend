@@ -57,7 +57,7 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
       return
     }
     if (eventKey === EditDatasetMenuItems.TERMS) {
-      showModal()
+      navigate(`${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`)
       return
     }
     if (eventKey === EditDatasetMenuItems.PERMISSIONS) {

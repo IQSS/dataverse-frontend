@@ -2,25 +2,37 @@ import { UserMother } from '../../../users/domain/models/UserMother'
 import { Header } from '../../../../../src/sections/layout/header/Header'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 
 const testUser = UserMother.create()
 const rootCollection = CollectionMother.create({ id: 'root' })
 const collectionRepository: CollectionRepository = {} as CollectionRepository
+const notificationRepository: NotificationRepository = {} as unknown as NotificationRepository
 
 describe('Header component', () => {
   beforeEach(() => {
     collectionRepository.getById = cy.stub().resolves(rootCollection)
+    notificationRepository.getUnreadNotificationsCount = cy.stub().resolves(0)
   })
   it('displays the brand', () => {
-    cy.mountAuthenticated(<Header collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
+    )
 
     cy.findByRole('link', { name: /Dataverse/ }).should('exist')
     cy.findByRole('link').should('have.attr', 'href', '/spa/')
   })
 
   it('displays the user name when the user is logged in', () => {
-    cy.mountAuthenticated(<Header collectionRepository={collectionRepository} />)
-
+    cy.mountAuthenticated(
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
+    )
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByText(testUser.displayName).should('be.visible')
     cy.findByText(testUser.displayName).click()
@@ -28,7 +40,12 @@ describe('Header component', () => {
   })
 
   it('displays the Add Data Button when the user is logged in', () => {
-    cy.mountAuthenticated(<Header collectionRepository={collectionRepository} />)
+    cy.mountAuthenticated(
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
+    )
 
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
@@ -39,16 +56,45 @@ describe('Header component', () => {
   })
 
   it('displays the Log In button when the user is not logged in', () => {
-    cy.customMount(<Header collectionRepository={collectionRepository} />)
-
+    cy.customMount(
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
+    )
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByRole('button', { name: 'Log In' }).should('exist')
   })
 
   it('does not display the Add Data button when the user is not logged in', () => {
-    cy.customMount(<Header collectionRepository={collectionRepository} />)
-
+    cy.customMount(
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
+    )
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
+  })
+  it.only('Displays the unread notifications badge', () => {
+    notificationRepository.getUnreadNotificationsCount = cy.stub().resolves(3)
+    cy.mountAuthenticated(
+      <Header
+        collectionRepository={collectionRepository}
+        notficationRepository={notificationRepository}
+      />
+    )
+    cy.findByRole('button', { name: 'Toggle navigation' }).click()
+    cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
+  })
+  it('trigger oidcLogin when the Log In button is clicked', () => {
+    cy.customMount(
+      <Header
+        notficationRepository={notificationRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
+    cy.findByRole('button', { name: 'Toggle navigation' }).click()
+    cy.findByRole('button', { name: 'Log In' }).click()
   })
 })

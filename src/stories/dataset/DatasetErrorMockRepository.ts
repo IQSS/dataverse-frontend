@@ -1,4 +1,4 @@
-import { Dataset, DatasetLock } from '../../dataset/domain/models/Dataset'
+import { Dataset, DatasetLock, TermsOfAccess } from '../../dataset/domain/models/Dataset'
 import { DatasetMockRepository } from './DatasetMockRepository'
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
@@ -10,6 +10,7 @@ import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
+import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLicenseUpdateRequest'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 
@@ -153,6 +154,14 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     })
   }
 
+  updateTermsOfAccess(_datasetId: string | number, _termsOfAccess: TermsOfAccess): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
   link(_datasetId: string | number, _collectionIdOrAlias: string | number): Promise<void> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
@@ -170,6 +179,17 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
   }
 
   getDatasetLinkedCollections(_datasetId: string | number): Promise<CollectionSummary[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  updateDatasetLicense(
+    _datasetId: string | number,
+    _licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ): Promise<void> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

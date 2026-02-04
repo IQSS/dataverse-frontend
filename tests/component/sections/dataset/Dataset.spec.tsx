@@ -445,7 +445,7 @@ describe('Dataset', () => {
 
     cy.findAllByText(testDataset.version.title).should('exist')
 
-    const termsTab = cy.findByRole('tab', { name: 'Terms' })
+    const termsTab = cy.findByRole('tab', { name: 'Terms and Guestbook' })
     termsTab.should('exist')
 
     termsTab.click()
@@ -532,7 +532,7 @@ describe('Dataset', () => {
 
     cy.findAllByText(testDataset.version.title).should('exist')
     cy.findByRole('tab', { name: 'Files' }).should('exist')
-    cy.findByRole('tab', { name: 'Terms' }).should('exist')
+    cy.findByRole('tab', { name: 'Terms and Guestbook' }).should('exist')
     cy.findByRole('tab', { name: 'Metadata' }).should('exist')
     cy.findByRole('tab', { name: 'Versions' }).should('exist')
   })
