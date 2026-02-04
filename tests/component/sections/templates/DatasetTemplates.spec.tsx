@@ -579,7 +579,7 @@ describe('Dataset Templates', () => {
       })
     })
 
-    it.only('shows custom instructions above the field value when the template includes instructions', () => {
+    it('shows custom instructions above the field value when the template includes instructions', () => {
       const templateWithCitationAndInstructions = TemplateMother.create({
         datasetMetadataBlocks: [
           {
