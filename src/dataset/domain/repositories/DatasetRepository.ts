@@ -9,7 +9,6 @@ import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetDownloadCount } from '../models/DatasetDownloadCount'
 import { FormattedCitation, CitationFormat } from '../models/DatasetCitation'
 import { DatasetLicenseUpdateRequest } from '../models/DatasetLicenseUpdateRequest'
-import { DatasetTemplate } from '../models/DatasetTemplate'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetVersionPaginationInfo } from '../models/DatasetVersionPaginationInfo'
 
@@ -61,7 +60,6 @@ export interface DatasetRepository {
     version: string,
     format: CitationFormat
   ) => Promise<FormattedCitation>
-  getTemplates: (collectionIdOrAlias: number | string) => Promise<DatasetTemplate[]>
   updateTermsOfAccess: (datasetId: string | number, termsOfAccess: TermsOfAccess) => Promise<void>
   updateDatasetLicense: (
     datasetId: string | number,
