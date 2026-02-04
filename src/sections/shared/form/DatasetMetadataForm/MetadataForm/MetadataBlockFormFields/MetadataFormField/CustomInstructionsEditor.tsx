@@ -45,7 +45,7 @@ export const CustomInstructionsEditor = ({
   }
 
   return (
-    <div className={styles['custom-instructions']}>
+    <div className={`col-sm-9 ${styles['custom-instructions']}`}>
       <span className={styles['custom-instructions-label']}>{t('label')}</span>
       <div className={styles['custom-instructions-content']}>
         {!isEditing && (
