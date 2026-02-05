@@ -8,8 +8,7 @@ import { MetadataFormSkeleton } from './MetadataForm/MetadataFormSkeleton'
 import { MetadataForm } from './MetadataForm'
 import { DatasetMetadataBlocks } from '../../../../dataset/domain/models/Dataset'
 import { Alert } from '@iqss/dataverse-design-system'
-import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
-import { DatasetType } from '@/dataset/domain/models/DatasetType'
+import { Template } from '@/templates/domain/models/Template'
 
 type DatasetMetadataFormProps =
   | {
@@ -20,7 +19,7 @@ type DatasetMetadataFormProps =
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues?: never
       datasetLastUpdateTime?: never
-      datasetTemplate?: DatasetTemplate
+      datasetTemplate?: Template
       datasetTypeName?: DatasetType['name']
     }
   | {

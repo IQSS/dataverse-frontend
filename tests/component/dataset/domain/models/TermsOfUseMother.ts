@@ -29,7 +29,8 @@ export class TermsOfAccessMother {
       availabilityStatus: undefined,
       contactForAccess: undefined,
       sizeOfCollection: undefined,
-      studyCompletion: undefined
+      studyCompletion: undefined,
+      termsOfAccessForRestrictedFiles: undefined
     }
   }
 
@@ -63,21 +64,6 @@ export class CustomTermsMother {
 
     return { ...defaultTerms, ...props }
   }
-
-  static createRealistic(props?: Partial<CustomTerms>): CustomTerms {
-    const defaultTerms: CustomTerms = {
-      termsOfUse: 'Be nice to each other.',
-      confidentialityDeclaration: 'Keep the data confidential.',
-      specialPermissions: 'Special permissions may be granted upon request.',
-      restrictions: 'No commercial use allowed.',
-      citationRequirements: 'Please cite the dataset as per the guidelines.',
-      depositorRequirements: 'Depositors must comply with the data management plan.',
-      conditions: 'Conditions apply as per the dataset agreement.',
-      disclaimer: 'The dataset is provided "as is" without warranties of any kind.'
-    }
-
-    return { ...defaultTerms, ...props }
-  }
 }
 
 export class TermsOfUseMother {
@@ -99,8 +85,8 @@ export class TermsOfUseMother {
 
   static createRealistic(props?: Partial<DatasetTermsOfUse>): DatasetTermsOfUse {
     const defaultTerms: DatasetTermsOfUse = {
-      termsOfAccess: TermsOfAccessMother.createRealistic(),
-      customTerms: CustomTermsMother.createRealistic()
+      termsOfAccess: TermsOfAccessMother.create(),
+      customTerms: CustomTermsMother.create()
     }
     return { ...defaultTerms, ...props }
   }

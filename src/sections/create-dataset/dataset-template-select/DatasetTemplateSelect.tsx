@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Col, Form } from '@iqss/dataverse-design-system'
-import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
+import { Template } from '@/templates/domain/models/Template'
 
 interface DatasetTemplateSelectProps {
-  datasetTemplates: DatasetTemplate[]
+  datasetTemplates: Template[]
   onChange: (selectedTemplateId: string) => void
 }
 
@@ -24,7 +24,7 @@ export const DatasetTemplateSelect = ({
   )
 
   // Find the default template if any and use it as the default value if no template is selected
-  const defaultTemplate: DatasetTemplate | null = useMemo(
+  const defaultTemplate: Template | null = useMemo(
     () => datasetTemplates.find((template) => template.isDefault) || null,
     [datasetTemplates]
   )

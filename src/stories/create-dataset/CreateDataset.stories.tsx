@@ -3,6 +3,7 @@ import { CreateDataset } from '../../sections/create-dataset/CreateDataset'
 import { WithLayout } from '../WithLayout'
 import { WithI18next } from '../WithI18next'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
+import { TemplateMockRepository } from '../templates/TemplateMockRepository'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
 import { NotImplementedModalProvider } from '../../sections/not-implemented/NotImplementedModalProvider'
@@ -49,6 +50,7 @@ export const Default: Story = {
     <NotImplementedModalProvider>
       <CreateDataset
         datasetRepository={datasetRepositoryMockWithoutTemplatesAndTypes}
+        templateRepository={new TemplateMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         collectionRepository={new CollectionMockRepository()}
         collectionId={'collectionId'}
@@ -61,6 +63,7 @@ export const WithTemplatesAndTypes: Story = {
   render: () => (
     <CreateDataset
       datasetRepository={new DatasetMockRepository()}
+      templateRepository={new TemplateMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       collectionRepository={new CollectionMockRepository()}
       collectionId={'collectionId'}
@@ -96,6 +99,7 @@ export const NotAllowedToAddDataset: Story = {
   render: () => (
     <CreateDataset
       datasetRepository={new DatasetMockRepository()}
+      templateRepository={new TemplateMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       collectionRepository={collectionRepositoryWithoutPermissionsToCreateDataset}
       collectionId={'collectionId'}

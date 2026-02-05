@@ -8,14 +8,16 @@ import { Route } from '@/sections/Route.enum'
 import { useSession } from '@/sections/session/SessionContext'
 import { LoggedInHeaderActions } from './LoggedInHeaderActions'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import styles from './Header.module.scss'
 
 interface HeaderProps {
   collectionRepository: CollectionRepository
+  notficationRepository: NotificationRepository
 }
-export function Header({ collectionRepository }: HeaderProps) {
+export function Header({ collectionRepository, notficationRepository }: HeaderProps) {
   const { t } = useTranslation('header')
   const { user } = useSession()
   const { pathname, search } = useLocation()
@@ -38,7 +40,11 @@ export function Header({ collectionRepository }: HeaderProps) {
       className={styles.navbar}>
       <LanguageSwitcher />
       {user ? (
-        <LoggedInHeaderActions user={user} collectionRepository={collectionRepository} />
+        <LoggedInHeaderActions
+          user={user}
+          collectionRepository={collectionRepository}
+          notificationRepository={notficationRepository}
+        />
       ) : (
         <Button
           onClick={handleOidcLogIn}

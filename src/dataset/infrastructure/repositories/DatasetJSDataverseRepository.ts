@@ -1,5 +1,10 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
-import { Dataset, DatasetLock, DatasetNonNumericVersion } from '../../domain/models/Dataset'
+import {
+  Dataset,
+  DatasetLock,
+  DatasetNonNumericVersion,
+  TermsOfAccess
+} from '../../domain/models/Dataset'
 import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
   createDataset,
@@ -34,10 +39,11 @@ import {
   deleteDatasetDraft,
   getDatasetCitationInOtherFormats,
   getDatasetAvailableCategories,
-  getDatasetTemplates,
   linkDataset,
   unlinkDataset,
   getDatasetLinkedCollections,
+  updateTermsOfAccess,
+  updateDatasetLicense,
   DatasetType,
   getDatasetAvailableDatasetTypes
 } from '@iqss/dataverse-client-javascript'
@@ -52,11 +58,11 @@ import { DatasetVersionSummarySubset } from '@/dataset/domain/models/DatasetVers
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
+import { DatasetLicenseUpdateRequest } from '../../domain/models/DatasetLicenseUpdateRequest'
 import { axiosInstance } from '@/axiosInstance'
 import { requireAppConfig } from '../../../config'
 import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
-import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 
 const includeDeaccessioned = true
@@ -372,6 +378,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         throw new Error(error.message)
       })
   }
+
   deaccession(
     datasetId: string | number,
     version: string,
@@ -417,10 +424,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return getDatasetAvailableCategories.execute(datasetId)
   }
 
-  getTemplates(collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
-    return getDatasetTemplates.execute(collectionIdOrAlias)
-  }
-
   link(datasetId: string | number, collectionIdOrAlias: string | number) {
     return linkDataset.execute(datasetId, collectionIdOrAlias)
   }
@@ -464,5 +467,16 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .catch(() => {
         return undefined
       })
+  }
+
+  updateDatasetLicense(
+    datasetId: string | number,
+    licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ): Promise<void> {
+    return updateDatasetLicense.execute(datasetId, licenseUpdateRequest)
+  }
+
+  updateTermsOfAccess(datasetId: string | number, termsOfAccess: TermsOfAccess): Promise<void> {
+    return updateTermsOfAccess.execute(datasetId, termsOfAccess)
   }
 }

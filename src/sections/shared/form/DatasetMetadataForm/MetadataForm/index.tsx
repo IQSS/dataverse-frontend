@@ -14,7 +14,7 @@ import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { usePrefillFieldsWithUserData } from './usePrefillFieldsWithUserData'
-import { DatasetTemplateInstruction } from '@/dataset/domain/models/DatasetTemplate'
+import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
 import styles from './index.module.scss'
 
