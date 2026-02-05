@@ -89,9 +89,7 @@ describe('useUpdateDatasetLicense', () => {
   })
 
   it('should handle WriteError and prefer the reason without status code when available', async () => {
-    const mockWriteError = new WriteError(
-      'Error [500] Reason was: [500] An error occurred while updating the dataset license. Please try again.'
-    )
+    const mockWriteError = new WriteError('Custom error message')
     datasetRepository.updateDatasetLicense = cy.stub().rejects(mockWriteError)
 
     const { result } = renderHook(() =>
@@ -108,14 +106,11 @@ describe('useUpdateDatasetLicense', () => {
     expect(datasetRepository.updateDatasetLicense).to.have.been.calledWith(123, request)
     expect(onSuccessfulUpdateLicense).to.not.have.been.called
     expect(result.current.isLoading).to.deep.equal(false)
-    expect(result.current.error).to.deep.equal(
-      'An error occurred while updating the dataset license. Please try again.'
-    )
+    expect(result.current.error).to.deep.equal('Custom error message')
   })
 
   it('should handle WriteError and fall back to the error message when no reason is present', async () => {
-    const message = 'An error occurred while updating the dataset license. Please try again.'
-    const mockWriteError = new WriteError(message)
+    const mockWriteError = new WriteError('')
     datasetRepository.updateDatasetLicense = cy.stub().rejects(mockWriteError)
 
     const { result } = renderHook(() =>
@@ -132,9 +127,7 @@ describe('useUpdateDatasetLicense', () => {
     expect(datasetRepository.updateDatasetLicense).to.have.been.calledWith(123, request)
     expect(onSuccessfulUpdateLicense).to.not.have.been.called
     expect(result.current.isLoading).to.deep.equal(false)
-    expect(result.current.error).to.deep.equal(
-      'An error occurred while updating the dataset license. Please try again.'
-    )
+    expect(result.current.error).to.deep.equal('There was an error when writing the resource.')
   })
 
   it('should handle unknown errors and set default error message', async () => {

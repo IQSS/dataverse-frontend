@@ -146,4 +146,29 @@ describe('SessionProvider', () => {
 
     cy.findByText('An unexpected error occurred while getting the user.').should('exist')
   })
+
+  it('should not fetch user when login is in progress even if token exists', () => {
+    userRepository.getAuthenticated = cy.stub()
+
+    renderComponent({
+      loginInProgress: true,
+      withTokenPresent: true
+    })
+
+    cy.findByText('Loading...').should('not.exist')
+    cy.findByText(testUser.displayName).should('not.exist')
+    expect(userRepository.getAuthenticated).to.not.have.been.called
+  })
+
+  it('should stop loading after a fetch error', () => {
+    userRepository.getAuthenticated = cy.stub().rejects(new Error('Failed to fetch user'))
+
+    renderComponent({
+      loginInProgress: false,
+      withTokenPresent: true
+    })
+
+    cy.findByText('Loading...').should('not.exist')
+    cy.findByText('An unexpected error occurred while getting the user.').should('exist')
+  })
 })

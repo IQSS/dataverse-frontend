@@ -92,7 +92,7 @@ export const TemplateForm = ({
       const templateFields = datasetDto.metadataBlocks.flatMap((metadataBlock) =>
         MetadataFieldsHelper.buildTemplateFieldsFromMetadataValues(
           metadataBlock.fields,
-          metadataFieldsForMapping[metadataBlock.name] ?? {}
+          metadataFieldsForMapping[metadataBlock.name]
         )
       )
 

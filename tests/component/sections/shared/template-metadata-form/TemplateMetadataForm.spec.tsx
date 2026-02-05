@@ -1,16 +1,21 @@
 import { createTemplate } from '@iqss/dataverse-client-javascript'
+import { useLocation } from 'react-router-dom'
 import { TemplateMetadataForm } from '@/sections/shared/form/TemplateMetadataForm/TemplateMetadataForm'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { TypeMetadataFieldOptions } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
-
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 const templateRepository: TemplateRepository = {} as TemplateRepository
 
 const metadataBlocksInfo = MetadataBlockInfoMother.getAllBlocks()
 
 describe('TemplateMetadataForm', () => {
+  const LocationDisplay = () => {
+    const location = useLocation()
+    return <div data-testid="location-display">{location.pathname}</div>
+  }
+
   beforeEach(() => {
     metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(metadataBlocksInfo)
     templateRepository.getTemplatesByCollectionId = cy.stub().resolves([])
@@ -18,11 +23,14 @@ describe('TemplateMetadataForm', () => {
 
   const mountTemplateMetadataForm = () =>
     cy.customMount(
-      <TemplateMetadataForm
-        collectionId="root"
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        templateRepository={templateRepository}
-      />
+      <>
+        <TemplateMetadataForm
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          templateRepository={templateRepository}
+        />
+        <LocationDisplay />
+      </>
     )
 
   const fillRequiredTemplateFields = () => {
@@ -208,5 +216,68 @@ describe('TemplateMetadataForm', () => {
     mountTemplateMetadataForm()
 
     cy.findByText(/Failed to load metadata blocks/i).should('exist')
+  })
+
+  it('removes cleared custom instructions from the submit payload', () => {
+    const executeStub = cy.stub(createTemplate, 'execute').resolves()
+
+    mountTemplateMetadataForm()
+
+    cy.findByLabelText(/Template Name/).type('Test Template')
+
+    cy.findByTestId('custom-instructions-toggle-title').click()
+    cy.findByTestId('custom-instructions-input-title').type('Use the official title')
+    cy.findByTestId('custom-instructions-save-title').click()
+
+    cy.findByTestId('custom-instructions-toggle-title').click()
+    cy.findByTestId('custom-instructions-input-title').clear()
+    cy.findByTestId('custom-instructions-save-title').click()
+
+    cy.findByRole('button', { name: 'Save + Add Terms' }).click()
+
+    cy.wrap(executeStub).should('have.been.calledOnce')
+    cy.wrap(executeStub).then((stub) => {
+      const payload = stub.getCall(0).args[0] as { instructions?: unknown[] }
+      expect(payload.instructions).to.equal(undefined)
+    })
+  })
+
+  it('removes only the cleared instruction when multiple exist', () => {
+    const executeStub = cy.stub(createTemplate, 'execute').resolves()
+
+    mountTemplateMetadataForm()
+
+    cy.findByLabelText(/Template Name/).type('Test Template')
+
+    cy.findByTestId('custom-instructions-toggle-title').click()
+    cy.findByTestId('custom-instructions-input-title').type('Use the official title')
+    cy.findByTestId('custom-instructions-save-title').click()
+
+    cy.findByTestId('custom-instructions-toggle-author').click()
+    cy.findByTestId('custom-instructions-input-author').type('List all authors')
+    cy.findByTestId('custom-instructions-save-author').click()
+
+    cy.findByTestId('custom-instructions-toggle-title').click()
+    cy.findByTestId('custom-instructions-input-title').clear()
+    cy.findByTestId('custom-instructions-save-title').click()
+
+    cy.findByRole('button', { name: 'Save + Add Terms' }).click()
+
+    cy.wrap(executeStub).should('have.been.calledOnce')
+    cy.wrap(executeStub).then((stub) => {
+      const payload = stub.getCall(0).args[0] as { instructions?: unknown[] }
+      expect(payload.instructions).to.have.length(1)
+      expect(payload.instructions?.[0]).to.have.property('instructionField', 'author')
+    })
+  })
+
+  it('clears the validation error when a non-empty template name is entered', () => {
+    mountTemplateMetadataForm()
+
+    cy.findByRole('button', { name: 'Save + Add Terms' }).click()
+    cy.findByText('Please add in a name for the dataset template.').should('exist')
+
+    cy.findByLabelText(/Template Name/).type('Valid Template Name')
+    cy.findByText('Please add in a name for the dataset template.').should('not.exist')
   })
 })
