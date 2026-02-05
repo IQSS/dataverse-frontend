@@ -76,7 +76,7 @@ describe('Header component', () => {
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
   })
-  it.only('Displays the unread notifications badge', () => {
+  it('Displays the unread notifications badge', () => {
     notificationRepository.getUnreadNotificationsCount = cy.stub().resolves(3)
     cy.mountAuthenticated(
       <Header

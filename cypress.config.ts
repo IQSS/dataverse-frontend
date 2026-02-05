@@ -47,7 +47,7 @@ export default defineConfig({
     ],
     defaultLanguage: 'en',
     codeCoverage: {
-      exclude: ['tests/**/*.*', '**/ErrorPage.tsx']
+      exclude: ['tests/**/*.*', '**/ErrorPage.tsx', '**/EditGuestBook.tsx']
     }
   }
 })

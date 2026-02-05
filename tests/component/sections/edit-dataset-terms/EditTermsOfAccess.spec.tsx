@@ -2,12 +2,20 @@ import { ReactNode } from 'react'
 import { EditTermsOfAccess } from '@/sections/edit-dataset-terms/edit-terms-of-access/EditTermsOfAccess'
 import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
+import {
+  DatasetMother,
+  DatasetVersionMother
+} from '@tests/component/dataset/domain/models/DatasetMother'
 import {
   TermsOfAccessMother,
   TermsOfUseMother
 } from '@tests/component/dataset/domain/models/TermsOfUseMother'
-import { Dataset } from '@/dataset/domain/models/Dataset'
+import {
+  Dataset,
+  DatasetPublishingStatus,
+  DatasetVersionNumber
+} from '@/dataset/domain/models/Dataset'
+import { useLocation } from 'react-router-dom'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
@@ -28,7 +36,12 @@ const mockDataset = DatasetMother.create({
 })
 
 describe('EditTermsOfAccess', () => {
-  const withProviders = (component: ReactNode, dataset: Dataset) => {
+  const LocationDisplay = () => {
+    const location = useLocation()
+    return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>
+  }
+
+  const withProviders = (component: ReactNode, dataset?: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
 
@@ -36,6 +49,7 @@ describe('EditTermsOfAccess', () => {
       <DatasetProvider
         searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
         repository={datasetRepository}>
+        <LocationDisplay />
         {component}
       </DatasetProvider>
     )
@@ -146,6 +160,55 @@ describe('EditTermsOfAccess', () => {
 
     cy.findByLabelText('Enable access request').should('exist')
     cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
+  })
+
+  describe('Cancel', () => {
+    it('does nothing when dataset is not loaded', () => {
+      cy.customMount(withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />))
+
+      cy.findByTestId('location-display').should('have.text', '/')
+      cy.findByRole('button', { name: 'Cancel' }).click()
+      cy.findByTestId('location-display').should('have.text', '/')
+    })
+
+    it('navigates to the dataset page with DRAFT version param when publishingStatus is draft', () => {
+      const dataset = DatasetMother.create({
+        persistentId: 'pid-123',
+        version: DatasetVersionMother.createDraft()
+      })
+
+      cy.customMount(
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, dataset)
+      )
+
+      cy.findByRole('button', { name: 'Cancel' }).click()
+
+      cy.findByTestId('location-display').should(
+        'have.text',
+        '/datasets?persistentId=pid-123&version=DRAFT'
+      )
+    })
+
+    it('navigates to the dataset page with numeric version param when publishingStatus is not draft', () => {
+      const dataset = DatasetMother.create({
+        persistentId: 'pid-999',
+        version: DatasetVersionMother.create({
+          publishingStatus: DatasetPublishingStatus.RELEASED,
+          number: new DatasetVersionNumber(2, 7)
+        })
+      })
+
+      cy.customMount(
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, dataset)
+      )
+
+      cy.findByRole('button', { name: 'Cancel' }).click()
+
+      cy.findByTestId('location-display').should(
+        'have.text',
+        '/datasets?persistentId=pid-999&version=2.7'
+      )
+    })
   })
 
   describe('Toast Notifications', () => {

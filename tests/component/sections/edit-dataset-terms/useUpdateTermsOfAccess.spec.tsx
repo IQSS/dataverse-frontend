@@ -60,8 +60,10 @@ describe('useUpdateTermsOfAccess', () => {
   })
 
   describe('Error handling', () => {
-    it('should handle WriteError and set formatted error message', async () => {
-      const mockWriteError = new WriteError()
+    it('should handle WriteError and prefer the reason without status code when available', async () => {
+      const mockWriteError = new WriteError(
+        'Error [500] Reason was: [500] An error occurred while updating the dataset terms of access. Please try again.'
+      )
       datasetRepository.updateTermsOfAccess = cy.stub().rejects(mockWriteError)
 
       const { result } = renderHook(() =>
@@ -81,6 +83,29 @@ describe('useUpdateTermsOfAccess', () => {
       expect(result.current.error).to.deep.equal(
         'An error occurred while updating the dataset terms of access. Please try again.'
       )
+    })
+
+    it('should handle WriteError and fall back to the error message when no reason is present', async () => {
+      const message =
+        'An error occurred while updating the dataset terms of access. Please try again.'
+      const mockWriteError = new WriteError(message)
+      datasetRepository.updateTermsOfAccess = cy.stub().rejects(mockWriteError)
+
+      const { result } = renderHook(() =>
+        useUpdateTermsOfAccess({
+          datasetRepository,
+          onSuccessfulUpdateTermsOfAccess
+        })
+      )
+
+      await act(async () => {
+        await result.current.handleUpdateTermsOfAccess(123, sampleTerms)
+      })
+
+      expect(datasetRepository.updateTermsOfAccess).to.have.been.calledWith(123, sampleTerms)
+      expect(onSuccessfulUpdateTermsOfAccess).to.not.have.been.called
+      expect(result.current.isLoading).to.deep.equal(false)
+      expect(result.current.error).to.deep.equal(message)
     })
 
     it('should handle unknown errors and set default error message', async () => {

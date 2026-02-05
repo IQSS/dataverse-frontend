@@ -658,5 +658,22 @@ describe('Dataset Templates', () => {
         cy.findByTestId('preview-modal-skeleton').should('exist')
       })
     })
+
+    it('shows an error message when fetching the template fails', () => {
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([template])
+      templateRepository.getTemplate = cy
+        .stub()
+        .rejects(new ReadError('Something went wrong getting the template. Try again later.'))
+      metadataBlockInfoRepository.getByName = cy.stub().resolves(MetadataBlockInfoMother.create())
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('dialog').within(() => {
+        cy.findByText(/Something went wrong getting the template. Try again later./i).should(
+          'exist'
+        )
+      })
+    })
   })
 })
