@@ -1,22 +1,22 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
-import { DatasetRepository } from '../repositories/DatasetRepository'
-import { DatasetTemplate } from '../models/DatasetTemplate'
-import { getDatasetTemplates } from '../useCases/getDatasetTemplates'
+import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
+import { Template } from '@/templates/domain/models/Template'
+import { getTemplatesByCollectionId } from '@/templates/domain/useCases/getTemplatesByCollectionId'
 
-interface useGetDatasetTemplatesProps {
-  datasetRepository: DatasetRepository
+interface useGetTemplatesByCollectionIdProps {
+  templateRepository: TemplateRepository
   collectionIdOrAlias: number | string
   autoFetch?: boolean
 }
 
-export const useGetDatasetTemplates = ({
-  datasetRepository,
+export const useGetTemplatesByCollectionId = ({
+  templateRepository,
   collectionIdOrAlias,
   autoFetch = true
-}: useGetDatasetTemplatesProps) => {
-  const [datasetTemplates, setDatasetTemplates] = useState<DatasetTemplate[]>([])
+}: useGetTemplatesByCollectionIdProps) => {
+  const [datasetTemplates, setDatasetTemplates] = useState<Template[]>([])
   const [isLoadingDatasetTemplates, setIsLoadingDatasetTemplates] = useState<boolean>(autoFetch)
   const [errorGetDatasetTemplates, setErrorGetDatasetTemplates] = useState<string | null>(null)
 
@@ -25,8 +25,8 @@ export const useGetDatasetTemplates = ({
     setErrorGetDatasetTemplates(null)
 
     try {
-      const response: DatasetTemplate[] = await getDatasetTemplates(
-        datasetRepository,
+      const response: Template[] = await getTemplatesByCollectionId(
+        templateRepository,
         collectionIdOrAlias
       )
 
@@ -46,7 +46,7 @@ export const useGetDatasetTemplates = ({
     } finally {
       setIsLoadingDatasetTemplates(false)
     }
-  }, [datasetRepository, collectionIdOrAlias])
+  }, [templateRepository, collectionIdOrAlias])
 
   useEffect(() => {
     if (autoFetch) {

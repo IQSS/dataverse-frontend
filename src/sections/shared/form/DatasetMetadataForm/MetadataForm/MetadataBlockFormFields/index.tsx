@@ -1,4 +1,4 @@
-import { DatasetTemplateInstruction } from '@/dataset/domain/models/DatasetTemplate'
+import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
 import { type MetadataBlockInfo } from '../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataFormField } from './MetadataFormField'
 

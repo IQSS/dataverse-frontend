@@ -15,12 +15,14 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useCollection } from '../collection/useCollection'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { CreateDatasetSkeleton } from './CreateDatasetSkeleton'
-import { useGetDatasetTemplates } from '@/dataset/domain/hooks/useGetDatasetTemplates'
-import { type DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
+import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemplatesByCollectionId'
+import { type Template } from '@/templates/domain/models/Template'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
+import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 
 interface CreateDatasetProps {
   datasetRepository: DatasetRepository
+  templateRepository: TemplateRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionRepository: CollectionRepository
   collectionId: string
@@ -28,6 +30,7 @@ interface CreateDatasetProps {
 
 export function CreateDataset({
   datasetRepository,
+  templateRepository,
   metadataBlockInfoRepository,
   collectionRepository,
   collectionId
@@ -35,7 +38,7 @@ export function CreateDataset({
   const { t } = useTranslation('createDataset')
   const { isModalOpen, hideModal } = useNotImplementedModal()
   const { setIsLoading } = useLoading()
-  const [selectedTemplate, setSelectedTemplate] = useState<DatasetTemplate | null>(null)
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
@@ -50,13 +53,13 @@ export function CreateDataset({
 
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
 
-  const { datasetTemplates, isLoadingDatasetTemplates } = useGetDatasetTemplates({
-    datasetRepository,
+  const { datasetTemplates, isLoadingDatasetTemplates } = useGetTemplatesByCollectionId({
+    templateRepository,
     collectionIdOrAlias: collectionId
   })
 
   const handleDatasetTemplateChange = (selectedTemplateId: string) => {
-    const template: DatasetTemplate | null =
+    const template: Template | null =
       datasetTemplates.find((template) => template.id.toString() === selectedTemplateId) || null
     setSelectedTemplate(template)
   }
@@ -71,7 +74,7 @@ export function CreateDataset({
   // When dataset templates are loaded we set the default one if any
   useEffect(() => {
     if (datasetTemplates.length > 0) {
-      const defaultTemplate: DatasetTemplate | null =
+      const defaultTemplate: Template | null =
         datasetTemplates.find((template) => template.isDefault) || null
 
       setSelectedTemplate(defaultTemplate)
