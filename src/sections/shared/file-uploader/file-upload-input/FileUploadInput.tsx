@@ -14,6 +14,7 @@ import { OperationType } from '../FileUploader'
 import { FileUploaderHelper } from '../FileUploaderHelper'
 import { SwalModal } from '../../swal-modal/SwalModal'
 import styles from './FileUploadInput.module.scss'
+import { useUploadLimit } from './useUploadLimit'
 
 type FileUploadInputProps = {
   fileRepository: FileRepository
@@ -22,6 +23,8 @@ type FileUploadInputProps = {
 
 const limit = 6
 const semaphore = new Semaphore(limit)
+
+const maxFilesPerUpload = 1000
 
 const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInputProps) => {
   const {
@@ -44,6 +47,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [isDragging, setIsDragging] = useState(false)
+  const { uploadLimit } = useUploadLimit(datasetPersistentId)
 
   const totalFiles = Object.keys(fileUploaderState.files).length
 
@@ -267,6 +271,27 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
         <Accordion.Item eventKey="0">
           <Accordion.Header>{t('fileUploader.accordionTitle')}</Accordion.Header>
           <Accordion.Body>
+            <p className={styles.helper_text}>
+              {t('fileUploader.uploadWidgetHelp', {
+                maxFilesPerUpload: maxFilesPerUpload.toLocaleString()
+              })}
+              {uploadLimit.maxFilesAvailableToUploadFormatted && (
+                <>
+                  {' '}
+                  {t('fileUploader.uploadWidgetMaxFilesHelp', {
+                    maxFilesAvailableToUpload: uploadLimit.maxFilesAvailableToUploadFormatted
+                  })}
+                </>
+              )}
+              {uploadLimit.storageQuotaRemainingFormatted && (
+                <>
+                  {' '}
+                  {t('fileUploader.uploadWidgetStorageQuotaHelp', {
+                    storageQuotaRemaining: uploadLimit.storageQuotaRemainingFormatted
+                  })}
+                </>
+              )}
+            </p>
             <Card>
               <Card.Header>
                 <Button
