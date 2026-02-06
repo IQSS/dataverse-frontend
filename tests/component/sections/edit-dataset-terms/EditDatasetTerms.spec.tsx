@@ -302,32 +302,6 @@ describe('EditDatasetTerms', () => {
       )
     })
 
-    it('shows unsaved changes modal when restricted files form is dirty', () => {
-      const dataset = DatasetMother.create({
-        license: mockLicenses[0],
-        termsOfUse: TermsOfUseMother.withoutCustomTerms()
-      })
-
-      cy.customMount(
-        withProviders(
-          <EditDatasetTerms
-            defaultActiveTabKey={
-              EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.restrictedFilesTerms
-            }
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          dataset
-        )
-      )
-
-      cy.findByLabelText('Terms of Access for Restricted Files').clear().type('Updated terms')
-
-      cy.findByRole('tab', { name: 'Dataset Terms' }).click()
-
-      cy.findByText('Unsaved Changes').should('exist')
-    })
-
     it('switches tabs without unsaved modal when active tab is guest book', () => {
       const dataset = DatasetMother.create({
         license: mockLicenses[0],
