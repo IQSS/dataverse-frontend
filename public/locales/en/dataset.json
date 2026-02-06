@@ -68,7 +68,7 @@
       },
       "deleteDatasetModal": {
         "title": "Delete Dataset",
-        "messageDraft": "Are you sure you want to delete this draft version? You cannot undelete this draft.",
+        "messageDraft": "Are you sure you want to delete this draft version? Files will be reverted to the most recently published version. You cannot undelete this draft.",
         "messageDataset": "Are you sure you want to delete this dataset? You cannot undelete this dataset.",
         "defaultDatasetDeleteError": "An error occurred while deleting the dataset."
       }
