@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { FileSize, FileSizeUnit } from '@/files/domain/models/FileMetadata'
 import { getDatasetUploadLimits } from '@/dataset/domain/useCases/getDatasetUploadLimits'
+import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 
 interface UploadLimit {
@@ -9,17 +10,20 @@ interface UploadLimit {
   storageQuotaRemainingFormatted?: string
 }
 
-export function useUploadLimit(datasetPersistentId: string) {
+export function useUploadLimit(
+  datasetPersistentId: string,
+  fetchUploadLimits: (datasetId: string) => Promise<DatasetUploadLimits> = getDatasetUploadLimits
+) {
   const [uploadLimit, setUploadLimit] = useState<UploadLimit>({})
   const [isLoadingUploadLimits, setIsLoadingUploadLimits] = useState<boolean>(true)
   const [errorUploadLimits, setErrorUploadLimits] = useState<string | null>(null)
 
-  const fetchUploadLimits = useCallback(async () => {
+  const fetchUploadLimitsCallback = useCallback(async () => {
     setIsLoadingUploadLimits(true)
     setErrorUploadLimits(null)
 
     try {
-      const limits = await getDatasetUploadLimits(datasetPersistentId)
+      const limits = await fetchUploadLimits(datasetPersistentId)
 
       if (Object.keys(limits).length === 0) {
         setUploadLimit({})
@@ -50,16 +54,16 @@ export function useUploadLimit(datasetPersistentId: string) {
     } finally {
       setIsLoadingUploadLimits(false)
     }
-  }, [datasetPersistentId])
+  }, [datasetPersistentId, fetchUploadLimits])
 
   useEffect(() => {
-    void fetchUploadLimits()
-  }, [fetchUploadLimits])
+    void fetchUploadLimitsCallback()
+  }, [fetchUploadLimitsCallback])
 
   return {
     uploadLimit,
     isLoadingUploadLimits,
     errorUploadLimits,
-    fetchUploadLimits
+    fetchUploadLimits: fetchUploadLimitsCallback
   }
 }

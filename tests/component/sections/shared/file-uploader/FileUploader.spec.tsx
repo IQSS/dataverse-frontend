@@ -1007,4 +1007,62 @@ describe('FileUploader', () => {
       })
     })
   })
+
+  describe.only('upload limits UI', () => {
+    it('shows both upload limit messages when both limits are present', () => {
+      const fetchUploadLimits = cy.stub().resolves({
+        numberOfFilesRemaining: 20,
+        storageQuotaRemaining: 1048576
+      })
+
+      cy.customMount(
+        <FileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.ADD_FILES_TO_DATASET}
+          fetchUploadLimits={fetchUploadLimits}
+        />
+      )
+
+      cy.findByText(/Maximum of 20 files available to upload./i).should('exist')
+      cy.findByText(/Storage quota: 1 MB remaining./i).should('exist')
+    })
+
+    it('shows only the available limit message when one limit is missing', () => {
+      const fetchUploadLimits = cy.stub().resolves({
+        numberOfFilesRemaining: 5
+      })
+
+      cy.customMount(
+        <FileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.ADD_FILES_TO_DATASET}
+          fetchUploadLimits={fetchUploadLimits}
+        />
+      )
+
+      cy.findByText(/Maximum of 5 files available to upload./i).should('exist')
+      cy.findByText(/Storage quota:/i).should('not.exist')
+    })
+
+    it('does not show limits message when limits are not present', () => {
+      const fetchUploadLimits = cy.stub().resolves({})
+
+      cy.customMount(
+        <FileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.ADD_FILES_TO_DATASET}
+          fetchUploadLimits={fetchUploadLimits}
+        />
+      )
+
+      cy.findByText(/Maximum of \d+ files available to upload./i).should('not.exist')
+      cy.findByText(/Storage quota:/i).should('not.exist')
+    })
+  })
 })

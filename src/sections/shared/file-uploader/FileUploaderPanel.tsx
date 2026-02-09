@@ -12,17 +12,20 @@ import { useFileUploaderContext } from './context/FileUploaderContext'
 import FileUploadInput from './file-upload-input/FileUploadInput'
 import { UploadedFilesList } from './uploaded-files-list/UploadedFilesList'
 import { ConfirmLeaveModal } from './confirm-leave-modal/ConfirmLeaveModal'
+import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 
 interface FileUploaderPanelProps {
   fileRepository: FileRepository
   datasetPersistentId: string
   referrer?: ReplaceFileReferrer
+  fetchUploadLimits?: (datasetId: string) => Promise<DatasetUploadLimits>
 }
 
 const FileUploaderPanel = ({
   fileRepository,
   datasetPersistentId,
-  referrer
+  referrer,
+  fetchUploadLimits
 }: FileUploaderPanelProps) => {
   const { t } = useTranslation('shared')
   const navigate = useNavigate()
@@ -101,7 +104,11 @@ const FileUploaderPanel = ({
 
   return (
     <Stack gap={4}>
-      <FileUploadInput fileRepository={fileRepository} datasetPersistentId={datasetPersistentId} />
+      <FileUploadInput
+        fileRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        fetchUploadLimits={fetchUploadLimits}
+      />
 
       {uploadedFiles.length > 0 && (
         <UploadedFilesList
