@@ -79,12 +79,7 @@ export const DatasetTypeSelect = ({
                   <span>
                     <strong className="text-capitalize">{dt.name}</strong>
                     <br />
-                    <span className="small text-muted">
-                      {dt.name === 'dataset' &&
-                        'A traditional dataset. May include code. Maps to https://schema.org/Dataset'}
-                      {dt.name === 'review' &&
-                        'A review of a research object such as a dataset. Maps to https://schema.org/CriticReview'}
-                    </span>
+                    <span className="small text-muted">{dt.description}</span>
                   </span>
                 </Card.Body>
               </Card>
