@@ -1,8 +1,9 @@
-import { getDatasetUploadLimits as jsGetDatasetUploadLimits } from '@iqss/dataverse-client-javascript'
+import { DatasetRepository } from '../repositories/DatasetRepository'
 import { DatasetUploadLimits } from '../models/DatasetUploadLimits'
 
 export async function getDatasetUploadLimits(
-  datasetId: string | number
+  datasetId: string | number,
+  datasetRepository: DatasetRepository
 ): Promise<DatasetUploadLimits> {
-  return jsGetDatasetUploadLimits.execute(datasetId)
+  return datasetRepository.getDatasetUploadLimits(datasetId)
 }

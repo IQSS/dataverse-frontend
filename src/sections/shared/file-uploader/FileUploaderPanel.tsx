@@ -7,6 +7,7 @@ import { Stack } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { useFileUploaderContext } from './context/FileUploaderContext'
 import FileUploadInput from './file-upload-input/FileUploadInput'
@@ -16,13 +17,18 @@ import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits
 
 interface FileUploaderPanelProps {
   fileRepository: FileRepository
+  datasetRepository: DatasetRepository
   datasetPersistentId: string
   referrer?: ReplaceFileReferrer
-  fetchUploadLimits?: (datasetId: string) => Promise<DatasetUploadLimits>
+  fetchUploadLimits?: (
+    datasetId: string | number,
+    datasetRepository: DatasetRepository
+  ) => Promise<DatasetUploadLimits>
 }
 
 const FileUploaderPanel = ({
   fileRepository,
+  datasetRepository,
   datasetPersistentId,
   referrer,
   fetchUploadLimits
@@ -106,6 +112,7 @@ const FileUploaderPanel = ({
     <Stack gap={4}>
       <FileUploadInput
         fileRepository={fileRepository}
+        datasetRepository={datasetRepository}
         datasetPersistentId={datasetPersistentId}
         fetchUploadLimits={fetchUploadLimits}
       />
