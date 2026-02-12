@@ -1,7 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { useUploadLimit } from '@/sections/shared/file-uploader/file-upload-input/useUploadLimit'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 const DATASET_PERSISTENT_ID = 'doi:10.5072/FK2/8YOKQI'
+const datasetRepository: DatasetRepository = {} as DatasetRepository
 
 describe('useUploadLimit', () => {
   it('formats upload limit values when limits are present', async () => {
@@ -10,7 +12,9 @@ describe('useUploadLimit', () => {
       storageQuotaRemaining: 1048576
     })
 
-    const { result } = renderHook(() => useUploadLimit(DATASET_PERSISTENT_ID, fetchUploadLimits))
+    const { result } = renderHook(() =>
+      useUploadLimit(DATASET_PERSISTENT_ID, datasetRepository, fetchUploadLimits)
+    )
 
     await act(() => {
       expect(result.current.isLoadingUploadLimits).to.deep.equal(true)
@@ -30,7 +34,9 @@ describe('useUploadLimit', () => {
   it('returns empty uploadLimit when no limits are present', async () => {
     const fetchUploadLimits = cy.stub().resolves({})
 
-    const { result } = renderHook(() => useUploadLimit(DATASET_PERSISTENT_ID, fetchUploadLimits))
+    const { result } = renderHook(() =>
+      useUploadLimit(DATASET_PERSISTENT_ID, datasetRepository, fetchUploadLimits)
+    )
 
     await waitFor(() => {
       expect(result.current.isLoadingUploadLimits).to.equal(false)
