@@ -46,6 +46,16 @@ export default defineConfig({
       { code: 'es', name: 'Español' }
     ],
     defaultLanguage: 'en',
+    branding: {
+      dataverseName: 'Dataverse'
+    },
+    homepage: {
+      supportUrl: 'https://support.dataverse.harvard.edu/'
+    },
+    footer: {
+      copyrightHolder: 'The President & Fellows of Harvard College',
+      privacyPolicyUrl: 'https://support.dataverse.harvard.edu/harvard-dataverse-privacy-policy'
+    },
     codeCoverage: {
       exclude: ['tests/**/*.*', '**/ErrorPage.tsx']
     }
