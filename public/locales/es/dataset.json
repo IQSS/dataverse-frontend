@@ -1,7 +1,8 @@
 {
   "filesTabTitle": "Ficheros",
   "metadataTabTitle": "Metadatos",
-  "termsTabTitle": "Términos",
+  "termsTabTitle": "Términos y libros de visitas",
+  "termsTabTitleReadOnly": "Términos",
   "anonymizedFieldValue": "retirado",
   "customTerms": {
     "title": "Términos personalizados del dataset",
