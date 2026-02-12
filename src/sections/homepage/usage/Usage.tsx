@@ -10,11 +10,20 @@ interface UsageProps {
   collectionId: string
 }
 
+interface AppConfig {
+  branding: {
+    dataverseName: string
+  }
+  homepage: {
+    supportUrl: string
+  }
+}
+
 export const Usage = ({ collectionId }: UsageProps) => {
   const { t } = useTranslation('homepage', { keyPrefix: 'usage' })
-  const appConfig = requireAppConfig()
-  const dataverseName = appConfig.branding?.dataverseName ?? 'Dataverse'
-  const supportUrl = appConfig.homepage?.supportUrl
+  const appConfig = requireAppConfig() as AppConfig
+  const dataverseName = appConfig.branding.dataverseName ?? 'Dataverse'
+  const supportUrl = appConfig.homepage.supportUrl
 
   return (
     <Row>
@@ -22,7 +31,7 @@ export const Usage = ({ collectionId }: UsageProps) => {
         <Card className={styles.card}>
           <Card.Body className={styles.card_body}>
             <h5>{t('datasets.title')}</h5>
-            <p className="small text-muted">{t('datasets.content', { dataverseName })}</p>
+            <p className="small text-muted">{t('datasets.content')}</p>
             <footer className={styles.footer_wrapper}>
               <Link
                 to={RouteWithParams.CREATE_DATASET(collectionId)}
@@ -55,28 +64,26 @@ export const Usage = ({ collectionId }: UsageProps) => {
         </Card>
       </Col>
 
-      {supportUrl && (
-        <Col xs={12} lg={4} className={styles.column_card}>
-          <Card className={styles.card}>
-            <Card.Body className={styles.card_body}>
-              <h5>{t('general.title', { dataverseName })}</h5>
-              <p className="small text-muted">{t('general.content')}</p>
-              <footer className={styles.footer_wrapper}>
-                <a
-                  href={supportUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="btn btn-secondary btn-sm">
-                  <Stack direction="horizontal" gap={2}>
-                    <span className={styles.cta_link_text}>{t('general.text_button')}</span>
-                    <BoxArrowUpRight size={14} />
-                  </Stack>
-                </a>
-              </footer>
-            </Card.Body>
-          </Card>
-        </Col>
-      )}
+      <Col xs={12} lg={4} className={styles.column_card}>
+        <Card className={styles.card}>
+          <Card.Body className={styles.card_body}>
+            <h5>{t('general.title', { dataverseName })}</h5>
+            <p className="small text-muted">{t('general.content')}</p>
+            <footer className={styles.footer_wrapper}>
+              <a
+                href={supportUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="btn btn-secondary btn-sm">
+                <Stack direction="horizontal" gap={2}>
+                  <span className={styles.cta_link_text}>{t('general.text_button')}</span>
+                  <BoxArrowUpRight size={14} />
+                </Stack>
+              </a>
+            </footer>
+          </Card.Body>
+        </Card>
+      </Col>
     </Row>
   )
 }

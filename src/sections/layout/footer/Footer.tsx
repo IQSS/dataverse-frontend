@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Container, Row, Col } from '@iqss/dataverse-design-system'
-import dataverseProjectLogo from '@/assets/dataverse-project-logo.svg'
 import { requireAppConfig } from '@/config'
 import { DataverseInfoRepository } from '../../../info/domain/repositories/DataverseInfoRepository'
 import { useDataverseVersion } from './useDataverseVersion'
+import dataverseProjectLogo from '@/assets/dataverse-project-logo.svg'
 import styles from './Footer.module.scss'
 
 interface FooterProps {
