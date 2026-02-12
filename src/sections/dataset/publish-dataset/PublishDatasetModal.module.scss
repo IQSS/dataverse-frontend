@@ -7,3 +7,9 @@
 .secondaryText {
   color: $dv-subtext-color;
 }
+
+.disclaimerText {
+  + label {
+    color: $dv-danger-color;
+  }
+}

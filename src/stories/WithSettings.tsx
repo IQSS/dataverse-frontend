@@ -25,6 +25,17 @@ export const WithSettings = (Story: StoryFn) => {
 
       case SettingName.MAX_EMBARGO_DURATION_IN_MONTHS:
         return SettingMother.createMaxEmbargoDurationInMonths(-1) as Setting<T>
+      case SettingName.DATASET_PUBLISH_POPUP_CUSTOM_TEXT:
+        return SettingMother.createDatasetPublishPopupCustomText(
+          'This is custom text for the dataset publish popup.'
+        ) as Setting<T>
+      case SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT:
+        return SettingMother.createPublishDatasetDisclaimerText(
+          'This is custom text for the publish dataset disclaimer.'
+        ) as Setting<T>
+
+      default:
+        throw new Error(`No mock implementation for setting`)
     }
   }
 

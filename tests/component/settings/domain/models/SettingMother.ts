@@ -36,4 +36,17 @@ export class SettingMother {
       value: value ? value : faker.datatype.number()
     }
   }
+  static createDatasetPublishPopupCustomText(value?: string): Setting<string> {
+    return {
+      name: SettingName.DATASET_PUBLISH_POPUP_CUSTOM_TEXT,
+      value: value ? value : faker.lorem.sentence()
+    }
+  }
+
+  static createPublishDatasetDisclaimerText(value?: string): Setting<string> {
+    return {
+      name: SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT,
+      value: value ? value : faker.lorem.sentence()
+    }
+  }
 }
