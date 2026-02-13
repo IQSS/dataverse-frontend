@@ -9,7 +9,7 @@ import { SettingsProvider } from '../../../../../src/sections/settings/SettingsP
 import { SettingMother } from '@tests/component/settings/domain/models/SettingMother'
 import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
-// Small helpers to keep tests focused on behavior (not setup boilerplate).
+
 const TEST_PERSISTENT_ID = 'testPersistentId'
 
 type CreateRepositoryOptions = {
@@ -53,7 +53,7 @@ const mountPublishDatasetModal = ({
   dataverseInfoWithoutCustomText.getDatasetPublishPopupCustomText = cy.stub().resolves('')
   dataverseInfoWithoutCustomText.getPublishDatasetDisclaimerText = cy.stub().resolves('')
   const resolvedDataverseInfoRepository = dataverseInfoRepository ?? dataverseInfoWithoutCustomText
-  console.log(resolvedDataverseInfoRepository.getPublishDatasetDisclaimerText())
+
   mountFn(
     <SettingsProvider dataverseInfoRepository={resolvedDataverseInfoRepository}>
       <PublishDatasetModal
@@ -236,7 +236,7 @@ describe('PublishDatasetModal', () => {
 
     cy.findByText(disclaimerText).should('exist')
   })
-  it('Displays disables the continue button until the user checks the disclaimer text', () => {
+  it('Disables the continue button until the user checks the disclaimer text', () => {
     const dataverseInfoRepository = new DataverseInfoMockRepository()
     const disclaimerText = 'This is disclaimer text for the dataset publish popup.'
 
