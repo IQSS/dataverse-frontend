@@ -5,7 +5,10 @@ import { CollectionRepository } from '../../../../../src/collection/domain/repos
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { CustomTermsMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { LicenseMother } from '@tests/component/dataset/domain/models/LicenseMother'
-
+import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
+import { SettingMother } from '@tests/component/settings/domain/models/SettingMother'
+import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 // Small helpers to keep tests focused on behavior (not setup boilerplate).
 const TEST_PERSISTENT_ID = 'testPersistentId'
 
@@ -32,6 +35,7 @@ type MountOptions = {
   collectionRepository?: CollectionRepository
   parentCollection?: ReturnType<typeof UpwardHierarchyNodeMother.createCollection>
   handleClose?: sinon.SinonStub
+  dataverseInfoRepository?: DataverseInfoRepository
   props?: Partial<React.ComponentProps<typeof PublishDatasetModal>>
 }
 
@@ -40,23 +44,30 @@ const mountPublishDatasetModal = ({
   repository = createDatasetRepository(),
   collectionRepository = createCollectionRepository(),
   parentCollection = UpwardHierarchyNodeMother.createCollection(),
+  dataverseInfoRepository,
   handleClose = cy.stub(),
   props = {}
 }: MountOptions = {}) => {
   const mountFn = mountAs === 'superuser' ? cy.mountSuperuser : cy.mountAuthenticated
-
+  const dataverseInfoWithoutCustomText = new DataverseInfoMockRepository()
+  dataverseInfoWithoutCustomText.getDatasetPublishPopupCustomText = cy.stub().resolves('')
+  dataverseInfoWithoutCustomText.getPublishDatasetDisclaimerText = cy.stub().resolves('')
+  const resolvedDataverseInfoRepository = dataverseInfoRepository ?? dataverseInfoWithoutCustomText
+  console.log(resolvedDataverseInfoRepository.getPublishDatasetDisclaimerText())
   mountFn(
-    <PublishDatasetModal
-      show={true}
-      repository={repository}
-      collectionRepository={collectionRepository}
-      parentCollection={parentCollection}
-      persistentId={TEST_PERSISTENT_ID}
-      releasedVersionExists={false}
-      handleClose={handleClose}
-      license={LicenseMother.create()}
-      {...props}
-    />
+    <SettingsProvider dataverseInfoRepository={resolvedDataverseInfoRepository}>
+      <PublishDatasetModal
+        show={true}
+        repository={repository}
+        collectionRepository={collectionRepository}
+        parentCollection={parentCollection}
+        persistentId={TEST_PERSISTENT_ID}
+        releasedVersionExists={false}
+        handleClose={handleClose}
+        license={LicenseMother.create()}
+        {...props}
+      />
+    </SettingsProvider>
   )
 
   return { repository, collectionRepository, parentCollection, handleClose }
@@ -212,5 +223,45 @@ describe('PublishDatasetModal', () => {
     })
 
     cy.findByText(/Custom Dataset Terms/).should('exist')
+  })
+  it('Displays disclaimer text from settings', () => {
+    const dataverseInfoRepository = new DataverseInfoMockRepository()
+    const disclaimerText = 'This is custom text for the dataset publish popup.'
+
+    dataverseInfoRepository.getPublishDatasetDisclaimerText = cy
+      .stub()
+      .resolves(SettingMother.createPublishDatasetDisclaimerText(disclaimerText))
+
+    mountPublishDatasetModal({ dataverseInfoRepository })
+
+    cy.findByText(disclaimerText).should('exist')
+  })
+  it('Displays disables the continue button until the user checks the disclaimer text', () => {
+    const dataverseInfoRepository = new DataverseInfoMockRepository()
+    const disclaimerText = 'This is disclaimer text for the dataset publish popup.'
+
+    dataverseInfoRepository.getPublishDatasetDisclaimerText = cy
+      .stub()
+      .resolves(SettingMother.createPublishDatasetDisclaimerText(disclaimerText))
+    mountPublishDatasetModal({ dataverseInfoRepository })
+
+    cy.findByText(disclaimerText).should('exist')
+    cy.findByRole('button', { name: 'Continue' }).should('be.disabled')
+    cy.findByRole('checkbox', { name: disclaimerText }).click()
+    cy.findByRole('button', { name: 'Continue' }).should('not.be.disabled')
+  })
+  it('Displays the custom popup text if it is available', () => {
+    const dataverseInfoRepository = new DataverseInfoMockRepository()
+    const popupText = 'This is custom text for the popup.'
+
+    dataverseInfoRepository.getDatasetPublishPopupCustomText = cy
+      .stub()
+      .resolves(SettingMother.createDatasetPublishPopupCustomText(popupText))
+    dataverseInfoRepository.getPublishDatasetDisclaimerText = cy.stub().resolves('')
+
+    mountPublishDatasetModal({ dataverseInfoRepository })
+
+    cy.findByText(popupText).should('exist')
+    cy.findByRole('button', { name: 'Continue' }).should('not.be.disabled')
   })
 })
