@@ -207,6 +207,8 @@ describe('FilesTable', () => {
     dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
     dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
     dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
+    dataverseInfoRepository.getPublishDatasetDisclaimerText = cy.stub().resolves({})
+    dataverseInfoRepository.getDatasetPublishPopupCustomText = cy.stub().resolves({})
 
     cy.customMount(
       <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>

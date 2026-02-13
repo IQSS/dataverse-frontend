@@ -28,6 +28,8 @@ describe('ZipDownloadLimitMessage', () => {
     dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
     dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
     dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
+    dataverseInfoRepository.getPublishDatasetDisclaimerText = cy.stub().resolves({})
+    dataverseInfoRepository.getDatasetPublishPopupCustomText = cy.stub().resolves({})
   })
 
   it('should not render if there is less than 1 file selected', () => {
