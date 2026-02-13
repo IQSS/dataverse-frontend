@@ -13,3 +13,16 @@
     color: $dv-danger-color;
   }
 }
+
+.customPopupTextBlock {
+  border: 1px solid $dv-border-color;
+  background-color: #f8f9fa;
+  border-left: 4px solid $dv-primary-color;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.customPopupText {
+  margin: 0;
+  color: $dv-text-color;
+}
