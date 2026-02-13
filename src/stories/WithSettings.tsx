@@ -33,7 +33,6 @@ export const WithSettings = (Story: StoryFn) => {
         return SettingMother.createPublishDatasetDisclaimerText(
           'This is custom text for the publish dataset disclaimer.'
         ) as Setting<T>
-
       default:
         throw new Error(`No mock implementation for setting`)
     }
