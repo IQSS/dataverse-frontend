@@ -10,20 +10,13 @@ interface UsageProps {
   collectionId: string
 }
 
-interface AppConfig {
-  branding: {
-    dataverseName: string
-  }
-  homepage: {
-    supportUrl: string
-  }
-}
+const DEFAULT_SUPPORT_URL = 'https://guides.dataverse.org/en/latest/user/index.html'
 
 export const Usage = ({ collectionId }: UsageProps) => {
   const { t } = useTranslation('homepage', { keyPrefix: 'usage' })
-  const appConfig = requireAppConfig() as AppConfig
-  const dataverseName = appConfig.branding.dataverseName ?? 'Dataverse'
-  const supportUrl = appConfig.homepage.supportUrl
+  const appConfig = requireAppConfig()
+  const dataverseName = appConfig.branding?.dataverseName ?? 'Dataverse'
+  const supportUrl = appConfig.homepage?.supportUrl ?? DEFAULT_SUPPORT_URL
 
   return (
     <Row>
