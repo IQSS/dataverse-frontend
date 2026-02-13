@@ -12,8 +12,8 @@ import { FileCriteria } from '../../../../../../src/files/domain/models/FileCrit
 import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
 
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -199,16 +199,10 @@ describe('FilesTable', () => {
       })
     ]
 
-    const dataverseInfoRepository = {} as DataverseInfoRepository
-
+    const dataverseInfoRepository = new DataverseInfoMockEmptyRepository()
     dataverseInfoRepository.getZipDownloadLimit = cy
       .stub()
       .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(500, FileSizeUnit.BYTES)))
-    dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
-    dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
-    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
-    dataverseInfoRepository.getPublishDatasetDisclaimerText = cy.stub().resolves({})
-    dataverseInfoRepository.getDatasetPublishPopupCustomText = cy.stub().resolves({})
 
     cy.customMount(
       <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>

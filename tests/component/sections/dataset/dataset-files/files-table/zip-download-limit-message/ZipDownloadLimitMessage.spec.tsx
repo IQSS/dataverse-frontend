@@ -5,7 +5,7 @@ import { SettingMother } from '../../../../../settings/domain/models/SettingMoth
 import { ZipDownloadLimit } from '../../../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsProvider } from '@/sections/settings/SettingsProvider'
 import { FilePreviewMother } from '../../../../../files/domain/models/FilePreviewMother'
-import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
 
 const fileSelection = {
   0: FilePreviewMother.create({
@@ -18,18 +18,13 @@ const fileSelection = {
 const zipDownloadLimit = new ZipDownloadLimit(500, FileSizeUnit.BYTES)
 const filesTotalDownloadSize = 3072 // 3.0 KB
 
-const dataverseInfoRepository = {} as DataverseInfoRepository
+const dataverseInfoRepository = new DataverseInfoMockEmptyRepository()
 
 describe('ZipDownloadLimitMessage', () => {
   beforeEach(() => {
     dataverseInfoRepository.getZipDownloadLimit = cy
       .stub()
       .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
-    dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
-    dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
-    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
-    dataverseInfoRepository.getPublishDatasetDisclaimerText = cy.stub().resolves({})
-    dataverseInfoRepository.getDatasetPublishPopupCustomText = cy.stub().resolves({})
   })
 
   it('should not render if there is less than 1 file selected', () => {
