@@ -119,7 +119,9 @@ export function PublishDatasetModal({
           />
 
           {shouldShowCustomPopupText && (
-            <p className={styles.secondaryText}>{datasetPublishPopupCustomText}</p>
+            <div className={styles.customPopupTextBlock}>
+              <p className={styles.customPopupText}>{datasetPublishPopupCustomText}</p>
+            </div>
           )}
 
           {releasedVersionExists && !requiresMajorVersionUpdate && (

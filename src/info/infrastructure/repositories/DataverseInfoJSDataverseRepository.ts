@@ -110,9 +110,6 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
       .execute()
       .then((text) => {
         const trimmedLength = text?.trim().length ?? 0
-        console.debug(
-          `[DataverseInfo] Loaded ${SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT} (length=${trimmedLength})`
-        )
 
         return {
           name: SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT,
@@ -120,11 +117,6 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
         }
       })
       .catch((error: unknown) => {
-        console.warn(
-          `[DataverseInfo] Failed loading ${SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT}; defaulting to empty string`,
-          error
-        )
-
         // In case of error, we default to an empty string which indicates no disclaimer text.
         return {
           name: SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT,

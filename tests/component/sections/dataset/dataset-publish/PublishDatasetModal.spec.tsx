@@ -224,6 +224,7 @@ describe('PublishDatasetModal', () => {
 
     cy.findByText(/Custom Dataset Terms/).should('exist')
   })
+
   it('Displays disclaimer text from settings', () => {
     const dataverseInfoRepository = new DataverseInfoMockRepository()
     const disclaimerText = 'This is custom text for the dataset publish popup.'
@@ -236,6 +237,7 @@ describe('PublishDatasetModal', () => {
 
     cy.findByText(disclaimerText).should('exist')
   })
+
   it('Disables the continue button until the user checks the disclaimer text', () => {
     const dataverseInfoRepository = new DataverseInfoMockRepository()
     const disclaimerText = 'This is disclaimer text for the dataset publish popup.'
@@ -250,6 +252,7 @@ describe('PublishDatasetModal', () => {
     cy.findByRole('checkbox', { name: disclaimerText }).click()
     cy.findByRole('button', { name: 'Continue' }).should('not.be.disabled')
   })
+
   it('Displays the custom popup text if it is available', () => {
     const dataverseInfoRepository = new DataverseInfoMockRepository()
     const popupText = 'This is custom text for the popup.'
