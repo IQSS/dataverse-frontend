@@ -109,8 +109,6 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
     return getPublishDatasetDisclaimerText
       .execute()
       .then((text) => {
-        const trimmedLength = text?.trim().length ?? 0
-
         return {
           name: SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT,
           value: text
