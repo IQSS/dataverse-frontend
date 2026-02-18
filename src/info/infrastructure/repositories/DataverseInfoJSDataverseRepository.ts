@@ -116,7 +116,7 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
           value: text
         }
       })
-      .catch((error: unknown) => {
+      .catch(() => {
         // In case of error, we default to an empty string which indicates no disclaimer text.
         return {
           name: SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT,
