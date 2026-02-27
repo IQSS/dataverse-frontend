@@ -227,6 +227,7 @@ export function Dataset({
                       datasetPersistentId={dataset.persistentId}
                       datasetVersion={dataset.version}
                       canUpdateDataset={canUpdateDataset}
+                      hasGuestbook={dataset.guestbookId !== undefined}
                     />
                   </div>
                 </Tabs.Tab>

@@ -183,6 +183,11 @@
     "requestAccessTip": "If checked, users can request access to the restricted files in this dataset.",
     "requestAccessTrue": "Users may request access to files.",
     "requestAccessFalse": "Users may not request access to files.",
+    "guestbookTitle": "Guestbook",
+    "guestbookTip": "User information (i.e., name, email, institution, and position) will be collected when files are downloaded.",
+    "guestbookDescription": "The following guestbook will prompt a user to provide additional information when downloading a file.",
+    "noGuestbookAssigned": "No guestbook is assigned to this dataset so users will not be prompted to provide any information when downloading files. To learn more about guestbooks, visit the <anchor>Dataset Guestbook</anchor> section of the User Guide.",
+    "guestbookPreviewButton": "Preview Guestbook",
     "restrictedFilesTip": "The number of restricted files in this dataset.",
     "dataAccessPlaceTip": "If the data is not only in Dataverse, list the location(s) where the data are currently stored.",
     "originalArchiveTip": "Archive from which the data was obtained.",
@@ -347,7 +352,7 @@
     "tabs": {
       "datasetTerms": "Dataset Terms",
       "restrictedFilesTerms": "Restricted Files + Terms of Access",
-      "guestBook": "GuestBook"
+      "guestbook": "Guestbook"
     },
     "datasetTerms": {
       "title": "Dataset Terms",
@@ -361,10 +366,9 @@
       "title": "Restricted Files + Terms of Access",
       "description": "Set up access restrictions and terms for restricted files in this dataset."
     },
-    "guestBook": {
-      "title": "GuestBook",
-      "description": "Select a guestbook to have a user provide additional information when downloading a file.",
-      "testGuestbook": "Test Guestbook",
+    "guestbook": {
+      "title": "Guestbook",
+      "description": "Select a guestbook to have a user provide additional information when downloading a file. To learn more about guestbooks, visit the Dataset Guestbook section of the User Guide.",
       "previewButton": "Preview Guestbook"
     },
     "unsavedChangesModal": {
@@ -373,6 +377,7 @@
       "stay": "Stay on this page",
       "leave": "Leave without saving"
     },
+    "defaultGuestbookUpdateError": "An error occurred while updating the dataset guestbook. Please try again.",
     "defaultLicenseUpdateError": "An error occurred while updating the dataset license. Please try again.",
     "defaultTermsOfAccessUpdateError": "An error occurred while updating the dataset terms of access. Please try again."
   }

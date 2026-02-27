@@ -44,10 +44,10 @@ export const EditTermsOfAccessTab: Story = {
   )
 }
 
-export const EditGuestBookTab: Story = {
+export const EditGuestbookTab: Story = {
   render: () => (
     <EditDatasetTerms
-      defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestBook}
+      defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
       licenseRepository={licenseRepository}
       datasetRepository={datasetRepository}
     />

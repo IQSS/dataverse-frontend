@@ -11,6 +11,7 @@ import { FileExploreToolsOptions, FileQueryToolsOptions } from './FileToolOption
 
 interface FileActionButtonAccessFileProps {
   id: number
+  guestbookId?: number
   access: FileAccess
   userHasDownloadPermission: boolean
   metadata: FileMetadata
@@ -22,6 +23,7 @@ interface FileActionButtonAccessFileProps {
 
 export function AccessFileMenu({
   id,
+  guestbookId,
   access,
   userHasDownloadPermission,
   metadata,
@@ -77,6 +79,8 @@ export function AccessFileMenu({
           isActivelyEmbargoed={metadata.isActivelyEmbargoed}
         />
         <FileDownloadOptions
+          fileId={id}
+          guestbookId={guestbookId}
           type={metadata.type}
           downloadUrls={metadata.downloadUrls}
           ingestInProgress={ingestInProgress}

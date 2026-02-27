@@ -175,6 +175,7 @@
     "requestAccessTip": "Si está marcado, los usuarios pueden solicitar acceso a los ficheros restringidos en este dataset.",
     "requestAccessTrue": "Los usuarios pueden solicitar acceso a los ficheros.",
     "requestAccessFalse": "Los usuarios no pueden solicitar acceso a los ficheros.",
+    "noGuestbookAssigned": "No hay un libro de visitas asignado a este dataset, por lo que no se pedirá a los usuarios que proporcionen información al descargar archivos. Para obtener más información sobre libros de visitas, visita la sección <anchor>Dataset Guestbook</anchor> de la Guía del usuario.",
     "restrictedFilesTip": "El número de ficheros restringidos en este dataset.",
     "dataAccessPlaceTip": "Si los datos no están solo en Dataverse, enumera la(s) ubicación(es) donde los datos están actualmente almacenados.",
     "originalArchiveTip": "Fichero del cual se obtuvieron los datos.",

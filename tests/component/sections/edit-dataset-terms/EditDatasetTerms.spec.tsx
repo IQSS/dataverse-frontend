@@ -84,7 +84,7 @@ describe('EditDatasetTerms', () => {
 
       cy.findByRole('tab', { name: 'Dataset Terms' }).should('exist')
       cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).should('exist')
-      cy.findByRole('tab', { name: 'GuestBook' }).should('exist')
+      cy.findByRole('tab', { name: 'Guestbook' }).should('exist')
     })
 
     it('switches between tabs correctly', () => {
@@ -115,7 +115,7 @@ describe('EditDatasetTerms', () => {
 
       cy.findByLabelText('Enable access request').should('exist')
 
-      cy.findByRole('tab', { name: 'GuestBook' }).should('not.be.selected')
+      cy.findByRole('tab', { name: 'Guestbook' }).should('not.be.selected')
     })
 
     it('starts with the correct default tab', () => {

@@ -91,6 +91,18 @@
       "helpText": "Share this file on your favorite social media networks."
     }
   },
+  "actions": {
+    "optionsMenu": {
+      "guestbookAppliedModal": {
+        "submitError": "Something went wrong submitting guestbook responses. Try again later.",
+        "downloadError": "Something went wrong downloading the file. Try again later.",
+        "validation": {
+          "required": "This field is required.",
+          "invalidEmail": "Please enter a valid email address."
+        }
+      }
+    }
+  },
   "deleteFileModal": {
     "title": "Delete File",
     "message": "The file will be deleted after you click on the Delete button.",

@@ -80,6 +80,18 @@
       "title": "File Options",
       "headers": {
         "editOptions": "Edit Options"
+      },
+      "guestbookAppliedModal": {
+        "title": "Dataset Guestbook",
+        "message": "A guestbook is assigned to this dataset. Users will be prompted to provide additional information when downloading files.",
+        "close": "Close",
+        "additionalQuestions": "Additional Questions",
+        "submitError": "Something went wrong submitting guestbook responses. Try again later.",
+        "downloadError": "Something went wrong downloading the file. Try again later.",
+        "validation": {
+          "required": "This field is required.",
+          "invalidEmail": "Please enter a valid email address."
+        }
       }
     },
     "alreadyDeletedAlert": {

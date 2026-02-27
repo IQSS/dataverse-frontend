@@ -1,0 +1,36 @@
+.edit-guest-book {
+
+  .guestbook-list {
+    margin-top: 0.75rem;
+    border: 1px solid var(--bs-border-color);
+  }
+
+  .guestbook-loading {
+    padding: 0.75rem;
+  }
+
+  .guestbook-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-top: 1px solid var(--bs-border-color);
+  }
+
+  .guestbook-option:first-child {
+    border-top: 0;
+  }
+
+  .guestbook-option-selected {
+    background-color: #f2f0c7;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--bs-border-color);
+  }
+}

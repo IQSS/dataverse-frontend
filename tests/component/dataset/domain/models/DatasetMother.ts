@@ -451,7 +451,8 @@ export class DatasetMother {
       dataset.nextMajorVersion,
       dataset.nextMinorVersion,
       dataset.requiresMajorVersionUpdate,
-      dataset.fileStore
+      dataset.fileStore,
+      dataset.guestbookId
     ).build()
   }
 

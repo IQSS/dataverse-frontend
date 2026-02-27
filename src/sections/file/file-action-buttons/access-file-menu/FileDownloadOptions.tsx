@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { FileDownloadUrls, FileType } from '../../../../files/domain/models/FileMetadata'
 
 interface FileDownloadOptionsProps {
+  fileId: number
+  guestbookId?: number
   type: FileType
   isTabular: boolean
   ingestInProgress: boolean
@@ -14,6 +16,8 @@ interface FileDownloadOptionsProps {
 }
 
 export function FileDownloadOptions({
+  fileId,
+  guestbookId,
   type,
   isTabular,
   ingestInProgress,
@@ -33,12 +37,16 @@ export function FileDownloadOptions({
       </DropdownHeader>
       {isTabular ? (
         <FileTabularDownloadOptions
+          fileId={fileId}
+          guestbookId={guestbookId}
           type={type}
           ingestInProgress={ingestInProgress}
           downloadUrls={downloadUrls}
         />
       ) : (
         <FileNonTabularDownloadOptions
+          fileId={fileId}
+          guestbookId={guestbookId}
           type={type}
           ingestIsInProgress={ingestInProgress}
           downloadUrlOriginal={downloadUrls.original}

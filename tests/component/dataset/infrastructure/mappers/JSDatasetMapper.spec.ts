@@ -49,6 +49,7 @@ const jsDataset = {
     deaccessionNote: undefined
   },
   internalVersionNumber: 1,
+  guestbookId: 1001,
   termsOfUse: {
     termsOfAccess: termsOfAccess
   },
@@ -231,6 +232,7 @@ const expectedDataset = {
   internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
+  guestbookId: 1001,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -339,6 +341,7 @@ const expectedDatasetWithPublicationDate = {
   internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
+  guestbookId: 1001,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -448,6 +451,7 @@ const expectedDatasetWithNextVersionNumbers = {
   internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
+  guestbookId: 1001,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -561,6 +565,7 @@ const expectedDatasetAlternateVersion = {
   internalVersionNumber: 1,
   requestedVersion: '4.0',
   publicationDate: undefined,
+  guestbookId: 1001,
   hasValidTermsOfAccess: true,
   hasOneTabularFileAtLeast: true,
   isValid: true,

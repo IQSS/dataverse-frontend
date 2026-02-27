@@ -1,0 +1,77 @@
+import { useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+import { Button, Col, QuestionMarkTooltip, Row, Spinner } from '@iqss/dataverse-design-system'
+import { useGetGuestbookById } from './useGetGuestbookById'
+import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
+import { PreviewGuestbookModal } from '@/sections/guestbooks/preview-modal/PreviewGuestbookModal'
+import { useDataset } from '@/sections/dataset/DatasetContext'
+import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
+
+const guestbookRepository = new GuestbookJSDataverseRepository()
+
+export const DatasetGuestbook = () => {
+  const { t } = useTranslation('dataset')
+  const { dataset } = useDataset()
+  const [showPreview, setShowPreview] = useState(false)
+  const datasetHasGuestbook = dataset?.guestbookId !== undefined
+  const { guestbook, isLoadingGuestbook } = useGetGuestbookById({
+    guestbookRepository,
+    guestbookId: dataset?.guestbookId
+  })
+  const hasGuestbook = guestbook !== undefined
+
+  return (
+    <>
+      <Row className={styles['dataset-terms-row']}>
+        <Col sm={3}>
+          <strong>{t('termsTab.guestbookTitle')} </strong>
+          <QuestionMarkTooltip placement="right" message={t('termsTab.guestbookTip')} />
+        </Col>
+        <Col>
+          {!datasetHasGuestbook ? (
+            <p className={styles['community-norms-text']}>
+              <Trans
+                t={t}
+                i18nKey="termsTab.noGuestbookAssigned"
+                components={{
+                  anchor: (
+                    <a
+                      href="https://guides.dataverse.org/en/6.9/user/dataverse-management.html#dataset-guestbooks"
+                      target="_blank"
+                      rel="noreferrer"
+                    />
+                  )
+                }}
+              />
+            </p>
+          ) : (
+            <>
+              <p className={styles['community-norms-text']}>{t('termsTab.guestbookDescription')}</p>
+              <div className={styles['guestbook-selection']}>
+                {isLoadingGuestbook ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <span>{guestbook?.name ?? '-'}</span>
+                    {hasGuestbook && (
+                      <Button type="button" size="sm" onClick={() => setShowPreview(true)}>
+                        {t('termsTab.guestbookPreviewButton')}
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </Col>
+      </Row>
+      {guestbook && (
+        <PreviewGuestbookModal
+          show={showPreview}
+          handleClose={() => setShowPreview(false)}
+          guestbook={guestbook}
+        />
+      )}
+    </>
+  )
+}

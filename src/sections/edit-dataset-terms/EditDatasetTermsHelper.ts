@@ -2,13 +2,18 @@ export class EditDatasetTermsHelper {
   static EDIT_DATASET_TERMS_TABS_KEYS = {
     datasetTerms: 'datasetTerms',
     restrictedFilesTerms: 'restrictedFilesTerms',
-    guestBook: 'guestBook'
+    guestbook: 'guestbook'
   } as const
 
   static EDIT_DATASET_TERMS_TAB_QUERY_KEY = 'tab'
 
   public static defineSelectedTabKey(searchParams: URLSearchParams): EditDatasetTermsTabKey {
     const tabValue = searchParams.get(this.EDIT_DATASET_TERMS_TAB_QUERY_KEY)
+
+    // Backward compatibility for older URLs
+    if (tabValue === 'guestBook') {
+      return this.EDIT_DATASET_TERMS_TABS_KEYS.guestbook
+    }
 
     return (
       this.EDIT_DATASET_TERMS_TABS_KEYS[

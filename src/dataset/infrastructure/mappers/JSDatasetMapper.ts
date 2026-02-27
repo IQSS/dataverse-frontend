@@ -100,7 +100,8 @@ export class JSDatasetMapper {
         latestPublishedVersionMinorNumber
       ),
       JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff),
-      fileStore
+      fileStore,
+      jsDataset.guestbookId
     ).build()
   }
 

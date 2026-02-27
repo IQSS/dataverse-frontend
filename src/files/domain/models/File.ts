@@ -9,6 +9,7 @@ import { FileVersionSummarySubset } from './FileVersionSummaryInfo'
 export interface File {
   id: number
   datasetPersistentId: string
+  guestbookId?: number
   name: string
   access: FileAccess
   datasetVersion: DatasetVersion
