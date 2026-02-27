@@ -60,7 +60,9 @@ export const EditCollectionDropdown = ({
       <DropdownButtonItem as={Link} to={RouteWithParams.EDIT_FEATURED_ITEMS(collection.id)}>
         {t('featuredItems.title')}
       </DropdownButtonItem>
-
+      <DropdownButtonItem as={Link} to={RouteWithParams.GUESTBOOKS(collection.id)}>
+        {t('editCollection.datasetGuestbooks')}
+      </DropdownButtonItem>
       {canCollectionBeDeleted && (
         <>
           <DropdownSeparator />

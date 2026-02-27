@@ -52,6 +52,7 @@
   "editCollection": {
     "edit": "Edit",
     "generalInfo": "General Information",
+    "datasetGuestbooks": "Dataset Guestbooks",
     "deleteCollection": "Delete Collection"
   },
   "featuredItems": {

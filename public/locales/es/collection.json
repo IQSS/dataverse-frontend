@@ -52,6 +52,7 @@
   "editCollection": {
     "edit": "Editar",
     "generalInfo": "Información general",
+    "datasetGuestbooks": "Libros de visitas de datasets",
     "deleteCollection": "Eliminar colección"
   },
   "featuredItems": {
