@@ -32,6 +32,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Show toast notification when API token is copied to clipboard.
 - Dataset versions: (1) file changes should be `Access: Restricted` instead of `isResticted: true/false`; (2) logic of View Detail button. (#879)
 - File versions: (1) logic of linking to a file version; (2)If file not included, show text information "File not included in this version.". (#879)
+- Notifications unread count now refreshes immediately (without waiting for polling) after notifications are read and after dataset/collection create or dataset publish actions that generate notifications.
 
 ### Removed
 
