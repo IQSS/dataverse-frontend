@@ -451,6 +451,7 @@ describe('Dataset', () => {
     termsTab.click()
 
     cy.findByText('Dataset Terms').should('exist')
+    cy.findByText('Guestbook').should('exist')
   })
 
   it('renders the Dataset Files tab', () => {

@@ -3,33 +3,40 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Button, Col, QuestionMarkTooltip, Row, Spinner } from '@iqss/dataverse-design-system'
 import { useGetGuestbookById } from './useGetGuestbookById'
 import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { PreviewGuestbookModal } from '@/sections/guestbooks/preview-modal/PreviewGuestbookModal'
 import { useDataset } from '@/sections/dataset/DatasetContext'
 import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 
-const guestbookRepository = new GuestbookJSDataverseRepository()
+interface DatasetGuestbookProps {
+  guestbookRepository?: GuestbookRepository
+}
 
-export const DatasetGuestbook = () => {
+export const DatasetGuestbook = ({
+  guestbookRepository = new GuestbookJSDataverseRepository()
+}: DatasetGuestbookProps) => {
   const { t } = useTranslation('dataset')
   const { dataset } = useDataset()
   const [showPreview, setShowPreview] = useState(false)
   const datasetHasGuestbook = dataset?.guestbookId !== undefined
   const { guestbook, isLoadingGuestbook } = useGetGuestbookById({
     guestbookRepository,
-    guestbookId: dataset?.guestbookId
+    guestbookId: dataset?.guestbookId as number
   })
   const hasGuestbook = guestbook !== undefined
 
   return (
     <>
-      <Row className={styles['dataset-terms-row']}>
+      <Row className={styles['dataset-terms-row']} data-testid="dataset-guestbook-section">
         <Col sm={3}>
           <strong>{t('termsTab.guestbookTitle')} </strong>
           <QuestionMarkTooltip placement="right" message={t('termsTab.guestbookTip')} />
         </Col>
         <Col>
           {!datasetHasGuestbook ? (
-            <p className={styles['community-norms-text']}>
+            <p
+              className={styles['community-norms-text']}
+              data-testid="dataset-guestbook-empty-message">
               <Trans
                 t={t}
                 i18nKey="termsTab.noGuestbookAssigned"
@@ -46,13 +53,17 @@ export const DatasetGuestbook = () => {
             </p>
           ) : (
             <>
-              <p className={styles['community-norms-text']}>{t('termsTab.guestbookDescription')}</p>
+              <p
+                className={styles['community-norms-text']}
+                data-testid="dataset-guestbook-description">
+                {t('termsTab.guestbookDescription')}
+              </p>
               <div className={styles['guestbook-selection']}>
                 {isLoadingGuestbook ? (
                   <Spinner />
                 ) : (
                   <>
-                    <span>{guestbook?.name ?? '-'}</span>
+                    <span data-testid="dataset-guestbook-name">{guestbook?.name ?? '-'}</span>
                     {hasGuestbook && (
                       <Button type="button" size="sm" onClick={() => setShowPreview(true)}>
                         {t('termsTab.guestbookPreviewButton')}

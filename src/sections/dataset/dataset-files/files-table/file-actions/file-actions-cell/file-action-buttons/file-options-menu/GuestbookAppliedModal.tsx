@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Alert, Button, Modal, Spinner } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
 import { useDataset } from '@/sections/dataset/DatasetContext'
 import { useGetGuestbookById } from '@/sections/dataset/dataset-guestbook/useGetGuestbookById'
@@ -11,24 +12,32 @@ import {
 } from './GuestbookAppliedForm'
 import { useSession } from '@/sections/session/SessionContext'
 import { Guestbook, GuestbookCustomQuestion } from '@/guestbooks/domain/models/Guestbook'
-import { useSubmitGuestbookForDatafileDownload } from './useSubmitGuestbookForDatafileDownload'
+import { useSubmitGuestbookForDatafileDownload } from '@/access/hooks/useSubmitGuestbookForDatafileDownload'
+import { useSubmitGuestbookForDatafilesDownload } from '@/access/hooks/useSubmitGuestbookForDatafilesDownload'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
 
 interface GuestbookAppliedModalProps {
-  fileId: number | string
+  fileId?: number | string
+  fileIds?: Array<number | string>
   guestbookId?: number
   show: boolean
   handleClose: () => void
+  guestbookRepository?: GuestbookRepository
+  accessRepository?: AccessRepository
 }
 
-const guestbookRepository = new GuestbookJSDataverseRepository()
 type GuestbookFormValues = Record<string, string>
 type GuestbookResponseAnswer = { id: number | string; value: string | string[] }
 
 export function GuestbookAppliedModal({
   fileId,
+  fileIds,
   guestbookId,
   show,
-  handleClose
+  handleClose,
+  guestbookRepository = new GuestbookJSDataverseRepository(),
+  accessRepository
 }: GuestbookAppliedModalProps) {
   const { t: tFiles } = useTranslation('files')
   const { t: tDataset } = useTranslation('dataset')
@@ -39,15 +48,20 @@ export function GuestbookAppliedModal({
   const [hasAttemptedAccept, setHasAttemptedAccept] = useState(false)
   const [errorDownloadSignedUrlFile, setErrorDownloadSignedUrlFile] = useState<string | null>(null)
   const {
-    isSubmittingGuestbook,
-    errorSubmitGuestbook,
+    isSubmittingGuestbook: isSubmittingGuestbookDatafile,
+    errorSubmitGuestbook: errorSubmitGuestbookDatafile,
     handleSubmitGuestbookForDatafileDownload,
     resetSubmitGuestbookForDatafileDownloadState
-  } = useSubmitGuestbookForDatafileDownload()
-
+  } = useSubmitGuestbookForDatafileDownload({ accessRepository })
+  const {
+    isSubmittingGuestbook: isSubmittingGuestbookDatafiles,
+    errorSubmitGuestbook: errorSubmitGuestbookDatafiles,
+    handleSubmitGuestbookForDatafilesDownload,
+    resetSubmitGuestbookForDatafilesDownloadState
+  } = useSubmitGuestbookForDatafilesDownload({ accessRepository })
   const { guestbook, isLoadingGuestbook, errorGetGuestbook } = useGetGuestbookById({
     guestbookRepository,
-    guestbookId: guestbookId ?? dataset?.guestbookId
+    guestbookId: guestbookId
   })
 
   const accountFieldLabels = useMemo(() => {
@@ -224,7 +238,7 @@ export function GuestbookAppliedModal({
 
   const getFilenameFromContentDisposition = (contentDispositionHeader: string | null): string => {
     if (!contentDispositionHeader) {
-      return `datafile-${fileId}`
+      return fileId !== undefined ? `datafile-${fileId}` : 'files-download'
     }
 
     const utf8FileNameMatch = contentDispositionHeader.match(/filename\*=UTF-8''([^;]+)/i)
@@ -241,7 +255,7 @@ export function GuestbookAppliedModal({
       return basicFileNameMatch[1]
     }
 
-    return `datafile-${fileId}`
+    return fileId !== undefined ? `datafile-${fileId}` : 'files-download'
   }
 
   const triggerDirectDownload = async (signedUrl: string) => {
@@ -292,7 +306,11 @@ export function GuestbookAppliedModal({
   const clearModalErrors = () => {
     setErrorDownloadSignedUrlFile(null)
     resetSubmitGuestbookForDatafileDownloadState()
+    resetSubmitGuestbookForDatafilesDownloadState()
   }
+
+  const isSubmittingGuestbook = isSubmittingGuestbookDatafile || isSubmittingGuestbookDatafiles
+  const errorSubmitGuestbook = errorSubmitGuestbookDatafile || errorSubmitGuestbookDatafiles
 
   useEffect(() => {
     if (show) {
@@ -300,8 +318,14 @@ export function GuestbookAppliedModal({
       setHasAttemptedAccept(false)
       setErrorDownloadSignedUrlFile(null)
       resetSubmitGuestbookForDatafileDownloadState()
+      resetSubmitGuestbookForDatafilesDownloadState()
     }
-  }, [show, prefilledAccountFieldValues, resetSubmitGuestbookForDatafileDownloadState])
+  }, [
+    show,
+    prefilledAccountFieldValues,
+    resetSubmitGuestbookForDatafileDownloadState,
+    resetSubmitGuestbookForDatafilesDownloadState
+  ])
 
   const handleModalClose = () => {
     clearModalErrors()
@@ -324,10 +348,22 @@ export function GuestbookAppliedModal({
     }
 
     const answers = buildGuestbookAnswers()
-    const signedUrl = await handleSubmitGuestbookForDatafileDownload(fileId, answers)
+
+    let signedUrl: string | undefined
+
+    if (fileId !== undefined) {
+      signedUrl = await handleSubmitGuestbookForDatafileDownload(fileId, answers)
+    } else if (fileIds && fileIds.length > 0) {
+      signedUrl = await handleSubmitGuestbookForDatafilesDownload(fileIds, answers)
+    } else {
+      return
+    }
     if (signedUrl) {
       handleModalClose()
-      void triggerDirectDownload(signedUrl).catch(() => undefined)
+      void triggerDirectDownload(signedUrl).catch((error) => {
+        const fallbackMessage = tFiles('actions.optionsMenu.guestbookAppliedModal.downloadError')
+        toast.error(error instanceof Error ? error.message : fallbackMessage)
+      })
     }
   }
 

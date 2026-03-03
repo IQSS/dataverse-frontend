@@ -11,6 +11,7 @@ import { useMultipleFileDownload } from '../../../../../file/multiple-file-downl
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
+import { GuestbookAppliedModal } from '../file-actions-cell/file-action-buttons/file-options-menu/GuestbookAppliedModal'
 
 interface DownloadFilesButtonProps {
   files: FilePreview[]
@@ -24,23 +25,33 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const { t } = useTranslation('files')
   const { dataset } = useDataset()
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
+  const [showGuestbookAppliedModal, setShowGuestbookAppliedModal] = useState(false)
   const { getMultipleFileDownloadUrl } = useMultipleFileDownload()
   const isBelow768px = useMediaQuery('(max-width: 768px)')
 
   const fileSelectionCount = Object.keys(fileSelection).length
-  const onClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const allFilesSelected = Object.values(fileSelection).some((file) => file === undefined)
+  const selectedFileIds = getFileIdsFromSelection(fileSelection)
+  const hasGuestbook = dataset?.guestbookId !== undefined
+  const onClick = (event: MouseEvent<HTMLElement>) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {
       event.preventDefault()
       setShowNoFilesSelectedModal(true)
+      return
+    }
+
+    if (hasGuestbook) {
+      event.preventDefault()
+      setShowGuestbookAppliedModal(true)
     }
   }
+
   const getDownloadUrl = (downloadMode: FileDownloadMode): string => {
-    const allFilesSelected = Object.values(fileSelection).some((file) => file === undefined)
     if (allFilesSelected) {
       return dataset ? dataset.downloadUrls[downloadMode] : ''
     }
 
-    return getMultipleFileDownloadUrl(getFileIdsFromSelection(fileSelection), downloadMode)
+    return getMultipleFileDownloadUrl(selectedFileIds, downloadMode)
   }
 
   if (
@@ -74,16 +85,52 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
           ariaLabel={t('actions.downloadFiles.title')}
           variant="secondary"
           withSpacing>
-          <DropdownButtonItem onClick={onClick} href={getDownloadUrl(FileDownloadMode.ORIGINAL)}>
+          <DropdownButtonItem
+            onClick={onClick}
+            href={hasGuestbook ? undefined : getDownloadUrl(FileDownloadMode.ORIGINAL)}>
             {t('actions.downloadFiles.options.original')}
           </DropdownButtonItem>
-          <DropdownButtonItem onClick={onClick} href={getDownloadUrl(FileDownloadMode.ARCHIVAL)}>
+          <DropdownButtonItem
+            onClick={onClick}
+            href={hasGuestbook ? undefined : getDownloadUrl(FileDownloadMode.ARCHIVAL)}>
             {t('actions.downloadFiles.options.archival')}
           </DropdownButtonItem>
         </DropdownButton>
         <NoSelectedFilesModal
           show={showNoFilesSelectedModal}
           handleClose={() => setShowNoFilesSelectedModal(false)}
+        />
+        <GuestbookAppliedModal
+          fileIds={!allFilesSelected ? selectedFileIds : undefined}
+          guestbookId={dataset?.guestbookId}
+          show={showGuestbookAppliedModal}
+          handleClose={() => setShowGuestbookAppliedModal(false)}
+        />
+      </>
+    )
+  }
+
+  if (hasGuestbook) {
+    return (
+      <>
+        <Button
+          id="download-files"
+          variant="secondary"
+          icon={<Download className={styles.icon} />}
+          aria-label={t('actions.downloadFiles.title')}
+          withSpacing
+          onClick={onClick}>
+          {dropdownButtonTitle}
+        </Button>
+        <NoSelectedFilesModal
+          show={showNoFilesSelectedModal}
+          handleClose={() => setShowNoFilesSelectedModal(false)}
+        />
+        <GuestbookAppliedModal
+          fileIds={!allFilesSelected ? selectedFileIds : undefined}
+          guestbookId={dataset?.guestbookId}
+          show={showGuestbookAppliedModal}
+          handleClose={() => setShowGuestbookAppliedModal(false)}
         />
       </>
     )

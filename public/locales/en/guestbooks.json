@@ -16,18 +16,18 @@
     "required": "Required",
     "optional": "Optional"
   },
-  "create":{
+  "create": {
     "fields": {
-    "dataCollected": {
-          "label": "Data Collected",
-          "help": "Dataverse account information that will be collected when a user downloads a file. Check the ones that will be required.",
-          "options": {
-            "name": "Name",
-            "email": "Email",
-            "institution": "Institution",
-            "position": "Position"
-          }
+      "dataCollected": {
+        "label": "Data Collected",
+        "help": "Dataverse account information that will be collected when a user downloads a file. Check the ones that will be required.",
+        "options": {
+          "name": "Name",
+          "email": "Email",
+          "institution": "Institution",
+          "position": "Position"
         }
+      }
     }
   }
 }

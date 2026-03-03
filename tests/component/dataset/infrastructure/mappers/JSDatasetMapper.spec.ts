@@ -675,6 +675,34 @@ describe('JS Dataset Mapper', () => {
     expect(mapped).to.deep.equal(expectedDataset)
   })
 
+  it('maps guestbookId when present in jsDataset', () => {
+    const mapped = JSDatasetMapper.toDataset(
+      jsDataset,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
+    )
+
+    expect(mapped.guestbookId).to.equal(1001)
+  })
+
+  it('does not set guestbookId when jsDataset has no guestbook', () => {
+    const mapped = JSDatasetMapper.toDataset(
+      { ...jsDataset, guestbookId: undefined },
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
+    )
+
+    expect(mapped.guestbookId).to.equal(undefined)
+  })
+
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {
     const mappedWithAlternate = JSDatasetMapper.toDataset(
       jsDataset,

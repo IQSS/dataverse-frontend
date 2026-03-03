@@ -296,6 +296,58 @@ describe('DownloadFilesButton', () => {
     )
   })
 
+  it('opens guestbook modal when guestbook exists and files are selected for non-tabular download', () => {
+    const datasetWithGuestbook = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: false,
+      guestbookId: 10
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createNonTabular()
+    })
+    const fileSelection = {
+      'some-file-id': files[0]
+    }
+
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+        datasetWithGuestbook
+      )
+    )
+
+    cy.get('#download-files').parents('a').should('not.exist')
+    cy.get('#download-files').click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: 'Accept' }).should('exist')
+  })
+
+  it('opens guestbook modal when guestbook exists and tabular option is clicked', () => {
+    const datasetWithGuestbook = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true,
+      guestbookId: 10
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
+    })
+    const fileSelection = {
+      'some-file-id': files[0]
+    }
+
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+        datasetWithGuestbook
+      )
+    )
+
+    cy.get('#download-files').click()
+    cy.findByRole('button', { name: 'Original Format' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: 'Accept' }).should('exist')
+  })
+
   it('does not render the AccessDatasetMenu if the file store does not start with "s3"', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),

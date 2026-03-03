@@ -15,6 +15,7 @@ import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import { License } from '@/sections/dataset/dataset-terms/License'
 import { DatasetGuestbook } from '@/sections/dataset/dataset-guestbook/DatasetGuestbook'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 
 interface DatasetTermsProps {
   license: DatasetLicense | undefined
@@ -23,7 +24,7 @@ interface DatasetTermsProps {
   datasetPersistentId: string
   datasetVersion: DatasetVersion
   canUpdateDataset?: boolean
-  hasGuestbook?: boolean
+  guestbookRepository?: GuestbookRepository
 }
 
 export function DatasetTerms({
@@ -33,7 +34,7 @@ export function DatasetTerms({
   datasetPersistentId,
   datasetVersion,
   canUpdateDataset,
-  hasGuestbook = false
+  guestbookRepository
 }: DatasetTermsProps) {
   const { t } = useTranslation('dataset')
   const { filesCountInfo, isLoading } = useGetFilesCountInfo({
@@ -57,9 +58,6 @@ export function DatasetTerms({
   const defaultActiveKeys = ['0']
   if (displayTermsOfAccess) {
     defaultActiveKeys.push('1')
-  }
-  if (hasGuestbook) {
-    defaultActiveKeys.push('2')
   }
 
   return (
@@ -85,10 +83,12 @@ export function DatasetTerms({
             </Accordion.Body>
           </Accordion.Item>
         )}
-        <Accordion.Item eventKey={'2'}>
-          <Accordion.Header>{t('termsTab.guestbookTitle')}</Accordion.Header>
-          <Accordion.Body>
-            <DatasetGuestbook />
+        <Accordion.Item eventKey={'2'} data-testid="dataset-terms-guestbook-accordion-item">
+          <Accordion.Header data-testid="dataset-terms-guestbook-accordion-header">
+            {t('termsTab.guestbookTitle')}
+          </Accordion.Header>
+          <Accordion.Body data-testid="dataset-terms-guestbook-accordion-body">
+            <DatasetGuestbook guestbookRepository={guestbookRepository} />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
