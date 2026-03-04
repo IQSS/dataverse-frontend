@@ -82,6 +82,39 @@ describe('EditGuestbook', () => {
     cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
   })
 
+  it('keeps Save Changes disabled when dataset has no assigned guestbook and none is selected', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    const dataset = DatasetMother.create({ guestbookId: undefined })
+
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
+
+    cy.findByLabelText('Data Request Guestbook').should('not.be.checked')
+    cy.findByLabelText('Secondary Guestbook').should('not.be.checked')
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+  })
+
+  it('falls back to no preselection when dataset guestbook is not in fetched list', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    const dataset = DatasetMother.create({ guestbookId: 9999 })
+
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
+
+    cy.findByLabelText('Data Request Guestbook').should('not.be.checked')
+    cy.findByLabelText('Secondary Guestbook').should('not.be.checked')
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+  })
+
+  it('handles empty guestbook list', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves([])
+    const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
+
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
+
+    cy.findByLabelText('Data Request Guestbook').should('not.exist')
+    cy.findByLabelText('Secondary Guestbook').should('not.exist')
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+  })
+
   it('opens preview modal when clicking Preview Guestbook', () => {
     cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
@@ -107,6 +140,30 @@ describe('EditGuestbook', () => {
       })
   })
 
+  it('closes preview modal when clicking Close', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
+
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
+
+    cy.findAllByRole('button', { name: 'Preview Guestbook' }).eq(0).click()
+    cy.findByRole('dialog').should('be.visible')
+    cy.findByText('Close').click()
+    cy.findByRole('dialog').should('not.exist')
+  })
+
+  it('calls onPreview callback when provided', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    const onPreview = cy.stub().as('onPreview')
+    const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
+
+    cy.customMount(withProviders(<EditGuestbook onPreview={onPreview} />, dataset))
+
+    cy.findAllByRole('button', { name: 'Preview Guestbook' }).eq(0).click()
+    cy.get('@onPreview').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+  })
+
   it('submits selected guestbook', () => {
     cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const assignDatasetGuestbookExecute = cy.stub(assignDatasetGuestbook, 'execute')
@@ -124,6 +181,20 @@ describe('EditGuestbook', () => {
       999,
       mockGuestbooks[1].id
     )
+  })
+
+  it('shows assign guestbook error alert when save fails', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    cy.stub(assignDatasetGuestbook, 'execute').rejects(new Error('unexpected'))
+    const dataset = DatasetMother.create({ id: 999, guestbookId: mockGuestbooks[0].id })
+
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
+
+    cy.findByLabelText('Secondary Guestbook').click()
+    cy.findByRole('button', { name: 'Save Changes' }).click()
+    cy.findByText(
+      /An error occurred while updating the dataset guestbook. Please try again./
+    ).should('exist')
   })
 
   it('shows an error alert when loading guestbooks fails', () => {

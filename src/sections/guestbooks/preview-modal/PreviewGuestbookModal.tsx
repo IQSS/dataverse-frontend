@@ -50,7 +50,7 @@ export const PreviewGuestbookModal = ({
           <Col sm={3}>
             <strong>{t('preview.guestbookNameLabel')} </strong>
           </Col>
-          <Col>{guestbook?.name ?? ''}</Col>
+          <Col>{guestbook.name}</Col>
         </Row>
         <Row className={styles['dataset-terms-row']}>
           <Col sm={3}>
@@ -58,7 +58,7 @@ export const PreviewGuestbookModal = ({
             <QuestionMarkTooltip placement="right" message={t('preview.guestbookDataTip')} />
           </Col>
           <Col>
-            {t('preview.accountInformation')}
+            <>{t('preview.accountInformation')}</>
             <ul>
               {guestbookData.map((item) => (
                 <li key={item.label}>
@@ -66,15 +66,19 @@ export const PreviewGuestbookModal = ({
                 </li>
               ))}
             </ul>
-            {t('preview.customQuestionsLabel')}
-            <ul>
-              {(guestbook?.customQuestions ?? []).map((question, index) => (
-                <li key={`${question.question}-${index}`}>
-                  {question.question} (
-                  {question.required ? t('preview.required') : t('preview.optional')})
-                </li>
-              ))}
-            </ul>
+            {guestbook.customQuestions && guestbook.customQuestions.length > 0 && (
+              <>
+                <>{t('preview.customQuestionsLabel')}</>
+                <ul>
+                  {guestbook.customQuestions.map((question, index) => (
+                    <li key={`${question.question}-${index}`}>
+                      {question.question} (
+                      {question.required ? t('preview.required') : t('preview.optional')})
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </Col>
         </Row>
       </Modal.Body>

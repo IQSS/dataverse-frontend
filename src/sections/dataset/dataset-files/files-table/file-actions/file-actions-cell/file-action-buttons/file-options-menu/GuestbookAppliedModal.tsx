@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Alert, Button, Modal, Spinner } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
-import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
 import { useDataset } from '@/sections/dataset/DatasetContext'
 import { useGetGuestbookById } from '@/sections/dataset/dataset-guestbook/useGetGuestbookById'
 import {
@@ -12,10 +10,11 @@ import {
 } from './GuestbookAppliedForm'
 import { useSession } from '@/sections/session/SessionContext'
 import { Guestbook, GuestbookCustomQuestion } from '@/guestbooks/domain/models/Guestbook'
-import { useSubmitGuestbookForDatafileDownload } from '@/access/hooks/useSubmitGuestbookForDatafileDownload'
-import { useSubmitGuestbookForDatafilesDownload } from '@/access/hooks/useSubmitGuestbookForDatafilesDownload'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
+import { useGuestbookAppliedSubmission } from './useGuestbookAppliedSubmission'
+import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
+import { AccessJSDataverseRepository } from '@/access/infrastructure/repositories/AccessJSDataverseRepository'
 
 interface GuestbookAppliedModalProps {
   fileId?: number | string
@@ -41,61 +40,33 @@ export function GuestbookAppliedModal({
 }: GuestbookAppliedModalProps) {
   const { t: tFiles } = useTranslation('files')
   const { t: tDataset } = useTranslation('dataset')
-  const { t: tGuestbooks } = useTranslation('guestbooks')
   const { dataset } = useDataset()
   const { user } = useSession()
-  const repository = useMemo(
+  const [formValues, setFormValues] = useState<GuestbookFormValues>({})
+  const resolvedGuestbookRepository = useMemo(
     () => guestbookRepository ?? new GuestbookJSDataverseRepository(),
     [guestbookRepository]
   )
-  const [formValues, setFormValues] = useState<GuestbookFormValues>({})
-  const [hasAttemptedAccept, setHasAttemptedAccept] = useState(false)
-  const [errorDownloadSignedUrlFile, setErrorDownloadSignedUrlFile] = useState<string | null>(null)
-  const {
-    isSubmittingGuestbook: isSubmittingGuestbookDatafile,
-    errorSubmitGuestbook: errorSubmitGuestbookDatafile,
-    handleSubmitGuestbookForDatafileDownload,
-    resetSubmitGuestbookForDatafileDownloadState
-  } = useSubmitGuestbookForDatafileDownload({ accessRepository })
-  const {
-    isSubmittingGuestbook: isSubmittingGuestbookDatafiles,
-    errorSubmitGuestbook: errorSubmitGuestbookDatafiles,
-    handleSubmitGuestbookForDatafilesDownload,
-    resetSubmitGuestbookForDatafilesDownloadState
-  } = useSubmitGuestbookForDatafilesDownload({ accessRepository })
+  const resolvedAccessRepository = useMemo(
+    () => accessRepository ?? new AccessJSDataverseRepository(),
+    [accessRepository]
+  )
   const { guestbook, isLoadingGuestbook, errorGetGuestbook } = useGetGuestbookById({
-    guestbookRepository: repository,
-    guestbookId: guestbookId
+    guestbookRepository: resolvedGuestbookRepository,
+    guestbookId
   })
 
-  const accountFieldLabels = useMemo(() => {
-    const options = tGuestbooks('create.fields.dataCollected.options', {
-      returnObjects: true
-    })
+  const accountFieldKeys = useMemo(() => ['name', 'email', 'institution', 'position'], [])
 
-    if (typeof options !== 'object' || options === null || Array.isArray(options)) {
-      return {}
-    }
-
-    return Object.entries(options).reduce<Record<string, string>>((labels, [key, value]) => {
-      if (typeof value === 'string') {
-        labels[key] = value
-      }
-      return labels
-    }, {})
-  }, [tGuestbooks])
-
-  const accountFieldKeys = useMemo(() => Object.keys(accountFieldLabels), [accountFieldLabels])
   const prefilledAccountFieldValues = useMemo(() => {
     if (!user) {
       return {}
     }
 
-    const fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim() || user.displayName
-
     return accountFieldKeys.reduce<GuestbookFormValues>((prefilledValues, fieldName) => {
       if (fieldName === 'name') {
-        prefilledValues[fieldName] = fullName
+        prefilledValues[fieldName] =
+          `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim() || user.displayName
       }
       if (fieldName === 'email') {
         prefilledValues[fieldName] = user.email
@@ -240,135 +211,47 @@ export function GuestbookAppliedModal({
     }
   }
 
-  const getFilenameFromContentDisposition = (contentDispositionHeader: string | null): string => {
-    if (!contentDispositionHeader) {
-      return fileId !== undefined ? `datafile-${fileId}` : 'files-download'
-    }
-
-    const utf8FileNameMatch = contentDispositionHeader.match(/filename\*=UTF-8''([^;]+)/i)
-    if (utf8FileNameMatch?.[1]) {
-      try {
-        return decodeURIComponent(utf8FileNameMatch[1])
-      } catch {
-        return utf8FileNameMatch[1]
-      }
-    }
-
-    const basicFileNameMatch = contentDispositionHeader.match(/filename="?([^"]+)"?/i)
-    if (basicFileNameMatch?.[1]) {
-      return basicFileNameMatch[1]
-    }
-
-    return fileId !== undefined ? `datafile-${fileId}` : 'files-download'
-  }
-
-  const triggerDirectDownload = async (signedUrl: string) => {
-    const response = await fetch(buildSignedUrl(signedUrl), {
-      // signed URLs do not require cookies/tokens and may redirect to cross-origin storage (e.g. S3),
-      // where credentialed CORS requests are rejected.
-      credentials: 'omit'
-    })
-
-    if (!response.ok) {
-      let errorMessage: string | undefined
-
-      try {
-        const errorPayload = (await response.json()) as {
-          message?: string
-          data?: { message?: string }
-        }
-        if (errorPayload.message) {
-          errorMessage = errorPayload.message
-        } else if (errorPayload.data?.message) {
-          errorMessage = errorPayload.data.message
-        }
-      } catch {
-        // fallback message below
-      }
-
-      throw new Error(
-        errorMessage ?? tFiles('actions.optionsMenu.guestbookAppliedModal.downloadError')
-      )
-    }
-
-    const blob = await response.blob()
-    const objectURL = URL.createObjectURL(blob)
+  const triggerDirectDownload = (signedUrl: string): Promise<void> => {
     const downloadLink = document.createElement('a')
-
-    downloadLink.href = objectURL
-    downloadLink.download = getFilenameFromContentDisposition(
-      response.headers.get('content-disposition')
-    )
+    downloadLink.href = buildSignedUrl(signedUrl)
     downloadLink.style.display = 'none'
+    downloadLink.rel = 'noreferrer'
 
     document.body.appendChild(downloadLink)
     downloadLink.click()
     document.body.removeChild(downloadLink)
-    URL.revokeObjectURL(objectURL)
+
+    return Promise.resolve()
   }
 
-  const clearModalErrors = () => {
-    setErrorDownloadSignedUrlFile(null)
-    resetSubmitGuestbookForDatafileDownloadState()
-    resetSubmitGuestbookForDatafilesDownloadState()
-  }
-
-  const isSubmittingGuestbook = isSubmittingGuestbookDatafile || isSubmittingGuestbookDatafiles
-  const errorSubmitGuestbook = errorSubmitGuestbookDatafile || errorSubmitGuestbookDatafiles
+  const {
+    hasAttemptedAccept,
+    errorDownloadSignedUrlFile,
+    errorSubmitGuestbook,
+    isSubmittingGuestbook,
+    handleModalClose,
+    handleSubmit,
+    resetSubmissionState
+  } = useGuestbookAppliedSubmission({
+    fileId,
+    fileIds,
+    handleClose,
+    accessRepository: resolvedAccessRepository,
+    triggerDirectDownload
+  })
 
   useEffect(() => {
     if (show) {
       setFormValues(prefilledAccountFieldValues)
-      setHasAttemptedAccept(false)
-      setErrorDownloadSignedUrlFile(null)
-      resetSubmitGuestbookForDatafileDownloadState()
-      resetSubmitGuestbookForDatafilesDownloadState()
+      resetSubmissionState()
     }
-  }, [
-    show,
-    prefilledAccountFieldValues,
-    resetSubmitGuestbookForDatafileDownloadState,
-    resetSubmitGuestbookForDatafilesDownloadState
-  ])
-
-  const handleModalClose = () => {
-    clearModalErrors()
-    handleClose()
-  }
+  }, [show, prefilledAccountFieldValues, resetSubmissionState])
 
   const updateFieldValue = (fieldName: string, value: string) => {
     setFormValues((current) => ({
       ...current,
       [fieldName]: value
     }))
-  }
-
-  const handleSubmit = async () => {
-    setHasAttemptedAccept(true)
-    setErrorDownloadSignedUrlFile(null)
-
-    if (hasAccountFieldErrors || !guestbook) {
-      return
-    }
-
-    const answers = buildGuestbookAnswers()
-
-    let signedUrl: string | undefined
-
-    if (fileId !== undefined) {
-      signedUrl = await handleSubmitGuestbookForDatafileDownload(fileId, answers)
-    } else if (fileIds && fileIds.length > 0) {
-      signedUrl = await handleSubmitGuestbookForDatafilesDownload(fileIds, answers)
-    } else {
-      return
-    }
-    if (signedUrl) {
-      handleModalClose()
-      void triggerDirectDownload(signedUrl).catch((error) => {
-        const fallbackMessage = tFiles('actions.optionsMenu.guestbookAppliedModal.downloadError')
-        toast.error(error instanceof Error ? error.message : fallbackMessage)
-      })
-    }
   }
 
   return (
@@ -401,7 +284,13 @@ export function GuestbookAppliedModal({
       </Modal.Body>
       <Modal.Footer>
         <Button
-          onClick={() => void handleSubmit()}
+          onClick={() =>
+            void handleSubmit({
+              hasAccountFieldErrors,
+              guestbook,
+              answers: buildGuestbookAnswers()
+            })
+          }
           disabled={
             isLoadingGuestbook || isSubmittingGuestbook || !!errorGetGuestbook || !guestbook
           }

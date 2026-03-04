@@ -101,6 +101,32 @@ describe('EditDatasetTerms', () => {
     licenseRepository.getAvailableStandardLicenses = cy.stub().resolves(mockLicenses)
   })
 
+  describe('EditDatasetTermsHelper', () => {
+    it('maps guestbook tab query param to guestbook tab key', () => {
+      const searchParams = new URLSearchParams({
+        [EditDatasetTermsHelper.EDIT_DATASET_TERMS_TAB_QUERY_KEY]: 'guestbook'
+      })
+
+      expect(EditDatasetTermsHelper.defineSelectedTabKey(searchParams)).to.equal(
+        EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook
+      )
+    })
+
+    it('falls back to dataset terms tab key when tab query param is missing or invalid', () => {
+      const missingTabSearchParams = new URLSearchParams()
+      const invalidTabSearchParams = new URLSearchParams({
+        [EditDatasetTermsHelper.EDIT_DATASET_TERMS_TAB_QUERY_KEY]: 'invalid-tab'
+      })
+
+      expect(EditDatasetTermsHelper.defineSelectedTabKey(missingTabSearchParams)).to.equal(
+        EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms
+      )
+      expect(EditDatasetTermsHelper.defineSelectedTabKey(invalidTabSearchParams)).to.equal(
+        EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms
+      )
+    })
+  })
+
   describe('Tab Navigation', () => {
     it('renders all three tabs', () => {
       const dataset = DatasetMother.create({
@@ -475,6 +501,122 @@ describe('EditDatasetTerms', () => {
           cy.findByText(/How will you use this data?/).should('exist')
           cy.findByText(/Email/).should('exist')
         })
+    })
+  })
+
+  describe('Tab State Guard Branches', () => {
+    const withProvidersOptionalDataset = (component: ReactNode, dataset: Dataset | undefined) => {
+      datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
+      datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
+      return (
+        <DatasetProvider
+          searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+          repository={datasetRepository}>
+          {component}
+        </DatasetProvider>
+      )
+    }
+
+    beforeEach(() => {
+      cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    })
+
+    it('renders not found page when dataset does not exist', () => {
+      cy.customMount(
+        withProvidersOptionalDataset(
+          <EditDatasetTerms
+            defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          undefined
+        )
+      )
+
+      cy.findByText('404').should('exist')
+    })
+
+    it('shows unsaved changes modal when restricted files tab form is dirty and switching tabs', () => {
+      const dataset = DatasetMother.create()
+      cy.customMount(
+        withProvidersOptionalDataset(
+          <EditDatasetTerms
+            defaultActiveTabKey={
+              EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.restrictedFilesTerms
+            }
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.findByLabelText('Enable access request').uncheck()
+      cy.findByLabelText(/Terms of Access for Restricted Files/i)
+        .clear()
+        .type('Need contact approval')
+
+      cy.findByRole('tab', { name: 'Dataset Terms' }).click()
+      cy.findByText('Unsaved Changes').should('exist')
+    })
+
+    it('switches from guestbook tab without unsaved modal when guestbook form is not dirty', () => {
+      const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
+      cy.customMount(
+        withProvidersOptionalDataset(
+          <EditDatasetTerms
+            defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.findByRole('tab', { name: 'Dataset Terms' }).click()
+      cy.findByText('Unsaved Changes').should('not.exist')
+      cy.findByRole('tab', { name: 'Dataset Terms' }).should('have.attr', 'aria-selected', 'true')
+    })
+
+    it('uses default dirty-state branch when active tab key is unknown', () => {
+      const dataset = DatasetMother.create()
+      cy.customMount(
+        withProvidersOptionalDataset(
+          <EditDatasetTerms
+            defaultActiveTabKey={'unknown-tab-key' as unknown as never}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).click()
+      cy.findByText('Unsaved Changes').should('not.exist')
+      cy.findByRole('tab', { name: 'Restricted Files + Terms of Access' }).should(
+        'have.attr',
+        'aria-selected',
+        'true'
+      )
+    })
+
+    it('does not trigger tab switch flow when selecting the current active tab', () => {
+      const dataset = DatasetMother.create()
+      cy.customMount(
+        withProvidersOptionalDataset(
+          <EditDatasetTerms
+            defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.get('select').select('CC0 1.0')
+      cy.findByRole('tab', { name: 'Dataset Terms' }).click()
+      cy.findByText('Unsaved Changes').should('not.exist')
+      cy.findByRole('tab', { name: 'Dataset Terms' }).should('have.attr', 'aria-selected', 'true')
     })
   })
 

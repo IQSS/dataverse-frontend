@@ -10,11 +10,6 @@ export class EditDatasetTermsHelper {
   public static defineSelectedTabKey(searchParams: URLSearchParams): EditDatasetTermsTabKey {
     const tabValue = searchParams.get(this.EDIT_DATASET_TERMS_TAB_QUERY_KEY)
 
-    // Backward compatibility for older URLs
-    if (tabValue === 'guestBook') {
-      return this.EDIT_DATASET_TERMS_TABS_KEYS.guestbook
-    }
-
     return (
       this.EDIT_DATASET_TERMS_TABS_KEYS[
         tabValue as keyof typeof this.EDIT_DATASET_TERMS_TABS_KEYS
