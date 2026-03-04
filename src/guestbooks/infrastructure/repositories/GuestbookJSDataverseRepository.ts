@@ -3,7 +3,7 @@ import { GuestbookRepository } from '../../domain/repositories/GuestbookReposito
 import { Guestbook } from '../../domain/models/Guestbook'
 
 export class GuestbookJSDataverseRepository implements GuestbookRepository {
-  async getGuestbook(guestbookId: number): Promise<Guestbook> {
-    return (await getGuestbook.execute(guestbookId)) as Guestbook
+  getGuestbook(guestbookId: number): Promise<Guestbook> {
+    return getGuestbook.execute(guestbookId).then((guestbook) => guestbook as Guestbook)
   }
 }

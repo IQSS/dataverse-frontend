@@ -36,7 +36,7 @@ export function GuestbookAppliedModal({
   guestbookId,
   show,
   handleClose,
-  guestbookRepository = new GuestbookJSDataverseRepository(),
+  guestbookRepository,
   accessRepository
 }: GuestbookAppliedModalProps) {
   const { t: tFiles } = useTranslation('files')
@@ -44,6 +44,10 @@ export function GuestbookAppliedModal({
   const { t: tGuestbooks } = useTranslation('guestbooks')
   const { dataset } = useDataset()
   const { user } = useSession()
+  const repository = useMemo(
+    () => guestbookRepository ?? new GuestbookJSDataverseRepository(),
+    [guestbookRepository]
+  )
   const [formValues, setFormValues] = useState<GuestbookFormValues>({})
   const [hasAttemptedAccept, setHasAttemptedAccept] = useState(false)
   const [errorDownloadSignedUrlFile, setErrorDownloadSignedUrlFile] = useState<string | null>(null)
@@ -60,7 +64,7 @@ export function GuestbookAppliedModal({
     resetSubmitGuestbookForDatafilesDownloadState
   } = useSubmitGuestbookForDatafilesDownload({ accessRepository })
   const { guestbook, isLoadingGuestbook, errorGetGuestbook } = useGetGuestbookById({
-    guestbookRepository,
+    guestbookRepository: repository,
     guestbookId: guestbookId
   })
 

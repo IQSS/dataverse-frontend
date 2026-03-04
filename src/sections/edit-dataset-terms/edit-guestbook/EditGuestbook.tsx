@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { startTransition, useCallback, useEffect, useState } from 'react'
 import { Alert, Button, Col, Form, Row, Spinner } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -131,7 +131,7 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
 
               {!isLoadingGuestbooksByCollectionId &&
                 !errorGetGuestbooksByCollectionId &&
-                guestbooks.map((guestbook) => (
+                (guestbooks ?? []).map((guestbook) => (
                   <div
                     key={guestbook.id}
                     className={`${styles['guestbook-option']}${
@@ -156,7 +156,9 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
                           onPreview()
                           return
                         }
-                        setPreviewGuestbook(guestbook)
+                        startTransition(() => {
+                          setPreviewGuestbook(guestbook)
+                        })
                       }}
                       aria-label={t('editTerms.guestbook.previewButton')}>
                       {t('editTerms.guestbook.previewButton')}
@@ -186,7 +188,11 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
       {previewGuestbook && (
         <PreviewGuestbookModal
           show={Boolean(previewGuestbook)}
-          handleClose={() => setPreviewGuestbook(undefined)}
+          handleClose={() =>
+            startTransition(() => {
+              setPreviewGuestbook(undefined)
+            })
+          }
           guestbook={previewGuestbook}
         />
       )}

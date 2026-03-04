@@ -31,11 +31,8 @@ export const useGetGuestbooksByCollectionId = ({
     setErrorGetGuestbooksByCollectionId(null)
 
     try {
-      await getGuestbooksByCollectionId
-        .execute(collectionIdOrAlias)
-        .then((guestbooks: Guestbook[]) => {
-          setGuestbooks(guestbooks)
-        })
+      const fetchedGuestbooks = await getGuestbooksByCollectionId.execute(collectionIdOrAlias)
+      setGuestbooks(Array.isArray(fetchedGuestbooks) ? fetchedGuestbooks : [])
     } catch (err) {
       setGuestbooks([])
       if (err instanceof ReadError) {

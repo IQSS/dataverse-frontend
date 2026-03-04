@@ -11,6 +11,8 @@ import {
 } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { License } from '@/licenses/domain/models/License'
+import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { getGuestbooksByCollectionId } from '@iqss/dataverse-client-javascript'
 
 const licenseRepository: LicenseRepository = {} as LicenseRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -43,6 +45,41 @@ const mockLicenses: License[] = [
     rightsIdentifierScheme: 'SPDX',
     schemeUri: 'https://spdx.org/licenses/',
     languageCode: 'en'
+  }
+]
+
+const mockGuestbooks: Guestbook[] = [
+  {
+    id: 1,
+    name: 'Data Request Guestbook',
+    enabled: true,
+    emailRequired: true,
+    nameRequired: true,
+    institutionRequired: false,
+    positionRequired: false,
+    customQuestions: [],
+    createTime: '2025-03-11T00:00:00Z',
+    dataverseId: 10
+  },
+  {
+    id: 2,
+    name: 'Secondary Guestbook',
+    enabled: true,
+    emailRequired: true,
+    nameRequired: false,
+    institutionRequired: false,
+    positionRequired: false,
+    customQuestions: [
+      {
+        question: 'How will you use this data?',
+        required: true,
+        displayOrder: 1,
+        type: 'text',
+        hidden: false
+      }
+    ],
+    createTime: '2025-03-11T00:00:00Z',
+    dataverseId: 10
   }
 ]
 
@@ -358,6 +395,86 @@ describe('EditDatasetTerms', () => {
       cy.findByLabelText(/Terms of Access for Restricted Files/i).type('Provide contact details')
 
       cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
+    })
+  })
+
+  describe('Guestbook Tab Integration', () => {
+    it('displays available guestbooks and keeps Save Changes disabled for current guestbook', () => {
+      cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+      const dataset = DatasetMother.create({
+        license: mockLicenses[0],
+        guestbookId: mockGuestbooks[0].id
+      })
+
+      cy.customMount(
+        withProviders(
+          <EditDatasetTerms
+            defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.findByRole('tab', { name: 'Guestbook' }).should('have.attr', 'aria-selected', 'true')
+      cy.findByLabelText('Data Request Guestbook').should('be.checked')
+      cy.findByLabelText('Secondary Guestbook').should('not.be.checked')
+      cy.findAllByRole('button', { name: 'Preview Guestbook' }).should('have.length', 2)
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+    })
+
+    it('enables Save Changes when selecting a different guestbook', () => {
+      cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+      const dataset = DatasetMother.create({
+        license: mockLicenses[0],
+        guestbookId: mockGuestbooks[0].id
+      })
+
+      cy.customMount(
+        withProviders(
+          <EditDatasetTerms
+            defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+      cy.findByLabelText('Secondary Guestbook').click()
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
+    })
+
+    it('opens guestbook preview modal from guestbook tab', () => {
+      cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+      const dataset = DatasetMother.create({
+        license: mockLicenses[0],
+        guestbookId: mockGuestbooks[1].id
+      })
+
+      cy.customMount(
+        withProviders(
+          <EditDatasetTerms
+            defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.findAllByRole('button', { name: 'Preview Guestbook' }).should('have.length', 2)
+      cy.findAllByRole('button', { name: 'Preview Guestbook' }).eq(1).click()
+
+      cy.findByRole('dialog')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Secondary Guestbook').should('exist')
+          cy.findByText(/How will you use this data?/).should('exist')
+          cy.findByText(/Email/).should('exist')
+        })
     })
   })
 

@@ -9,14 +9,13 @@ const datasetRepository: DatasetRepository = {} as DatasetRepository
 
 const datasetVersionDiff: DatasetVersionDiff = DatasetVersionDiffMother.create()
 
-const datasetVersionDiffMock = {
-  differences: datasetVersionDiff,
-  error: 'There was an error getting the dataset version differences',
-  isLoading: false
-}
-
 describe('useGetDatasetVersionDiff', () => {
   it('should return dataset version differences correctly', async () => {
+    const datasetVersionDiffMock = {
+      differences: datasetVersionDiff,
+      error: 'There was an error getting the dataset version differences',
+      isLoading: false
+    }
     datasetRepository.getVersionDiff = cy.stub().resolves(datasetVersionDiffMock)
     const { result } = renderHook(() =>
       useGetDatasetVersionDiff({
@@ -78,11 +77,12 @@ describe('useGetDatasetVersionDiff', () => {
       return expect(result.current.differences).to.deep.equal(undefined)
     })
 
-    await act(() => {
+    await waitFor(() => {
       expect(result.current.isLoading).to.deep.equal(false)
-      return expect(result.current.error).to.deep.equal(
+      expect(result.current.error).to.deep.equal(
         'Something went wrong getting the information from the dataset version differences. Try again later.'
       )
+      return expect(result.current.differences).to.deep.equal(undefined)
     })
   })
 })

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Button, Col, QuestionMarkTooltip, Row, Spinner } from '@iqss/dataverse-design-system'
 import { useGetGuestbookById } from './useGetGuestbookById'
@@ -13,14 +13,18 @@ interface DatasetGuestbookProps {
 }
 
 export const DatasetGuestbook = ({
-  guestbookRepository = new GuestbookJSDataverseRepository()
+  guestbookRepository
 }: DatasetGuestbookProps) => {
   const { t } = useTranslation('dataset')
   const { dataset } = useDataset()
   const [showPreview, setShowPreview] = useState(false)
+  const repository = useMemo(
+    () => guestbookRepository ?? new GuestbookJSDataverseRepository(),
+    [guestbookRepository]
+  )
   const datasetHasGuestbook = dataset?.guestbookId !== undefined
   const { guestbook, isLoadingGuestbook } = useGetGuestbookById({
-    guestbookRepository,
+    guestbookRepository: repository,
     guestbookId: dataset?.guestbookId as number
   })
   const hasGuestbook = guestbook !== undefined
