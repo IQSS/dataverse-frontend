@@ -84,7 +84,9 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
           direction="horizontal"
           gap={2}
           style={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>{t('notifications.displayingNotifications', { start, end, total })}</div>
+          {notifications.length > 0 && (
+            <div>{t('notifications.displayingNotifications', { start, end, total })}</div>
+          )}
 
           {notifications.length > 0 && (
             <Button
