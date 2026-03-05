@@ -40,16 +40,25 @@ const meta: Meta<typeof DatasetGuestbook> = {
 export default meta
 type Story = StoryObj<typeof DatasetGuestbook>
 
-const withDatasetContext = (datasetWithGuestbook: boolean) => (StoryComponent: () => JSX.Element) => (
-  <DatasetContext.Provider
-    value={{
-      dataset: DatasetMother.createRealistic({ guestbookId: datasetWithGuestbook ? 3 : undefined }),
-      isLoading: false,
-      refreshDataset: () => {}
-    }}>
-    <StoryComponent />
-  </DatasetContext.Provider>
-)
+const withDatasetContext = (datasetWithGuestbook: boolean) => {
+  const DatasetGuestbookStoryDecorator = (StoryComponent: () => JSX.Element) => (
+    <DatasetContext.Provider
+      value={{
+        dataset: DatasetMother.createRealistic({
+          guestbookId: datasetWithGuestbook ? 3 : undefined
+        }),
+        isLoading: false,
+        refreshDataset: () => {}
+      }}>
+      <StoryComponent />
+    </DatasetContext.Provider>
+  )
+
+  DatasetGuestbookStoryDecorator.displayName = `DatasetGuestbookStoryDecorator-${String(
+    datasetWithGuestbook
+  )}`
+  return DatasetGuestbookStoryDecorator
+}
 
 export const WithAssignedGuestbook: Story = {
   decorators: [withDatasetContext(true)],

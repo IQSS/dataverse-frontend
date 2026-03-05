@@ -12,9 +12,7 @@ interface DatasetGuestbookProps {
   guestbookRepository?: GuestbookRepository
 }
 
-export const DatasetGuestbook = ({
-  guestbookRepository
-}: DatasetGuestbookProps) => {
+export const DatasetGuestbook = ({ guestbookRepository }: DatasetGuestbookProps) => {
   const { t } = useTranslation('dataset')
   const { dataset } = useDataset()
   const [showPreview, setShowPreview] = useState(false)

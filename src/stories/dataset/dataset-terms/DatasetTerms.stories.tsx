@@ -51,16 +51,21 @@ class GuestbookMockRepository implements GuestbookRepository {
   }
 }
 
-const withDatasetContext = (dataset = testDatasetWithGuestbook) => (Story: () => JSX.Element) => (
-  <DatasetContext.Provider
-    value={{
-      dataset,
-      isLoading: false,
-      refreshDataset: () => {}
-    }}>
-    <Story />
-  </DatasetContext.Provider>
-)
+const withDatasetContext = (dataset = testDatasetWithGuestbook) => {
+  const DatasetTermsStoryDecorator = (Story: () => JSX.Element) => (
+    <DatasetContext.Provider
+      value={{
+        dataset,
+        isLoading: false,
+        refreshDataset: () => {}
+      }}>
+      <Story />
+    </DatasetContext.Provider>
+  )
+
+  DatasetTermsStoryDecorator.displayName = 'DatasetTermsStoryDecorator'
+  return DatasetTermsStoryDecorator
+}
 
 export const Default: Story = {
   decorators: [withDatasetContext()],
