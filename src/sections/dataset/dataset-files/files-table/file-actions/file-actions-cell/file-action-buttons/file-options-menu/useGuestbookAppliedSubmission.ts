@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WriteError } from '@iqss/dataverse-client-javascript'
+import { submitGuestbookForDatasetDownload } from '@/access/domain/useCases/submitGuestbookForDatasetDownload'
 import { submitGuestbookForDatafileDownload } from '@/access/domain/useCases/submitGuestbookForDatafileDownload'
 import { submitGuestbookForDatafilesDownload } from '@/access/domain/useCases/submitGuestbookForDatafilesDownload'
 import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
@@ -10,6 +11,7 @@ import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteE
 type GuestbookResponseAnswer = { id: number | string; value: string | string[] }
 
 interface UseGuestbookAppliedSubmissionProps {
+  datasetPersistentId?: string
   fileId?: number | string
   fileIds?: Array<number | string>
   handleClose: () => void
@@ -24,6 +26,7 @@ interface HandleSubmitProps {
 }
 
 export const useGuestbookAppliedSubmission = ({
+  datasetPersistentId,
   fileId,
   fileIds,
   handleClose,
@@ -66,6 +69,12 @@ export const useGuestbookAppliedSubmission = ({
           signedUrl = await submitGuestbookForDatafileDownload(accessRepository, fileId, answers)
         } else if (fileIds && fileIds.length > 0) {
           signedUrl = await submitGuestbookForDatafilesDownload(accessRepository, fileIds, answers)
+        } else if (datasetPersistentId !== undefined) {
+          signedUrl = await submitGuestbookForDatasetDownload(
+            accessRepository,
+            datasetPersistentId,
+            answers
+          )
         } else {
           return
         }
@@ -91,7 +100,15 @@ export const useGuestbookAppliedSubmission = ({
         })
       }
     },
-    [fileId, fileIds, handleModalClose, accessRepository, tFiles, triggerDirectDownload]
+    [
+      datasetPersistentId,
+      fileId,
+      fileIds,
+      handleModalClose,
+      accessRepository,
+      tFiles,
+      triggerDirectDownload
+    ]
   )
 
   return {

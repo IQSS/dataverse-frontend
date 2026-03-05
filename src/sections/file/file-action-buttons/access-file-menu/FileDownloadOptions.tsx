@@ -4,10 +4,14 @@ import { FileTabularDownloadOptions } from './FileTabularDownloadOptions'
 import { FileNonTabularDownloadOptions } from './FileNonTabularDownloadOptions'
 import { useTranslation } from 'react-i18next'
 import { FileDownloadUrls, FileType } from '../../../../files/domain/models/FileMetadata'
+import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 
 interface FileDownloadOptionsProps {
   fileId: number
   guestbookId?: number
+  datasetPersistentId?: string
+  datasetLicense?: DatasetLicense
+  datasetCustomTerms?: CustomTerms
   type: FileType
   isTabular: boolean
   ingestInProgress: boolean
@@ -18,6 +22,9 @@ interface FileDownloadOptionsProps {
 export function FileDownloadOptions({
   fileId,
   guestbookId,
+  datasetPersistentId,
+  datasetLicense,
+  datasetCustomTerms,
   type,
   isTabular,
   ingestInProgress,
@@ -39,6 +46,9 @@ export function FileDownloadOptions({
         <FileTabularDownloadOptions
           fileId={fileId}
           guestbookId={guestbookId}
+          datasetPersistentId={datasetPersistentId}
+          datasetLicense={datasetLicense}
+          datasetCustomTerms={datasetCustomTerms}
           type={type}
           ingestInProgress={ingestInProgress}
           downloadUrls={downloadUrls}
@@ -47,6 +57,9 @@ export function FileDownloadOptions({
         <FileNonTabularDownloadOptions
           fileId={fileId}
           guestbookId={guestbookId}
+          datasetPersistentId={datasetPersistentId}
+          datasetLicense={datasetLicense}
+          datasetCustomTerms={datasetCustomTerms}
           type={type}
           ingestIsInProgress={ingestInProgress}
           downloadUrlOriginal={downloadUrls.original}

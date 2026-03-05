@@ -1,6 +1,6 @@
 import { startTransition, useCallback, useEffect, useState } from 'react'
 import { Alert, Button, Col, Form, Row, Spinner } from '@iqss/dataverse-design-system'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
@@ -27,6 +27,7 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
   const { dataset, refreshDataset } = useDataset()
   const navigate = useNavigate()
   const collectionIdOrAlias = dataset?.parentCollectionNode?.id
+  const collectionName = dataset?.parentCollectionNode?.name ?? ''
 
   const navigateToDatasetView = useCallback(() => {
     if (!dataset) return
@@ -114,58 +115,82 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
             <Form.Group.Label>{t('editTerms.guestbook.title')}</Form.Group.Label>
           </Col>
           <Col sm={8}>
-            <Form.Group.Text>{t('editTerms.guestbook.description')}</Form.Group.Text>
-            <div className={styles['guestbook-list']}>
-              {isLoadingGuestbooksByCollectionId && (
-                <div className={styles['guestbook-loading']}>
-                  <Spinner />
-                </div>
-              )}
-
-              {errorGetGuestbooksByCollectionId && (
-                <Alert variant="danger">{errorGetGuestbooksByCollectionId}</Alert>
-              )}
-              {errorAssignDatasetGuestbook && (
-                <Alert variant="danger">{errorAssignDatasetGuestbook}</Alert>
-              )}
-
+            <Form.Group.Text className={styles['guestbook-description']}>
+              <Trans
+                t={t}
+                i18nKey="editTerms.guestbook.description"
+                components={{
+                  anchor: (
+                    <a
+                      href="https://guides.dataverse.org/en/6.9/user/dataverse-management.html#dataset-guestbooks"
+                      target="_blank"
+                      rel="noreferrer"
+                    />
+                  )
+                }}
+              />
               {!isLoadingGuestbooksByCollectionId &&
                 !errorGetGuestbooksByCollectionId &&
-                (guestbooks ?? []).map((guestbook) => (
-                  <div
-                    key={guestbook.id}
-                    className={`${styles['guestbook-option']}${
-                      selectedGuestbookId === guestbook.id
-                        ? ` ${styles['guestbook-option-selected']}`
-                        : ''
-                    }`}>
-                    <Form.Group.Radio
-                      name="guestbook"
-                      id={`guestbook-${guestbook.id}`}
-                      value={guestbook.id.toString()}
-                      checked={selectedGuestbookId === guestbook.id}
-                      onChange={() => setSelectedGuestbookId(guestbook.id)}
-                      label={guestbook.name}
-                    />
-
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={() => {
-                        if (onPreview) {
-                          onPreview()
-                          return
-                        }
-                        startTransition(() => {
-                          setPreviewGuestbook(guestbook)
-                        })
-                      }}
-                      aria-label={t('editTerms.guestbook.previewButton')}>
-                      {t('editTerms.guestbook.previewButton')}
-                    </Button>
+                guestbooks.length === 0 && (
+                  <div style={{ marginTop: '10px' }}>
+                    {t('editTerms.guestbook.noGuestbooksEnabled', { collectionName })}
                   </div>
-                ))}
-            </div>
+                )}
+            </Form.Group.Text>
+
+            {isLoadingGuestbooksByCollectionId && (
+              <div className={styles['guestbook-loading']}>
+                <Spinner />
+              </div>
+            )}
+
+            {errorGetGuestbooksByCollectionId && (
+              <Alert variant="danger">{errorGetGuestbooksByCollectionId}</Alert>
+            )}
+            {errorAssignDatasetGuestbook && (
+              <Alert variant="danger">{errorAssignDatasetGuestbook}</Alert>
+            )}
+
+            {!isLoadingGuestbooksByCollectionId &&
+              !errorGetGuestbooksByCollectionId &&
+              guestbooks.length > 0 && (
+                <div className={styles['guestbook-list']}>
+                  {guestbooks.map((guestbook) => (
+                    <div
+                      key={guestbook.id}
+                      className={`${styles['guestbook-option']}${
+                        selectedGuestbookId === guestbook.id
+                          ? ` ${styles['guestbook-option-selected']}`
+                          : ''
+                      }`}>
+                      <Form.Group.Radio
+                        name="guestbook"
+                        id={`guestbook-${guestbook.id}`}
+                        value={guestbook.id.toString()}
+                        checked={selectedGuestbookId === guestbook.id}
+                        onChange={() => setSelectedGuestbookId(guestbook.id)}
+                        label={guestbook.name}
+                      />
+
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={() => {
+                          if (onPreview) {
+                            onPreview()
+                            return
+                          }
+                          startTransition(() => {
+                            setPreviewGuestbook(guestbook)
+                          })
+                        }}
+                        aria-label={t('editTerms.guestbook.previewButton')}>
+                        {t('editTerms.guestbook.previewButton')}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
           </Col>
         </Row>
 
@@ -177,7 +202,7 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
               selectedGuestbookId === dataset?.guestbookId ||
               isLoadingAssignDatasetGuestbook
             }>
-            {tShared('saveChanges')}
+            {isLoadingAssignDatasetGuestbook ? tShared('saving') : tShared('saveChanges')}
           </Button>
           <Button variant="secondary" type="button">
             {tShared('cancel')}

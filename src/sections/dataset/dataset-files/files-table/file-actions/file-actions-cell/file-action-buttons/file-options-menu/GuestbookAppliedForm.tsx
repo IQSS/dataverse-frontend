@@ -1,18 +1,23 @@
 import { useMemo } from 'react'
-import { Col, Form, Row } from '@iqss/dataverse-design-system'
+import { Col, DropdownButton, DropdownButtonItem, Form, Row } from '@iqss/dataverse-design-system'
 import { Trans, useTranslation } from 'react-i18next'
 import { Guestbook, GuestbookCustomQuestion } from '@/guestbooks/domain/models/Guestbook'
-import { DatasetLicense } from '@/dataset/domain/models/Dataset'
+import { CustomTerms as CustomTermsModel, DatasetLicense } from '@/dataset/domain/models/Dataset'
 import { Validator as validator } from '@/shared/helpers/Validator'
-import styles from './GuestbookAppliedModal.module.scss'
+import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
+import styles from './DownloadWithGuestbookModal.module.scss'
 
 interface GuestbookAppliedFormProps {
   license?: DatasetLicense
+  customTerms?: CustomTermsModel
+  datasetPersistentId?: string
   guestbook?: Guestbook
   formValues: Record<string, string>
   hasAttemptedAccept: boolean
   accountFieldErrors: Record<string, string | null>
   accountFieldKeys: string[]
+  shouldLockIdentityFields: boolean
   isAccountFieldRequired: (fieldName: string) => boolean
   onFieldChange: (fieldName: string, value: string) => void
 }
@@ -27,11 +32,14 @@ export const isGuestbookAppliedFormEmailValid = (email: string): boolean =>
 
 export function GuestbookAppliedForm({
   license,
+  customTerms,
+  datasetPersistentId,
   guestbook,
   formValues,
   hasAttemptedAccept,
   accountFieldErrors,
   accountFieldKeys,
+  shouldLockIdentityFields,
   isAccountFieldRequired,
   onFieldChange
 }: GuestbookAppliedFormProps) {
@@ -40,12 +48,14 @@ export function GuestbookAppliedForm({
   const { t: tGuestbooks } = useTranslation('guestbooks')
 
   const customQuestions = useMemo(
-    () =>
-      (guestbook?.customQuestions ?? [])
-        .filter((question) => !question.hidden)
-        .sort((first, second) => first.displayOrder - second.displayOrder),
+    () => (guestbook?.customQuestions ?? []).filter((question) => !question.hidden),
     [guestbook?.customQuestions]
   )
+  const customTermsHref = datasetPersistentId
+    ? `/spa${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${encodeURIComponent(
+        datasetPersistentId
+      )}&${QueryParamKey.TAB}=terms&termsTab=guestbook`
+    : undefined
 
   const renderCustomQuestionField = (question: GuestbookCustomQuestion, index: number) => {
     const fieldName = getGuestbookCustomQuestionFieldName(question, index)
@@ -66,22 +76,20 @@ export function GuestbookAppliedForm({
     }
 
     if (question.type === 'options') {
-      const sortedOptionValues = [...(question.optionValues ?? [])].sort(
-        (first, second) => first.displayOrder - second.displayOrder
-      )
-
       return (
-        <Form.Group.Select
-          value={value}
-          onChange={(event) => onFieldChange(fieldName, (event.target as HTMLSelectElement).value)}
+        <DropdownButton
+          id={fieldName}
+          title={value || 'Select...'}
+          onSelect={(eventKey) => onFieldChange(fieldName, eventKey ?? '')}
+          variant="secondary"
           aria-required={isRequired}>
-          <option value="" />
-          {sortedOptionValues.map((option) => (
-            <option key={`${fieldName}-${option.displayOrder}`} value={option.value}>
+          <DropdownButtonItem eventKey="">Select...</DropdownButtonItem>
+          {(question.optionValues ?? []).map((option) => (
+            <DropdownButtonItem key={`${fieldName}-${option.displayOrder}`} eventKey={option.value}>
               {option.value}
-            </option>
+            </DropdownButtonItem>
           ))}
-        </Form.Group.Select>
+        </DropdownButton>
       )
     }
 
@@ -132,12 +140,25 @@ export function GuestbookAppliedForm({
               {license.name}
             </a>
           )}
+          {!license && customTerms && (
+            <span>
+              {customTermsHref ? (
+                <a href={customTermsHref}>{tDataset('customTerms.title')}</a>
+              ) : (
+                tDataset('customTerms.title')
+              )}{' '}
+              - {tDataset('customTerms.description')}
+            </span>
+          )}
         </Col>
       </Form.Group>
+      <CustomTerms customTerms={customTerms} />
 
       {accountFieldKeys.map((accountFieldKey) => {
         const fieldLabel = tGuestbooks(`create.fields.dataCollected.options.${accountFieldKey}`)
         const isRequired = isAccountFieldRequired(accountFieldKey)
+        const isIdentityField = accountFieldKey === 'name' || accountFieldKey === 'email'
+        const shouldDisableInput = shouldLockIdentityFields && isIdentityField
         const hasError =
           (hasAttemptedAccept || accountFieldKey === 'email') &&
           accountFieldErrors[accountFieldKey] !== null
@@ -162,6 +183,7 @@ export function GuestbookAppliedForm({
                   onFieldChange(accountFieldKey, (event.target as HTMLInputElement).value)
                 }
                 isInvalid={hasError}
+                disabled={shouldDisableInput}
                 aria-required={isRequired}
               />
               {hasError && (

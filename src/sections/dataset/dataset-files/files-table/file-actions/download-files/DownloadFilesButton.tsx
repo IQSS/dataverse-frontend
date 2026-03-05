@@ -11,7 +11,7 @@ import { useMultipleFileDownload } from '../../../../../file/multiple-file-downl
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
-import { GuestbookAppliedModal } from '../file-actions-cell/file-action-buttons/file-options-menu/GuestbookAppliedModal'
+import { DownloadWithGuestbookModal } from '../file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
 
 interface DownloadFilesButtonProps {
   files: FilePreview[]
@@ -25,13 +25,15 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const { t } = useTranslation('files')
   const { dataset } = useDataset()
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
-  const [showGuestbookAppliedModal, setShowGuestbookAppliedModal] = useState(false)
+  const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
   const { getMultipleFileDownloadUrl } = useMultipleFileDownload()
   const isBelow768px = useMediaQuery('(max-width: 768px)')
 
   const fileSelectionCount = Object.keys(fileSelection).length
   const allFilesSelected = Object.values(fileSelection).some((file) => file === undefined)
   const selectedFileIds = getFileIdsFromSelection(fileSelection)
+  const allSelectedFileIds = files.map((file) => file.id)
+  const fileIdsForGuestbookSubmission = allFilesSelected ? allSelectedFileIds : selectedFileIds
   const hasGuestbook = dataset?.guestbookId !== undefined
   const onClick = (event: MouseEvent<HTMLElement>) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {
@@ -42,7 +44,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
 
     if (hasGuestbook) {
       event.preventDefault()
-      setShowGuestbookAppliedModal(true)
+      setShowDownloadWithGuestbookModal(true)
     }
   }
 
@@ -100,11 +102,11 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
           show={showNoFilesSelectedModal}
           handleClose={() => setShowNoFilesSelectedModal(false)}
         />
-        <GuestbookAppliedModal
-          fileIds={!allFilesSelected ? selectedFileIds : undefined}
+        <DownloadWithGuestbookModal
+          fileIds={fileIdsForGuestbookSubmission}
           guestbookId={dataset?.guestbookId}
-          show={showGuestbookAppliedModal}
-          handleClose={() => setShowGuestbookAppliedModal(false)}
+          show={showDownloadWithGuestbookModal}
+          handleClose={() => setShowDownloadWithGuestbookModal(false)}
         />
       </>
     )
@@ -126,11 +128,11 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
           show={showNoFilesSelectedModal}
           handleClose={() => setShowNoFilesSelectedModal(false)}
         />
-        <GuestbookAppliedModal
-          fileIds={!allFilesSelected ? selectedFileIds : undefined}
+        <DownloadWithGuestbookModal
+          fileIds={fileIdsForGuestbookSubmission}
           guestbookId={dataset?.guestbookId}
-          show={showGuestbookAppliedModal}
-          handleClose={() => setShowGuestbookAppliedModal(false)}
+          show={showDownloadWithGuestbookModal}
+          handleClose={() => setShowDownloadWithGuestbookModal(false)}
         />
       </>
     )

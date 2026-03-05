@@ -144,6 +144,40 @@ describe('DatasetTerms', () => {
     cy.findByTestId('dataset-guestbook-name').should('contain.text', guestbookName)
   })
 
+  it('opens guestbook accordion by default when termsTab=guestbook is present in query params', () => {
+    const guestbookId = 10
+    guestbookRepository.getGuestbook = cy.stub().resolves({
+      id: guestbookId,
+      name: 'Guestbook Test',
+      enabled: true,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: false,
+      positionRequired: false,
+      customQuestions: [],
+      createTime: '2026-01-01T00:00:00.000Z',
+      dataverseId: 1
+    })
+
+    cy.customMount(
+      withDatasetContext(
+        <DatasetTerms
+          license={license}
+          termsOfUse={termsOfUse}
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+          guestbookRepository={guestbookRepository}
+        />,
+        DatasetMother.create({ guestbookId })
+      ),
+      ['/datasets?tab=terms&termsTab=guestbook']
+    )
+
+    cy.findByRole('button', { name: 'Guestbook' }).should('have.attr', 'aria-expanded', 'true')
+    cy.findByTestId('dataset-guestbook-name').should('contain.text', 'Guestbook Test')
+  })
+
   it('check that the terms of use sections are rendered even without edit permissions', () => {
     cy.customMount(
       <DatasetTerms

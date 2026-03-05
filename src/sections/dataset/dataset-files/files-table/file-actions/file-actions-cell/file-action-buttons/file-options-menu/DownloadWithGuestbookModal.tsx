@@ -15,11 +15,15 @@ import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
 import { useGuestbookAppliedSubmission } from './useGuestbookAppliedSubmission'
 import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
 import { AccessJSDataverseRepository } from '@/access/infrastructure/repositories/AccessJSDataverseRepository'
+import { CustomTerms as CustomTermsModel, DatasetLicense } from '@/dataset/domain/models/Dataset'
 
-interface GuestbookAppliedModalProps {
+interface DownloadWithGuestbookModalProps {
   fileId?: number | string
   fileIds?: Array<number | string>
   guestbookId?: number
+  datasetPersistentId?: string
+  datasetLicense?: DatasetLicense
+  datasetCustomTerms?: CustomTermsModel
   show: boolean
   handleClose: () => void
   guestbookRepository?: GuestbookRepository
@@ -29,15 +33,18 @@ interface GuestbookAppliedModalProps {
 type GuestbookFormValues = Record<string, string>
 type GuestbookResponseAnswer = { id: number | string; value: string | string[] }
 
-export function GuestbookAppliedModal({
+export function DownloadWithGuestbookModal({
   fileId,
   fileIds,
   guestbookId,
+  datasetPersistentId,
+  datasetLicense,
+  datasetCustomTerms,
   show,
   handleClose,
   guestbookRepository,
   accessRepository
-}: GuestbookAppliedModalProps) {
+}: DownloadWithGuestbookModalProps) {
   const { t: tFiles } = useTranslation('files')
   const { t: tDataset } = useTranslation('dataset')
   const { dataset } = useDataset()
@@ -55,6 +62,10 @@ export function GuestbookAppliedModal({
     guestbookRepository: resolvedGuestbookRepository,
     guestbookId
   })
+
+  const resolvedDatasetPersistentId = datasetPersistentId ?? dataset?.persistentId
+  const resolvedDatasetLicense = datasetLicense ?? dataset?.license
+  const resolvedDatasetCustomTerms = datasetCustomTerms ?? dataset?.termsOfUse.customTerms
 
   const accountFieldKeys = useMemo(() => ['name', 'email', 'institution', 'position'], [])
 
@@ -125,10 +136,7 @@ export function GuestbookAppliedModal({
 
   const hasAccountFieldErrors = Object.values(accountFieldErrors).some((error) => error !== null)
   const customQuestions = useMemo(
-    () =>
-      (guestbook?.customQuestions ?? [])
-        .filter((question) => !question.hidden)
-        .sort((first, second) => first.displayOrder - second.displayOrder),
+    () => (guestbook?.customQuestions ?? []).filter((question) => !question.hidden),
     [guestbook?.customQuestions]
   )
 
@@ -233,6 +241,7 @@ export function GuestbookAppliedModal({
     handleSubmit,
     resetSubmissionState
   } = useGuestbookAppliedSubmission({
+    datasetPersistentId: resolvedDatasetPersistentId,
     fileId,
     fileIds,
     handleClose,
@@ -270,12 +279,15 @@ export function GuestbookAppliedModal({
               <Alert variant="danger">{errorDownloadSignedUrlFile}</Alert>
             )}
             <GuestbookAppliedForm
-              license={dataset?.license}
+              license={resolvedDatasetLicense}
+              customTerms={resolvedDatasetCustomTerms}
+              datasetPersistentId={resolvedDatasetPersistentId}
               guestbook={guestbook}
               formValues={formValues}
               hasAttemptedAccept={hasAttemptedAccept}
               accountFieldErrors={accountFieldErrors}
               accountFieldKeys={accountFieldKeys}
+              shouldLockIdentityFields={!!user}
               isAccountFieldRequired={isAccountFieldRequired}
               onFieldChange={updateFieldValue}
             />

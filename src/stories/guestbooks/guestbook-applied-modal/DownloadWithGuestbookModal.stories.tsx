@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { GuestbookAppliedModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/GuestbookAppliedModal'
+import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
 import { WithI18next } from '@/stories/WithI18next'
 import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
@@ -34,18 +34,31 @@ class GuestbookMockRepository implements GuestbookRepository {
 }
 
 class AccessMockRepository implements AccessRepository {
-  submitGuestbookForDatafileDownload(_fileId: number | string): Promise<string> {
+  submitGuestbookForDatasetDownload(
+    _datasetId: number | string,
+    _answers: Array<{ id: number | string; value: string | string[] }>
+  ): Promise<string> {
+    return Promise.resolve('/api/v1/access/dataset/:persistentId?token=storybook')
+  }
+
+  submitGuestbookForDatafileDownload(
+    _fileId: number | string,
+    _answers: Array<{ id: number | string; value: string | string[] }>
+  ): Promise<string> {
     return Promise.resolve('/api/v1/access/datafile/123?token=storybook')
   }
 
-  submitGuestbookForDatafilesDownload(_fileIds: Array<number | string>): Promise<string> {
+  submitGuestbookForDatafilesDownload(
+    _fileIds: Array<number | string>,
+    _answers: Array<{ id: number | string; value: string | string[] }>
+  ): Promise<string> {
     return Promise.resolve('/api/v1/access/datafiles/123,124?token=storybook')
   }
 }
 
-const meta: Meta<typeof GuestbookAppliedModal> = {
-  title: 'Sections/Guestbooks/GuestbookAppliedModal',
-  component: GuestbookAppliedModal,
+const meta: Meta<typeof DownloadWithGuestbookModal> = {
+  title: 'Sections/Guestbooks/DownloadWithGuestbookModal',
+  component: DownloadWithGuestbookModal,
   decorators: [
     WithI18next,
     WithLoggedInUser,
@@ -63,7 +76,7 @@ const meta: Meta<typeof GuestbookAppliedModal> = {
 }
 
 export default meta
-type Story = StoryObj<typeof GuestbookAppliedModal>
+type Story = StoryObj<typeof DownloadWithGuestbookModal>
 
 export const SingleFile: Story = {
   args: {

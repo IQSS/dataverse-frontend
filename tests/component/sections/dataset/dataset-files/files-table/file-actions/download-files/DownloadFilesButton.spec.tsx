@@ -1,4 +1,8 @@
 import { ReactNode } from 'react'
+import {
+  getGuestbook,
+  submitGuestbookForDatafilesDownload
+} from '@iqss/dataverse-client-javascript'
 import { Dataset as DatasetModel } from '../../../../../../../../src/dataset/domain/models/Dataset'
 import { DatasetProvider } from '../../../../../../../../src/sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
@@ -346,6 +350,60 @@ describe('DownloadFilesButton', () => {
     cy.findByRole('button', { name: 'Original Format' }).click()
     cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: 'Accept' }).should('exist')
+  })
+
+  it('submits guestbook for all selected files when guestbook exists', () => {
+    const files = [
+      FilePreviewMother.create({ id: 10, metadata: FileMetadataMother.createTabular() }),
+      FilePreviewMother.create({ id: 11, metadata: FileMetadataMother.createTabular() }),
+      FilePreviewMother.create({ id: 12, metadata: FileMetadataMother.createTabular() })
+    ]
+    const datasetWithGuestbook = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true,
+      guestbookId: 10
+    })
+    const fileSelection = {
+      'file-a': undefined,
+      'file-b': undefined,
+      'file-c': undefined
+    }
+
+    cy.stub(getGuestbook, 'execute').resolves({
+      id: 10,
+      name: 'Guestbook Test',
+      enabled: true,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: false,
+      positionRequired: false,
+      customQuestions: [],
+      createTime: '2026-01-01T00:00:00.000Z',
+      dataverseId: 1
+    })
+    const submitStub = cy
+      .stub(submitGuestbookForDatafilesDownload, 'execute')
+      .resolves('/api/v1/access/datafiles/10,11,12?token=test')
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+        datasetWithGuestbook
+      )
+    )
+
+    cy.get('#download-files').click()
+    cy.findByRole('button', { name: 'Original Format' }).click()
+    cy.findByLabelText(/^Name/).should('be.disabled')
+    cy.findByLabelText(/^Email/).should('be.disabled')
+    cy.findByRole('button', { name: 'Accept' }).click()
+
+    cy.wrap(submitStub).should('have.been.calledOnce')
+    cy.wrap(submitStub).its('firstCall.args.0').should('deep.equal', [10, 11, 12])
+    cy.get('@anchorClick').should('have.been.calledOnce')
   })
 
   it('does not render the AccessDatasetMenu if the file store does not start with "s3"', () => {

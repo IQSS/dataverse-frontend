@@ -147,3 +147,17 @@ export const WithoutAssignedGuestbook: Story = {
     />
   )
 }
+
+export const GuestbookEmptyState: Story = {
+  decorators: [withDatasetContext(DatasetMother.createRealistic({ guestbookId: undefined }))],
+  render: () => (
+    <DatasetTerms
+      license={license}
+      termsOfUse={termsOfUseWithoutCustomTerms}
+      filesRepository={new FileMockNoRestrictedFilesRepository()}
+      datasetPersistentId={testDataset.persistentId}
+      datasetVersion={testDataset.version}
+      guestbookRepository={new GuestbookMockRepository()}
+    />
+  )
+}

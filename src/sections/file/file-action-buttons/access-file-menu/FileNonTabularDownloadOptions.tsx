@@ -2,12 +2,16 @@ import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useDataset } from '../../../dataset/DatasetContext'
 import { useTranslation } from 'react-i18next'
 import { FileType } from '../../../../files/domain/models/FileMetadata'
-import { GuestbookAppliedModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/GuestbookAppliedModal'
+import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
 import { MouseEvent, useState } from 'react'
+import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 
 interface FileNonTabularDownloadOptionsProps {
   fileId: number
   guestbookId?: number
+  datasetPersistentId?: string
+  datasetLicense?: DatasetLicense
+  datasetCustomTerms?: CustomTerms
   type: FileType
   downloadUrlOriginal: string
   ingestIsInProgress: boolean
@@ -16,6 +20,9 @@ interface FileNonTabularDownloadOptionsProps {
 export function FileNonTabularDownloadOptions({
   fileId,
   guestbookId,
+  datasetPersistentId,
+  datasetLicense,
+  datasetCustomTerms,
   type,
   downloadUrlOriginal,
   ingestIsInProgress
@@ -24,7 +31,7 @@ export function FileNonTabularDownloadOptions({
   const { dataset } = useDataset()
   const resolvedGuestbookId = guestbookId ?? dataset?.guestbookId
   const hasGuestbook = resolvedGuestbookId !== undefined
-  const [showGuestbookAppliedModal, setShowGuestbookAppliedModal] = useState(false)
+  const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
   const downloadDisabled = ingestIsInProgress || (dataset && dataset.isLockedFromFileDownload)
 
   const handleDownloadClick = (event: MouseEvent<HTMLElement>) => {
@@ -33,7 +40,7 @@ export function FileNonTabularDownloadOptions({
     }
 
     event.preventDefault()
-    setShowGuestbookAppliedModal(true)
+    setShowDownloadWithGuestbookModal(true)
   }
 
   return (
@@ -46,11 +53,14 @@ export function FileNonTabularDownloadOptions({
           ? t('actions.accessFileMenu.downloadOptions.options.original')
           : type.toDisplayFormat()}
       </DropdownButtonItem>
-      <GuestbookAppliedModal
+      <DownloadWithGuestbookModal
         fileId={fileId}
         guestbookId={resolvedGuestbookId}
-        show={showGuestbookAppliedModal}
-        handleClose={() => setShowGuestbookAppliedModal(false)}
+        datasetPersistentId={datasetPersistentId}
+        datasetLicense={datasetLicense}
+        datasetCustomTerms={datasetCustomTerms}
+        show={showDownloadWithGuestbookModal}
+        handleClose={() => setShowDownloadWithGuestbookModal(false)}
       />
     </>
   )

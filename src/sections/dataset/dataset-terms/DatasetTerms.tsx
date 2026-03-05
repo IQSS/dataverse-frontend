@@ -16,6 +16,7 @@ import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import { License } from '@/sections/dataset/dataset-terms/License'
 import { DatasetGuestbook } from '@/sections/dataset/dataset-guestbook/DatasetGuestbook'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { useSearchParams } from 'react-router-dom'
 
 interface DatasetTermsProps {
   license: DatasetLicense | undefined
@@ -37,6 +38,7 @@ export function DatasetTerms({
   guestbookRepository
 }: DatasetTermsProps) {
   const { t } = useTranslation('dataset')
+  const [searchParams] = useSearchParams()
   const { filesCountInfo, isLoading } = useGetFilesCountInfo({
     filesRepository,
     datasetPersistentId,
@@ -50,6 +52,7 @@ export function DatasetTerms({
     (value) => value === undefined || typeof value === 'boolean'
   )
   const displayTermsOfAccess = !termsOfAccessIsEmpty || restrictedFilesCount > 0
+  const shouldOpenGuestbookSection = searchParams.get('termsTab') === 'guestbook'
 
   if (isLoading) {
     return <SpinnerSymbol />
@@ -58,6 +61,9 @@ export function DatasetTerms({
   const defaultActiveKeys = ['0']
   if (displayTermsOfAccess) {
     defaultActiveKeys.push('1')
+  }
+  if (shouldOpenGuestbookSection) {
+    defaultActiveKeys.push('2')
   }
 
   return (

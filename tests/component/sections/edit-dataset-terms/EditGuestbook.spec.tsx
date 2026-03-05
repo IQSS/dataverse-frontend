@@ -104,7 +104,7 @@ describe('EditGuestbook', () => {
     cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
   })
 
-  it('handles empty guestbook list', () => {
+  it('renders the empty state message with the collection name', () => {
     cy.stub(getGuestbooksByCollectionId, 'execute').resolves([])
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
@@ -112,6 +112,14 @@ describe('EditGuestbook', () => {
 
     cy.findByLabelText('Data Request Guestbook').should('not.exist')
     cy.findByLabelText('Secondary Guestbook').should('not.exist')
+    cy.findByRole('link', { name: 'Dataset Guestbook' }).should(
+      'have.attr',
+      'href',
+      'https://guides.dataverse.org/en/6.9/user/dataverse-management.html#dataset-guestbooks'
+    )
+    cy.findByText(/There are no guestbooks enabled in Root\./).should('exist')
+    cy.findByText(/To create a guestbook, return to Root,/).should('exist')
+    cy.findByText(/select the "Dataset Guestbooks" option\./).should('exist')
     cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
   })
 

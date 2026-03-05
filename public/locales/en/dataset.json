@@ -368,7 +368,8 @@
     },
     "guestbook": {
       "title": "Guestbook",
-      "description": "Select a guestbook to have a user provide additional information when downloading a file. To learn more about guestbooks, visit the Dataset Guestbook section of the User Guide.",
+      "description": "Select a guestbook to have a user provide additional information when downloading a file. To learn more about guestbooks, visit the <anchor>Dataset Guestbook</anchor> section of the User Guide.",
+      "noGuestbooksEnabled": "There are no guestbooks enabled in {{collectionName}}. To create a guestbook, return to {{collectionName}}, click the \"Edit\" button and select the \"Dataset Guestbooks\" option.",
       "previewButton": "Preview Guestbook"
     },
     "unsavedChangesModal": {
