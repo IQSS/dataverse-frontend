@@ -194,7 +194,7 @@ describe('DownloadWithGuestbookModal', () => {
     cy.findByText('This field is required.').should('not.exist')
   })
 
-  it.only('disables name and email fields for authenticated users', () => {
+  it('disables name and email fields for authenticated users', () => {
     cy.mountAuthenticated(
       <DownloadWithGuestbookModal
         show
