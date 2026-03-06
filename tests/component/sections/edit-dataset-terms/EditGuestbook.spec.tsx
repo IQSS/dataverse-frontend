@@ -1,14 +1,25 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { UpwardHierarchyNodeMother } from '@tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { EditGuestbook } from '@/sections/edit-dataset-terms/edit-guestbook/EditGuestbook'
 import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
+import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
+import {
+  DatasetMother,
+  DatasetVersionMother
+} from '@tests/component/dataset/domain/models/DatasetMother'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import {
   assignDatasetGuestbook,
   getGuestbooksByCollectionId
 } from '@iqss/dataverse-client-javascript'
+
+const LocationDisplay = () => {
+  const location = useLocation()
+  return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>
+}
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
@@ -60,6 +71,17 @@ describe('EditGuestbook', () => {
       </DatasetProvider>
     )
   }
+
+  const withDatasetContext = (component: ReactNode, dataset: Dataset | undefined) => (
+    <DatasetContext.Provider
+      value={{
+        dataset,
+        isLoading: false,
+        refreshDataset: () => {}
+      }}>
+      {component}
+    </DatasetContext.Provider>
+  )
 
   it('renders guestbook options and keeps Save Changes disabled for current guestbook', () => {
     cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
@@ -189,6 +211,166 @@ describe('EditGuestbook', () => {
       999,
       mockGuestbooks[1].id
     )
+  })
+
+  it('navigates with DRAFT version query param after successful submit for draft datasets', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    cy.stub(assignDatasetGuestbook, 'execute').resolves(undefined)
+    const draftDataset = DatasetMother.create({
+      id: 999,
+      persistentId: 'doi:10.5072/FK2/DRAFTPID',
+      guestbookId: mockGuestbooks[0].id,
+      version: DatasetVersionMother.createDraft()
+    })
+
+    cy.customMount(
+      withProviders(
+        <>
+          <EditGuestbook />
+          <LocationDisplay />
+        </>,
+        draftDataset
+      )
+    )
+
+    cy.findByLabelText('Secondary Guestbook').click()
+    cy.findByRole('button', { name: 'Save Changes' }).click()
+    cy.findByTestId('location-display').should(
+      'have.text',
+      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FDRAFTPID&version=DRAFT'
+    )
+  })
+
+  it('navigates with numeric version query param after successful submit for non-draft datasets', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    cy.stub(assignDatasetGuestbook, 'execute').resolves(undefined)
+    const releasedDataset = DatasetMother.create({
+      id: 999,
+      persistentId: 'doi:10.5072/FK2/RELEASEDPID',
+      guestbookId: mockGuestbooks[0].id,
+      version: DatasetVersionMother.createReleased()
+    })
+
+    cy.customMount(
+      withProviders(
+        <>
+          <EditGuestbook />
+          <LocationDisplay />
+        </>,
+        releasedDataset
+      )
+    )
+
+    cy.findByLabelText('Secondary Guestbook').click()
+    cy.findByRole('button', { name: 'Save Changes' }).click()
+    cy.findByTestId('location-display').should(
+      'have.text',
+      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0'
+    )
+  })
+
+  it('keeps selected guestbook when dataset has no assigned guestbook and selected id still exists after guestbooks refresh', () => {
+    const collectionA = 'collection-a'
+    const collectionB = 'collection-b'
+    const guestbooksForA = mockGuestbooks
+    const guestbooksForB = [mockGuestbooks[1]]
+
+    cy.stub(getGuestbooksByCollectionId, 'execute').callsFake((collectionIdOrAlias) => {
+      if (collectionIdOrAlias === collectionA) return Promise.resolve(guestbooksForA)
+      return Promise.resolve(guestbooksForB)
+    })
+
+    const createDataset = (collectionId: string) =>
+      DatasetMother.create({
+        guestbookId: undefined,
+        hierarchy: UpwardHierarchyNodeMother.createDataset({
+          parent: UpwardHierarchyNodeMother.createCollection({ id: collectionId, name: 'Root' })
+        })
+      })
+
+    const Harness = () => {
+      const [dataset, setDataset] = useState<Dataset>(createDataset(collectionA))
+      return (
+        <>
+          {withDatasetContext(<EditGuestbook />, dataset)}
+          <button onClick={() => setDataset(createDataset(collectionB))} type="button">
+            Switch Collection
+          </button>
+        </>
+      )
+    }
+
+    cy.customMount(<Harness />)
+
+    cy.findByLabelText('Secondary Guestbook').click()
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
+    cy.findByRole('button', { name: 'Switch Collection' }).click()
+    cy.findByLabelText('Secondary Guestbook').should('be.checked')
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
+  })
+
+  it('keeps current selected guestbook when dataset has assigned guestbook but user selected another valid guestbook', () => {
+    const collectionA = 'collection-a'
+    const collectionB = 'collection-b'
+    const guestbooksForA = mockGuestbooks
+    const guestbooksForB = [mockGuestbooks[0], mockGuestbooks[1]]
+
+    cy.stub(getGuestbooksByCollectionId, 'execute').callsFake((collectionIdOrAlias) => {
+      if (collectionIdOrAlias === collectionA) return Promise.resolve(guestbooksForA)
+      return Promise.resolve(guestbooksForB)
+    })
+
+    const createDataset = (collectionId: string) =>
+      DatasetMother.create({
+        guestbookId: mockGuestbooks[0].id,
+        hierarchy: UpwardHierarchyNodeMother.createDataset({
+          parent: UpwardHierarchyNodeMother.createCollection({ id: collectionId, name: 'Root' })
+        })
+      })
+
+    const Harness = () => {
+      const [dataset, setDataset] = useState<Dataset>(createDataset(collectionA))
+      return (
+        <>
+          {withDatasetContext(<EditGuestbook />, dataset)}
+          <button onClick={() => setDataset(createDataset(collectionB))} type="button">
+            Switch Collection
+          </button>
+        </>
+      )
+    }
+
+    cy.customMount(<Harness />)
+
+    cy.findByLabelText('Secondary Guestbook').click()
+    cy.findByRole('button', { name: 'Switch Collection' }).click()
+    cy.findByLabelText('Secondary Guestbook').should('be.checked')
+    cy.findByLabelText('Data Request Guestbook').should('not.be.checked')
+  })
+
+  it('does not submit when selectedGuestbookId is undefined', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    const assignDatasetGuestbookExecute = cy
+      .stub(assignDatasetGuestbook, 'execute')
+      .as('assignDatasetGuestbookExecute')
+    const dataset = DatasetMother.create({ id: 999, guestbookId: undefined })
+
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
+
+    cy.get('form').submit()
+    cy.get('@assignDatasetGuestbookExecute').should('not.have.been.called')
+  })
+
+  it('does not submit when dataset is undefined', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    const assignDatasetGuestbookExecute = cy
+      .stub(assignDatasetGuestbook, 'execute')
+      .as('assignDatasetGuestbookExecute')
+
+    cy.customMount(withDatasetContext(<EditGuestbook />, undefined))
+
+    cy.get('form').submit()
+    cy.get('@assignDatasetGuestbookExecute').should('not.have.been.called')
   })
 
   it('shows assign guestbook error alert when save fails', () => {
