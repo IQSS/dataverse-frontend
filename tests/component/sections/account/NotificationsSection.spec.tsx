@@ -135,7 +135,7 @@ describe('NotificationsSection', () => {
     cy.get('@markAsRead').should('have.been.calledOnceWith', Cypress.sinon.match.number)
   })
 
-  it.only('does not render notifications display count when there are no notifications', () => {
+  it('does not render notifications display count when there are no notifications', () => {
     cy.mountAuthenticated(
       <NotificationsSection notificationRepository={emptyNotificationRepository} />
     )
