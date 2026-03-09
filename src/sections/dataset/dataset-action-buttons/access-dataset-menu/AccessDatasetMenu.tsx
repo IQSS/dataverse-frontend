@@ -62,11 +62,6 @@ export function AccessDatasetMenu({
     return <></>
   }
 
-  // TODO: remove this when access datafile supports bearer tokens
-  if (version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-    return <></>
-  }
-
   const handleDownloadWithGuestbook = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault()
     setShowDownloadWithGuestbookModal(true)

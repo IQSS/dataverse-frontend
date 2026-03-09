@@ -3,19 +3,23 @@ import {
   FileTypeMother
 } from '../../../../files/domain/models/FileMetadataMother'
 import { FileTabularDownloadOptions } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/FileTabularDownloadOptions'
-import { DatasetRepository } from '../../../../../../src/dataset/domain/repositories/DatasetRepository'
-import { DatasetLockMother, DatasetMother } from '../../../../dataset/domain/models/DatasetMother'
-import { DatasetProvider } from '../../../../../../src/sections/dataset/DatasetProvider'
 
 const tabularType = FileTypeMother.createTabular()
 const downloadUrls = FileDownloadUrlsMother.create()
+const defaultProps = {
+  fileId: 1,
+  isLockedFromFileDownload: false
+}
+
 describe('FileTabularDownloadOptions', () => {
   it('renders the download options for a tabular file', () => {
     cy.customMount(
       <FileTabularDownloadOptions
+        fileId={defaultProps.fileId}
         type={tabularType}
         downloadUrls={downloadUrls}
         ingestInProgress={false}
+        isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
       />
     )
 
@@ -36,9 +40,11 @@ describe('FileTabularDownloadOptions', () => {
     const unknownType = FileTypeMother.createTabularUnknown()
     cy.customMount(
       <FileTabularDownloadOptions
+        fileId={defaultProps.fileId}
         type={unknownType}
         downloadUrls={downloadUrls}
         ingestInProgress={false}
+        isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
       />
     )
 
@@ -51,7 +57,13 @@ describe('FileTabularDownloadOptions', () => {
 
   it('renders the options as disabled when the file ingest is in progress', () => {
     cy.customMount(
-      <FileTabularDownloadOptions type={tabularType} downloadUrls={downloadUrls} ingestInProgress />
+      <FileTabularDownloadOptions
+        fileId={defaultProps.fileId}
+        type={tabularType}
+        downloadUrls={downloadUrls}
+        ingestInProgress
+        isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
+      />
     )
 
     cy.findByRole('link', { name: 'Comma Separated Values (Original File Format)' })
@@ -64,22 +76,14 @@ describe('FileTabularDownloadOptions', () => {
   })
 
   it('renders the options as disabled when the dataset is locked from file download', () => {
-    const datasetRepository: DatasetRepository = {} as DatasetRepository
-    const datasetLockedFromFileDownload = DatasetMother.create({
-      locks: [DatasetLockMother.createLockedFromFileDownload()]
-    })
-    datasetRepository.getByPersistentId = cy.stub().resolves(datasetLockedFromFileDownload)
-
     cy.customMount(
-      <DatasetProvider
-        repository={datasetRepository}
-        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-        <FileTabularDownloadOptions
-          type={tabularType}
-          downloadUrls={downloadUrls}
-          ingestInProgress={false}
-        />
-      </DatasetProvider>
+      <FileTabularDownloadOptions
+        fileId={defaultProps.fileId}
+        type={tabularType}
+        downloadUrls={downloadUrls}
+        ingestInProgress={false}
+        isLockedFromFileDownload
+      />
     )
 
     cy.findByRole('link', { name: 'Comma Separated Values (Original File Format)' })
@@ -95,9 +99,11 @@ describe('FileTabularDownloadOptions', () => {
     const rDataType = FileTypeMother.createRData()
     cy.customMount(
       <FileTabularDownloadOptions
+        fileId={defaultProps.fileId}
         type={rDataType}
         downloadUrls={downloadUrls}
         ingestInProgress={false}
+        isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
       />
     )
 
