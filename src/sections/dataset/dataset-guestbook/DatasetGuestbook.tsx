@@ -1,28 +1,19 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Button, Col, QuestionMarkTooltip, Row, Spinner } from '@iqss/dataverse-design-system'
 import { useGetGuestbookById } from './useGetGuestbookById'
-import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
-import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { PreviewGuestbookModal } from '@/sections/guestbooks/preview-modal/PreviewGuestbookModal'
 import { useDataset } from '@/sections/dataset/DatasetContext'
+import { useGuestbookRepository } from '@/sections/guestbooks/GuestbookRepositoryContext'
 import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 
-interface DatasetGuestbookProps {
-  guestbookRepository?: GuestbookRepository
-}
-
-export const DatasetGuestbook = ({ guestbookRepository }: DatasetGuestbookProps) => {
+export const DatasetGuestbook = () => {
   const { t } = useTranslation('dataset')
   const { dataset } = useDataset()
+  const guestbookRepository = useGuestbookRepository()
   const [showPreview, setShowPreview] = useState(false)
-  const repository = useMemo(
-    () => guestbookRepository ?? new GuestbookJSDataverseRepository(),
-    [guestbookRepository]
-  )
-  const datasetHasGuestbook = dataset?.guestbookId !== undefined
   const { guestbook, isLoadingGuestbook } = useGetGuestbookById({
-    guestbookRepository: repository,
+    guestbookRepository,
     guestbookId: dataset?.guestbookId as number
   })
   const hasGuestbook = guestbook !== undefined
@@ -35,7 +26,7 @@ export const DatasetGuestbook = ({ guestbookRepository }: DatasetGuestbookProps)
           <QuestionMarkTooltip placement="right" message={t('termsTab.guestbookTip')} />
         </Col>
         <Col>
-          {!datasetHasGuestbook ? (
+          {!guestbook ? (
             <p
               className={styles['community-norms-text']}
               data-testid="dataset-guestbook-empty-message">

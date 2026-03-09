@@ -5,6 +5,7 @@ import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
 
 class GuestbookMockRepository implements GuestbookRepository {
   getGuestbook(_guestbookId: number): Promise<Guestbook> {
@@ -40,18 +41,22 @@ const meta: Meta<typeof DatasetGuestbook> = {
 export default meta
 type Story = StoryObj<typeof DatasetGuestbook>
 
+const guestbookRepository = new GuestbookMockRepository()
+
 const withDatasetContext = (datasetWithGuestbook: boolean) => {
   const DatasetGuestbookStoryDecorator = (StoryComponent: () => JSX.Element) => (
-    <DatasetContext.Provider
-      value={{
-        dataset: DatasetMother.createRealistic({
-          guestbookId: datasetWithGuestbook ? 3 : undefined
-        }),
-        isLoading: false,
-        refreshDataset: () => {}
-      }}>
-      <StoryComponent />
-    </DatasetContext.Provider>
+    <GuestbookRepositoryProvider repository={guestbookRepository}>
+      <DatasetContext.Provider
+        value={{
+          dataset: DatasetMother.createRealistic({
+            guestbookId: datasetWithGuestbook ? 3 : undefined
+          }),
+          isLoading: false,
+          refreshDataset: () => {}
+        }}>
+        <StoryComponent />
+      </DatasetContext.Provider>
+    </GuestbookRepositoryProvider>
   )
 
   DatasetGuestbookStoryDecorator.displayName = `DatasetGuestbookStoryDecorator-${String(
@@ -62,10 +67,10 @@ const withDatasetContext = (datasetWithGuestbook: boolean) => {
 
 export const WithAssignedGuestbook: Story = {
   decorators: [withDatasetContext(true)],
-  render: () => <DatasetGuestbook guestbookRepository={new GuestbookMockRepository()} />
+  render: () => <DatasetGuestbook />
 }
 
 export const WithoutAssignedGuestbook: Story = {
   decorators: [withDatasetContext(false)],
-  render: () => <DatasetGuestbook guestbookRepository={new GuestbookMockRepository()} />
+  render: () => <DatasetGuestbook />
 }

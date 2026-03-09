@@ -2,7 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
-import { useGuestbookAppliedSubmission } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/useGuestbookAppliedSubmission'
+import { useGuestbookCollectSubmission } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/useGuestbookCollectSubmission'
 
 const accessRepository: AccessRepository = {} as AccessRepository
 const answers = [{ id: 'name', value: 'Test User' }]
@@ -20,7 +20,7 @@ const guestbook: Guestbook = {
   dataverseId: 1
 }
 
-describe('useGuestbookAppliedSubmission', () => {
+describe('useGuestbookCollectSubmission', () => {
   beforeEach(() => {
     accessRepository.submitGuestbookForDatafileDownload = cy.stub().resolves('signed-url-datafile')
     accessRepository.submitGuestbookForDatafilesDownload = cy
@@ -30,7 +30,7 @@ describe('useGuestbookAppliedSubmission', () => {
 
   it('initializes with default state', async () => {
     const { result } = renderHook(() =>
-      useGuestbookAppliedSubmission({
+      useGuestbookCollectSubmission({
         fileId: 10,
         handleClose: cy.stub().as('handleClose'),
         accessRepository,
@@ -52,7 +52,7 @@ describe('useGuestbookAppliedSubmission', () => {
     const handleClose = cy.stub().as('handleClose')
     const triggerDirectDownload = cy.stub().resolves(undefined)
     const { result } = renderHook(() =>
-      useGuestbookAppliedSubmission({
+      useGuestbookCollectSubmission({
         fileId: 10,
         handleClose,
         accessRepository,
@@ -79,7 +79,7 @@ describe('useGuestbookAppliedSubmission', () => {
     const handleClose = cy.stub().as('handleClose')
     const triggerDirectDownload = cy.stub().resolves(undefined)
     const { result } = renderHook(() =>
-      useGuestbookAppliedSubmission({
+      useGuestbookCollectSubmission({
         fileId: 10,
         handleClose,
         accessRepository,
@@ -106,7 +106,7 @@ describe('useGuestbookAppliedSubmission', () => {
     const handleClose = cy.stub().as('handleClose')
     const triggerDirectDownload = cy.stub().resolves(undefined)
     const { result } = renderHook(() =>
-      useGuestbookAppliedSubmission({
+      useGuestbookCollectSubmission({
         fileIds: [10, 11],
         handleClose,
         accessRepository,
@@ -137,7 +137,7 @@ describe('useGuestbookAppliedSubmission', () => {
     const handleClose = cy.stub().as('handleClose')
     const triggerDirectDownload = cy.stub().resolves(undefined)
     const { result } = renderHook(() =>
-      useGuestbookAppliedSubmission({
+      useGuestbookCollectSubmission({
         fileId: 10,
         handleClose,
         accessRepository,
@@ -164,7 +164,7 @@ describe('useGuestbookAppliedSubmission', () => {
   it('sets default message for non-WriteError exceptions', async () => {
     accessRepository.submitGuestbookForDatafileDownload = cy.stub().rejects(new Error('unknown'))
     const { result } = renderHook(() =>
-      useGuestbookAppliedSubmission({
+      useGuestbookCollectSubmission({
         fileId: 10,
         handleClose: cy.stub().as('handleClose'),
         accessRepository,
@@ -190,7 +190,7 @@ describe('useGuestbookAppliedSubmission', () => {
     const handleClose = cy.stub().as('handleClose')
     const triggerDirectDownload = cy.stub().rejects(new Error('Download failed'))
     const { result } = renderHook(() =>
-      useGuestbookAppliedSubmission({
+      useGuestbookCollectSubmission({
         fileId: 10,
         handleClose,
         accessRepository,
@@ -217,7 +217,7 @@ describe('useGuestbookAppliedSubmission', () => {
   it('resets submission state on handleModalClose', async () => {
     const handleClose = cy.stub().as('handleClose')
     const { result } = renderHook(() =>
-      useGuestbookAppliedSubmission({
+      useGuestbookCollectSubmission({
         fileId: 10,
         handleClose,
         accessRepository,

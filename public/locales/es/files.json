@@ -81,7 +81,7 @@
       "headers": {
         "editOptions": "Opciones de edición"
       },
-      "guestbookAppliedModal": {
+      "guestbookCollectModal": {
         "title": "Libro de visitas del dataset",
         "message": "Hay un libro de visitas asignado a este dataset. Se pedirá a los usuarios que proporcionen información adicional al descargar archivos.",
         "close": "Cerrar",

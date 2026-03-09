@@ -4,14 +4,10 @@ import { FileTabularDownloadOptions } from './FileTabularDownloadOptions'
 import { FileNonTabularDownloadOptions } from './FileNonTabularDownloadOptions'
 import { useTranslation } from 'react-i18next'
 import { FileDownloadUrls, FileType } from '../../../../files/domain/models/FileMetadata'
-import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
+import { useDataset } from '@/sections/dataset/DatasetContext'
 
 interface FileDownloadOptionsProps {
   fileId: number
-  guestbookId?: number
-  datasetPersistentId?: string
-  datasetLicense?: DatasetLicense
-  datasetCustomTerms?: CustomTerms
   type: FileType
   isTabular: boolean
   ingestInProgress: boolean
@@ -21,10 +17,6 @@ interface FileDownloadOptionsProps {
 
 export function FileDownloadOptions({
   fileId,
-  guestbookId,
-  datasetPersistentId,
-  datasetLicense,
-  datasetCustomTerms,
   type,
   isTabular,
   ingestInProgress,
@@ -32,10 +24,17 @@ export function FileDownloadOptions({
   userHasDownloadPermission
 }: FileDownloadOptionsProps) {
   const { t } = useTranslation('files')
+  const { dataset } = useDataset()
 
   if (!userHasDownloadPermission) {
     return <></>
   }
+
+  const datasetPersistentId = dataset?.persistentId
+  const datasetLicense = dataset?.license
+  const datasetCustomTerms = dataset?.termsOfUse.customTerms
+  const guestbookId = dataset?.guestbookId
+  const isLockedFromFileDownload = !!dataset?.isLockedFromFileDownload
 
   return (
     <>
@@ -45,13 +44,14 @@ export function FileDownloadOptions({
       {isTabular ? (
         <FileTabularDownloadOptions
           fileId={fileId}
+          type={type}
+          ingestInProgress={ingestInProgress}
+          downloadUrls={downloadUrls}
           guestbookId={guestbookId}
           datasetPersistentId={datasetPersistentId}
           datasetLicense={datasetLicense}
           datasetCustomTerms={datasetCustomTerms}
-          type={type}
-          ingestInProgress={ingestInProgress}
-          downloadUrls={downloadUrls}
+          isLockedFromFileDownload={isLockedFromFileDownload}
         />
       ) : (
         <FileNonTabularDownloadOptions
@@ -63,6 +63,7 @@ export function FileDownloadOptions({
           type={type}
           ingestIsInProgress={ingestInProgress}
           downloadUrlOriginal={downloadUrls.original}
+          isLockedFromFileDownload={isLockedFromFileDownload}
         />
       )}
     </>

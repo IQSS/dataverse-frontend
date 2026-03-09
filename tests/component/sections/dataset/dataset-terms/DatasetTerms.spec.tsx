@@ -12,6 +12,7 @@ import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { Dataset as DatasetModel } from '@/dataset/domain/models/Dataset'
 import { ReactNode } from 'react'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
 
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = DatasetMother.create().version
@@ -58,6 +59,11 @@ describe('DatasetTerms', () => {
     <DatasetContext.Provider value={{ dataset, isLoading: false, refreshDataset: () => {} }}>
       {component}
     </DatasetContext.Provider>
+  )
+  const withGuestbookRepository = (component: ReactNode) => (
+    <GuestbookRepositoryProvider repository={guestbookRepository}>
+      {component}
+    </GuestbookRepositoryProvider>
   )
 
   beforeEach(() => {
@@ -121,16 +127,17 @@ describe('DatasetTerms', () => {
     })
 
     cy.customMount(
-      withDatasetContext(
-        <DatasetTerms
-          license={license}
-          termsOfUse={termsOfUse}
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          guestbookRepository={guestbookRepository}
-        />,
-        DatasetMother.create({ guestbookId })
+      withGuestbookRepository(
+        withDatasetContext(
+          <DatasetTerms
+            license={license}
+            termsOfUse={termsOfUse}
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />,
+          DatasetMother.create({ guestbookId })
+        )
       )
     )
 
@@ -160,16 +167,17 @@ describe('DatasetTerms', () => {
     })
 
     cy.customMount(
-      withDatasetContext(
-        <DatasetTerms
-          license={license}
-          termsOfUse={termsOfUse}
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          guestbookRepository={guestbookRepository}
-        />,
-        DatasetMother.create({ guestbookId })
+      withGuestbookRepository(
+        withDatasetContext(
+          <DatasetTerms
+            license={license}
+            termsOfUse={termsOfUse}
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />,
+          DatasetMother.create({ guestbookId })
+        )
       ),
       ['/datasets?tab=terms&termsTab=guestbook']
     )

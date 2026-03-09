@@ -1,5 +1,4 @@
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { useDataset } from '../../../dataset/DatasetContext'
 import { useTranslation } from 'react-i18next'
 import { FileDownloadUrls, FileType } from '../../../../files/domain/models/FileMetadata'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
@@ -9,30 +8,30 @@ import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 
 interface FileTabularDownloadOptionsProps {
   fileId: number
+  type: FileType
+  ingestInProgress: boolean
+  downloadUrls: FileDownloadUrls
   guestbookId?: number
   datasetPersistentId?: string
   datasetLicense?: DatasetLicense
   datasetCustomTerms?: CustomTerms
-  type: FileType
-  ingestInProgress: boolean
-  downloadUrls: FileDownloadUrls
+  isLockedFromFileDownload: boolean
 }
 
 export function FileTabularDownloadOptions({
   fileId,
+  type,
+  ingestInProgress,
+  downloadUrls,
   guestbookId,
   datasetPersistentId,
   datasetLicense,
   datasetCustomTerms,
-  type,
-  ingestInProgress,
-  downloadUrls
+  isLockedFromFileDownload
 }: FileTabularDownloadOptionsProps) {
   const { t } = useTranslation('files')
-  const { dataset } = useDataset()
-  const downloadDisabled = ingestInProgress || (dataset && dataset.isLockedFromFileDownload)
-  const resolvedGuestbookId = guestbookId ?? dataset?.guestbookId
-  const hasGuestbook = resolvedGuestbookId !== undefined
+  const downloadDisabled = ingestInProgress || isLockedFromFileDownload
+  const hasGuestbook = guestbookId !== undefined
 
   const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
 
@@ -73,15 +72,17 @@ export function FileTabularDownloadOptions({
           {t('actions.accessFileMenu.downloadOptions.options.RData')}
         </DropdownButtonItem>
       )}
-      <DownloadWithGuestbookModal
-        fileId={fileId}
-        guestbookId={resolvedGuestbookId}
-        datasetPersistentId={datasetPersistentId}
-        datasetLicense={datasetLicense}
-        datasetCustomTerms={datasetCustomTerms}
-        show={showDownloadWithGuestbookModal}
-        handleClose={handleCloseGuestbookModal}
-      />
+      {hasGuestbook && (
+        <DownloadWithGuestbookModal
+          fileId={fileId}
+          guestbookId={guestbookId}
+          datasetPersistentId={datasetPersistentId}
+          datasetLicense={datasetLicense}
+          datasetCustomTerms={datasetCustomTerms}
+          show={showDownloadWithGuestbookModal}
+          handleClose={handleCloseGuestbookModal}
+        />
+      )}
     </>
   )
 }

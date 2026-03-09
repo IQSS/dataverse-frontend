@@ -15,7 +15,6 @@ import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import { License } from '@/sections/dataset/dataset-terms/License'
 import { DatasetGuestbook } from '@/sections/dataset/dataset-guestbook/DatasetGuestbook'
-import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { useSearchParams } from 'react-router-dom'
 
 interface DatasetTermsProps {
@@ -25,7 +24,6 @@ interface DatasetTermsProps {
   datasetPersistentId: string
   datasetVersion: DatasetVersion
   canUpdateDataset?: boolean
-  guestbookRepository?: GuestbookRepository
 }
 
 export function DatasetTerms({
@@ -34,8 +32,7 @@ export function DatasetTerms({
   filesRepository,
   datasetPersistentId,
   datasetVersion,
-  canUpdateDataset,
-  guestbookRepository
+  canUpdateDataset
 }: DatasetTermsProps) {
   const { t } = useTranslation('dataset')
   const [searchParams] = useSearchParams()
@@ -94,7 +91,7 @@ export function DatasetTerms({
             {t('termsTab.guestbookTitle')}
           </Accordion.Header>
           <Accordion.Body data-testid="dataset-terms-guestbook-accordion-body">
-            <DatasetGuestbook guestbookRepository={guestbookRepository} />
+            <DatasetGuestbook />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>

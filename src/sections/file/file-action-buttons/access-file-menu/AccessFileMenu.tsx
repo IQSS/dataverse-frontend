@@ -8,14 +8,9 @@ import { FileDownloadOptions } from './FileDownloadOptions'
 import { FileAccess } from '../../../../files/domain/models/FileAccess'
 import { FileMetadata } from '../../../../files/domain/models/FileMetadata'
 import { FileExploreToolsOptions, FileQueryToolsOptions } from './FileToolOptions'
-import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 
 interface FileActionButtonAccessFileProps {
   id: number
-  guestbookId?: number
-  datasetPersistentId?: string
-  datasetLicense?: DatasetLicense
-  datasetCustomTerms?: CustomTerms
   access: FileAccess
   userHasDownloadPermission: boolean
   metadata: FileMetadata
@@ -27,10 +22,6 @@ interface FileActionButtonAccessFileProps {
 
 export function AccessFileMenu({
   id,
-  guestbookId,
-  datasetPersistentId,
-  datasetLicense,
-  datasetCustomTerms,
   access,
   userHasDownloadPermission,
   metadata,
@@ -87,10 +78,6 @@ export function AccessFileMenu({
         />
         <FileDownloadOptions
           fileId={id}
-          guestbookId={guestbookId}
-          datasetPersistentId={datasetPersistentId}
-          datasetLicense={datasetLicense}
-          datasetCustomTerms={datasetCustomTerms}
           type={metadata.type}
           downloadUrls={metadata.downloadUrls}
           ingestInProgress={ingestInProgress}

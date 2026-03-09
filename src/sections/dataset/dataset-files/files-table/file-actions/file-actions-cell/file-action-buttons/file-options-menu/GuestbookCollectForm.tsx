@@ -8,7 +8,7 @@ import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import styles from './DownloadWithGuestbookModal.module.scss'
 
-interface GuestbookAppliedFormProps {
+interface GuestbookCollectFormProps {
   license?: DatasetLicense
   customTerms?: CustomTermsModel
   datasetPersistentId?: string
@@ -27,10 +27,10 @@ export const getGuestbookCustomQuestionFieldName = (
   index: number
 ): string => `custom-question-${question.displayOrder}-${index}`
 
-export const isGuestbookAppliedFormEmailValid = (email: string): boolean =>
+export const isGuestbookCollectFormEmailValid = (email: string): boolean =>
   validator.isValidEmail(email)
 
-export function GuestbookAppliedForm({
+export function GuestbookCollectForm({
   license,
   customTerms,
   datasetPersistentId,
@@ -42,7 +42,7 @@ export function GuestbookAppliedForm({
   shouldLockIdentityFields,
   isAccountFieldRequired,
   onFieldChange
-}: GuestbookAppliedFormProps) {
+}: GuestbookCollectFormProps) {
   const { t: tFiles } = useTranslation('files')
   const { t: tDataset } = useTranslation('dataset')
   const { t: tGuestbooks } = useTranslation('guestbooks')
@@ -200,7 +200,7 @@ export function GuestbookAppliedForm({
         <Form.Group as={Row} className={styles['form-row']}>
           <Col sm={3}>
             <Form.Group.Label className={styles['row-label']}>
-              {tFiles('actions.optionsMenu.guestbookAppliedModal.additionalQuestions')}
+              {tFiles('actions.optionsMenu.guestbookCollectModal.additionalQuestions')}
             </Form.Group.Label>
           </Col>
           <Col sm={9} className={styles['question-list']}>

@@ -350,9 +350,7 @@ describe('EditGuestbook', () => {
 
   it('does not submit when selectedGuestbookId is undefined', () => {
     cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
-    const assignDatasetGuestbookExecute = cy
-      .stub(assignDatasetGuestbook, 'execute')
-      .as('assignDatasetGuestbookExecute')
+    cy.stub(assignDatasetGuestbook, 'execute').as('assignDatasetGuestbookExecute')
     const dataset = DatasetMother.create({ id: 999, guestbookId: undefined })
 
     cy.customMount(withProviders(<EditGuestbook />, dataset))
@@ -363,9 +361,7 @@ describe('EditGuestbook', () => {
 
   it('does not submit when dataset is undefined', () => {
     cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
-    const assignDatasetGuestbookExecute = cy
-      .stub(assignDatasetGuestbook, 'execute')
-      .as('assignDatasetGuestbookExecute')
+    cy.stub(assignDatasetGuestbook, 'execute').as('assignDatasetGuestbookExecute')
 
     cy.customMount(withDatasetContext(<EditGuestbook />, undefined))
 

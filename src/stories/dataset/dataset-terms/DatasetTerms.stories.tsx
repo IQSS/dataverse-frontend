@@ -11,6 +11,7 @@ import { FileMockNoRestrictedFilesRepository } from '@/stories/file/FileMockNoRe
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
 
 const meta: Meta<typeof DatasetTerms> = {
   title: 'Sections/Dataset Page/DatasetTerms',
@@ -51,16 +52,20 @@ class GuestbookMockRepository implements GuestbookRepository {
   }
 }
 
+const guestbookRepository = new GuestbookMockRepository()
+
 const withDatasetContext = (dataset = testDatasetWithGuestbook) => {
   const DatasetTermsStoryDecorator = (Story: () => JSX.Element) => (
-    <DatasetContext.Provider
-      value={{
-        dataset,
-        isLoading: false,
-        refreshDataset: () => {}
-      }}>
-      <Story />
-    </DatasetContext.Provider>
+    <GuestbookRepositoryProvider repository={guestbookRepository}>
+      <DatasetContext.Provider
+        value={{
+          dataset,
+          isLoading: false,
+          refreshDataset: () => {}
+        }}>
+        <Story />
+      </DatasetContext.Provider>
+    </GuestbookRepositoryProvider>
   )
 
   DatasetTermsStoryDecorator.displayName = 'DatasetTermsStoryDecorator'
@@ -76,7 +81,6 @@ export const Default: Story = {
       filesRepository={new FileMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
-      guestbookRepository={new GuestbookMockRepository()}
     />
   )
 }
@@ -102,7 +106,6 @@ export const RestrictedFiles: Story = {
       filesRepository={new FileMockRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
-      guestbookRepository={new GuestbookMockRepository()}
     />
   )
 }
@@ -116,7 +119,6 @@ export const NoRestrictedFiles: Story = {
       filesRepository={new FileMockNoRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
-      guestbookRepository={new GuestbookMockRepository()}
     />
   )
 }
@@ -129,7 +131,6 @@ export const CustomTerms: Story = {
       filesRepository={new FileMockNoRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
-      guestbookRepository={new GuestbookMockRepository()}
     />
   )
 }
@@ -143,7 +144,6 @@ export const WithoutAssignedGuestbook: Story = {
       filesRepository={new FileMockNoRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
-      guestbookRepository={new GuestbookMockRepository()}
     />
   )
 }
@@ -157,7 +157,6 @@ export const GuestbookEmptyState: Story = {
       filesRepository={new FileMockNoRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
-      guestbookRepository={new GuestbookMockRepository()}
     />
   )
 }

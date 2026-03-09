@@ -148,10 +148,6 @@ export function File({
               <ButtonGroup aria-label={t('actionButtons.title')} vertical className={styles.group}>
                 <AccessFileMenu
                   id={file.id}
-                  guestbookId={file.guestbookId}
-                  datasetPersistentId={file.datasetPersistentId}
-                  datasetLicense={file.datasetLicense}
-                  datasetCustomTerms={file.datasetCustomTerms}
                   access={file.access}
                   userHasDownloadPermission={file.permissions.canDownloadFile}
                   metadata={file.metadata}

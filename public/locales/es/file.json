@@ -93,7 +93,7 @@
   },
   "actions": {
     "optionsMenu": {
-      "guestbookAppliedModal": {
+      "guestbookCollectModal": {
         "submitError": "Algo salió mal al enviar las respuestas del libro de visitas. Inténtalo de nuevo más tarde.",
         "downloadError": "Algo salió mal al descargar el archivo. Inténtalo de nuevo más tarde.",
         "validation": {

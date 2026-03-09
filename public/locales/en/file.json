@@ -93,7 +93,7 @@
   },
   "actions": {
     "optionsMenu": {
-      "guestbookAppliedModal": {
+      "guestbookCollectModal": {
         "submitError": "Something went wrong submitting guestbook responses. Try again later.",
         "downloadError": "Something went wrong downloading the file. Try again later.",
         "validation": {

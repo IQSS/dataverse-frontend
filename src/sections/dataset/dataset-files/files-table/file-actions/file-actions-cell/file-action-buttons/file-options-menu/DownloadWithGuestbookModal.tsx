@@ -4,18 +4,16 @@ import { useTranslation } from 'react-i18next'
 import { useDataset } from '@/sections/dataset/DatasetContext'
 import { useGetGuestbookById } from '@/sections/dataset/dataset-guestbook/useGetGuestbookById'
 import {
-  GuestbookAppliedForm,
+  GuestbookCollectForm,
   getGuestbookCustomQuestionFieldName,
-  isGuestbookAppliedFormEmailValid
-} from './GuestbookAppliedForm'
+  isGuestbookCollectFormEmailValid
+} from './GuestbookCollectForm'
 import { useSession } from '@/sections/session/SessionContext'
 import { Guestbook, GuestbookCustomQuestion } from '@/guestbooks/domain/models/Guestbook'
-import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
-import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
-import { useGuestbookAppliedSubmission } from './useGuestbookAppliedSubmission'
-import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
-import { AccessJSDataverseRepository } from '@/access/infrastructure/repositories/AccessJSDataverseRepository'
+import { useGuestbookCollectSubmission } from './useGuestbookCollectSubmission'
 import { CustomTerms as CustomTermsModel, DatasetLicense } from '@/dataset/domain/models/Dataset'
+import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
+import { useGuestbookRepository } from '@/sections/guestbooks/GuestbookRepositoryContext'
 
 interface DownloadWithGuestbookModalProps {
   fileId?: number | string
@@ -26,8 +24,6 @@ interface DownloadWithGuestbookModalProps {
   datasetCustomTerms?: CustomTermsModel
   show: boolean
   handleClose: () => void
-  guestbookRepository?: GuestbookRepository
-  accessRepository?: AccessRepository
 }
 
 type GuestbookFormValues = Record<string, string>
@@ -41,25 +37,17 @@ export function DownloadWithGuestbookModal({
   datasetLicense,
   datasetCustomTerms,
   show,
-  handleClose,
-  guestbookRepository,
-  accessRepository
+  handleClose
 }: DownloadWithGuestbookModalProps) {
   const { t: tFiles } = useTranslation('files')
   const { t: tDataset } = useTranslation('dataset')
   const { dataset } = useDataset()
   const { user } = useSession()
+  const accessRepository = useAccessRepository()
+  const guestbookRepository = useGuestbookRepository()
   const [formValues, setFormValues] = useState<GuestbookFormValues>({})
-  const resolvedGuestbookRepository = useMemo(
-    () => guestbookRepository ?? new GuestbookJSDataverseRepository(),
-    [guestbookRepository]
-  )
-  const resolvedAccessRepository = useMemo(
-    () => accessRepository ?? new AccessJSDataverseRepository(),
-    [accessRepository]
-  )
   const { guestbook, isLoadingGuestbook, errorGetGuestbook } = useGetGuestbookById({
-    guestbookRepository: resolvedGuestbookRepository,
+    guestbookRepository,
     guestbookId
   })
 
@@ -117,13 +105,13 @@ export function DownloadWithGuestbookModal({
       const value = (formValues[fieldName] ?? '').trim()
 
       if (isAccountFieldRequired(fieldName) && value.length === 0) {
-        errors[fieldName] = tFiles('actions.optionsMenu.guestbookAppliedModal.validation.required')
+        errors[fieldName] = tFiles('actions.optionsMenu.guestbookCollectModal.validation.required')
         return errors
       }
 
-      if (fieldName === 'email' && value.length > 0 && !isGuestbookAppliedFormEmailValid(value)) {
+      if (fieldName === 'email' && value.length > 0 && !isGuestbookCollectFormEmailValid(value)) {
         errors[fieldName] = tFiles(
-          'actions.optionsMenu.guestbookAppliedModal.validation.invalidEmail'
+          'actions.optionsMenu.guestbookCollectModal.validation.invalidEmail'
         )
         return errors
       }
@@ -240,12 +228,12 @@ export function DownloadWithGuestbookModal({
     handleModalClose,
     handleSubmit,
     resetSubmissionState
-  } = useGuestbookAppliedSubmission({
+  } = useGuestbookCollectSubmission({
     datasetPersistentId: resolvedDatasetPersistentId,
     fileId,
     fileIds,
     handleClose,
-    accessRepository: resolvedAccessRepository,
+    accessRepository,
     triggerDirectDownload
   })
 
@@ -278,7 +266,7 @@ export function DownloadWithGuestbookModal({
             {errorDownloadSignedUrlFile && (
               <Alert variant="danger">{errorDownloadSignedUrlFile}</Alert>
             )}
-            <GuestbookAppliedForm
+            <GuestbookCollectForm
               license={resolvedDatasetLicense}
               customTerms={resolvedDatasetCustomTerms}
               datasetPersistentId={resolvedDatasetPersistentId}

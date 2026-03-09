@@ -1,17 +1,17 @@
+import { Download } from 'react-bootstrap-icons'
+import { useTranslation } from 'react-i18next'
+import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
+import { MouseEvent, useState } from 'react'
 import { FileDownloadMode } from '../../../../../../files/domain/models/FileMetadata'
 import { useDataset } from '../../../../DatasetContext'
-import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { Download } from 'react-bootstrap-icons'
-import styles from './DownloadFilesButton.module.scss'
-import { useTranslation } from 'react-i18next'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
-import { MouseEvent, useState } from 'react'
 import { useMultipleFileDownload } from '../../../../../file/multiple-file-download/MultipleFileDownloadContext'
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { DownloadWithGuestbookModal } from '../file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import styles from './DownloadFilesButton.module.scss'
 
 interface DownloadFilesButtonProps {
   files: FilePreview[]
@@ -31,10 +31,12 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
 
   const fileSelectionCount = Object.keys(fileSelection).length
   const allFilesSelected = Object.values(fileSelection).some((file) => file === undefined)
-  const selectedFileIds = getFileIdsFromSelection(fileSelection)
   const allSelectedFileIds = files.map((file) => file.id)
-  const fileIdsForGuestbookSubmission = allFilesSelected ? allSelectedFileIds : selectedFileIds
+  const fileIdsForGuestbookSubmission = allFilesSelected
+    ? allSelectedFileIds
+    : getFileIdsFromSelection(fileSelection)
   const hasGuestbook = dataset?.guestbookId !== undefined
+
   const onClick = (event: MouseEvent<HTMLElement>) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {
       event.preventDefault()
@@ -53,7 +55,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
       return dataset ? dataset.downloadUrls[downloadMode] : ''
     }
 
-    return getMultipleFileDownloadUrl(selectedFileIds, downloadMode)
+    return getMultipleFileDownloadUrl(getFileIdsFromSelection(fileSelection), downloadMode)
   }
 
   if (
@@ -77,6 +79,24 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
     ? ''
     : /* istanbul ignore next */ t('actions.downloadFiles.title')
 
+  const downloadFeedbackModals = (
+    <>
+      <NoSelectedFilesModal
+        show={showNoFilesSelectedModal}
+        handleClose={() => setShowNoFilesSelectedModal(false)}
+      />
+      {hasGuestbook && (
+        <DownloadWithGuestbookModal
+          fileIds={fileIdsForGuestbookSubmission}
+          datasetPersistentId={dataset.persistentId}
+          guestbookId={dataset.guestbookId}
+          show={showDownloadWithGuestbookModal}
+          handleClose={() => setShowDownloadWithGuestbookModal(false)}
+        />
+      )}
+    </>
+  )
+
   if (dataset.hasOneTabularFileAtLeast) {
     return (
       <>
@@ -98,49 +118,15 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
             {t('actions.downloadFiles.options.archival')}
           </DropdownButtonItem>
         </DropdownButton>
-        <NoSelectedFilesModal
-          show={showNoFilesSelectedModal}
-          handleClose={() => setShowNoFilesSelectedModal(false)}
-        />
-        <DownloadWithGuestbookModal
-          fileIds={fileIdsForGuestbookSubmission}
-          guestbookId={dataset?.guestbookId}
-          show={showDownloadWithGuestbookModal}
-          handleClose={() => setShowDownloadWithGuestbookModal(false)}
-        />
+        {downloadFeedbackModals}
       </>
     )
   }
 
-  if (hasGuestbook) {
-    return (
-      <>
-        <Button
-          id="download-files"
-          variant="secondary"
-          icon={<Download className={styles.icon} />}
-          aria-label={t('actions.downloadFiles.title')}
-          withSpacing
-          onClick={onClick}>
-          {dropdownButtonTitle}
-        </Button>
-        <NoSelectedFilesModal
-          show={showNoFilesSelectedModal}
-          handleClose={() => setShowNoFilesSelectedModal(false)}
-        />
-        <DownloadWithGuestbookModal
-          fileIds={fileIdsForGuestbookSubmission}
-          guestbookId={dataset?.guestbookId}
-          show={showDownloadWithGuestbookModal}
-          handleClose={() => setShowDownloadWithGuestbookModal(false)}
-        />
-      </>
-    )
-  }
-
+  // no tabular file content
   return (
     <>
-      <a href={getDownloadUrl(FileDownloadMode.ORIGINAL)}>
+      {hasGuestbook ? (
         <Button
           id="download-files"
           variant="secondary"
@@ -150,11 +136,21 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
           onClick={onClick}>
           {dropdownButtonTitle}
         </Button>
-      </a>
-      <NoSelectedFilesModal
-        show={showNoFilesSelectedModal}
-        handleClose={() => setShowNoFilesSelectedModal(false)}
-      />
+      ) : (
+        <a href={getDownloadUrl(FileDownloadMode.ORIGINAL)}>
+          <Button
+            id="download-files"
+            variant="secondary"
+            icon={<Download className={styles.icon} />}
+            aria-label={t('actions.downloadFiles.title')}
+            withSpacing
+            onClick={onClick}>
+            {dropdownButtonTitle}
+          </Button>
+        </a>
+      )}
+
+      {downloadFeedbackModals}
     </>
   )
 }

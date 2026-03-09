@@ -81,7 +81,7 @@
       "headers": {
         "editOptions": "Edit Options"
       },
-      "guestbookAppliedModal": {
+      "guestbookCollectModal": {
         "title": "Dataset Guestbook",
         "message": "A guestbook is assigned to this dataset. Users will be prompted to provide additional information when downloading files.",
         "close": "Close",

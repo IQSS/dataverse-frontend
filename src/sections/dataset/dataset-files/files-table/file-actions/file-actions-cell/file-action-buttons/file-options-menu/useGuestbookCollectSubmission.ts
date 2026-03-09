@@ -10,7 +10,7 @@ import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteE
 
 type GuestbookResponseAnswer = { id: number | string; value: string | string[] }
 
-interface UseGuestbookAppliedSubmissionProps {
+interface UseGuestbookCollectSubmissionProps {
   datasetPersistentId?: string
   fileId?: number | string
   fileIds?: Array<number | string>
@@ -25,14 +25,14 @@ interface HandleSubmitProps {
   answers: GuestbookResponseAnswer[]
 }
 
-export const useGuestbookAppliedSubmission = ({
+export const useGuestbookCollectSubmission = ({
   datasetPersistentId,
   fileId,
   fileIds,
   handleClose,
   accessRepository,
   triggerDirectDownload
-}: UseGuestbookAppliedSubmissionProps) => {
+}: UseGuestbookCollectSubmissionProps) => {
   const { t: tFiles } = useTranslation('files')
   const [hasAttemptedAccept, setHasAttemptedAccept] = useState(false)
   const [isSubmittingGuestbook, setIsSubmittingGuestbook] = useState(false)
@@ -85,7 +85,7 @@ export const useGuestbookAppliedSubmission = ({
             errorHandler.getReasonWithoutStatusCode() ?? errorHandler.getErrorMessage()
           setErrorSubmitGuestbook(formattedError)
         } else {
-          setErrorSubmitGuestbook(tFiles('actions.optionsMenu.guestbookAppliedModal.submitError'))
+          setErrorSubmitGuestbook(tFiles('actions.optionsMenu.guestbookCollectModal.submitError'))
         }
       } finally {
         setIsSubmittingGuestbook(false)
@@ -94,7 +94,7 @@ export const useGuestbookAppliedSubmission = ({
       if (signedUrl) {
         handleModalClose()
         void triggerDirectDownload(signedUrl).catch((error) => {
-          const fallbackMessage = tFiles('actions.optionsMenu.guestbookAppliedModal.downloadError')
+          const fallbackMessage = tFiles('actions.optionsMenu.guestbookCollectModal.downloadError')
           const errorMessage = error instanceof Error ? error.message : fallbackMessage
           setErrorDownloadSignedUrlFile(errorMessage)
         })

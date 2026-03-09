@@ -1,5 +1,4 @@
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { useDataset } from '../../../dataset/DatasetContext'
 import { useTranslation } from 'react-i18next'
 import { FileType } from '../../../../files/domain/models/FileMetadata'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
@@ -15,6 +14,7 @@ interface FileNonTabularDownloadOptionsProps {
   type: FileType
   downloadUrlOriginal: string
   ingestIsInProgress: boolean
+  isLockedFromFileDownload: boolean
 }
 
 export function FileNonTabularDownloadOptions({
@@ -25,14 +25,13 @@ export function FileNonTabularDownloadOptions({
   datasetCustomTerms,
   type,
   downloadUrlOriginal,
-  ingestIsInProgress
+  ingestIsInProgress,
+  isLockedFromFileDownload
 }: FileNonTabularDownloadOptionsProps) {
   const { t } = useTranslation('files')
-  const { dataset } = useDataset()
-  const resolvedGuestbookId = guestbookId ?? dataset?.guestbookId
-  const hasGuestbook = resolvedGuestbookId !== undefined
+  const hasGuestbook = guestbookId !== undefined
   const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
-  const downloadDisabled = ingestIsInProgress || (dataset && dataset.isLockedFromFileDownload)
+  const downloadDisabled = ingestIsInProgress || isLockedFromFileDownload
 
   const handleDownloadClick = (event: MouseEvent<HTMLElement>) => {
     if (!hasGuestbook || downloadDisabled) {
@@ -53,15 +52,17 @@ export function FileNonTabularDownloadOptions({
           ? t('actions.accessFileMenu.downloadOptions.options.original')
           : type.toDisplayFormat()}
       </DropdownButtonItem>
-      <DownloadWithGuestbookModal
-        fileId={fileId}
-        guestbookId={resolvedGuestbookId}
-        datasetPersistentId={datasetPersistentId}
-        datasetLicense={datasetLicense}
-        datasetCustomTerms={datasetCustomTerms}
-        show={showDownloadWithGuestbookModal}
-        handleClose={() => setShowDownloadWithGuestbookModal(false)}
-      />
+      {hasGuestbook && (
+        <DownloadWithGuestbookModal
+          fileId={fileId}
+          guestbookId={guestbookId}
+          datasetPersistentId={datasetPersistentId}
+          datasetLicense={datasetLicense}
+          datasetCustomTerms={datasetCustomTerms}
+          show={showDownloadWithGuestbookModal}
+          handleClose={() => setShowDownloadWithGuestbookModal(false)}
+        />
+      )}
     </>
   )
 }
