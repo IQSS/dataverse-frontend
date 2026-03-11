@@ -224,13 +224,13 @@ describe('Edit Dataset Terms', () => {
 
           cy.visit(editDatasetTermsUrl)
 
-          cy.findByRole('tab', { name: 'Terms and Guestbook' }).click()
+          cy.findByRole('tab', { name: 'Guestbook' }).click()
           cy.findByLabelText(firstGuestbook.name).should('be.checked')
           cy.findByLabelText(secondGuestbook.name).click()
           cy.findByRole('button', { name: 'Save Changes' }).click()
           cy.findByText(/The terms for this dataset have been updated./i).should('exist')
 
-          cy.findByRole('tab', { name: 'Terms' }).click()
+          cy.findByRole('tab', { name: 'Terms and Guestbook' }).click()
           cy.findByRole('button', { name: 'Guestbook' }).click()
           cy.findByTestId('dataset-guestbook-name').should('contain.text', secondGuestbook.name)
         })

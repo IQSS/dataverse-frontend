@@ -43,21 +43,16 @@ export function DownloadWithGuestbookModal({
 }: DownloadWithGuestbookModalProps) {
   const { t: tFiles } = useTranslation('files')
   const { t: tDataset } = useTranslation('dataset')
-  const { dataset } = useDataset()
   const { user } = useSession()
+  const { dataset } = useDataset()
   const accessRepository = useAccessRepository()
   const guestbookRepository = useGuestbookRepository()
+
   const [formValues, setFormValues] = useState<GuestbookFormValues>({})
   const { guestbook, isLoadingGuestbook, errorGetGuestbook } = useGetGuestbookById({
     guestbookRepository,
     guestbookId
   })
-
-  const resolvedDatasetId = datasetId ?? dataset?.id ?? dataset?.persistentId
-  const resolvedDatasetPersistentId = dataset?.persistentId
-  const resolvedDatasetLicense = datasetLicense ?? dataset?.license
-  const resolvedDatasetCustomTerms = datasetCustomTerms ?? dataset?.termsOfUse.customTerms
-
   const accountFieldKeys = useMemo(() => ['name', 'email', 'institution', 'position'], [])
 
   const prefilledAccountFieldValues = useMemo(() => {
@@ -223,7 +218,7 @@ export function DownloadWithGuestbookModal({
     handleSubmit,
     resetSubmissionState
   } = useGuestbookCollectSubmission({
-    datasetId: resolvedDatasetId,
+    datasetId,
     fileId,
     fileIds,
     handleClose,
@@ -261,9 +256,9 @@ export function DownloadWithGuestbookModal({
               <Alert variant="danger">{errorDownloadSignedUrlFile}</Alert>
             )}
             <GuestbookCollectForm
-              license={resolvedDatasetLicense}
-              customTerms={resolvedDatasetCustomTerms}
-              datasetPersistentId={resolvedDatasetPersistentId}
+              license={datasetLicense}
+              customTerms={datasetCustomTerms}
+              datasetPersistentId={dataset?.persistentId}
               guestbook={guestbook}
               formValues={formValues}
               hasAttemptedAccept={hasAttemptedAccept}

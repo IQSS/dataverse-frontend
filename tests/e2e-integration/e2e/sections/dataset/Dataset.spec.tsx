@@ -789,8 +789,8 @@ describe('Dataset', () => {
           cy.findByRole('button', { name: 'Accept' }).click()
 
           cy.get('@anchorClick').should('have.been.calledOnce')
-          cy.findByText('Your download has started.').should('exist')
           cy.findByRole('dialog').should('not.exist')
+          cy.findByText('Your download has started.').should('exist')
         })
       })
     })
