@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { ReadError, getGuestbooksByCollectionId } from '@iqss/dataverse-client-javascript'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { useGetGuestbooksByCollectionId } from '@/sections/guestbooks/useGetGuestbooksByCollectionId'
@@ -22,16 +22,14 @@ describe('useGetGuestbooksByCollectionId', () => {
 
     const { result } = renderHook(() => useGetGuestbooksByCollectionId({ collectionIdOrAlias: 1 }))
 
-    await act(() => {
-      expect(result.current.isLoadingGuestbooksByCollectionId).to.deep.equal(true)
-      expect(result.current.errorGetGuestbooksByCollectionId).to.deep.equal(null)
-      return expect(result.current.guestbooks).to.deep.equal([])
-    })
+    expect(result.current.isLoadingGuestbooksByCollectionId).to.deep.equal(true)
+    expect(result.current.errorGetGuestbooksByCollectionId).to.deep.equal(null)
+    expect(result.current.guestbooks).to.deep.equal([])
 
-    await act(() => {
+    await waitFor(() => {
       expect(result.current.isLoadingGuestbooksByCollectionId).to.deep.equal(false)
       expect(result.current.errorGetGuestbooksByCollectionId).to.deep.equal(null)
-      return expect(result.current.guestbooks).to.deep.equal([guestbook])
+      expect(result.current.guestbooks).to.deep.equal([guestbook])
     })
 
     cy.wrap(executeStub).should('have.been.calledOnceWith', 1)

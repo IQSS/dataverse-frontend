@@ -213,6 +213,34 @@ describe('EditGuestbook', () => {
     )
   })
 
+  it('navigates back to the dataset view when clicking Cancel without submitting', () => {
+    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
+    cy.stub(assignDatasetGuestbook, 'execute').as('assignDatasetGuestbookExecute')
+    const releasedDataset = DatasetMother.create({
+      id: 999,
+      persistentId: 'doi:10.5072/FK2/CANCELPID',
+      guestbookId: mockGuestbooks[0].id,
+      version: DatasetVersionMother.createReleased()
+    })
+
+    cy.customMount(
+      withProviders(
+        <>
+          <EditGuestbook />
+          <LocationDisplay />
+        </>,
+        releasedDataset
+      )
+    )
+
+    cy.findByRole('button', { name: 'Cancel' }).click()
+    cy.findByTestId('location-display').should(
+      'have.text',
+      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FCANCELPID&version=1.0'
+    )
+    cy.get('@assignDatasetGuestbookExecute').should('not.have.been.called')
+  })
+
   it('navigates with DRAFT version query param after successful submit for draft datasets', () => {
     cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     cy.stub(assignDatasetGuestbook, 'execute').resolves(undefined)

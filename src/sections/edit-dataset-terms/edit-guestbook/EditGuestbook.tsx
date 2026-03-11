@@ -44,6 +44,10 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
     navigate(`${Route.DATASETS}?${searchParams.toString()}`)
   }, [dataset, navigate])
 
+  const handleCancel = () => {
+    navigateToDatasetView()
+  }
+
   const { guestbooks, isLoadingGuestbooksByCollectionId, errorGetGuestbooksByCollectionId } =
     useGetGuestbooksByCollectionId({
       collectionIdOrAlias
@@ -204,7 +208,7 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
             }>
             {isLoadingAssignDatasetGuestbook ? tShared('saving') : tShared('saveChanges')}
           </Button>
-          <Button variant="secondary" type="button">
+          <Button variant="secondary" type="button" onClick={handleCancel}>
             {tShared('cancel')}
           </Button>
         </div>

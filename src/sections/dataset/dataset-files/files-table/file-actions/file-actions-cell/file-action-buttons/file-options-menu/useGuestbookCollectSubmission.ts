@@ -1,17 +1,19 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WriteError } from '@iqss/dataverse-client-javascript'
+import { toast } from 'react-toastify'
 import { submitGuestbookForDatasetDownload } from '@/access/domain/useCases/submitGuestbookForDatasetDownload'
 import { submitGuestbookForDatafileDownload } from '@/access/domain/useCases/submitGuestbookForDatafileDownload'
 import { submitGuestbookForDatafilesDownload } from '@/access/domain/useCases/submitGuestbookForDatafilesDownload'
-import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
+import {
+  AccessRepository,
+  GuestbookResponseDTO
+} from '@/access/domain/repositories/AccessRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 
-type GuestbookResponseAnswer = { id: number | string; value: string | string[] }
-
 interface UseGuestbookCollectSubmissionProps {
-  datasetPersistentId?: string
+  datasetId?: number | string
   fileId?: number | string
   fileIds?: Array<number | string>
   handleClose: () => void
@@ -22,11 +24,11 @@ interface UseGuestbookCollectSubmissionProps {
 interface HandleSubmitProps {
   hasAccountFieldErrors: boolean
   guestbook?: Guestbook
-  answers: GuestbookResponseAnswer[]
+  guestbookResponse: GuestbookResponseDTO
 }
 
 export const useGuestbookCollectSubmission = ({
-  datasetPersistentId,
+  datasetId,
   fileId,
   fileIds,
   handleClose,
@@ -52,7 +54,7 @@ export const useGuestbookCollectSubmission = ({
   }, [handleClose, resetSubmissionState])
 
   const handleSubmit = useCallback(
-    async ({ hasAccountFieldErrors, guestbook, answers }: HandleSubmitProps) => {
+    async ({ hasAccountFieldErrors, guestbook, guestbookResponse }: HandleSubmitProps) => {
       setHasAttemptedAccept(true)
       setErrorDownloadSignedUrlFile(null)
 
@@ -66,14 +68,22 @@ export const useGuestbookCollectSubmission = ({
 
       try {
         if (fileId !== undefined) {
-          signedUrl = await submitGuestbookForDatafileDownload(accessRepository, fileId, answers)
+          signedUrl = await submitGuestbookForDatafileDownload(
+            accessRepository,
+            fileId,
+            guestbookResponse
+          )
         } else if (fileIds && fileIds.length > 0) {
-          signedUrl = await submitGuestbookForDatafilesDownload(accessRepository, fileIds, answers)
-        } else if (datasetPersistentId !== undefined) {
+          signedUrl = await submitGuestbookForDatafilesDownload(
+            accessRepository,
+            fileIds,
+            guestbookResponse
+          )
+        } else if (datasetId !== undefined) {
           signedUrl = await submitGuestbookForDatasetDownload(
             accessRepository,
-            datasetPersistentId,
-            answers
+            datasetId,
+            guestbookResponse
           )
         } else {
           return
@@ -93,22 +103,20 @@ export const useGuestbookCollectSubmission = ({
 
       if (signedUrl) {
         handleModalClose()
-        void triggerDirectDownload(signedUrl).catch((error) => {
-          const fallbackMessage = tFiles('actions.optionsMenu.guestbookCollectModal.downloadError')
-          const errorMessage = error instanceof Error ? error.message : fallbackMessage
-          setErrorDownloadSignedUrlFile(errorMessage)
-        })
+        void triggerDirectDownload(signedUrl)
+          .then(() => {
+            toast.success(tFiles('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
+          })
+          .catch((error) => {
+            const fallbackMessage = tFiles(
+              'actions.optionsMenu.guestbookCollectModal.downloadError'
+            )
+            const errorMessage = error instanceof Error ? error.message : fallbackMessage
+            setErrorDownloadSignedUrlFile(errorMessage)
+          })
       }
     },
-    [
-      datasetPersistentId,
-      fileId,
-      fileIds,
-      handleModalClose,
-      accessRepository,
-      tFiles,
-      triggerDirectDownload
-    ]
+    [datasetId, fileId, fileIds, handleModalClose, accessRepository, tFiles, triggerDirectDownload]
   )
 
   return {

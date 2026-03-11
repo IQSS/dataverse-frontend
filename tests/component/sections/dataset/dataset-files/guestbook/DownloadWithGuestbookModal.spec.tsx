@@ -1,10 +1,15 @@
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { DatasetLicense } from '@/dataset/domain/models/Dataset'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
-import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
+import {
+  AccessRepository,
+  GuestbookResponseDTO
+} from '@/access/domain/repositories/AccessRepository'
 import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
 import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
+import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
 
 const guestbook: Guestbook = {
   id: 10,
@@ -59,19 +64,31 @@ describe('DownloadWithGuestbookModal', () => {
   let getGuestbookImpl: (guestbookId: number) => Promise<Guestbook>
   let submitGuestbookForDatafileDownloadImpl: (
     fileId: number | string,
-    answers: Array<{ id: number | string; value: string | string[] }>
+    guestbookResponse: GuestbookResponseDTO
   ) => Promise<string>
   let submitGuestbookForDatafilesDownloadImpl: (
     fileIds: Array<number | string>,
-    answers: Array<{ id: number | string; value: string | string[] }>
+    guestbookResponse: GuestbookResponseDTO
   ) => Promise<string>
   let guestbookRepository: GuestbookRepository
   let accessRepository: AccessRepository
 
   const withRepositories = (component: React.ReactNode) => (
-    <GuestbookRepositoryProvider repository={guestbookRepository}>
-      <AccessRepositoryProvider repository={accessRepository}>{component}</AccessRepositoryProvider>
-    </GuestbookRepositoryProvider>
+    <DatasetContext.Provider
+      value={{
+        dataset: DatasetMother.create({
+          id: 123,
+          persistentId: 'doi:10.5072/FK2/FILEPAGE'
+        }),
+        isLoading: false,
+        refreshDataset: () => {}
+      }}>
+      <GuestbookRepositoryProvider repository={guestbookRepository}>
+        <AccessRepositoryProvider repository={accessRepository}>
+          {component}
+        </AccessRepositoryProvider>
+      </GuestbookRepositoryProvider>
+    </DatasetContext.Provider>
   )
 
   beforeEach(() => {
@@ -97,20 +114,14 @@ describe('DownloadWithGuestbookModal', () => {
       submitGuestbookForDatafileDownload: cy
         .stub()
         .as('submitGuestbookForDatafileDownload')
-        .callsFake(
-          (
-            fileId: number | string,
-            answers: Array<{ id: number | string; value: string | string[] }>
-          ) => submitGuestbookForDatafileDownloadImpl(fileId, answers)
+        .callsFake((fileId: number | string, guestbookResponse: GuestbookResponseDTO) =>
+          submitGuestbookForDatafileDownloadImpl(fileId, guestbookResponse)
         ),
       submitGuestbookForDatafilesDownload: cy
         .stub()
         .as('submitGuestbookForDatafilesDownload')
-        .callsFake(
-          (
-            fileIds: Array<number | string>,
-            answers: Array<{ id: number | string; value: string | string[] }>
-          ) => submitGuestbookForDatafilesDownloadImpl(fileIds, answers)
+        .callsFake((fileIds: Array<number | string>, guestbookResponse: GuestbookResponseDTO) =>
+          submitGuestbookForDatafilesDownloadImpl(fileIds, guestbookResponse)
         )
     }
   })
@@ -143,7 +154,6 @@ describe('DownloadWithGuestbookModal', () => {
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
           fileId={10}
-          datasetPersistentId="doi:10.5072/FK2/FILEPAGE"
           datasetLicense={datasetLicense}
           datasetCustomTerms={undefined}
         />
@@ -161,7 +171,6 @@ describe('DownloadWithGuestbookModal', () => {
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
           fileId={10}
-          datasetPersistentId="doi:10.5072/FK2/FILEPAGE"
           datasetLicense={undefined}
           datasetCustomTerms={{
             termsOfUse: 'File page custom terms text',
@@ -235,6 +244,7 @@ describe('DownloadWithGuestbookModal', () => {
     cy.get('@submitGuestbookForDatafileDownload').should('have.been.calledOnce')
     cy.get('@anchorClick').should('have.been.calledOnce')
     cy.get('@handleClose').should('have.been.calledOnce')
+    cy.findByText('Your download has started.').should('exist')
     cy.findByText('This field is required.').should('not.exist')
   })
 
@@ -374,12 +384,18 @@ describe('DownloadWithGuestbookModal', () => {
     cy.get('@submitGuestbookForDatafileDownload').should('have.been.calledOnce')
     cy.get('@submitGuestbookForDatafileDownload')
       .its('firstCall.args.1')
-      .should('deep.equal', [
-        { id: 'name', value: 'Test User' },
-        { id: 'email', value: 'test.user@example.com' },
-        { id: 'custom-question-2-0', value: 'CSV' },
-        { id: 'custom-question-1-1', value: 'For a replication package' }
-      ])
+      .should('deep.equal', {
+        guestbookResponse: {
+          name: 'Test User',
+          email: 'test.user@example.com',
+          institution: undefined,
+          position: undefined,
+          answers: [
+            { id: 'custom-question-2-0', value: 'CSV' },
+            { id: 'custom-question-1-1', value: 'For a replication package' }
+          ]
+        }
+      })
     cy.get('@anchorClick').should('have.been.calledOnce')
     cy.get('@handleClose').should('have.been.calledOnce')
   })

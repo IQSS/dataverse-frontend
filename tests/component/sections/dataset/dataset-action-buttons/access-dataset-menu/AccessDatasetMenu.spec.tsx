@@ -6,17 +6,11 @@ import {
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
 import { FileSizeUnit } from '../../../../../../src/files/domain/models/FileMetadata'
-import { FileRepository } from '../../../../../../src/files/domain/repositories/FileRepository'
 import { getGuestbook, submitGuestbookForDatasetDownload } from '@iqss/dataverse-client-javascript'
 
 const downloadUrls = DatasetDownloadUrlsMother.create()
-const fileRepository: FileRepository = {} as FileRepository
 
 describe('AccessDatasetMenu', () => {
-  beforeEach(() => {
-    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves([{ id: 10 }, { id: 11 }])
-  })
-
   it('renders the AccessDatasetMenu if the user has download files permissions and the dataset is not deaccessioned', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()

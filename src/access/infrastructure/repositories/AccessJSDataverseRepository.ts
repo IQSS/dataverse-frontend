@@ -5,34 +5,28 @@ import {
 } from '@iqss/dataverse-client-javascript'
 import {
   AccessRepository,
-  GuestbookResponseAnswer
+  GuestbookResponseDTO
 } from '@/access/domain/repositories/AccessRepository'
 
 export class AccessJSDataverseRepository implements AccessRepository {
   submitGuestbookForDatasetDownload(
     datasetId: number | string,
-    answers: GuestbookResponseAnswer[]
+    answers: GuestbookResponseDTO
   ): Promise<string> {
-    return submitGuestbookForDatasetDownloadJSDv.execute(datasetId, {
-      guestbookResponse: { answers }
-    })
+    return submitGuestbookForDatasetDownloadJSDv.execute(datasetId, answers)
   }
 
   submitGuestbookForDatafileDownload(
     fileId: number | string,
-    answers: GuestbookResponseAnswer[]
+    answers: GuestbookResponseDTO
   ): Promise<string> {
-    return submitGuestbookForDatafileDownloadJSDv.execute(fileId, {
-      guestbookResponse: { answers }
-    })
+    return submitGuestbookForDatafileDownloadJSDv.execute(fileId, answers)
   }
 
   submitGuestbookForDatafilesDownload(
     fileIds: Array<number | string>,
-    answers: GuestbookResponseAnswer[]
+    answers: GuestbookResponseDTO
   ): Promise<string> {
-    return submitGuestbookForDatafilesDownloadJSDv.execute(fileIds, {
-      guestbookResponse: { answers }
-    })
+    return submitGuestbookForDatafilesDownloadJSDv.execute(fileIds, answers)
   }
 }

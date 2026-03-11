@@ -14,12 +14,16 @@ import { useGuestbookCollectSubmission } from './useGuestbookCollectSubmission'
 import { CustomTerms as CustomTermsModel, DatasetLicense } from '@/dataset/domain/models/Dataset'
 import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
 import { useGuestbookRepository } from '@/sections/guestbooks/GuestbookRepositoryContext'
+import {
+  GuestbookAnswerDTO,
+  GuestbookResponseDTO
+} from '@/access/domain/repositories/AccessRepository'
 
 interface DownloadWithGuestbookModalProps {
   fileId?: number | string
   fileIds?: Array<number | string>
   guestbookId?: number
-  datasetPersistentId?: string
+  datasetId?: number | string
   datasetLicense?: DatasetLicense
   datasetCustomTerms?: CustomTermsModel
   show: boolean
@@ -27,13 +31,11 @@ interface DownloadWithGuestbookModalProps {
 }
 
 type GuestbookFormValues = Record<string, string>
-type GuestbookResponseAnswer = { id: number | string; value: string | string[] }
-
 export function DownloadWithGuestbookModal({
   fileId,
   fileIds,
   guestbookId,
-  datasetPersistentId,
+  datasetId,
   datasetLicense,
   datasetCustomTerms,
   show,
@@ -51,7 +53,8 @@ export function DownloadWithGuestbookModal({
     guestbookId
   })
 
-  const resolvedDatasetPersistentId = datasetPersistentId ?? dataset?.persistentId
+  const resolvedDatasetId = datasetId ?? dataset?.id ?? dataset?.persistentId
+  const resolvedDatasetPersistentId = dataset?.persistentId
   const resolvedDatasetLicense = datasetLicense ?? dataset?.license
   const resolvedDatasetCustomTerms = datasetCustomTerms ?? dataset?.termsOfUse.customTerms
 
@@ -157,25 +160,8 @@ export function DownloadWithGuestbookModal({
     return fieldName
   }
 
-  const buildGuestbookAnswers = () => {
-    const accountAnswers = accountFieldKeys.reduce<GuestbookResponseAnswer[]>(
-      (answers, fieldName) => {
-        const value = (formValues[fieldName] ?? '').trim()
-        if (value.length === 0) {
-          return answers
-        }
-
-        answers.push({
-          id: resolveAnswerId(fieldName, undefined, guestbook),
-          value
-        })
-
-        return answers
-      },
-      []
-    )
-
-    const customQuestionAnswers = customQuestions.reduce<GuestbookResponseAnswer[]>(
+  const buildGuestbookResponse = (): GuestbookResponseDTO => {
+    const customQuestionAnswers = customQuestions.reduce<GuestbookAnswerDTO[]>(
       (answers, question, index) => {
         const fieldName = getGuestbookCustomQuestionFieldName(question, index)
         const value = (formValues[fieldName] ?? '').trim()
@@ -193,7 +179,15 @@ export function DownloadWithGuestbookModal({
       []
     )
 
-    return [...accountAnswers, ...customQuestionAnswers]
+    return {
+      guestbookResponse: {
+        name: (formValues.name ?? '').trim() || undefined,
+        email: (formValues.email ?? '').trim() || undefined,
+        institution: (formValues.institution ?? '').trim() || undefined,
+        position: (formValues.position ?? '').trim() || undefined,
+        answers: customQuestionAnswers
+      }
+    }
   }
   const buildSignedUrl = (signedUrl: string): string => {
     try {
@@ -229,7 +223,7 @@ export function DownloadWithGuestbookModal({
     handleSubmit,
     resetSubmissionState
   } = useGuestbookCollectSubmission({
-    datasetPersistentId: resolvedDatasetPersistentId,
+    datasetId: resolvedDatasetId,
     fileId,
     fileIds,
     handleClose,
@@ -288,7 +282,7 @@ export function DownloadWithGuestbookModal({
             void handleSubmit({
               hasAccountFieldErrors,
               guestbook,
-              answers: buildGuestbookAnswers()
+              guestbookResponse: buildGuestbookResponse()
             })
           }
           disabled={

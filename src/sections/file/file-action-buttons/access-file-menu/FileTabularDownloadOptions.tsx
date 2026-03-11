@@ -12,7 +12,6 @@ interface FileTabularDownloadOptionsProps {
   ingestInProgress: boolean
   downloadUrls: FileDownloadUrls
   guestbookId?: number
-  datasetPersistentId?: string
   datasetLicense?: DatasetLicense
   datasetCustomTerms?: CustomTerms
   isLockedFromFileDownload: boolean
@@ -24,7 +23,6 @@ export function FileTabularDownloadOptions({
   ingestInProgress,
   downloadUrls,
   guestbookId,
-  datasetPersistentId,
   datasetLicense,
   datasetCustomTerms,
   isLockedFromFileDownload
@@ -76,7 +74,6 @@ export function FileTabularDownloadOptions({
         <DownloadWithGuestbookModal
           fileId={fileId}
           guestbookId={guestbookId}
-          datasetPersistentId={datasetPersistentId}
           datasetLicense={datasetLicense}
           datasetCustomTerms={datasetCustomTerms}
           show={showDownloadWithGuestbookModal}

@@ -30,7 +30,6 @@ export function FileDownloadOptions({
     return <></>
   }
 
-  const datasetPersistentId = dataset?.persistentId
   const datasetLicense = dataset?.license
   const datasetCustomTerms = dataset?.termsOfUse.customTerms
   const guestbookId = dataset?.guestbookId
@@ -48,7 +47,6 @@ export function FileDownloadOptions({
           ingestInProgress={ingestInProgress}
           downloadUrls={downloadUrls}
           guestbookId={guestbookId}
-          datasetPersistentId={datasetPersistentId}
           datasetLicense={datasetLicense}
           datasetCustomTerms={datasetCustomTerms}
           isLockedFromFileDownload={isLockedFromFileDownload}
@@ -57,7 +55,6 @@ export function FileDownloadOptions({
         <FileNonTabularDownloadOptions
           fileId={fileId}
           guestbookId={guestbookId}
-          datasetPersistentId={datasetPersistentId}
           datasetLicense={datasetLicense}
           datasetCustomTerms={datasetCustomTerms}
           type={type}

@@ -5,7 +5,10 @@ import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
-import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
+import {
+  AccessRepository,
+  GuestbookResponseDTO
+} from '@/access/domain/repositories/AccessRepository'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
 import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
@@ -34,15 +37,13 @@ const storybookGuestbook: Guestbook = {
 const accessRepository: AccessRepository = {
   submitGuestbookForDatasetDownload: (
     _datasetId: number | string,
-    _answers: Array<{ id: number | string; value: string | string[] }>
+    _answers: GuestbookResponseDTO
   ) => Promise.resolve('/api/v1/access/dataset/:persistentId?token=storybook'),
-  submitGuestbookForDatafileDownload: (
-    _fileId: number | string,
-    _answers: Array<{ id: number | string; value: string | string[] }>
-  ) => Promise.resolve('/api/v1/access/datafile/123?token=storybook'),
+  submitGuestbookForDatafileDownload: (_fileId: number | string, _answers: GuestbookResponseDTO) =>
+    Promise.resolve('/api/v1/access/datafile/123?token=storybook'),
   submitGuestbookForDatafilesDownload: (
     _fileIds: Array<number | string>,
-    _answers: Array<{ id: number | string; value: string | string[] }>
+    _answers: GuestbookResponseDTO
   ) => Promise.resolve('/api/v1/access/datafiles/123,124?token=storybook')
 }
 

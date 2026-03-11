@@ -87,6 +87,7 @@
         "close": "Cerrar",
         "additionalQuestions": "Preguntas adicionales",
         "submitError": "Algo salió mal al enviar las respuestas del libro de visitas. Inténtalo de nuevo más tarde.",
+        "downloadStarted": "Tu descarga ha comenzado.",
         "downloadError": "Algo salió mal al descargar el archivo. Inténtalo de nuevo más tarde.",
         "validation": {
           "required": "Este campo es obligatorio.",

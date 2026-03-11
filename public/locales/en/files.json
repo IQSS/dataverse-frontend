@@ -87,6 +87,7 @@
         "close": "Close",
         "additionalQuestions": "Additional Questions",
         "submitError": "Something went wrong submitting guestbook responses. Try again later.",
+        "downloadStarted": "Your download has started.",
         "downloadError": "Something went wrong downloading the file. Try again later.",
         "validation": {
           "required": "This field is required.",

@@ -91,7 +91,6 @@ export function AccessDatasetMenu({
           show={showDownloadWithGuestbookModal}
           handleClose={() => setShowDownloadWithGuestbookModal(false)}
           guestbookId={guestbookId}
-          datasetPersistentId={persistentId}
           datasetLicense={license}
           datasetCustomTerms={customTerms}
         />

@@ -14,7 +14,7 @@ export const DatasetGuestbook = () => {
   const [showPreview, setShowPreview] = useState(false)
   const { guestbook, isLoadingGuestbook } = useGetGuestbookById({
     guestbookRepository,
-    guestbookId: dataset?.guestbookId as number
+    guestbookId: dataset?.guestbookId
   })
   const hasGuestbook = guestbook !== undefined
 

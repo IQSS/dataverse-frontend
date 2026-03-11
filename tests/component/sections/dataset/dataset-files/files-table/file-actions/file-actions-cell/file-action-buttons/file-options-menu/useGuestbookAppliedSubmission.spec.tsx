@@ -5,7 +5,12 @@ import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { useGuestbookCollectSubmission } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/useGuestbookCollectSubmission'
 
 const accessRepository: AccessRepository = {} as AccessRepository
-const answers = [{ id: 'name', value: 'Test User' }]
+const guestbookResponse = {
+  guestbookResponse: {
+    name: 'Test User',
+    answers: []
+  }
+}
 
 const guestbook: Guestbook = {
   id: 10,
@@ -64,7 +69,7 @@ describe('useGuestbookCollectSubmission', () => {
       await result.current.handleSubmit({
         hasAccountFieldErrors: true,
         guestbook,
-        answers
+        guestbookResponse
       })
     })
 
@@ -91,11 +96,14 @@ describe('useGuestbookCollectSubmission', () => {
       await result.current.handleSubmit({
         hasAccountFieldErrors: false,
         guestbook,
-        answers
+        guestbookResponse
       })
     })
 
-    expect(accessRepository.submitGuestbookForDatafileDownload).to.have.been.calledWith(10, answers)
+    expect(accessRepository.submitGuestbookForDatafileDownload).to.have.been.calledWith(
+      10,
+      guestbookResponse
+    )
     expect(accessRepository.submitGuestbookForDatafilesDownload).to.not.have.been.called
     expect(handleClose).to.have.been.calledOnce
     expect(triggerDirectDownload).to.have.been.calledOnceWith('signed-url-datafile')
@@ -118,13 +126,13 @@ describe('useGuestbookCollectSubmission', () => {
       await result.current.handleSubmit({
         hasAccountFieldErrors: false,
         guestbook,
-        answers
+        guestbookResponse
       })
     })
 
     expect(accessRepository.submitGuestbookForDatafilesDownload).to.have.been.calledWith(
       [10, 11],
-      answers
+      guestbookResponse
     )
     expect(accessRepository.submitGuestbookForDatafileDownload).to.not.have.been.called
     expect(handleClose).to.have.been.calledOnce
@@ -149,7 +157,7 @@ describe('useGuestbookCollectSubmission', () => {
       await result.current.handleSubmit({
         hasAccountFieldErrors: false,
         guestbook,
-        answers
+        guestbookResponse
       })
     })
 
@@ -176,7 +184,7 @@ describe('useGuestbookCollectSubmission', () => {
       await result.current.handleSubmit({
         hasAccountFieldErrors: false,
         guestbook,
-        answers
+        guestbookResponse
       })
     })
 
@@ -202,7 +210,7 @@ describe('useGuestbookCollectSubmission', () => {
       await result.current.handleSubmit({
         hasAccountFieldErrors: false,
         guestbook,
-        answers
+        guestbookResponse
       })
     })
 
@@ -229,7 +237,7 @@ describe('useGuestbookCollectSubmission', () => {
       await result.current.handleSubmit({
         hasAccountFieldErrors: true,
         guestbook,
-        answers
+        guestbookResponse
       })
     })
     expect(result.current.hasAttemptedAccept).to.deep.equal(true)

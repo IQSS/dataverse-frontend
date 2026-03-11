@@ -174,13 +174,12 @@ describe('SessionProvider', () => {
         throw new ReadError()
       })
     })
-
+    cy.clock()
     renderComponent({
       loginInProgress: false,
       withTokenPresent: true
     })
 
-    cy.clock()
     cy.findByText('Loading...').should('exist')
     cy.tick(DELAYED_TIME)
     cy.findByText('There was an error when reading the resource.').should('exist')
