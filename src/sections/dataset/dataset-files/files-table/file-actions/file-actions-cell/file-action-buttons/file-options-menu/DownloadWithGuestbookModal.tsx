@@ -62,8 +62,7 @@ export function DownloadWithGuestbookModal({
 
     return accountFieldKeys.reduce<GuestbookFormValues>((prefilledValues, fieldName) => {
       if (fieldName === 'name') {
-        prefilledValues[fieldName] =
-          `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim() || user.displayName
+        prefilledValues[fieldName] = user.displayName
       }
       if (fieldName === 'email') {
         prefilledValues[fieldName] = user.email
@@ -143,13 +142,13 @@ export function DownloadWithGuestbookModal({
     }
 
     if (fieldName === 'email') {
-      return guestbookWithAnswerIds.email ?? fieldName
+      return guestbookWithAnswerIds.email ?? ''
     }
     if (fieldName === 'institution') {
-      return guestbookWithAnswerIds.institution ?? fieldName
+      return guestbookWithAnswerIds.institution ?? ''
     }
     if (fieldName === 'position') {
-      return guestbookWithAnswerIds.position ?? fieldName
+      return guestbookWithAnswerIds.position ?? ''
     }
 
     return fieldName
@@ -197,16 +196,20 @@ export function DownloadWithGuestbookModal({
   }
 
   const triggerDirectDownload = (signedUrl: string): Promise<void> => {
-    const downloadLink = document.createElement('a')
-    downloadLink.href = buildSignedUrl(signedUrl)
-    downloadLink.style.display = 'none'
-    downloadLink.rel = 'noreferrer'
+    try {
+      const downloadLink = document.createElement('a')
+      downloadLink.href = buildSignedUrl(signedUrl)
+      downloadLink.style.display = 'none'
+      downloadLink.rel = 'noreferrer'
 
-    document.body.appendChild(downloadLink)
-    downloadLink.click()
-    document.body.removeChild(downloadLink)
+      document.body.appendChild(downloadLink)
+      downloadLink.click()
+      document.body.removeChild(downloadLink)
 
-    return Promise.resolve()
+      return Promise.resolve()
+    } catch (error) {
+      return Promise.reject(error)
+    }
   }
 
   const {

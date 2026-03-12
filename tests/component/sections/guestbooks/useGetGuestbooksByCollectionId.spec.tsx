@@ -35,6 +35,24 @@ describe('useGetGuestbooksByCollectionId', () => {
     cy.wrap(executeStub).should('have.been.calledOnceWith', 1)
   })
 
+  it('returns an empty array when request succeeds with a non-array payload', async () => {
+    const executeStub = cy.stub(getGuestbooksByCollectionId, 'execute').resolves({ guestbook })
+
+    const { result } = renderHook(() => useGetGuestbooksByCollectionId({ collectionIdOrAlias: 1 }))
+
+    expect(result.current.isLoadingGuestbooksByCollectionId).to.deep.equal(true)
+    expect(result.current.errorGetGuestbooksByCollectionId).to.deep.equal(null)
+    expect(result.current.guestbooks).to.deep.equal([])
+
+    await waitFor(() => {
+      expect(result.current.isLoadingGuestbooksByCollectionId).to.deep.equal(false)
+      expect(result.current.errorGetGuestbooksByCollectionId).to.deep.equal(null)
+      expect(result.current.guestbooks).to.deep.equal([])
+    })
+
+    cy.wrap(executeStub).should('have.been.calledOnceWith', 1)
+  })
+
   it('does not fetch when collection id is undefined', async () => {
     const executeStub = cy.stub(getGuestbooksByCollectionId, 'execute').resolves([guestbook])
 
@@ -73,6 +91,31 @@ describe('useGetGuestbooksByCollectionId', () => {
 
     expect(result.current.guestbooks).to.deep.equal([])
     expect(result.current.errorGetGuestbooksByCollectionId).to.deep.equal('ReadError message')
+    expect(result.current.isLoadingGuestbooksByCollectionId).to.deep.equal(false)
+  })
+
+  it('falls back to the raw ReadError message when no reason can be extracted', async () => {
+    const executeStub = cy.stub(getGuestbooksByCollectionId, 'execute')
+    executeStub.onFirstCall().resolves([guestbook])
+    executeStub.onSecondCall().rejects(new ReadError('Raw read error message'))
+
+    const { result } = renderHook(() =>
+      useGetGuestbooksByCollectionId({ collectionIdOrAlias: 1, autoFetch: false })
+    )
+
+    await act(async () => {
+      await result.current.fetchGuestbooksByCollectionId()
+    })
+
+    expect(result.current.guestbooks).to.deep.equal([guestbook])
+    expect(result.current.errorGetGuestbooksByCollectionId).to.deep.equal(null)
+
+    await act(async () => {
+      await result.current.fetchGuestbooksByCollectionId()
+    })
+
+    expect(result.current.guestbooks).to.deep.equal([])
+    expect(result.current.errorGetGuestbooksByCollectionId).to.deep.equal('Raw read error message')
     expect(result.current.isLoadingGuestbooksByCollectionId).to.deep.equal(false)
   })
 

@@ -85,8 +85,6 @@ export const useGuestbookCollectSubmission = ({
             datasetId,
             guestbookResponse
           )
-        } else {
-          return
         }
       } catch (err) {
         if (err instanceof WriteError) {

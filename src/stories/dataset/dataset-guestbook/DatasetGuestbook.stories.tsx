@@ -30,6 +30,14 @@ class GuestbookMockRepository implements GuestbookRepository {
       dataverseId: 1
     })
   }
+
+  assignDatasetGuestbook(_datasetId: number | string, _guestbookId: number): Promise<void> {
+    return Promise.resolve()
+  }
+
+  removeDatasetGuestbook(_datasetId: number | string): Promise<void> {
+    return Promise.resolve()
+  }
 }
 
 const meta: Meta<typeof DatasetGuestbook> = {

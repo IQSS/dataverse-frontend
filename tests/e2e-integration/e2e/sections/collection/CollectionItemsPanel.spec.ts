@@ -323,12 +323,13 @@ describe('Collection Items Panel', () => {
     cy.visit(`/spa/collections`)
     cy.findByRole('button', { name: /Sort/ }).click({ force: true })
     cy.contains('Name (Z-A)').click({ force: true })
+    cy.wait('@getCollectionItems')
 
-    cy.findAllByTestId('dataset-card').first().contains('Volta')
     const sortExpectedUrl = new URLSearchParams({
       [CollectionItemsQueryParams.SORT]: 'name',
       [CollectionItemsQueryParams.ORDER]: 'desc'
     }).toString()
     cy.url().should('include', `/collections?${sortExpectedUrl}`)
+    cy.findAllByTestId('dataset-card').first().should('contain.text', 'Volta')
   })
 })

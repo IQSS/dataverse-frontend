@@ -48,7 +48,9 @@ const accessRepository: AccessRepository = {
 }
 
 const guestbookRepository: GuestbookRepository = {
-  getGuestbook: (_guestbookId: number) => Promise.resolve(storybookGuestbook)
+  getGuestbook: (_guestbookId: number) => Promise.resolve(storybookGuestbook),
+  assignDatasetGuestbook: (_datasetId: number | string, _guestbookId: number) => Promise.resolve(),
+  removeDatasetGuestbook: (_datasetId: number | string) => Promise.resolve()
 }
 
 const meta: Meta<typeof DownloadWithGuestbookModal> = {

@@ -159,9 +159,7 @@ export function GuestbookCollectForm({
         const isRequired = isAccountFieldRequired(accountFieldKey)
         const isIdentityField = accountFieldKey === 'name' || accountFieldKey === 'email'
         const shouldDisableInput = shouldLockIdentityFields && isIdentityField
-        const hasError =
-          (hasAttemptedAccept || accountFieldKey === 'email') &&
-          accountFieldErrors[accountFieldKey] !== null
+        const invalid = hasAttemptedAccept && accountFieldErrors[accountFieldKey] !== null
 
         return (
           <Form.Group
@@ -182,15 +180,13 @@ export function GuestbookCollectForm({
                 onChange={(event) =>
                   onFieldChange(accountFieldKey, (event.target as HTMLInputElement).value)
                 }
-                isInvalid={hasError}
+                isInvalid={invalid}
                 disabled={shouldDisableInput}
                 aria-required={isRequired}
               />
-              {hasError && (
-                <Form.Group.Feedback type="invalid">
-                  {accountFieldErrors[accountFieldKey]}
-                </Form.Group.Feedback>
-              )}
+              <Form.Group.Feedback type="invalid">
+                {invalid ? accountFieldErrors[accountFieldKey] : undefined}
+              </Form.Group.Feedback>
             </Col>
           </Form.Group>
         )

@@ -4,6 +4,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import {
   DatasetNonNumericVersionSearchParam,
   DatasetPublishingStatus
@@ -11,15 +12,17 @@ import {
 import { useGetGuestbooksByCollectionId } from '@/sections/guestbooks/useGetGuestbooksByCollectionId'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { useAssignDatasetGuestbook } from './useAssignDatasetGuestbook'
+import { useRemoveDatasetGuestbook } from './useRemoveDatasetGuestbook'
 import { useDataset } from '../../dataset/DatasetContext'
 import { PreviewGuestbookModal } from '@/sections/guestbooks/preview-modal/PreviewGuestbookModal'
 import styles from './EditGuestbook.module.scss'
 
 interface EditGuestbookProps {
+  guestbookRepository: GuestbookRepository
   onPreview?: () => void
 }
 
-export function EditGuestbook({ onPreview }: EditGuestbookProps) {
+export function EditGuestbook({ guestbookRepository, onPreview }: EditGuestbookProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const [selectedGuestbookId, setSelectedGuestbookId] = useState<number | undefined>(undefined)
@@ -57,7 +60,20 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
     isLoadingAssignDatasetGuestbook,
     errorAssignDatasetGuestbook
   } = useAssignDatasetGuestbook({
+    guestbookRepository,
     onSuccessfulAssignDatasetGuestbook: () => {
+      toast.success(t('alerts.termsUpdated.alertText'))
+      refreshDataset()
+      navigateToDatasetView()
+    }
+  })
+  const {
+    handleRemoveDatasetGuestbook,
+    isLoadingRemoveDatasetGuestbook,
+    errorRemoveDatasetGuestbook
+  } = useRemoveDatasetGuestbook({
+    guestbookRepository,
+    onSuccessfulRemoveDatasetGuestbook: () => {
       toast.success(t('alerts.termsUpdated.alertText'))
       refreshDataset()
       navigateToDatasetView()
@@ -105,9 +121,19 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (!dataset || selectedGuestbookId === undefined) {
+    if (!dataset) {
       return
     }
+
+    if (selectedGuestbookId === undefined) {
+      if (dataset.guestbookId === undefined) {
+        return
+      }
+
+      await handleRemoveDatasetGuestbook(dataset.id)
+      return
+    }
+
     await handleAssignDatasetGuestbook(dataset.id, selectedGuestbookId)
   }
 
@@ -142,6 +168,22 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
                 )}
             </Form.Group.Text>
 
+            {!isLoadingGuestbooksByCollectionId &&
+              !errorGetGuestbooksByCollectionId &&
+              guestbooks.length > 0 &&
+              selectedGuestbookId !== undefined && (
+                <div style={{ marginTop: '10px' }}>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    style={{ marginBottom: '0.75rem' }}
+                    onClick={() => setSelectedGuestbookId(undefined)}>
+                    {t('editTerms.guestbook.clearSelection')}
+                  </Button>
+                </div>
+              )}
+
             {isLoadingGuestbooksByCollectionId && (
               <div className={styles['guestbook-loading']}>
                 <Spinner />
@@ -153,6 +195,9 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
             )}
             {errorAssignDatasetGuestbook && (
               <Alert variant="danger">{errorAssignDatasetGuestbook}</Alert>
+            )}
+            {errorRemoveDatasetGuestbook && (
+              <Alert variant="danger">{errorRemoveDatasetGuestbook}</Alert>
             )}
 
             {!isLoadingGuestbooksByCollectionId &&
@@ -202,11 +247,15 @@ export function EditGuestbook({ onPreview }: EditGuestbookProps) {
           <Button
             type="submit"
             disabled={
-              selectedGuestbookId === undefined ||
+              guestbooks.length === 0 ||
+              (selectedGuestbookId === undefined && dataset?.guestbookId === undefined) ||
               selectedGuestbookId === dataset?.guestbookId ||
-              isLoadingAssignDatasetGuestbook
+              isLoadingAssignDatasetGuestbook ||
+              isLoadingRemoveDatasetGuestbook
             }>
-            {isLoadingAssignDatasetGuestbook ? tShared('saving') : tShared('saveChanges')}
+            {isLoadingAssignDatasetGuestbook || isLoadingRemoveDatasetGuestbook
+              ? tShared('saving')
+              : tShared('saveChanges')}
           </Button>
           <Button variant="secondary" type="button" onClick={handleCancel}>
             {tShared('cancel')}

@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { assignDatasetGuestbook, WriteError } from '@iqss/dataverse-client-javascript'
+import { WriteError } from '@iqss/dataverse-client-javascript'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { assignDatasetGuestbook } from '@/guestbooks/domain/useCases/assignDatasetGuestbook'
 
 interface UseAssignDatasetGuestbookProps {
+  guestbookRepository: GuestbookRepository
   onSuccessfulAssignDatasetGuestbook: () => void
 }
 
@@ -14,6 +17,7 @@ interface UseAssignDatasetGuestbookReturn {
 }
 
 export const useAssignDatasetGuestbook = ({
+  guestbookRepository,
   onSuccessfulAssignDatasetGuestbook
 }: UseAssignDatasetGuestbookProps): UseAssignDatasetGuestbookReturn => {
   const { t } = useTranslation('dataset')
@@ -27,7 +31,7 @@ export const useAssignDatasetGuestbook = ({
     setErrorAssignDatasetGuestbook(null)
 
     try {
-      await assignDatasetGuestbook.execute(datasetId, guestbookId)
+      await assignDatasetGuestbook(guestbookRepository, datasetId, guestbookId)
       onSuccessfulAssignDatasetGuestbook()
     } catch (err) {
       if (err instanceof WriteError) {
