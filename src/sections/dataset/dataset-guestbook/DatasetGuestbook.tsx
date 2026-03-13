@@ -26,7 +26,11 @@ export const DatasetGuestbook = () => {
           <QuestionMarkTooltip placement="right" message={t('termsTab.guestbookTip')} />
         </Col>
         <Col>
-          {!guestbook ? (
+          {isLoadingGuestbook ? (
+            <div className={styles['guestbook-selection']}>
+              <Spinner />
+            </div>
+          ) : !guestbook ? (
             <p
               className={styles['community-norms-text']}
               data-testid="dataset-guestbook-empty-message">
@@ -52,18 +56,14 @@ export const DatasetGuestbook = () => {
                 {t('termsTab.guestbookDescription')}
               </p>
               <div className={styles['guestbook-selection']}>
-                {isLoadingGuestbook ? (
-                  <Spinner />
-                ) : (
-                  <>
-                    <span data-testid="dataset-guestbook-name">{guestbook?.name ?? '-'}</span>
-                    {hasGuestbook && (
-                      <Button type="button" size="sm" onClick={() => setShowPreview(true)}>
-                        {t('termsTab.guestbookPreviewButton')}
-                      </Button>
-                    )}
-                  </>
-                )}
+                <>
+                  <span data-testid="dataset-guestbook-name">{guestbook?.name ?? '-'}</span>
+                  {hasGuestbook && (
+                    <Button type="button" size="sm" onClick={() => setShowPreview(true)}>
+                      {t('termsTab.guestbookPreviewButton')}
+                    </Button>
+                  )}
+                </>
               </div>
             </>
           )}

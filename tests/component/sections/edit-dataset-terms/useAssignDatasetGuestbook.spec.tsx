@@ -11,6 +11,7 @@ describe('useAssignDatasetGuestbook', () => {
     onSuccessfulAssignDatasetGuestbook = cy.stub().as('onSuccessfulAssignDatasetGuestbook')
     guestbookRepository = {
       getGuestbook: cy.stub(),
+      getGuestbooksByCollectionId: cy.stub(),
       assignDatasetGuestbook: cy.stub(),
       removeDatasetGuestbook: cy.stub()
     }
@@ -74,9 +75,7 @@ describe('useAssignDatasetGuestbook', () => {
     expect(assignDatasetGuestbookStub).to.have.been.calledWith(123, 5)
     expect(onSuccessfulAssignDatasetGuestbook).to.not.have.been.called
     expect(result.current.isLoadingAssignDatasetGuestbook).to.deep.equal(false)
-    expect(result.current.errorAssignDatasetGuestbook).to.deep.equal(
-      'Guestbook cannot be assigned'
-    )
+    expect(result.current.errorAssignDatasetGuestbook).to.deep.equal('Guestbook cannot be assigned')
   })
 
   it('should handle WriteError using the raw error message when no reason can be extracted', async () => {

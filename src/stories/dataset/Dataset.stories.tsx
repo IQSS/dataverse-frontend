@@ -17,9 +17,14 @@ import { WithDeaccessionedDataset } from './WithDeaccessionedDataset'
 import { WithNotImplementedModal } from '../WithNotImplementedModal'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { DatasetMockRepository } from './DatasetMockRepository'
+import { DatasetWithGuestbookMockRepository } from './DatasetWithGuestbookMockRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 import { ContactMockRepository } from '../shared-mock-repositories/contact/ContactMockRepository'
 import { DataverseInfoMockRepository } from '../shared-mock-repositories/info/DataverseInfoMockRepository'
+import { GuestbookMockRepository } from '../shared-mock-repositories/guestbook/GuestbookMockRepository'
+import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -33,6 +38,24 @@ const meta: Meta<typeof Dataset> = {
 
 export default meta
 type Story = StoryObj<typeof Dataset>
+
+const guestbookRepository: GuestbookRepository = new GuestbookMockRepository()
+
+const WithDatasetGuestbook = (Story: () => JSX.Element) => {
+  const datasetRepository = new DatasetWithGuestbookMockRepository()
+
+  return (
+    <GuestbookRepositoryProvider repository={guestbookRepository}>
+      <DatasetProvider
+        repository={datasetRepository}
+        searchParams={{ persistentId: 'doi:10.5072/FK2/8YOKQI' }}>
+        <Story />
+      </DatasetProvider>
+    </GuestbookRepositoryProvider>
+  )
+}
+
+WithDatasetGuestbook.displayName = 'WithDatasetGuestbook'
 
 export const Default: Story = {
   decorators: [WithLayout, WithDataset, WithNotImplementedModal],
@@ -157,6 +180,21 @@ export const DatasetWithNoFiles: Story = {
       collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockNoDataRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+      contactRepository={new ContactMockRepository()}
+      filesTabInfiniteScrollEnabled
+      dataverseInfoRepository={new DataverseInfoMockRepository()}
+    />
+  )
+}
+
+export const DatasetWithGuestbook: Story = {
+  decorators: [WithLayout, WithDatasetGuestbook, WithNotImplementedModal],
+  render: () => (
+    <Dataset
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       filesTabInfiniteScrollEnabled

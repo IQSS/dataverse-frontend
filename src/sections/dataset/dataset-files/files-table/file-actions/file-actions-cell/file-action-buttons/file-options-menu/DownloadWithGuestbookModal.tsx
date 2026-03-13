@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Alert, Button, Modal, Spinner } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { useDataset } from '@/sections/dataset/DatasetContext'
 import { useGetGuestbookById } from '@/sections/dataset/dataset-guestbook/useGetGuestbookById'
 import {
   GuestbookCollectForm,
@@ -24,6 +23,7 @@ interface DownloadWithGuestbookModalProps {
   fileIds?: Array<number | string>
   guestbookId?: number
   datasetId?: number | string
+  datasetPersistentId?: string
   datasetLicense?: DatasetLicense
   datasetCustomTerms?: CustomTermsModel
   show: boolean
@@ -36,6 +36,7 @@ export function DownloadWithGuestbookModal({
   fileIds,
   guestbookId,
   datasetId,
+  datasetPersistentId,
   datasetLicense,
   datasetCustomTerms,
   show,
@@ -44,7 +45,6 @@ export function DownloadWithGuestbookModal({
   const { t: tFiles } = useTranslation('files')
   const { t: tDataset } = useTranslation('dataset')
   const { user } = useSession()
-  const { dataset } = useDataset()
   const accessRepository = useAccessRepository()
   const guestbookRepository = useGuestbookRepository()
 
@@ -261,7 +261,7 @@ export function DownloadWithGuestbookModal({
             <GuestbookCollectForm
               license={datasetLicense}
               customTerms={datasetCustomTerms}
-              datasetPersistentId={dataset?.persistentId}
+              datasetPersistentId={datasetPersistentId}
               guestbook={guestbook}
               formValues={formValues}
               hasAttemptedAccept={hasAttemptedAccept}

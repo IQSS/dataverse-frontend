@@ -89,6 +89,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
         <DownloadWithGuestbookModal
           fileIds={fileIdsForGuestbookSubmission}
           guestbookId={dataset.guestbookId}
+          datasetPersistentId={dataset.persistentId}
           show={showDownloadWithGuestbookModal}
           handleClose={() => setShowDownloadWithGuestbookModal(false)}
         />

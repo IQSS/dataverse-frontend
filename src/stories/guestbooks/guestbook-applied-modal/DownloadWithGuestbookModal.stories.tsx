@@ -2,37 +2,15 @@ import { Meta, StoryObj } from '@storybook/react'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
 import { WithI18next } from '@/stories/WithI18next'
 import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
+import { GuestbookMockRepository } from '@/stories/shared-mock-repositories/guestbook/GuestbookMockRepository'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
-import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import {
   AccessRepository,
   GuestbookResponseDTO
 } from '@/access/domain/repositories/AccessRepository'
-import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
 import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
-
-const storybookGuestbook: Guestbook = {
-  id: 3,
-  name: 'Storybook Guestbook',
-  enabled: true,
-  nameRequired: true,
-  emailRequired: true,
-  institutionRequired: false,
-  positionRequired: false,
-  customQuestions: [
-    {
-      question: 'How will you use this data?',
-      required: true,
-      displayOrder: 1,
-      type: 'text',
-      hidden: false
-    }
-  ],
-  createTime: '2026-01-01T00:00:00.000Z',
-  dataverseId: 1
-}
 
 const accessRepository: AccessRepository = {
   submitGuestbookForDatasetDownload: (
@@ -47,11 +25,7 @@ const accessRepository: AccessRepository = {
   ) => Promise.resolve('/api/v1/access/datafiles/123,124?token=storybook')
 }
 
-const guestbookRepository: GuestbookRepository = {
-  getGuestbook: (_guestbookId: number) => Promise.resolve(storybookGuestbook),
-  assignDatasetGuestbook: (_datasetId: number | string, _guestbookId: number) => Promise.resolve(),
-  removeDatasetGuestbook: (_datasetId: number | string) => Promise.resolve()
-}
+const guestbookRepository = new GuestbookMockRepository()
 
 const meta: Meta<typeof DownloadWithGuestbookModal> = {
   title: 'Sections/Guestbooks/DownloadWithGuestbookModal',

@@ -133,6 +133,7 @@ describe('DownloadWithGuestbookModal', () => {
         .callsFake((guestbookId: number) => {
           return getGuestbookImpl(guestbookId)
         }),
+      getGuestbooksByCollectionId: cy.stub().resolves([]),
       assignDatasetGuestbook: (_datasetId: number | string, _guestbookId: number) =>
         Promise.resolve(),
       removeDatasetGuestbook: (_datasetId: number | string) => Promise.resolve()
@@ -202,6 +203,7 @@ describe('DownloadWithGuestbookModal', () => {
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
           fileId={10}
+          datasetPersistentId="doi:10.5072/FK2/FILEPAGE"
           datasetLicense={undefined}
           datasetCustomTerms={{
             termsOfUse: 'File page custom terms text',

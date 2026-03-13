@@ -8,6 +8,7 @@ import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 interface FileNonTabularDownloadOptionsProps {
   fileId: number
   guestbookId?: number
+  datasetPersistentId?: string
   datasetLicense?: DatasetLicense
   datasetCustomTerms?: CustomTerms
   type: FileType
@@ -19,6 +20,7 @@ interface FileNonTabularDownloadOptionsProps {
 export function FileNonTabularDownloadOptions({
   fileId,
   guestbookId,
+  datasetPersistentId,
   datasetLicense,
   datasetCustomTerms,
   type,
@@ -54,6 +56,7 @@ export function FileNonTabularDownloadOptions({
         <DownloadWithGuestbookModal
           fileId={fileId}
           guestbookId={guestbookId}
+          datasetPersistentId={datasetPersistentId}
           datasetLicense={datasetLicense}
           datasetCustomTerms={datasetCustomTerms}
           show={showDownloadWithGuestbookModal}

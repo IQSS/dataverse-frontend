@@ -3,42 +3,11 @@ import { DatasetGuestbook } from '@/sections/dataset/dataset-guestbook/DatasetGu
 import { WithI18next } from '@/stories/WithI18next'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
-import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
-import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
-
-class GuestbookMockRepository implements GuestbookRepository {
-  getGuestbook(_guestbookId: number): Promise<Guestbook> {
-    return Promise.resolve({
-      id: 3,
-      name: 'Storybook Guestbook',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [
-        {
-          question: 'How will you use this data?',
-          required: true,
-          displayOrder: 1,
-          type: 'text',
-          hidden: false
-        }
-      ],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
-  }
-
-  assignDatasetGuestbook(_datasetId: number | string, _guestbookId: number): Promise<void> {
-    return Promise.resolve()
-  }
-
-  removeDatasetGuestbook(_datasetId: number | string): Promise<void> {
-    return Promise.resolve()
-  }
-}
+import {
+  GuestbookMockRepository,
+  storybookGuestbook
+} from '@/stories/shared-mock-repositories/guestbook/GuestbookMockRepository'
 
 const meta: Meta<typeof DatasetGuestbook> = {
   title: 'Sections/Dataset Page/DatasetTerms/DatasetGuestbook',
@@ -57,7 +26,7 @@ const withDatasetContext = (datasetWithGuestbook: boolean) => {
       <DatasetContext.Provider
         value={{
           dataset: DatasetMother.createRealistic({
-            guestbookId: datasetWithGuestbook ? 3 : undefined
+            guestbookId: datasetWithGuestbook ? storybookGuestbook.id : undefined
           }),
           isLoading: false,
           refreshDataset: () => {}

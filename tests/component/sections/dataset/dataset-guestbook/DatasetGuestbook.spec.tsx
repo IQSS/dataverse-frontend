@@ -1,16 +1,11 @@
-import * as guestbookHookModule from '@/sections/dataset/dataset-guestbook/useGetGuestbookById'
 import { DatasetGuestbook } from '@/sections/dataset/dataset-guestbook/DatasetGuestbook'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { Dataset as DatasetModel } from '@/dataset/domain/models/Dataset'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
-
-const guestbookRepository: GuestbookRepository = {
-  getGuestbook: cy.stub(),
-  assignDatasetGuestbook: cy.stub().resolves(undefined),
-  removeDatasetGuestbook: cy.stub().resolves(undefined)
-}
+import { QueryParamKey, Route } from '@/sections/Route.enum'
 
 const guestbook: Guestbook = {
   id: 10,
@@ -26,12 +21,25 @@ const guestbook: Guestbook = {
 }
 
 describe('DatasetGuestbook', () => {
-  const mountComponent = () =>
+  let guestbookRepository: GuestbookRepository
+
+  beforeEach(() => {
+    guestbookRepository = {
+      getGuestbook: cy.stub(),
+      getGuestbooksByCollectionId: cy.stub(),
+      assignDatasetGuestbook: cy.stub().resolves(undefined),
+      removeDatasetGuestbook: cy.stub().resolves(undefined)
+    }
+  })
+
+  const mountComponent = (
+    dataset: DatasetModel = DatasetMother.create({ guestbookId: guestbook.id })
+  ) =>
     cy.customMount(
       <GuestbookRepositoryProvider repository={guestbookRepository}>
         <DatasetContext.Provider
           value={{
-            dataset: DatasetMother.create({ guestbookId: guestbook.id }),
+            dataset,
             isLoading: false,
             refreshDataset: () => {}
           }}>
@@ -41,12 +49,9 @@ describe('DatasetGuestbook', () => {
     )
 
   it('renders a spinner while the guestbook is loading', () => {
-    cy.stub(guestbookHookModule, 'useGetGuestbookById').returns({
-      guestbook,
-      isLoadingGuestbook: true,
-      errorGetGuestbook: null,
-      fetchGuestbook: cy.stub()
-    })
+    ;(guestbookRepository.getGuestbook as Cypress.Agent<sinon.SinonStub>).returns(
+      new Promise(() => {})
+    )
 
     mountComponent()
 
@@ -54,12 +59,10 @@ describe('DatasetGuestbook', () => {
   })
 
   it('renders a fallback dash when the guestbook name is missing', () => {
-    cy.stub(guestbookHookModule, 'useGetGuestbookById').returns({
-      guestbook: { ...guestbook, name: undefined } as unknown as Guestbook,
-      isLoadingGuestbook: false,
-      errorGetGuestbook: null,
-      fetchGuestbook: cy.stub()
-    })
+    ;(guestbookRepository.getGuestbook as Cypress.Agent<sinon.SinonStub>).resolves({
+      ...guestbook,
+      name: undefined
+    } as unknown as Guestbook)
 
     mountComponent()
 
@@ -67,18 +70,35 @@ describe('DatasetGuestbook', () => {
   })
 
   it('opens and closes the preview modal from the preview button', () => {
-    cy.stub(guestbookHookModule, 'useGetGuestbookById').returns({
-      guestbook,
-      isLoadingGuestbook: false,
-      errorGetGuestbook: null,
-      fetchGuestbook: cy.stub()
+    const dataset = DatasetMother.create({ guestbookId: guestbook.id })
+    ;(guestbookRepository.getGuestbook as Cypress.Agent<sinon.SinonStub>).resolves({
+      ...guestbook,
+      customQuestions: [
+        {
+          question: 'How will you use this data?',
+          required: true,
+          displayOrder: 1,
+          type: 'text',
+          hidden: false
+        }
+      ]
     })
 
-    mountComponent()
+    mountComponent(dataset)
 
+    cy.findByRole('button', { name: 'Preview Guestbook' }).should('exist')
     cy.findByRole('button', { name: 'Preview Guestbook' }).click()
     cy.findByRole('dialog').should('be.visible')
-    cy.findByRole('button', { name: 'Close' }).click()
+    cy.findByRole('link', { name: 'Custom Questions' }).should(
+      'have.attr',
+      'href',
+      `/spa${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${encodeURIComponent(
+        dataset.persistentId
+      )}&${QueryParamKey.TAB}=terms&termsTab=guestbook`
+    )
+    cy.findByRole('dialog').within(() => {
+      cy.findAllByRole('button', { name: 'Close' }).last().click()
+    })
     cy.findByRole('dialog').should('not.exist')
   })
 })

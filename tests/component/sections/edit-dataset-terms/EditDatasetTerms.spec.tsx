@@ -12,10 +12,11 @@ import {
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { License } from '@/licenses/domain/models/License'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
-import { getGuestbooksByCollectionId } from '@iqss/dataverse-client-javascript'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 
 const licenseRepository: LicenseRepository = {} as LicenseRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
+let guestbookRepository: GuestbookRepository
 
 const mockLicenses: License[] = [
   {
@@ -99,6 +100,12 @@ describe('EditDatasetTerms', () => {
   beforeEach(() => {
     cy.viewport(1920, 1080)
     licenseRepository.getAvailableStandardLicenses = cy.stub().resolves(mockLicenses)
+    guestbookRepository = {
+      getGuestbook: cy.stub(),
+      getGuestbooksByCollectionId: cy.stub().resolves(mockGuestbooks),
+      assignDatasetGuestbook: cy.stub().resolves(undefined),
+      removeDatasetGuestbook: cy.stub().resolves(undefined)
+    }
   })
 
   describe('EditDatasetTermsHelper', () => {
@@ -140,6 +147,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -162,6 +170,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -195,6 +204,7 @@ describe('EditDatasetTerms', () => {
             }
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -220,6 +230,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -239,6 +250,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -278,6 +290,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -313,6 +326,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -334,6 +348,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -364,6 +379,7 @@ describe('EditDatasetTerms', () => {
             }
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -393,6 +409,7 @@ describe('EditDatasetTerms', () => {
             }
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -426,7 +443,6 @@ describe('EditDatasetTerms', () => {
 
   describe('Guestbook Tab Integration', () => {
     it('displays available guestbooks and keeps Save Changes disabled for current guestbook', () => {
-      cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
       const dataset = DatasetMother.create({
         license: mockLicenses[0],
         guestbookId: mockGuestbooks[0].id
@@ -438,6 +454,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -451,7 +468,6 @@ describe('EditDatasetTerms', () => {
     })
 
     it('enables Save Changes when selecting a different guestbook', () => {
-      cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
       const dataset = DatasetMother.create({
         license: mockLicenses[0],
         guestbookId: mockGuestbooks[0].id
@@ -463,6 +479,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -474,7 +491,6 @@ describe('EditDatasetTerms', () => {
     })
 
     it('opens guestbook preview modal from guestbook tab', () => {
-      cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
       const dataset = DatasetMother.create({
         license: mockLicenses[0],
         guestbookId: mockGuestbooks[1].id
@@ -486,6 +502,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -517,10 +534,6 @@ describe('EditDatasetTerms', () => {
       )
     }
 
-    beforeEach(() => {
-      cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
-    })
-
     it('renders not found page when dataset does not exist', () => {
       cy.customMount(
         withProvidersOptionalDataset(
@@ -528,6 +541,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           undefined
         )
@@ -546,6 +560,7 @@ describe('EditDatasetTerms', () => {
             }
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -568,6 +583,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -586,6 +602,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={'unknown-tab-key' as unknown as never}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -608,6 +625,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -633,6 +651,7 @@ describe('EditDatasetTerms', () => {
             defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
             licenseRepository={licenseRepository}
             datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
           />,
           dataset
         )
@@ -669,6 +688,7 @@ describe('EditDatasetTerms Mobile View', () => {
           defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
           licenseRepository={licenseRepository}
           datasetRepository={datasetRepository}
+          guestbookRepository={guestbookRepository}
         />,
         dataset
       )

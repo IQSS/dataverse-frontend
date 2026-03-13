@@ -53,6 +53,7 @@ export function EditGuestbook({ guestbookRepository, onPreview }: EditGuestbookP
 
   const { guestbooks, isLoadingGuestbooksByCollectionId, errorGetGuestbooksByCollectionId } =
     useGetGuestbooksByCollectionId({
+      guestbookRepository,
       collectionIdOrAlias
     })
   const {

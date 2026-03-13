@@ -1,7 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
-import { ReadError, getGuestbooksByCollectionId } from '@iqss/dataverse-client-javascript'
+import { ReadError } from '@iqss/dataverse-client-javascript'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { useGetGuestbooksByCollectionId } from '@/sections/guestbooks/useGetGuestbooksByCollectionId'
+import { createGuestbookRepositoryStub } from './createGuestbookRepositoryStub'
 
 const guestbook: Guestbook = {
   id: 10,
@@ -17,10 +19,20 @@ const guestbook: Guestbook = {
 }
 
 describe('useGetGuestbooksByCollectionId', () => {
-  it('returns guestbooks when request succeeds', async () => {
-    const executeStub = cy.stub(getGuestbooksByCollectionId, 'execute').resolves([guestbook])
+  let guestbookRepository: GuestbookRepository
 
-    const { result } = renderHook(() => useGetGuestbooksByCollectionId({ collectionIdOrAlias: 1 }))
+  beforeEach(() => {
+    guestbookRepository = createGuestbookRepositoryStub()
+  })
+
+  it('returns guestbooks when request succeeds', async () => {
+    const getGuestbooksByCollectionIdStub =
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    getGuestbooksByCollectionIdStub.resolves([guestbook])
+
+    const { result } = renderHook(() =>
+      useGetGuestbooksByCollectionId({ guestbookRepository, collectionIdOrAlias: 1 })
+    )
 
     expect(result.current.isLoadingGuestbooksByCollectionId).to.deep.equal(true)
     expect(result.current.errorGetGuestbooksByCollectionId).to.deep.equal(null)
@@ -32,13 +44,17 @@ describe('useGetGuestbooksByCollectionId', () => {
       expect(result.current.guestbooks).to.deep.equal([guestbook])
     })
 
-    cy.wrap(executeStub).should('have.been.calledOnceWith', 1)
+    cy.wrap(getGuestbooksByCollectionIdStub).should('have.been.calledOnceWith', 1)
   })
 
   it('returns an empty array when request succeeds with a non-array payload', async () => {
-    const executeStub = cy.stub(getGuestbooksByCollectionId, 'execute').resolves({ guestbook })
+    const getGuestbooksByCollectionIdStub =
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    getGuestbooksByCollectionIdStub.resolves({ guestbook })
 
-    const { result } = renderHook(() => useGetGuestbooksByCollectionId({ collectionIdOrAlias: 1 }))
+    const { result } = renderHook(() =>
+      useGetGuestbooksByCollectionId({ guestbookRepository, collectionIdOrAlias: 1 })
+    )
 
     expect(result.current.isLoadingGuestbooksByCollectionId).to.deep.equal(true)
     expect(result.current.errorGetGuestbooksByCollectionId).to.deep.equal(null)
@@ -50,14 +66,16 @@ describe('useGetGuestbooksByCollectionId', () => {
       expect(result.current.guestbooks).to.deep.equal([])
     })
 
-    cy.wrap(executeStub).should('have.been.calledOnceWith', 1)
+    cy.wrap(getGuestbooksByCollectionIdStub).should('have.been.calledOnceWith', 1)
   })
 
   it('does not fetch when collection id is undefined', async () => {
-    const executeStub = cy.stub(getGuestbooksByCollectionId, 'execute').resolves([guestbook])
+    const getGuestbooksByCollectionIdStub =
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    getGuestbooksByCollectionIdStub.resolves([guestbook])
 
     const { result } = renderHook(() =>
-      useGetGuestbooksByCollectionId({ collectionIdOrAlias: undefined })
+      useGetGuestbooksByCollectionId({ guestbookRepository, collectionIdOrAlias: undefined })
     )
 
     await act(() => {
@@ -66,16 +84,21 @@ describe('useGetGuestbooksByCollectionId', () => {
       return expect(result.current.guestbooks).to.deep.equal([])
     })
 
-    cy.wrap(executeStub).should('not.have.been.called')
+    cy.wrap(getGuestbooksByCollectionIdStub).should('not.have.been.called')
   })
 
   it('resets guestbooks and sets formatted message when request fails with ReadError', async () => {
-    const executeStub = cy.stub(getGuestbooksByCollectionId, 'execute')
-    executeStub.onFirstCall().resolves([guestbook])
-    executeStub.onSecondCall().rejects(new ReadError('ReadError message'))
+    const getGuestbooksByCollectionIdStub =
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    getGuestbooksByCollectionIdStub.onFirstCall().resolves([guestbook])
+    getGuestbooksByCollectionIdStub.onSecondCall().rejects(new ReadError('ReadError message'))
 
     const { result } = renderHook(() =>
-      useGetGuestbooksByCollectionId({ collectionIdOrAlias: 1, autoFetch: false })
+      useGetGuestbooksByCollectionId({
+        guestbookRepository,
+        collectionIdOrAlias: 1,
+        autoFetch: false
+      })
     )
 
     await act(async () => {
@@ -95,12 +118,17 @@ describe('useGetGuestbooksByCollectionId', () => {
   })
 
   it('falls back to the raw ReadError message when no reason can be extracted', async () => {
-    const executeStub = cy.stub(getGuestbooksByCollectionId, 'execute')
-    executeStub.onFirstCall().resolves([guestbook])
-    executeStub.onSecondCall().rejects(new ReadError('Raw read error message'))
+    const getGuestbooksByCollectionIdStub =
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    getGuestbooksByCollectionIdStub.onFirstCall().resolves([guestbook])
+    getGuestbooksByCollectionIdStub.onSecondCall().rejects(new ReadError('Raw read error message'))
 
     const { result } = renderHook(() =>
-      useGetGuestbooksByCollectionId({ collectionIdOrAlias: 1, autoFetch: false })
+      useGetGuestbooksByCollectionId({
+        guestbookRepository,
+        collectionIdOrAlias: 1,
+        autoFetch: false
+      })
     )
 
     await act(async () => {
@@ -120,12 +148,17 @@ describe('useGetGuestbooksByCollectionId', () => {
   })
 
   it('resets guestbooks and sets default message when request fails with non-ReadError', async () => {
-    const executeStub = cy.stub(getGuestbooksByCollectionId, 'execute')
-    executeStub.onFirstCall().resolves([guestbook])
-    executeStub.onSecondCall().rejects(new Error('unexpected'))
+    const getGuestbooksByCollectionIdStub =
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    getGuestbooksByCollectionIdStub.onFirstCall().resolves([guestbook])
+    getGuestbooksByCollectionIdStub.onSecondCall().rejects(new Error('unexpected'))
 
     const { result } = renderHook(() =>
-      useGetGuestbooksByCollectionId({ collectionIdOrAlias: 1, autoFetch: false })
+      useGetGuestbooksByCollectionId({
+        guestbookRepository,
+        collectionIdOrAlias: 1,
+        autoFetch: false
+      })
     )
 
     await act(async () => {

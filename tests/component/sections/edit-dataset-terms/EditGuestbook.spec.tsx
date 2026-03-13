@@ -12,7 +12,6 @@ import {
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
-import { getGuestbooksByCollectionId } from '@iqss/dataverse-client-javascript'
 
 const LocationDisplay = () => {
   const location = useLocation()
@@ -85,13 +84,13 @@ describe('EditGuestbook', () => {
   beforeEach(() => {
     guestbookRepository = {
       getGuestbook: cy.stub(),
+      getGuestbooksByCollectionId: cy.stub().resolves(mockGuestbooks),
       assignDatasetGuestbook: cy.stub().resolves(undefined),
       removeDatasetGuestbook: cy.stub().resolves(undefined)
     }
   })
 
   it('renders guestbook options and keeps Save Changes disabled for current guestbook', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
     cy.customMount(
@@ -105,7 +104,6 @@ describe('EditGuestbook', () => {
   })
 
   it('enables Save Changes when selecting a different guestbook', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
     cy.customMount(
@@ -117,7 +115,6 @@ describe('EditGuestbook', () => {
   })
 
   it('keeps Save Changes disabled when dataset has no assigned guestbook and none is selected', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const dataset = DatasetMother.create({ guestbookId: undefined })
 
     cy.customMount(
@@ -131,7 +128,6 @@ describe('EditGuestbook', () => {
   })
 
   it('falls back to no preselection when dataset has no guestbook id', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const dataset = DatasetMother.create({ guestbookId: undefined })
 
     cy.customMount(
@@ -145,7 +141,6 @@ describe('EditGuestbook', () => {
   })
 
   it('clears the selected guestbook when clicking Clear Selection', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
     cy.customMount(
@@ -161,7 +156,9 @@ describe('EditGuestbook', () => {
   })
 
   it('renders the empty state message with the collection name', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves([])
+    ;(
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    ).resolves([])
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
     cy.customMount(
@@ -182,7 +179,6 @@ describe('EditGuestbook', () => {
   })
 
   it('opens preview modal when clicking Preview Guestbook', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
     cy.customMount(
@@ -209,7 +205,6 @@ describe('EditGuestbook', () => {
   })
 
   it('closes preview modal when clicking Close', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
     cy.customMount(
@@ -223,7 +218,6 @@ describe('EditGuestbook', () => {
   })
 
   it('calls onPreview callback when provided', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const onPreview = cy.stub().as('onPreview')
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
@@ -240,7 +234,6 @@ describe('EditGuestbook', () => {
   })
 
   it('submits selected guestbook', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const assignDatasetGuestbookStub =
       guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>
     assignDatasetGuestbookStub.resolves(undefined)
@@ -262,7 +255,6 @@ describe('EditGuestbook', () => {
   })
 
   it('navigates back to the dataset view when clicking Cancel without submitting', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).as(
       'assignDatasetGuestbookExecute'
     )
@@ -292,7 +284,6 @@ describe('EditGuestbook', () => {
   })
 
   it('navigates with DRAFT version query param after successful submit for draft datasets', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).resolves(
       undefined
     )
@@ -322,7 +313,6 @@ describe('EditGuestbook', () => {
   })
 
   it('navigates with numeric version query param after successful submit for non-draft datasets', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).resolves(
       undefined
     )
@@ -357,7 +347,9 @@ describe('EditGuestbook', () => {
     const guestbooksForA = mockGuestbooks
     const guestbooksForB = [mockGuestbooks[1]]
 
-    cy.stub(getGuestbooksByCollectionId, 'execute').callsFake((collectionIdOrAlias) => {
+    ;(
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    ).callsFake((collectionIdOrAlias) => {
       if (collectionIdOrAlias === collectionA) return Promise.resolve(guestbooksForA)
       return Promise.resolve(guestbooksForB)
     })
@@ -397,7 +389,9 @@ describe('EditGuestbook', () => {
     const guestbooksForA = mockGuestbooks
     const guestbooksForB = [mockGuestbooks[0], mockGuestbooks[1]]
 
-    cy.stub(getGuestbooksByCollectionId, 'execute').callsFake((collectionIdOrAlias) => {
+    ;(
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    ).callsFake((collectionIdOrAlias) => {
       if (collectionIdOrAlias === collectionA) return Promise.resolve(guestbooksForA)
       return Promise.resolve(guestbooksForB)
     })
@@ -431,7 +425,6 @@ describe('EditGuestbook', () => {
   })
 
   it('does not submit when selectedGuestbookId is undefined and dataset has no guestbook', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).as(
       'assignDatasetGuestbookExecute'
     )
@@ -450,7 +443,6 @@ describe('EditGuestbook', () => {
   })
 
   it('does not submit when dataset is undefined', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).as(
       'assignDatasetGuestbookExecute'
     )
@@ -468,7 +460,6 @@ describe('EditGuestbook', () => {
   })
 
   it('removes selected guestbook when selection is cleared and saved', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     const removeDatasetGuestbookStub =
       guestbookRepository.removeDatasetGuestbook as Cypress.Agent<sinon.SinonStub>
     removeDatasetGuestbookStub.resolves(undefined)
@@ -487,7 +478,6 @@ describe('EditGuestbook', () => {
   })
 
   it('shows assign guestbook error alert when save fails', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).rejects(
       new Error('unexpected')
     )
@@ -505,7 +495,6 @@ describe('EditGuestbook', () => {
   })
 
   it('shows remove guestbook error alert when clear and save fails', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').resolves(mockGuestbooks)
     ;(guestbookRepository.removeDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).rejects(
       new Error('unexpected')
     )
@@ -523,7 +512,9 @@ describe('EditGuestbook', () => {
   })
 
   it('shows an error alert when loading guestbooks fails', () => {
-    cy.stub(getGuestbooksByCollectionId, 'execute').rejects(new Error('network error'))
+    ;(
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    ).rejects(new Error('network error'))
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
     cy.customMount(

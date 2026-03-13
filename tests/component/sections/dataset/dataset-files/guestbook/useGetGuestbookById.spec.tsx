@@ -3,8 +3,8 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { useGetGuestbookById } from '@/sections/dataset/dataset-guestbook/useGetGuestbookById'
+import { createGuestbookRepositoryStub } from '@/../tests/component/sections/guestbooks/createGuestbookRepositoryStub'
 
-const guestbookRepository: GuestbookRepository = {} as GuestbookRepository
 const guestbook: Guestbook = {
   id: 10,
   name: 'Guestbook Test',
@@ -19,6 +19,12 @@ const guestbook: Guestbook = {
 }
 
 describe('useGetGuestbookById', () => {
+  let guestbookRepository: GuestbookRepository
+
+  beforeEach(() => {
+    guestbookRepository = createGuestbookRepositoryStub()
+  })
+
   it('should return guestbook', async () => {
     guestbookRepository.getGuestbook = cy.stub().resolves(guestbook)
 

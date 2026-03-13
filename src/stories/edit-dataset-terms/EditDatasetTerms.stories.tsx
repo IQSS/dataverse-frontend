@@ -3,13 +3,13 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { WithDataset } from '../dataset/WithDataset'
 import { EditDatasetTerms } from '../../sections/edit-dataset-terms/EditDatasetTerms'
-import { EditDatasetTermsHelper } from '../../sections/edit-dataset-terms/EditDatasetTermsHelper'
+import { EditDatasetTermsHelper } from '@/sections/edit-dataset-terms/EditDatasetTermsHelper'
 import { LicenseMockRepository } from '../shared-mock-repositories/license/LicenseMockRepository'
+import { GuestbookMockRepository } from '../shared-mock-repositories/guestbook/GuestbookMockRepository'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { LicenseRepository } from '@/licenses/domain/repositories/LicenseRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
-import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 
 const meta: Meta<typeof EditDatasetTerms> = {
   title: 'Pages/EditDatasetTerms',
@@ -25,23 +25,8 @@ type Story = StoryObj<typeof EditDatasetTerms>
 
 const licenseRepository: LicenseRepository = new LicenseMockRepository() as LicenseRepository
 const datasetRepository: DatasetRepository = new DatasetMockRepository() as DatasetRepository
-const guestbookRepository: GuestbookRepository = {
-  getGuestbook: (_guestbookId: number) =>
-    Promise.resolve({
-      id: 1,
-      name: 'Storybook Guestbook',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    } as Guestbook),
-  assignDatasetGuestbook: (_datasetId: number | string, _guestbookId: number) => Promise.resolve(),
-  removeDatasetGuestbook: (_datasetId: number | string) => Promise.resolve()
-}
+const guestbookRepository: GuestbookRepository =
+  new GuestbookMockRepository() as GuestbookRepository
 
 export const EditLicenseAndTermsTab: Story = {
   render: () => (

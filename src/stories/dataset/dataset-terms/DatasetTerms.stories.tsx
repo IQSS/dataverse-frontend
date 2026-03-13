@@ -8,9 +8,11 @@ import { LicenseMother } from '../../../../tests/component/dataset/domain/models
 import { TermsOfUseMother } from '../../../../tests/component/dataset/domain/models/TermsOfUseMother'
 import { FileMockRestrictedFilesRepository } from '@/stories/file/FileMockRestrictedFilesRepository'
 import { FileMockNoRestrictedFilesRepository } from '@/stories/file/FileMockNoRestrictedFilesRepository'
+import {
+  GuestbookMockRepository,
+  storybookGuestbook
+} from '@/stories/shared-mock-repositories/guestbook/GuestbookMockRepository'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
-import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
-import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
 
 const meta: Meta<typeof DatasetTerms> = {
@@ -25,40 +27,9 @@ type Story = StoryObj<typeof DatasetTerms>
 const testDataset = DatasetMother.createRealistic()
 const license = LicenseMother.create()
 const termsOfUseWithoutCustomTerms = TermsOfUseMother.createRealistic({ customTerms: undefined })
-const testDatasetWithGuestbook = DatasetMother.createRealistic({ guestbookId: 3 })
-
-class GuestbookMockRepository implements GuestbookRepository {
-  getGuestbook(_guestbookId: number): Promise<Guestbook> {
-    return Promise.resolve({
-      id: 3,
-      name: 'Storybook Guestbook',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [
-        {
-          question: 'How will you use this data?',
-          required: true,
-          displayOrder: 1,
-          type: 'text',
-          hidden: false
-        }
-      ],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
-  }
-
-  assignDatasetGuestbook(_datasetId: number | string, _guestbookId: number): Promise<void> {
-    return Promise.resolve()
-  }
-
-  removeDatasetGuestbook(_datasetId: number | string): Promise<void> {
-    return Promise.resolve()
-  }
-}
+const testDatasetWithGuestbook = DatasetMother.createRealistic({
+  guestbookId: storybookGuestbook.id
+})
 
 const guestbookRepository = new GuestbookMockRepository()
 
