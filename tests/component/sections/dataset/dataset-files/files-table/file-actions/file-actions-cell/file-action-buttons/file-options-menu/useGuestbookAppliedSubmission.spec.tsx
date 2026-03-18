@@ -27,6 +27,7 @@ const guestbook: Guestbook = {
 
 describe('useGuestbookCollectSubmission', () => {
   beforeEach(() => {
+    accessRepository.submitGuestbookForDatasetDownload = cy.stub().resolves('signed-url-dataset')
     accessRepository.submitGuestbookForDatafileDownload = cy.stub().resolves('signed-url-datafile')
     accessRepository.submitGuestbookForDatafilesDownload = cy
       .stub()
@@ -67,13 +68,14 @@ describe('useGuestbookCollectSubmission', () => {
 
     await act(async () => {
       await result.current.handleSubmit({
-        hasAccountFieldErrors: true,
+        hasFormErrors: true,
         guestbook,
         guestbookResponse
       })
     })
 
     expect(result.current.hasAttemptedAccept).to.deep.equal(true)
+    expect(accessRepository.submitGuestbookForDatasetDownload).to.not.have.been.called
     expect(accessRepository.submitGuestbookForDatafileDownload).to.not.have.been.called
     expect(accessRepository.submitGuestbookForDatafilesDownload).to.not.have.been.called
     expect(triggerDirectDownload).to.not.have.been.called
@@ -94,12 +96,13 @@ describe('useGuestbookCollectSubmission', () => {
 
     await act(async () => {
       await result.current.handleSubmit({
-        hasAccountFieldErrors: false,
+        hasFormErrors: false,
         guestbook,
         guestbookResponse
       })
     })
 
+    expect(accessRepository.submitGuestbookForDatasetDownload).to.not.have.been.called
     expect(accessRepository.submitGuestbookForDatafileDownload).to.have.been.calledWith(
       10,
       guestbookResponse
@@ -124,12 +127,13 @@ describe('useGuestbookCollectSubmission', () => {
 
     await act(async () => {
       await result.current.handleSubmit({
-        hasAccountFieldErrors: false,
+        hasFormErrors: false,
         guestbook,
         guestbookResponse
       })
     })
 
+    expect(accessRepository.submitGuestbookForDatasetDownload).to.not.have.been.called
     expect(accessRepository.submitGuestbookForDatafilesDownload).to.have.been.calledWith(
       [10, 11],
       guestbookResponse
@@ -155,7 +159,7 @@ describe('useGuestbookCollectSubmission', () => {
 
     await act(async () => {
       await result.current.handleSubmit({
-        hasAccountFieldErrors: false,
+        hasFormErrors: false,
         guestbook,
         guestbookResponse
       })
@@ -182,7 +186,7 @@ describe('useGuestbookCollectSubmission', () => {
 
     await act(async () => {
       await result.current.handleSubmit({
-        hasAccountFieldErrors: false,
+        hasFormErrors: false,
         guestbook,
         guestbookResponse
       })
@@ -208,7 +212,7 @@ describe('useGuestbookCollectSubmission', () => {
 
     await act(async () => {
       await result.current.handleSubmit({
-        hasAccountFieldErrors: false,
+        hasFormErrors: false,
         guestbook,
         guestbookResponse
       })
@@ -235,7 +239,7 @@ describe('useGuestbookCollectSubmission', () => {
 
     await act(async () => {
       await result.current.handleSubmit({
-        hasAccountFieldErrors: true,
+        hasFormErrors: true,
         guestbook,
         guestbookResponse
       })
@@ -252,5 +256,36 @@ describe('useGuestbookCollectSubmission', () => {
       expect(result.current.errorDownloadSignedUrlFile).to.deep.equal(null)
     })
     expect(handleClose).to.have.been.calledOnce
+  })
+
+  it('submits for dataset id and triggers download', async () => {
+    const handleClose = cy.stub().as('handleClose')
+    const triggerDirectDownload = cy.stub().resolves(undefined)
+    const { result } = renderHook(() =>
+      useGuestbookCollectSubmission({
+        datasetId: 999,
+        handleClose,
+        accessRepository,
+        triggerDirectDownload
+      })
+    )
+
+    await act(async () => {
+      await result.current.handleSubmit({
+        hasFormErrors: false,
+        guestbook,
+        guestbookResponse
+      })
+    })
+
+    expect(accessRepository.submitGuestbookForDatasetDownload).to.have.been.calledWith(
+      999,
+      guestbookResponse
+    )
+    expect(accessRepository.submitGuestbookForDatafileDownload).to.not.have.been.called
+    expect(accessRepository.submitGuestbookForDatafilesDownload).to.not.have.been.called
+    expect(handleClose).to.have.been.calledOnce
+    expect(triggerDirectDownload).to.have.been.calledOnceWith('signed-url-dataset')
+    expect(result.current.errorSubmitGuestbook).to.deep.equal(null)
   })
 })
