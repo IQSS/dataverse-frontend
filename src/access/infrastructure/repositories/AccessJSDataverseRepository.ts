@@ -24,7 +24,7 @@ export class AccessJSDataverseRepository implements AccessRepository {
   }
 
   submitGuestbookForDatafilesDownload(
-    fileIds: Array<number | string>,
+    fileIds: Array<number>,
     answers: GuestbookResponseDTO
   ): Promise<string> {
     return submitGuestbookForDatafilesDownloadJSDv.execute(fileIds, answers)

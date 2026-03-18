@@ -20,7 +20,7 @@ import {
 
 interface DownloadWithGuestbookModalProps {
   fileId?: number | string
-  fileIds?: Array<number | string>
+  fileIds?: Array<number>
   guestbookId?: number
   datasetId?: number | string
   datasetPersistentId?: string

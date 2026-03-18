@@ -15,7 +15,7 @@ import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteE
 interface UseGuestbookCollectSubmissionProps {
   datasetId?: number | string
   fileId?: number | string
-  fileIds?: Array<number | string>
+  fileIds?: Array<number>
   handleClose: () => void
   accessRepository: AccessRepository
   triggerDirectDownload: (signedUrl: string) => Promise<void>

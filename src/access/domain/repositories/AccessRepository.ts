@@ -9,7 +9,7 @@ export type GuestbookResponseDTO = {
     email?: string
     institution?: string
     position?: string
-    answers: GuestbookAnswerDTO[]
+    answers?: GuestbookAnswerDTO[]
   }
 }
 export interface AccessRepository {
@@ -22,7 +22,7 @@ export interface AccessRepository {
     answers: GuestbookResponseDTO
   ) => Promise<string>
   submitGuestbookForDatafilesDownload: (
-    fileIds: Array<number | string>,
+    fileIds: Array<number>,
     answers: GuestbookResponseDTO
   ) => Promise<string>
 }

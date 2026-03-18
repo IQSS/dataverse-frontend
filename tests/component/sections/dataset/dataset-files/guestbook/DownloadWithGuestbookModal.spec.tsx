@@ -95,7 +95,7 @@ describe('DownloadWithGuestbookModal', () => {
     guestbookResponse: GuestbookResponseDTO
   ) => Promise<string>
   let submitGuestbookForDatafilesDownloadImpl: (
-    fileIds: Array<number | string>,
+    fileIds: Array<number>,
     guestbookResponse: GuestbookResponseDTO
   ) => Promise<string>
   let guestbookRepository: GuestbookRepository
@@ -152,7 +152,7 @@ describe('DownloadWithGuestbookModal', () => {
       submitGuestbookForDatafilesDownload: cy
         .stub()
         .as('submitGuestbookForDatafilesDownload')
-        .callsFake((fileIds: Array<number | string>, guestbookResponse: GuestbookResponseDTO) =>
+        .callsFake((fileIds: Array<number>, guestbookResponse: GuestbookResponseDTO) =>
           submitGuestbookForDatafilesDownloadImpl(fileIds, guestbookResponse)
         )
     }

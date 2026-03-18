@@ -19,10 +19,8 @@ const accessRepository: AccessRepository = {
   ) => Promise.resolve('/api/v1/access/dataset/:persistentId?token=storybook'),
   submitGuestbookForDatafileDownload: (_fileId: number | string, _answers: GuestbookResponseDTO) =>
     Promise.resolve('/api/v1/access/datafile/123?token=storybook'),
-  submitGuestbookForDatafilesDownload: (
-    _fileIds: Array<number | string>,
-    _answers: GuestbookResponseDTO
-  ) => Promise.resolve('/api/v1/access/datafiles/123,124?token=storybook')
+  submitGuestbookForDatafilesDownload: (_fileIds: Array<number>, _answers: GuestbookResponseDTO) =>
+    Promise.resolve('/api/v1/access/datafiles/123,124?token=storybook')
 }
 
 const guestbookRepository = new GuestbookMockRepository()

@@ -2,7 +2,7 @@ import { AccessRepository, GuestbookResponseDTO } from '../repositories/AccessRe
 
 export function submitGuestbookForDatafilesDownload(
   accessRepository: AccessRepository,
-  fileIds: Array<number | string>,
+  fileIds: Array<number>,
   answers: GuestbookResponseDTO
 ): Promise<string> {
   return accessRepository.submitGuestbookForDatafilesDownload(fileIds, answers)
