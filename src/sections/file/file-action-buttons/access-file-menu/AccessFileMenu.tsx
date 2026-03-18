@@ -57,6 +57,7 @@ export function AccessFileMenu({
     <MenuWrapper>
       <DropdownButton
         id={`action-button-access-file-${id}`}
+        data-testid={`access-file-button-${id}`}
         title={asIcon ? '' : t('actions.accessFileMenu.title')}
         asButtonGroup
         variant={asIcon ? 'secondary' : 'primary'}

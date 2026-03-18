@@ -156,9 +156,9 @@ describe('EditGuestbook', () => {
   })
 
   it('renders the empty state message with the collection name', () => {
-    ;(
-      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
-    ).resolves([])
+    ;(guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>).resolves(
+      []
+    )
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
     cy.customMount(
@@ -347,12 +347,12 @@ describe('EditGuestbook', () => {
     const guestbooksForA = mockGuestbooks
     const guestbooksForB = [mockGuestbooks[1]]
 
-    ;(
-      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
-    ).callsFake((collectionIdOrAlias) => {
-      if (collectionIdOrAlias === collectionA) return Promise.resolve(guestbooksForA)
-      return Promise.resolve(guestbooksForB)
-    })
+    ;(guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>).callsFake(
+      (collectionIdOrAlias) => {
+        if (collectionIdOrAlias === collectionA) return Promise.resolve(guestbooksForA)
+        return Promise.resolve(guestbooksForB)
+      }
+    )
 
     const createDataset = (collectionId: string) =>
       DatasetMother.create({
@@ -389,12 +389,12 @@ describe('EditGuestbook', () => {
     const guestbooksForA = mockGuestbooks
     const guestbooksForB = [mockGuestbooks[0], mockGuestbooks[1]]
 
-    ;(
-      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
-    ).callsFake((collectionIdOrAlias) => {
-      if (collectionIdOrAlias === collectionA) return Promise.resolve(guestbooksForA)
-      return Promise.resolve(guestbooksForB)
-    })
+    ;(guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>).callsFake(
+      (collectionIdOrAlias) => {
+        if (collectionIdOrAlias === collectionA) return Promise.resolve(guestbooksForA)
+        return Promise.resolve(guestbooksForB)
+      }
+    )
 
     const createDataset = (collectionId: string) =>
       DatasetMother.create({
@@ -512,9 +512,9 @@ describe('EditGuestbook', () => {
   })
 
   it('shows an error alert when loading guestbooks fails', () => {
-    ;(
-      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
-    ).rejects(new Error('network error'))
+    ;(guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>).rejects(
+      new Error('network error')
+    )
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
     cy.customMount(

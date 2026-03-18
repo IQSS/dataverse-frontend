@@ -45,6 +45,7 @@ export function FileNonTabularDownloadOptions({
   return (
     <>
       <DropdownButtonItem
+        data-testid={`download-original-file-${fileId}`}
         href={hasGuestbook ? undefined : downloadUrlOriginal}
         onClick={handleDownloadClick}
         disabled={downloadDisabled}>
