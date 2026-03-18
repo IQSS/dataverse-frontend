@@ -31,9 +31,8 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
 
   const fileSelectionCount = Object.keys(fileSelection).length
   const allFilesSelected = Object.values(fileSelection).some((file) => file === undefined)
-  const allSelectedFileIds = files.map((file) => file.id)
   const fileIdsForGuestbookSubmission = allFilesSelected
-    ? allSelectedFileIds
+    ? undefined
     : getFileIdsFromSelection(fileSelection)
   const hasGuestbook = dataset?.guestbookId !== undefined
 
@@ -88,6 +87,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
       {hasGuestbook && (
         <DownloadWithGuestbookModal
           fileIds={fileIdsForGuestbookSubmission}
+          datasetId={allFilesSelected ? dataset.id : undefined}
           guestbookId={dataset.guestbookId}
           datasetPersistentId={dataset.persistentId}
           show={showDownloadWithGuestbookModal}

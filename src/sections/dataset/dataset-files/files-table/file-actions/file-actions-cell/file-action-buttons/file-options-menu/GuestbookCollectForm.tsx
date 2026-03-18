@@ -16,6 +16,7 @@ interface GuestbookCollectFormProps {
   formValues: Record<string, string>
   hasAttemptedAccept: boolean
   accountFieldErrors: Record<string, string | null>
+  customQuestionErrors: Record<string, string | null>
   accountFieldKeys: string[]
   shouldLockIdentityFields: boolean
   isAccountFieldRequired: (fieldName: string) => boolean
@@ -38,6 +39,7 @@ export function GuestbookCollectForm({
   formValues,
   hasAttemptedAccept,
   accountFieldErrors,
+  customQuestionErrors,
   accountFieldKeys,
   shouldLockIdentityFields,
   isAccountFieldRequired,
@@ -61,45 +63,65 @@ export function GuestbookCollectForm({
     const fieldName = getGuestbookCustomQuestionFieldName(question, index)
     const value = formValues[fieldName] ?? ''
     const isRequired = question.required
+    const invalid = hasAttemptedAccept && customQuestionErrors[fieldName] !== null
 
     if (question.type === 'textarea') {
       return (
-        <Form.Group.TextArea
-          value={value}
-          onChange={(event) =>
-            onFieldChange(fieldName, (event.target as HTMLTextAreaElement).value)
-          }
-          aria-required={isRequired}
-          rows={3}
-        />
+        <>
+          <Form.Group.TextArea
+            value={value}
+            onChange={(event) =>
+              onFieldChange(fieldName, (event.target as HTMLTextAreaElement).value)
+            }
+            isInvalid={invalid}
+            aria-required={isRequired}
+            rows={3}
+          />
+          <Form.Group.Feedback type="invalid">
+            {invalid ? customQuestionErrors[fieldName] : undefined}
+          </Form.Group.Feedback>
+        </>
       )
     }
 
     if (question.type === 'options') {
       return (
-        <DropdownButton
-          id={fieldName}
-          title={value || 'Select...'}
-          onSelect={(eventKey) => onFieldChange(fieldName, eventKey ?? '')}
-          variant="secondary"
-          aria-required={isRequired}>
-          <DropdownButtonItem eventKey="">Select...</DropdownButtonItem>
-          {(question.optionValues ?? []).map((option) => (
-            <DropdownButtonItem key={`${fieldName}-${option.displayOrder}`} eventKey={option.value}>
-              {option.value}
-            </DropdownButtonItem>
-          ))}
-        </DropdownButton>
+        <>
+          <DropdownButton
+            id={fieldName}
+            title={value || 'Select...'}
+            onSelect={(eventKey) => onFieldChange(fieldName, eventKey ?? '')}
+            variant="secondary"
+            aria-required={isRequired}>
+            <DropdownButtonItem eventKey="">Select...</DropdownButtonItem>
+            {(question.optionValues ?? []).map((option) => (
+              <DropdownButtonItem
+                key={`${fieldName}-${option.displayOrder}`}
+                eventKey={option.value}>
+                {option.value}
+              </DropdownButtonItem>
+            ))}
+          </DropdownButton>
+          <Form.Group.Feedback type="invalid" style={{ display: invalid ? 'block' : 'none' }}>
+            {invalid ? customQuestionErrors[fieldName] : undefined}
+          </Form.Group.Feedback>
+        </>
       )
     }
 
     return (
-      <Form.Group.Input
-        type="text"
-        value={value}
-        onChange={(event) => onFieldChange(fieldName, (event.target as HTMLInputElement).value)}
-        aria-required={isRequired}
-      />
+      <>
+        <Form.Group.Input
+          type="text"
+          value={value}
+          onChange={(event) => onFieldChange(fieldName, (event.target as HTMLInputElement).value)}
+          isInvalid={invalid}
+          aria-required={isRequired}
+        />
+        <Form.Group.Feedback type="invalid">
+          {invalid ? customQuestionErrors[fieldName] : undefined}
+        </Form.Group.Feedback>
+      </>
     )
   }
 

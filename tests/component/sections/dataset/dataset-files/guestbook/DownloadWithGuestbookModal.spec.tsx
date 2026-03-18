@@ -397,6 +397,35 @@ describe('DownloadWithGuestbookModal', () => {
     cy.findByText('This field is required.').should('not.exist')
   })
 
+  it('shows required validation for custom questions and blocks submit', () => {
+    getGuestbookImpl = () => Promise.resolve(guestbookWithCustomQuestions)
+
+    cy.customMount(
+      withRepositories(
+        <DownloadWithGuestbookModal
+          show
+          handleClose={cy.stub().as('handleClose')}
+          guestbookId={10}
+          fileId={10}
+        />
+      )
+    )
+
+    cy.findByLabelText(/^Name/).clear().type('Test User')
+    cy.findByLabelText(/^Email/)
+      .clear()
+      .type('test.user@example.com')
+    cy.findByRole('button', { name: 'Accept' }).click()
+
+    cy.findByText('How will you use this data?')
+      .parents('div')
+      .first()
+      .within(() => {
+        cy.findByText('This field is required.').should('exist')
+      })
+    cy.get('@submitGuestbookForDatafileDownload').should('not.have.been.called')
+  })
+
   it('renders visible custom questions and submits answers with generated field ids', () => {
     getGuestbookImpl = () => Promise.resolve(guestbookWithCustomQuestions)
     const handleClose = cy.stub().as('handleClose')

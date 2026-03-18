@@ -20,9 +20,14 @@ import styles from './EditGuestbook.module.scss'
 interface EditGuestbookProps {
   guestbookRepository: GuestbookRepository
   onPreview?: () => void
+  onFormStateChange?: (isDirty: boolean) => void
 }
 
-export function EditGuestbook({ guestbookRepository, onPreview }: EditGuestbookProps) {
+export function EditGuestbook({
+  guestbookRepository,
+  onPreview,
+  onFormStateChange
+}: EditGuestbookProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const [selectedGuestbookId, setSelectedGuestbookId] = useState<number | undefined>(undefined)
@@ -119,6 +124,10 @@ export function EditGuestbook({ guestbookRepository, onPreview }: EditGuestbookP
       return currentDatasetGuestbookId
     })
   }, [dataset?.guestbookId, guestbooks])
+
+  useEffect(() => {
+    onFormStateChange?.(selectedGuestbookId !== dataset?.guestbookId)
+  }, [dataset?.guestbookId, onFormStateChange, selectedGuestbookId])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()

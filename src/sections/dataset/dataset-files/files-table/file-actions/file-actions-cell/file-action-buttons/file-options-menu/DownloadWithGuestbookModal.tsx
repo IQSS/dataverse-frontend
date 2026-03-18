@@ -124,6 +124,24 @@ export function DownloadWithGuestbookModal({
     () => (guestbook?.customQuestions ?? []).filter((question) => !question.hidden),
     [guestbook?.customQuestions]
   )
+  const customQuestionErrors = customQuestions.reduce<Record<string, string | null>>(
+    (errors, question, index) => {
+      const fieldName = getGuestbookCustomQuestionFieldName(question, index)
+      const value = (formValues[fieldName] ?? '').trim()
+
+      if (question.required && value.length === 0) {
+        errors[fieldName] = tFiles('actions.optionsMenu.guestbookCollectModal.validation.required')
+        return errors
+      }
+
+      errors[fieldName] = null
+      return errors
+    },
+    {}
+  )
+  const hasCustomQuestionErrors = Object.values(customQuestionErrors).some(
+    (error) => error !== null
+  )
 
   const resolveAnswerId = (
     fieldName: string,
@@ -266,6 +284,7 @@ export function DownloadWithGuestbookModal({
               formValues={formValues}
               hasAttemptedAccept={hasAttemptedAccept}
               accountFieldErrors={accountFieldErrors}
+              customQuestionErrors={customQuestionErrors}
               accountFieldKeys={accountFieldKeys}
               shouldLockIdentityFields={!!user}
               isAccountFieldRequired={isAccountFieldRequired}
@@ -278,7 +297,7 @@ export function DownloadWithGuestbookModal({
         <Button
           onClick={() =>
             void handleSubmit({
-              hasAccountFieldErrors,
+              hasFormErrors: hasAccountFieldErrors || hasCustomQuestionErrors,
               guestbook,
               guestbookResponse: buildGuestbookResponse()
             })

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import {
   getGuestbook,
+  submitGuestbookForDatasetDownload,
   submitGuestbookForDatafilesDownload
 } from '@iqss/dataverse-client-javascript'
 import { Dataset as DatasetModel } from '../../../../../../../../src/dataset/domain/models/Dataset'
@@ -352,13 +353,14 @@ describe('DownloadFilesButton', () => {
     cy.findByRole('button', { name: 'Accept' }).should('exist')
   })
 
-  it('submits guestbook for all selected files when guestbook exists', () => {
+  it('submits guestbook for the dataset when all files are selected and guestbook exists', () => {
     const files = [
       FilePreviewMother.create({ id: 10, metadata: FileMetadataMother.createTabular() }),
       FilePreviewMother.create({ id: 11, metadata: FileMetadataMother.createTabular() }),
       FilePreviewMother.create({ id: 12, metadata: FileMetadataMother.createTabular() })
     ]
     const datasetWithGuestbook = DatasetMother.create({
+      id: 999,
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
       hasOneTabularFileAtLeast: true,
       guestbookId: 10
@@ -381,7 +383,10 @@ describe('DownloadFilesButton', () => {
       createTime: '2026-01-01T00:00:00.000Z',
       dataverseId: 1
     })
-    const submitStub = cy
+    const submitDatasetStub = cy
+      .stub(submitGuestbookForDatasetDownload, 'execute')
+      .resolves('/api/v1/access/dataset/999?token=test')
+    const submitFilesStub = cy
       .stub(submitGuestbookForDatafilesDownload, 'execute')
       .resolves('/api/v1/access/datafiles/10,11,12?token=test')
     cy.window().then((window) => {
@@ -401,8 +406,9 @@ describe('DownloadFilesButton', () => {
     cy.findByLabelText(/^Email/).should('be.disabled')
     cy.findByRole('button', { name: 'Accept' }).click()
 
-    cy.wrap(submitStub).should('have.been.calledOnce')
-    cy.wrap(submitStub).its('firstCall.args.0').should('deep.equal', [10, 11, 12])
+    cy.wrap(submitDatasetStub).should('have.been.calledOnce')
+    cy.wrap(submitDatasetStub).its('firstCall.args.0').should('equal', 999)
+    cy.wrap(submitFilesStub).should('not.have.been.called')
     cy.get('@anchorClick').should('have.been.calledOnce')
   })
 

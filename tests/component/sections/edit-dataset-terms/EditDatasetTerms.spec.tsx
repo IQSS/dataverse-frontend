@@ -594,6 +594,26 @@ describe('EditDatasetTerms', () => {
       cy.findByRole('tab', { name: 'Dataset Terms' }).should('have.attr', 'aria-selected', 'true')
     })
 
+    it('shows unsaved changes modal when guestbook tab form is dirty and switching tabs', () => {
+      const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
+      cy.customMount(
+        withProvidersOptionalDataset(
+          <EditDatasetTerms
+            defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+            guestbookRepository={guestbookRepository}
+          />,
+          dataset
+        )
+      )
+
+      cy.findByLabelText('Secondary Guestbook').click()
+      cy.findByRole('tab', { name: 'Dataset Terms' }).click()
+
+      cy.findByText('Unsaved Changes').should('exist')
+    })
+
     it('uses default dirty-state branch when active tab key is unknown', () => {
       const dataset = DatasetMother.create()
       cy.customMount(

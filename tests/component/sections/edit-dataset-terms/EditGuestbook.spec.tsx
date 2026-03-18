@@ -114,6 +114,25 @@ describe('EditGuestbook', () => {
     cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
   })
 
+  it('reports dirty state when guestbook selection changes', () => {
+    const onFormStateChange = cy.stub().as('onFormStateChange')
+    const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
+
+    cy.customMount(
+      withProviders(
+        <EditGuestbook
+          guestbookRepository={guestbookRepository}
+          onFormStateChange={onFormStateChange}
+        />,
+        dataset
+      )
+    )
+
+    cy.findByLabelText('Secondary Guestbook').click()
+
+    cy.get('@onFormStateChange').should('have.been.calledWith', true)
+  })
+
   it('keeps Save Changes disabled when dataset has no assigned guestbook and none is selected', () => {
     const dataset = DatasetMother.create({ guestbookId: undefined })
 

@@ -22,7 +22,7 @@ interface UseGuestbookCollectSubmissionProps {
 }
 
 interface HandleSubmitProps {
-  hasAccountFieldErrors: boolean
+  hasFormErrors: boolean
   guestbook?: Guestbook
   guestbookResponse: GuestbookResponseDTO
 }
@@ -54,11 +54,11 @@ export const useGuestbookCollectSubmission = ({
   }, [handleClose, resetSubmissionState])
 
   const handleSubmit = useCallback(
-    async ({ hasAccountFieldErrors, guestbook, guestbookResponse }: HandleSubmitProps) => {
+    async ({ hasFormErrors, guestbook, guestbookResponse }: HandleSubmitProps) => {
       setHasAttemptedAccept(true)
       setErrorDownloadSignedUrlFile(null)
 
-      if (hasAccountFieldErrors || !guestbook) {
+      if (hasFormErrors || !guestbook) {
         return
       }
 

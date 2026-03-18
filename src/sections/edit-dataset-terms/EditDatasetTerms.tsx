@@ -43,7 +43,7 @@ export const EditDatasetTerms = ({
 
   const [licenseFormIsDirty, setLicenseFormIsDirty] = useState(false)
   const [termsOfAccessFormIsDirty, setTermsOfAccessFormIsDirty] = useState(false)
-  const [guestbookFormIsDirty, _setGuestbookFormIsDirty] = useState(false)
+  const [guestbookFormIsDirty, setGuestbookFormIsDirty] = useState(false)
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -138,7 +138,10 @@ export const EditDatasetTerms = ({
             <Accordion.Header>{t('editTerms.tabs.guestbook')}</Accordion.Header>
             <Accordion.Body>
               <div className={styles['tab-container']}>
-                <EditGuestbook guestbookRepository={guestbookRepository} />
+                <EditGuestbook
+                  guestbookRepository={guestbookRepository}
+                  onFormStateChange={setGuestbookFormIsDirty}
+                />
               </div>
             </Accordion.Body>
           </Accordion.Item>
@@ -168,7 +171,10 @@ export const EditDatasetTerms = ({
 
           <Tabs.Tab eventKey={tabsKeys.guestbook} title={t('editTerms.tabs.guestbook')}>
             <div className={styles['tab-container']}>
-              <EditGuestbook guestbookRepository={guestbookRepository} />
+              <EditGuestbook
+                guestbookRepository={guestbookRepository}
+                onFormStateChange={setGuestbookFormIsDirty}
+              />
             </div>
           </Tabs.Tab>
         </Tabs>
