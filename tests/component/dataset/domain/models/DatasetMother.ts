@@ -227,6 +227,26 @@ export class DatasetPermissionsMother {
       canDeleteDataset: false
     })
   }
+
+  static createWithReadOnlyAllowed(): DatasetPermissions {
+    return this.create({
+      canDownloadFiles: true,
+      canUpdateDataset: false,
+      canPublishDataset: false,
+      canManageDatasetPermissions: false,
+      canManageFilesPermissions: false,
+      canDeleteDataset: false
+    })
+  }
+}
+
+export class DatasetWithoutPermissionsMother {
+  static create(props?: Partial<Dataset>): Dataset {
+    return DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithNoDatasetPermissions(),
+      ...props
+    })
+  }
 }
 
 export class DatasetLockMother {
@@ -558,14 +578,7 @@ export class DatasetMother {
           }
         }
       ] as DatasetMetadataBlocks,
-      permissions: {
-        canDownloadFiles: true,
-        canUpdateDataset: false,
-        canPublishDataset: false,
-        canManageDatasetPermissions: false,
-        canManageFilesPermissions: false,
-        canDeleteDataset: false
-      },
+      permissions: DatasetPermissionsMother.createWithReadOnlyAllowed(),
       locks: [],
       hasValidTermsOfAccess: true,
       hasOneTabularFileAtLeast: true,
@@ -615,14 +628,7 @@ export class DatasetMother {
   static createDeaccessionedwithNoEditPermission(props?: Partial<Dataset>): Dataset {
     return this.create({
       version: DatasetVersionMother.createDeaccessioned(),
-      permissions: {
-        canDownloadFiles: true,
-        canUpdateDataset: false,
-        canPublishDataset: false,
-        canManageDatasetPermissions: false,
-        canManageFilesPermissions: false,
-        canDeleteDataset: false
-      },
+      permissions: DatasetPermissionsMother.createWithReadOnlyAllowed(),
       ...props
     })
   }

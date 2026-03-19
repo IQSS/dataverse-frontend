@@ -2,6 +2,7 @@
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
   "termsTabTitle": "Terms and Guestbook",
+  "termsTabTitleReadOnly": "Terms",
   "anonymizedFieldValue": "withheld",
   "customTerms": {
     "title": "Custom Dataset Terms",
