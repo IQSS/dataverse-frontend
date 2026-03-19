@@ -2,8 +2,6 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Col, Modal, QuestionMarkTooltip, Row } from '@iqss/dataverse-design-system'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
-import { useDataset } from '@/sections/dataset/DatasetContext'
-import { QueryParamKey, Route } from '@/sections/Route.enum'
 import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 
 interface PreviewGuestbookModalProps {
@@ -24,7 +22,6 @@ export const PreviewGuestbookModal = ({
 }: PreviewGuestbookModalProps) => {
   const { t } = useTranslation('guestbooks')
   const { t: tShared } = useTranslation('shared')
-  const { dataset } = useDataset()
 
   const guestbookData = useMemo<GuestbookItems[]>(() => {
     return [
@@ -40,11 +37,6 @@ export const PreviewGuestbookModal = ({
       }
     ]
   }, [guestbook, t])
-  const customQuestionsHref = dataset?.persistentId
-    ? `/spa${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${encodeURIComponent(
-        dataset.persistentId
-      )}&${QueryParamKey.TAB}=terms&termsTab=guestbook`
-    : undefined
 
   return (
     <Modal show={show} onHide={handleClose} centered size="lg">
@@ -76,11 +68,7 @@ export const PreviewGuestbookModal = ({
             </ul>
             {guestbook.customQuestions && guestbook.customQuestions.length > 0 && (
               <>
-                {customQuestionsHref ? (
-                  <a href={customQuestionsHref}>{t('preview.customQuestionsLabel')}</a>
-                ) : (
-                  <>{t('preview.customQuestionsLabel')}</>
-                )}
+                <>{t('preview.customQuestionsLabel')}</>
                 <ul>
                   {guestbook.customQuestions.map((question, index) => (
                     <li key={`${question.question}-${index}`}>

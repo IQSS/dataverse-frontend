@@ -5,7 +5,6 @@ import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookR
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { Dataset as DatasetModel } from '@/dataset/domain/models/Dataset'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
-import { QueryParamKey, Route } from '@/sections/Route.enum'
 
 const guestbook: Guestbook = {
   id: 10,
@@ -89,13 +88,6 @@ describe('DatasetGuestbook', () => {
     cy.findByRole('button', { name: 'Preview Guestbook' }).should('exist')
     cy.findByRole('button', { name: 'Preview Guestbook' }).click()
     cy.findByRole('dialog').should('be.visible')
-    cy.findByRole('link', { name: 'Custom Questions' }).should(
-      'have.attr',
-      'href',
-      `/spa${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${encodeURIComponent(
-        dataset.persistentId
-      )}&${QueryParamKey.TAB}=terms&termsTab=guestbook`
-    )
     cy.findByRole('dialog').within(() => {
       cy.findAllByRole('button', { name: 'Close' }).last().click()
     })
