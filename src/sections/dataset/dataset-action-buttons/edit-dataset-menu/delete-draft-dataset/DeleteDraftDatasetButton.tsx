@@ -22,6 +22,7 @@ export function DeleteDraftDatasetButton({
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const navigate = useNavigate()
   const { t } = useTranslation('dataset')
+  const hasReleasedVersion = dataset.version.someDatasetVersionHasBeenReleased
 
   const handleOpenModal = () => setShowConfirmationModal(true)
   const handleCloseModal = () => setShowConfirmationModal(false)
@@ -45,7 +46,13 @@ export function DeleteDraftDatasetButton({
       navigate(`${Route.DATASETS}?${searchParams.toString()}`)
     }
 
-    toast.success(t('alerts.datasetDeletedSuccess'))
+    toast.success(
+      t(
+        hasReleasedVersion
+          ? 'alerts.datasetDeletedSuccessDraft'
+          : 'alerts.datasetDeletedSuccessDataset'
+      )
+    )
   }
 
   if (
@@ -59,7 +66,7 @@ export function DeleteDraftDatasetButton({
     <>
       <DropdownSeparator />
       <DropdownButtonItem onClick={handleOpenModal}>
-        {dataset.version.someDatasetVersionHasBeenReleased
+        {hasReleasedVersion
           ? t('datasetActionButtons.editDataset.delete.draft')
           : t('datasetActionButtons.editDataset.delete.released')}
       </DropdownButtonItem>
@@ -69,6 +76,7 @@ export function DeleteDraftDatasetButton({
         handleDelete={() => handleDeleteDraftDataset(dataset.persistentId)}
         isDeletingDataset={isDeletingDataset}
         errorDeletingDataset={errorDeletingDataset}
+        hasReleasedVersion={hasReleasedVersion}
       />
     </>
   )
