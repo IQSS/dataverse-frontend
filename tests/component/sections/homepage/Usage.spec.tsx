@@ -47,6 +47,9 @@ describe('Usage', () => {
     cy.findByRole('heading', {
       name: 'Publishing your data is easy on Testverse!'
     }).should('be.visible')
+    cy.findByText(
+      'Testverse is a repository for research data. Deposit data and code here.'
+    ).should('be.visible')
     cy.findByRole('link', { name: 'Getting started' })
       .should('have.attr', 'href', supportUrl)
       .and('have.attr', 'target', '_blank')

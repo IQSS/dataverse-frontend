@@ -24,7 +24,12 @@ export const Usage = ({ collectionId }: UsageProps) => {
         <Card className={styles.card}>
           <Card.Body className={styles.card_body}>
             <h5>{t('datasets.title')}</h5>
-            <p className="small text-muted">{t('datasets.content')}</p>
+            <p className="small text-muted">
+              {t('datasets.content', {
+                dataverseName,
+                interpolation: { escapeValue: false }
+              })}
+            </p>
             <footer className={styles.footer_wrapper}>
               <Link
                 to={RouteWithParams.CREATE_DATASET(collectionId)}
@@ -60,7 +65,12 @@ export const Usage = ({ collectionId }: UsageProps) => {
       <Col xs={12} lg={4} className={styles.column_card}>
         <Card className={styles.card}>
           <Card.Body className={styles.card_body}>
-            <h5>{t('general.title', { dataverseName })}</h5>
+            <h5>
+              {t('general.title', {
+                dataverseName,
+                interpolation: { escapeValue: false }
+              })}
+            </h5>
             <p className="small text-muted">{t('general.content')}</p>
             <footer className={styles.footer_wrapper}>
               <a
