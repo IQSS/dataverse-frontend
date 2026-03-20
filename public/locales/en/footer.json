@@ -1,5 +1,5 @@
 {
-  "copyright": "Copyright © {{year}}, The President & Fellows of Harvard College | ",
+  "copyright": "Copyright © {{year}}, {{copyrightHolder}}",
   "privacyPolicy": "Privacy Policy",
   "poweredBy": "Powered by"
 }
