@@ -19,6 +19,7 @@ export function FileNonTabularDownloadOptions({
 
   return (
     <DropdownButtonItem
+      data-testid={`download-original-file`}
       href={downloadUrlOriginal}
       disabled={ingestIsInProgress || (dataset && dataset.isLockedFromFileDownload)}>
       {type.displayFormatIsUnknown
