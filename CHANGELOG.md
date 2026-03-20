@@ -15,6 +15,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Edit Terms Integration.
 - With the addition of the new runtime configuration approach, we now support dynamic configuration for languages. If more than one language is configured, the Language Switcher will be shown in the header to allow users to change the language.
 - Added Notifications tab in Account Page
+- Added an environment variable to docker-compose-dev.yml to hide the OIDC client used in the SPA from the JSF frontend: DATAVERSE_AUTH_OIDC_HIDDEN_JSF: 1
 
 ### Changed
 
@@ -24,6 +25,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Changed the way we were handling DATE type metadata field validation to better match the backend validation and give users better error messages. For example, for an input like “foo AD”, we now show “Production Date is not a valid date. The AD year must be numeric.“. For an input like “99999 AD”, we now show “Production Date is not a valid date. The AD year cant be higher than 9999.“. For an input like “[-9999?], we now show “Production Date is not a valid date. The year in brackets cannot be negative.“, etc.
 - The SPA now fetches the runtime configuration from `config.js` on each load, allowing configurations without rebuilding the app. We don't use `.env` variables at build time anymore.
 - Renamed dataset template fetch/create use cases and DTOs to `getTemplatesByCollectionId` and `CreateTemplateDTO` for API alignment, and added new `getTemplate` and `deleteTemplate` use cases for retrieving a single template by ID and deleting templates.
+- Dataset page Terms tab title now depends on permissions: users with dataset update permission see `Terms and Guestbook`, and read-only users see `Terms`.
 
 ### Fixed
 
@@ -31,6 +33,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Show toast notification when API token is copied to clipboard.
 - Dataset versions: (1) file changes should be `Access: Restricted` instead of `isResticted: true/false`; (2) logic of View Detail button. (#879)
 - File versions: (1) logic of linking to a file version; (2)If file not included, show text information "File not included in this version.". (#879)
+- Dataset page publish flow now avoids rendering duplicate tab sets by making tabs skeleton and tabs content mutually exclusive.
 
 ### Removed
 
