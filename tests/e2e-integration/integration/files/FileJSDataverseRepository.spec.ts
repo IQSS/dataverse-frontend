@@ -103,6 +103,7 @@ const fileExpectedData = (id: number, datasetPid: string): Omit<File, 'hierarchy
     name: 'blob',
     datasetPersistentId: datasetPid,
     datasetVersion: {
+      lastUpdateTime: dateNow,
       labels: [
         { semanticMeaning: DatasetLabelSemanticMeaning.DATASET, value: DatasetLabelValue.DRAFT },
         {
