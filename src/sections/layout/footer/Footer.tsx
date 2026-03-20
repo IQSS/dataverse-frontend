@@ -24,7 +24,11 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
         <Row>
           <Col sm={8}>
             <em className={styles.copyright}>
-              {t('copyright', { year: currentYear, copyrightHolder })}
+              {t('copyright', {
+                year: currentYear,
+                copyrightHolder,
+                interpolation: { escapeValue: false }
+              })}
               {privacyPolicyUrl && (
                 <>
                   {' | '}

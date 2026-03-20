@@ -19,7 +19,9 @@ describe('Footer component', () => {
   it('should render footer content', () => {
     cy.customMount(FooterMother.withDataverseVersion(sandbox, testVersion))
 
-    cy.contains(`Copyright © ${currentYear}`).should('exist')
+    cy.contains(`Copyright © ${currentYear}, The President & Fellows of Harvard College`).should(
+      'exist'
+    )
     cy.findByText('Privacy Policy').should('exist')
     cy.findByAltText('The Dataverse Project logo').should('exist')
     cy.findByText(testVersion).should('exist')
