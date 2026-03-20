@@ -96,13 +96,13 @@ export class FileHelper extends DataverseApiHelper {
       .then((binary: string) => Cypress.Blob.binaryStringToBlob(binary, 'image/jpeg'))
   }
 
-  static async download(id: number) {
-    cy.visit(`/file.xhtml?fileId=${id}`)
-      .get('#actionButtonBlock > div:nth-child(1) > div > button')
-      .click()
-      .get('#fileForm\\:j_idt274')
-      .click()
-    return Promise.resolve()
+  static download(id: number): Promise<void> {
+    return new Cypress.Promise((resolve) => {
+      cy.visit(`/spa/files?id=${id}`)
+      cy.get(`#action-button-access-file-${id}`).click()
+      cy.findByTestId(`download-original-file-${id}`).click()
+      cy.then(() => resolve())
+    })
   }
 
   static async addLabel(id: number, labels: FileLabel[]) {
