@@ -5,7 +5,7 @@ import { useIsPasswordRevealed } from 'keycloakify/tools/useIsPasswordRevealed'
 import type { PageProps } from 'keycloakify/login/pages/PageProps'
 import type { KcContext } from '../KcContext'
 import type { I18n } from '../i18n'
-import { Alert, Button, Col, Form } from '@iqss/dataverse-design-system'
+import { Button, Col, Form } from '@iqss/dataverse-design-system'
 import {
   EyeFill,
   EyeSlashFill,
@@ -92,9 +92,6 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: 'log
           )}
         </>
       }>
-      <Alert variant="warning" customHeading={msgStr('signInNoticeTitle')} dismissible={false}>
-        {msg('signInNoticeBody')}
-      </Alert>
       <div id="kc-form">
         <div id="kc-form-wrapper">
           {realm.password && (

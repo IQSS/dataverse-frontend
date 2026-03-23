@@ -7,9 +7,9 @@ const { useI18n, ofTypeI18n } = i18nBuilder
   .withThemeName<ThemeName>()
   .withCustomTranslations({
     en: {
-      signInNoticeTitle: 'Note',
+      signInNoticeTitle: 'Note about ORCID, GitHub, and Google sign-in:',
       signInNoticeBody:
-        'Please use your Username/Email or Institutional Account to sign in. Other identity providers(ORCID, GitHub, Microsoft and Google) are not supported for Dataverse SPA.'
+        'These options are available only to the existing accounts that previously authenticated with these methods. New sign-ups via ORCID, GitHub, or Google are not supported. Please use your Institutional Login or Username/Email to sign up. If you need help logging in, please contact support.'
     }
   })
   .build()

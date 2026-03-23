@@ -64,11 +64,19 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
 
   return (
     <div className={styles.login} id="kc-login-template">
+      {kcContext.pageId === 'login.ftl' && (
+        <div className={styles['top-notice']}>
+          <Alert variant="warning" customHeading={msgStr('signInNoticeTitle')} dismissible={false}>
+            {msg('signInNoticeBody')}
+          </Alert>
+        </div>
+      )}
       <div id="kc-header">
         <div id="kc-header-wrapper" className={styles['header-wrapper']}>
           <img src={dataverse_logo} alt="Brand Logo Image" />
         </div>
       </div>
+
       <div className={styles['login-card']}>
         <header>
           {enabledLanguages.length > 1 && (
