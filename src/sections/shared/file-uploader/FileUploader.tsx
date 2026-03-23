@@ -9,7 +9,7 @@ import { FileUploaderGlobalConfig } from './context/fileUploaderReducer'
 import { LoadingConfigSpinner } from './loading-config-spinner/LoadingConfigSpinner'
 import FileUploaderPanel from './FileUploaderPanel'
 
-type FileUploaderProps =
+export type FileUploaderProps =
   | {
       fileRepository: FileRepository
       datasetRepository: DatasetRepository

@@ -1,5 +1,10 @@
 import { WriteError } from '@iqss/dataverse-client-javascript'
-import { FileUploader, OperationType } from '@/sections/shared/file-uploader/FileUploader'
+import {
+  FileUploader,
+  OperationType,
+  type FileUploaderProps
+} from '@/sections/shared/file-uploader/FileUploader'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
 import {
   FileMetadataMother,
@@ -10,6 +15,13 @@ import { FileMockFailedRepository } from '@/stories/file/FileMockFailedUploadRep
 import FileUploadInputStyles from '../../../../../src/sections/shared/file-uploader/file-upload-input/FileUploadInput.module.scss'
 
 const fileMockRepository = new FileMockRepository()
+const datasetMockRepository = new DatasetMockRepository()
+
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never
+
+const TestFileUploader = (props: DistributiveOmit<FileUploaderProps, 'datasetRepository'>) => (
+  <FileUploader {...props} datasetRepository={datasetMockRepository} />
+)
 
 const ORIGINAL_FILE_NAME = 'File Title'
 const ORIGINAL_FILE_TYPE = 'application/json'
@@ -24,7 +36,7 @@ describe('FileUploader', () => {
   describe('replace mode', () => {
     it('shows the loading configuration spinner while loading the fixity algorithm', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -38,7 +50,7 @@ describe('FileUploader', () => {
 
     it('shows correct labels related to file replacement', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -55,7 +67,7 @@ describe('FileUploader', () => {
 
     it('disables the Select file to add button when one file was already selected', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -83,7 +95,7 @@ describe('FileUploader', () => {
       fileMockRepository.replace = cy.stub().rejects()
 
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -116,7 +128,7 @@ describe('FileUploader', () => {
         .rejects(new WriteError('File replace failed because of A, B, C.'))
 
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -145,7 +157,7 @@ describe('FileUploader', () => {
 
     it('renders the file being uploaded', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -168,7 +180,7 @@ describe('FileUploader', () => {
 
     it('renders file upload by clicking add button', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -190,7 +202,7 @@ describe('FileUploader', () => {
 
     it('skips the uploading of .DS_Store files', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -213,7 +225,7 @@ describe('FileUploader', () => {
 
     it('does not allow to upload a new file is there is already one and shows toast message', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -244,7 +256,7 @@ describe('FileUploader', () => {
     describe('Different File Type confirmation dialog', () => {
       it('shows the Different File Type warning when trying to upload a file with different type', () => {
         cy.customMount(
-          <FileUploader
+          <TestFileUploader
             fileRepository={fileMockRepository}
             datasetPersistentId=":latest"
             storageType="S3"
@@ -269,7 +281,7 @@ describe('FileUploader', () => {
 
       it('shows "Unknown" label when file type could not be mapped to a friendly type', () => {
         cy.customMount(
-          <FileUploader
+          <TestFileUploader
             fileRepository={fileMockRepository}
             datasetPersistentId=":latest"
             storageType="S3"
@@ -294,7 +306,7 @@ describe('FileUploader', () => {
 
       it('cancels the upload when the user clicks on the cancel button', () => {
         cy.customMount(
-          <FileUploader
+          <TestFileUploader
             fileRepository={fileMockRepository}
             datasetPersistentId=":latest"
             storageType="S3"
@@ -327,7 +339,7 @@ describe('FileUploader', () => {
 
       it('continues the upload when the user clicks on the continue button', () => {
         cy.customMount(
-          <FileUploader
+          <TestFileUploader
             fileRepository={fileMockRepository}
             datasetPersistentId=":latest"
             storageType="S3"
@@ -361,7 +373,7 @@ describe('FileUploader', () => {
   describe('add files to dataset mode', () => {
     it('shows correct labels related to add files to dataset', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -377,7 +389,7 @@ describe('FileUploader', () => {
 
     it('renders the files being uploaded', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -404,7 +416,7 @@ describe('FileUploader', () => {
 
     it('cancels one upload and leaves other uploads', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -440,7 +452,7 @@ describe('FileUploader', () => {
 
     it('renders failed file upload', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={new FileMockFailedRepository()}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -462,7 +474,7 @@ describe('FileUploader', () => {
 
     it('prevents double re-uploads', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -515,7 +527,7 @@ describe('FileUploader', () => {
 
     it('prevents double uploads', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -552,7 +564,7 @@ describe('FileUploader', () => {
       fileMockRepository.addUploadedFiles = cy.stub().rejects()
 
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -587,7 +599,7 @@ describe('FileUploader', () => {
         .rejects(new WriteError('Adding files failed because of A, B, C.'))
 
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -616,7 +628,7 @@ describe('FileUploader', () => {
     describe('Leave Confirmation Modal', () => {
       it('it is shown when user click the Cancel button', () => {
         cy.customMount(
-          <FileUploader
+          <TestFileUploader
             fileRepository={fileMockRepository}
             datasetPersistentId=":latest"
             storageType="S3"
@@ -656,7 +668,7 @@ describe('FileUploader', () => {
 
       it('it is shown when user click the Cancel button and user stays on the page', () => {
         cy.customMount(
-          <FileUploader
+          <TestFileUploader
             fileRepository={fileMockRepository}
             datasetPersistentId=":latest"
             storageType="S3"
@@ -701,7 +713,7 @@ describe('FileUploader', () => {
 
       it('clears uploading in progress files when user clicks on Leave without saving', () => {
         cy.customMount(
-          <FileUploader
+          <TestFileUploader
             fileRepository={fileMockRepository}
             datasetPersistentId=":latest"
             storageType="S3"
@@ -739,7 +751,7 @@ describe('FileUploader', () => {
 
     it('removes uploaded file from the list', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -775,7 +787,7 @@ describe('FileUploader', () => {
   describe('Uploaded Files List', () => {
     it('shows edit dropdown button disabled when no files are selected', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -800,7 +812,7 @@ describe('FileUploader', () => {
 
     it('shows edit dropdown button enabled when files are selected', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -829,7 +841,7 @@ describe('FileUploader', () => {
 
     it('removes selected files from the list', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -870,7 +882,7 @@ describe('FileUploader', () => {
 
     it('does not submit the form when pressing enter in the description textarea', () => {
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -898,7 +910,7 @@ describe('FileUploader', () => {
     describe('form fields validations', () => {
       it('should show incorrect file name error message when file name is incorrect', () => {
         cy.customMount(
-          <FileUploader
+          <TestFileUploader
             fileRepository={fileMockRepository}
             datasetPersistentId=":latest"
             storageType="S3"
@@ -925,7 +937,7 @@ describe('FileUploader', () => {
 
       it('should show incorrect file path error message when file path is incorrect', () => {
         cy.customMount(
-          <FileUploader
+          <TestFileUploader
             fileRepository={fileMockRepository}
             datasetPersistentId=":latest"
             storageType="S3"
@@ -952,7 +964,7 @@ describe('FileUploader', () => {
 
       it('should show file path + file name duplicate combination error message when file path + file name combination is duplicate', () => {
         cy.customMount(
-          <FileUploader
+          <TestFileUploader
             fileRepository={fileMockRepository}
             datasetPersistentId=":latest"
             storageType="S3"
@@ -1008,7 +1020,7 @@ describe('FileUploader', () => {
     })
   })
 
-  describe.only('upload limits UI', () => {
+  describe('upload limits UI', () => {
     it('shows both upload limit messages when both limits are present', () => {
       const fetchUploadLimits = cy.stub().resolves({
         numberOfFilesRemaining: 20,
@@ -1016,7 +1028,7 @@ describe('FileUploader', () => {
       })
 
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -1035,7 +1047,7 @@ describe('FileUploader', () => {
       })
 
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
@@ -1052,7 +1064,7 @@ describe('FileUploader', () => {
       const fetchUploadLimits = cy.stub().resolves({})
 
       cy.customMount(
-        <FileUploader
+        <TestFileUploader
           fileRepository={fileMockRepository}
           datasetPersistentId=":latest"
           storageType="S3"
