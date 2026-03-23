@@ -1,8 +1,8 @@
 import { createSandbox, SinonSandbox } from 'sinon'
 import { DataverseVersionMother } from '../../../info/domain/models/DataverseVersionMother'
-import { DataverseInfoRepository } from '../../../../../src/info/domain/repositories/DataverseInfoRepository'
 import { FooterMother } from './FooterMother'
 import { Footer } from '../../../../../src/sections/layout/footer/Footer'
+import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 
 describe('Footer component', () => {
   const sandbox: SinonSandbox = createSandbox()
@@ -19,9 +19,8 @@ describe('Footer component', () => {
   })
 
   it('should call dataverseInfoRepository.getVersion on mount', () => {
-    const dataverseInfoRepository: DataverseInfoRepository = {
-      getVersion: cy.stub().resolves(testVersion)
-    }
+    const dataverseInfoRepository = new DataverseInfoMockRepository()
+    const getVersionSpy = sandbox.spy(dataverseInfoRepository, 'getVersion')
 
     cy.customMount(<Footer dataverseInfoRepository={dataverseInfoRepository} />)
 
