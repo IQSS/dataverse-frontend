@@ -552,11 +552,10 @@ describe('Dataset', () => {
 
           cy.get('#edit-files-menu').should('exist')
 
-          // TODO: Bring back this part of the test when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
-          // cy.findByRole('button', { name: 'Access File' }).as('accessButton')
-          // cy.get('@accessButton').should('exist')
-          // cy.get('@accessButton').click()
-          // cy.findByText('Embargoed').should('exist')
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('exist')
+          cy.get('@accessButton').click()
+          cy.findByText('Embargoed').should('exist')
         })
     })
 
