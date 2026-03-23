@@ -201,22 +201,10 @@ export function DownloadWithGuestbookModal({
       }
     }
   }
-  const buildSignedUrl = (signedUrl: string): string => {
-    try {
-      const signedUrlObject = new URL(signedUrl, window.location.origin)
-      return new URL(
-        `${signedUrlObject.pathname}${signedUrlObject.search}${signedUrlObject.hash}`,
-        window.location.origin
-      ).toString()
-    } catch {
-      return signedUrl
-    }
-  }
-
   const triggerDirectDownload = (signedUrl: string): Promise<void> => {
     try {
       const downloadLink = document.createElement('a')
-      downloadLink.href = buildSignedUrl(signedUrl)
+      downloadLink.href = signedUrl
       downloadLink.style.display = 'none'
       downloadLink.rel = 'noreferrer'
 

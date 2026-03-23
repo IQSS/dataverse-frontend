@@ -520,7 +520,7 @@ describe('DownloadWithGuestbookModal', () => {
     cy.get('@handleClose').should('have.been.calledOnce')
   })
 
-  it('normalizes an absolute signed URL to the current origin before triggering download', () => {
+  it('uses an absolute signed URL verbatim when triggering download', () => {
     submitGuestbookForDatafileDownloadImpl = () =>
       Promise.resolve('https://demo.dataverse.org/api/v1/access/datafile/10?token=test#frag')
     const handleClose = cy.stub().as('handleClose')
@@ -547,35 +547,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.window()
       .its('__clickedHref')
-      .should('match', /\/api\/v1\/access\/datafile\/10\?token=test#frag$/)
-  })
-
-  it('falls back to the raw signed URL when URL normalization fails', () => {
-    submitGuestbookForDatafileDownloadImpl = () => Promise.resolve('http://[invalid-url')
-    const handleClose = cy.stub().as('handleClose')
-
-    cy.window().then((window) => {
-      cy.stub(window.HTMLAnchorElement.prototype, 'click').callsFake(function (
-        this: HTMLAnchorElement
-      ) {
-        ;(window as Window & { __clickedHref?: string }).__clickedHref =
-          this.getAttribute('href') ?? ''
-      })
-    })
-
-    cy.customMount(
-      withRepositories(
-        <DownloadWithGuestbookModal show handleClose={handleClose} guestbookId={10} fileId={10} />
-      )
-    )
-
-    cy.findByLabelText(/^Name/).clear().type('Test User')
-    cy.findByLabelText(/^Email/)
-      .clear()
-      .type('test.user@example.com')
-    cy.findByRole('button', { name: 'Accept' }).click()
-
-    cy.window().its('__clickedHref').should('eq', 'http://[invalid-url')
+      .should('eq', 'https://demo.dataverse.org/api/v1/access/datafile/10?token=test#frag')
   })
 
   it('shows a dropdown box for additional questions of options type', () => {

@@ -133,6 +133,7 @@ describe('AccessDatasetMenu', () => {
     ]
     cy.customMount(
       <AccessDatasetMenu
+        datasetNumericId={2}
         fileDownloadSizes={fileDownloadSizes}
         hasOneTabularFileAtLeast={false}
         version={version}
@@ -316,6 +317,7 @@ describe('AccessDatasetMenu', () => {
     cy.findByLabelText(/email/i).type('test.user@example.com')
     cy.findByRole('button', { name: 'Accept' }).click()
     cy.wrap(submitGuestbookForDatasetDownloadExecute).should('have.been.calledOnce')
+    cy.wrap(submitGuestbookForDatasetDownloadExecute).its('firstCall.args.0').should('eq', 2)
     cy.findByText('Your download has started.').should('exist')
   })
 

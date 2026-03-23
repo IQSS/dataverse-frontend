@@ -5,6 +5,8 @@ import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/fil
 import { MouseEvent, useState } from 'react'
 import FileTypeToFriendlyTypeMap from '../../../../files/domain/models/FileTypeToFriendlyTypeMap'
 import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
+import { toast } from 'react-toastify'
+import { triggerAuthenticatedDownload } from '@/shared/helpers/AuthenticatedDownloadHelper'
 
 interface FileTabularDownloadOptionsProps {
   fileId: number
@@ -35,13 +37,25 @@ export function FileTabularDownloadOptions({
 
   const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
 
-  const handleDownloadClick = (event: MouseEvent<HTMLElement>) => {
-    if (!hasGuestbook || downloadDisabled) {
+  const handleDownloadClick = (event: MouseEvent<HTMLElement>, url?: string) => {
+    if (downloadDisabled) {
+      return
+    }
+
+    if (hasGuestbook) {
+      event.preventDefault()
+      setShowDownloadWithGuestbookModal(true)
+      return
+    }
+
+    if (!url) {
       return
     }
 
     event.preventDefault()
-    setShowDownloadWithGuestbookModal(true)
+    void triggerAuthenticatedDownload(url).catch(() => {
+      toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
+    })
   }
 
   const handleCloseGuestbookModal = () => {
@@ -52,22 +66,21 @@ export function FileTabularDownloadOptions({
     <>
       {!type.originalFormatIsUnknown && (
         <DropdownButtonItem
-          href={hasGuestbook ? undefined : downloadUrls.original}
-          onClick={handleDownloadClick}
+          href={undefined}
+          onClick={(event) => handleDownloadClick(event, downloadUrls.original)}
           disabled={downloadDisabled}>{`${type.original || ''} (${t(
           'actions.accessFileMenu.downloadOptions.options.original'
         )})`}</DropdownButtonItem>
       )}
       <DropdownButtonItem
-        href={hasGuestbook ? undefined : downloadUrls.tabular}
-        onClick={handleDownloadClick}
+        onClick={(event) => handleDownloadClick(event, downloadUrls.tabular)}
         disabled={downloadDisabled || !downloadUrls.tabular}>
         {t('actions.accessFileMenu.downloadOptions.options.tabular')}
       </DropdownButtonItem>
       {type.original !== FileTypeToFriendlyTypeMap['application/x-r-data'] && (
         <DropdownButtonItem
-          href={hasGuestbook ? undefined : downloadUrls.rData}
-          onClick={handleDownloadClick}
+          href={undefined}
+          onClick={(event) => handleDownloadClick(event, downloadUrls.rData)}
           disabled={downloadDisabled || !downloadUrls.rData}>
           {t('actions.accessFileMenu.downloadOptions.options.RData')}
         </DropdownButtonItem>
