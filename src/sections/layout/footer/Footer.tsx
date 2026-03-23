@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Container, Row, Col } from '@iqss/dataverse-design-system'
-import dataverseProjectLogo from '@/assets/dataverse-project-logo.svg'
+import { requireAppConfig } from '@/config'
 import { DataverseInfoRepository } from '../../../info/domain/repositories/DataverseInfoRepository'
 import { useDataverseVersion } from './useDataverseVersion'
+import dataverseProjectLogo from '@/assets/dataverse-project-logo.svg'
 import styles from './Footer.module.scss'
 
 interface FooterProps {
@@ -13,6 +14,9 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
   const { t } = useTranslation('footer')
   const { dataverseVersion } = useDataverseVersion(dataverseInfoRepository)
   const currentYear = new Date().getFullYear().toString()
+  const appConfig = requireAppConfig()
+  const copyrightHolder = appConfig.footer?.copyrightHolder ?? 'Dataverse Project'
+  const privacyPolicyUrl = appConfig.footer?.privacyPolicyUrl
 
   return (
     <footer className={styles.container}>
@@ -20,13 +24,19 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
         <Row>
           <Col sm={8}>
             <em className={styles.copyright}>
-              {t('copyright', { year: currentYear })}
-              <a
-                href="https://support.dataverse.harvard.edu/harvard-dataverse-privacy-policy"
-                rel="noreferrer"
-                target="_blank">
-                {t('privacyPolicy')}
-              </a>
+              {t('copyright', {
+                year: currentYear,
+                copyrightHolder,
+                interpolation: { escapeValue: false }
+              })}
+              {privacyPolicyUrl && (
+                <>
+                  {' | '}
+                  <a href={privacyPolicyUrl} rel="noreferrer" target="_blank">
+                    {t('privacyPolicy')}
+                  </a>
+                </>
+              )}
             </em>
           </Col>
           <Col sm={4}>
