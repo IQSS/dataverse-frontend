@@ -34,6 +34,7 @@ export function DatasetActionButtons({
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
       <AccessDatasetMenu
+        datasetNumericId={dataset.id}
         version={dataset.version}
         permissions={dataset.permissions}
         hasOneTabularFileAtLeast={dataset.hasOneTabularFileAtLeast}

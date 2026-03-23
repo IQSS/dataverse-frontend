@@ -4,6 +4,8 @@ import { FileType } from '../../../../files/domain/models/FileMetadata'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
 import { MouseEvent, useState } from 'react'
 import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
+import { toast } from 'react-toastify'
+import { triggerAuthenticatedDownload } from '@/shared/helpers/AuthenticatedDownloadHelper'
 
 interface FileNonTabularDownloadOptionsProps {
   fileId: number
@@ -34,19 +36,26 @@ export function FileNonTabularDownloadOptions({
   const downloadDisabled = ingestIsInProgress || isLockedFromFileDownload
 
   const handleDownloadClick = (event: MouseEvent<HTMLElement>) => {
-    if (!hasGuestbook || downloadDisabled) {
+    if (downloadDisabled) {
+      return
+    }
+
+    if (hasGuestbook) {
+      event.preventDefault()
+      setShowDownloadWithGuestbookModal(true)
       return
     }
 
     event.preventDefault()
-    setShowDownloadWithGuestbookModal(true)
+    void triggerAuthenticatedDownload(downloadUrlOriginal).catch(() => {
+      toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
+    })
   }
 
   return (
     <>
       <DropdownButtonItem
         data-testid={`download-original-file-${fileId}`}
-        href={hasGuestbook ? undefined : downloadUrlOriginal}
         onClick={handleDownloadClick}
         disabled={downloadDisabled}>
         {type.displayFormatIsUnknown

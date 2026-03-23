@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { DropdownButton, DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { Download as DownloadIcon } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import {
   CustomTerms,
   DatasetDownloadUrls,
@@ -13,10 +14,12 @@ import {
 import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/FileMetadata'
 import { DatasetExploreOptions } from '../DatasetToolsOptions'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import { triggerAuthenticatedDownload } from '@/shared/helpers/AuthenticatedDownloadHelper'
 
 // TODO: add compute feature
 
 interface AccessDatasetMenuProps {
+  datasetNumericId?: number | string
   version: DatasetVersion
   permissions: DatasetPermissions
   hasOneTabularFileAtLeast: boolean
@@ -30,6 +33,7 @@ interface AccessDatasetMenuProps {
 }
 
 export function AccessDatasetMenu({
+  datasetNumericId,
   version,
   permissions,
   hasOneTabularFileAtLeast,
@@ -90,7 +94,7 @@ export function AccessDatasetMenu({
         <DownloadWithGuestbookModal
           show={showDownloadWithGuestbookModal}
           handleClose={() => setShowDownloadWithGuestbookModal(false)}
-          datasetId={persistentId}
+          datasetId={datasetNumericId ?? persistentId}
           datasetPersistentId={persistentId}
           guestbookId={guestbookId}
           datasetLicense={license}
@@ -117,6 +121,27 @@ const DatasetDownloadOptions = ({
   onDownloadWithGuestbook
 }: DatasetDownloadOptionsProps) => {
   const { t } = useTranslation('dataset')
+  const { t: tFiles } = useTranslation('files')
+
+  const handleDirectDownload = (
+    event: React.MouseEvent<HTMLElement>,
+    url: string | undefined
+  ): void => {
+    if (hasGuestbook) {
+      onDownloadWithGuestbook(event)
+      return
+    }
+
+    if (!url) {
+      return
+    }
+
+    event.preventDefault()
+    void triggerAuthenticatedDownload(url).catch(() => {
+      toast.error(tFiles('actions.optionsMenu.guestbookCollectModal.downloadError'))
+    })
+  }
+
   function getFormattedFileSize(mode: FileDownloadMode): string {
     const foundSize = fileDownloadSizes.find((size) => size.mode === mode)
     return foundSize ? foundSize.toString() : ''
@@ -125,22 +150,22 @@ const DatasetDownloadOptions = ({
   return hasOneTabularFileAtLeast ? (
     <>
       <DropdownButtonItem
-        href={hasGuestbook ? undefined : downloadUrls[FileDownloadMode.ORIGINAL]}
-        onClick={hasGuestbook ? onDownloadWithGuestbook : undefined}>
+        href={undefined}
+        onClick={(event) => handleDirectDownload(event, downloadUrls[FileDownloadMode.ORIGINAL])}>
         {t('datasetActionButtons.accessDataset.downloadOptions.originalZip')} (
         {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
       </DropdownButtonItem>
       <DropdownButtonItem
-        href={hasGuestbook ? undefined : downloadUrls[FileDownloadMode.ARCHIVAL]}
-        onClick={hasGuestbook ? onDownloadWithGuestbook : undefined}>
+        href={undefined}
+        onClick={(event) => handleDirectDownload(event, downloadUrls[FileDownloadMode.ARCHIVAL])}>
         {t('datasetActionButtons.accessDataset.downloadOptions.archivalZip')} (
         {getFormattedFileSize(FileDownloadMode.ARCHIVAL)})
       </DropdownButtonItem>
     </>
   ) : (
     <DropdownButtonItem
-      href={hasGuestbook ? undefined : downloadUrls[FileDownloadMode.ORIGINAL]}
-      onClick={hasGuestbook ? onDownloadWithGuestbook : undefined}>
+      href={undefined}
+      onClick={(event) => handleDirectDownload(event, downloadUrls[FileDownloadMode.ORIGINAL])}>
       {t('datasetActionButtons.accessDataset.downloadOptions.zip')} (
       {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
     </DropdownButtonItem>

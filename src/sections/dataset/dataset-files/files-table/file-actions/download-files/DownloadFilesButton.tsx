@@ -2,6 +2,7 @@ import { Download } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { MouseEvent, useState } from 'react'
+import { toast } from 'react-toastify'
 import { FileDownloadMode } from '../../../../../../files/domain/models/FileMetadata'
 import { useDataset } from '../../../../DatasetContext'
 import { FileSelection } from '../../row-selection/useFileSelection'
@@ -9,8 +10,8 @@ import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFiles
 import { useMultipleFileDownload } from '../../../../../file/multiple-file-download/MultipleFileDownloadContext'
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
-import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { DownloadWithGuestbookModal } from '../file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import { triggerAuthenticatedDownload } from '@/shared/helpers/AuthenticatedDownloadHelper'
 import styles from './DownloadFilesButton.module.scss'
 
 interface DownloadFilesButtonProps {
@@ -36,7 +37,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
     : getFileIdsFromSelection(fileSelection)
   const hasGuestbook = dataset?.guestbookId !== undefined
 
-  const onClick = (event: MouseEvent<HTMLElement>) => {
+  const onClick = (event: MouseEvent<HTMLElement>, downloadMode?: FileDownloadMode) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {
       event.preventDefault()
       setShowNoFilesSelectedModal(true)
@@ -46,6 +47,14 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
     if (hasGuestbook) {
       event.preventDefault()
       setShowDownloadWithGuestbookModal(true)
+      return
+    }
+
+    if (downloadMode) {
+      event.preventDefault()
+      void triggerAuthenticatedDownload(getDownloadUrl(downloadMode)).catch(() => {
+        toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
+      })
     }
   }
 
@@ -66,11 +75,6 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
 
   // TODO: remove this when we can handle non-S3 files
   if (!dataset?.fileStore?.startsWith('s3')) {
-    return <></>
-  }
-
-  // TODO: remove this when access datafile supports bearer tokens
-  if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
     return <></>
   }
 
@@ -108,13 +112,13 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
           variant="secondary"
           withSpacing>
           <DropdownButtonItem
-            onClick={onClick}
-            href={hasGuestbook ? undefined : getDownloadUrl(FileDownloadMode.ORIGINAL)}>
+            onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}
+            href={undefined}>
             {t('actions.downloadFiles.options.original')}
           </DropdownButtonItem>
           <DropdownButtonItem
-            onClick={onClick}
-            href={hasGuestbook ? undefined : getDownloadUrl(FileDownloadMode.ARCHIVAL)}>
+            onClick={(event) => onClick(event, FileDownloadMode.ARCHIVAL)}
+            href={undefined}>
             {t('actions.downloadFiles.options.archival')}
           </DropdownButtonItem>
         </DropdownButton>
@@ -133,21 +137,19 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
           icon={<Download className={styles.icon} />}
           aria-label={t('actions.downloadFiles.title')}
           withSpacing
-          onClick={onClick}>
+          onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}>
           {dropdownButtonTitle}
         </Button>
       ) : (
-        <a href={getDownloadUrl(FileDownloadMode.ORIGINAL)}>
-          <Button
-            id="download-files"
-            variant="secondary"
-            icon={<Download className={styles.icon} />}
-            aria-label={t('actions.downloadFiles.title')}
-            withSpacing
-            onClick={onClick}>
-            {dropdownButtonTitle}
-          </Button>
-        </a>
+        <Button
+          id="download-files"
+          variant="secondary"
+          icon={<Download className={styles.icon} />}
+          aria-label={t('actions.downloadFiles.title')}
+          withSpacing
+          onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}>
+          {dropdownButtonTitle}
+        </Button>
       )}
 
       {downloadFeedbackModals}
