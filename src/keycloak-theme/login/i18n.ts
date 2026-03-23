@@ -8,8 +8,9 @@ const { useI18n, ofTypeI18n } = i18nBuilder
   .withCustomTranslations({
     en: {
       signInNoticeTitle: 'Note about ORCID, GitHub, and Google sign-in:',
-      signInNoticeBody:
-        'These options are available only to the existing accounts that previously authenticated with these methods. New sign-ups via ORCID, GitHub, or Google are not supported. Please use your Institutional Login or Username/Email to sign up. If you need help logging in, please contact support.'
+      signInNoticeBodyPrefix:
+        'These options are available only to the existing accounts that previously authenticated with these methods. New sign-ups via ORCID, GitHub, or Google are not supported. Please use your Harvard Login or Username/Email to ',
+      signInNoticeSignUpLinkText: 'sign up in Harvard Dataverse'
     }
   })
   .build()
