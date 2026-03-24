@@ -3,7 +3,6 @@ import { CollectionRepository } from '../../../collection/domain/repositories/Co
 import { publishCollection } from '../../../collection/domain/useCases/publishCollection'
 
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
-import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 
 type UsePublishCollectionReturnType =
   | {
@@ -37,7 +36,6 @@ export function usePublishCollection(
       .then(() => {
         setPublishError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
-        needsUpdateStore.setNeedsUpdate(true)
         onPublishSucceed()
         return
       })
