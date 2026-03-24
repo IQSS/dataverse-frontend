@@ -3,18 +3,15 @@ import { requireAppConfig } from '@/config'
 import { GuestbookResponseDTO } from '@/access/domain/repositories/AccessRepository'
 import { Utils } from '@/shared/helpers/Utils'
 
-const EMPTY_GUESTBOOK_RESPONSE: GuestbookResponseDTO = {
+export const EMPTY_GUESTBOOK_RESPONSE: GuestbookResponseDTO = {
   guestbookResponse: {}
 }
 
-type SignedUrlResponse =
-  | string
-  | {
-      signedUrl?: string
-      data?: {
-        signedUrl?: string
-      }
-    }
+type SignedUrlResponse = {
+  data: {
+    signedUrl: string
+  }
+}
 
 const getAuthToken = (): string | null => {
   const appConfig = requireAppConfig()
@@ -28,11 +25,7 @@ const buildAuthHeaders = (): Record<string, string> => {
 }
 
 const getSignedUrlFromResponse = (responseData: SignedUrlResponse): string => {
-  if (typeof responseData === 'string') {
-    return responseData
-  }
-
-  const signedUrl = responseData.data?.signedUrl ?? responseData.signedUrl
+  const signedUrl = responseData.data.signedUrl
 
   if (!signedUrl) {
     throw new Error('Signed download URL not found in response')

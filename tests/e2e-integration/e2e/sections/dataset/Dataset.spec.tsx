@@ -745,7 +745,7 @@ describe('Dataset', () => {
 
           cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
 
-          cy.findByRole('link', { name: /Original Format ZIP/ })
+          cy.findByRole('button', { name: /Original Format ZIP/ })
             .should('exist')
             .click({ force: true })
 
@@ -772,7 +772,7 @@ describe('Dataset', () => {
 
           cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
 
-          cy.findByRole('link', { name: /Original Format ZIP/ })
+          cy.findByRole('button', { name: /Original Format ZIP/ })
             .should('exist')
             .click({ force: true })
 
