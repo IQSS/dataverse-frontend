@@ -163,6 +163,36 @@ describe('LoggedInHeaderActions', () => {
     cy.get('[data-testid="unread-notifications-badge"]').should('not.exist')
   })
 
+  it('retries unread notification refresh after an invalidation when the first fetch is stale', () => {
+    const unreadCountStub = cy.stub()
+    unreadCountStub.onFirstCall().resolves(3)
+    unreadCountStub.onSecondCall().resolves(3)
+    unreadCountStub.onThirdCall().resolves(5)
+    notificationRepository.getUnreadNotificationsCount = unreadCountStub
+
+    cy.clock()
+    cy.mountAuthenticated(
+      <LoggedInHeaderActions
+        user={testUser}
+        collectionRepository={collectionRepository}
+        notificationRepository={notificationRepository}
+      />
+    )
+
+    cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
+    cy.then(() => {
+      needsUpdateStore.setNeedsUpdate(true)
+    })
+
+    cy.wrap(unreadCountStub).should('have.been.calledTwice')
+    cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
+
+    cy.tick(1_000)
+
+    cy.wrap(unreadCountStub).should('have.been.calledThrice')
+    cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '5')
+  })
+
   it('calls the logout function when clicking the logout button', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
     collectionRepository.getById = cy.stub().resolves(CollectionMother.create())
