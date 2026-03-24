@@ -4,6 +4,8 @@ import { Setting, SettingName } from '../../settings/domain/models/Setting'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { getZipDownloadLimit } from '@/info/domain/useCases/getZipDownloadLimit'
 import { getMaxEmbargoDurationInMonths } from '@/info/domain/useCases/getMaxEmbargoDurationInMonths'
+import { getPublishDatasetDisclaimerText } from '@/info/domain/useCases/getPublishDatasetDisclaimerText'
+import { getDatasetPublishPopupCustomText } from '@/info/domain/useCases/getDatasetPublishPopupCustomText'
 import { getHasPublicStore } from '@/info/domain/useCases/getHasPublicStore'
 import { getExternalStatusesAllowed } from '@/info/domain/useCases/getExternalStatusesAllowed'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
@@ -26,7 +28,9 @@ export function SettingsProvider({
           getZipDownloadLimit(dataverseInfoRepository),
           getMaxEmbargoDurationInMonths(dataverseInfoRepository),
           getHasPublicStore(dataverseInfoRepository),
-          getExternalStatusesAllowed(dataverseInfoRepository)
+          getExternalStatusesAllowed(dataverseInfoRepository),
+          getDatasetPublishPopupCustomText(dataverseInfoRepository),
+          getPublishDatasetDisclaimerText(dataverseInfoRepository)
         ])
 
         setSettings(settingsResponse)
