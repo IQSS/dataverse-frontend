@@ -21,8 +21,8 @@ import { SettingsProvider } from '../../../../../src/sections/settings/SettingsP
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
-import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
 
 const testFiles: FilePreview[] = FilePreviewMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -51,7 +51,7 @@ const testFilesCountInfo = FilesCountInfoMother.create({
   ]
 })
 const paginationInfo: FilePaginationInfo = new FilePaginationInfo(1, 10, 200)
-const dataverseInfoRepository = {} as DataverseInfoRepository
+const dataverseInfoRepository = new DataverseInfoMockEmptyRepository()
 
 describe('DatasetFiles', () => {
   beforeEach(() => {

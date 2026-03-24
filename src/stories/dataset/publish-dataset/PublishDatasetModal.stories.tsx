@@ -8,6 +8,7 @@ import { CollectionMockRepository } from '@/stories/collection/CollectionMockRep
 import { UpwardHierarchyNodeMother } from '@tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { CustomTermsMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { LicenseMother } from '@tests/component/dataset/domain/models/LicenseMother'
+import { WithSettings } from '@/stories/WithSettings'
 
 const meta: Meta<typeof PublishDatasetModal> = {
   title: 'Sections/Dataset Page/PublishDatasetModal',
@@ -104,6 +105,36 @@ export const RequiresMajorVersionUpdate: Story = {
 }
 export const WithCustomTerms: Story = {
   decorators: [WithLoggedInUser],
+  render: () => (
+    <PublishDatasetModal
+      show={true}
+      repository={new DatasetMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
+      parentCollection={UpwardHierarchyNodeMother.createCollection()}
+      persistentId={'test'}
+      license={undefined}
+      customTerms={CustomTermsMother.create()}
+      releasedVersionExists={false}
+      handleClose={() => {}}></PublishDatasetModal>
+  )
+}
+export const withTextSettings: Story = {
+  decorators: [WithLoggedInUser, WithSettings],
+  render: () => (
+    <PublishDatasetModal
+      show={true}
+      repository={new DatasetMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
+      parentCollection={UpwardHierarchyNodeMother.createCollection()}
+      persistentId={'test'}
+      license={LicenseMother.create()}
+      customTerms={undefined}
+      releasedVersionExists={false}
+      handleClose={() => {}}></PublishDatasetModal>
+  )
+}
+export const withTextSettingsAndCustomTerms: Story = {
+  decorators: [WithLoggedInUser, WithSettings],
   render: () => (
     <PublishDatasetModal
       show={true}

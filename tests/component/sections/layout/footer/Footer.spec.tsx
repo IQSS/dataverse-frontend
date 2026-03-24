@@ -37,7 +37,9 @@ describe('Footer component', () => {
       getExternalStatusesAllowed: cy.stub().resolves({} as Setting<string[]>),
       getAvailableDatasetMetadataExportFormats: cy
         .stub()
-        .resolves({} as DatasetMetadataExportFormats)
+        .resolves({} as DatasetMetadataExportFormats),
+      getPublishDatasetDisclaimerText: cy.stub().resolves({} as Setting<string>),
+      getDatasetPublishPopupCustomText: cy.stub().resolves({} as Setting<string>)
     }
 
     cy.customMount(<Footer dataverseInfoRepository={dataverseInfoRepository} />)

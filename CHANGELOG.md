@@ -26,6 +26,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Changed the way we were handling DATE type metadata field validation to better match the backend validation and give users better error messages. For example, for an input like “foo AD”, we now show “Production Date is not a valid date. The AD year must be numeric.“. For an input like “99999 AD”, we now show “Production Date is not a valid date. The AD year cant be higher than 9999.“. For an input like “[-9999?], we now show “Production Date is not a valid date. The year in brackets cannot be negative.“, etc.
 - The SPA now fetches the runtime configuration from `config.js` on each load, allowing configurations without rebuilding the app. We don't use `.env` variables at build time anymore.
 - Renamed dataset template fetch/create use cases and DTOs to `getTemplatesByCollectionId` and `CreateTemplateDTO` for API alignment, and added new `getTemplate` and `deleteTemplate` use cases for retrieving a single template by ID and deleting templates.
+- Added disclaimer text and custom popup text to Publish Dataset modal for better communication of the implications of publishing a dataset. The text can be configured through the runtime configuration.
 - Dataset page Terms tab title now depends on permissions: users with dataset update permission see `Terms and Guestbook`, and read-only users see `Terms`.
 
 ### Fixed
