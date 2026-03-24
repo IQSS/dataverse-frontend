@@ -25,6 +25,7 @@ export function PublishCollectionModal({
 }: PublishCollectionModalProps) {
   const { t: tShared } = useTranslation('shared')
   const { t: tCollection } = useTranslation('collection')
+  const modalTitle = tCollection('publish.title')
   const navigate = useNavigate()
 
   const { submissionStatus, submitPublish, publishError } = usePublishCollection(
@@ -41,9 +42,9 @@ export function PublishCollectionModal({
   }
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={show} onHide={handleClose} size="lg" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{tCollection('publish.title')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Stack direction="vertical">

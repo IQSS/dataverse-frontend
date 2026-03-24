@@ -105,6 +105,7 @@ export const LinkCollectionDropdown = ({
 
       <Modal
         show={showModal}
+        ariaLabel={'Link Collection Modal'}
         onHide={isLinkingCollection ? () => {} : handleClose}
         centered
         size="lg">

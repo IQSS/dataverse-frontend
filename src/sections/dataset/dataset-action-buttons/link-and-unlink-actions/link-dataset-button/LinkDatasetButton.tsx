@@ -112,7 +112,12 @@ export function LinkDatasetButton({
         {t('datasetActionButtons.linkDataset.title')}
       </Button>
 
-      <Modal show={showModal} onHide={isLinkingDataset ? () => {} : handleClose} centered size="lg">
+      <Modal
+        ariaLabel={'Link Dataset Button'}
+        show={showModal}
+        onHide={isLinkingDataset ? () => {} : handleClose}
+        centered
+        size="lg">
         <Modal.Header>
           <Modal.Title>{t('datasetActionButtons.linkDataset.title')}</Modal.Title>
         </Modal.Header>
