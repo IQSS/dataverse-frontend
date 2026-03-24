@@ -107,8 +107,8 @@ describe('useCheckPublishCompleted Hook', () => {
     // Polling waits 2s to fire, then the follow-up lock check waits another 2s.
     cy.tick(4_000)
 
-    cy.get('[data-testid="publish-completed"]').should('have.text', 'true')
     cy.wrap(getLocksStub).should('have.been.calledTwice')
+    cy.get('[data-testid="publish-completed"]').should('have.text', 'true')
     cy.get('@setNeedsUpdate').should('have.been.calledOnceWith', true)
   })
 })
