@@ -33,4 +33,10 @@ export class DataverseInfoMockLoadingRepository implements DataverseInfoMockRepo
   getAvailableDatasetMetadataExportFormats(): Promise<DatasetMetadataExportFormats> {
     return new Promise(() => {})
   }
+  getPublishDatasetDisclaimerText(): Promise<Setting<string>> {
+    return new Promise(() => {})
+  }
+  getDatasetPublishPopupCustomText(): Promise<Setting<string>> {
+    return new Promise(() => {})
+  }
 }

@@ -2,17 +2,22 @@ import { createSandbox, SinonSandbox } from 'sinon'
 import { DataverseVersionMother } from '../../../info/domain/models/DataverseVersionMother'
 import { FooterMother } from './FooterMother'
 import { Footer } from '../../../../../src/sections/layout/footer/Footer'
+import { applyTestAppConfig } from '../../../../support/bootstrapAppConfig'
+import type { AppConfig } from '@/config'
 import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 
 describe('Footer component', () => {
   const sandbox: SinonSandbox = createSandbox()
   const testVersion = DataverseVersionMother.create()
   const currentYear = new Date().getFullYear().toString()
+  const defaultFooterEnv = Cypress.env('footer') as AppConfig['footer']
 
   it('should render footer content', () => {
     cy.customMount(FooterMother.withDataverseVersion(sandbox, testVersion))
 
-    cy.contains(`Copyright © ${currentYear}`).should('exist')
+    cy.contains(`Copyright © ${currentYear}, The President & Fellows of Harvard College`).should(
+      'exist'
+    )
     cy.findByText('Privacy Policy').should('exist')
     cy.findByAltText('The Dataverse Project logo').should('exist')
     cy.findByText(testVersion).should('exist')
@@ -29,8 +34,12 @@ describe('Footer component', () => {
   })
 
   it('should open privacy policy link in new tab', () => {
+    Cypress.env('footer', defaultFooterEnv)
+    applyTestAppConfig()
     cy.customMount(FooterMother.withDataverseVersion(sandbox))
 
-    cy.findByText('Privacy Policy').should('exist')
+    cy.findByText('Privacy Policy')
+      .should('have.attr', 'href', defaultFooterEnv?.privacyPolicyUrl)
+      .and('have.attr', 'target', '_blank')
   })
 })

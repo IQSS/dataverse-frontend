@@ -20,5 +20,17 @@ window.__APP_CONFIG__ = {
     { code: 'es', name: 'Español' }
   ],
   // Default language code from the list above
-  defaultLanguage: 'en'
+  defaultLanguage: 'en',
+  // Optional branding values for homepage/footer text
+  branding: {
+    // Used in homepage strings such as "{{dataverseName}} is a repository..."
+    dataverseName: 'Harvard Dataverse'
+  },
+  homepage: {
+    supportUrl: 'https://support.dataverse.harvard.edu/'
+  },
+  footer: {
+    copyrightHolder: 'The President & Fellows of Harvard College',
+    privacyPolicyUrl: 'https://support.dataverse.harvard.edu/harvard-dataverse-privacy-policy'
+  }
 }
