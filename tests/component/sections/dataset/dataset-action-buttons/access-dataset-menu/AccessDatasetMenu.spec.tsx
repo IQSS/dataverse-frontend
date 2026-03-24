@@ -7,8 +7,17 @@ import {
 } from '../../../../dataset/domain/models/DatasetMother'
 import { FileSizeUnit } from '../../../../../../src/files/domain/models/FileMetadata'
 import { getGuestbook, submitGuestbookForDatasetDownload } from '@iqss/dataverse-client-javascript'
+import { ReactNode, Suspense } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const downloadUrls = DatasetDownloadUrlsMother.create()
+
+function TranslationPreloader({ children }: { children: ReactNode }) {
+  useTranslation('dataset')
+  useTranslation('files')
+
+  return <>{children}</>
+}
 
 describe('AccessDatasetMenu', () => {
   it('renders the AccessDatasetMenu if the user has download files permissions and the dataset is not deaccessioned', () => {
@@ -132,22 +141,26 @@ describe('AccessDatasetMenu', () => {
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
     cy.customMount(
-      <AccessDatasetMenu
-        datasetNumericId={2}
-        fileDownloadSizes={fileDownloadSizes}
-        hasOneTabularFileAtLeast={false}
-        version={version}
-        permissions={permissions}
-        downloadUrls={downloadUrls}
-        fileStore="s3"
-        persistentId="doi:10.5072/FK2/ABCDEFGH"
-      />
+      <Suspense fallback="loading">
+        <TranslationPreloader>
+          <AccessDatasetMenu
+            datasetNumericId={2}
+            fileDownloadSizes={fileDownloadSizes}
+            hasOneTabularFileAtLeast={false}
+            version={version}
+            permissions={permissions}
+            downloadUrls={downloadUrls}
+            fileStore="s3"
+            persistentId="doi:10.5072/FK2/ABCDEFGH"
+          />
+        </TranslationPreloader>
+      </Suspense>
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).click()
-    cy.findByText('Download ZIP (2 KB)')
-      .should('exist')
-      .should('have.attr', 'href', downloadUrls.original)
+    cy.findByRole('button', { name: 'Download ZIP (2 KB)' }).should('exist')
+    cy.get('body').should('not.contain.text', 'Original Format ZIP')
+    cy.get('body').should('not.contain.text', 'Archival Format (.tab) ZIP')
   })
 
   it('renders empty size text in non-tabular mode when original size is missing', () => {
@@ -159,6 +172,7 @@ describe('AccessDatasetMenu', () => {
 
     cy.customMount(
       <AccessDatasetMenu
+        datasetNumericId={2}
         fileDownloadSizes={fileDownloadSizes}
         hasOneTabularFileAtLeast={false}
         version={version}
@@ -196,12 +210,8 @@ describe('AccessDatasetMenu', () => {
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).click()
-    cy.findByText('Original Format ZIP (2 KB)')
-      .should('exist')
-      .should('have.attr', 'href', downloadUrls.original)
-    cy.findByText('Archival Format (.tab) ZIP (39.5 TB)')
-      .should('exist')
-      .should('have.attr', 'href', downloadUrls.archival)
+    cy.findByRole('button', { name: 'Original Format ZIP (2 KB)' }).should('exist')
+    cy.findByRole('button', { name: 'Archival Format (.tab) ZIP (39.5 TB)' }).should('exist')
   })
 
   it('renders empty size text when a download mode size is missing', () => {
@@ -299,6 +309,7 @@ describe('AccessDatasetMenu', () => {
 
     cy.customMount(
       <AccessDatasetMenu
+        datasetNumericId={2}
         fileDownloadSizes={fileDownloadSizes}
         hasOneTabularFileAtLeast={false}
         version={version}
@@ -311,7 +322,9 @@ describe('AccessDatasetMenu', () => {
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
-    cy.findByRole('button', { name: /Download ZIP/ }).click()
+    cy.findByRole('button', { name: /Download ZIP/ })
+      .should('exist')
+      .click()
     cy.findByRole('dialog').should('exist')
     cy.findByLabelText(/name/i).type('Test User')
     cy.findByLabelText(/email/i).type('test.user@example.com')
@@ -440,7 +453,7 @@ describe('AccessDatasetMenu', () => {
     cy.findByRole('dialog').should('exist')
   })
 
-  it('keeps archival option as link when guestbook does not exist', () => {
+  it('renders archival option as a button when guestbook does not exist', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
     const fileDownloadSizes = [
@@ -461,10 +474,7 @@ describe('AccessDatasetMenu', () => {
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
-    cy.findByRole('link', { name: /Archival Format \(\.tab\) ZIP/ }).should(
-      'have.attr',
-      'href',
-      downloadUrls.archival
-    )
+    cy.findByRole('button', { name: /Original Format ZIP/ }).should('exist')
+    cy.findByRole('button', { name: /Archival Format \(\.tab\) ZIP/ }).should('exist')
   })
 })

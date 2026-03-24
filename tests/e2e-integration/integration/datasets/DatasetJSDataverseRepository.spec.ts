@@ -58,7 +58,12 @@ const termsOfUse = {
   termsOfAccessForRestrictedFiles: undefined
 }
 
-const datasetData = (persistentId: string, versionId: number, lastUpdateTime: string) => {
+const datasetData = (
+  datasetId: number,
+  persistentId: string,
+  versionId: number,
+  lastUpdateTime: string
+) => {
   return {
     license: {
       name: 'CC0 1.0',
@@ -152,8 +157,8 @@ const datasetData = (persistentId: string, versionId: number, lastUpdateTime: st
     },
     locks: [],
     downloadUrls: {
-      original: `/api/access/dataset/:persistentId/versions/:draft?persistentId=${persistentId}&format=original`,
-      archival: `/api/access/dataset/:persistentId/versions/:draft?persistentId=${persistentId}`
+      original: `/api/access/dataset/${datasetId}/versions/:draft?format=original`,
+      archival: `/api/access/dataset/${datasetId}/versions/:draft`
     },
     fileDownloadSizes: [
       new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
@@ -183,6 +188,7 @@ describe('Dataset JSDataverse Repository', () => {
           throw new Error('Dataset not found')
         }
         const datasetExpected = datasetData(
+          dataset.id,
           dataset.persistentId,
           dataset.version.id,
           dataset.version.lastUpdateTime
@@ -261,6 +267,7 @@ describe('Dataset JSDataverse Repository', () => {
           throw new Error('Dataset not found')
         }
         const datasetExpected = datasetData(
+          dataset.id,
           dataset.persistentId,
           dataset.version.id,
           dataset.version.lastUpdateTime
@@ -301,6 +308,7 @@ describe('Dataset JSDataverse Repository', () => {
           throw new Error('Dataset not found')
         }
         const datasetExpected = datasetData(
+          dataset.id,
           dataset.persistentId,
           dataset.version.id,
           dataset.version.lastUpdateTime
@@ -320,6 +328,7 @@ describe('Dataset JSDataverse Repository', () => {
         throw new Error('Dataset not found')
       }
       const datasetExpected = datasetData(
+        dataset.id,
         dataset.persistentId,
         dataset.version.id,
         dataset.version.lastUpdateTime
@@ -386,6 +395,7 @@ describe('Dataset JSDataverse Repository', () => {
         throw new Error('Dataset not found')
       }
       const datasetExpected = datasetData(
+        dataset.id,
         dataset.persistentId,
         dataset.version.id,
         dataset.version.lastUpdateTime
@@ -407,6 +417,7 @@ describe('Dataset JSDataverse Repository', () => {
           throw new Error('Dataset not found')
         }
         const datasetExpected = datasetData(
+          dataset.id,
           dataset.persistentId,
           dataset.version.id,
           dataset.version.lastUpdateTime

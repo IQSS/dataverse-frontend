@@ -16,7 +16,6 @@ interface FileActionButtonAccessFileProps {
   metadata: FileMetadata
   ingestInProgress: boolean
   isDeaccessioned: boolean
-  isDraft: boolean
   asIcon?: boolean
 }
 
@@ -27,7 +26,6 @@ export function AccessFileMenu({
   metadata,
   ingestInProgress,
   isDeaccessioned,
-  isDraft,
   asIcon = false
 }: FileActionButtonAccessFileProps) {
   const { t } = useTranslation('files')

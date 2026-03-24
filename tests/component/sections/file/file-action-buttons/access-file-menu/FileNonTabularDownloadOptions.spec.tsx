@@ -25,10 +25,9 @@ describe('FileNonTabularDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: 'Original File Format' })
+    cy.findByRole('button', { name: 'Original File Format' })
       .should('exist')
       .should('not.have.class', 'disabled')
-      .should('have.attr', 'href', downloadUrls.original)
   })
 
   it('renders the download options for a file of known type', () => {
@@ -42,10 +41,9 @@ describe('FileNonTabularDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: 'Plain Text' })
+    cy.findByRole('button', { name: 'Plain Text' })
       .should('exist')
       .should('not.have.class', 'disabled')
-      .should('have.attr', 'href', downloadUrls.original)
   })
 
   it('renders the options as disabled when the file ingest is in progress', () => {
@@ -59,7 +57,7 @@ describe('FileNonTabularDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: 'Plain Text' }).should('have.class', 'disabled')
+    cy.findByRole('button', { name: 'Plain Text' }).should('have.class', 'disabled')
   })
 
   it('renders the options as disabled when the dataset is locked from file download', () => {
@@ -73,6 +71,6 @@ describe('FileNonTabularDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: 'Plain Text' }).should('have.class', 'disabled')
+    cy.findByRole('button', { name: 'Plain Text' }).should('have.class', 'disabled')
   })
 })

@@ -40,7 +40,7 @@ describe('useGuestbookCollectSubmission', () => {
         fileId: 10,
         handleClose: cy.stub().as('handleClose'),
         accessRepository,
-        triggerDirectDownload: cy.stub().resolves(undefined)
+        downloadFromSignedUrl: cy.stub().resolves(undefined)
       })
     )
 
@@ -56,13 +56,13 @@ describe('useGuestbookCollectSubmission', () => {
 
   it('does not submit when account fields are invalid', async () => {
     const handleClose = cy.stub().as('handleClose')
-    const triggerDirectDownload = cy.stub().resolves(undefined)
+    const downloadFromSignedUrl = cy.stub().resolves(undefined)
     const { result } = renderHook(() =>
       useGuestbookCollectSubmission({
         fileId: 10,
         handleClose,
         accessRepository,
-        triggerDirectDownload
+        downloadFromSignedUrl
       })
     )
 
@@ -78,19 +78,19 @@ describe('useGuestbookCollectSubmission', () => {
     expect(accessRepository.submitGuestbookForDatasetDownload).to.not.have.been.called
     expect(accessRepository.submitGuestbookForDatafileDownload).to.not.have.been.called
     expect(accessRepository.submitGuestbookForDatafilesDownload).to.not.have.been.called
-    expect(triggerDirectDownload).to.not.have.been.called
+    expect(downloadFromSignedUrl).to.not.have.been.called
     expect(handleClose).to.not.have.been.called
   })
 
   it('submits for a single file id and triggers download', async () => {
     const handleClose = cy.stub().as('handleClose')
-    const triggerDirectDownload = cy.stub().resolves(undefined)
+    const downloadFromSignedUrl = cy.stub().resolves(undefined)
     const { result } = renderHook(() =>
       useGuestbookCollectSubmission({
         fileId: 10,
         handleClose,
         accessRepository,
-        triggerDirectDownload
+        downloadFromSignedUrl
       })
     )
 
@@ -109,19 +109,19 @@ describe('useGuestbookCollectSubmission', () => {
     )
     expect(accessRepository.submitGuestbookForDatafilesDownload).to.not.have.been.called
     expect(handleClose).to.have.been.calledOnce
-    expect(triggerDirectDownload).to.have.been.calledOnceWith('signed-url-datafile')
+    expect(downloadFromSignedUrl).to.have.been.calledOnceWith('signed-url-datafile')
     expect(result.current.errorSubmitGuestbook).to.deep.equal(null)
   })
 
   it('submits for multiple file ids and triggers download', async () => {
     const handleClose = cy.stub().as('handleClose')
-    const triggerDirectDownload = cy.stub().resolves(undefined)
+    const downloadFromSignedUrl = cy.stub().resolves(undefined)
     const { result } = renderHook(() =>
       useGuestbookCollectSubmission({
         fileIds: [10, 11],
         handleClose,
         accessRepository,
-        triggerDirectDownload
+        downloadFromSignedUrl
       })
     )
 
@@ -140,20 +140,20 @@ describe('useGuestbookCollectSubmission', () => {
     )
     expect(accessRepository.submitGuestbookForDatafileDownload).to.not.have.been.called
     expect(handleClose).to.have.been.calledOnce
-    expect(triggerDirectDownload).to.have.been.calledOnceWith('signed-url-datafiles')
+    expect(downloadFromSignedUrl).to.have.been.calledOnceWith('signed-url-datafiles')
     expect(result.current.errorSubmitGuestbook).to.deep.equal(null)
   })
 
   it('sets formatted message for WriteError', async () => {
     accessRepository.submitGuestbookForDatafileDownload = cy.stub().rejects(new WriteError(''))
     const handleClose = cy.stub().as('handleClose')
-    const triggerDirectDownload = cy.stub().resolves(undefined)
+    const downloadFromSignedUrl = cy.stub().resolves(undefined)
     const { result } = renderHook(() =>
       useGuestbookCollectSubmission({
         fileId: 10,
         handleClose,
         accessRepository,
-        triggerDirectDownload
+        downloadFromSignedUrl
       })
     )
 
@@ -166,7 +166,7 @@ describe('useGuestbookCollectSubmission', () => {
     })
 
     expect(handleClose).to.not.have.been.called
-    expect(triggerDirectDownload).to.not.have.been.called
+    expect(downloadFromSignedUrl).to.not.have.been.called
     expect(result.current.isSubmittingGuestbook).to.deep.equal(false)
     expect(result.current.errorSubmitGuestbook).to.deep.equal(
       'There was an error when writing the resource.'
@@ -180,7 +180,7 @@ describe('useGuestbookCollectSubmission', () => {
         fileId: 10,
         handleClose: cy.stub().as('handleClose'),
         accessRepository,
-        triggerDirectDownload: cy.stub().resolves(undefined)
+        downloadFromSignedUrl: cy.stub().resolves(undefined)
       })
     )
 
@@ -198,15 +198,15 @@ describe('useGuestbookCollectSubmission', () => {
     expect(result.current.isSubmittingGuestbook).to.deep.equal(false)
   })
 
-  it('sets download error when triggerDirectDownload fails', async () => {
+  it('sets download error when downloadFromSignedUrl fails', async () => {
     const handleClose = cy.stub().as('handleClose')
-    const triggerDirectDownload = cy.stub().rejects(new Error('Download failed'))
+    const downloadFromSignedUrl = cy.stub().rejects(new Error('Download failed'))
     const { result } = renderHook(() =>
       useGuestbookCollectSubmission({
         fileId: 10,
         handleClose,
         accessRepository,
-        triggerDirectDownload
+        downloadFromSignedUrl
       })
     )
 
@@ -223,7 +223,7 @@ describe('useGuestbookCollectSubmission', () => {
     })
 
     expect(handleClose).to.have.been.calledOnce
-    expect(triggerDirectDownload).to.have.been.calledOnce
+    expect(downloadFromSignedUrl).to.have.been.calledOnce
   })
 
   it('resets submission state on handleModalClose', async () => {
@@ -233,7 +233,7 @@ describe('useGuestbookCollectSubmission', () => {
         fileId: 10,
         handleClose,
         accessRepository,
-        triggerDirectDownload: cy.stub().resolves(undefined)
+        downloadFromSignedUrl: cy.stub().resolves(undefined)
       })
     )
 
@@ -260,13 +260,13 @@ describe('useGuestbookCollectSubmission', () => {
 
   it('submits for dataset id and triggers download', async () => {
     const handleClose = cy.stub().as('handleClose')
-    const triggerDirectDownload = cy.stub().resolves(undefined)
+    const downloadFromSignedUrl = cy.stub().resolves(undefined)
     const { result } = renderHook(() =>
       useGuestbookCollectSubmission({
         datasetId: 999,
         handleClose,
         accessRepository,
-        triggerDirectDownload
+        downloadFromSignedUrl
       })
     )
 
@@ -285,7 +285,7 @@ describe('useGuestbookCollectSubmission', () => {
     expect(accessRepository.submitGuestbookForDatafileDownload).to.not.have.been.called
     expect(accessRepository.submitGuestbookForDatafilesDownload).to.not.have.been.called
     expect(handleClose).to.have.been.calledOnce
-    expect(triggerDirectDownload).to.have.been.calledOnceWith('signed-url-dataset')
+    expect(downloadFromSignedUrl).to.have.been.calledOnceWith('signed-url-dataset')
     expect(result.current.errorSubmitGuestbook).to.deep.equal(null)
   })
 })

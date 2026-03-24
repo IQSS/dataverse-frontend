@@ -6,7 +6,7 @@ import { MouseEvent, useState } from 'react'
 import FileTypeToFriendlyTypeMap from '../../../../files/domain/models/FileTypeToFriendlyTypeMap'
 import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 import { toast } from 'react-toastify'
-import { triggerAuthenticatedDownload } from '@/shared/helpers/AuthenticatedDownloadHelper'
+import { downloadFromSignedUrl, requestSignedDownloadUrl } from '@/shared/helpers/DownloadHelper'
 
 interface FileTabularDownloadOptionsProps {
   fileId: number
@@ -53,9 +53,11 @@ export function FileTabularDownloadOptions({
     }
 
     event.preventDefault()
-    void triggerAuthenticatedDownload(url).catch(() => {
-      toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
-    })
+    void requestSignedDownloadUrl(url)
+      .then(downloadFromSignedUrl)
+      .catch(() => {
+        toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
+      })
   }
 
   const handleCloseGuestbookModal = () => {
@@ -66,7 +68,6 @@ export function FileTabularDownloadOptions({
     <>
       {!type.originalFormatIsUnknown && (
         <DropdownButtonItem
-          href={undefined}
           onClick={(event) => handleDownloadClick(event, downloadUrls.original)}
           disabled={downloadDisabled}>{`${type.original || ''} (${t(
           'actions.accessFileMenu.downloadOptions.options.original'
@@ -79,7 +80,6 @@ export function FileTabularDownloadOptions({
       </DropdownButtonItem>
       {type.original !== FileTypeToFriendlyTypeMap['application/x-r-data'] && (
         <DropdownButtonItem
-          href={undefined}
           onClick={(event) => handleDownloadClick(event, downloadUrls.rData)}
           disabled={downloadDisabled || !downloadUrls.rData}>
           {t('actions.accessFileMenu.downloadOptions.options.RData')}

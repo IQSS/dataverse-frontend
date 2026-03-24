@@ -755,6 +755,33 @@ describe('Dataset', () => {
         })
     })
 
+    it('downloads the dataset as a guest', () => {
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(2)).then((dataset) =>
+          DatasetHelper.publish(dataset.persistentId)
+        )
+      )
+        .its('persistentId')
+        .then((persistentId: string) => {
+          TestsUtils.logout()
+          cy.wait(1500) // Wait for the dataset to be published and the session to clear
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.wait(1500) // Wait for the page to load
+
+          cy.findByText('Files').should('exist')
+
+          cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
+
+          cy.findByRole('link', { name: /Original Format ZIP/ })
+            .should('exist')
+            .click({ force: true })
+
+          cy.reload()
+
+          cy.findAllByText('1 Downloads').should('exist')
+        })
+    })
+
     it('downloads the dataset with guestbook submission and shows a success toast', () => {
       const guestbookName = `Guestbook ${faker.datatype.uuid()}`
 

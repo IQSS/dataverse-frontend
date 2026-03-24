@@ -192,9 +192,7 @@ describe('DownloadFilesButton', () => {
       </MultipleFileDownloadProvider>
     )
 
-    cy.get('#download-files')
-      .parent('a')
-      .should('have.attr', 'href', 'https://multiple-file-download-url')
+    cy.get('#download-files').should('exist')
   })
 
   it('renders the download url for the selected files when some files are selected and there are tabular files', () => {
@@ -219,16 +217,8 @@ describe('DownloadFilesButton', () => {
     )
 
     cy.get('#download-files').click()
-    cy.findByRole('link', { name: 'Original Format' }).should(
-      'have.attr',
-      'href',
-      'https://multiple-file-download-url'
-    )
-    cy.findByRole('link', { name: 'Archival Format (.tab)' }).should(
-      'have.attr',
-      'href',
-      'https://multiple-file-download-url'
-    )
+    cy.findByRole('button', { name: 'Original Format' }).should('exist')
+    cy.findByRole('button', { name: 'Archival Format (.tab)' }).should('exist')
   })
 
   it('renders the dataset download url when all the files are selected', () => {
@@ -255,16 +245,8 @@ describe('DownloadFilesButton', () => {
     )
 
     cy.get('#download-files').click()
-    cy.findByRole('link', { name: 'Original Format' }).should(
-      'have.attr',
-      'href',
-      'https://dataset-download-url-original'
-    )
-    cy.findByRole('link', { name: 'Archival Format (.tab)' }).should(
-      'have.attr',
-      'href',
-      'https://dataset-download-url-archival'
-    )
+    cy.findByRole('button', { name: 'Original Format' }).should('exist')
+    cy.findByRole('button', { name: 'Archival Format (.tab)' }).should('exist')
   })
 
   it('renders the dataset download url with the single file download url when one file is selected', () => {
@@ -289,16 +271,8 @@ describe('DownloadFilesButton', () => {
     )
 
     cy.get('#download-files').click()
-    cy.findByRole('link', { name: 'Original Format' }).should(
-      'have.attr',
-      'href',
-      'https://single-file-download-url'
-    )
-    cy.findByRole('link', { name: 'Archival Format (.tab)' }).should(
-      'have.attr',
-      'href',
-      'https://single-file-download-url'
-    )
+    cy.findByRole('button', { name: 'Original Format' }).should('exist')
+    cy.findByRole('button', { name: 'Archival Format (.tab)' }).should('exist')
   })
 
   it('opens guestbook modal when guestbook exists and files are selected for non-tabular download', () => {
@@ -401,7 +375,7 @@ describe('DownloadFilesButton', () => {
     )
 
     cy.get('#download-files').click()
-    cy.findByRole('button', { name: 'Original Format' }).click()
+    cy.findByText(/Original Format/).click()
     cy.findByLabelText(/^Name/).should('be.disabled')
     cy.findByLabelText(/^Email/).should('be.disabled')
     cy.findByRole('button', { name: 'Accept' }).click()

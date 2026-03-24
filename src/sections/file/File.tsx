@@ -153,7 +153,6 @@ export function File({
                   metadata={file.metadata}
                   ingestInProgress={file.ingest.isInProgress}
                   isDeaccessioned={isDeaccessioned}
-                  isDraft={file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT}
                 />
                 {file.permissions.canEditOwnerDataset && (
                   <EditFileMenu

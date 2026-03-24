@@ -23,17 +23,12 @@ describe('FileTabularDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: 'Comma Separated Values (Original File Format)' })
-      .should('exist')
-      .should('have.attr', 'href', downloadUrls.original)
-    cy.findByRole('link', { name: 'Tab-Delimited' })
-      .should('exist')
-      .should('have.attr', 'href', downloadUrls.tabular)
-      .should('not.have.class', 'disabled')
-    cy.findByRole('link', { name: 'R Data' })
+    cy.findByRole('button', { name: 'Comma Separated Values (Original File Format)' }).should(
+      'exist'
+    )
+    cy.findByRole('button', { name: 'Tab-Delimited' })
       .should('exist')
       .should('not.have.class', 'disabled')
-      .should('have.attr', 'href', downloadUrls.rData)
   })
 
   it('renders the download options for a tabular file of unknown original type', () => {
@@ -48,11 +43,11 @@ describe('FileTabularDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: /(Original File Format)/ }).should('not.exist')
-    cy.findByRole('link', { name: 'Tab-Delimited' })
+    cy.findByRole('button', { name: /(Original File Format)/ }).should('not.exist')
+    cy.findByRole('button', { name: 'Tab-Delimited' })
       .should('exist')
       .should('not.have.class', 'disabled')
-    cy.findByRole('link', { name: 'R Data' }).should('exist').should('not.have.class', 'disabled')
+    cy.findByRole('button', { name: 'R Data' }).should('exist').should('not.have.class', 'disabled')
   })
 
   it('renders the options as disabled when the file ingest is in progress', () => {
@@ -66,13 +61,13 @@ describe('FileTabularDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: 'Comma Separated Values (Original File Format)' })
+    cy.findByRole('button', { name: 'Comma Separated Values (Original File Format)' })
       .should('exist')
       .should('have.class', 'disabled')
-    cy.findByRole('link', { name: 'Tab-Delimited' })
+    cy.findByRole('button', { name: 'Tab-Delimited' })
       .should('exist')
       .should('have.class', 'disabled')
-    cy.findByRole('link', { name: 'R Data' }).should('exist').should('have.class', 'disabled')
+    cy.findByRole('button', { name: 'R Data' }).should('exist').should('have.class', 'disabled')
   })
 
   it('renders the options as disabled when the dataset is locked from file download', () => {
@@ -86,13 +81,13 @@ describe('FileTabularDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: 'Comma Separated Values (Original File Format)' })
+    cy.findByRole('button', { name: 'Comma Separated Values (Original File Format)' })
       .should('exist')
       .should('have.class', 'disabled')
-    cy.findByRole('link', { name: 'Tab-Delimited' })
+    cy.findByRole('button', { name: 'Tab-Delimited' })
       .should('exist')
       .should('have.class', 'disabled')
-    cy.findByRole('link', { name: 'R Data' }).should('exist').should('have.class', 'disabled')
+    cy.findByRole('button', { name: 'R Data' }).should('exist').should('have.class', 'disabled')
   })
 
   it('does not render the RData option if the file type is already R Data', () => {
@@ -107,12 +102,12 @@ describe('FileTabularDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: 'R Data (Original File Format)' })
+    cy.findByRole('button', { name: 'R Data (Original File Format)' })
       .should('exist')
       .should('not.have.class', 'disabled')
-    cy.findByRole('link', { name: 'Tab-Delimited' })
+    cy.findByRole('button', { name: 'Tab-Delimited' })
       .should('exist')
       .should('not.have.class', 'disabled')
-    cy.findByRole('link', { name: 'R Data' }).should('not.exist')
+    cy.findByRole('button', { name: 'R Data' }).should('not.exist')
   })
 })

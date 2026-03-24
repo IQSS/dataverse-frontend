@@ -17,6 +17,7 @@ import {
   GuestbookAnswerDTO,
   GuestbookResponseDTO
 } from '@/access/domain/repositories/AccessRepository'
+import { downloadFromSignedUrl } from '@/shared/helpers/DownloadHelper'
 
 interface DownloadWithGuestbookModalProps {
   fileId?: number | string
@@ -201,23 +202,6 @@ export function DownloadWithGuestbookModal({
       }
     }
   }
-  const triggerDirectDownload = (signedUrl: string): Promise<void> => {
-    try {
-      const downloadLink = document.createElement('a')
-      downloadLink.href = signedUrl
-      downloadLink.style.display = 'none'
-      downloadLink.rel = 'noreferrer'
-
-      document.body.appendChild(downloadLink)
-      downloadLink.click()
-      document.body.removeChild(downloadLink)
-
-      return Promise.resolve()
-    } catch (error) {
-      return Promise.reject(error)
-    }
-  }
-
   const {
     hasAttemptedAccept,
     errorDownloadSignedUrlFile,
@@ -232,7 +216,7 @@ export function DownloadWithGuestbookModal({
     fileIds,
     handleClose,
     accessRepository,
-    triggerDirectDownload
+    downloadFromSignedUrl
   })
 
   useEffect(() => {

@@ -79,7 +79,7 @@ export class JSDatasetMapper {
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset hasOneTabularFileAtLeast
       true, // TODO Connect with dataset isValid
-      JSDatasetMapper.toDownloadUrls(jsDataset.persistentId, version),
+      JSDatasetMapper.toDownloadUrls(jsDataset.id, version),
       JSDatasetMapper.toFileDownloadSizes(
         jsDatasetFilesTotalOriginalDownloadSize,
         jsDatasetFilesTotalArchivalDownloadSize
@@ -101,7 +101,7 @@ export class JSDatasetMapper {
       ),
       JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff),
       fileStore,
-      jsDataset.guestbookId
+      jsDataset.guestbookId as number
     ).build()
   }
 
@@ -249,13 +249,10 @@ export class JSDatasetMapper {
     return extraFields
   }
 
-  static toDownloadUrls(
-    jsDatasetPersistentId: string,
-    version: DatasetVersion
-  ): DatasetDownloadUrls {
+  static toDownloadUrls(jsDatasetId: number, version: DatasetVersion): DatasetDownloadUrls {
     return {
-      original: `/api/access/dataset/:persistentId/versions/${version.number.toString()}?persistentId=${jsDatasetPersistentId}&format=original`,
-      archival: `/api/access/dataset/:persistentId/versions/${version.number.toString()}?persistentId=${jsDatasetPersistentId}`
+      original: `/api/access/dataset/${jsDatasetId}/versions/${version.number.toString()}?format=original`,
+      archival: `/api/access/dataset/${jsDatasetId}/versions/${version.number.toString()}`
     }
   }
 

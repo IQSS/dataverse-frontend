@@ -14,7 +14,7 @@ import {
 import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/FileMetadata'
 import { DatasetExploreOptions } from '../DatasetToolsOptions'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
-import { triggerAuthenticatedDownload } from '@/shared/helpers/AuthenticatedDownloadHelper'
+import { downloadFromSignedUrl, requestSignedDownloadUrl } from '@/shared/helpers/DownloadHelper'
 
 // TODO: add compute feature
 
@@ -94,7 +94,7 @@ export function AccessDatasetMenu({
         <DownloadWithGuestbookModal
           show={showDownloadWithGuestbookModal}
           handleClose={() => setShowDownloadWithGuestbookModal(false)}
-          datasetId={datasetNumericId ?? persistentId}
+          datasetId={datasetNumericId} // TODO: we should allow this to pass persistentId when we have the backend support for guestbook submission with persistentId
           datasetPersistentId={persistentId}
           guestbookId={guestbookId}
           datasetLicense={license}
@@ -137,9 +137,11 @@ const DatasetDownloadOptions = ({
     }
 
     event.preventDefault()
-    void triggerAuthenticatedDownload(url).catch(() => {
-      toast.error(tFiles('actions.optionsMenu.guestbookCollectModal.downloadError'))
-    })
+    void requestSignedDownloadUrl(url)
+      .then(downloadFromSignedUrl)
+      .catch(() => {
+        toast.error(tFiles('actions.optionsMenu.guestbookCollectModal.downloadError'))
+      })
   }
 
   function getFormattedFileSize(mode: FileDownloadMode): string {
@@ -150,13 +152,11 @@ const DatasetDownloadOptions = ({
   return hasOneTabularFileAtLeast ? (
     <>
       <DropdownButtonItem
-        href={undefined}
         onClick={(event) => handleDirectDownload(event, downloadUrls[FileDownloadMode.ORIGINAL])}>
         {t('datasetActionButtons.accessDataset.downloadOptions.originalZip')} (
         {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
       </DropdownButtonItem>
       <DropdownButtonItem
-        href={undefined}
         onClick={(event) => handleDirectDownload(event, downloadUrls[FileDownloadMode.ARCHIVAL])}>
         {t('datasetActionButtons.accessDataset.downloadOptions.archivalZip')} (
         {getFormattedFileSize(FileDownloadMode.ARCHIVAL)})
@@ -164,7 +164,6 @@ const DatasetDownloadOptions = ({
     </>
   ) : (
     <DropdownButtonItem
-      href={undefined}
       onClick={(event) => handleDirectDownload(event, downloadUrls[FileDownloadMode.ORIGINAL])}>
       {t('datasetActionButtons.accessDataset.downloadOptions.zip')} (
       {getFormattedFileSize(FileDownloadMode.ORIGINAL)})

@@ -13,7 +13,6 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission
         ingestInProgress={false}
         isDeaccessioned={false}
-        isDraft={false}
       />
     )
 
@@ -30,7 +29,6 @@ describe('AccessFileMenu', () => {
         ingestInProgress={false}
         isDeaccessioned={false}
         asIcon
-        isDraft={false}
       />
     )
 
@@ -48,7 +46,6 @@ describe('AccessFileMenu', () => {
         ingestInProgress={false}
         isDeaccessioned={false}
         asIcon={false}
-        isDraft={false}
       />
     )
 
@@ -66,7 +63,6 @@ describe('AccessFileMenu', () => {
           userHasDownloadPermission
           ingestInProgress={false}
           isDeaccessioned={false}
-          isDraft={false}
         />
       </Suspense>
     )
@@ -84,7 +80,6 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission
         ingestInProgress={false}
         isDeaccessioned={false}
-        isDraft={false}
       />
     )
 
@@ -101,7 +96,6 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission={false}
         ingestInProgress={false}
         isDeaccessioned={false}
-        isDraft={false}
       />
     )
 
@@ -118,7 +112,6 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission
         ingestInProgress={false}
         isDeaccessioned={false}
-        isDraft={false}
       />
     )
 
@@ -136,7 +129,6 @@ describe('AccessFileMenu', () => {
         ingestInProgress={false}
         isDeaccessioned={false}
         asIcon
-        isDraft={false}
       />
     )
 
@@ -153,14 +145,13 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission
         ingestInProgress={false}
         isDeaccessioned={false}
-        isDraft={false}
       />
     )
 
     cy.findByRole('button', { name: 'Access File' }).should('not.exist')
   })
 
-  it('should not render the access file menu for draft datasets', () => {
+  it('should render the access file menu for draft datasets', () => {
     cy.customMount(
       <AccessFileMenu
         id={1}
@@ -169,10 +160,9 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission
         ingestInProgress={false}
         isDeaccessioned={false}
-        isDraft
       />
     )
 
-    cy.findByRole('button', { name: 'Access File' }).should('not.exist')
+    cy.findByRole('button', { name: 'Access File' }).should('exist')
   })
 })

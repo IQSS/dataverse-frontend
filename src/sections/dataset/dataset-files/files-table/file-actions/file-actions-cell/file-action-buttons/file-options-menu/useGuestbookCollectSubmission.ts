@@ -18,7 +18,7 @@ interface UseGuestbookCollectSubmissionProps {
   fileIds?: Array<number>
   handleClose: () => void
   accessRepository: AccessRepository
-  triggerDirectDownload: (signedUrl: string) => Promise<void>
+  downloadFromSignedUrl: (signedUrl: string) => Promise<void>
 }
 
 interface HandleSubmitProps {
@@ -33,7 +33,7 @@ export const useGuestbookCollectSubmission = ({
   fileIds,
   handleClose,
   accessRepository,
-  triggerDirectDownload
+  downloadFromSignedUrl
 }: UseGuestbookCollectSubmissionProps) => {
   const { t: tFiles } = useTranslation('files')
   const [hasAttemptedAccept, setHasAttemptedAccept] = useState(false)
@@ -101,7 +101,7 @@ export const useGuestbookCollectSubmission = ({
 
       if (signedUrl) {
         handleModalClose()
-        void triggerDirectDownload(signedUrl)
+        void downloadFromSignedUrl(signedUrl)
           .then(() => {
             toast.success(tFiles('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
           })
@@ -114,7 +114,7 @@ export const useGuestbookCollectSubmission = ({
           })
       }
     },
-    [datasetId, fileId, fileIds, handleModalClose, accessRepository, tFiles, triggerDirectDownload]
+    [datasetId, fileId, fileIds, handleModalClose, accessRepository, tFiles, downloadFromSignedUrl]
   )
 
   return {

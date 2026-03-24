@@ -11,7 +11,7 @@ import { useMultipleFileDownload } from '../../../../../file/multiple-file-downl
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
 import { DownloadWithGuestbookModal } from '../file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
-import { triggerAuthenticatedDownload } from '@/shared/helpers/AuthenticatedDownloadHelper'
+import { downloadFromSignedUrl, requestSignedDownloadUrl } from '@/shared/helpers/DownloadHelper'
 import styles from './DownloadFilesButton.module.scss'
 
 interface DownloadFilesButtonProps {
@@ -52,9 +52,11 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
 
     if (downloadMode) {
       event.preventDefault()
-      void triggerAuthenticatedDownload(getDownloadUrl(downloadMode)).catch(() => {
-        toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
-      })
+      void requestSignedDownloadUrl(getDownloadUrl(downloadMode))
+        .then(downloadFromSignedUrl)
+        .catch(() => {
+          toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
+        })
     }
   }
 
@@ -111,14 +113,10 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
           ariaLabel={t('actions.downloadFiles.title')}
           variant="secondary"
           withSpacing>
-          <DropdownButtonItem
-            onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}
-            href={undefined}>
+          <DropdownButtonItem onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}>
             {t('actions.downloadFiles.options.original')}
           </DropdownButtonItem>
-          <DropdownButtonItem
-            onClick={(event) => onClick(event, FileDownloadMode.ARCHIVAL)}
-            href={undefined}>
+          <DropdownButtonItem onClick={(event) => onClick(event, FileDownloadMode.ARCHIVAL)}>
             {t('actions.downloadFiles.options.archival')}
           </DropdownButtonItem>
         </DropdownButton>

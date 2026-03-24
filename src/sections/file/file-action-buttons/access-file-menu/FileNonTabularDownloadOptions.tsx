@@ -5,7 +5,7 @@ import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/fil
 import { MouseEvent, useState } from 'react'
 import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 import { toast } from 'react-toastify'
-import { triggerAuthenticatedDownload } from '@/shared/helpers/AuthenticatedDownloadHelper'
+import { downloadFromSignedUrl, requestSignedDownloadUrl } from '@/shared/helpers/DownloadHelper'
 
 interface FileNonTabularDownloadOptionsProps {
   fileId: number
@@ -47,9 +47,11 @@ export function FileNonTabularDownloadOptions({
     }
 
     event.preventDefault()
-    void triggerAuthenticatedDownload(downloadUrlOriginal).catch(() => {
-      toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
-    })
+    void requestSignedDownloadUrl(downloadUrlOriginal)
+      .then(downloadFromSignedUrl)
+      .catch(() => {
+        toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
+      })
   }
 
   return (
