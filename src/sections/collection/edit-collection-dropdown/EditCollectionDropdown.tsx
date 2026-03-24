@@ -84,9 +84,6 @@ export const EditCollectionDropdown = ({
         <DropdownButtonItem onClick={handleNotImplementedClick}>
           {t('editCollection.datasetGuestbooks')}
         </DropdownButtonItem>
-        <DropdownButtonItem onClick={handleNotImplementedClick}>
-          {t('editCollection.featuredDataverses')}
-        </DropdownButtonItem>
 
         {canCollectionBeDeleted && (
           <>

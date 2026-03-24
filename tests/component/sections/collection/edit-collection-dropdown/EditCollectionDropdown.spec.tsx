@@ -127,7 +127,6 @@ describe('EditCollectionDropdown', () => {
     cy.findByRole('button', { name: 'Groups' }).should('exist')
     cy.findByRole('button', { name: 'Dataset Templates' }).should('exist')
     cy.findByRole('button', { name: 'Dataset Guestbooks' }).should('exist')
-    cy.findByRole('button', { name: 'Featured Dataverses' }).should('exist')
   })
 
   it('shows the not implemented modal when a new edit option is clicked', () => {
