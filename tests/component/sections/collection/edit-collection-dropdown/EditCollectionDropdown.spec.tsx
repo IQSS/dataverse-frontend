@@ -111,6 +111,42 @@ describe('EditCollectionDropdown', () => {
     )
   })
 
+  it('shows the not implemented collection edit options', () => {
+    cy.mountAuthenticated(
+      <EditCollectionDropdown
+        collection={rootCollection}
+        collectionRepository={collectionRepository}
+        canUserDeleteCollection={false}
+      />
+    )
+
+    openDropdown()
+
+    cy.findByRole('button', { name: 'Theme + Widgets' }).should('exist')
+    cy.findByRole('button', { name: 'Permissions' }).should('exist')
+    cy.findByRole('button', { name: 'Groups' }).should('exist')
+    cy.findByRole('button', { name: 'Dataset Templates' }).should('exist')
+    cy.findByRole('button', { name: 'Dataset Guestbooks' }).should('exist')
+    cy.findByRole('button', { name: 'Featured Dataverses' }).should('exist')
+  })
+
+  it('shows the not implemented modal when a new edit option is clicked', () => {
+    cy.mountAuthenticated(
+      <EditCollectionDropdown
+        collection={rootCollection}
+        collectionRepository={collectionRepository}
+        canUserDeleteCollection={false}
+      />
+    )
+
+    openDropdown()
+
+    cy.findByRole('button', { name: 'Permissions' }).click()
+
+    cy.findByText('Not Implemented').should('exist')
+    cy.findByText('This feature is not implemented yet in SPA.').should('exist')
+  })
+
   describe('delete button', () => {
     it('shows the delete button if user can delete collection, collection is not root and collection has no data', () => {
       cy.mountAuthenticated(
