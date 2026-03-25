@@ -28,13 +28,6 @@ export const requestSignedDownloadUrlFromAccessApi = async ({
   guestbookResponse,
   format
 }: SignedDownloadSubmissionParams): Promise<string> => {
-  console.log('Requesting signed download URL with params:', {
-    datasetId,
-    fileId,
-    fileIds,
-    guestbookResponse,
-    format
-  })
   const datasetDownloadFormat =
     format === FileDownloadMode.ORIGINAL || format === FileDownloadMode.ARCHIVAL
       ? format
