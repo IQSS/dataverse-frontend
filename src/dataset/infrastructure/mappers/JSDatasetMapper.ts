@@ -79,7 +79,7 @@ export class JSDatasetMapper {
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset hasOneTabularFileAtLeast
       true, // TODO Connect with dataset isValid
-      JSDatasetMapper.toDownloadUrls(jsDataset.id, version),
+      JSDatasetMapper.toDownloadUrls(jsDataset.persistentId, version),
       JSDatasetMapper.toFileDownloadSizes(
         jsDatasetFilesTotalOriginalDownloadSize,
         jsDatasetFilesTotalArchivalDownloadSize
@@ -249,10 +249,13 @@ export class JSDatasetMapper {
     return extraFields
   }
 
-  static toDownloadUrls(jsDatasetId: number, version: DatasetVersion): DatasetDownloadUrls {
+  static toDownloadUrls(
+    jsDatasetPersistentId: string,
+    version: DatasetVersion
+  ): DatasetDownloadUrls {
     return {
-      original: `/api/access/dataset/${jsDatasetId}/versions/${version.number.toString()}?format=original`,
-      archival: `/api/access/dataset/${jsDatasetId}/versions/${version.number.toString()}`
+      original: `/api/access/dataset/${jsDatasetPersistentId}/versions/${version.number.toString()}?format=original`,
+      archival: `/api/access/dataset/${jsDatasetPersistentId}/versions/${version.number.toString()}`
     }
   }
 
