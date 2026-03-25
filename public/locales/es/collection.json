@@ -52,6 +52,12 @@
   "editCollection": {
     "edit": "Editar",
     "generalInfo": "Información general",
+    "themeAndWidgets": "Tema + Widgets",
+    "permissions": "Permisos",
+    "groups": "Grupos",
+    "datasetTemplates": "Plantillas de dataset",
+    "datasetGuestbooks": "Libros de visitas de dataset",
+    "featuredDataverses": "Dataverses destacados",
     "deleteCollection": "Eliminar colección"
   },
   "featuredItems": {
