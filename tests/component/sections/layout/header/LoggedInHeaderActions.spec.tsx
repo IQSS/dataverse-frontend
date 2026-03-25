@@ -4,6 +4,7 @@ import { CollectionRepository } from '../../../../../src/collection/domain/repos
 import { CollectionMother } from '../../../collection/domain/models/CollectionMother'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
+import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 
 const testUser = UserMother.create()
 const collectionRepository: CollectionRepository = {} as CollectionRepository
@@ -138,6 +139,58 @@ describe('LoggedInHeaderActions', () => {
     cy.get('@userBtn').click()
     cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
     cy.get('[data-testid="unread-notifications-badge"]').should('have.length', 2)
+  })
+
+  it('refreshes unread notification badge when notifications update', () => {
+    const unreadCountStub = cy.stub()
+    unreadCountStub.onFirstCall().resolves(3)
+    unreadCountStub.onSecondCall().resolves(0)
+    notificationRepository.getUnreadNotificationsCount = unreadCountStub
+
+    cy.mountAuthenticated(
+      <LoggedInHeaderActions
+        user={testUser}
+        collectionRepository={collectionRepository}
+        notificationRepository={notificationRepository}
+      />
+    )
+
+    cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
+    cy.then(() => {
+      needsUpdateStore.setNeedsUpdate(true)
+    })
+    cy.wrap(unreadCountStub).should('have.been.calledTwice')
+    cy.get('[data-testid="unread-notifications-badge"]').should('not.exist')
+  })
+
+  it('retries unread notification refresh after an invalidation when the first fetch is stale', () => {
+    const unreadCountStub = cy.stub()
+    unreadCountStub.onFirstCall().resolves(3)
+    unreadCountStub.onSecondCall().resolves(3)
+    unreadCountStub.onThirdCall().resolves(5)
+    notificationRepository.getUnreadNotificationsCount = unreadCountStub
+
+    cy.clock()
+    cy.mountAuthenticated(
+      <LoggedInHeaderActions
+        user={testUser}
+        collectionRepository={collectionRepository}
+        notificationRepository={notificationRepository}
+      />
+    )
+
+    cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
+    cy.then(() => {
+      needsUpdateStore.setNeedsUpdate(true)
+    })
+
+    cy.wrap(unreadCountStub).should('have.been.calledTwice')
+    cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
+
+    cy.tick(1_000)
+
+    cy.wrap(unreadCountStub).should('have.been.calledThrice')
+    cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '5')
   })
 
   it('calls the logout function when clicking the logout button', () => {

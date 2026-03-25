@@ -114,7 +114,7 @@ describe('Edit Dataset Terms', () => {
         cy.findByRole('button', { name: 'Save Changes' }).click()
         cy.findByRole('button', { name: 'Cancel' }).click()
 
-        cy.findByRole('tab', { name: 'Terms and Guestbook' }).click()
+        cy.findByRole('tab', { name: /^Terms(?: and Guestbook)?$/ }).click()
         cy.findByText(/Data can be accessed through the university data center/i).should('exist')
         cy.findByText(/dataowner@university.edu/i).should('exist')
         cy.findByText(/500 MB/i).should('exist')

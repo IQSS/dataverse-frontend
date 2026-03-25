@@ -7,6 +7,7 @@ import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmi
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { publishCollection } from '../../../collection/domain/useCases/publishCollection'
+import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 
 type UsePublishDatasetReturnType =
   | {
@@ -43,6 +44,7 @@ export function usePublishDataset(
         .then(() => {
           setPublishError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
+          needsUpdateStore.setNeedsUpdate(true)
           onPublishSucceed()
         })
         .catch((err) => {

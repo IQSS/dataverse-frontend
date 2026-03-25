@@ -29,6 +29,7 @@ const meta: Meta<typeof Modal> = {
 
 function DefaultExample(size?: 'sm' | 'lg' | 'xl') {
   const [show, setShow] = useState(false)
+  const modalTitle = 'Modal heading'
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
@@ -37,9 +38,9 @@ function DefaultExample(size?: 'sm' | 'lg' | 'xl') {
     <>
       <Button onClick={handleShow}>Launch demo modal</Button>
 
-      <Modal show={show} onHide={handleClose} size={size}>
+      <Modal show={show} onHide={handleClose} size={size} ariaLabel={modalTitle}>
         <Modal.Header>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>You are reading this text in a modal!</Modal.Body>
         <Modal.Footer>

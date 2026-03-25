@@ -113,6 +113,7 @@ export function Dataset({
 
   const currentVersionNumber = dataset.version.number.toString()
   const canUpdateDataset = dataset.permissions.canUpdateDataset
+  const termsTabTitle = canUpdateDataset ? t('termsTabTitle') : t('termsTabTitleReadOnly')
 
   return (
     <>
@@ -164,87 +165,86 @@ export function Dataset({
             </Col>
           </Row>
 
-          {publishInProgress && <TabsSkeleton />}
-
-          {(!publishInProgress || !isDatasetLoading) &&
-            (isCurrentVersionDeaccessioned && !canUpdateDataset ? (
-              <Tabs defaultActiveKey="versions" onSelect={handleTabSelect}>
-                <Tabs.Tab eventKey="versions" title={t('Versions')}>
-                  <div className={styles['tab-container']}>
-                    <DatasetVersions
-                      datasetRepository={datasetRepository}
-                      datasetId={dataset.persistentId}
-                      currentVersionNumber={currentVersionNumber}
-                      canUpdateDataset={canUpdateDataset}
-                      isInView={activeTab === 'versions'}
-                      key={dataset.internalVersionNumber}
-                      isCurrentVersionDeaccessioned={isCurrentVersionDeaccessioned}
-                    />
-                  </div>
-                </Tabs.Tab>
-              </Tabs>
-            ) : (
-              <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
-                <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
-                  <div className={styles['tab-container']}>
-                    {filesTabInfiniteScrollEnabled ? (
-                      <DatasetFilesScrollable
-                        filesRepository={fileRepository}
-                        datasetPersistentId={dataset.persistentId}
-                        datasetVersion={dataset.version}
-                        canUpdateDataset={canUpdateDataset}
-                        key={dataset.version.publishingStatus}
-                        datasetRepository={datasetRepository}
-                      />
-                    ) : (
-                      <DatasetFiles
-                        filesRepository={fileRepository}
-                        datasetPersistentId={dataset.persistentId}
-                        datasetVersion={dataset.version}
-                        datasetRepository={datasetRepository}
-                      />
-                    )}
-                  </div>
-                </Tabs.Tab>
-
-                <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
-                  <div className={styles['tab-container']}>
-                    <DatasetMetadata
-                      dataset={dataset}
-                      anonymizedView={anonymizedView}
-                      metadataBlockInfoRepository={metadataBlockInfoRepository}
-                      dataverseInfoRepository={dataverseInfoRepository}
-                    />
-                  </div>
-                </Tabs.Tab>
-
-                <Tabs.Tab eventKey="terms" title={t('termsTabTitle')}>
-                  <div ref={termsTabRef} className={styles['tab-container']}>
-                    <DatasetTerms
-                      license={dataset.license}
-                      termsOfUse={dataset.termsOfUse}
+          {publishInProgress || isDatasetLoading ? (
+            <TabsSkeleton />
+          ) : isCurrentVersionDeaccessioned && !canUpdateDataset ? (
+            <Tabs defaultActiveKey="versions" onSelect={handleTabSelect}>
+              <Tabs.Tab eventKey="versions" title={t('Versions')}>
+                <div className={styles['tab-container']}>
+                  <DatasetVersions
+                    datasetRepository={datasetRepository}
+                    datasetId={dataset.persistentId}
+                    currentVersionNumber={currentVersionNumber}
+                    canUpdateDataset={canUpdateDataset}
+                    isInView={activeTab === 'versions'}
+                    key={dataset.internalVersionNumber}
+                    isCurrentVersionDeaccessioned={isCurrentVersionDeaccessioned}
+                  />
+                </div>
+              </Tabs.Tab>
+            </Tabs>
+          ) : (
+            <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
+              <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
+                <div className={styles['tab-container']}>
+                  {filesTabInfiniteScrollEnabled ? (
+                    <DatasetFilesScrollable
                       filesRepository={fileRepository}
                       datasetPersistentId={dataset.persistentId}
                       datasetVersion={dataset.version}
                       canUpdateDataset={canUpdateDataset}
-                    />
-                  </div>
-                </Tabs.Tab>
-
-                <Tabs.Tab eventKey="versions" title={t('Versions')}>
-                  <div className={styles['tab-container']}>
-                    <DatasetVersions
+                      key={dataset.version.publishingStatus}
                       datasetRepository={datasetRepository}
-                      datasetId={dataset.persistentId}
-                      currentVersionNumber={currentVersionNumber}
-                      canUpdateDataset={canUpdateDataset}
-                      isInView={activeTab === 'versions'}
-                      key={dataset.internalVersionNumber}
                     />
-                  </div>
-                </Tabs.Tab>
-              </Tabs>
-            ))}
+                  ) : (
+                    <DatasetFiles
+                      filesRepository={fileRepository}
+                      datasetPersistentId={dataset.persistentId}
+                      datasetVersion={dataset.version}
+                      datasetRepository={datasetRepository}
+                    />
+                  )}
+                </div>
+              </Tabs.Tab>
+
+              <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
+                <div className={styles['tab-container']}>
+                  <DatasetMetadata
+                    dataset={dataset}
+                    anonymizedView={anonymizedView}
+                    metadataBlockInfoRepository={metadataBlockInfoRepository}
+                    dataverseInfoRepository={dataverseInfoRepository}
+                  />
+                </div>
+              </Tabs.Tab>
+
+              <Tabs.Tab eventKey="terms" title={termsTabTitle}>
+                <div ref={termsTabRef} className={styles['tab-container']}>
+                  <DatasetTerms
+                    license={dataset.license}
+                    termsOfUse={dataset.termsOfUse}
+                    filesRepository={fileRepository}
+                    datasetPersistentId={dataset.persistentId}
+                    datasetVersion={dataset.version}
+                    canUpdateDataset={canUpdateDataset}
+                  />
+                </div>
+              </Tabs.Tab>
+
+              <Tabs.Tab eventKey="versions" title={t('Versions')}>
+                <div className={styles['tab-container']}>
+                  <DatasetVersions
+                    datasetRepository={datasetRepository}
+                    datasetId={dataset.persistentId}
+                    currentVersionNumber={currentVersionNumber}
+                    canUpdateDataset={canUpdateDataset}
+                    isInView={activeTab === 'versions'}
+                    key={dataset.internalVersionNumber}
+                  />
+                </div>
+              </Tabs.Tab>
+            </Tabs>
+          )}
 
           <SeparationLine />
         </div>

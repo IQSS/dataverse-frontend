@@ -70,7 +70,7 @@ export function FileNonTabularDownloadOptions({
   return (
     <>
       <DropdownButtonItem
-        data-testid={`download-original-file-${fileId}`}
+        data-testid={`download-original-file`}
         onClick={handleDownloadClick}
         disabled={downloadDisabled}>
         {type.displayFormatIsUnknown

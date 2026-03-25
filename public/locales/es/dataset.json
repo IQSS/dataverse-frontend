@@ -1,7 +1,8 @@
 {
   "filesTabTitle": "Ficheros",
   "metadataTabTitle": "Metadatos",
-  "termsTabTitle": "Términos",
+  "termsTabTitle": "Términos y libros de visitas",
+  "termsTabTitleReadOnly": "Términos",
   "anonymizedFieldValue": "retirado",
   "customTerms": {
     "title": "Términos personalizados del dataset",
@@ -69,7 +70,8 @@
       },
       "deleteDatasetModal": {
         "title": "Eliminar dataset",
-        "message": "¿Seguro que quieres eliminar este dataset? Esta acción no se puede deshacer.",
+        "messageDraft": "¿Seguro que quieres eliminar esta versión borrador? No podrás recuperar este borrador.",
+        "messageDataset": "¿Seguro que quieres eliminar este dataset? Esta acción no se puede deshacer.",
         "defaultDatasetDeleteError": "Ocurrió un error al eliminar el dataset."
       }
     },
@@ -142,7 +144,8 @@
       "heading": "URL privada de dataset no publicado",
       "alertText": "Este dataset no publicado se está compartiendo de forma privada."
     },
-    "datasetDeletedSuccess": "El dataset ha sido eliminado."
+    "datasetDeletedSuccessDraft": "El borrador del dataset ha sido eliminado.",
+    "datasetDeletedSuccessDataset": "El dataset ha sido eliminado."
   },
   "termsTab": {
     "editTermsButton": "Editar requisitos de términos",

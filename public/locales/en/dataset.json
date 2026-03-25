@@ -2,6 +2,7 @@
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
   "termsTabTitle": "Terms and Guestbook",
+  "termsTabTitleReadOnly": "Terms",
   "anonymizedFieldValue": "withheld",
   "customTerms": {
     "title": "Custom Dataset Terms",
@@ -69,7 +70,8 @@
       },
       "deleteDatasetModal": {
         "title": "Delete Dataset",
-        "message": "Are you sure you want to delete this dataset? This action cannot be undone.",
+        "messageDraft": "Are you sure you want to delete this draft version? Files will be reverted to the most recently published version. You cannot undelete this draft.",
+        "messageDataset": "Are you sure you want to delete this dataset? You cannot undelete this dataset.",
         "defaultDatasetDeleteError": "An error occurred while deleting the dataset."
       }
     },
@@ -142,7 +144,8 @@
       "heading": "Unpublished Dataset Private URL",
       "alertText": "This unpublished dataset is being privately shared."
     },
-    "datasetDeletedSuccess": "The dataset has been deleted."
+    "datasetDeletedSuccessDraft": "The dataset draft has been deleted.",
+    "datasetDeletedSuccessDataset": "The dataset has been deleted."
   },
   "termsTab": {
     "editTermsButton": "Edit Terms and Guestbook",

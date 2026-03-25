@@ -100,7 +100,7 @@ export class FileHelper extends DataverseApiHelper {
     return new Cypress.Promise((resolve) => {
       cy.visit(`/spa/files?id=${id}`)
       cy.get(`#action-button-access-file-${id}`).click()
-      cy.findByTestId(`download-original-file-${id}`).click()
+      cy.findByTestId(`download-original-file`).click()
       cy.then(() => resolve())
     })
   }
