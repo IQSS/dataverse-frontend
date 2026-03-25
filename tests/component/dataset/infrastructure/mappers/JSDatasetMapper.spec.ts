@@ -299,8 +299,8 @@ const expectedDataset = {
     new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
   ],
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -409,8 +409,8 @@ const expectedDatasetWithPublicationDate = {
     new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
   ],
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -519,8 +519,8 @@ const expectedDatasetWithNextVersionNumbers = {
     new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
   ],
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -643,8 +643,8 @@ const expectedDatasetAlternateVersion = {
   },
   thumbnail: undefined,
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
