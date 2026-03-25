@@ -5,6 +5,7 @@ import { CollectionRepository } from '../../../../../src/collection/domain/repos
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { CustomTermsMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { LicenseMother } from '@tests/component/dataset/domain/models/LicenseMother'
+import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
 import { SettingMother } from '@tests/component/settings/domain/models/SettingMother'
 import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
@@ -59,12 +60,12 @@ const mountPublishDatasetModal = ({
       <PublishDatasetModal
         show={true}
         repository={repository}
+        license={LicenseMother.create()}
         collectionRepository={collectionRepository}
         parentCollection={parentCollection}
         persistentId={TEST_PERSISTENT_ID}
         releasedVersionExists={false}
         handleClose={handleClose}
-        license={LicenseMother.create()}
         {...props}
       />
     </SettingsProvider>
@@ -91,6 +92,33 @@ describe('PublishDatasetModal', () => {
       TEST_PERSISTENT_ID,
       VersionUpdateType.MAJOR
     )
+  })
+
+  it('refreshes unread notification count after successful publish', () => {
+    const handleClose = cy.stub()
+    const repository = {} as DatasetRepository
+    repository.publish = cy.stub().as('repositoryPublish').resolves()
+    const collectionRepository = {} as CollectionRepository
+    collectionRepository.publish = cy.stub().as('collectionRepositoryPublish').resolves()
+    const parentCollection = UpwardHierarchyNodeMother.createCollection()
+    cy.spy(needsUpdateStore, 'setNeedsUpdate').as('setNeedsUpdate')
+
+    cy.mountAuthenticated(
+      <PublishDatasetModal
+        show={true}
+        repository={repository}
+        license={LicenseMother.create()}
+        collectionRepository={collectionRepository}
+        parentCollection={parentCollection}
+        persistentId="testPersistentId"
+        releasedVersionExists={false}
+        handleClose={handleClose}
+      />
+    )
+
+    cy.findByText('Continue').click()
+    cy.get('@repositoryPublish').should('have.been.calledOnce')
+    cy.get('@setNeedsUpdate').should('have.been.calledWith', true)
   })
 
   it('displays an error message when publishDataset fails', () => {

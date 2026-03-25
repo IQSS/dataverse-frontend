@@ -27,6 +27,7 @@ export function DeaccessionDatasetModal({
   handleCloseDeaccessionModal
 }: DeaccessionDatasetModalProps) {
   const { t } = useTranslation(['dataset', 'shared'])
+  const modalTitle = 'Deaccession Dataset'
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const { refreshDataset } = useDataset()
 
@@ -110,9 +111,9 @@ export function DeaccessionDatasetModal({
 
   return (
     <>
-      <Modal show={show} onHide={handleCloseWithReset} size="lg">
+      <Modal show={show} onHide={handleCloseWithReset} size="lg" ariaLabel={modalTitle}>
         <Modal.Header>
-          <Modal.Title>Deaccession Dataset</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {isLoadingDatasetVersionSummaries ? (

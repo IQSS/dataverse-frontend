@@ -37,6 +37,7 @@ export const ConfirmRestrictFileModal = ({
 }: ConfirmRestrictFileModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('file')
+  const modalTitle = t('restriction.restrictAccess')
 
   const [enableAccessRequest, setEnableAccessRequest] = useState(requestAccess)
   const [terms, setTerms] = useState(termsOfAccessForRestrictedFiles)
@@ -49,9 +50,14 @@ export const ConfirmRestrictFileModal = ({
   }, [show, requestAccess, termsOfAccessForRestrictedFiles])
 
   return (
-    <Modal show={show} onHide={isRestrictingFile ? () => {} : handleClose} centered size="lg">
+    <Modal
+      show={show}
+      onHide={isRestrictingFile ? () => {} : handleClose}
+      centered
+      size="lg"
+      ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('restriction.restrictAccess')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {' '}

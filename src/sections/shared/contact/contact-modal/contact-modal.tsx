@@ -71,6 +71,7 @@ export const ContactModal = ({
   return (
     <Modal
       show={show}
+      ariaLabel={title}
       onHide={() => {
         handleClose()
         formMethods.reset()

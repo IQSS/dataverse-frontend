@@ -11,11 +11,12 @@ interface ConfirmLeaveModalProps {
 
 export const ConfirmLeaveModal = ({ show, onStay, onLeave }: ConfirmLeaveModalProps) => {
   const { t } = useTranslation('shared')
+  const modalTitle = t('fileUploader.confirmLeaveModal.title')
 
   return (
-    <Modal show={show} onHide={onLeave} centered size="lg">
+    <Modal show={show} onHide={onLeave} centered size="lg" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('fileUploader.confirmLeaveModal.title')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Stack gap={2}>

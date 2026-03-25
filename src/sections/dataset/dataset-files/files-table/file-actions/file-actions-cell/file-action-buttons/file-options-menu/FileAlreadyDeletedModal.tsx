@@ -9,10 +9,11 @@ interface FileAlreadyDeletedModalProps {
 }
 export function FileAlreadyDeletedModal({ show, handleClose }: FileAlreadyDeletedModalProps) {
   const { t } = useTranslation('files')
+  const modalTitle = t('actions.alreadyDeletedAlert.title')
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={show} onHide={handleClose} size="lg" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('actions.alreadyDeletedAlert.title')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p className={styles.paragraph}>

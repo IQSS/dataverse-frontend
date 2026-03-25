@@ -10,10 +10,11 @@ interface NoSelectedFilesModalProps {
 
 export function NoSelectedFilesModal({ show, handleClose }: NoSelectedFilesModalProps) {
   const { t } = useTranslation('files')
+  const modalTitle = t('actions.noSelectedFilesAlert.title')
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={show} onHide={handleClose} size="lg" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('actions.noSelectedFilesAlert.title')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p className={styles.paragraph}>

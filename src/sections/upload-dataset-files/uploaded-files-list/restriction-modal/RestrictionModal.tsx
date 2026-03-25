@@ -23,15 +23,21 @@ export function RestrictionModal({
   update
 }: RestrictionModalProps) {
   const { t } = useTranslation('uploadDatasetFiles')
+  const modalTitle = t('restriction.restrictAccess')
   const [terms, setTerms] = useState(defaultTerms)
   const [requestAccess, setRequestAccess] = useState(defaultRequestAccess)
   const handleClose = (saved: boolean) =>
     update({ saved: saved, terms: terms, requestAccess: requestAccess })
 
   return (
-    <Modal data-testid="restrictionModal" show={show} onHide={() => handleClose(false)} size="lg">
+    <Modal
+      data-testid="restrictionModal"
+      show={show}
+      onHide={() => handleClose(false)}
+      size="lg"
+      ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('restriction.restrictAccess')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className={styles.restriction_form}>

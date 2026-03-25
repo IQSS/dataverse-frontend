@@ -148,6 +148,10 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
 
   const handleUndo = () => editor?.chain().focus().undo().run()
   const handleRedo = () => editor?.chain().focus().redo().run()
+  const linkDialogTitle =
+    locales?.linkDialog?.title ?? richTextEditorDefaultLocales.linkDialog?.title
+  const imageDialogTitle =
+    locales?.imageDialog?.title ?? richTextEditorDefaultLocales.imageDialog?.title
 
   return (
     <>
@@ -378,11 +382,13 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
       </div>
 
       {/* Dialog for pasting a url to the link */}
-      <Modal show={linkDialog.open} onHide={handleCloseLinkDialog} size="lg">
+      <Modal
+        show={linkDialog.open}
+        onHide={handleCloseLinkDialog}
+        size="lg"
+        ariaLabel={linkDialogTitle}>
         <Modal.Header>
-          <Modal.Title>
-            {locales?.linkDialog?.title ?? richTextEditorDefaultLocales.linkDialog?.title}
-          </Modal.Title>
+          <Modal.Title>{linkDialogTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group controlId="link-url" as={Col}>
@@ -416,11 +422,13 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
       </Modal>
 
       {/* Dialog for adding the url and alt text of the image  */}
-      <Modal show={imageDialog.open} onHide={handleCloseImageDialog} size="lg">
+      <Modal
+        show={imageDialog.open}
+        onHide={handleCloseImageDialog}
+        size="lg"
+        ariaLabel={imageDialogTitle}>
         <Modal.Header>
-          <Modal.Title>
-            {locales?.imageDialog?.title ?? richTextEditorDefaultLocales.imageDialog?.title}
-          </Modal.Title>
+          <Modal.Title>{imageDialogTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group controlId="image-url" as={Col}>
