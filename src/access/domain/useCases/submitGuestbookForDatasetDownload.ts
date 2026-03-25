@@ -3,7 +3,8 @@ import { AccessRepository, GuestbookResponseDTO } from '../repositories/AccessRe
 export function submitGuestbookForDatasetDownload(
   accessRepository: AccessRepository,
   datasetId: number | string,
-  answers: GuestbookResponseDTO
+  answers: GuestbookResponseDTO,
+  format?: string
 ): Promise<string> {
-  return accessRepository.submitGuestbookForDatasetDownload(datasetId, answers)
+  return accessRepository.submitGuestbookForDatasetDownload(datasetId, answers, format)
 }

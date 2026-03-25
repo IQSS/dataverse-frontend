@@ -1,6 +1,5 @@
 import { AccessDatasetMenu } from '../../../../../../src/sections/dataset/dataset-action-buttons/access-dataset-menu/AccessDatasetMenu'
 import {
-  DatasetDownloadUrlsMother,
   DatasetFileDownloadSizeMother,
   DatasetPermissionsMother,
   DatasetVersionMother
@@ -9,14 +8,30 @@ import { FileSizeUnit } from '../../../../../../src/files/domain/models/FileMeta
 import { getGuestbook, submitGuestbookForDatasetDownload } from '@iqss/dataverse-client-javascript'
 import { ReactNode, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-
-const downloadUrls = DatasetDownloadUrlsMother.create()
+import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
+import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
 
 function TranslationPreloader({ children }: { children: ReactNode }) {
   useTranslation('dataset')
   useTranslation('files')
 
   return <>{children}</>
+}
+
+function withAccessRepository(
+  component: React.ReactNode,
+  repositoryOverrides: Partial<AccessRepository> = {}
+) {
+  const accessRepository: AccessRepository = {
+    submitGuestbookForDatasetDownload: cy.stub().resolves('signed-url-dataset'),
+    submitGuestbookForDatafileDownload: cy.stub().resolves('signed-url-datafile'),
+    submitGuestbookForDatafilesDownload: cy.stub().resolves('signed-url-datafiles'),
+    ...repositoryOverrides
+  }
+
+  return (
+    <AccessRepositoryProvider repository={accessRepository}>{component}</AccessRepositoryProvider>
+  )
 }
 
 describe('AccessDatasetMenu', () => {
@@ -33,7 +48,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -58,7 +72,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -79,7 +92,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -100,7 +112,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -125,7 +136,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -149,7 +159,6 @@ describe('AccessDatasetMenu', () => {
             hasOneTabularFileAtLeast={false}
             version={version}
             permissions={permissions}
-            downloadUrls={downloadUrls}
             fileStore="s3"
             persistentId="doi:10.5072/FK2/ABCDEFGH"
           />
@@ -177,7 +186,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={false}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -203,7 +211,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -226,7 +233,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -253,7 +259,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -274,7 +279,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="not-s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -314,7 +318,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={false}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
         guestbookId={10}
@@ -360,7 +363,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={false}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
         guestbookId={10}
@@ -400,7 +402,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={false}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
         guestbookId={10}
@@ -441,7 +442,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
         guestbookId={10}
@@ -467,7 +467,6 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
-        downloadUrls={downloadUrls}
         fileStore="s3"
         persistentId="doi:10.5072/FK2/ABCDEFGH"
       />
@@ -476,5 +475,37 @@ describe('AccessDatasetMenu', () => {
     cy.findByRole('button', { name: 'Access Dataset' }).click()
     cy.findByRole('button', { name: /Original Format ZIP/ }).should('exist')
     cy.findByRole('button', { name: /Archival Format \(\.tab\) ZIP/ }).should('exist')
+  })
+
+  it('shows a success toast when direct dataset download succeeds without guestbook', () => {
+    const version = DatasetVersionMother.createReleased()
+    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
+    ]
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.customMount(
+      withAccessRepository(
+        <AccessDatasetMenu
+          datasetNumericId={2}
+          fileDownloadSizes={fileDownloadSizes}
+          hasOneTabularFileAtLeast={false}
+          version={version}
+          permissions={permissions}
+          fileStore="s3"
+          persistentId="doi:10.5072/FK2/ABCDEFGH"
+        />
+      )
+    )
+
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.findByRole('button', { name: /Download ZIP/ }).click()
+
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByText('Your download has started.').should('exist')
   })
 })

@@ -4,6 +4,8 @@ import {
   submitGuestbookForDatasetDownload,
   submitGuestbookForDatafilesDownload
 } from '@iqss/dataverse-client-javascript'
+import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
+import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
 import { Dataset as DatasetModel } from '../../../../../../../../src/dataset/domain/models/Dataset'
 import { DatasetProvider } from '../../../../../../../../src/sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
@@ -31,6 +33,22 @@ describe('DownloadFilesButton', () => {
         searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
         {component}
       </DatasetProvider>
+    )
+  }
+
+  const withAccessRepository = (
+    component: ReactNode,
+    repositoryOverrides: Partial<AccessRepository> = {}
+  ) => {
+    const accessRepository: AccessRepository = {
+      submitGuestbookForDatasetDownload: cy.stub().resolves('signed-url-dataset'),
+      submitGuestbookForDatafileDownload: cy.stub().resolves('signed-url-datafile'),
+      submitGuestbookForDatafilesDownload: cy.stub().resolves('signed-url-datafiles'),
+      ...repositoryOverrides
+    }
+
+    return (
+      <AccessRepositoryProvider repository={accessRepository}>{component}</AccessRepositoryProvider>
     )
   }
 
@@ -247,6 +265,97 @@ describe('DownloadFilesButton', () => {
     cy.get('#download-files').click()
     cy.findByRole('button', { name: 'Original Format' }).should('exist')
     cy.findByRole('button', { name: 'Archival Format (.tab)' }).should('exist')
+  })
+
+  it('requests a signed dataset download url when all files are selected', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true,
+      downloadUrls: {
+        original: 'https://dataset-download-url-original',
+        archival: 'https://dataset-download-url-archival'
+      }
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
+    })
+    const fileSelection = {
+      'some-file-id': undefined,
+      'some-other-file-id': undefined
+    }
+    const submitDatasetDownload = cy.stub().resolves('https://signed-dataset-download-url')
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.mountAuthenticated(
+      withAccessRepository(
+        withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithDownloadFilesPermission
+        ),
+        {
+          submitGuestbookForDatasetDownload: submitDatasetDownload
+        }
+      )
+    )
+
+    cy.get('#download-files').click()
+    cy.findByRole('button', { name: 'Archival Format (.tab)' }).click()
+
+    cy.wrap(submitDatasetDownload).should(
+      'have.been.calledOnceWith',
+      datasetWithDownloadFilesPermission.id,
+      {
+        guestbookResponse: {}
+      },
+      'archival'
+    )
+    cy.get('@anchorClick').should('have.been.calledOnce')
+  })
+
+  it('requests a signed multiple-file download url when some files are selected', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
+    })
+    const fileSelection = {
+      'some-file-id': files[0],
+      'some-other-file-id': files[1]
+    }
+    const submitDatafilesDownload = cy.stub().resolves('https://signed-multiple-file-download-url')
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.mountAuthenticated(
+      withAccessRepository(
+        withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithDownloadFilesPermission
+        ),
+        {
+          submitGuestbookForDatafilesDownload: submitDatafilesDownload
+        }
+      )
+    )
+
+    cy.get('#download-files').click()
+    cy.findByRole('button', { name: 'Archival Format (.tab)' }).click()
+
+    cy.wrap(submitDatafilesDownload).should(
+      'have.been.calledOnceWith',
+      [files[0].id, files[1].id],
+      { guestbookResponse: {} },
+      'archival'
+    )
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByText('Your download has started.').should('exist')
   })
 
   it('renders the dataset download url with the single file download url when one file is selected', () => {

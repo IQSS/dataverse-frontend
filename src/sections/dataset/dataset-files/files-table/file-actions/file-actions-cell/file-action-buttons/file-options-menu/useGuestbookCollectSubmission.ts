@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { toast } from 'react-toastify'
+import { FileDownloadMode } from '@/files/domain/models/FileMetadata'
 import { submitGuestbookForDatasetDownload } from '@/access/domain/useCases/submitGuestbookForDatasetDownload'
 import { submitGuestbookForDatafileDownload } from '@/access/domain/useCases/submitGuestbookForDatafileDownload'
 import { submitGuestbookForDatafilesDownload } from '@/access/domain/useCases/submitGuestbookForDatafilesDownload'
@@ -16,6 +17,7 @@ interface UseGuestbookCollectSubmissionProps {
   datasetId?: number | string
   fileId?: number | string
   fileIds?: Array<number>
+  format?: string | FileDownloadMode
   handleClose: () => void
   accessRepository: AccessRepository
   downloadFromSignedUrl: (signedUrl: string) => Promise<void>
@@ -31,6 +33,7 @@ export const useGuestbookCollectSubmission = ({
   datasetId,
   fileId,
   fileIds,
+  format,
   handleClose,
   accessRepository,
   downloadFromSignedUrl
@@ -53,6 +56,11 @@ export const useGuestbookCollectSubmission = ({
     handleClose()
   }, [handleClose, resetSubmissionState])
 
+  const datasetDownloadFormat =
+    format === FileDownloadMode.ORIGINAL || format === FileDownloadMode.ARCHIVAL
+      ? format
+      : undefined
+
   const handleSubmit = useCallback(
     async ({ hasFormErrors, guestbook, guestbookResponse }: HandleSubmitProps) => {
       setHasAttemptedAccept(true)
@@ -71,19 +79,22 @@ export const useGuestbookCollectSubmission = ({
           signedUrl = await submitGuestbookForDatafileDownload(
             accessRepository,
             fileId,
-            guestbookResponse
+            guestbookResponse,
+            format
           )
         } else if (fileIds && fileIds.length > 0) {
           signedUrl = await submitGuestbookForDatafilesDownload(
             accessRepository,
             fileIds,
-            guestbookResponse
+            guestbookResponse,
+            datasetDownloadFormat
           )
         } else if (datasetId !== undefined) {
           signedUrl = await submitGuestbookForDatasetDownload(
             accessRepository,
             datasetId,
-            guestbookResponse
+            guestbookResponse,
+            datasetDownloadFormat
           )
         }
       } catch (err) {
@@ -114,7 +125,17 @@ export const useGuestbookCollectSubmission = ({
           })
       }
     },
-    [datasetId, fileId, fileIds, handleModalClose, accessRepository, tFiles, downloadFromSignedUrl]
+    [
+      accessRepository,
+      datasetDownloadFormat,
+      datasetId,
+      downloadFromSignedUrl,
+      fileId,
+      fileIds,
+      format,
+      handleModalClose,
+      tFiles
+    ]
   )
 
   return {

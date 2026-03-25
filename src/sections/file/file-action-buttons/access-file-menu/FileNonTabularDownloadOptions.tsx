@@ -1,11 +1,16 @@
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { FileType } from '../../../../files/domain/models/FileMetadata'
+import { FileDownloadMode, FileType } from '../../../../files/domain/models/FileMetadata'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
 import { MouseEvent, useState } from 'react'
 import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 import { toast } from 'react-toastify'
-import { downloadFromSignedUrl, requestSignedDownloadUrl } from '@/shared/helpers/DownloadHelper'
+import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
+import {
+  downloadFromSignedUrl,
+  EMPTY_GUESTBOOK_RESPONSE,
+  requestSignedDownloadUrlFromAccessApi
+} from '@/shared/helpers/DownloadHelper'
 
 interface FileNonTabularDownloadOptionsProps {
   fileId: number
@@ -26,11 +31,11 @@ export function FileNonTabularDownloadOptions({
   datasetLicense,
   datasetCustomTerms,
   type,
-  downloadUrlOriginal,
   ingestIsInProgress,
   isLockedFromFileDownload
 }: FileNonTabularDownloadOptionsProps) {
   const { t } = useTranslation('files')
+  const accessRepository = useAccessRepository()
   const hasGuestbook = guestbookId !== undefined
   const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
   const downloadDisabled = ingestIsInProgress || isLockedFromFileDownload
@@ -47,8 +52,16 @@ export function FileNonTabularDownloadOptions({
     }
 
     event.preventDefault()
-    void requestSignedDownloadUrl(downloadUrlOriginal)
+    void requestSignedDownloadUrlFromAccessApi({
+      accessRepository,
+      fileId,
+      guestbookResponse: EMPTY_GUESTBOOK_RESPONSE,
+      format: FileDownloadMode.ORIGINAL
+    })
       .then(downloadFromSignedUrl)
+      .then(() => {
+        toast.success(t('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
+      })
       .catch(() => {
         toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
       })
@@ -64,10 +77,11 @@ export function FileNonTabularDownloadOptions({
           ? t('actions.accessFileMenu.downloadOptions.options.original')
           : type.toDisplayFormat()}
       </DropdownButtonItem>
-      {hasGuestbook && (
+      {hasGuestbook && showDownloadWithGuestbookModal && (
         <DownloadWithGuestbookModal
           fileId={fileId}
           guestbookId={guestbookId}
+          format={FileDownloadMode.ORIGINAL}
           datasetPersistentId={datasetPersistentId}
           datasetLicense={datasetLicense}
           datasetCustomTerms={datasetCustomTerms}

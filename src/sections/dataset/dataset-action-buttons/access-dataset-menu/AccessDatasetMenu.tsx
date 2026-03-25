@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import {
   CustomTerms,
-  DatasetDownloadUrls,
   DatasetLicense,
   DatasetPermissions,
   DatasetPublishingStatus,
@@ -13,8 +12,10 @@ import {
 } from '../../../../dataset/domain/models/Dataset'
 import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/FileMetadata'
 import { DatasetExploreOptions } from '../DatasetToolsOptions'
+import { submitGuestbookForDatasetDownload } from '@/access/domain/useCases/submitGuestbookForDatasetDownload'
+import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
-import { downloadFromSignedUrl, requestSignedDownloadUrl } from '@/shared/helpers/DownloadHelper'
+import { downloadFromSignedUrl, EMPTY_GUESTBOOK_RESPONSE } from '@/shared/helpers/DownloadHelper'
 
 // TODO: add compute feature
 
@@ -24,7 +25,6 @@ interface AccessDatasetMenuProps {
   permissions: DatasetPermissions
   hasOneTabularFileAtLeast: boolean
   fileDownloadSizes: FileDownloadSize[]
-  downloadUrls: DatasetDownloadUrls
   fileStore: string | undefined
   persistentId: string
   guestbookId?: number
@@ -38,7 +38,6 @@ export function AccessDatasetMenu({
   permissions,
   hasOneTabularFileAtLeast,
   fileDownloadSizes,
-  downloadUrls,
   fileStore,
   persistentId,
   guestbookId,
@@ -47,6 +46,9 @@ export function AccessDatasetMenu({
 }: AccessDatasetMenuProps) {
   const { t } = useTranslation('dataset')
   const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
+  const [selectedDownloadFormat, setSelectedDownloadFormat] = useState<FileDownloadMode>(
+    FileDownloadMode.ORIGINAL
+  )
   const hasGuestbook = guestbookId !== undefined
 
   const flesToDownloadSizeIsZero =
@@ -66,8 +68,12 @@ export function AccessDatasetMenu({
     return <></>
   }
 
-  const handleDownloadWithGuestbook = (event: React.MouseEvent<HTMLElement>) => {
+  const handleDownloadWithGuestbook = (
+    event: React.MouseEvent<HTMLElement>,
+    mode: FileDownloadMode
+  ) => {
     event.preventDefault()
+    setSelectedDownloadFormat(mode)
     setShowDownloadWithGuestbookModal(true)
   }
 
@@ -82,9 +88,9 @@ export function AccessDatasetMenu({
           {t('datasetActionButtons.accessDataset.downloadOptions.header')} <DownloadIcon />
         </DropdownHeader>
         <DatasetDownloadOptions
+          datasetNumericId={datasetNumericId}
           hasOneTabularFileAtLeast={hasOneTabularFileAtLeast}
           fileDownloadSizes={fileDownloadSizes}
-          downloadUrls={downloadUrls}
           hasGuestbook={hasGuestbook}
           onDownloadWithGuestbook={handleDownloadWithGuestbook}
         />
@@ -97,6 +103,7 @@ export function AccessDatasetMenu({
           datasetId={datasetNumericId} // TODO: we should allow this to pass persistentId when we have the backend support for guestbook submission with persistentId
           datasetPersistentId={persistentId}
           guestbookId={guestbookId}
+          format={selectedDownloadFormat}
           datasetLicense={license}
           datasetCustomTerms={customTerms}
         />
@@ -106,39 +113,48 @@ export function AccessDatasetMenu({
 }
 
 interface DatasetDownloadOptionsProps {
+  datasetNumericId?: number | string
   hasOneTabularFileAtLeast: boolean
   fileDownloadSizes: FileDownloadSize[]
-  downloadUrls: DatasetDownloadUrls
   hasGuestbook: boolean
-  onDownloadWithGuestbook: (event: React.MouseEvent<HTMLElement>) => void
+  onDownloadWithGuestbook: (event: React.MouseEvent<HTMLElement>, mode: FileDownloadMode) => void
 }
 
 const DatasetDownloadOptions = ({
+  datasetNumericId,
   hasOneTabularFileAtLeast,
   fileDownloadSizes,
-  downloadUrls,
   hasGuestbook,
   onDownloadWithGuestbook
 }: DatasetDownloadOptionsProps) => {
   const { t } = useTranslation('dataset')
   const { t: tFiles } = useTranslation('files')
+  const accessRepository = useAccessRepository()
 
   const handleDirectDownload = (
     event: React.MouseEvent<HTMLElement>,
-    url: string | undefined
+    mode: FileDownloadMode
   ): void => {
     if (hasGuestbook) {
-      onDownloadWithGuestbook(event)
+      onDownloadWithGuestbook(event, mode)
       return
     }
 
-    if (!url) {
+    if (datasetNumericId === undefined) {
       return
     }
 
     event.preventDefault()
-    void requestSignedDownloadUrl(url)
+    void submitGuestbookForDatasetDownload(
+      accessRepository,
+      datasetNumericId,
+      EMPTY_GUESTBOOK_RESPONSE,
+      mode
+    )
       .then(downloadFromSignedUrl)
+      .then(() => {
+        toast.success(tFiles('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
+      })
       .catch(() => {
         toast.error(tFiles('actions.optionsMenu.guestbookCollectModal.downloadError'))
       })
@@ -152,19 +168,18 @@ const DatasetDownloadOptions = ({
   return hasOneTabularFileAtLeast ? (
     <>
       <DropdownButtonItem
-        onClick={(event) => handleDirectDownload(event, downloadUrls[FileDownloadMode.ORIGINAL])}>
+        onClick={(event) => handleDirectDownload(event, FileDownloadMode.ORIGINAL)}>
         {t('datasetActionButtons.accessDataset.downloadOptions.originalZip')} (
         {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
       </DropdownButtonItem>
       <DropdownButtonItem
-        onClick={(event) => handleDirectDownload(event, downloadUrls[FileDownloadMode.ARCHIVAL])}>
+        onClick={(event) => handleDirectDownload(event, FileDownloadMode.ARCHIVAL)}>
         {t('datasetActionButtons.accessDataset.downloadOptions.archivalZip')} (
         {getFormattedFileSize(FileDownloadMode.ARCHIVAL)})
       </DropdownButtonItem>
     </>
   ) : (
-    <DropdownButtonItem
-      onClick={(event) => handleDirectDownload(event, downloadUrls[FileDownloadMode.ORIGINAL])}>
+    <DropdownButtonItem onClick={(event) => handleDirectDownload(event, FileDownloadMode.ORIGINAL)}>
       {t('datasetActionButtons.accessDataset.downloadOptions.zip')} (
       {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
     </DropdownButtonItem>

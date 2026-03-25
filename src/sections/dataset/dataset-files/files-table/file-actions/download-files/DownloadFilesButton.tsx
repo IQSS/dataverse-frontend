@@ -7,11 +7,15 @@ import { FileDownloadMode } from '../../../../../../files/domain/models/FileMeta
 import { useDataset } from '../../../../DatasetContext'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
-import { useMultipleFileDownload } from '../../../../../file/multiple-file-download/MultipleFileDownloadContext'
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
 import { DownloadWithGuestbookModal } from '../file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
-import { downloadFromSignedUrl, requestSignedDownloadUrl } from '@/shared/helpers/DownloadHelper'
+import {
+  downloadFromSignedUrl,
+  EMPTY_GUESTBOOK_RESPONSE,
+  requestSignedDownloadUrlFromAccessApi
+} from '@/shared/helpers/DownloadHelper'
+import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
 import styles from './DownloadFilesButton.module.scss'
 
 interface DownloadFilesButtonProps {
@@ -27,7 +31,10 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const { dataset } = useDataset()
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
   const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
-  const { getMultipleFileDownloadUrl } = useMultipleFileDownload()
+  const [selectedDownloadFormat, setSelectedDownloadFormat] = useState<FileDownloadMode>(
+    FileDownloadMode.ORIGINAL
+  )
+  const accessRepository = useAccessRepository()
   const isBelow768px = useMediaQuery('(max-width: 768px)')
 
   const fileSelectionCount = Object.keys(fileSelection).length
@@ -37,7 +44,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
     : getFileIdsFromSelection(fileSelection)
   const hasGuestbook = dataset?.guestbookId !== undefined
 
-  const onClick = (event: MouseEvent<HTMLElement>, downloadMode?: FileDownloadMode) => {
+  const onClick = (event: MouseEvent<HTMLElement>, downloadMode: FileDownloadMode) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {
       event.preventDefault()
       setShowNoFilesSelectedModal(true)
@@ -46,26 +53,26 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
 
     if (hasGuestbook) {
       event.preventDefault()
+      setSelectedDownloadFormat(downloadMode)
       setShowDownloadWithGuestbookModal(true)
       return
     }
 
-    if (downloadMode) {
-      event.preventDefault()
-      void requestSignedDownloadUrl(getDownloadUrl(downloadMode))
-        .then(downloadFromSignedUrl)
-        .catch(() => {
-          toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
-        })
-    }
-  }
-
-  const getDownloadUrl = (downloadMode: FileDownloadMode): string => {
-    if (allFilesSelected) {
-      return dataset ? dataset.downloadUrls[downloadMode] : ''
-    }
-
-    return getMultipleFileDownloadUrl(getFileIdsFromSelection(fileSelection), downloadMode)
+    event.preventDefault()
+    void requestSignedDownloadUrlFromAccessApi({
+      accessRepository,
+      datasetId: allFilesSelected ? dataset?.id : undefined,
+      fileIds: allFilesSelected ? undefined : getFileIdsFromSelection(fileSelection),
+      guestbookResponse: EMPTY_GUESTBOOK_RESPONSE,
+      format: downloadMode
+    })
+      .then(downloadFromSignedUrl)
+      .then(() => {
+        toast.success(t('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
+      })
+      .catch(() => {
+        toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
+      })
   }
 
   if (
@@ -95,6 +102,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
           fileIds={fileIdsForGuestbookSubmission}
           datasetId={allFilesSelected ? dataset.id : undefined}
           guestbookId={dataset.guestbookId}
+          format={selectedDownloadFormat}
           datasetPersistentId={dataset.persistentId}
           show={showDownloadWithGuestbookModal}
           handleClose={() => setShowDownloadWithGuestbookModal(false)}

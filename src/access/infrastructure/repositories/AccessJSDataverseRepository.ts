@@ -11,22 +11,25 @@ import {
 export class AccessJSDataverseRepository implements AccessRepository {
   submitGuestbookForDatasetDownload(
     datasetId: number | string,
-    answers: GuestbookResponseDTO
+    answers: GuestbookResponseDTO,
+    format?: string
   ): Promise<string> {
-    return submitGuestbookForDatasetDownloadJSDv.execute(datasetId, answers)
+    return submitGuestbookForDatasetDownloadJSDv.execute(datasetId, answers, format)
   }
 
   submitGuestbookForDatafileDownload(
     fileId: number | string,
-    answers: GuestbookResponseDTO
+    answers: GuestbookResponseDTO,
+    format?: string
   ): Promise<string> {
-    return submitGuestbookForDatafileDownloadJSDv.execute(fileId, answers)
+    return submitGuestbookForDatafileDownloadJSDv.execute(fileId, answers, format)
   }
 
   submitGuestbookForDatafilesDownload(
     fileIds: Array<number>,
-    answers: GuestbookResponseDTO
+    answers: GuestbookResponseDTO,
+    format?: string
   ): Promise<string> {
-    return submitGuestbookForDatafilesDownloadJSDv.execute(fileIds, answers)
+    return submitGuestbookForDatafilesDownloadJSDv.execute(fileIds, answers, format)
   }
 }

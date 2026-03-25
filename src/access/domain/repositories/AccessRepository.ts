@@ -15,14 +15,17 @@ export type GuestbookResponseDTO = {
 export interface AccessRepository {
   submitGuestbookForDatasetDownload: (
     datasetId: number | string,
-    answers: GuestbookResponseDTO
+    answers: GuestbookResponseDTO,
+    format?: string
   ) => Promise<string>
   submitGuestbookForDatafileDownload: (
     fileId: number | string,
-    answers: GuestbookResponseDTO
+    answers: GuestbookResponseDTO,
+    format?: string
   ) => Promise<string>
   submitGuestbookForDatafilesDownload: (
     fileIds: Array<number>,
-    answers: GuestbookResponseDTO
+    answers: GuestbookResponseDTO,
+    format?: string
   ) => Promise<string>
 }

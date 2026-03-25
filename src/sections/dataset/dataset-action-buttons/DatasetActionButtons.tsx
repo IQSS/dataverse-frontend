@@ -39,7 +39,6 @@ export function DatasetActionButtons({
         permissions={dataset.permissions}
         hasOneTabularFileAtLeast={dataset.hasOneTabularFileAtLeast}
         fileDownloadSizes={dataset.fileDownloadSizes}
-        downloadUrls={dataset.downloadUrls}
         fileStore={dataset.fileStore}
         persistentId={dataset.persistentId}
         guestbookId={dataset.guestbookId}

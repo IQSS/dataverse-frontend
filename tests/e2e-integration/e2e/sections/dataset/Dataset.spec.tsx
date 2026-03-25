@@ -749,9 +749,7 @@ describe('Dataset', () => {
             .should('exist')
             .click({ force: true })
 
-          cy.reload()
-
-          cy.findAllByText('1 Downloads').should('exist')
+          cy.findByText('Your download has started.').should('exist')
         })
     })
 
@@ -776,6 +774,7 @@ describe('Dataset', () => {
             .should('exist')
             .click({ force: true })
 
+          cy.findByText('Your download has started.').should('exist')
           cy.reload()
 
           cy.findAllByText('1 Downloads').should('exist')

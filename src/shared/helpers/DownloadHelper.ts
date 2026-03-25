@@ -1,45 +1,68 @@
-import axios from 'axios'
-import { requireAppConfig } from '@/config'
-import { GuestbookResponseDTO } from '@/access/domain/repositories/AccessRepository'
-import { Utils } from '@/shared/helpers/Utils'
+import { submitGuestbookForDatasetDownload } from '@/access/domain/useCases/submitGuestbookForDatasetDownload'
+import { submitGuestbookForDatafileDownload } from '@/access/domain/useCases/submitGuestbookForDatafileDownload'
+import { submitGuestbookForDatafilesDownload } from '@/access/domain/useCases/submitGuestbookForDatafilesDownload'
+import {
+  AccessRepository,
+  GuestbookResponseDTO
+} from '@/access/domain/repositories/AccessRepository'
+import { FileDownloadMode } from '@/files/domain/models/FileMetadata'
 
 export const EMPTY_GUESTBOOK_RESPONSE: GuestbookResponseDTO = {
   guestbookResponse: {}
 }
 
-type SignedUrlResponse = {
-  data: {
-    signedUrl: string
-  }
+interface SignedDownloadSubmissionParams {
+  accessRepository: AccessRepository
+  datasetId?: number | string
+  fileId?: number | string
+  fileIds?: Array<number>
+  guestbookResponse: GuestbookResponseDTO
+  format?: string | FileDownloadMode
 }
 
-const getAuthToken = (): string | null => {
-  const appConfig = requireAppConfig()
-  return Utils.getLocalStorageItem<string>(`${appConfig.oidc.localStorageKeyPrefix}token`)
-}
-
-const buildAuthHeaders = (): Record<string, string> => {
-  const token = getAuthToken()
-
-  return token ? { Authorization: `Bearer ${token}` } : {}
-}
-
-const getSignedUrlFromResponse = (responseData: SignedUrlResponse): string => {
-  const signedUrl = responseData.data.signedUrl
-
-  if (!signedUrl) {
-    throw new Error('Signed download URL not found in response')
-  }
-
-  return signedUrl
-}
-
-export const requestSignedDownloadUrl = async (url: string): Promise<string> => {
-  const response = await axios.post<SignedUrlResponse>(url, EMPTY_GUESTBOOK_RESPONSE, {
-    headers: buildAuthHeaders()
+export const requestSignedDownloadUrlFromAccessApi = async ({
+  accessRepository,
+  datasetId,
+  fileId,
+  fileIds,
+  guestbookResponse,
+  format
+}: SignedDownloadSubmissionParams): Promise<string> => {
+  console.log('Requesting signed download URL with params:', {
+    datasetId,
+    fileId,
+    fileIds,
+    guestbookResponse,
+    format
   })
+  const datasetDownloadFormat =
+    format === FileDownloadMode.ORIGINAL || format === FileDownloadMode.ARCHIVAL
+      ? format
+      : undefined
 
-  return getSignedUrlFromResponse(response.data)
+  if (fileId !== undefined) {
+    return submitGuestbookForDatafileDownload(accessRepository, fileId, guestbookResponse, format)
+  }
+
+  if (fileIds && fileIds.length > 0) {
+    return submitGuestbookForDatafilesDownload(
+      accessRepository,
+      fileIds,
+      guestbookResponse,
+      datasetDownloadFormat
+    )
+  }
+
+  if (datasetId !== undefined) {
+    return submitGuestbookForDatasetDownload(
+      accessRepository,
+      datasetId,
+      guestbookResponse,
+      datasetDownloadFormat
+    )
+  }
+
+  throw new Error('No download target provided for signed URL request')
 }
 
 export const downloadFromSignedUrl = (signedUrl: string): Promise<void> => {

@@ -2,6 +2,7 @@ import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/fil
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { DatasetLicense } from '@/dataset/domain/models/Dataset'
+import { FileDownloadMode } from '@/files/domain/models/FileMetadata'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import {
   AccessRepository,
@@ -279,6 +280,68 @@ describe('DownloadWithGuestbookModal', () => {
     cy.get('@handleClose').should('have.been.calledOnce')
     cy.findByText('Your download has started.').should('exist')
     cy.findByText('This field is required.').should('not.exist')
+  })
+
+  it('passes original format through when submitting a file guestbook download', () => {
+    const handleClose = cy.stub().as('handleClose')
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.customMount(
+      withRepositories(
+        <DownloadWithGuestbookModal
+          show
+          handleClose={handleClose}
+          guestbookId={10}
+          fileId={10}
+          format={FileDownloadMode.ORIGINAL}
+        />
+      )
+    )
+
+    cy.findByLabelText(/^Name/).clear().type('Test User')
+    cy.findByLabelText(/^Email/)
+      .clear()
+      .type('test.user@example.com')
+    cy.findByRole('button', { name: 'Accept' }).click()
+
+    cy.get('@submitGuestbookForDatafileDownload')
+      .its('firstCall.args.2')
+      .should('eq', FileDownloadMode.ORIGINAL)
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.get('@handleClose').should('have.been.calledOnce')
+  })
+
+  it('passes tab-delimited format through when submitting a file guestbook download', () => {
+    const handleClose = cy.stub().as('handleClose')
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.customMount(
+      withRepositories(
+        <DownloadWithGuestbookModal
+          show
+          handleClose={handleClose}
+          guestbookId={10}
+          fileId={10}
+          format="tab"
+        />
+      )
+    )
+
+    cy.findByLabelText(/^Name/).clear().type('Test User')
+    cy.findByLabelText(/^Email/)
+      .clear()
+      .type('test.user@example.com')
+    cy.findByRole('button', { name: 'Accept' }).click()
+
+    cy.get('@submitGuestbookForDatafileDownload').its('firstCall.args.2').should('eq', 'tab')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.get('@handleClose').should('have.been.calledOnce')
   })
 
   it('disables name and email fields for authenticated users', () => {

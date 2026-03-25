@@ -18,10 +18,12 @@ import {
   GuestbookResponseDTO
 } from '@/access/domain/repositories/AccessRepository'
 import { downloadFromSignedUrl } from '@/shared/helpers/DownloadHelper'
+import { FileDownloadMode } from '@/files/domain/models/FileMetadata'
 
 interface DownloadWithGuestbookModalProps {
   fileId?: number | string
   fileIds?: Array<number>
+  format?: string | FileDownloadMode
   guestbookId?: number
   datasetId?: number | string
   datasetPersistentId?: string
@@ -35,6 +37,7 @@ type GuestbookFormValues = Record<string, string>
 export function DownloadWithGuestbookModal({
   fileId,
   fileIds,
+  format,
   guestbookId,
   datasetId,
   datasetPersistentId,
@@ -214,6 +217,7 @@ export function DownloadWithGuestbookModal({
     datasetId,
     fileId,
     fileIds,
+    format,
     handleClose,
     accessRepository,
     downloadFromSignedUrl

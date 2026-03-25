@@ -1,12 +1,18 @@
+import { MouseEvent, useState } from 'react'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { FileDownloadUrls, FileType } from '../../../../files/domain/models/FileMetadata'
+import { toast } from 'react-toastify'
+import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
-import { MouseEvent, useState } from 'react'
+import {
+  downloadFromSignedUrl,
+  EMPTY_GUESTBOOK_RESPONSE,
+  requestSignedDownloadUrlFromAccessApi
+} from '@/shared/helpers/DownloadHelper'
+import { FileDownloadMode, FileType } from '../../../../files/domain/models/FileMetadata'
+import type { FileDownloadUrls } from '../../../../files/domain/models/FileMetadata'
 import FileTypeToFriendlyTypeMap from '../../../../files/domain/models/FileTypeToFriendlyTypeMap'
 import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
-import { toast } from 'react-toastify'
-import { downloadFromSignedUrl, requestSignedDownloadUrl } from '@/shared/helpers/DownloadHelper'
 
 interface FileTabularDownloadOptionsProps {
   fileId: number
@@ -32,68 +38,74 @@ export function FileTabularDownloadOptions({
   isLockedFromFileDownload
 }: FileTabularDownloadOptionsProps) {
   const { t } = useTranslation('files')
+  const accessRepository = useAccessRepository()
   const downloadDisabled = ingestInProgress || isLockedFromFileDownload
   const hasGuestbook = guestbookId !== undefined
-
   const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
+  const [selectedDownloadFormat, setSelectedDownloadFormat] = useState<string>(
+    FileDownloadMode.ORIGINAL
+  )
 
-  const handleDownloadClick = (event: MouseEvent<HTMLElement>, url?: string) => {
+  const handleDownloadClick = (event: MouseEvent<HTMLElement>, format: string) => {
     if (downloadDisabled) {
       return
     }
 
+    event.preventDefault()
+
     if (hasGuestbook) {
-      event.preventDefault()
+      setSelectedDownloadFormat(format)
       setShowDownloadWithGuestbookModal(true)
       return
     }
 
-    if (!url) {
-      return
-    }
-
-    event.preventDefault()
-    void requestSignedDownloadUrl(url)
+    // For tabular files without a guestbook, it directly request the signed URL and download the file
+    void requestSignedDownloadUrlFromAccessApi({
+      accessRepository,
+      fileId,
+      guestbookResponse: EMPTY_GUESTBOOK_RESPONSE,
+      format
+    })
       .then(downloadFromSignedUrl)
+      .then(() => {
+        toast.success(t('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
+      })
       .catch(() => {
         toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
       })
-  }
-
-  const handleCloseGuestbookModal = () => {
-    setShowDownloadWithGuestbookModal(false)
   }
 
   return (
     <>
       {!type.originalFormatIsUnknown && (
         <DropdownButtonItem
-          onClick={(event) => handleDownloadClick(event, downloadUrls.original)}
+          onClick={(event) => handleDownloadClick(event, FileDownloadMode.ORIGINAL)}
           disabled={downloadDisabled}>{`${type.original || ''} (${t(
           'actions.accessFileMenu.downloadOptions.options.original'
         )})`}</DropdownButtonItem>
       )}
       <DropdownButtonItem
-        onClick={(event) => handleDownloadClick(event, downloadUrls.tabular)}
+        onClick={(event) => handleDownloadClick(event, 'tab')}
         disabled={downloadDisabled || !downloadUrls.tabular}>
         {t('actions.accessFileMenu.downloadOptions.options.tabular')}
       </DropdownButtonItem>
       {type.original !== FileTypeToFriendlyTypeMap['application/x-r-data'] && (
         <DropdownButtonItem
-          onClick={(event) => handleDownloadClick(event, downloadUrls.rData)}
+          onClick={(event) => handleDownloadClick(event, 'RData')}
           disabled={downloadDisabled || !downloadUrls.rData}>
           {t('actions.accessFileMenu.downloadOptions.options.RData')}
         </DropdownButtonItem>
       )}
-      {hasGuestbook && (
+      {hasGuestbook && showDownloadWithGuestbookModal && (
         <DownloadWithGuestbookModal
           fileId={fileId}
           guestbookId={guestbookId}
+          format={selectedDownloadFormat}
           datasetPersistentId={datasetPersistentId}
           datasetLicense={datasetLicense}
           datasetCustomTerms={datasetCustomTerms}
           show={showDownloadWithGuestbookModal}
-          handleClose={handleCloseGuestbookModal}
+          handleClose={() => setShowDownloadWithGuestbookModal(false)}
         />
       )}
     </>
