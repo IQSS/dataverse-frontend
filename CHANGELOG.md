@@ -13,6 +13,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Share button in File Page.
 - Link Collection and Link Dataset features.
 - Edit Terms Integration.
+- File upload now shows the remaining storage quota when upload limits are available.
 - With the addition of the new runtime configuration approach, we now support dynamic configuration for languages. If more than one language is configured, the Language Switcher will be shown in the header to allow users to change the language.
 - Added Notifications tab in Account Page
 - Added runtime configuration options for homepage branding and support link.
