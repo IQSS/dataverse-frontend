@@ -5,6 +5,7 @@ import { FileNonTabularDownloadOptions } from './FileNonTabularDownloadOptions'
 import { useTranslation } from 'react-i18next'
 import { FileDownloadUrls, FileType } from '../../../../files/domain/models/FileMetadata'
 import { useDataset } from '@/sections/dataset/DatasetContext'
+import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 
 interface FileDownloadOptionsProps {
   fileId: number
@@ -13,6 +14,10 @@ interface FileDownloadOptionsProps {
   ingestInProgress: boolean
   downloadUrls: FileDownloadUrls
   userHasDownloadPermission: boolean
+  guestbookId?: number
+  datasetPersistentId?: string
+  datasetLicense?: DatasetLicense
+  datasetCustomTerms?: CustomTerms
 }
 
 export function FileDownloadOptions({
@@ -21,7 +26,11 @@ export function FileDownloadOptions({
   isTabular,
   ingestInProgress,
   downloadUrls,
-  userHasDownloadPermission
+  userHasDownloadPermission,
+  guestbookId,
+  datasetPersistentId,
+  datasetLicense,
+  datasetCustomTerms
 }: FileDownloadOptionsProps) {
   const { t } = useTranslation('files')
   const { dataset } = useDataset()
@@ -29,11 +38,6 @@ export function FileDownloadOptions({
   if (!userHasDownloadPermission) {
     return <></>
   }
-
-  const datasetLicense = dataset?.license
-  const datasetCustomTerms = dataset?.termsOfUse.customTerms
-  const guestbookId = dataset?.guestbookId
-  const datasetPersistentId = dataset?.persistentId
   const isLockedFromFileDownload = !!dataset?.isLockedFromFileDownload
 
   return (
@@ -70,5 +74,4 @@ export function FileDownloadOptions({
   )
 }
 
-// TODO: Add guestbook support
 // TODO: Add file package support

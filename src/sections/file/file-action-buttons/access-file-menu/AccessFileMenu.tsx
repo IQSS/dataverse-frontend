@@ -5,6 +5,7 @@ import { RequestAccessOption } from './RequestAccessOption'
 import { DropdownButton, DropdownHeader, Tooltip } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { FileDownloadOptions } from './FileDownloadOptions'
+import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 import { FileAccess } from '../../../../files/domain/models/FileAccess'
 import { FileMetadata } from '../../../../files/domain/models/FileMetadata'
 import { FileExploreToolsOptions, FileQueryToolsOptions } from './FileToolOptions'
@@ -16,6 +17,10 @@ interface FileActionButtonAccessFileProps {
   metadata: FileMetadata
   ingestInProgress: boolean
   isDeaccessioned: boolean
+  guestbookId?: number
+  datasetPersistentId?: string
+  datasetLicense?: DatasetLicense
+  datasetCustomTerms?: CustomTerms
   asIcon?: boolean
 }
 
@@ -26,6 +31,10 @@ export function AccessFileMenu({
   metadata,
   ingestInProgress,
   isDeaccessioned,
+  guestbookId,
+  datasetPersistentId,
+  datasetLicense,
+  datasetCustomTerms,
   asIcon = false
 }: FileActionButtonAccessFileProps) {
   const { t } = useTranslation('files')
@@ -77,6 +86,10 @@ export function AccessFileMenu({
           ingestInProgress={ingestInProgress}
           isTabular={metadata.isTabular}
           userHasDownloadPermission={userHasDownloadPermission}
+          guestbookId={guestbookId}
+          datasetPersistentId={datasetPersistentId}
+          datasetLicense={datasetLicense}
+          datasetCustomTerms={datasetCustomTerms}
         />
         {userHasDownloadPermission && (
           <>

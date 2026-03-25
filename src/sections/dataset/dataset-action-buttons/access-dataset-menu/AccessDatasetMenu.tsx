@@ -12,11 +12,13 @@ import {
 } from '../../../../dataset/domain/models/Dataset'
 import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/FileMetadata'
 import { DatasetExploreOptions } from '../DatasetToolsOptions'
-import { submitGuestbookForDatasetDownload } from '@/access/domain/useCases/submitGuestbookForDatasetDownload'
 import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
-import { downloadFromSignedUrl, EMPTY_GUESTBOOK_RESPONSE } from '@/shared/helpers/DownloadHelper'
-
+import {
+  downloadFromSignedUrl,
+  EMPTY_GUESTBOOK_RESPONSE,
+  requestSignedDownloadUrlFromAccessApi
+} from '@/shared/helpers/DownloadHelper'
 // TODO: add compute feature
 
 interface AccessDatasetMenuProps {
@@ -145,12 +147,13 @@ const DatasetDownloadOptions = ({
     }
 
     event.preventDefault()
-    void submitGuestbookForDatasetDownload(
+    void requestSignedDownloadUrlFromAccessApi({
       accessRepository,
-      datasetNumericId,
-      EMPTY_GUESTBOOK_RESPONSE,
-      mode
-    )
+      datasetId: datasetNumericId,
+      fileIds: undefined,
+      guestbookResponse: EMPTY_GUESTBOOK_RESPONSE,
+      format: mode
+    })
       .then(downloadFromSignedUrl)
       .then(() => {
         toast.success(tFiles('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
