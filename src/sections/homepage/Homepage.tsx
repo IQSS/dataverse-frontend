@@ -59,11 +59,7 @@ export const Homepage = ({
       {collection && (
         <>
           <div className={styles['featured-items-wrapper']}>
-            <FeaturedItems
-              collectionRepository={collectionRepository}
-              collectionId={collection.id}
-              withLoadingSkeleton={true}
-            />
+            <FeaturedItems collectionId={collection.id} withLoadingSkeleton={true} />
           </div>
         </>
       )}

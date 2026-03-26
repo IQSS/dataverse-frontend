@@ -1,10 +1,25 @@
+import { ComponentProps } from 'react'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { LinkCollectionDropdown } from '@/sections/collection/link-collection-dropdown/LinkCollectionDropdown'
+import { LinkCollectionDropdown as BaseLinkCollectionDropdown } from '@/sections/collection/link-collection-dropdown/LinkCollectionDropdown'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 import { ReadError, WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
+
+function LinkCollectionDropdown({
+  collectionRepository,
+  ...props
+}: ComponentProps<typeof BaseLinkCollectionDropdown> & {
+  collectionRepository: CollectionRepository
+}) {
+  return (
+    <WithRepositories collectionRepository={collectionRepository}>
+      <BaseLinkCollectionDropdown {...props} />
+    </WithRepositories>
+  )
+}
 
 describe('LinkCollectionDropdown', () => {
   beforeEach(() => {

@@ -5,6 +5,7 @@ import { within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CollectionMockRepository } from '../CollectionMockRepository'
 import { WithToasts } from '@/stories/WithToasts'
+import { WithRepositories } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof LinkCollectionDropdown> = {
   title: 'Sections/Collection Page/LinkCollectionDropdown',
@@ -20,13 +21,8 @@ export default meta
 type Story = StoryObj<typeof LinkCollectionDropdown>
 
 export const Default: Story = {
-  render: () => (
-    <LinkCollectionDropdown
-      collectionId="1"
-      collectionName="Collection Mock"
-      collectionRepository={new CollectionMockRepository()}
-    />
-  ),
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
+  render: () => <LinkCollectionDropdown collectionId="1" collectionName="Collection Mock" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 

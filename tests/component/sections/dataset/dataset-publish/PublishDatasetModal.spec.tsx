@@ -33,7 +33,7 @@ const createCollectionRepository = (options: CreateRepositoryOptions = {}) => {
 type MountOptions = {
   mountAs?: 'authenticated' | 'superuser'
   repository?: DatasetRepository
-  collectionRepository?: CollectionRepository
+  collectionRepository: CollectionRepository | undefined
   parentCollection?: ReturnType<typeof UpwardHierarchyNodeMother.createCollection>
   handleClose?: sinon.SinonStub
   dataverseInfoRepository?: DataverseInfoRepository

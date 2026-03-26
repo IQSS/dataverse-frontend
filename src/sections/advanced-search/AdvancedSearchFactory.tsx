@@ -4,6 +4,7 @@ import { CollectionJSDataverseRepository } from '@/collection/infrastructure/rep
 import { MetadataBlockInfoJSDataverseRepository } from '@/metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import { AdvancedSearch } from './AdvancedSearch'
+import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
@@ -23,11 +24,12 @@ function AdvancedSearchWithSearchParams() {
     searchParams.get(CollectionItemsQueryParams.FILTER_QUERIES) ?? undefined
 
   return (
-    <AdvancedSearch
-      collectionId={collectionId}
-      collectionRepository={collectionRepository}
-      metadataBlockInfoRepository={metadataBlockInfoRepository}
-      collectionFilterQueries={collectionPageCurrentFilterQueries}
-    />
+    <RepositoriesProvider collectionRepository={collectionRepository}>
+      <AdvancedSearch
+        collectionId={collectionId}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionFilterQueries={collectionPageCurrentFilterQueries}
+      />
+    </RepositoriesProvider>
   )
 }

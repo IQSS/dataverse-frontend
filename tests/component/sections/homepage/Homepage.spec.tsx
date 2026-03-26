@@ -4,6 +4,7 @@ import { CollectionMother } from '@tests/component/collection/domain/models/Coll
 import { DataverseHubMockRepository } from '@/stories/dataverse-hub/DataverseHubMockRepository'
 import Homepage from '@/sections/homepage/Homepage'
 import { SearchMockRepository } from '@/stories/shared-mock-repositories/search/SearchMockRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const testCollectionRepository = {} as CollectionRepository
 const testCollection = CollectionMother.create({ name: 'Collection Name' })
@@ -23,22 +24,26 @@ describe('Homepage', () => {
 
   it('shows app loader while loading root collection', () => {
     cy.customMount(
-      <Homepage
-        collectionRepository={testCollectionRepository}
-        dataverseHubRepository={new DataverseHubMockRepository()}
-        searchRepository={new SearchMockRepository()}
-      />
+      <WithRepositories collectionRepository={testCollectionRepository}>
+        <Homepage
+          collectionRepository={testCollectionRepository}
+          dataverseHubRepository={new DataverseHubMockRepository()}
+          searchRepository={new SearchMockRepository()}
+        />
+      </WithRepositories>
     )
     cy.findByTestId('app-loader').should('exist')
   })
 
   it('shows featured items if the root collection has any', () => {
     cy.customMount(
-      <Homepage
-        collectionRepository={testCollectionRepository}
-        dataverseHubRepository={new DataverseHubMockRepository()}
-        searchRepository={new SearchMockRepository()}
-      />
+      <WithRepositories collectionRepository={testCollectionRepository}>
+        <Homepage
+          collectionRepository={testCollectionRepository}
+          dataverseHubRepository={new DataverseHubMockRepository()}
+          searchRepository={new SearchMockRepository()}
+        />
+      </WithRepositories>
     )
     cy.findByTestId('featured-items').should('exist')
   })
@@ -46,11 +51,13 @@ describe('Homepage', () => {
   it('does not show featured items if the root collection has none', () => {
     testCollectionRepository.getFeaturedItems = cy.stub().resolves([])
     cy.customMount(
-      <Homepage
-        collectionRepository={testCollectionRepository}
-        dataverseHubRepository={new DataverseHubMockRepository()}
-        searchRepository={new SearchMockRepository()}
-      />
+      <WithRepositories collectionRepository={testCollectionRepository}>
+        <Homepage
+          collectionRepository={testCollectionRepository}
+          dataverseHubRepository={new DataverseHubMockRepository()}
+          searchRepository={new SearchMockRepository()}
+        />
+      </WithRepositories>
     )
     cy.findByTestId('featured-items').should('not.exist')
   })

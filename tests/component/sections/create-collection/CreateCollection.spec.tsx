@@ -6,6 +6,7 @@ import { CollectionFacetMother } from '@tests/component/collection/domain/models
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { MetadataBlockInfoMother } from '@tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { UserMother } from '@tests/component/users/domain/models/UserMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -54,11 +55,12 @@ describe('CreateCollection', () => {
     })
 
     cy.customMount(
-      <CreateCollection
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        parentCollectionId="root"
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <CreateCollection
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          parentCollectionId="root"
+        />
+      </WithRepositories>
     )
     cy.clock()
 
@@ -73,11 +75,12 @@ describe('CreateCollection', () => {
 
   it('should render the correct breadcrumbs', () => {
     cy.customMount(
-      <CreateCollection
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        parentCollectionId="root"
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <CreateCollection
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          parentCollectionId="root"
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('link', { name: 'Root' }).should('exist')
@@ -92,11 +95,12 @@ describe('CreateCollection', () => {
     collectionRepository.getById = cy.stub().resolves(null)
 
     cy.customMount(
-      <CreateCollection
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        parentCollectionId="root"
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <CreateCollection
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          parentCollectionId="root"
+        />
+      </WithRepositories>
     )
 
     cy.findByTestId('not-found-page').should('exist')
@@ -113,11 +117,12 @@ describe('CreateCollection', () => {
     })
 
     cy.mountAuthenticated(
-      <CreateCollection
-        collectionRepository={collectionRepository}
-        parentCollectionId="root"
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <CreateCollection
+          parentCollectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.wait(DELAYED_TIME * 2)
@@ -134,11 +139,12 @@ describe('CreateCollection', () => {
     })
 
     cy.mountAuthenticated(
-      <CreateCollection
-        collectionRepository={collectionRepository}
-        parentCollectionId="root"
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <CreateCollection
+          parentCollectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.wait(DELAYED_TIME * 2)
@@ -152,11 +158,12 @@ describe('CreateCollection', () => {
     collectionRepository.getUserPermissions = cy.stub().rejects('Error')
 
     cy.mountAuthenticated(
-      <CreateCollection
-        collectionRepository={collectionRepository}
-        parentCollectionId="root"
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <CreateCollection
+          parentCollectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('Error').should('exist')

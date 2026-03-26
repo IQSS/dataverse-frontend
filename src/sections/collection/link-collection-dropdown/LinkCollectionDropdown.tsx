@@ -11,26 +11,25 @@ import {
   Stack
 } from '@iqss/dataverse-design-system'
 import { WriteError } from '@iqss/dataverse-client-javascript'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { linkCollection } from '@/collection/domain/useCases/linkCollection'
 import { CollectionLinkSelect } from './collection-link-select/CollectionLinkSelect'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { RouteWithParams } from '@/sections/Route.enum'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 
 interface LinkCollectionDropdownProps {
   collectionId: string
   collectionName: string
-  collectionRepository: CollectionRepository
 }
 
 export const LinkCollectionDropdown = ({
   collectionId,
-  collectionName,
-  collectionRepository
+  collectionName
 }: LinkCollectionDropdownProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('collection')
   const { t: tShared } = useTranslation('shared')
   const [showModal, setShowModal] = useState(false)
