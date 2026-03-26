@@ -9,8 +9,6 @@
     "guestbookNameLabel": "Guestbook Name",
     "guestbookDataLabel": "Collected Data",
     "guestbookDataTip": "User data collected by the guestbook.",
-    "collectedDataLabel": "Collected Data",
-    "collectedDataTip": "User data collected by the guestbook.",
     "accountInformation": "Account Information",
     "customQuestionsLabel": "Custom Questions",
     "required": "Required",

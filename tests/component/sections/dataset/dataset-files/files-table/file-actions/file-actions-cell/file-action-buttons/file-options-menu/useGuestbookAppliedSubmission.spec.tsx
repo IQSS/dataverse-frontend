@@ -198,7 +198,7 @@ describe('useGuestbookCollectSubmission', () => {
     expect(result.current.isSubmittingGuestbook).to.deep.equal(false)
   })
 
-  it('sets download error when downloadFromSignedUrl fails', async () => {
+  it('stores download error and keeps the modal open when downloadFromSignedUrl fails', async () => {
     const handleClose = cy.stub().as('handleClose')
     const downloadFromSignedUrl = cy.stub().rejects(new Error('Download failed'))
     const { result } = renderHook(() =>
@@ -222,29 +222,34 @@ describe('useGuestbookCollectSubmission', () => {
       expect(result.current.errorDownloadSignedUrlFile).to.deep.equal('Download failed')
     })
 
-    expect(handleClose).to.have.been.calledOnce
+    expect(handleClose).to.not.have.been.called
     expect(downloadFromSignedUrl).to.have.been.calledOnce
+    expect(result.current.errorSubmitGuestbook).to.deep.equal(null)
   })
 
   it('resets submission state on handleModalClose', async () => {
     const handleClose = cy.stub().as('handleClose')
+    const downloadFromSignedUrl = cy.stub().rejects(new Error('Download failed'))
     const { result } = renderHook(() =>
       useGuestbookCollectSubmission({
         fileId: 10,
         handleClose,
         accessRepository,
-        downloadFromSignedUrl: cy.stub().resolves(undefined)
+        downloadFromSignedUrl
       })
     )
 
     await act(async () => {
       await result.current.handleSubmit({
-        hasFormErrors: true,
+        hasFormErrors: false,
         guestbook,
         guestbookResponse
       })
     })
-    expect(result.current.hasAttemptedAccept).to.deep.equal(true)
+
+    await waitFor(() => {
+      expect(result.current.errorDownloadSignedUrlFile).to.deep.equal('Download failed')
+    })
 
     act(() => {
       result.current.handleModalClose()

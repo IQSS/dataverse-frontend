@@ -111,9 +111,9 @@ export const useGuestbookCollectSubmission = ({
       }
 
       if (signedUrl) {
-        handleModalClose()
         void downloadFromSignedUrl(signedUrl)
           .then(() => {
+            handleModalClose()
             toast.success(tFiles('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
           })
           .catch((error) => {

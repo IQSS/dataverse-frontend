@@ -9,8 +9,6 @@
     "guestbookNameLabel": "Nombre del libro de visitas",
     "guestbookDataLabel": "Datos recopilados",
     "guestbookDataTip": "Datos del usuario recopilados por el libro de visitas.",
-    "collectedDataLabel": "Datos recopilados",
-    "collectedDataTip": "Datos del usuario recopilados por el libro de visitas.",
     "accountInformation": "Información de la cuenta",
     "customQuestionsLabel": "Preguntas personalizadas",
     "required": "Obligatorio",
