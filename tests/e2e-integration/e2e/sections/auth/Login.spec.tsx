@@ -41,10 +41,7 @@ describe('Login', () => {
 
     cy.url().should((currentUrl) => {
       const baseUrl = Cypress.config().baseUrl as string
-      expect([
-        `${baseUrl}/spa`,
-        `${baseUrl}/spa/collections`
-      ]).to.include(currentUrl)
+      expect([`${baseUrl}/spa`, `${baseUrl}/spa/collections`]).to.include(currentUrl)
     })
 
     cy.get('body').then(($body) => {
