@@ -40,7 +40,6 @@ export const EditDatasetTerms = ({
 
   const [licenseFormIsDirty, setLicenseFormIsDirty] = useState(false)
   const [termsOfAccessFormIsDirty, setTermsOfAccessFormIsDirty] = useState(false)
-  const [guestBookFormIsDirty, setGuestBookFormIsDirty] = useState(false)
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -60,8 +59,6 @@ export const EditDatasetTerms = ({
         return licenseFormIsDirty
       case tabsKeys.restrictedFilesTerms:
         return termsOfAccessFormIsDirty
-      case tabsKeys.guestBook:
-        return guestBookFormIsDirty
       default:
         return false
     }

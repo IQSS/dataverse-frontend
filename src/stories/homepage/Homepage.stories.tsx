@@ -26,7 +26,6 @@ export const Default: Story = {
   decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <Homepage
-      collectionRepository={new CollectionMockRepository()}
       dataverseHubRepository={new DataverseHubMockRepository()}
       searchRepository={new SearchMockRepository()}
     />
@@ -67,7 +66,6 @@ export const WithFeaturedItems: Story = {
   decorators: [WithRepositories({ collectionRepository: collectionRepositoryWithFeaturedItems })],
   render: () => (
     <Homepage
-      collectionRepository={collectionRepositoryWithFeaturedItems}
       dataverseHubRepository={new DataverseHubMockRepository()}
       searchRepository={new SearchMockRepository()}
     />

@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DataverseHubRepository } from '@/dataverse-hub/domain/repositories/DataverseHubRepository'
 import { SearchRepository } from '@/search/domain/repositories/SearchRepository'
 import { useGetSearchServices } from '@/search/domain/hooks/useGetSearchServices'
@@ -13,18 +12,15 @@ import { SearchInput } from './search-input/SearchInput'
 import { Metrics } from './metrics/Metrics'
 import { Usage } from './usage/Usage'
 import styles from './Homepage.module.scss'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface HomepageProps {
-  collectionRepository: CollectionRepository
   dataverseHubRepository: DataverseHubRepository
   searchRepository: SearchRepository
 }
 
-export const Homepage = ({
-  collectionRepository,
-  dataverseHubRepository,
-  searchRepository
-}: HomepageProps) => {
+export const Homepage = ({ dataverseHubRepository, searchRepository }: HomepageProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { collection, isLoading: isLoadingCollection } = useCollection(collectionRepository)
   const { searchServices, isLoadingSearchServices } = useGetSearchServices({
     searchRepository,

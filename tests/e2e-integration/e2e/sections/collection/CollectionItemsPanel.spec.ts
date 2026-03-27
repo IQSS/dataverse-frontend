@@ -321,14 +321,24 @@ describe('Collection Items Panel', () => {
     })
     // 8 Sort by Name (Z-A)
     cy.visit(`/spa/collections`)
+    cy.intercept({
+      pathname: '/api/v1/search',
+      query: {
+        sort: 'name',
+        order: 'desc'
+      }
+    }).as('getSortedCollectionItems')
     cy.findByRole('button', { name: /Sort/ }).click({ force: true })
     cy.contains('Name (Z-A)').click({ force: true })
 
-    cy.findAllByTestId('dataset-card').first().contains('Volta')
-    const sortExpectedUrl = new URLSearchParams({
-      [CollectionItemsQueryParams.SORT]: 'name',
-      [CollectionItemsQueryParams.ORDER]: 'desc'
-    }).toString()
-    cy.url().should('include', `/collections?${sortExpectedUrl}`)
+    cy.wait('@getSortedCollectionItems').then(() => {
+      const sortExpectedUrl = new URLSearchParams({
+        [CollectionItemsQueryParams.SORT]: 'name',
+        [CollectionItemsQueryParams.ORDER]: 'desc'
+      }).toString()
+
+      cy.url().should('include', `/collections?${sortExpectedUrl}`)
+      cy.findAllByTestId('dataset-card').contains('Volta')
+    })
   })
 })

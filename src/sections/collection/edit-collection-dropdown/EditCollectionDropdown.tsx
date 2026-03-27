@@ -15,7 +15,6 @@ import { RouteWithParams } from '@/sections/Route.enum'
 import { CollectionHelper } from '../CollectionHelper'
 import { DeleteCollectionButton } from './delete-collection-button/DeleteCollectionButton'
 import { NotImplementedModal } from '@/sections/not-implemented/NotImplementedModal'
-import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './EditCollectionDropdown.module.scss'
 
 interface EditCollectionDropdownProps {
@@ -27,7 +26,6 @@ export const EditCollectionDropdown = ({
   collection,
   canUserDeleteCollection
 }: EditCollectionDropdownProps) => {
-  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('collection')
   const [showNotImplementedModal, setShowNotImplementedModal] = useState(false)
 
@@ -90,7 +88,6 @@ export const EditCollectionDropdown = ({
             <DeleteCollectionButton
               collectionId={collection.id}
               parentCollection={CollectionHelper.getParentCollection(collection.hierarchy)}
-              collectionRepository={collectionRepository}
             />
           </>
         )}

@@ -12,7 +12,6 @@ import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteE
 import { unlinkDataset } from '@/dataset/domain/useCases/unlinkDataset'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { useGetDatasetLinkedCollections } from '@/dataset/domain/hooks/useGetDatasetLinkedCollections'
-import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 
@@ -27,7 +26,6 @@ export function UnlinkDatasetButton({
   datasetRepository,
   updateParent
 }: UnlinkDatasetButtonProps) {
-  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const modalTitle = t('datasetActionButtons.unlinkDataset.title')

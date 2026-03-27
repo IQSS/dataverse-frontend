@@ -6,6 +6,7 @@ import { TemplateJSDataverseRepository } from '../../templates/infrastructure/re
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
 import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const templateRepository = new TemplateJSDataverseRepository()
@@ -26,12 +27,13 @@ function CreateDatasetWithSearchParams() {
   const { collectionId } = useParams<{ collectionId: string }>() as { collectionId: string }
 
   return (
-    <CreateDataset
-      datasetRepository={datasetRepository}
-      templateRepository={templateRepository}
-      metadataBlockInfoRepository={metadataBlockInfoRepository}
-      collectionRepository={collectionRepository}
-      collectionId={collectionId}
-    />
+    <RepositoriesProvider collectionRepository={collectionRepository}>
+      <CreateDataset
+        datasetRepository={datasetRepository}
+        templateRepository={templateRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionId={collectionId}
+      />
+    </RepositoriesProvider>
   )
 }

@@ -32,7 +32,6 @@ import { DatasetMetrics } from './dataset-metrics/DatasetMetrics'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { useAnonymized } from './anonymized/AnonymizedContext'
-import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -55,7 +54,6 @@ export function Dataset({
   publishInProgress,
   tab = 'files'
 }: DatasetProps) {
-  const { collectionRepository } = useCollectionRepositories()
   const { setIsLoading } = useLoading()
   const { dataset, isLoading: isDatasetLoading } = useDataset()
   const { t } = useTranslation('dataset')

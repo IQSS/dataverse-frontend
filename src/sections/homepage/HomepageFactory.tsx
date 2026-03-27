@@ -14,7 +14,6 @@ export class HomepageFactory {
     return (
       <RepositoriesProvider collectionRepository={collectionRepository}>
         <Homepage
-          collectionRepository={collectionRepository}
           dataverseHubRepository={dataverseHubRepository}
           searchRepository={searchRepository}
         />

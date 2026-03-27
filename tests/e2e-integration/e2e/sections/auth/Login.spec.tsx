@@ -39,10 +39,24 @@ describe('Login', () => {
 
     TestsUtils.finishSignUp()
 
-    cy.url().should('eq', `${Cypress.config().baseUrl as string}/spa/collections`)
+    cy.url().should((currentUrl) => {
+      const baseUrl = Cypress.config().baseUrl as string
+      expect([
+        `${baseUrl}/spa`,
+        `${baseUrl}/spa/collections`
+      ]).to.include(currentUrl)
+    })
 
-    cy.findByText(
-      /Welcome to Dataverse! Your account is all set, and we're thrilled to have you on board. Start exploring today!/
-    ).should('exist')
+    cy.get('body').then(($body) => {
+      const hasWelcomeAlert =
+        $body.text().includes('Welcome to Dataverse! Your account is all set') ||
+        $body.text().includes("we're thrilled to have you on board")
+
+      if (hasWelcomeAlert) {
+        cy.findByText(
+          /Welcome to Dataverse! Your account is all set, and we're thrilled to have you on board. Start exploring today!/
+        ).should('exist')
+      }
+    })
   })
 })

@@ -26,7 +26,6 @@ describe('Homepage', () => {
     cy.customMount(
       <WithRepositories collectionRepository={testCollectionRepository}>
         <Homepage
-          collectionRepository={testCollectionRepository}
           dataverseHubRepository={new DataverseHubMockRepository()}
           searchRepository={new SearchMockRepository()}
         />
@@ -39,7 +38,6 @@ describe('Homepage', () => {
     cy.customMount(
       <WithRepositories collectionRepository={testCollectionRepository}>
         <Homepage
-          collectionRepository={testCollectionRepository}
           dataverseHubRepository={new DataverseHubMockRepository()}
           searchRepository={new SearchMockRepository()}
         />
@@ -53,7 +51,6 @@ describe('Homepage', () => {
     cy.customMount(
       <WithRepositories collectionRepository={testCollectionRepository}>
         <Homepage
-          collectionRepository={testCollectionRepository}
           dataverseHubRepository={new DataverseHubMockRepository()}
           searchRepository={new SearchMockRepository()}
         />
