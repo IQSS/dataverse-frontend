@@ -19,7 +19,7 @@ export function CollectionCardThumbnail({ collectionPreview }: CollectionCardCar
         {collectionPreview.thumbnail ? (
           <img src={collectionPreview.thumbnail} alt={collectionPreview.name} />
         ) : (
-          <div className={styles.icon}>
+          <div className={styles.icon} aria-hidden="true">
             <Icon name={IconName.COLLECTION} />
           </div>
         )}
