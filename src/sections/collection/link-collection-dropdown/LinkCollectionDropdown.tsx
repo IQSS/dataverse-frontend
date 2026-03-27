@@ -116,7 +116,6 @@ export const LinkCollectionDropdown = ({
             mode="link"
             linkingObjectType="collection"
             collectionIdOrAlias={collectionId}
-            collectionRepository={collectionRepository}
             onCollectionSelected={handleCollectionSelected}
             helpText={t('linkCollection.helper')}
           />
