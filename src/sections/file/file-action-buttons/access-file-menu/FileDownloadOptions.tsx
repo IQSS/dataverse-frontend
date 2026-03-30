@@ -38,6 +38,11 @@ export function FileDownloadOptions({
   if (!userHasDownloadPermission) {
     return <></>
   }
+
+  const resolvedGuestbookId = guestbookId ?? dataset?.guestbookId
+  const resolvedDatasetPersistentId = datasetPersistentId ?? dataset?.persistentId
+  const resolvedDatasetLicense = datasetLicense ?? dataset?.license
+  const resolvedDatasetCustomTerms = datasetCustomTerms ?? dataset?.termsOfUse?.customTerms
   const isLockedFromFileDownload = !!dataset?.isLockedFromFileDownload
 
   return (
@@ -51,19 +56,19 @@ export function FileDownloadOptions({
           type={type}
           ingestInProgress={ingestInProgress}
           downloadUrls={downloadUrls}
-          guestbookId={guestbookId}
-          datasetPersistentId={datasetPersistentId}
-          datasetLicense={datasetLicense}
-          datasetCustomTerms={datasetCustomTerms}
+          guestbookId={resolvedGuestbookId}
+          datasetPersistentId={resolvedDatasetPersistentId}
+          datasetLicense={resolvedDatasetLicense}
+          datasetCustomTerms={resolvedDatasetCustomTerms}
           isLockedFromFileDownload={isLockedFromFileDownload}
         />
       ) : (
         <FileNonTabularDownloadOptions
           fileId={fileId}
-          guestbookId={guestbookId}
-          datasetPersistentId={datasetPersistentId}
-          datasetLicense={datasetLicense}
-          datasetCustomTerms={datasetCustomTerms}
+          guestbookId={resolvedGuestbookId}
+          datasetPersistentId={resolvedDatasetPersistentId}
+          datasetLicense={resolvedDatasetLicense}
+          datasetCustomTerms={resolvedDatasetCustomTerms}
           type={type}
           ingestIsInProgress={ingestInProgress}
           downloadUrlOriginal={downloadUrls.original}
