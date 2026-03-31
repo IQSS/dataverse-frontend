@@ -1,9 +1,7 @@
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { FileDownloadMode, FileType } from '../../../../files/domain/models/FileMetadata'
-import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
-import { MouseEvent, useState } from 'react'
-import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
+import { MouseEvent } from 'react'
 import { toast } from 'react-toastify'
 import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
 import {
@@ -14,10 +12,8 @@ import {
 
 interface FileNonTabularDownloadOptionsProps {
   fileId: number
-  guestbookId?: number
-  datasetPersistentId?: string
-  datasetLicense?: DatasetLicense
-  datasetCustomTerms?: CustomTerms
+  hasGuestbook: boolean
+  onOpenGuestbookModal: () => void
   type: FileType
   downloadUrlOriginal: string
   ingestIsInProgress: boolean
@@ -26,18 +22,14 @@ interface FileNonTabularDownloadOptionsProps {
 
 export function FileNonTabularDownloadOptions({
   fileId,
-  guestbookId,
-  datasetPersistentId,
-  datasetLicense,
-  datasetCustomTerms,
+  hasGuestbook,
+  onOpenGuestbookModal,
   type,
   ingestIsInProgress,
   isLockedFromFileDownload
 }: FileNonTabularDownloadOptionsProps) {
   const { t } = useTranslation('files')
   const accessRepository = useAccessRepository()
-  const hasGuestbook = guestbookId !== undefined
-  const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
   const downloadDisabled = ingestIsInProgress || isLockedFromFileDownload
 
   const handleDownloadClick = (event: MouseEvent<HTMLElement>) => {
@@ -47,7 +39,7 @@ export function FileNonTabularDownloadOptions({
 
     if (hasGuestbook) {
       event.preventDefault()
-      setShowDownloadWithGuestbookModal(true)
+      onOpenGuestbookModal()
       return
     }
 
@@ -68,27 +60,13 @@ export function FileNonTabularDownloadOptions({
   }
 
   return (
-    <>
-      <DropdownButtonItem
-        data-testid={`download-original-file`}
-        onClick={handleDownloadClick}
-        disabled={downloadDisabled}>
-        {type.displayFormatIsUnknown
-          ? t('actions.accessFileMenu.downloadOptions.options.original')
-          : type.toDisplayFormat()}
-      </DropdownButtonItem>
-      {hasGuestbook && showDownloadWithGuestbookModal && (
-        <DownloadWithGuestbookModal
-          fileId={fileId}
-          guestbookId={guestbookId}
-          format={FileDownloadMode.ORIGINAL}
-          datasetPersistentId={datasetPersistentId}
-          datasetLicense={datasetLicense}
-          datasetCustomTerms={datasetCustomTerms}
-          show={showDownloadWithGuestbookModal}
-          handleClose={() => setShowDownloadWithGuestbookModal(false)}
-        />
-      )}
-    </>
+    <DropdownButtonItem
+      data-testid={`download-original-file`}
+      onClick={handleDownloadClick}
+      disabled={downloadDisabled}>
+      {type.displayFormatIsUnknown
+        ? t('actions.accessFileMenu.downloadOptions.options.original')
+        : type.toDisplayFormat()}
+    </DropdownButtonItem>
   )
 }

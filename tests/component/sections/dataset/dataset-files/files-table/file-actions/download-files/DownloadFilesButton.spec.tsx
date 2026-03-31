@@ -1,9 +1,10 @@
-import { ReactNode } from 'react'
+import { ReactNode, Suspense } from 'react'
 import {
   getGuestbook,
   submitGuestbookForDatasetDownload,
   submitGuestbookForDatafilesDownload
 } from '@iqss/dataverse-client-javascript'
+import { useTranslation } from 'react-i18next'
 import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
 import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
 import { Dataset as DatasetModel } from '../../../../../../../../src/dataset/domain/models/Dataset'
@@ -23,6 +24,14 @@ import { FilePreviewMother } from '../../../../../../files/domain/models/FilePre
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const fileRepository = {} as FileRepository
 describe('DownloadFilesButton', () => {
+  const TranslationPreloader = ({ children }: { children: ReactNode }) => {
+    useTranslation('files')
+    useTranslation('dataset')
+    useTranslation('guestbooks')
+
+    return <>{children}</>
+  }
+
   const withDataset = (component: ReactNode, dataset: DatasetModel | undefined) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
@@ -31,7 +40,9 @@ describe('DownloadFilesButton', () => {
       <DatasetProvider
         repository={datasetRepository}
         searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-        {component}
+        <Suspense fallback="loading">
+          <TranslationPreloader>{component}</TranslationPreloader>
+        </Suspense>
       </DatasetProvider>
     )
   }
@@ -434,6 +445,46 @@ describe('DownloadFilesButton', () => {
     cy.findByRole('button', { name: 'Original Format' }).click()
     cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: 'Accept' }).should('exist')
+  })
+
+  it('does not fetch the guestbook until the modal is opened', () => {
+    const datasetWithGuestbook = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true,
+      guestbookId: 10
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
+    })
+    const fileSelection = {
+      'some-file-id': files[0]
+    }
+    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
+      id: 10,
+      name: 'Guestbook Test',
+      enabled: true,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: false,
+      positionRequired: false,
+      customQuestions: [],
+      createTime: '2026-01-01T00:00:00.000Z',
+      dataverseId: 1
+    })
+
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+        datasetWithGuestbook
+      )
+    )
+
+    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+
+    cy.get('#download-files').click()
+    cy.findByRole('button', { name: 'Original Format' }).click()
+
+    cy.wrap(getGuestbookExecute).should('have.been.calledOnceWith', 10)
   })
 
   it('submits guestbook for the dataset when all files are selected and guestbook exists', () => {

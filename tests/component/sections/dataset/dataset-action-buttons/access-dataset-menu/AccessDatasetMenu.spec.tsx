@@ -14,6 +14,7 @@ import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProv
 function TranslationPreloader({ children }: { children: ReactNode }) {
   useTranslation('dataset')
   useTranslation('files')
+  useTranslation('guestbooks')
 
   return <>{children}</>
 }
@@ -312,16 +313,20 @@ describe('AccessDatasetMenu', () => {
     })
 
     cy.customMount(
-      <AccessDatasetMenu
-        datasetNumericId={2}
-        fileDownloadSizes={fileDownloadSizes}
-        hasOneTabularFileAtLeast={false}
-        version={version}
-        permissions={permissions}
-        fileStore="s3"
-        persistentId="doi:10.5072/FK2/ABCDEFGH"
-        guestbookId={10}
-      />
+      <Suspense fallback="loading">
+        <TranslationPreloader>
+          <AccessDatasetMenu
+            datasetNumericId={2}
+            fileDownloadSizes={fileDownloadSizes}
+            hasOneTabularFileAtLeast={false}
+            version={version}
+            permissions={permissions}
+            fileStore="s3"
+            persistentId="doi:10.5072/FK2/ABCDEFGH"
+            guestbookId={10}
+          />
+        </TranslationPreloader>
+      </Suspense>
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
@@ -335,6 +340,50 @@ describe('AccessDatasetMenu', () => {
     cy.wrap(submitGuestbookForDatasetDownloadExecute).should('have.been.calledOnce')
     cy.wrap(submitGuestbookForDatasetDownloadExecute).its('firstCall.args.0').should('eq', 2)
     cy.findByText('Your download has started.').should('exist')
+  })
+
+  it('does not fetch the guestbook until the modal is opened', () => {
+    const version = DatasetVersionMother.createReleased()
+    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
+    ]
+    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
+      id: 10,
+      name: 'Guestbook Test',
+      enabled: true,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: false,
+      positionRequired: false,
+      customQuestions: [],
+      createTime: '2026-01-01T00:00:00.000Z',
+      dataverseId: 1
+    })
+
+    cy.customMount(
+      <Suspense fallback="loading">
+        <TranslationPreloader>
+          <AccessDatasetMenu
+            datasetNumericId={2}
+            fileDownloadSizes={fileDownloadSizes}
+            hasOneTabularFileAtLeast={false}
+            version={version}
+            permissions={permissions}
+            fileStore="s3"
+            persistentId="doi:10.5072/FK2/ABCDEFGH"
+            guestbookId={10}
+          />
+        </TranslationPreloader>
+      </Suspense>
+    )
+
+    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.findByRole('button', { name: /Download ZIP/ }).click()
+
+    cy.wrap(getGuestbookExecute).should('have.been.calledOnceWith', 10)
   })
 
   it('renders download option as a button and opens guestbook modal when guestbook exists', () => {
@@ -358,15 +407,19 @@ describe('AccessDatasetMenu', () => {
     })
 
     cy.customMount(
-      <AccessDatasetMenu
-        fileDownloadSizes={fileDownloadSizes}
-        hasOneTabularFileAtLeast={false}
-        version={version}
-        permissions={permissions}
-        fileStore="s3"
-        persistentId="doi:10.5072/FK2/ABCDEFGH"
-        guestbookId={10}
-      />
+      <Suspense fallback="loading">
+        <TranslationPreloader>
+          <AccessDatasetMenu
+            fileDownloadSizes={fileDownloadSizes}
+            hasOneTabularFileAtLeast={false}
+            version={version}
+            permissions={permissions}
+            fileStore="s3"
+            persistentId="doi:10.5072/FK2/ABCDEFGH"
+            guestbookId={10}
+          />
+        </TranslationPreloader>
+      </Suspense>
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
@@ -397,15 +450,19 @@ describe('AccessDatasetMenu', () => {
     })
 
     cy.customMount(
-      <AccessDatasetMenu
-        fileDownloadSizes={fileDownloadSizes}
-        hasOneTabularFileAtLeast={false}
-        version={version}
-        permissions={permissions}
-        fileStore="s3"
-        persistentId="doi:10.5072/FK2/ABCDEFGH"
-        guestbookId={10}
-      />
+      <Suspense fallback="loading">
+        <TranslationPreloader>
+          <AccessDatasetMenu
+            fileDownloadSizes={fileDownloadSizes}
+            hasOneTabularFileAtLeast={false}
+            version={version}
+            permissions={permissions}
+            fileStore="s3"
+            persistentId="doi:10.5072/FK2/ABCDEFGH"
+            guestbookId={10}
+          />
+        </TranslationPreloader>
+      </Suspense>
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
@@ -437,15 +494,19 @@ describe('AccessDatasetMenu', () => {
     })
 
     cy.customMount(
-      <AccessDatasetMenu
-        fileDownloadSizes={fileDownloadSizes}
-        hasOneTabularFileAtLeast={true}
-        version={version}
-        permissions={permissions}
-        fileStore="s3"
-        persistentId="doi:10.5072/FK2/ABCDEFGH"
-        guestbookId={10}
-      />
+      <Suspense fallback="loading">
+        <TranslationPreloader>
+          <AccessDatasetMenu
+            fileDownloadSizes={fileDownloadSizes}
+            hasOneTabularFileAtLeast={true}
+            version={version}
+            permissions={permissions}
+            fileStore="s3"
+            persistentId="doi:10.5072/FK2/ABCDEFGH"
+            guestbookId={10}
+          />
+        </TranslationPreloader>
+      </Suspense>
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()

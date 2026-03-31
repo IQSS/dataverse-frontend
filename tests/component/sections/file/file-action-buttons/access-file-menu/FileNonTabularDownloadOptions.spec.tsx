@@ -3,10 +3,6 @@ import {
   FileTypeMother
 } from '../../../../files/domain/models/FileMetadataMother'
 import { FileNonTabularDownloadOptions } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/FileNonTabularDownloadOptions'
-import { DatasetContext } from '@/sections/dataset/DatasetContext'
-import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
-import { ReactNode, Suspense } from 'react'
-import { useTranslation } from 'react-i18next'
 import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
 import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
 
@@ -19,29 +15,6 @@ const defaultProps = {
 }
 
 describe('FileNonTabularDownloadOptions', () => {
-  const TranslationPreloader = ({ children }: { children: ReactNode }) => {
-    useTranslation('files')
-    useTranslation('dataset')
-    useTranslation('guestbooks')
-
-    return <>{children}</>
-  }
-
-  const withDataset = (component: React.ReactNode) => (
-    <DatasetContext.Provider
-      value={{
-        dataset: DatasetMother.create({
-          id: 123,
-          persistentId: 'doi:10.5072/FK2/NONTABULARFILE',
-          guestbookId: 10
-        }),
-        isLoading: false,
-        refreshDataset: () => {}
-      }}>
-      {component}
-    </DatasetContext.Provider>
-  )
-
   const withAccessRepository = (
     component: React.ReactNode,
     repositoryOverrides: Partial<AccessRepository> = {}
@@ -62,6 +35,8 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.customMount(
       <FileNonTabularDownloadOptions
         fileId={defaultProps.fileId}
+        hasGuestbook={false}
+        onOpenGuestbookModal={cy.stub()}
         type={unknownType}
         downloadUrlOriginal={downloadUrls.original}
         ingestIsInProgress={false}
@@ -78,6 +53,8 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.customMount(
       <FileNonTabularDownloadOptions
         fileId={defaultProps.fileId}
+        hasGuestbook={false}
+        onOpenGuestbookModal={cy.stub()}
         type={textType}
         downloadUrlOriginal={downloadUrls.original}
         ingestIsInProgress={false}
@@ -94,6 +71,8 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.customMount(
       <FileNonTabularDownloadOptions
         fileId={defaultProps.fileId}
+        hasGuestbook={false}
+        onOpenGuestbookModal={cy.stub()}
         type={textType}
         downloadUrlOriginal={downloadUrls.original}
         ingestIsInProgress
@@ -108,6 +87,8 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.customMount(
       <FileNonTabularDownloadOptions
         fileId={defaultProps.fileId}
+        hasGuestbook={false}
+        onOpenGuestbookModal={cy.stub()}
         type={textType}
         downloadUrlOriginal={downloadUrls.original}
         ingestIsInProgress={false}
@@ -118,29 +99,24 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.findByRole('button', { name: 'Plain Text' }).should('have.class', 'disabled')
   })
 
-  it('opens the guestbook modal when original format is clicked', () => {
+  it('requests opening the guestbook modal when original format is clicked', () => {
+    const onOpenGuestbookModal = cy.stub().as('onOpenGuestbookModal')
+
     cy.customMount(
-      <Suspense fallback="loading">
-        <TranslationPreloader>
-          {withDataset(
-            <FileNonTabularDownloadOptions
-              fileId={defaultProps.fileId}
-              guestbookId={10}
-              datasetPersistentId="doi:10.5072/FK2/NONTABULARFILE"
-              type={textType}
-              downloadUrlOriginal={downloadUrls.original}
-              ingestIsInProgress={false}
-              isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
-            />
-          )}
-        </TranslationPreloader>
-      </Suspense>
+      <FileNonTabularDownloadOptions
+        fileId={defaultProps.fileId}
+        hasGuestbook
+        onOpenGuestbookModal={onOpenGuestbookModal}
+        type={textType}
+        downloadUrlOriginal={downloadUrls.original}
+        ingestIsInProgress={false}
+        isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
+      />
     )
 
     cy.findByRole('button', { name: 'Plain Text' }).click()
 
-    cy.findByRole('dialog').should('exist')
-    cy.findByRole('button', { name: 'Accept' }).should('exist')
+    cy.get('@onOpenGuestbookModal').should('have.been.calledOnce')
   })
 
   it('shows a success toast when direct download succeeds without guestbook', () => {
@@ -152,6 +128,8 @@ describe('FileNonTabularDownloadOptions', () => {
       withAccessRepository(
         <FileNonTabularDownloadOptions
           fileId={defaultProps.fileId}
+          hasGuestbook={false}
+          onOpenGuestbookModal={cy.stub()}
           type={textType}
           downloadUrlOriginal={downloadUrls.original}
           ingestIsInProgress={false}

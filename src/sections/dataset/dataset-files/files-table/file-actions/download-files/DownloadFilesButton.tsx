@@ -97,7 +97,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
         show={showNoFilesSelectedModal}
         handleClose={() => setShowNoFilesSelectedModal(false)}
       />
-      {hasGuestbook && (
+      {hasGuestbook && showDownloadWithGuestbookModal && (
         <DownloadWithGuestbookModal
           fileIds={fileIdsForGuestbookSubmission}
           datasetId={allFilesSelected ? dataset.id : undefined}

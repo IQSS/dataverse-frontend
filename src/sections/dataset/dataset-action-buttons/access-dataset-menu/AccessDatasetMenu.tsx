@@ -98,7 +98,7 @@ export function AccessDatasetMenu({
         />
         <DatasetExploreOptions persistentId={persistentId} />
       </DropdownButton>
-      {hasGuestbook && (
+      {hasGuestbook && showDownloadWithGuestbookModal && (
         <DownloadWithGuestbookModal
           show={showDownloadWithGuestbookModal}
           handleClose={() => setShowDownloadWithGuestbookModal(false)}

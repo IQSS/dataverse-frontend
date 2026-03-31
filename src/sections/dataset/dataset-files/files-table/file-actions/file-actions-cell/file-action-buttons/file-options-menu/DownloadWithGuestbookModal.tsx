@@ -55,7 +55,8 @@ export function DownloadWithGuestbookModal({
   const [formValues, setFormValues] = useState<GuestbookFormValues>({})
   const { guestbook, isLoadingGuestbook, errorGetGuestbook } = useGetGuestbookById({
     guestbookRepository,
-    guestbookId
+    guestbookId,
+    enabled: show
   })
   const accountFieldKeys = useMemo(() => ['name', 'email', 'institution', 'position'], [])
 

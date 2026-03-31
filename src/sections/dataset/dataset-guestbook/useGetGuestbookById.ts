@@ -9,19 +9,23 @@ import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErr
 interface useGetGuestbookByIdProps {
   guestbookRepository: GuestbookRepository
   guestbookId?: number
+  enabled?: boolean
 }
 
 export const useGetGuestbookById = ({
   guestbookRepository,
-  guestbookId
+  guestbookId,
+  enabled = true
 }: useGetGuestbookByIdProps) => {
   const { t } = useTranslation('guestbooks')
   const [guestbook, setGuestbook] = useState<Guestbook | undefined>(undefined)
-  const [isLoadingGuestbook, setIsLoadingGuestbook] = useState<boolean>(guestbookId !== undefined)
+  const [isLoadingGuestbook, setIsLoadingGuestbook] = useState<boolean>(
+    enabled && guestbookId !== undefined
+  )
   const [errorGetGuestbook, setErrorGetGuestbook] = useState<string | null>(null)
 
   const fetchGuestbook = useCallback(async () => {
-    if (guestbookId === undefined) {
+    if (!enabled || guestbookId === undefined) {
       setGuestbook(undefined)
       setIsLoadingGuestbook(false)
       setErrorGetGuestbook(null)
@@ -47,7 +51,7 @@ export const useGetGuestbookById = ({
     } finally {
       setIsLoadingGuestbook(false)
     }
-  }, [guestbookId, guestbookRepository, t])
+  }, [enabled, guestbookId, guestbookRepository, t])
 
   useEffect(() => {
     void fetchGuestbook()

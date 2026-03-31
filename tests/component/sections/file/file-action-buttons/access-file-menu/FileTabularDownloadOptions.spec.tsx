@@ -3,10 +3,6 @@ import {
   FileTypeMother
 } from '../../../../files/domain/models/FileMetadataMother'
 import { FileTabularDownloadOptions } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/FileTabularDownloadOptions'
-import { DatasetContext } from '@/sections/dataset/DatasetContext'
-import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
-import { ReactNode, Suspense } from 'react'
-import { useTranslation } from 'react-i18next'
 
 const tabularType = FileTypeMother.createTabular()
 const downloadUrls = FileDownloadUrlsMother.create()
@@ -16,35 +12,14 @@ const defaultProps = {
 }
 
 describe('FileTabularDownloadOptions', () => {
-  const TranslationPreloader = ({ children }: { children: ReactNode }) => {
-    useTranslation('files')
-    useTranslation('dataset')
-    useTranslation('guestbooks')
-
-    return <>{children}</>
-  }
-
-  const withDataset = (component: React.ReactNode) => (
-    <DatasetContext.Provider
-      value={{
-        dataset: DatasetMother.create({
-          id: 123,
-          persistentId: 'doi:10.5072/FK2/TABULARFILE',
-          guestbookId: 10
-        }),
-        isLoading: false,
-        refreshDataset: () => {}
-      }}>
-      {component}
-    </DatasetContext.Provider>
-  )
-
   it('renders the download options for a tabular file', () => {
     cy.customMount(
       <FileTabularDownloadOptions
         fileId={defaultProps.fileId}
         type={tabularType}
         downloadUrls={downloadUrls}
+        hasGuestbook={false}
+        onOpenGuestbookModal={cy.stub()}
         ingestInProgress={false}
         isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
       />
@@ -65,6 +40,8 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={unknownType}
         downloadUrls={downloadUrls}
+        hasGuestbook={false}
+        onOpenGuestbookModal={cy.stub()}
         ingestInProgress={false}
         isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
       />
@@ -83,6 +60,8 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={tabularType}
         downloadUrls={downloadUrls}
+        hasGuestbook={false}
+        onOpenGuestbookModal={cy.stub()}
         ingestInProgress
         isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
       />
@@ -103,6 +82,8 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={tabularType}
         downloadUrls={downloadUrls}
+        hasGuestbook={false}
+        onOpenGuestbookModal={cy.stub()}
         ingestInProgress={false}
         isLockedFromFileDownload
       />
@@ -124,6 +105,8 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={rDataType}
         downloadUrls={downloadUrls}
+        hasGuestbook={false}
+        onOpenGuestbookModal={cy.stub()}
         ingestInProgress={false}
         isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
       />
@@ -138,53 +121,43 @@ describe('FileTabularDownloadOptions', () => {
     cy.findByRole('button', { name: 'R Data' }).should('not.exist')
   })
 
-  it('opens the guestbook modal when original format is clicked', () => {
+  it('requests opening the guestbook modal when original format is clicked', () => {
+    const onOpenGuestbookModal = cy.stub().as('onOpenGuestbookModal')
+
     cy.customMount(
-      <Suspense fallback="loading">
-        <TranslationPreloader>
-          {withDataset(
-            <FileTabularDownloadOptions
-              fileId={defaultProps.fileId}
-              type={tabularType}
-              downloadUrls={downloadUrls}
-              ingestInProgress={false}
-              guestbookId={10}
-              datasetPersistentId="doi:10.5072/FK2/TABULARFILE"
-              isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
-            />
-          )}
-        </TranslationPreloader>
-      </Suspense>
+      <FileTabularDownloadOptions
+        fileId={defaultProps.fileId}
+        type={tabularType}
+        downloadUrls={downloadUrls}
+        hasGuestbook
+        onOpenGuestbookModal={onOpenGuestbookModal}
+        ingestInProgress={false}
+        isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
+      />
     )
 
     cy.findByRole('button', { name: 'Comma Separated Values (Original File Format)' }).click()
 
-    cy.findByRole('dialog').should('exist')
-    cy.findByRole('button', { name: 'Accept' }).should('exist')
+    cy.get('@onOpenGuestbookModal').should('have.been.calledOnceWith', 'original')
   })
 
-  it('opens the guestbook modal when tab-delimited format is clicked', () => {
+  it('requests opening the guestbook modal when tab-delimited format is clicked', () => {
+    const onOpenGuestbookModal = cy.stub().as('onOpenGuestbookModal')
+
     cy.customMount(
-      <Suspense fallback="loading">
-        <TranslationPreloader>
-          {withDataset(
-            <FileTabularDownloadOptions
-              fileId={defaultProps.fileId}
-              type={tabularType}
-              downloadUrls={downloadUrls}
-              ingestInProgress={false}
-              guestbookId={10}
-              datasetPersistentId="doi:10.5072/FK2/TABULARFILE"
-              isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
-            />
-          )}
-        </TranslationPreloader>
-      </Suspense>
+      <FileTabularDownloadOptions
+        fileId={defaultProps.fileId}
+        type={tabularType}
+        downloadUrls={downloadUrls}
+        hasGuestbook
+        onOpenGuestbookModal={onOpenGuestbookModal}
+        ingestInProgress={false}
+        isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
+      />
     )
 
     cy.findByRole('button', { name: 'Tab-Delimited' }).click()
 
-    cy.findByRole('dialog').should('exist')
-    cy.findByRole('button', { name: 'Accept' }).should('exist')
+    cy.get('@onOpenGuestbookModal').should('have.been.calledOnceWith', 'tab')
   })
 })
