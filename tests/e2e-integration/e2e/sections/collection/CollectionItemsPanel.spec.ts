@@ -43,6 +43,8 @@ function extractInfoFromInterceptedResponse(interception: Interception) {
 }
 
 describe('Collection Items Panel', () => {
+  let collectionId: string
+
   beforeEach(() => {
     TestsUtils.login().then((token) => {
       cy.wrap(TestsUtils.setup(token)).then(async () => {
@@ -52,6 +54,7 @@ describe('Collection Items Panel', () => {
 
         const collectionName = 'ItemsTestCollection'
         const collection = await CollectionHelper.create(`${collectionName}-${Date.now()}`)
+        collectionId = collection.id
         // Creates 8 datasets with 1 file each
         for (const _number of numbersOfDatasetsToCreate) {
           await DatasetHelper.createWithFileAndTitle(
@@ -71,7 +74,7 @@ describe('Collection Items Panel', () => {
   })
 
   it('performs different search, filtering and respond to back and forward navigation', () => {
-    cy.visit(`/spa/collections`)
+    cy.visit(`/spa/collections/${collectionId}`)
 
     cy.wait('@getCollectionItems').then((interception) => {
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
@@ -121,7 +124,7 @@ describe('Collection Items Panel', () => {
         ].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections?${firstExpectedURL}`)
+      cy.url().should('include', `/collections/${collectionId}?${firstExpectedURL}`)
     })
 
     // 2 - Now perform a search in the input
@@ -154,7 +157,7 @@ describe('Collection Items Panel', () => {
         [CollectionItemsQueryParams.QUERY]: 'Darwin'
       }).toString()
 
-      cy.url().should('include', `/collections?${secondExpectedURL}`)
+      cy.url().should('include', `/collections/${collectionId}?${secondExpectedURL}`)
     })
 
     // 3 - Clear the search and assert that the search is performed correctly and the url is updated correctly
@@ -187,7 +190,7 @@ describe('Collection Items Panel', () => {
         ].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections?${thirdExpectedURL}`)
+      cy.url().should('include', `/collections/${collectionId}?${thirdExpectedURL}`)
     })
 
     // 4 - Uncheck the Collections checkbox
@@ -219,7 +222,7 @@ describe('Collection Items Panel', () => {
         ].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections?${fourthExpectedURL}`)
+      cy.url().should('include', `/collections/${collectionId}?${fourthExpectedURL}`)
     })
 
     // 5 - Uncheck the Dataset checkbox
@@ -247,7 +250,7 @@ describe('Collection Items Panel', () => {
         [CollectionItemsQueryParams.TYPES]: [CollectionItemType.FILE].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections?${fifthExpectedURL}`)
+      cy.url().should('include', `/collections/${collectionId}?${fifthExpectedURL}`)
     })
 
     // 6 - Navigate back with the browser and assert that the url is updated correctly and the items are displayed correctly as in step 4
@@ -278,7 +281,7 @@ describe('Collection Items Panel', () => {
         ].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections?${fourthExpectedURL}`)
+      cy.url().should('include', `/collections/${collectionId}?${fourthExpectedURL}`)
     })
 
     // 7 - Selects a facet filter
@@ -312,7 +315,7 @@ describe('Collection Items Panel', () => {
         ].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections?${expectedURL}`)
+      cy.url().should('include', `/collections/${collectionId}?${expectedURL}`)
 
       // Assert that the selected facet filter is displayed
       cy.findAllByRole('button', { name: /Finch, Fiona/ })
@@ -320,7 +323,7 @@ describe('Collection Items Panel', () => {
         .should('have.length', 2)
     })
     // 8 Sort by Name (Z-A)
-    cy.visit(`/spa/collections`)
+    cy.visit(`/spa/collections/${collectionId}`)
     cy.findByRole('button', { name: /Sort/ }).click({ force: true })
     cy.contains('Name (Z-A)').click({ force: true })
     cy.wait('@getCollectionItems')
@@ -329,7 +332,7 @@ describe('Collection Items Panel', () => {
       [CollectionItemsQueryParams.SORT]: 'name',
       [CollectionItemsQueryParams.ORDER]: 'desc'
     }).toString()
-    cy.url().should('include', `/collections?${sortExpectedUrl}`)
+    cy.url().should('include', `/collections/${collectionId}?${sortExpectedUrl}`)
     cy.findAllByTestId('dataset-card').first().should('contain.text', 'Volta')
   })
 })
