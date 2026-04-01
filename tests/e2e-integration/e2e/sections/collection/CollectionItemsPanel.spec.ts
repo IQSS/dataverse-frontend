@@ -74,7 +74,7 @@ describe('Collection Items Panel', () => {
   })
 
   it('performs different search, filtering and respond to back and forward navigation', () => {
-    cy.visit(`/spa/collections/${collectionId}`)
+    cy.visit(`/spa/collections`)
 
     cy.wait('@getCollectionItems').then((interception) => {
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
@@ -124,7 +124,7 @@ describe('Collection Items Panel', () => {
         ].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections/${collectionId}?${firstExpectedURL}`)
+      cy.url().should('include', `/collections?${firstExpectedURL}`)
     })
 
     // 2 - Now perform a search in the input
@@ -157,7 +157,7 @@ describe('Collection Items Panel', () => {
         [CollectionItemsQueryParams.QUERY]: 'Darwin'
       }).toString()
 
-      cy.url().should('include', `/collections/${collectionId}?${secondExpectedURL}`)
+      cy.url().should('include', `/collections?${secondExpectedURL}`)
     })
 
     // 3 - Clear the search and assert that the search is performed correctly and the url is updated correctly
@@ -190,7 +190,7 @@ describe('Collection Items Panel', () => {
         ].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections/${collectionId}?${thirdExpectedURL}`)
+      cy.url().should('include', `/collections?${thirdExpectedURL}`)
     })
 
     // 4 - Uncheck the Collections checkbox
@@ -222,7 +222,7 @@ describe('Collection Items Panel', () => {
         ].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections/${collectionId}?${fourthExpectedURL}`)
+      cy.url().should('include', `/collections?${fourthExpectedURL}`)
     })
 
     // 5 - Uncheck the Dataset checkbox
@@ -250,7 +250,7 @@ describe('Collection Items Panel', () => {
         [CollectionItemsQueryParams.TYPES]: [CollectionItemType.FILE].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections/${collectionId}?${fifthExpectedURL}`)
+      cy.url().should('include', `/collections?${fifthExpectedURL}`)
     })
 
     // 6 - Navigate back with the browser and assert that the url is updated correctly and the items are displayed correctly as in step 4
@@ -281,7 +281,7 @@ describe('Collection Items Panel', () => {
         ].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections/${collectionId}?${fourthExpectedURL}`)
+      cy.url().should('include', `/collections?${fourthExpectedURL}`)
     })
 
     // 7 - Selects a facet filter
@@ -315,7 +315,7 @@ describe('Collection Items Panel', () => {
         ].join(',')
       }).toString()
 
-      cy.url().should('include', `/collections/${collectionId}?${expectedURL}`)
+      cy.url().should('include', `/collections?${expectedURL}`)
 
       // Assert that the selected facet filter is displayed
       cy.findAllByRole('button', { name: /Finch, Fiona/ })

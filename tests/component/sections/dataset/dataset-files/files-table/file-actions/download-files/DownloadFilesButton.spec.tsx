@@ -397,7 +397,7 @@ describe('DownloadFilesButton', () => {
 
   it('opens guestbook modal when guestbook exists and files are selected for non-tabular download', () => {
     const datasetWithGuestbook = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions(),
       hasOneTabularFileAtLeast: false,
       guestbookId: 10
     })
@@ -423,7 +423,7 @@ describe('DownloadFilesButton', () => {
 
   it('opens guestbook modal when guestbook exists and tabular option is clicked', () => {
     const datasetWithGuestbook = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions(),
       hasOneTabularFileAtLeast: true,
       guestbookId: 10
     })
@@ -449,7 +449,7 @@ describe('DownloadFilesButton', () => {
 
   it('does not fetch the guestbook until the modal is opened', () => {
     const datasetWithGuestbook = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions(),
       hasOneTabularFileAtLeast: true,
       guestbookId: 10
     })

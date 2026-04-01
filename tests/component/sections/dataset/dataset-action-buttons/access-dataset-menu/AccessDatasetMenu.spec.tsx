@@ -289,10 +289,8 @@ describe('AccessDatasetMenu', () => {
 
   it('opens DownloadWithGuestbookModal when guestbook exists and download option is clicked', () => {
     const version = DatasetVersionMother.createReleased()
-    const permissions = DatasetPermissionsMother.create({
-      canDownloadFiles: true,
-      canUpdateDataset: false
-    })
+    const permissions =
+      DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions()
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
@@ -347,10 +345,8 @@ describe('AccessDatasetMenu', () => {
 
   it('does not fetch the guestbook until the modal is opened', () => {
     const version = DatasetVersionMother.createReleased()
-    const permissions = DatasetPermissionsMother.create({
-      canDownloadFiles: true,
-      canUpdateDataset: false
-    })
+    const permissions =
+      DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions()
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
@@ -394,10 +390,8 @@ describe('AccessDatasetMenu', () => {
 
   it('renders download option as a button and opens guestbook modal when guestbook exists', () => {
     const version = DatasetVersionMother.createReleased()
-    const permissions = DatasetPermissionsMother.create({
-      canDownloadFiles: true,
-      canUpdateDataset: false
-    })
+    const permissions =
+      DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions()
 
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
@@ -441,7 +435,8 @@ describe('AccessDatasetMenu', () => {
 
   it('closes DownloadWithGuestbookModal when cancel is clicked', () => {
     const version = DatasetVersionMother.createReleased()
-    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const permissions =
+      DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions()
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
@@ -484,7 +479,8 @@ describe('AccessDatasetMenu', () => {
 
   it('opens guestbook modal from archival option when guestbook exists', () => {
     const version = DatasetVersionMother.createReleased()
-    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const permissions =
+      DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions()
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES }),
       DatasetFileDownloadSizeMother.createArchival({ value: 4000, unit: FileSizeUnit.BYTES })
