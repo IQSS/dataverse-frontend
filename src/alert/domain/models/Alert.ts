@@ -1,4 +1,4 @@
-import { AlertVariant } from '@iqss/dataverse-design-system/dist/components/alert/AlertVariant'
+import { type AlertVariant } from '@iqss/dataverse-design-system'
 
 export enum AlertMessageKey {
   DRAFT_VERSION = 'draftVersion',

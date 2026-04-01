@@ -546,6 +546,102 @@ describe('DownloadFilesButton', () => {
     cy.get('@anchorClick').should('have.been.calledOnce')
   })
 
+  it('bypasses the guestbook modal for draft datasets', () => {
+    const datasetWithGuestbook = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: false,
+      guestbookId: 10,
+      version: DatasetVersionMother.createDraft()
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createNonTabular()
+    })
+    const fileSelection = {
+      'some-file-id': files[0]
+    }
+    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
+      id: 10,
+      name: 'Guestbook Test',
+      enabled: true,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: false,
+      positionRequired: false,
+      customQuestions: [],
+      createTime: '2026-01-01T00:00:00.000Z',
+      dataverseId: 1
+    })
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.mountAuthenticated(
+      withAccessRepository(
+        withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithGuestbook
+        )
+      )
+    )
+
+    cy.get('#download-files').click()
+
+    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText('Your download has started.').should('exist')
+  })
+
+  it('bypasses the guestbook modal for users who can edit the dataset', () => {
+    const datasetWithGuestbook = DatasetMother.create({
+      permissions: DatasetPermissionsMother.create({
+        canDownloadFiles: true,
+        canUpdateDataset: true
+      }),
+      hasOneTabularFileAtLeast: false,
+      guestbookId: 10
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createNonTabular()
+    })
+    const fileSelection = {
+      'some-file-id': files[0]
+    }
+    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
+      id: 10,
+      name: 'Guestbook Test',
+      enabled: true,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: false,
+      positionRequired: false,
+      customQuestions: [],
+      createTime: '2026-01-01T00:00:00.000Z',
+      dataverseId: 1
+    })
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.mountAuthenticated(
+      withAccessRepository(
+        withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithGuestbook
+        )
+      )
+    )
+
+    cy.get('#download-files').click()
+
+    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText('Your download has started.').should('exist')
+  })
+
   it('does not render the AccessDatasetMenu if the file store does not start with "s3"', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),

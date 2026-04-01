@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { MouseEvent, useState } from 'react'
 import { toast } from 'react-toastify'
+import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { FileDownloadMode } from '../../../../../../files/domain/models/FileMetadata'
 import { useDataset } from '../../../../DatasetContext'
 import { FileSelection } from '../../row-selection/useFileSelection'
@@ -42,7 +43,10 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const fileIdsForGuestbookSubmission = allFilesSelected
     ? undefined
     : getFileIdsFromSelection(fileSelection)
-  const hasGuestbook = dataset?.guestbookId !== undefined
+  const hasGuestbook =
+    dataset?.guestbookId !== undefined &&
+    dataset?.version.publishingStatus !== DatasetPublishingStatus.DRAFT &&
+    !dataset?.permissions.canUpdateDataset
 
   const onClick = (event: MouseEvent<HTMLElement>, downloadMode: FileDownloadMode) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {

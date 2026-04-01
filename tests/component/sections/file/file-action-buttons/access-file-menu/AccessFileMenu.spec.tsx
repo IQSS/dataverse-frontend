@@ -156,6 +156,7 @@ describe('AccessFileMenu', () => {
         ingestInProgress={false}
         isDeaccessioned={false}
         asIcon
+        isDraft={false}
       />
     )
 
@@ -187,6 +188,7 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission
         ingestInProgress={false}
         isDeaccessioned={false}
+        isDraft={false}
       />
     )
 
@@ -237,5 +239,90 @@ describe('AccessFileMenu', () => {
     cy.get('@submitGuestbookForDatafileDownload').should('not.have.been.called')
     cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: 'Accept' }).should('exist')
+  })
+
+  it('bypasses the guestbook modal for files in draft datasets', () => {
+    const accessRepository: AccessRepository = {
+      submitGuestbookForDatasetDownload: cy.stub().resolves('signed-url-dataset'),
+      submitGuestbookForDatafileDownload: cy
+        .stub()
+        .as('submitGuestbookForDatafileDownload')
+        .resolves('signed-url-file'),
+      submitGuestbookForDatafilesDownload: cy.stub().resolves('signed-url-datafiles')
+    }
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.customMount(
+      <Suspense fallback="loading">
+        <TranslationPreloader />
+        <AccessRepositoryProvider repository={accessRepository}>
+          <AccessFileMenu
+            id={1}
+            access={FileAccessMother.createPublic()}
+            metadata={FileMetadataMother.createDefault()}
+            userHasDownloadPermission
+            ingestInProgress={false}
+            isDeaccessioned={false}
+            isDraft
+            guestbookId={10}
+            datasetPersistentId="doi:10.5072/FK2/FILEPAGE"
+          />
+        </AccessRepositoryProvider>
+      </Suspense>
+    )
+
+    cy.findByRole('button', { name: 'Access File' }).click()
+    cy.findByRole('button', { name: 'Plain Text' }).click()
+
+    cy.get('@submitGuestbookForDatafileDownload').should('have.been.calledOnce')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText('Your download has started.').should('exist')
+  })
+
+  it('bypasses the guestbook modal for users who can edit the dataset', () => {
+    const accessRepository: AccessRepository = {
+      submitGuestbookForDatasetDownload: cy.stub().resolves('signed-url-dataset'),
+      submitGuestbookForDatafileDownload: cy
+        .stub()
+        .as('submitGuestbookForDatafileDownload')
+        .resolves('signed-url-file'),
+      submitGuestbookForDatafilesDownload: cy.stub().resolves('signed-url-datafiles')
+    }
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.customMount(
+      <Suspense fallback="loading">
+        <TranslationPreloader />
+        <AccessRepositoryProvider repository={accessRepository}>
+          <AccessFileMenu
+            id={1}
+            access={FileAccessMother.createPublic()}
+            metadata={FileMetadataMother.createDefault()}
+            userHasDownloadPermission
+            ingestInProgress={false}
+            isDeaccessioned={false}
+            isDraft={false}
+            canEdit
+            guestbookId={10}
+            datasetPersistentId="doi:10.5072/FK2/FILEPAGE"
+          />
+        </AccessRepositoryProvider>
+      </Suspense>
+    )
+
+    cy.findByRole('button', { name: 'Access File' }).click()
+    cy.findByRole('button', { name: 'Plain Text' }).click()
+
+    cy.get('@submitGuestbookForDatafileDownload').should('have.been.calledOnce')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText('Your download has started.').should('exist')
   })
 })

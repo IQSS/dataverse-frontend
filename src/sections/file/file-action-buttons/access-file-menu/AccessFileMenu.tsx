@@ -17,6 +17,8 @@ interface FileActionButtonAccessFileProps {
   metadata: FileMetadata
   ingestInProgress: boolean
   isDeaccessioned: boolean
+  isDraft?: boolean
+  canEdit?: boolean
   guestbookId?: number
   datasetPersistentId?: string
   datasetLicense?: DatasetLicense
@@ -31,6 +33,8 @@ export function AccessFileMenu({
   metadata,
   ingestInProgress,
   isDeaccessioned,
+  isDraft,
+  canEdit,
   guestbookId,
   datasetPersistentId,
   datasetLicense,
@@ -86,6 +90,8 @@ export function AccessFileMenu({
           ingestInProgress={ingestInProgress}
           isTabular={metadata.isTabular}
           userHasDownloadPermission={userHasDownloadPermission}
+          isDraft={isDraft}
+          canEdit={canEdit}
           guestbookId={guestbookId}
           datasetPersistentId={datasetPersistentId}
           datasetLicense={datasetLicense}

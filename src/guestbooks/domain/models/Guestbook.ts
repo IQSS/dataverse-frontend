@@ -6,6 +6,7 @@ export interface GuestbookOption {
 }
 
 export interface GuestbookCustomQuestion {
+  id?: number | string
   question: string
   required: boolean
   displayOrder: number

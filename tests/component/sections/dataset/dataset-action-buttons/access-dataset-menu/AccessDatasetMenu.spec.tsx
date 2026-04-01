@@ -289,7 +289,10 @@ describe('AccessDatasetMenu', () => {
 
   it('opens DownloadWithGuestbookModal when guestbook exists and download option is clicked', () => {
     const version = DatasetVersionMother.createReleased()
-    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const permissions = DatasetPermissionsMother.create({
+      canDownloadFiles: true,
+      canUpdateDataset: false
+    })
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
@@ -344,7 +347,10 @@ describe('AccessDatasetMenu', () => {
 
   it('does not fetch the guestbook until the modal is opened', () => {
     const version = DatasetVersionMother.createReleased()
-    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const permissions = DatasetPermissionsMother.create({
+      canDownloadFiles: true,
+      canUpdateDataset: false
+    })
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
@@ -388,7 +394,11 @@ describe('AccessDatasetMenu', () => {
 
   it('renders download option as a button and opens guestbook modal when guestbook exists', () => {
     const version = DatasetVersionMother.createReleased()
-    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const permissions = DatasetPermissionsMother.create({
+      canDownloadFiles: true,
+      canUpdateDataset: false
+    })
+
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
@@ -567,6 +577,111 @@ describe('AccessDatasetMenu', () => {
     cy.findByRole('button', { name: /Download ZIP/ }).click()
 
     cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByText('Your download has started.').should('exist')
+  })
+
+  it('bypasses the guestbook modal for draft datasets', () => {
+    const version = DatasetVersionMother.createDraft()
+    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
+    ]
+    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
+      id: 10,
+      name: 'Guestbook Test',
+      enabled: true,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: false,
+      positionRequired: false,
+      customQuestions: [],
+      createTime: '2026-01-01T00:00:00.000Z',
+      dataverseId: 1
+    })
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.customMount(
+      withAccessRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              datasetNumericId={2}
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={false}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              guestbookId={10}
+            />
+          </TranslationPreloader>
+        </Suspense>
+      )
+    )
+
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.findByRole('button', { name: /Download ZIP/ }).click()
+
+    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText('Your download has started.').should('exist')
+  })
+
+  it('bypasses the guestbook modal for users who can edit the dataset', () => {
+    const version = DatasetVersionMother.createReleased()
+    const permissions = DatasetPermissionsMother.create({
+      canDownloadFiles: true,
+      canUpdateDataset: true
+    })
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
+    ]
+    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
+      id: 10,
+      name: 'Guestbook Test',
+      enabled: true,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: false,
+      positionRequired: false,
+      customQuestions: [],
+      createTime: '2026-01-01T00:00:00.000Z',
+      dataverseId: 1
+    })
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.customMount(
+      withAccessRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              datasetNumericId={2}
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={false}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              guestbookId={10}
+            />
+          </TranslationPreloader>
+        </Suspense>
+      )
+    )
+
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.findByRole('button', { name: /Download ZIP/ }).click()
+
+    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
     cy.findByText('Your download has started.').should('exist')
   })
 })

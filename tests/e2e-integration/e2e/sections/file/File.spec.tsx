@@ -121,7 +121,7 @@ describe('File', () => {
       })
     })
 
-    it('downloads a file from the file page with guestbook submission and shows a success toast', () => {
+    it('downloads a file from the file page directly for dataset editors even when a guestbook is assigned', () => {
       const guestbookName = `Guestbook ${faker.datatype.uuid()}`
 
       cy.wrap(DatasetHelper.createWithFile(FileHelper.create())).then((dataset) => {
@@ -143,25 +143,55 @@ describe('File', () => {
             cy.visit(`/spa/files?id=${file.id}`)
             cy.wait(1500)
 
+            cy.window().then((window) => {
+              cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+            })
+
             cy.findByRole('button', { name: 'Access File' }).as('accessButton')
             cy.get('@accessButton').should('be.visible')
             cy.wait(500) // wait for the event handler to attach to the button
             cy.get('@accessButton').click()
             cy.findByTestId('download-original-file').should('exist').click({ force: true })
 
-            cy.findByRole('dialog').should('be.visible')
-            cy.findByLabelText(/name/i).should('be.disabled')
-            cy.findByLabelText(/email/i).should('be.disabled')
-
-            cy.window().then((window) => {
-              cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
-            })
-            cy.wait(500)
-            cy.findByRole('button', { name: 'Accept' }).click()
-
             cy.get('@anchorClick').should('have.been.calledOnce')
             cy.findByRole('dialog').should('not.exist')
             cy.findByText('Your download has started.').should('exist')
+          })
+      })
+    })
+
+    it('opens the guestbook modal for guests on the file page when a guestbook is assigned', () => {
+      const guestbookName = `Guestbook ${faker.datatype.uuid()}`
+
+      cy.wrap(DatasetHelper.createWithFile(FileHelper.create())).then((dataset) => {
+        if (!dataset.file) {
+          throw new Error('Expected created dataset to include a file')
+        }
+        const file = dataset.file
+
+        return cy
+          .wrap(
+            GuestbookHelper.createAndGetByName(guestbookName).then(async (guestbook) => {
+              await GuestbookHelper.assignToDataset(Number(dataset.id), guestbook.id)
+              await DatasetHelper.publish(dataset.persistentId)
+
+              return file
+            })
+          )
+          .then((file) => {
+            TestsUtils.logout()
+            cy.visit(`/spa/files?id=${file.id}`)
+            cy.wait(1500)
+
+            cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+            cy.get('@accessButton').should('be.visible')
+            cy.wait(500)
+            cy.get('@accessButton').click()
+            cy.findByTestId('download-original-file').should('exist').click({ force: true })
+
+            cy.findByRole('dialog').should('be.visible')
+            cy.findByLabelText(/name/i).should('be.enabled')
+            cy.findByLabelText(/email/i).should('be.enabled')
           })
       })
     })

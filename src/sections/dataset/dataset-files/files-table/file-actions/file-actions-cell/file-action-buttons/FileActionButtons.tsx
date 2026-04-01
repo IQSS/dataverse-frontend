@@ -31,6 +31,8 @@ export function FileActionButtons({
         userHasDownloadPermission={file.permissions.canDownloadFile}
         metadata={file.metadata}
         isDeaccessioned={file.datasetPublishingStatus === DatasetPublishingStatus.DEACCESSIONED}
+        isDraft={file.datasetPublishingStatus === DatasetPublishingStatus.DRAFT}
+        canEdit={file.permissions.canEditOwnerDataset}
         ingestInProgress={file.ingest.isInProgress}
         asIcon
       />

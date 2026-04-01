@@ -53,7 +53,7 @@ describe('useGetGuestbookById', () => {
       expect(result.current.guestbook).to.deep.equal(guestbook)
     })
 
-    cy.wrap(guestbookRepository.getGuestbook).should('have.been.calledOnceWith', guestbook.id)
+    expect(guestbookRepository.getGuestbook).to.have.been.calledOnceWith(guestbook.id)
   })
 
   it('should not fetch guestbook when guestbookId is undefined', async () => {
@@ -69,7 +69,7 @@ describe('useGetGuestbookById', () => {
       expect(result.current.errorGetGuestbook).to.deep.equal(null)
     })
 
-    cy.wrap(guestbookRepository.getGuestbook).should('not.have.been.called')
+    expect(guestbookRepository.getGuestbook).to.not.have.been.called
   })
 
   it('should not fetch guestbook when disabled', async () => {
@@ -86,7 +86,7 @@ describe('useGetGuestbookById', () => {
       expect(result.current.guestbook).to.deep.equal(undefined)
     })
 
-    cy.wrap(guestbookRepository.getGuestbook).should('not.have.been.called')
+    expect(guestbookRepository.getGuestbook).to.not.have.been.called
   })
 
   it('should fetch guestbook after being enabled', async () => {
@@ -106,7 +106,7 @@ describe('useGetGuestbookById', () => {
       expect(result.current.guestbook).to.deep.equal(undefined)
     })
 
-    cy.wrap(guestbookRepository.getGuestbook).should('not.have.been.called')
+    expect(guestbookRepository.getGuestbook).to.not.have.been.called
 
     rerender({ enabled: true })
 
@@ -116,7 +116,7 @@ describe('useGetGuestbookById', () => {
       expect(result.current.guestbook).to.deep.equal(guestbook)
     })
 
-    cy.wrap(guestbookRepository.getGuestbook).should('have.been.calledOnceWith', guestbook.id)
+    expect(guestbookRepository.getGuestbook).to.have.been.calledOnceWith(guestbook.id)
   })
 
   describe('Error handling', () => {

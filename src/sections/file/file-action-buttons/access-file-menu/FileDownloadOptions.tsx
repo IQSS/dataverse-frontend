@@ -10,7 +10,11 @@ import {
   FileType
 } from '../../../../files/domain/models/FileMetadata'
 import { useDataset } from '@/sections/dataset/DatasetContext'
-import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
+import {
+  CustomTerms,
+  DatasetLicense,
+  DatasetPublishingStatus
+} from '@/dataset/domain/models/Dataset'
 import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
 
 interface FileDownloadOptionsProps {
@@ -20,6 +24,8 @@ interface FileDownloadOptionsProps {
   ingestInProgress: boolean
   downloadUrls: FileDownloadUrls
   userHasDownloadPermission: boolean
+  isDraft?: boolean
+  canEdit?: boolean
   guestbookId?: number
   datasetPersistentId?: string
   datasetLicense?: DatasetLicense
@@ -33,6 +39,8 @@ export function FileDownloadOptions({
   ingestInProgress,
   downloadUrls,
   userHasDownloadPermission,
+  isDraft,
+  canEdit,
   guestbookId,
   datasetPersistentId,
   datasetLicense,
@@ -54,7 +62,11 @@ export function FileDownloadOptions({
   const resolvedDatasetLicense = datasetLicense ?? dataset?.license
   const resolvedDatasetCustomTerms = datasetCustomTerms ?? dataset?.termsOfUse?.customTerms
   const isLockedFromFileDownload = !!dataset?.isLockedFromFileDownload
-  const hasGuestbook = resolvedGuestbookId !== undefined
+  const resolvedIsDraftDataset =
+    isDraft ?? dataset?.version.publishingStatus === DatasetPublishingStatus.DRAFT
+  const resolvedCanEdit = canEdit ?? dataset?.permissions.canUpdateDataset ?? false
+  const hasGuestbook =
+    resolvedGuestbookId !== undefined && !resolvedIsDraftDataset && !resolvedCanEdit
 
   const openGuestbookModal = (format: string | FileDownloadMode) => {
     setSelectedDownloadFormat(format)

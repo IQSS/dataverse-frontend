@@ -781,7 +781,7 @@ describe('Dataset', () => {
         })
     })
 
-    it('downloads the dataset with guestbook submission and shows a success toast', () => {
+    it('downloads the dataset directly for dataset editors even when a guestbook is assigned', () => {
       const guestbookName = `Guestbook ${faker.datatype.uuid()}`
 
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then((dataset) => {
@@ -797,24 +797,46 @@ describe('Dataset', () => {
           cy.wait(1500) // Wait for the page to load
 
           cy.findByText('Files').should('exist')
+          cy.window().then((window) => {
+            cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+          })
+          cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
+          cy.findByRole('button', { name: /Original Format ZIP/ })
+            .should('exist')
+            .click({ force: true })
+
+          cy.get('@anchorClick').should('have.been.calledOnce')
+          cy.findByRole('dialog').should('not.exist')
+          cy.findByText('Your download has started.').should('exist')
+        })
+      })
+    })
+
+    it('opens the guestbook modal for guests when downloading a dataset with an assigned guestbook', () => {
+      const guestbookName = `Guestbook ${faker.datatype.uuid()}`
+
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then((dataset) => {
+        cy.wrap(
+          GuestbookHelper.createAndGetByName(guestbookName).then(async (guestbook) => {
+            await GuestbookHelper.assignToDataset(Number(dataset.id), guestbook.id)
+            await DatasetHelper.publish(dataset.persistentId)
+
+            return dataset
+          })
+        ).then((publishedDataset) => {
+          TestsUtils.logout()
+          cy.visit(`/spa/datasets?persistentId=${publishedDataset.persistentId}`)
+          cy.wait(1500)
+
+          cy.findByText('Files').should('exist')
           cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
           cy.findByRole('button', { name: /Original Format ZIP/ })
             .should('exist')
             .click({ force: true })
 
           cy.findByRole('dialog').should('be.visible')
-
-          cy.findByLabelText(/name/i).should('be.disabled')
-          cy.findByLabelText(/email/i).should('be.disabled')
-          cy.window().then((window) => {
-            cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
-          })
-
-          cy.findByRole('button', { name: 'Accept' }).click()
-
-          cy.get('@anchorClick').should('have.been.calledOnce')
-          cy.findByRole('dialog').should('not.exist')
-          cy.findByText('Your download has started.').should('exist')
+          cy.findByLabelText(/name/i).should('be.enabled')
+          cy.findByLabelText(/email/i).should('be.enabled')
         })
       })
     })

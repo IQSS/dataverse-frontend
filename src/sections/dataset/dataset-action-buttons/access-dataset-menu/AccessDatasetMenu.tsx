@@ -51,7 +51,10 @@ export function AccessDatasetMenu({
   const [selectedDownloadFormat, setSelectedDownloadFormat] = useState<FileDownloadMode>(
     FileDownloadMode.ORIGINAL
   )
-  const hasGuestbook = guestbookId !== undefined
+  const hasGuestbook =
+    guestbookId !== undefined &&
+    version.publishingStatus !== DatasetPublishingStatus.DRAFT &&
+    !permissions.canUpdateDataset
 
   const flesToDownloadSizeIsZero =
     fileDownloadSizes.map(({ value }) => value).reduce((acc, curr) => acc + curr, 0) === 0
