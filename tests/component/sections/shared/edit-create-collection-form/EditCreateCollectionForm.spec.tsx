@@ -10,6 +10,7 @@ import { CollectionMother } from '@tests/component/collection/domain/models/Coll
 import { MetadataBlockInfoMother } from '@tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { UpwardHierarchyNodeMother } from '@tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { UserMother } from '@tests/component/users/domain/models/UserMother'
+import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const metadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -251,6 +252,7 @@ describe('EditCreateCollectionForm', () => {
     })
 
     it('submits a valid form and succeed', () => {
+      cy.spy(needsUpdateStore, 'setNeedsUpdate').as('setNeedsUpdate')
       cy.customMount(
         <EditCreateCollectionForm
           mode="create"
@@ -269,6 +271,7 @@ describe('EditCreateCollectionForm', () => {
 
       cy.findByText('Error').should('not.exist')
       cy.findByText('Success!').should('exist')
+      cy.get('@setNeedsUpdate').should('have.been.calledWith', true)
     })
 
     it('submits a valid form and fails', () => {

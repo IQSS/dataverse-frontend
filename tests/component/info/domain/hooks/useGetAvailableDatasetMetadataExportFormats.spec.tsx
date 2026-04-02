@@ -3,8 +3,9 @@ import { ReadError } from '@iqss/dataverse-client-javascript'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { useGetAvailableDatasetMetadataExportFormats } from '@/info/domain/hooks/useGetAvailableDatasetMetadataExportFormats'
 import { DatasetMetadataExportFormatsMother } from '../models/DatasetMetadataExportFormatsMother'
+import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
 
-const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
+const dataverseInfoRepository: DataverseInfoRepository = new DataverseInfoMockEmptyRepository()
 const availableDsMetadataExportFormats = DatasetMetadataExportFormatsMother.create()
 
 describe('useGetAvailableDatasetMetadataExportFormats', () => {

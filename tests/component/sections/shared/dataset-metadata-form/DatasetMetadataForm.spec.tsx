@@ -9,6 +9,7 @@ import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { UserMother } from '../../../users/domain/models/UserMother'
 import { TemplateMother } from '@tests/component/sections/templates/TemplateMother'
+import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -1276,6 +1277,7 @@ describe('DatasetMetadataForm', () => {
   })
   describe('should not display required errors when submitting the form with required fields filled', () => {
     it('on create mode', () => {
+      cy.spy(needsUpdateStore, 'setNeedsUpdate').as('setNeedsUpdate')
       cy.customMount(
         <DatasetMetadataForm
           mode="create"
@@ -1295,6 +1297,7 @@ describe('DatasetMetadataForm', () => {
 
       cy.findByText('Error').should('not.exist')
       cy.findByText('Success!').should('exist')
+      cy.get('@setNeedsUpdate').should('have.been.calledWith', true)
     })
 
     it('on edit mode', () => {

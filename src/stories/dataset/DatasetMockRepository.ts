@@ -19,6 +19,7 @@ import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLice
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
+import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -219,6 +220,17 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getDatasetUploadLimits(_datasetId: string | number): Promise<DatasetUploadLimits> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          numberOfFilesRemaining: 10,
+          storageQuotaRemaining: 10737418240 // 10 GB in bytes
+        })
       }, FakerHelper.loadingTimout())
     })
   }

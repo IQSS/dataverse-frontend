@@ -11,11 +11,12 @@ interface ConfirmLeaveModalProps {
 
 export const ConfirmLeaveModal = ({ show, onStay, onLeave }: ConfirmLeaveModalProps) => {
   const { t } = useTranslation('dataset')
+  const modalTitle = t('editTerms.unsavedChangesModal.title')
 
   return (
-    <Modal show={show} onHide={onStay} centered size="lg">
+    <Modal show={show} onHide={onStay} centered size="lg" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('editTerms.unsavedChangesModal.title')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Stack gap={2}>

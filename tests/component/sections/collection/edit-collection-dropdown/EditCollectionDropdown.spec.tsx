@@ -111,6 +111,40 @@ describe('EditCollectionDropdown', () => {
     )
   })
 
+  it('shows the not implemented collection edit options', () => {
+    cy.mountAuthenticated(
+      <EditCollectionDropdown
+        collection={rootCollection}
+        collectionRepository={collectionRepository}
+        canUserDeleteCollection={false}
+      />
+    )
+
+    openDropdown()
+
+    cy.findByRole('button', { name: 'Theme + Widgets' }).should('exist')
+    cy.findByRole('button', { name: 'Permissions' }).should('exist')
+    cy.findByRole('button', { name: 'Groups' }).should('exist')
+    cy.findByRole('button', { name: 'Dataset Guestbooks' }).should('exist')
+  })
+
+  it('shows the not implemented modal when a new edit option is clicked', () => {
+    cy.mountAuthenticated(
+      <EditCollectionDropdown
+        collection={rootCollection}
+        collectionRepository={collectionRepository}
+        canUserDeleteCollection={false}
+      />
+    )
+
+    openDropdown()
+
+    cy.findByRole('button', { name: 'Permissions' }).click()
+
+    cy.findByText('Not Implemented').should('exist')
+    cy.findByText('This feature is not implemented yet in SPA.').should('exist')
+  })
+
   it('shows the Dataset Templates button with the correct link', () => {
     cy.mountAuthenticated(
       <EditCollectionDropdown

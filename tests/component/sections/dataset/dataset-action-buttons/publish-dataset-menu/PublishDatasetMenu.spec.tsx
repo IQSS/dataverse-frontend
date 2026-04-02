@@ -5,21 +5,19 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
-import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { SettingsProvider } from '../../../../../../src/sections/settings/SettingsProvider'
+import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 const collectionRepository = {} as CollectionRepository
 const datasetRepository = {} as DatasetRepository
-const dataverseInfoRepository = {} as DataverseInfoRepository
 
+let dataverseInfoRepository: DataverseInfoRepository
 describe('PublishDatasetMenu', () => {
   beforeEach(() => {
-    dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
-    dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
-    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
-    dataverseInfoRepository.getZipDownloadLimit = cy.stub().resolves({})
+    dataverseInfoRepository = new DataverseInfoMockEmptyRepository()
   })
 
   it('renders the PublishDatasetMenu if is dataset latest version and it is a draft and publishing is allowed', () => {
