@@ -495,7 +495,7 @@ describe('DownloadFilesButton', () => {
     ]
     const datasetWithGuestbook = DatasetMother.create({
       id: 999,
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions(),
       hasOneTabularFileAtLeast: true,
       guestbookId: 10
     })
