@@ -25,7 +25,6 @@ describe('Footer component', () => {
 
   it('should call dataverseInfoRepository.getVersion on mount', () => {
     const dataverseInfoRepository = new DataverseInfoMockRepository()
-    const getVersionSpy = sandbox.spy(dataverseInfoRepository, 'getVersion')
 
     cy.customMount(<Footer dataverseInfoRepository={dataverseInfoRepository} />)
 
