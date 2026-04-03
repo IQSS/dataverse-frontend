@@ -2,7 +2,7 @@ import { DatasetTemplates } from '../../../../src/sections/templates/DatasetTemp
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { TemplateRepository } from '../../../../src/templates/domain/repositories/TemplateRepository'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { ReadError } from '@iqss/dataverse-client-javascript'
+import { ReadError, WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 import { TemplateMother } from './TemplateMother'
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
@@ -536,6 +536,37 @@ describe('Dataset Templates', () => {
       cy.findByRole('button', { name: 'Copy' }).click({ force: true })
 
       cy.findByText(/Something went wrong copying the template. Try again later./i).should('exist')
+      cy.wrap(templateRepository.getTemplatesByCollectionId).should('have.been.calledOnce')
+    })
+
+    it('shows the generic error toast when creating the template fails with WriteError', () => {
+      const templateWithMetadata = TemplateMother.create({
+        id: 10,
+        name: 'Template Copy',
+        collectionAlias: 'root',
+        datasetMetadataBlocks: [
+          {
+            name: 'citation',
+            fields: {
+              title: 'My Title'
+            }
+          }
+        ]
+      })
+
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([templateWithMetadata])
+      templateRepository.getTemplate = cy.stub().resolves(templateWithMetadata)
+      templateRepository.createTemplate = cy.stub().rejects(new WriteError('Write error message'))
+      metadataBlockInfoRepository.getByCollectionId = cy
+        .stub()
+        .resolves([CitationMetadataBlockInfoMother.get()])
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'Copy' }).click({ force: true })
+
+      cy.findByText(/Something went wrong copying the template. Try again later./i).should('exist')
+      cy.wrap(templateRepository.createTemplate).should('have.been.calledOnce')
       cy.wrap(templateRepository.getTemplatesByCollectionId).should('have.been.calledOnce')
     })
   })
