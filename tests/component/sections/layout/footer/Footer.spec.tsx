@@ -12,6 +12,11 @@ describe('Footer component', () => {
   const currentYear = new Date().getFullYear().toString()
   const defaultFooterEnv = Cypress.env('footer') as AppConfig['footer']
 
+  afterEach(() => {
+    Cypress.env('footer', defaultFooterEnv)
+    applyTestAppConfig()
+  })
+
   it('should render footer content', () => {
     cy.customMount(FooterMother.withDataverseVersion(sandbox, testVersion))
 
@@ -33,9 +38,16 @@ describe('Footer component', () => {
     cy.wrap(dataverseInfoRepository.getVersion).should('have.been.called')
   })
 
-  it('should open privacy policy link in new tab', () => {
-    Cypress.env('footer', defaultFooterEnv)
+  it('should fall back to Dataverse Project when copyright holder is not configured', () => {
+    Cypress.env('footer', { privacyPolicyUrl: defaultFooterEnv?.privacyPolicyUrl })
     applyTestAppConfig()
+
+    cy.customMount(FooterMother.withDataverseVersion(sandbox, testVersion))
+
+    cy.contains(`Copyright © ${currentYear}, Dataverse Project`).should('exist')
+  })
+
+  it('should open privacy policy link in new tab', () => {
     cy.customMount(FooterMother.withDataverseVersion(sandbox))
 
     cy.findByText('Privacy Policy')
