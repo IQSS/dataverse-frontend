@@ -7,9 +7,9 @@ const { useI18n, ofTypeI18n } = i18nBuilder
   .withThemeName<ThemeName>()
   .withCustomTranslations({
     en: {
-      signInNoticeTitle: 'Note about ORCID, GitHub, and Google sign-in:',
+      signInNoticeTitle: 'Note about CILogon options sign-in',
       signInNoticeBodyPrefix:
-        'These options are available only to the existing accounts that previously authenticated with these methods. New sign-ups via ORCID, GitHub, or Google are not supported. Please use your Harvard Login or Username/Email to ',
+        'CILogon options are available only to the existing accounts that previously authenticated with these methods. New sign-ups via these options are not supported. Please use your Harvard Login or Username/Email to ',
       signInNoticeSignUpLinkText: 'sign up in Harvard Dataverse'
     }
   })
