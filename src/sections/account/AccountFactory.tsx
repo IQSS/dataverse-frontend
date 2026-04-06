@@ -6,6 +6,7 @@ import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/U
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { RoleJSDataverseRepository } from '@/roles/infrastructure/repositories/RoleJSDataverseRepository'
 import { NotificationJSDataverseRepository } from '@/notifications/infrastructure/repositories/NotificationJSDataverseRepository'
+import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const userRepository = new UserJSDataverseRepository()
 const collectionRepository = new CollectionJSDataverseRepository()
@@ -23,12 +24,13 @@ function AccountWithSearchParams() {
   const defaultActiveTabKey = AccountHelper.defineSelectedTabKey(searchParams)
 
   return (
-    <Account
-      defaultActiveTabKey={defaultActiveTabKey}
-      userRepository={userRepository}
-      collectionRepository={collectionRepository}
-      roleRepository={roleRepository}
-      notificationRepository={notificationRepository}
-    />
+    <RepositoriesProvider collectionRepository={collectionRepository}>
+      <Account
+        defaultActiveTabKey={defaultActiveTabKey}
+        userRepository={userRepository}
+        roleRepository={roleRepository}
+        notificationRepository={notificationRepository}
+      />
+    </RepositoriesProvider>
   )
 }

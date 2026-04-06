@@ -25,7 +25,6 @@ import useCheckPublishCompleted from './useCheckPublishCompleted'
 import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
 import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
 import { DatasetVersions } from './dataset-versions/DatasetVersions'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
@@ -38,7 +37,6 @@ interface DatasetProps {
   datasetRepository: DatasetRepository
   fileRepository: FileRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
-  collectionRepository: CollectionRepository
   contactRepository: ContactRepository
   dataverseInfoRepository: DataverseInfoRepository
   filesTabInfiniteScrollEnabled?: boolean
@@ -50,7 +48,6 @@ export function Dataset({
   datasetRepository,
   fileRepository,
   metadataBlockInfoRepository,
-  collectionRepository,
   contactRepository,
   dataverseInfoRepository,
   filesTabInfiniteScrollEnabled,
@@ -151,7 +148,6 @@ export function Dataset({
             <Col lg={3}>
               <DatasetActionButtons
                 datasetRepository={datasetRepository}
-                collectionRepository={collectionRepository}
                 dataset={dataset}
                 contactRepository={contactRepository}
               />

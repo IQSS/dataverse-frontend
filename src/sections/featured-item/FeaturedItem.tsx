@@ -1,25 +1,24 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CustomFeaturedItem } from '@/collection/domain/models/FeaturedItem'
 import { useGetFeaturedItems } from '../collection/useGetFeaturedItems'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { FeaturedItemView } from './featured-item-view/FeaturedItemView'
 import { useCollection } from '../collection/useCollection'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface FeaturedItemProps {
-  collectionRepository: CollectionRepository
   parentCollectionIdFromParams: string
   featuredItemId: string
 }
 
 export const FeaturedItem = ({
-  collectionRepository,
   parentCollectionIdFromParams,
   featuredItemId
 }: FeaturedItemProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('featuredItem')
 

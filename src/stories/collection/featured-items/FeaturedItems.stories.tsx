@@ -4,6 +4,7 @@ import { FeaturedItems } from '@/sections/collection/featured-items/FeaturedItem
 import { CollectionMockRepository } from '../CollectionMockRepository'
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
+import { WithRepositories } from '@/stories/WithRepositories'
 
 const collectionRepositoryWithFeaturedItems = new CollectionMockRepository()
 
@@ -29,10 +30,6 @@ export default meta
 type Story = StoryObj<typeof FeaturedItems>
 
 export const Default: Story = {
-  render: () => (
-    <FeaturedItems
-      collectionRepository={collectionRepositoryWithFeaturedItems}
-      collectionId="testAlias"
-    />
-  )
+  decorators: [WithRepositories({ collectionRepository: collectionRepositoryWithFeaturedItems })],
+  render: () => <FeaturedItems collectionId="testAlias" />
 }

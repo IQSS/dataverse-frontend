@@ -2,6 +2,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { EditFeaturedItems } from '@/sections/edit-collection-featured-items/EditFeaturedItems'
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const collectionRepository = {} as CollectionRepository
 const collection = CollectionMother.create({ name: 'Collection Name' })
@@ -30,10 +31,9 @@ describe('EditFeaturedItems', () => {
     collectionRepository.getById = cy.stub().resolves(undefined)
 
     cy.mountAuthenticated(
-      <EditFeaturedItems
-        collectionIdFromParams="root"
-        collectionRepository={collectionRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <EditFeaturedItems collectionIdFromParams="root" />
+      </WithRepositories>
     )
 
     cy.findByTestId('not-found-page').should('exist')
@@ -46,10 +46,9 @@ describe('EditFeaturedItems', () => {
     })
 
     cy.mountAuthenticated(
-      <EditFeaturedItems
-        collectionIdFromParams="root"
-        collectionRepository={collectionRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <EditFeaturedItems collectionIdFromParams="root" />
+      </WithRepositories>
     )
 
     cy.clock()
@@ -65,10 +64,9 @@ describe('EditFeaturedItems', () => {
       .rejects('Error loading collection featured items')
 
     cy.mountAuthenticated(
-      <EditFeaturedItems
-        collectionIdFromParams="root"
-        collectionRepository={collectionRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <EditFeaturedItems collectionIdFromParams="root" />
+      </WithRepositories>
     )
 
     cy.findByText('Error').should('exist')
@@ -76,10 +74,9 @@ describe('EditFeaturedItems', () => {
 
   it('renders the correct breadcrumbs', () => {
     cy.mountAuthenticated(
-      <EditFeaturedItems
-        collectionIdFromParams="root"
-        collectionRepository={collectionRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <EditFeaturedItems collectionIdFromParams="root" />
+      </WithRepositories>
     )
 
     cy.findByRole('link', { name: 'Root' }).should('exist')
