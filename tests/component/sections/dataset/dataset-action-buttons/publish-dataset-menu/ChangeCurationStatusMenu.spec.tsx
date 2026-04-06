@@ -4,15 +4,13 @@ import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { SettingsProvider } from '../../../../../../src/sections/settings/SettingsProvider'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { NotImplementedModalProvider } from '../../../../../../src/sections/not-implemented/NotImplementedModalProvider'
+import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
 
-const dataverseInfoRepository = {} as DataverseInfoRepository
+let dataverseInfoRepository: DataverseInfoRepository
 
 describe('ChangeCurationStatusMenu', () => {
   beforeEach(() => {
-    dataverseInfoRepository.getHasPublicStore = cy.stub().resolves({})
-    dataverseInfoRepository.getExternalStatusesAllowed = cy.stub().resolves({})
-    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy.stub().resolves({})
-    dataverseInfoRepository.getZipDownloadLimit = cy.stub().resolves({})
+    dataverseInfoRepository = new DataverseInfoMockEmptyRepository()
   })
 
   it('renders the ChangeCurationStatusMenu if external statuses are allowed and the user has update dataset permissions', () => {

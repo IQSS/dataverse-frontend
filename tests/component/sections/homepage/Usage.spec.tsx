@@ -56,6 +56,20 @@ describe('Usage', () => {
       .and('have.attr', 'rel', 'noreferrer noopener')
   })
 
+  it('falls back to Dataverse when config dataverse name is missing', () => {
+    Cypress.env('branding', {})
+    applyTestAppConfig()
+
+    cy.customMount(<Usage collectionId={collectionId} />)
+
+    cy.findByRole('heading', {
+      name: 'Publishing your data is easy on Dataverse!'
+    }).should('be.visible')
+    cy.findByText(
+      'Dataverse is a repository for research data. Deposit data and code here.'
+    ).should('be.visible')
+  })
+
   it('falls back to the default support URL when config support URL is missing', () => {
     Cypress.env('homepage', {})
     applyTestAppConfig()

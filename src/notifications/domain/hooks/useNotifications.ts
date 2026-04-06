@@ -4,6 +4,7 @@ import { Notification } from '@/notifications/domain/models/Notification'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
 import { getAllNotificationsByUser } from '@/notifications/domain/useCases/getAllNotificationsByUser'
+import { needsUpdateStore } from './needsUpdateStore'
 
 const POLLING_NOTIFICATIONS_INTERVAL_TIME = 30_000
 
@@ -67,6 +68,7 @@ export function useNotifications(
     try {
       await Promise.all(ids.map((id) => repository.markNotificationAsRead(id)))
       setError(null)
+      needsUpdateStore.setNeedsUpdate(true)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to mark as read'
       setError(message)
@@ -78,6 +80,7 @@ export function useNotifications(
     try {
       await Promise.all(ids.map((id) => repository.deleteNotification(id)))
       setError(null)
+      needsUpdateStore.setNeedsUpdate(true)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to delete notifications'
       setError(message)

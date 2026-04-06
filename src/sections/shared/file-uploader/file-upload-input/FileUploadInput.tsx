@@ -1,4 +1,4 @@
-import { ChangeEventHandler, DragEventHandler, memo, useRef, useState } from 'react'
+import { ChangeEventHandler, DragEventHandler, useRef, useState } from 'react'
 import { Accordion, Button, Card, ProgressBar } from '@iqss/dataverse-design-system'
 import { ExclamationTriangle, Plus, XLg } from 'react-bootstrap-icons'
 import { Trans, useTranslation } from 'react-i18next'
@@ -8,22 +8,37 @@ import cn from 'classnames'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
 import { uploadFile } from '@/files/domain/useCases/uploadFile'
+import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useFileUploaderContext } from '../context/FileUploaderContext'
 import { FileUploadState, FileUploadStatus } from '../context/fileUploaderReducer'
 import { OperationType } from '../FileUploader'
 import { FileUploaderHelper } from '../FileUploaderHelper'
 import { SwalModal } from '../../swal-modal/SwalModal'
 import styles from './FileUploadInput.module.scss'
+import { useUploadLimit } from './useUploadLimit'
 
 type FileUploadInputProps = {
   fileRepository: FileRepository
+  datasetRepository: DatasetRepository
   datasetPersistentId: string
+  fetchUploadLimits?: (
+    datasetId: string | number,
+    datasetRepository: DatasetRepository
+  ) => Promise<DatasetUploadLimits>
 }
 
 const limit = 6
 const semaphore = new Semaphore(limit)
 
-const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInputProps) => {
+const maxFilesPerUpload = 1000
+
+const FileUploadInput = ({
+  fileRepository,
+  datasetRepository,
+  datasetPersistentId,
+  fetchUploadLimits
+}: FileUploadInputProps) => {
   const {
     fileUploaderState,
     addFile,
@@ -44,6 +59,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [isDragging, setIsDragging] = useState(false)
+  const { uploadLimit } = useUploadLimit(datasetPersistentId, datasetRepository, fetchUploadLimits)
 
   const totalFiles = Object.keys(fileUploaderState.files).length
 
@@ -267,6 +283,27 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
         <Accordion.Item eventKey="0">
           <Accordion.Header>{t('fileUploader.accordionTitle')}</Accordion.Header>
           <Accordion.Body>
+            <p className={styles.helper_text}>
+              {t('fileUploader.uploadWidgetHelp', {
+                maxFilesPerUpload: maxFilesPerUpload.toLocaleString()
+              })}
+              {uploadLimit.maxFilesAvailableToUploadFormatted && (
+                <>
+                  {' '}
+                  {t('fileUploader.uploadWidgetMaxFilesHelp', {
+                    maxFilesAvailableToUpload: uploadLimit.maxFilesAvailableToUploadFormatted
+                  })}
+                </>
+              )}
+              {uploadLimit.storageQuotaRemainingFormatted && (
+                <>
+                  {' '}
+                  {t('fileUploader.uploadWidgetStorageQuotaHelp', {
+                    storageQuotaRemaining: uploadLimit.storageQuotaRemainingFormatted
+                  })}
+                </>
+              )}
+            </p>
             <Card>
               <Card.Header>
                 <Button
@@ -360,4 +397,4 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
   )
 }
 
-export default memo(FileUploadInput)
+export default FileUploadInput

@@ -3,19 +3,13 @@ import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { UnlinkDatasetButton } from './unlink-dataset-button/UnlinkDatasetButton'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 
 interface LinkAndUnlinkActionsProps {
   dataset: Dataset
   datasetRepository: DatasetRepository
-  collectionRepository: CollectionRepository
 }
 
-export const LinkAndUnlinkActions = ({
-  dataset,
-  datasetRepository,
-  collectionRepository
-}: LinkAndUnlinkActionsProps) => {
+export const LinkAndUnlinkActions = ({ dataset, datasetRepository }: LinkAndUnlinkActionsProps) => {
   const [key, setKey] = useState(0)
 
   // This is a way to force remounting both components when either one of them successfully links or unlinks a dataset.
@@ -27,14 +21,12 @@ export const LinkAndUnlinkActions = ({
       <LinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={updateKey}
         key={`link-dataset-button-${key}`}
       />
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={updateKey}
         key={`unlink-dataset-button-${key}`}
       />

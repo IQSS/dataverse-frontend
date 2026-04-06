@@ -22,11 +22,17 @@ export const ConfirmDeleteFileModal = ({
 }: ConfirmDeleteFileModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('file')
+  const modalTitle = t('deleteFileModal.title')
 
   return (
-    <Modal show={show} onHide={isDeletingFile ? () => {} : handleClose} centered size="lg">
+    <Modal
+      show={show}
+      onHide={isDeletingFile ? () => {} : handleClose}
+      centered
+      size="lg"
+      ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('deleteFileModal.title')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Stack gap={2}>

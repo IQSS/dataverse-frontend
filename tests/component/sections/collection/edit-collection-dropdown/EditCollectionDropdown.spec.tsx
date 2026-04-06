@@ -1,8 +1,10 @@
+import { ComponentProps } from 'react'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { EditCollectionDropdown } from '@/sections/collection/edit-collection-dropdown/EditCollectionDropdown'
+import { EditCollectionDropdown as BaseEditCollectionDropdown } from '@/sections/collection/edit-collection-dropdown/EditCollectionDropdown'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { UpwardHierarchyNodeMother } from '@tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const collectionRepository = {} as CollectionRepository
 
@@ -24,6 +26,19 @@ const rootCollection = CollectionMother.create({
 })
 
 const openDropdown = () => cy.findByRole('button', { name: /Edit/i }).click()
+
+function EditCollectionDropdown({
+  collectionRepository,
+  ...props
+}: ComponentProps<typeof BaseEditCollectionDropdown> & {
+  collectionRepository: CollectionRepository
+}) {
+  return (
+    <WithRepositories collectionRepository={collectionRepository}>
+      <BaseEditCollectionDropdown {...props} />
+    </WithRepositories>
+  )
+}
 
 describe('EditCollectionDropdown', () => {
   beforeEach(() => {
@@ -109,6 +124,41 @@ describe('EditCollectionDropdown', () => {
       'href',
       '/collections/root/edit-featured-items'
     )
+  })
+
+  it('shows the not implemented collection edit options', () => {
+    cy.mountAuthenticated(
+      <EditCollectionDropdown
+        collection={rootCollection}
+        collectionRepository={collectionRepository}
+        canUserDeleteCollection={false}
+      />
+    )
+
+    openDropdown()
+
+    cy.findByRole('button', { name: 'Theme + Widgets' }).should('exist')
+    cy.findByRole('button', { name: 'Permissions' }).should('exist')
+    cy.findByRole('button', { name: 'Groups' }).should('exist')
+    cy.findByRole('button', { name: 'Dataset Templates' }).should('exist')
+    cy.findByRole('button', { name: 'Dataset Guestbooks' }).should('exist')
+  })
+
+  it('shows the not implemented modal when a new edit option is clicked', () => {
+    cy.mountAuthenticated(
+      <EditCollectionDropdown
+        collection={rootCollection}
+        collectionRepository={collectionRepository}
+        canUserDeleteCollection={false}
+      />
+    )
+
+    openDropdown()
+
+    cy.findByRole('button', { name: 'Permissions' }).click()
+
+    cy.findByText('Not Implemented').should('exist')
+    cy.findByText('This feature is not implemented yet in SPA.').should('exist')
   })
 
   describe('delete button', () => {

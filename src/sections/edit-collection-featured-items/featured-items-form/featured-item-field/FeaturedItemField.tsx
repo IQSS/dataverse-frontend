@@ -8,7 +8,6 @@ import { ExclamationTriangle, Pencil, Plus, Trash } from 'react-bootstrap-icons'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import cn from 'classnames'
 import { Badge, Button, Col, Row, Tooltip } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
 import { BaseFormItem } from './base-form-item/BaseFormItem'
 import { DvObjectFormItem } from './dv-object-form-item/DvObjectFormItem'
@@ -20,6 +19,7 @@ import { deleteFeaturedItem } from '@/collection/domain/useCases/deleteFeaturedI
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
 import styles from './FeaturedItemField.module.scss'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface FeaturedItemFieldProps {
   sortableId: string
@@ -28,7 +28,6 @@ interface FeaturedItemFieldProps {
   onAddField: (index: number) => void
   onRemoveField: (index: number) => void
   onSelectType: (index: number, type: FeaturedItemType.CUSTOM | '' | 'base') => void
-  collectionRepository: CollectionRepository
   disableDragWhenOnlyOneItem: boolean
   initialImageUrl?: string
   featuredItemType: FeaturedItemType | 'base' | ''
@@ -42,12 +41,12 @@ export const FeaturedItemField = ({
   onAddField,
   onRemoveField,
   onSelectType,
-  collectionRepository,
   disableDragWhenOnlyOneItem,
   initialImageUrl,
   featuredItemType,
   itemsLength
 }: FeaturedItemFieldProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const isExistingItem = itemId !== undefined && itemId !== null
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('editFeaturedItems')

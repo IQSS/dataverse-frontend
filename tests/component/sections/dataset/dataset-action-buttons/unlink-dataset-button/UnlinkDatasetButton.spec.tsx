@@ -8,6 +8,7 @@ import { DatasetRepository } from '@/dataset/domain/repositories/DatasetReposito
 import { ReadError, WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -21,6 +22,20 @@ const clickUnlinkDatasetButton = () => {
     .should('exist')
     .click()
 }
+
+const mountAuthenticatedUnlinkDatasetButton = (
+  component: JSX.Element,
+  repository: CollectionRepository = collectionRepository
+) =>
+  cy.mountAuthenticated(
+    <WithRepositories collectionRepository={repository}>{component}</WithRepositories>
+  )
+
+const mountUnauthenticatedUnlinkDatasetButton = (
+  component: JSX.Element,
+  repository: CollectionRepository = collectionRepository
+) =>
+  cy.customMount(<WithRepositories collectionRepository={repository}>{component}</WithRepositories>)
 
 describe('UnlinkDatasetButton', () => {
   beforeEach(() => {
@@ -38,11 +53,10 @@ describe('UnlinkDatasetButton', () => {
   })
 
   it('renders the UnlinkDatasetButton if the user is authenticated and the dataset version is not deaccessioned and the dataset is released', () => {
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={() => {}}
       />
     )
@@ -51,11 +65,10 @@ describe('UnlinkDatasetButton', () => {
   })
 
   it('does not render the UnlinkDatasetButton if the user is not authenticated', () => {
-    cy.customMount(
+    mountUnauthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={() => {}}
       />
     )
@@ -68,11 +81,10 @@ describe('UnlinkDatasetButton', () => {
       version: DatasetVersionMother.createDeaccessioned()
     })
 
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={datasetDeaccessioned}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={() => {}}
       />
     )
@@ -86,11 +98,10 @@ describe('UnlinkDatasetButton', () => {
       .as('getDatasetLinkedCollections')
       .resolves([])
 
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={() => {}}
       />
     )
@@ -104,11 +115,10 @@ describe('UnlinkDatasetButton', () => {
     })
     const updateParentSpy = cy.spy().as('updateParentSpy')
 
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={updateParentSpy}
       />
     )
@@ -147,13 +157,13 @@ describe('UnlinkDatasetButton', () => {
   })
 
   it('searchs for a collection to link', () => {
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={new CollectionMockRepository()}
         updateParent={() => {}}
-      />
+      />,
+      new CollectionMockRepository()
     )
 
     clickUnlinkDatasetButton()
@@ -182,11 +192,10 @@ describe('UnlinkDatasetButton', () => {
   it('shows no collections to unlink message', () => {
     collectionRepository.getForUnlinking = cy.stub().resolves([])
 
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={() => {}}
       />
     )
@@ -213,11 +222,10 @@ describe('UnlinkDatasetButton', () => {
       })
     ])
 
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={() => {}}
       />
     )
@@ -251,11 +259,10 @@ describe('UnlinkDatasetButton', () => {
   it('handles error when unlinking the dataset fails', () => {
     datasetRepository.unlink = cy.stub().as('unlinkDataset').rejects(new Error('Unlinking failed'))
 
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={() => {}}
       />
     )
@@ -294,11 +301,10 @@ describe('UnlinkDatasetButton', () => {
       .as('unlinkDataset')
       .rejects(new WriteError('A WriteError received'))
 
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={() => {}}
       />
     )
@@ -336,11 +342,10 @@ describe('UnlinkDatasetButton', () => {
       .stub()
       .rejects(new Error('Fetching collections failed'))
 
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={() => {}}
       />
     )
@@ -359,11 +364,10 @@ describe('UnlinkDatasetButton', () => {
   it('handles error when fetching collections fails with ReadError', () => {
     collectionRepository.getForUnlinking = cy.stub().rejects(new ReadError('A ReadError received'))
 
-    cy.mountAuthenticated(
+    mountAuthenticatedUnlinkDatasetButton(
       <UnlinkDatasetButton
         dataset={dataset}
         datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
         updateParent={() => {}}
       />
     )

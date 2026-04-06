@@ -7,17 +7,15 @@ import dataverse_logo from '@/assets/dataverse_brand_icon.svg'
 import { Route } from '@/sections/Route.enum'
 import { useSession } from '@/sections/session/SessionContext'
 import { LoggedInHeaderActions } from './LoggedInHeaderActions'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import styles from './Header.module.scss'
 
 interface HeaderProps {
-  collectionRepository: CollectionRepository
   notficationRepository: NotificationRepository
 }
-export function Header({ collectionRepository, notficationRepository }: HeaderProps) {
+export function Header({ notficationRepository }: HeaderProps) {
   const { t } = useTranslation('header')
   const { user } = useSession()
   const { pathname, search } = useLocation()
@@ -40,11 +38,7 @@ export function Header({ collectionRepository, notficationRepository }: HeaderPr
       className={styles.navbar}>
       <LanguageSwitcher />
       {user ? (
-        <LoggedInHeaderActions
-          user={user}
-          collectionRepository={collectionRepository}
-          notificationRepository={notficationRepository}
-        />
+        <LoggedInHeaderActions user={user} notificationRepository={notficationRepository} />
       ) : (
         <Button
           onClick={handleOidcLogIn}

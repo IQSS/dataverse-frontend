@@ -13,6 +13,7 @@ import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/Datas
 import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLicenseUpdateRequest'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
+import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 
 export class DatasetErrorMockRepository implements DatasetMockRepository {
   getAllWithCount: (
@@ -190,6 +191,14 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     _datasetId: string | number,
     _licenseUpdateRequest: DatasetLicenseUpdateRequest
   ): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getDatasetUploadLimits(_datasetId: string | number): Promise<DatasetUploadLimits> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')
