@@ -5,6 +5,7 @@ import { CollectionMother } from '../../../collection/domain/models/CollectionMo
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const testUser = UserMother.create()
 const collectionRepository: CollectionRepository = {} as CollectionRepository
@@ -23,11 +24,9 @@ describe('LoggedInHeaderActions', () => {
     )
     collectionRepository.getById = cy.stub().resolves(CollectionMother.create())
     cy.customMount(
-      <LoggedInHeaderActions
-        user={testUser}
-        collectionRepository={collectionRepository}
-        notificationRepository={notificationRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: /Add Data/i }).as('addDataBtn')
@@ -42,11 +41,9 @@ describe('LoggedInHeaderActions', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
 
     cy.customMount(
-      <LoggedInHeaderActions
-        user={testUser}
-        collectionRepository={collectionRepository}
-        notificationRepository={notificationRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: /Add Data/i }).as('addDataBtn')
@@ -65,11 +62,9 @@ describe('LoggedInHeaderActions', () => {
     )
 
     cy.customMount(
-      <LoggedInHeaderActions
-        user={testUser}
-        collectionRepository={collectionRepository}
-        notificationRepository={notificationRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: /Add Data/i }).as('addDataBtn')
@@ -84,11 +79,9 @@ describe('LoggedInHeaderActions', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
 
     cy.customMount(
-      <LoggedInHeaderActions
-        user={testUser}
-        collectionRepository={collectionRepository}
-        notificationRepository={notificationRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: /Add Data/i }).as('addDataBtn')
@@ -103,11 +96,9 @@ describe('LoggedInHeaderActions', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
 
     cy.customMount(
-      <LoggedInHeaderActions
-        user={testUser}
-        collectionRepository={collectionRepository}
-        notificationRepository={notificationRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: /Add Data/i }).as('addDataBtn')
@@ -128,11 +119,9 @@ describe('LoggedInHeaderActions', () => {
     ])
     notificationRepository.getUnreadNotificationsCount = cy.stub().resolves(3)
     cy.mountAuthenticated(
-      <LoggedInHeaderActions
-        user={testUser}
-        collectionRepository={collectionRepository}
-        notificationRepository={notificationRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+      </WithRepositories>
     )
     cy.findByRole('button', { name: /James D. Potts/i }).as('userBtn')
     cy.get('@userBtn').should('exist')
@@ -148,11 +137,9 @@ describe('LoggedInHeaderActions', () => {
     notificationRepository.getUnreadNotificationsCount = unreadCountStub
 
     cy.mountAuthenticated(
-      <LoggedInHeaderActions
-        user={testUser}
-        collectionRepository={collectionRepository}
-        notificationRepository={notificationRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+      </WithRepositories>
     )
 
     cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
@@ -172,11 +159,9 @@ describe('LoggedInHeaderActions', () => {
 
     cy.clock()
     cy.mountAuthenticated(
-      <LoggedInHeaderActions
-        user={testUser}
-        collectionRepository={collectionRepository}
-        notificationRepository={notificationRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+      </WithRepositories>
     )
 
     cy.get('[data-testid="unread-notifications-badge"]').should('exist').and('contain', '3')
@@ -210,11 +195,9 @@ describe('LoggedInHeaderActions', () => {
           error: null,
           login: () => {}
         }}>
-        <LoggedInHeaderActions
-          user={testUser}
-          collectionRepository={collectionRepository}
-          notificationRepository={notificationRepository}
-        />
+        <WithRepositories collectionRepository={collectionRepository}>
+          <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+        </WithRepositories>
       </AuthContext.Provider>
     )
 

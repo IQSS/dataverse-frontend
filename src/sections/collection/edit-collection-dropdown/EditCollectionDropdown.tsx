@@ -12,7 +12,6 @@ import {
 import { PencilFill } from 'react-bootstrap-icons'
 import { Collection } from '@/collection/domain/models/Collection'
 import { RouteWithParams } from '@/sections/Route.enum'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionHelper } from '../CollectionHelper'
 import { DeleteCollectionButton } from './delete-collection-button/DeleteCollectionButton'
 import { NotImplementedModal } from '@/sections/not-implemented/NotImplementedModal'
@@ -21,12 +20,10 @@ import styles from './EditCollectionDropdown.module.scss'
 interface EditCollectionDropdownProps {
   collection: Collection
   canUserDeleteCollection: boolean
-  collectionRepository: CollectionRepository
 }
 
 export const EditCollectionDropdown = ({
   collection,
-  collectionRepository,
   canUserDeleteCollection
 }: EditCollectionDropdownProps) => {
   const { t } = useTranslation('collection')
@@ -91,7 +88,6 @@ export const EditCollectionDropdown = ({
             <DeleteCollectionButton
               collectionId={collection.id}
               parentCollection={CollectionHelper.getParentCollection(collection.hierarchy)}
-              collectionRepository={collectionRepository}
             />
           </>
         )}

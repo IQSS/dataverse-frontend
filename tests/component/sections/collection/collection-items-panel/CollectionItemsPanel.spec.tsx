@@ -1,8 +1,10 @@
-import { CollectionItemsPanel } from '@/sections/collection/collection-items-panel/CollectionItemsPanel'
+import { ComponentProps } from 'react'
+import { CollectionItemsPanel as BaseCollectionItemsPanel } from '@/sections/collection/collection-items-panel/CollectionItemsPanel'
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const ROOT_COLLECTION_ALIAS = 'root'
 const collectionRepository: CollectionRepository = {} as CollectionRepository
@@ -22,6 +24,19 @@ const emptyItemsWithCount: CollectionItemSubset = {
   items: [],
   facets: [],
   totalItemCount: 0
+}
+
+function CollectionItemsPanel({
+  collectionRepository,
+  ...props
+}: ComponentProps<typeof BaseCollectionItemsPanel> & {
+  collectionRepository: CollectionRepository
+}) {
+  return (
+    <WithRepositories collectionRepository={collectionRepository}>
+      <BaseCollectionItemsPanel {...props} />
+    </WithRepositories>
+  )
 }
 
 describe('CollectionItemsPanel', () => {

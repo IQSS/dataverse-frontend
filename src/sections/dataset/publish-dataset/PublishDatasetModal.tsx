@@ -14,7 +14,6 @@ import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmi
 import { QueryParamKey, Route } from '../../Route.enum'
 import { usePublishDataset } from './usePublishDataset'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { UpwardHierarchyNode } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { DatasetLicense } from '@/dataset/domain/models/Dataset'
 import { PublishLicense } from '@/sections/dataset/publish-dataset/PublishLicense'
@@ -22,11 +21,11 @@ import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { useSettings } from '@/sections/settings/SettingsContext'
 import { SettingName } from '@/settings/domain/models/Setting'
 import styles from './PublishDatasetModal.module.scss'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface PublishDatasetModalProps {
   show: boolean
   repository: DatasetRepository
-  collectionRepository: CollectionRepository
   parentCollection: UpwardHierarchyNode
   persistentId: string
   license: DatasetLicense | undefined
@@ -41,7 +40,6 @@ interface PublishDatasetModalProps {
 export function PublishDatasetModal({
   show,
   repository,
-  collectionRepository,
   parentCollection,
   persistentId,
   license,
@@ -52,6 +50,7 @@ export function PublishDatasetModal({
   nextMinorVersion,
   requiresMajorVersionUpdate
 }: PublishDatasetModalProps) {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()

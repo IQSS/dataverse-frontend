@@ -7,6 +7,7 @@ import { NotImplementedModalProvider } from '../../../../src/sections/not-implem
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const templateRepository: TemplateRepository = {} as TemplateRepository
@@ -24,6 +25,12 @@ const metadataBlocksInfoOnEditMode =
 const COLLECTION_NAME = 'Collection Name'
 const collection = CollectionMother.create({ name: COLLECTION_NAME, id: 'test-alias' })
 
+const mountCreateDataset = (component: JSX.Element): void => {
+  cy.customMount(
+    <WithRepositories collectionRepository={collectionRepository}>{component}</WithRepositories>
+  )
+}
+
 describe('Create Dataset', () => {
   beforeEach(() => {
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
@@ -40,12 +47,11 @@ describe('Create Dataset', () => {
 
   it('should show page not found when owner collection does not exist', () => {
     collectionRepository.getById = cy.stub().resolves(null)
-    cy.customMount(
+    mountCreateDataset(
       <CreateDataset
         datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        collectionRepository={collectionRepository}
         collectionId={'non-existing-collection'}
       />
     )
@@ -58,12 +64,11 @@ describe('Create Dataset', () => {
       return Cypress.Promise.delay(DELAYED_TIME).then(() => collection)
     })
 
-    cy.customMount(
+    mountCreateDataset(
       <CreateDataset
         datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        collectionRepository={collectionRepository}
         collectionId={'test-collectionId'}
       />
     )
@@ -75,12 +80,11 @@ describe('Create Dataset', () => {
   })
 
   it('should render the correct breadcrumbs', () => {
-    cy.customMount(
+    mountCreateDataset(
       <CreateDataset
         datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        collectionRepository={collectionRepository}
         collectionId={'test-collectionId'}
       />
     )
@@ -94,14 +98,13 @@ describe('Create Dataset', () => {
   })
 
   it('renders the Host Collection Form', () => {
-    cy.customMount(
+    mountCreateDataset(
       <NotImplementedModalProvider>
         <CreateDataset
           datasetRepository={datasetRepository}
           collectionId={'test-collectionId'}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
-          collectionRepository={collectionRepository}
         />
       </NotImplementedModalProvider>
     )
@@ -122,12 +125,11 @@ describe('Create Dataset', () => {
       })
     )
 
-    cy.customMount(
+    mountCreateDataset(
       <CreateDataset
         datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        collectionRepository={collectionRepository}
         collectionId={'test-collectionId'}
       />
     )
@@ -135,12 +137,11 @@ describe('Create Dataset', () => {
   })
 
   it('should not show alert error message when user is allowed to create a dataset within the collection', () => {
-    cy.customMount(
+    mountCreateDataset(
       <CreateDataset
         datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        collectionRepository={collectionRepository}
         collectionId={'test-collectionId'}
       />
     )
@@ -149,12 +150,11 @@ describe('Create Dataset', () => {
 
   describe('dataset templates functionality', () => {
     it('should not show template select when there are no templates', () => {
-      cy.customMount(
+      mountCreateDataset(
         <CreateDataset
           datasetRepository={datasetRepository}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
-          collectionRepository={collectionRepository}
           collectionId={'test-collectionId'}
         />
       )
@@ -168,12 +168,11 @@ describe('Create Dataset', () => {
       })
       templateRepository.getTemplatesByCollectionId = cy.stub().resolves([testDatasetTemplate1])
 
-      cy.customMount(
+      mountCreateDataset(
         <CreateDataset
           datasetRepository={datasetRepository}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
-          collectionRepository={collectionRepository}
           collectionId={'test-collectionId'}
         />
       )
@@ -195,12 +194,11 @@ describe('Create Dataset', () => {
         .stub()
         .resolves([testDatasetTemplate1, testDatasetTemplate2])
 
-      cy.customMount(
+      mountCreateDataset(
         <CreateDataset
           datasetRepository={datasetRepository}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
-          collectionRepository={collectionRepository}
           collectionId={'test-collectionId'}
         />
       )
@@ -222,12 +220,11 @@ describe('Create Dataset', () => {
         .stub()
         .resolves([testDatasetTemplate1, testDatasetTemplate2])
 
-      cy.customMount(
+      mountCreateDataset(
         <CreateDataset
           datasetRepository={datasetRepository}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
-          collectionRepository={collectionRepository}
           collectionId={'test-collectionId'}
         />
       )

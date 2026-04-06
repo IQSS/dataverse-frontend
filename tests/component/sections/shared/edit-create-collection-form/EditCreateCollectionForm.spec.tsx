@@ -1,9 +1,10 @@
+import { ComponentProps } from 'react'
 import { CollectionType } from '@/collection/domain/models/CollectionType'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { collectionNameToAlias } from '@/sections/shared/form/EditCreateCollectionForm/collection-form/top-fields-section/IdentifierField'
-import { EditCreateCollectionForm } from '@/sections/shared/form/EditCreateCollectionForm/EditCreateCollectionForm'
+import { EditCreateCollectionForm as BaseEditCreateCollectionForm } from '@/sections/shared/form/EditCreateCollectionForm/EditCreateCollectionForm'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { CollectionFacetMother } from '@tests/component/collection/domain/models/CollectionFacetMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
@@ -11,6 +12,7 @@ import { MetadataBlockInfoMother } from '@tests/component/metadata-block-info/do
 import { UpwardHierarchyNodeMother } from '@tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { UserMother } from '@tests/component/users/domain/models/UserMother'
 import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const metadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -78,6 +80,19 @@ const allMetadataBlocksMock = [
 const collectionFacets = CollectionFacetMother.createFacets()
 
 const allFacetableMetadataFields = MetadataBlockInfoMother.getAllFacetableMetadataFields()
+
+function EditCreateCollectionForm({
+  collectionRepository,
+  ...props
+}: ComponentProps<typeof BaseEditCreateCollectionForm> & {
+  collectionRepository: CollectionRepository
+}) {
+  return (
+    <WithRepositories collectionRepository={collectionRepository}>
+      <BaseEditCreateCollectionForm {...props} />
+    </WithRepositories>
+  )
+}
 
 describe('EditCreateCollectionForm', () => {
   beforeEach(() => {

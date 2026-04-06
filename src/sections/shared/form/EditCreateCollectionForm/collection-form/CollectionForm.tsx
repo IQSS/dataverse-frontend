@@ -3,7 +3,6 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Alert, Button, Card, Stack } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionFormData, CollectionFormFacet } from '../types'
 import {
   MetadataBlockInfo,
@@ -16,11 +15,11 @@ import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsS
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
 import { EditCreateCollectionFormMode } from '../EditCreateCollectionForm'
 import { RouteWithParams } from '@/sections/Route.enum'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './CollectionForm.module.scss'
 
 export interface CollectionFormProps {
   mode: EditCreateCollectionFormMode
-  collectionRepository: CollectionRepository
   collectionIdOrParentCollectionId: string
   defaultValues: CollectionFormData
   allMetadataBlocksInfo: MetadataBlockInfo[]
@@ -31,7 +30,6 @@ export interface CollectionFormProps {
 
 export const CollectionForm = ({
   mode,
-  collectionRepository,
   collectionIdOrParentCollectionId,
   defaultValues,
   allMetadataBlocksInfo,
@@ -39,6 +37,7 @@ export const CollectionForm = ({
   defaultCollectionFacets,
   isEditingRootCollection
 }: CollectionFormProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const formContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation('shared')
   const navigate = useNavigate()

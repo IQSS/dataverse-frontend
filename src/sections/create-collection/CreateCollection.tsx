@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
 import { useCollection } from '@/sections/collection/useCollection'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { useSession } from '../session/SessionContext'
@@ -14,18 +13,18 @@ import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFiel
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
 import { EditCreateCollectionForm } from '../shared/form/EditCreateCollectionForm/EditCreateCollectionForm'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface CreateCollectionProps {
   parentCollectionId: string
-  collectionRepository: CollectionRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
 export function CreateCollection({
   parentCollectionId,
-  collectionRepository,
   metadataBlockInfoRepository
 }: CreateCollectionProps) {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('createCollection')
   const { isLoading, setIsLoading } = useLoading()
   const { user } = useSession()
@@ -98,7 +97,6 @@ export function CreateCollection({
         mode="create"
         user={user as User}
         parentCollection={collection}
-        collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     </section>

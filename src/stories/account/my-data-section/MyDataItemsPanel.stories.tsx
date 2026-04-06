@@ -4,6 +4,7 @@ import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItems
 import { CollectionMockRepository } from '../../collection/CollectionMockRepository'
 import { WithLoggedInSuperUser } from '@/stories/WithLoggedInSuperUser'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof MyDataItemsPanel> = {
   title: 'Sections/Account Page/MyDataItemsPanel',
@@ -20,19 +21,17 @@ type Story = StoryObj<typeof MyDataItemsPanel>
 
 export const Default: Story = {
   render: () => (
-    <MyDataItemsPanel
-      roleRepository={new RoleMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <MyDataItemsPanel roleRepository={new RoleMockRepository()} />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const WithSuperUser: Story = {
   decorators: [WithLoggedInSuperUser],
   render: () => (
-    <MyDataItemsPanel
-      roleRepository={new RoleMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <MyDataItemsPanel roleRepository={new RoleMockRepository()} />
+    </RepositoriesStoryProvider>
   )
 }
