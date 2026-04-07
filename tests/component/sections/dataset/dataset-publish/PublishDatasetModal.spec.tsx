@@ -242,7 +242,7 @@ describe('PublishDatasetModal', () => {
       .and('include', `/collections/${parentCollection.id}`)
   })
 
-  it('Displays custom terms when license is undefined', () => {
+  it('displays custom terms when license is undefined', () => {
     const parentCollection = UpwardHierarchyNodeMother.createCollection({ isReleased: false })
 
     mountPublishDatasetModal({
@@ -279,7 +279,7 @@ describe('PublishDatasetModal', () => {
     cy.findByRole('link', { name: 'CC0 1.0' }).should('exist')
   })
 
-  it('opens the terms tab URL without duplicating the base path when Custom Dataset Terms link is clicked', () => {
+  it('opens the terms tab URL when Custom Dataset Terms link is clicked', () => {
     const windowOpenStub = cy.stub().as('windowOpen')
     cy.window().then((win) => {
       cy.stub(win, 'open').callsFake(windowOpenStub)
