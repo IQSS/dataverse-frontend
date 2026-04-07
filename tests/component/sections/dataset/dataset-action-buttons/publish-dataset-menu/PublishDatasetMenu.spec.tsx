@@ -11,10 +11,25 @@ import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { SettingsProvider } from '../../../../../../src/sections/settings/SettingsProvider'
 import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 const collectionRepository = {} as CollectionRepository
 const datasetRepository = {} as DatasetRepository
 
 let dataverseInfoRepository: DataverseInfoRepository
+
+const mountAuthenticatedPublishDatasetMenu = (
+  component: JSX.Element,
+  repository: CollectionRepository = collectionRepository
+) =>
+  cy.mountAuthenticated(
+    <WithRepositories collectionRepository={repository}>{component}</WithRepositories>
+  )
+
+const mountUnauthenticatedPublishDatasetMenu = (
+  component: JSX.Element,
+  repository: CollectionRepository = collectionRepository
+) =>
+  cy.customMount(<WithRepositories collectionRepository={repository}>{component}</WithRepositories>)
 describe('PublishDatasetMenu', () => {
   beforeEach(() => {
     dataverseInfoRepository = new DataverseInfoMockEmptyRepository()
@@ -29,12 +44,8 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' })
@@ -58,13 +69,9 @@ describe('PublishDatasetMenu', () => {
       .stub()
       .resolves(SettingMother.createExternalStatusesAllowed(['Author Contacted', 'Privacy Review']))
 
-    cy.mountAuthenticated(
+    mountAuthenticatedPublishDatasetMenu(
       <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-        <PublishDatasetMenu
-          datasetRepository={datasetRepository}
-          collectionRepository={collectionRepository}
-          dataset={dataset}
-        />
+        <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
       </SettingsProvider>
     )
 
@@ -82,12 +89,8 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.customMount(
-      <PublishDatasetMenu
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        dataset={dataset}
-      />
+    mountUnauthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
@@ -100,12 +103,8 @@ describe('PublishDatasetMenu', () => {
       locks: []
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        collectionRepository={collectionRepository}
-        datasetRepository={datasetRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
@@ -118,12 +117,8 @@ describe('PublishDatasetMenu', () => {
       locks: []
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        collectionRepository={collectionRepository}
-        datasetRepository={datasetRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
@@ -136,12 +131,8 @@ describe('PublishDatasetMenu', () => {
       locks: []
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        collectionRepository={collectionRepository}
-        datasetRepository={datasetRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
@@ -156,12 +147,8 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        collectionRepository={collectionRepository}
-        datasetRepository={datasetRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.enabled')
@@ -176,12 +163,8 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        collectionRepository={collectionRepository}
-        datasetRepository={datasetRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.disabled')
@@ -196,12 +179,8 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.disabled')
@@ -216,12 +195,8 @@ describe('PublishDatasetMenu', () => {
       isValid: false
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.disabled')
@@ -236,12 +211,8 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' })
@@ -261,12 +232,8 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' }).click()
@@ -283,12 +250,8 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.mountAuthenticated(
-      <PublishDatasetMenu
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        dataset={dataset}
-      />
+    mountAuthenticatedPublishDatasetMenu(
+      <PublishDatasetMenu datasetRepository={datasetRepository} dataset={dataset} />
     )
 
     cy.findByRole('button', { name: 'Publish Dataset' }).click()

@@ -10,6 +10,7 @@ import { SettingsProvider } from '../../../../../src/sections/settings/SettingsP
 import { SettingMother } from '@tests/component/settings/domain/models/SettingMother'
 import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const TEST_PERSISTENT_ID = 'testPersistentId'
 
@@ -33,7 +34,7 @@ const createCollectionRepository = (options: CreateRepositoryOptions = {}) => {
 type MountOptions = {
   mountAs?: 'authenticated' | 'superuser'
   repository?: DatasetRepository
-  collectionRepository?: CollectionRepository
+  collectionRepository: CollectionRepository | undefined
   parentCollection?: ReturnType<typeof UpwardHierarchyNodeMother.createCollection>
   handleClose?: sinon.SinonStub
   dataverseInfoRepository?: DataverseInfoRepository
@@ -56,19 +57,20 @@ const mountPublishDatasetModal = ({
   const resolvedDataverseInfoRepository = dataverseInfoRepository ?? dataverseInfoWithoutCustomText
 
   mountFn(
-    <SettingsProvider dataverseInfoRepository={resolvedDataverseInfoRepository}>
-      <PublishDatasetModal
-        show={true}
-        repository={repository}
-        license={LicenseMother.create()}
-        collectionRepository={collectionRepository}
-        parentCollection={parentCollection}
-        persistentId={TEST_PERSISTENT_ID}
-        releasedVersionExists={false}
-        handleClose={handleClose}
-        {...props}
-      />
-    </SettingsProvider>
+    <WithRepositories collectionRepository={collectionRepository}>
+      <SettingsProvider dataverseInfoRepository={resolvedDataverseInfoRepository}>
+        <PublishDatasetModal
+          show={true}
+          repository={repository}
+          license={LicenseMother.create()}
+          parentCollection={parentCollection}
+          persistentId={TEST_PERSISTENT_ID}
+          releasedVersionExists={false}
+          handleClose={handleClose}
+          {...props}
+        />
+      </SettingsProvider>
+    </WithRepositories>
   )
 
   return { repository, collectionRepository, parentCollection, handleClose }
@@ -104,16 +106,17 @@ describe('PublishDatasetModal', () => {
     cy.spy(needsUpdateStore, 'setNeedsUpdate').as('setNeedsUpdate')
 
     cy.mountAuthenticated(
-      <PublishDatasetModal
-        show={true}
-        repository={repository}
-        license={LicenseMother.create()}
-        collectionRepository={collectionRepository}
-        parentCollection={parentCollection}
-        persistentId="testPersistentId"
-        releasedVersionExists={false}
-        handleClose={handleClose}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <PublishDatasetModal
+          show={true}
+          repository={repository}
+          license={LicenseMother.create()}
+          parentCollection={parentCollection}
+          persistentId="testPersistentId"
+          releasedVersionExists={false}
+          handleClose={handleClose}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('Continue').click()

@@ -6,25 +6,24 @@ import { Navbar } from '@iqss/dataverse-design-system'
 import { User } from '@/users/domain/models/User'
 import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
 import { RouteWithParams, Route } from '@/sections//Route.enum'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { AccountHelper } from '@/sections/account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
 import UnreadNotificationBadge from '@/sections/layout/header/UnreadNotificationBadge'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { useUnreadCount } from '@/notifications/domain/hooks/useUnreadCount'
 import { SessionContext } from '@/sections/session/SessionContext'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface LoggedInHeaderActionsProps {
   user: User
-  collectionRepository: CollectionRepository
   notificationRepository: NotificationRepository
 }
 
 export const LoggedInHeaderActions = ({
   user,
-  collectionRepository,
   notificationRepository
 }: LoggedInHeaderActionsProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('header')
   const { logOut } = useContext(AuthContext)
   const { setUser } = useContext(SessionContext)

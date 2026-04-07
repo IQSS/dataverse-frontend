@@ -10,6 +10,7 @@ import { PublishDatasetMenu } from '../../../../sections/dataset/dataset-action-
 import { WithLoggedInUser } from '../../../WithLoggedInUser'
 import { DatasetMockRepository } from '../../DatasetMockRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof PublishDatasetMenu> = {
   title: 'Sections/Dataset Page/DatasetActionButtons/PublishDatasetMenu',
@@ -26,48 +27,51 @@ type Story = StoryObj<typeof PublishDatasetMenu>
 
 export const PublishingAllowed: Story = {
   render: () => (
-    <PublishDatasetMenu
-      dataset={DatasetMother.create({
-        version: DatasetVersionMother.createDraftAsLatestVersion(),
-        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
-        locks: [],
-        hasValidTermsOfAccess: true,
-        isValid: true
-      })}
-      datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <PublishDatasetMenu
+        dataset={DatasetMother.create({
+          version: DatasetVersionMother.createDraftAsLatestVersion(),
+          permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+          locks: [],
+          hasValidTermsOfAccess: true,
+          isValid: true
+        })}
+        datasetRepository={new DatasetMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const NoValidTermsOfAccess: Story = {
   render: () => (
-    <PublishDatasetMenu
-      dataset={DatasetMother.create({
-        version: DatasetVersionMother.createDraftAsLatestVersion(),
-        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
-        locks: [],
-        hasValidTermsOfAccess: false,
-        isValid: true
-      })}
-      datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <PublishDatasetMenu
+        dataset={DatasetMother.create({
+          version: DatasetVersionMother.createDraftAsLatestVersion(),
+          permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+          locks: [],
+          hasValidTermsOfAccess: false,
+          isValid: true
+        })}
+        datasetRepository={new DatasetMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const DatasetInReview: Story = {
   render: () => (
-    <PublishDatasetMenu
-      dataset={DatasetMother.create({
-        version: DatasetVersionMother.createDraftAsLatestVersionInReview(),
-        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
-        locks: [],
-        hasValidTermsOfAccess: true,
-        isValid: true
-      })}
-      datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <PublishDatasetMenu
+        dataset={DatasetMother.create({
+          version: DatasetVersionMother.createDraftAsLatestVersionInReview(),
+          permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+          locks: [],
+          hasValidTermsOfAccess: true,
+          isValid: true
+        })}
+        datasetRepository={new DatasetMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }

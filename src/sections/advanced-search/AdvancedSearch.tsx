@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useGetCollectionMetadataBlocksInfo } from '@/shared/hooks/useGetCollectionMetadataBlocksInfo'
 import { useCollection } from '../collection/useCollection'
@@ -16,20 +15,20 @@ import {
 } from './advanced-search-form/AdvancedSearchForm'
 import { MetadataFieldsHelper } from '../shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 import { AdvancedSearchHelper } from './AdvancedSearchHelper'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface AdvancedSearchProps {
   collectionId: string
-  collectionRepository: CollectionRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionFilterQueries?: string
 }
 
 export const AdvancedSearch = ({
   collectionId,
-  collectionRepository,
   metadataBlockInfoRepository,
   collectionFilterQueries
 }: AdvancedSearchProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('advancedSearch')
   const { setIsLoading } = useLoading()
   const [previousAdvancedSearchFormData, setPreviousAdvancedSearchFormData] =

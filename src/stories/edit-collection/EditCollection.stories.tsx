@@ -13,6 +13,7 @@ import { UpwardHierarchyNodeMother } from '@tests/component/shared/hierarchy/dom
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
 import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
+import { RepositoriesStoryProvider, WithRepositories } from '../WithRepositories'
 
 const meta: Meta<typeof EditCollection> = {
   title: 'Pages/Edit Collection',
@@ -54,40 +55,41 @@ export const Default: Story = {
     }
 
     return (
-      <EditCollection
-        collectionId="science"
-        collectionRepository={collectionRepo}
-        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      />
+      <RepositoriesStoryProvider collectionRepository={collectionRepo}>
+        <EditCollection
+          collectionId="science"
+          metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        />
+      </RepositoriesStoryProvider>
     )
   }
 }
 
 export const EditingRoot: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <EditCollection
       collectionId={ROOT_COLLECTION_ALIAS}
-      collectionRepository={new CollectionMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
     />
   )
 }
 
 export const Loading: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionLoadingMockRepository() })],
   render: () => (
     <EditCollection
       collectionId={ROOT_COLLECTION_ALIAS}
-      collectionRepository={new CollectionLoadingMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
     />
   )
 }
 
 export const CollectionNotFound: Story = {
+  decorators: [WithRepositories({ collectionRepository: new NoCollectionMockRepository() })],
   render: () => (
     <EditCollection
       collectionId={ROOT_COLLECTION_ALIAS}
-      collectionRepository={new NoCollectionMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
     />
   )
@@ -107,10 +109,14 @@ collectionRepositoryWithoutPermissionsToCreateCollection.getUserPermissions = ()
 }
 
 export const NotAllowedToEditCollection: Story = {
+  decorators: [
+    WithRepositories({
+      collectionRepository: collectionRepositoryWithoutPermissionsToCreateCollection
+    })
+  ],
   render: () => (
     <EditCollection
       collectionId={ROOT_COLLECTION_ALIAS}
-      collectionRepository={collectionRepositoryWithoutPermissionsToCreateCollection}
       metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
     />
   )

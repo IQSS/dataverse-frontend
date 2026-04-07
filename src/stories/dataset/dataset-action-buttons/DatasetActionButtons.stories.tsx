@@ -12,6 +12,7 @@ import { WithLoggedInUser } from '../../WithLoggedInUser'
 import { DatasetMockRepository } from '../DatasetMockRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 import { ContactMockRepository } from '@/stories/shared-mock-repositories/contact/ContactMockRepository'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof DatasetActionButtons> = {
   title: 'Sections/Dataset Page/DatasetActionButtons',
@@ -28,65 +29,68 @@ type Story = StoryObj<typeof DatasetActionButtons>
 
 export const WithPublishPermissions: Story = {
   render: () => (
-    <DatasetActionButtons
-      dataset={DatasetMother.create({
-        permissions: DatasetPermissionsMother.createWithAllAllowed(),
-        version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
-        hasValidTermsOfAccess: true,
-        hasOneTabularFileAtLeast: true,
-        fileDownloadSizes: [
-          DatasetFileDownloadSizeMother.createOriginal(),
-          DatasetFileDownloadSizeMother.createArchival()
-        ],
-        isValid: true
-      })}
-      datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-      contactRepository={new ContactMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <DatasetActionButtons
+        dataset={DatasetMother.create({
+          permissions: DatasetPermissionsMother.createWithAllAllowed(),
+          version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
+          hasValidTermsOfAccess: true,
+          hasOneTabularFileAtLeast: true,
+          fileDownloadSizes: [
+            DatasetFileDownloadSizeMother.createOriginal(),
+            DatasetFileDownloadSizeMother.createArchival()
+          ],
+          isValid: true
+        })}
+        datasetRepository={new DatasetMockRepository()}
+        contactRepository={new ContactMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const WithNoDatasetPermissions: Story = {
   render: () => (
-    <DatasetActionButtons
-      dataset={DatasetMother.create({
-        permissions: DatasetPermissionsMother.createWithNoDatasetPermissions(),
-        version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
-        hasValidTermsOfAccess: true,
-        fileDownloadSizes: [
-          DatasetFileDownloadSizeMother.createOriginal(),
-          DatasetFileDownloadSizeMother.createArchival()
-        ],
-        isValid: true
-      })}
-      datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-      contactRepository={new ContactMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <DatasetActionButtons
+        dataset={DatasetMother.create({
+          permissions: DatasetPermissionsMother.createWithNoDatasetPermissions(),
+          version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
+          hasValidTermsOfAccess: true,
+          fileDownloadSizes: [
+            DatasetFileDownloadSizeMother.createOriginal(),
+            DatasetFileDownloadSizeMother.createArchival()
+          ],
+          isValid: true
+        })}
+        datasetRepository={new DatasetMockRepository()}
+        contactRepository={new ContactMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const WithUpdateAndNoPublishDatasetPermissions: Story = {
   render: () => (
-    <DatasetActionButtons
-      dataset={DatasetMother.create({
-        permissions: DatasetPermissionsMother.create({
-          canDownloadFiles: true,
-          canPublishDataset: false,
-          canUpdateDataset: true
-        }),
-        version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
-        hasValidTermsOfAccess: true,
-        fileDownloadSizes: [
-          DatasetFileDownloadSizeMother.createOriginal(),
-          DatasetFileDownloadSizeMother.createArchival()
-        ],
-        isValid: true
-      })}
-      datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-      contactRepository={new ContactMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <DatasetActionButtons
+        dataset={DatasetMother.create({
+          permissions: DatasetPermissionsMother.create({
+            canDownloadFiles: true,
+            canPublishDataset: false,
+            canUpdateDataset: true
+          }),
+          version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
+          hasValidTermsOfAccess: true,
+          fileDownloadSizes: [
+            DatasetFileDownloadSizeMother.createOriginal(),
+            DatasetFileDownloadSizeMother.createArchival()
+          ],
+          isValid: true
+        })}
+        datasetRepository={new DatasetMockRepository()}
+        contactRepository={new ContactMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }

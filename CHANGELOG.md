@@ -13,6 +13,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Share button in File Page.
 - Link Collection and Link Dataset features.
 - Edit Terms Integration.
+- File upload now shows the remaining storage quota when upload limits are available.
 - With the addition of the new runtime configuration approach, we now support dynamic configuration for languages. If more than one language is configured, the Language Switcher will be shown in the header to allow users to change the language.
 - Added Notifications tab in Account Page
 - Added runtime configuration options for homepage branding and support link.
@@ -29,6 +30,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Renamed dataset template fetch/create use cases and DTOs to `getTemplatesByCollectionId` and `CreateTemplateDTO` for API alignment, and added new `getTemplate` and `deleteTemplate` use cases for retrieving a single template by ID and deleting templates.
 - Added disclaimer text and custom popup text to Publish Dataset modal for better communication of the implications of publishing a dataset. The text can be configured through the runtime configuration.
 - Dataset page Terms tab title now depends on permissions: users with dataset update permission see `Terms and Guestbook`, and read-only users see `Terms`.
+- Avoided prop-drilling for collection repository, so used context to share epository instances.
 
 ### Fixed
 

@@ -9,7 +9,6 @@ import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { DatasetMetadataForm } from '../shared/form/DatasetMetadataForm'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
-import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useCollection } from '../collection/useCollection'
@@ -19,12 +18,12 @@ import { useGetTemplatesByCollectionId } from '@/dataset/domain/hooks/useGetTemp
 import { type Template } from '@/templates/domain/models/Template'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface CreateDatasetProps {
   datasetRepository: DatasetRepository
   templateRepository: TemplateRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
-  collectionRepository: CollectionRepository
   collectionId: string
 }
 
@@ -32,9 +31,9 @@ export function CreateDataset({
   datasetRepository,
   templateRepository,
   metadataBlockInfoRepository,
-  collectionRepository,
   collectionId
 }: CreateDatasetProps) {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('createDataset')
   const { isModalOpen, hideModal } = useNotImplementedModal()
   const { setIsLoading } = useLoading()

@@ -9,6 +9,7 @@ import {
   DatasetVersionMother
 } from '../../../dataset/domain/models/DatasetMother'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const collectionRepository: CollectionRepository = {} as CollectionRepository
@@ -25,12 +26,13 @@ describe('DatasetActionButtons', () => {
     })
 
     cy.mountAuthenticated(
-      <DatasetActionButtons
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        contactRepository={contactRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <DatasetActionButtons
+          dataset={dataset}
+          datasetRepository={datasetRepository}
+          contactRepository={contactRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
@@ -56,12 +58,13 @@ describe('DatasetActionButtons', () => {
     })
 
     cy.mountAuthenticated(
-      <DatasetActionButtons
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        contactRepository={contactRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <DatasetActionButtons
+          dataset={dataset}
+          datasetRepository={datasetRepository}
+          contactRepository={contactRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
@@ -78,12 +81,13 @@ describe('DatasetActionButtons', () => {
       version: DatasetVersionMother.createDeaccessioned()
     })
     cy.mountAuthenticated(
-      <DatasetActionButtons
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        contactRepository={contactRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <DatasetActionButtons
+          dataset={dataset}
+          datasetRepository={datasetRepository}
+          contactRepository={contactRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Share' }).should('not.exist')

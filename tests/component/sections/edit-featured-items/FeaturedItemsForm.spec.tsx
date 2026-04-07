@@ -12,6 +12,7 @@ import { FeaturedItemsFormData } from '@/sections/edit-collection-featured-items
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const collectionRepository = {} as CollectionRepository
 const testCollection = CollectionMother.create({ name: 'Collection Name' })
@@ -46,16 +47,20 @@ const selectCustomFeaturedItemType = () => cy.findByTestId('base-form-item-custo
 const selectDvObjectFeaturedItemType = () =>
   cy.findByTestId('base-form-item-dvobject-option').click()
 
+const mountFeaturedItemsForm = (component: JSX.Element) =>
+  cy.mountAuthenticated(
+    <WithRepositories collectionRepository={collectionRepository}>{component}</WithRepositories>
+  )
+
 describe('FeaturedItemsForm', () => {
   beforeEach(() => {
     cy.viewport(1440, 824)
   })
 
   it('renders the Select Featured Item Type UI initally if collection has no featured items', () => {
-    cy.mountAuthenticated(
+    mountFeaturedItemsForm(
       <FeaturedItemsForm
         collectionId={testCollection.id}
-        collectionRepository={collectionRepository}
         defaultValues={emptyFeaturedItems}
         initialExistingFeaturedItems={[]}
       />
@@ -65,10 +70,9 @@ describe('FeaturedItemsForm', () => {
   })
 
   it('renders the form with the default values correctly', () => {
-    cy.mountAuthenticated(
+    mountFeaturedItemsForm(
       <FeaturedItemsForm
         collectionId={testCollection.id}
-        collectionRepository={collectionRepository}
         defaultValues={formDefaultValues}
         initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
       />
@@ -113,10 +117,9 @@ describe('FeaturedItemsForm', () => {
 
   describe('Image Field', () => {
     it('should show the new selected image preview', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -156,10 +159,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should change the initial image to the new selected image', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -201,10 +203,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should remove the initial image and then restore it', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -241,10 +242,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should change the initial image to the new selected image and then restore it', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -296,10 +296,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should remove the just selected image', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -344,10 +343,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show the aspect-ratio warning message if the selected image does not have the recommended aspect ratio', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -380,10 +378,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('neither helper text nor warning message should be shown if the image is invalid', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -438,10 +435,9 @@ describe('FeaturedItemsForm', () => {
 
   describe('Dataverse Object URL Field', () => {
     it('should show the correct type and identifier when entering a valid Dataverse object URL', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -488,10 +484,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show required error when leaving the field empty', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -516,10 +511,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show invalid URL error when entering an invalid Dataverse object URL', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -544,10 +538,9 @@ describe('FeaturedItemsForm', () => {
   })
 
   it('should add a new item when clicking the add button', () => {
-    cy.mountAuthenticated(
+    mountFeaturedItemsForm(
       <FeaturedItemsForm
         collectionId={testCollection.id}
-        collectionRepository={collectionRepository}
         defaultValues={formDefaultValues}
         initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
       />
@@ -566,10 +559,9 @@ describe('FeaturedItemsForm', () => {
 
   describe('Remove Featured Item Button', () => {
     it('should remove an item when clicking the remove button', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -597,10 +589,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show remove confirmation dialog if user has entered some data in the fields and confirm removal', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -639,10 +630,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show remove confirmation dialog if user has entered some data in the fields and cancel removal', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -683,10 +673,9 @@ describe('FeaturedItemsForm', () => {
 
   describe('Back To Type Selection button', () => {
     it('should go back to the Select Featured Item Type UI when clicking the back button', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -705,10 +694,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show the confirm discard changes dialog when trying to go back to the Select Featured Item Type UI with unsaved changes and clear errors from the form', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -754,10 +742,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show the confirm discard changes dialog and stay if users cancels going back', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -791,10 +778,9 @@ describe('FeaturedItemsForm', () => {
     it('should delete a single featured item when clicking the delete button and confirming the action', () => {
       collectionRepository.deleteFeaturedItem = cy.stub().as('deleteFeaturedItem').resolves()
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -831,10 +817,9 @@ describe('FeaturedItemsForm', () => {
 
     it('should not delete a single featured item when clicking the delete button and canceling the action', () => {
       collectionRepository.deleteFeaturedItem = cy.stub().as('deleteFeaturedItem').resolves()
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -861,10 +846,9 @@ describe('FeaturedItemsForm', () => {
         .as('deleteFeaturedItem')
         .rejects(new WriteError(errorMessage))
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -902,10 +886,9 @@ describe('FeaturedItemsForm', () => {
     it('should show fallback error when trying to delete a single featured item and not receiving an instance of WriteError from JS-dataverse', () => {
       collectionRepository.deleteFeaturedItem = cy.stub().as('deleteFeaturedItem').rejects()
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -945,10 +928,9 @@ describe('FeaturedItemsForm', () => {
     it('resets the form and show the select featured item type UI when deleting the last featured item', () => {
       collectionRepository.deleteFeaturedItem = cy.stub().as('deleteFeaturedItem').resolves()
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -1001,10 +983,9 @@ describe('FeaturedItemsForm', () => {
       featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(testFeaturedItems)
     }
 
-    cy.mountAuthenticated(
+    mountFeaturedItemsForm(
       <FeaturedItemsForm
         collectionId={testCollection.id}
-        collectionRepository={collectionRepository}
         defaultValues={formDefaultValuesWith4Items}
         initialExistingFeaturedItems={testFeaturedItems}
       />
@@ -1019,10 +1000,9 @@ describe('FeaturedItemsForm', () => {
 
   describe('Form Validations', () => {
     it('should show an error message when the image is too big', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -1068,10 +1048,9 @@ describe('FeaturedItemsForm', () => {
         )
       }
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -1108,10 +1087,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show content required error message when the content is empty', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -1145,10 +1123,9 @@ describe('FeaturedItemsForm', () => {
         featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(testFeaturedItems)
       }
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={testFeaturedItems}
         />
@@ -1168,10 +1145,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show an error message when submitting the form with a base form item without selecting a type', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -1201,10 +1177,9 @@ describe('FeaturedItemsForm', () => {
 
   // TODO: This test is failing in CI sometimes, we need to investigate why and fix it
   it.skip('should change the order of the items ', () => {
-    cy.mountAuthenticated(
+    mountFeaturedItemsForm(
       <FeaturedItemsForm
         collectionId={testCollection.id}
-        collectionRepository={collectionRepository}
         defaultValues={formDefaultValues}
         initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
       />
@@ -1275,10 +1250,9 @@ describe('FeaturedItemsForm', () => {
     it('should submit the form with the new values and show toast - case when collection dont have initial items', () => {
       collectionRepository.updateFeaturedItems = cy.stub().as('updateFeaturedItems').resolves()
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -1403,10 +1377,9 @@ describe('FeaturedItemsForm', () => {
         ])
       }
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo, featuredItemThree]}
         />
@@ -1529,10 +1502,9 @@ describe('FeaturedItemsForm', () => {
         .as('updateFeaturedItems')
         .rejects(new Error('Test Error'))
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -1566,10 +1538,9 @@ describe('FeaturedItemsForm', () => {
 
   describe('Delete All Featured Items', () => {
     it('should not show the delete all button when the collection has no initial items', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
           initialExistingFeaturedItems={[]}
         />
@@ -1579,10 +1550,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show the delete all button when the collection has initial items', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -1594,10 +1564,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show the confirmation modal when clicking the delete all button', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -1612,10 +1581,9 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should cancel the delete all action when clicking the cancel button in the confirmation modal', () => {
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -1636,10 +1604,9 @@ describe('FeaturedItemsForm', () => {
     it('should delete all featured items when clicking the confirm button in the confirmation modal', () => {
       collectionRepository.deleteFeaturedItems = cy.stub().as('deleteFeaturedItems').resolves()
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />
@@ -1673,10 +1640,9 @@ describe('FeaturedItemsForm', () => {
         .as('deleteFeaturedItems')
         .rejects(new Error('Test Error: featured items failed to delete'))
 
-      cy.mountAuthenticated(
+      mountFeaturedItemsForm(
         <FeaturedItemsForm
           collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
           defaultValues={formDefaultValues}
           initialExistingFeaturedItems={[featuredItemOne, featuredItemTwo]}
         />

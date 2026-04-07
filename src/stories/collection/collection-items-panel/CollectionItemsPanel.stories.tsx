@@ -8,6 +8,7 @@ import { CollectionMockRepository } from '../CollectionMockRepository'
 import { CollectionLoadingMockRepository } from '../CollectionLoadingMockRepository'
 import { NoCollectionMockRepository } from '../NoCollectionMockRepository'
 import { CollectionErrorMockRepository } from '../CollectionErrorMockRepository'
+import { WithRepositories } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof CollectionItemsPanel> = {
   title: 'Sections/Collection Page/CollectionItemsPanel',
@@ -23,17 +24,18 @@ export default meta
 type Story = StoryObj<typeof CollectionItemsPanel>
 
 export const Default: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
-      collectionRepository={new CollectionMockRepository()}
       addDataSlot={null}
     />
   )
 }
 
 export const WithAllFiltersAndSearchValue: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
@@ -46,13 +48,13 @@ export const WithAllFiltersAndSearchValue: Story = {
           CollectionItemType.FILE
         ]
       }}
-      collectionRepository={new CollectionMockRepository()}
       addDataSlot={null}
     />
   )
 }
 
 export const WithFacetFiltersApplied: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
@@ -66,18 +68,17 @@ export const WithFacetFiltersApplied: Story = {
         ],
         filtersQuery: ['dvCategory:Department', 'authorName_ss:Admin, Dataverse']
       }}
-      collectionRepository={new CollectionMockRepository()}
       addDataSlot={null}
     />
   )
 }
 
 export const WithAddDataButtons: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
-      collectionRepository={new CollectionMockRepository()}
       addDataSlot={
         <AddDataActionsButton collectionId={'someCollectionId'} canAddCollection canAddDataset />
       }
@@ -86,28 +87,29 @@ export const WithAddDataButtons: Story = {
 }
 
 export const LoadingItems: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionLoadingMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
-      collectionRepository={new CollectionLoadingMockRepository()}
       addDataSlot={null}
     />
   )
 }
 
 export const NoSearchMatches: Story = {
+  decorators: [WithRepositories({ collectionRepository: new NoCollectionMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
       collectionQueryParams={{ pageQuery: 1, searchQuery: 'some search', typesQuery: undefined }}
-      collectionRepository={new NoCollectionMockRepository()}
       addDataSlot={null}
     />
   )
 }
 
 export const NoCollectionDatasetsOrFiles: Story = {
+  decorators: [WithRepositories({ collectionRepository: new NoCollectionMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
@@ -120,13 +122,15 @@ export const NoCollectionDatasetsOrFiles: Story = {
           CollectionItemType.FILE
         ]
       }}
-      collectionRepository={new NoCollectionMockRepository()}
       addDataSlot={null}
     />
   )
 }
 export const NoCollectionDatasetsOrFilesAuthenticatedUser: Story = {
-  decorators: [WithLoggedInUser],
+  decorators: [
+    WithLoggedInUser,
+    WithRepositories({ collectionRepository: new NoCollectionMockRepository() })
+  ],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
@@ -139,7 +143,6 @@ export const NoCollectionDatasetsOrFilesAuthenticatedUser: Story = {
           CollectionItemType.FILE
         ]
       }}
-      collectionRepository={new NoCollectionMockRepository()}
       addDataSlot={
         <AddDataActionsButton collectionId={'collectionId'} canAddCollection canAddDataset />
       }
@@ -148,6 +151,7 @@ export const NoCollectionDatasetsOrFilesAuthenticatedUser: Story = {
 }
 
 export const NoCollections: Story = {
+  decorators: [WithRepositories({ collectionRepository: new NoCollectionMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
@@ -156,13 +160,13 @@ export const NoCollections: Story = {
         searchQuery: undefined,
         typesQuery: [CollectionItemType.COLLECTION]
       }}
-      collectionRepository={new NoCollectionMockRepository()}
       addDataSlot={null}
     />
   )
 }
 
 export const NoDatasets: Story = {
+  decorators: [WithRepositories({ collectionRepository: new NoCollectionMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
@@ -171,13 +175,13 @@ export const NoDatasets: Story = {
         searchQuery: undefined,
         typesQuery: [CollectionItemType.DATASET]
       }}
-      collectionRepository={new NoCollectionMockRepository()}
       addDataSlot={null}
     />
   )
 }
 
 export const NoFiles: Story = {
+  decorators: [WithRepositories({ collectionRepository: new NoCollectionMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
@@ -186,18 +190,17 @@ export const NoFiles: Story = {
         searchQuery: undefined,
         typesQuery: [CollectionItemType.FILE]
       }}
-      collectionRepository={new NoCollectionMockRepository()}
       addDataSlot={null}
     />
   )
 }
 
 export const WithErrorLoadingItems: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionErrorMockRepository() })],
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
-      collectionRepository={new CollectionErrorMockRepository()}
       addDataSlot={null}
     />
   )
