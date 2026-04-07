@@ -158,9 +158,7 @@ export function PublishDatasetModal({
             handleCustomTermsClick={() => {
               const searchParams = new URLSearchParams(location.search)
               searchParams.set('tab', 'terms')
-              const newUrl = `${import.meta.env.BASE_URL}${
-                location.pathname
-              }?${searchParams.toString()}`
+              const newUrl = `${location.pathname}?${searchParams.toString()}`
 
               window.open(newUrl, '_blank')
             }}
