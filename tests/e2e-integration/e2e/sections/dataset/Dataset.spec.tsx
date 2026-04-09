@@ -27,7 +27,9 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
           cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
             cy.findByRole('heading', {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
@@ -53,7 +55,9 @@ describe('Dataset', () => {
           cy.wrap(DatasetHelper.create(collectionId))
             .its('persistentId')
             .then((persistentId: string) => {
-              cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+              cy.visit(
+                `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+              )
               cy.findByText('Draft').should('exist')
               cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
               cy.findByRole('button', { name: 'Publish' }).should('exist')
@@ -70,7 +74,9 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
           cy.findByText('Draft').should('exist')
           cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
           cy.findByRole('button', { name: 'Publish' }).should('exist')
@@ -178,7 +184,9 @@ describe('Dataset', () => {
         .its('persistentId')
         .then((persistentId: string) => {
           TestsUtils.logout()
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.findByTestId('not-found-page').should('exist')
         })
@@ -288,7 +296,9 @@ describe('Dataset', () => {
       )
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.findByText('Root').should('exist')
           cy.findByRole('link', { name: 'Scientific Research' }).should('exist').click()
@@ -301,7 +311,9 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
           cy.findByRole('button', { name: 'Delete Dataset' }).should('exist').click()
@@ -317,7 +329,9 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.findByText('Files').should('exist')
 
@@ -329,7 +343,9 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)), { timeout: 5000 })
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.findByText('Files').should('exist')
 
@@ -349,7 +365,9 @@ describe('Dataset', () => {
         cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(30)), { timeout: 20000 })
           .its('persistentId')
           .then((persistentId: string) => {
-            cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+            cy.visit(
+              `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+            )
 
             cy.findByText('Files').should('exist')
 
@@ -373,7 +391,9 @@ describe('Dataset', () => {
         cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(30)), { timeout: 20000 })
           .its('persistentId')
           .then((persistentId: string) => {
-            cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+            cy.visit(
+              `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+            )
 
             cy.findByText('Files').should('exist')
 
@@ -403,7 +423,9 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)))
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.findByText('Files').should('exist')
 
@@ -441,7 +463,9 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.findByText('Files').should('exist')
 
@@ -507,7 +531,9 @@ describe('Dataset', () => {
         .then((persistentId: string) => {
           cy.wait(1500) // Wait for the files to be embargoed
 
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.wait(1500) // Wait for the files to be loaded
 
@@ -566,7 +592,9 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.createWithFiles(files))
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.findByText('Files').should('exist')
 
@@ -687,7 +715,9 @@ describe('Dataset', () => {
         .then((fileData) => cy.wrap(DatasetHelper.createWithFiles([fileData])))
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.findByText('Files').should('exist')
 

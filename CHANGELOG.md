@@ -62,6 +62,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Upgrade Keycloak to 26.3.2; updated SPI and test realm JSON.
 - Truncate long collection and dataset descriptions with expandable content. (#789)
 - UI polish: Files Table always shows action buttons. (#800)
+- Removed hard-coded references to /spa path and SPA name, changed to /modern (#945)
 
 ### Fixed
 

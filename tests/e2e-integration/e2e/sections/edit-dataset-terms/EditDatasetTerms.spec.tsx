@@ -21,7 +21,9 @@ describe('Edit Dataset Terms', () => {
         searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
         searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
 
-        const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`
+        const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${
+          Route.EDIT_DATASET_TERMS
+        }?${searchParams.toString()}`
 
         cy.visit(editDatasetTermsUrl)
 
@@ -73,7 +75,9 @@ describe('Edit Dataset Terms', () => {
         searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
         searchParams.set('tab', 'restrictedFilesTerms')
 
-        const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`
+        const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${
+          Route.EDIT_DATASET_TERMS
+        }?${searchParams.toString()}`
 
         cy.visit(editDatasetTermsUrl)
 
@@ -129,7 +133,9 @@ describe('Edit Dataset Terms', () => {
         searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
         searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
 
-        const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`
+        const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${
+          Route.EDIT_DATASET_TERMS
+        }?${searchParams.toString()}`
 
         cy.visit(editDatasetTermsUrl)
 
@@ -171,7 +177,9 @@ describe('Edit Dataset Terms', () => {
         searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
         searchParams.set('tab', 'restrictedFilesTerms')
 
-        const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`
+        const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${
+          Route.EDIT_DATASET_TERMS
+        }?${searchParams.toString()}`
 
         cy.visit(editDatasetTermsUrl)
 
@@ -192,7 +200,9 @@ describe('Edit Dataset Terms', () => {
         searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
         searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
 
-        const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`
+        const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${
+          Route.EDIT_DATASET_TERMS
+        }?${searchParams.toString()}`
 
         cy.visit(editDatasetTermsUrl)
         cy.findByRole('link', { name: datasetTitle }).click()

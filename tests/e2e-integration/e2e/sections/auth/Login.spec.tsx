@@ -42,7 +42,10 @@ describe('Login', () => {
 
     cy.url().should((currentUrl) => {
       const baseUrl = Cypress.config().baseUrl as string
-      expect([`${baseUrl}${FRONTEND_BASE_PATH}`, `${baseUrl}${FRONTEND_BASE_PATH}/collections`]).to.include(currentUrl)
+      expect([
+        `${baseUrl}${FRONTEND_BASE_PATH}`,
+        `${baseUrl}${FRONTEND_BASE_PATH}/collections`
+      ]).to.include(currentUrl)
     })
 
     cy.get('body').then(($body) => {
