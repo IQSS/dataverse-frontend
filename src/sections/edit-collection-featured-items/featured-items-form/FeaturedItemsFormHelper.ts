@@ -43,7 +43,7 @@ export class FeaturedItemsFormHelper {
           itemId: id,
           type,
           dvObjectIdentifier,
-          dvObjectUrl: this.transformDvObjectTypeAndIdentifierToURL(type, dvObjectIdentifier)
+          dvObjectUrl: this.transformDvObjectTypeAndIdentifierToSpaURL(type, dvObjectIdentifier)
         }
 
         return dvObjectFeaturedItemFormFieldData
@@ -213,13 +213,13 @@ export class FeaturedItemsFormHelper {
   }
 
   /**
-   * @description This method transforms the type and identifier of a Dataverse object into a URL for the modern frontend of Dataverse.
+   * @description This method transforms the type and identifier of a Dataverse object into a URL for the Modern version of Dataverse.
    * @param type - The type of the Dataverse object (Collection, Dataset, or File).
    * @param identifier - The identifier of the Dataverse object (e.g., alias for Collection, persistent ID for Dataset, or file ID for File).
    * @returns A string representing the URL for the specified Dataverse object.
    */
 
-  static transformDvObjectTypeAndIdentifierToURL = (
+  static transformDvObjectTypeAndIdentifierToSpaURL = (
     type: FeaturedItemType.COLLECTION | FeaturedItemType.DATASET | FeaturedItemType.FILE,
     identifier: string
   ): string => {

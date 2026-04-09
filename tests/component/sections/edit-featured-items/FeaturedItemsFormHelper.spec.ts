@@ -374,7 +374,7 @@ describe('FeaturedItemsFormHelper', () => {
   describe('transformDvObjectTypeAndIdentifierToURL', () => {
     it('should return collection page URL when type is collection', () => {
       const identifier = 'sample-collection-id'
-      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToURL(
+      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToSpaURL(
         FeaturedItemType.COLLECTION,
         identifier
       )
@@ -384,7 +384,7 @@ describe('FeaturedItemsFormHelper', () => {
 
     it('should return dataset page URL when type is dataset', () => {
       const identifier = 'doi:10.5072/FK2/ABC123'
-      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToURL(
+      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToSpaURL(
         FeaturedItemType.DATASET,
         identifier
       )
@@ -394,7 +394,7 @@ describe('FeaturedItemsFormHelper', () => {
 
     it('should return file page URL when type is file', () => {
       const identifier = '44'
-      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToURL(
+      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToSpaURL(
         FeaturedItemType.FILE,
         identifier
       )
@@ -405,7 +405,7 @@ describe('FeaturedItemsFormHelper', () => {
     it('should return # when type does not match any known type', () => {
       const identifier = 'unknown-id'
 
-      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToURL(
+      const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToSpaURL(
         'unknown-type' as FeaturedItemType.COLLECTION, // This cast is to simulate an unknown type and prevent TypeScript to complain
         identifier
       )
