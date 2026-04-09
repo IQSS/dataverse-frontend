@@ -158,7 +158,7 @@ describe('EditCollectionDropdown', () => {
     cy.findByRole('button', { name: 'Permissions' }).click()
 
     cy.findByText('Not Implemented').should('exist')
-    cy.findByText('This feature is not implemented yet in SPA.').should('exist')
+    cy.findByText(/This feature is not implemented yet in the Modern version./i).should('exist')
   })
 
   describe('delete button', () => {
