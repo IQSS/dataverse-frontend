@@ -1,3 +1,4 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
@@ -19,7 +20,7 @@ describe('File', () => {
       )
         .its('id')
         .then((id: string) => {
-          cy.visit(`/spa/files?id=${id}`)
+          cy.visit(`${FRONTEND_BASE_PATH}/files?id=${id}`)
 
           cy.findByRole('heading', { name: 'blob' }).should('exist')
           cy.findByText(DatasetLabelValue.DRAFT).should('exist')
@@ -41,7 +42,7 @@ describe('File', () => {
         .its('id')
         .then((id: string) => {
           TestsUtils.logout()
-          cy.visit(`/spa/files?id=${id}`)
+          cy.visit(`${FRONTEND_BASE_PATH}/files?id=${id}`)
 
           cy.findByRole('heading', { name: 'blob' }).should('exist')
 
@@ -65,7 +66,7 @@ describe('File', () => {
       )
         .its('id')
         .then((id: string) => {
-          cy.visit(`/spa/files?id=${id}`)
+          cy.visit(`${FRONTEND_BASE_PATH}/files?id=${id}`)
           cy.wait(3000)
 
           cy.findByRole('tab', { name: 'Versions' }).should('exist').click({ force: true })
@@ -83,7 +84,7 @@ describe('File', () => {
         .its('id')
         .then((id: string) => {
           TestsUtils.logout()
-          cy.visit(`/spa/files?id=${id}`)
+          cy.visit(`${FRONTEND_BASE_PATH}/files?id=${id}`)
 
           cy.findByTestId('not-found-page').should('exist')
         })
@@ -98,7 +99,7 @@ describe('File', () => {
       )
         .its('id')
         .then((id: string) => {
-          cy.visit(`/spa/files?id=${id}&datasetVersion=1.0`)
+          cy.visit(`${FRONTEND_BASE_PATH}/files?id=${id}&datasetVersion=1.0`)
 
           cy.findByRole('heading', { name: 'blob' }).should('exist')
 
@@ -107,7 +108,7 @@ describe('File', () => {
     })
 
     it('loads page not found when passing a wrong id', () => {
-      cy.visit(`/spa/files?id=wrong-id`)
+      cy.visit(`${FRONTEND_BASE_PATH}/files?id=wrong-id`)
       cy.findByTestId('not-found-page').should('exist')
     })
 
@@ -119,7 +120,7 @@ describe('File', () => {
       )
         .its('id')
         .then((id: string) => {
-          cy.visit(`/spa/files?id=${id}`)
+          cy.visit(`${FRONTEND_BASE_PATH}/files?id=${id}`)
 
           cy.findByText('Root').should('exist')
           cy.findByRole('link', { name: "Darwin's Finches" }).should('exist').click({ force: true })

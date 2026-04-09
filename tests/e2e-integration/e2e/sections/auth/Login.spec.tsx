@@ -1,3 +1,4 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { Utils } from '@/shared/helpers/Utils'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { requireAppConfig } from '@/config'
@@ -6,7 +7,7 @@ const appConfig = requireAppConfig()
 
 describe('Login', () => {
   it('successfully log in with a user that exists in dataverse and not in the OIDC provider', () => {
-    cy.visit('/spa/')
+    cy.visit(`${FRONTEND_BASE_PATH}/`)
     cy.wait(1_000)
     cy.findByTestId('oidc-login').click()
 
@@ -15,7 +16,7 @@ describe('Login', () => {
     cy.wait(1_500)
 
     cy.url()
-      .should('eq', `${Cypress.config().baseUrl as string}/spa`)
+      .should('eq', `${Cypress.config().baseUrl as string}${FRONTEND_BASE_PATH}`)
       .then(() => {
         const token = Utils.getLocalStorageItem<string>(
           `${appConfig.oidc.localStorageKeyPrefix}token`
@@ -29,7 +30,7 @@ describe('Login', () => {
 
   // TODO: Fix - We could do this in another iteration, first time e2e runs it will pass but second no because it will be already linked
   it('successfully log in and finish the sign up with a user that exists in the OIDC provider and not in dataverse', () => {
-    cy.visit('/spa/')
+    cy.visit(`${FRONTEND_BASE_PATH}/`)
     cy.wait(1_000)
     cy.findByTestId('oidc-login').click()
 
@@ -41,7 +42,7 @@ describe('Login', () => {
 
     cy.url().should((currentUrl) => {
       const baseUrl = Cypress.config().baseUrl as string
-      expect([`${baseUrl}/spa`, `${baseUrl}/spa/collections`]).to.include(currentUrl)
+      expect([`${baseUrl}${FRONTEND_BASE_PATH}`, `${baseUrl}${FRONTEND_BASE_PATH}/collections`]).to.include(currentUrl)
     })
 
     cy.get('body').then(($body) => {

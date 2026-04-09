@@ -1,3 +1,4 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
@@ -71,7 +72,7 @@ describe('Collection Items Panel', () => {
   })
 
   it('performs different search, filtering and respond to back and forward navigation', () => {
-    cy.visit(`/spa/collections`)
+    cy.visit(`${FRONTEND_BASE_PATH}/collections`)
 
     cy.wait('@getCollectionItems').then((interception) => {
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
@@ -320,7 +321,7 @@ describe('Collection Items Panel', () => {
         .should('have.length', 2)
     })
     // 8 Sort by Name (Z-A)
-    cy.visit(`/spa/collections`)
+    cy.visit(`${FRONTEND_BASE_PATH}/collections`)
     cy.intercept({
       pathname: '/api/v1/search',
       query: {

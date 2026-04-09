@@ -1,7 +1,8 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { faker } from '@faker-js/faker'
 
-const CREATE_COLLECTION_PAGE_URL = '/spa/collections/root/create'
+const CREATE_COLLECTION_PAGE_URL = `${FRONTEND_BASE_PATH}/collections/root/create`
 
 describe('Create Collection', () => {
   beforeEach(() => {

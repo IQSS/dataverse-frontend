@@ -453,7 +453,7 @@ describe('FeaturedItemsForm', () => {
       cy.findByLabelText(/Dataverse Object URL/)
         .should('exist')
         .should('be.visible')
-        .type('https://foo.com/spa/collections/foo')
+        .type('https://foo.com/modern/collections/foo')
 
       cy.findByTestId('dv-object-info').within(() => {
         cy.contains('Type: collection').should('exist').should('be.visible')
@@ -462,7 +462,7 @@ describe('FeaturedItemsForm', () => {
 
       cy.findByLabelText(/Dataverse Object URL/)
         .clear()
-        .type('https://foo.com/spa/datasets?persistentId=doi:10.5072/FK2/HIS9DO')
+        .type('https://foo.com/modern/datasets?persistentId=doi:10.5072/FK2/HIS9DO')
 
       cy.findByTestId('dv-object-info').within(() => {
         cy.contains('Type: dataset').should('exist').should('be.visible')
@@ -471,7 +471,7 @@ describe('FeaturedItemsForm', () => {
 
       cy.findByLabelText(/Dataverse Object URL/)
         .clear()
-        .type('https://foo.com/spa/files?id=4')
+        .type('https://foo.com/modern/files?id=4')
 
       cy.findByTestId('dv-object-info').within(() => {
         cy.contains('Type: file').should('exist').should('be.visible')
@@ -1307,7 +1307,7 @@ describe('FeaturedItemsForm', () => {
 
       cy.get('@third-item').within(() => {
         cy.findByLabelText(/Dataverse Object URL/).type(
-          'http://localhost:8000/spa/collections/dataverse-admin-collection'
+          'http://localhost:8000/modern/collections/dataverse-admin-collection'
         )
         cy.findByTestId('dv-object-info').within(() => {
           cy.contains('Type: collection').should('exist').should('be.visible')

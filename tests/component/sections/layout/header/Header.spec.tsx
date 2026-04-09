@@ -23,7 +23,7 @@ describe('Header component', () => {
     )
 
     cy.findByRole('link', { name: /Dataverse/ }).should('exist')
-    cy.findByRole('link').should('have.attr', 'href', '/spa/')
+    cy.findByRole('link').should('have.attr', 'href', '/modern/')
   })
 
   it('displays the user name when the user is logged in', () => {
