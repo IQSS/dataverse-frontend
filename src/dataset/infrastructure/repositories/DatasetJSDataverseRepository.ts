@@ -44,7 +44,9 @@ import {
   getDatasetLinkedCollections,
   updateTermsOfAccess,
   updateDatasetLicense,
-  getDatasetUploadLimits
+  getDatasetUploadLimits,
+  DatasetType,
+  getDatasetAvailableDatasetTypes
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -64,6 +66,7 @@ import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 const includeDeaccessioned = true
 
@@ -269,7 +272,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           datasetDetails.latestPublishedVersionMajorNumber,
           datasetDetails.latestPublishedVersionMinorNumber,
           datasetDetails.datasetVersionDiff,
-          datasetDetails.fileStore
+          datasetDetails.fileStore,
+          datasetDetails.datasetType
         )
       })
       .catch((error: ReadError) => {
@@ -327,9 +331,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  create(dataset: DatasetDTO, collectionId: string): Promise<{ persistentId: string }> {
+  create(
+    dataset: DatasetDTO, 
+    collectionId: string, 
+    datasetType?: string
+  ): Promise<{ persistentId: string }> {
     return createDataset
-      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId)
+      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId, datasetType)
       .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({
         persistentId: jsDatasetIdentifiers.persistentId
       }))
@@ -429,6 +437,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   getDatasetLinkedCollections(datasetId: string | number): Promise<CollectionSummary[]> {
     return getDatasetLinkedCollections.execute(datasetId)
+  }
+
+  getAvailableDatasetTypes: () => Promise<DatasetType[]> = () => {
+    return getDatasetAvailableDatasetTypes.execute()
   }
 
   /*

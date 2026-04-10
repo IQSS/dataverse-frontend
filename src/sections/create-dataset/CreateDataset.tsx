@@ -19,6 +19,9 @@ import { type Template } from '@/templates/domain/models/Template'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { useGetAvailableDatasetTypes } from '@/dataset/domain/hooks/useGetAvailableDatasetTypes'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
+import { DatasetTypeSelect } from './dataset-type-select/DatasetTypeSelect'
 
 interface CreateDatasetProps {
   datasetRepository: DatasetRepository
@@ -38,11 +41,14 @@ export function CreateDataset({
   const { isModalOpen, hideModal } = useNotImplementedModal()
   const { setIsLoading } = useLoading()
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
+  const [selectedDatasetType, setSelectedDatasetType] = useState<DatasetType | null>(null)
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionId
   )
+
+  const { datasetTypes, isLoading: isLoadingDatasetTypes } = useGetAvailableDatasetTypes({ datasetRepository })
 
   const { collectionUserPermissions, isLoading: isLoadingCollectionUserPermissions } =
     useGetCollectionUserPermissions({
@@ -63,12 +69,32 @@ export function CreateDataset({
     setSelectedTemplate(template)
   }
 
+  const handleDatasetTypeChange = (selectedTypeId: string) => {
+    const type: DatasetType | null =
+      datasetTypes.find((type) => type.id === Number(selectedTypeId)) || null
+
+    setSelectedType(type)
+  }
+
   const isLoadingData =
-    isLoadingCollectionUserPermissions || isLoadingCollection || isLoadingDatasetTemplates
+    isLoadingCollectionUserPermissions || 
+    isLoadingCollection || 
+    isLoadingDatasetTemplates || 
+    isLoadingDatasetTypes
 
   useEffect(() => {
     setIsLoading(isLoadingData)
   }, [isLoadingData, setIsLoading])
+
+  // When dataset types are loaded we set the default one to DATASET if available, it should always be there
+  useEffect(() => {
+    if (datasetTypes.length > 0) {
+      const defaultType: DatasetType | null =
+        datasetTypes.find((type) => type.name === 'dataset') || null
+
+      setSelectedType(defaultType)
+    }
+  }, [datasetTypes])
 
   // When dataset templates are loaded we set the default one if any
   useEffect(() => {
@@ -87,6 +113,11 @@ export function CreateDataset({
   if (isLoadingData || !collection) {
     return <CreateDatasetSkeleton />
   }
+
+  // We use the template id and dataset type id as key to force remounting the form when the template or type changes
+  const formKey = `${selectedType ? selectedType.id : 'no-type'}--${
+    selectedTemplate ? selectedTemplate.id : 'no-template'
+  }`
 
   if (collectionUserPermissions && !canUserAddDataset) {
     return (
@@ -120,13 +151,23 @@ export function CreateDataset({
           />
         )}
 
+        {/* Show the dataset type selector only if there's more than one dataset type (besides 'dataset') */}
+        {datasetTypes.length > 1 && selectedType && (
+          <DatasetTypeSelect
+            datasetTypes={datasetTypes}
+            onChange={handleDatasetTypeChange}
+            selectedType={selectedType}
+          />
+        )}
+
         <DatasetMetadataForm
           mode="create"
           collectionId={collectionId}
           datasetRepository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetTemplate={selectedTemplate ?? undefined}
-          key={selectedTemplate ? selectedTemplate.id : 'no-template-selected'} // We use the template id as key to force remounting the form when the template changes
+          datasetTypeName={selectedType ? selectedType.name : undefined}          
+          key={formKey}
         />
       </section>
     </>

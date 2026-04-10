@@ -3,10 +3,11 @@ import { MetadataBlockInfoRepository } from '../repositories/MetadataBlockInfoRe
 
 export async function getDisplayedOnCreateMetadataBlockInfoByCollectionId(
   metadataBlockInfoRepository: MetadataBlockInfoRepository,
-  collectionId: number | string
+  collectionId: number | string,
+  datasetType?: string
 ): Promise<MetadataBlockInfo[]> {
   return metadataBlockInfoRepository
-    .getDisplayedOnCreateByCollectionId(collectionId)
+    .getDisplayedOnCreateByCollectionId(collectionId, datasetType)
     .catch((error: Error) => {
       throw new Error(error.message)
     })

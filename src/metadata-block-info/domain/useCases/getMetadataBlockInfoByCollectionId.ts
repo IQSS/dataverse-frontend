@@ -3,9 +3,13 @@ import { MetadataBlockInfoRepository } from '../repositories/MetadataBlockInfoRe
 
 export async function getMetadataBlockInfoByCollectionId(
   metadataBlockInfoRepository: MetadataBlockInfoRepository,
-  collectionId: number | string
+  collectionId: number | string,
+  onlyDisplayedOnCreate?: boolean,
+  datasetType?: string
 ): Promise<MetadataBlockInfo[]> {
-  return metadataBlockInfoRepository.getByCollectionId(collectionId).catch((error: Error) => {
-    throw new Error(error.message)
-  })
+  return metadataBlockInfoRepository
+    .getByCollectionId(collectionId, onlyDisplayedOnCreate, datasetType)
+    .catch((error: Error) => {
+      throw new Error(error.message)
+    })
 }

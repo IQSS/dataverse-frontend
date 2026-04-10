@@ -49,7 +49,8 @@ export class JSDatasetMapper {
     latestPublishedVersionMajorNumber?: number,
     latestPublishedVersionMinorNumber?: number,
     datasetVersionDiff?: JSDatasetVersionDiff,
-    fileStore?: string
+    fileStore?: string,
+    datasetType?: string
   ): Dataset {
     const version = JSDatasetVersionMapper.toVersion(
       jsDataset.versionId,
@@ -100,7 +101,8 @@ export class JSDatasetMapper {
         latestPublishedVersionMinorNumber
       ),
       JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff),
-      fileStore
+      fileStore,
+      datasetType
     ).build()
   }
 
