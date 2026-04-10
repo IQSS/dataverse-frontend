@@ -1,16 +1,23 @@
+import { Download } from 'react-bootstrap-icons'
+import { useTranslation } from 'react-i18next'
+import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
+import { MouseEvent, useState } from 'react'
+import { toast } from 'react-toastify'
+import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { FileDownloadMode } from '../../../../../../files/domain/models/FileMetadata'
 import { useDataset } from '../../../../DatasetContext'
-import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { Download } from 'react-bootstrap-icons'
-import styles from './DownloadFilesButton.module.scss'
-import { useTranslation } from 'react-i18next'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
-import { MouseEvent, useState } from 'react'
-import { useMultipleFileDownload } from '../../../../../file/multiple-file-download/MultipleFileDownloadContext'
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
-import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
+import { DownloadWithGuestbookModal } from '../file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import {
+  downloadFromSignedUrl,
+  EMPTY_GUESTBOOK_RESPONSE,
+  requestSignedDownloadUrlFromAccessApi
+} from '@/shared/helpers/DownloadHelper'
+import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
+import styles from './DownloadFilesButton.module.scss'
 
 interface DownloadFilesButtonProps {
   files: FilePreview[]
@@ -24,23 +31,52 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const { t } = useTranslation('files')
   const { dataset } = useDataset()
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
-  const { getMultipleFileDownloadUrl } = useMultipleFileDownload()
+  const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
+  const [selectedDownloadFormat, setSelectedDownloadFormat] = useState<FileDownloadMode>(
+    FileDownloadMode.ORIGINAL
+  )
+  const accessRepository = useAccessRepository()
   const isBelow768px = useMediaQuery('(max-width: 768px)')
 
   const fileSelectionCount = Object.keys(fileSelection).length
-  const onClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const allFilesSelected = Object.values(fileSelection).some((file) => file === undefined)
+  const fileIdsForGuestbookSubmission = allFilesSelected
+    ? undefined
+    : getFileIdsFromSelection(fileSelection)
+  const hasGuestbook =
+    dataset?.guestbookId !== undefined &&
+    dataset?.version.publishingStatus !== DatasetPublishingStatus.DRAFT &&
+    !dataset?.permissions.canUpdateDataset
+
+  const onClick = (event: MouseEvent<HTMLElement>, downloadMode: FileDownloadMode) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {
       event.preventDefault()
       setShowNoFilesSelectedModal(true)
-    }
-  }
-  const getDownloadUrl = (downloadMode: FileDownloadMode): string => {
-    const allFilesSelected = Object.values(fileSelection).some((file) => file === undefined)
-    if (allFilesSelected) {
-      return dataset ? dataset.downloadUrls[downloadMode] : ''
+      return
     }
 
-    return getMultipleFileDownloadUrl(getFileIdsFromSelection(fileSelection), downloadMode)
+    if (hasGuestbook) {
+      event.preventDefault()
+      setSelectedDownloadFormat(downloadMode)
+      setShowDownloadWithGuestbookModal(true)
+      return
+    }
+
+    event.preventDefault()
+    void requestSignedDownloadUrlFromAccessApi({
+      accessRepository,
+      datasetId: allFilesSelected ? dataset?.id : undefined,
+      fileIds: allFilesSelected ? undefined : getFileIdsFromSelection(fileSelection),
+      guestbookResponse: EMPTY_GUESTBOOK_RESPONSE,
+      format: downloadMode
+    })
+      .then(downloadFromSignedUrl)
+      .then(() => {
+        toast.success(t('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
+      })
+      .catch(() => {
+        toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
+      })
   }
 
   if (
@@ -55,14 +91,29 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
     return <></>
   }
 
-  // TODO: remove this when access datafile supports bearer tokens
-  if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-    return <></>
-  }
-
   const dropdownButtonTitle = isBelow768px
     ? ''
     : /* istanbul ignore next */ t('actions.downloadFiles.title')
+
+  const downloadFeedbackModals = (
+    <>
+      <NoSelectedFilesModal
+        show={showNoFilesSelectedModal}
+        handleClose={() => setShowNoFilesSelectedModal(false)}
+      />
+      {hasGuestbook && showDownloadWithGuestbookModal && (
+        <DownloadWithGuestbookModal
+          fileIds={fileIdsForGuestbookSubmission}
+          datasetId={allFilesSelected ? dataset.id : undefined}
+          guestbookId={dataset.guestbookId}
+          format={selectedDownloadFormat}
+          datasetPersistentId={dataset.persistentId}
+          show={showDownloadWithGuestbookModal}
+          handleClose={() => setShowDownloadWithGuestbookModal(false)}
+        />
+      )}
+    </>
+  )
 
   if (dataset.hasOneTabularFileAtLeast) {
     return (
@@ -74,38 +125,44 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
           ariaLabel={t('actions.downloadFiles.title')}
           variant="secondary"
           withSpacing>
-          <DropdownButtonItem onClick={onClick} href={getDownloadUrl(FileDownloadMode.ORIGINAL)}>
+          <DropdownButtonItem onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}>
             {t('actions.downloadFiles.options.original')}
           </DropdownButtonItem>
-          <DropdownButtonItem onClick={onClick} href={getDownloadUrl(FileDownloadMode.ARCHIVAL)}>
+          <DropdownButtonItem onClick={(event) => onClick(event, FileDownloadMode.ARCHIVAL)}>
             {t('actions.downloadFiles.options.archival')}
           </DropdownButtonItem>
         </DropdownButton>
-        <NoSelectedFilesModal
-          show={showNoFilesSelectedModal}
-          handleClose={() => setShowNoFilesSelectedModal(false)}
-        />
+        {downloadFeedbackModals}
       </>
     )
   }
 
+  // no tabular file content
   return (
     <>
-      <a href={getDownloadUrl(FileDownloadMode.ORIGINAL)}>
+      {hasGuestbook ? (
         <Button
           id="download-files"
           variant="secondary"
           icon={<Download className={styles.icon} />}
           aria-label={t('actions.downloadFiles.title')}
           withSpacing
-          onClick={onClick}>
+          onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}>
           {dropdownButtonTitle}
         </Button>
-      </a>
-      <NoSelectedFilesModal
-        show={showNoFilesSelectedModal}
-        handleClose={() => setShowNoFilesSelectedModal(false)}
-      />
+      ) : (
+        <Button
+          id="download-files"
+          variant="secondary"
+          icon={<Download className={styles.icon} />}
+          aria-label={t('actions.downloadFiles.title')}
+          withSpacing
+          onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}>
+          {dropdownButtonTitle}
+        </Button>
+      )}
+
+      {downloadFeedbackModals}
     </>
   )
 }

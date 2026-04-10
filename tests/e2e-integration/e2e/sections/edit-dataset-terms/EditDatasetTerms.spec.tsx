@@ -3,6 +3,7 @@ import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetNonNumericVersionSearchParam } from '../../../../../src/dataset/domain/models/Dataset'
 import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { QueryParamKey, Route } from '../../../../../src/sections/Route.enum'
+import { GuestbookHelper } from '../../../shared/guestbooks/GuestbookHelper'
 
 describe('Edit Dataset Terms', () => {
   beforeEach(() => {
@@ -198,6 +199,41 @@ describe('Edit Dataset Terms', () => {
 
         cy.url().should('include', '/datasets')
         cy.findByRole('heading', { name: datasetTitle }).should('exist')
+      })
+    })
+  })
+
+  describe('Guestbook Tab', () => {
+    it('updates the assigned guestbook from the edit guestbook tab', () => {
+      const datasetTitle = faker.lorem.sentence()
+      const firstGuestbookName = `Guestbook ${faker.datatype.uuid()} A`
+      const secondGuestbookName = `Guestbook ${faker.datatype.uuid()} B`
+
+      cy.wrap(DatasetHelper.createWithTitle(datasetTitle), { timeout: 10000 }).then((dataset) => {
+        cy.wrap(
+          GuestbookHelper.createAndGetByName(firstGuestbookName).then(async (firstGuestbook) => {
+            const secondGuestbook = await GuestbookHelper.createAndGetByName(secondGuestbookName)
+            await GuestbookHelper.assignToDataset(Number(dataset.id), firstGuestbook.id)
+            return { firstGuestbook, secondGuestbook }
+          })
+        ).then(({ firstGuestbook, secondGuestbook }) => {
+          const searchParams = new URLSearchParams()
+          searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+          searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+          const editDatasetTermsUrl = `/spa${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`
+
+          cy.visit(editDatasetTermsUrl)
+
+          cy.findByRole('tab', { name: 'Guestbook' }).click()
+          cy.findByLabelText(firstGuestbook.name).should('be.checked')
+          cy.findByLabelText(secondGuestbook.name).click()
+          cy.findByRole('button', { name: 'Save Changes' }).click()
+          cy.findByText(/The terms for this dataset have been updated./i).should('exist')
+
+          cy.findByRole('tab', { name: 'Terms and Guestbook' }).click()
+          cy.findByRole('button', { name: 'Guestbook' }).click()
+          cy.findByTestId('dataset-guestbook-name').should('contain.text', secondGuestbook.name)
+        })
       })
     })
   })

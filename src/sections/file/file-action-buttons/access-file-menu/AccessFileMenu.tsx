@@ -5,6 +5,7 @@ import { RequestAccessOption } from './RequestAccessOption'
 import { DropdownButton, DropdownHeader, Tooltip } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { FileDownloadOptions } from './FileDownloadOptions'
+import { CustomTerms, DatasetLicense } from '@/dataset/domain/models/Dataset'
 import { FileAccess } from '../../../../files/domain/models/FileAccess'
 import { FileMetadata } from '../../../../files/domain/models/FileMetadata'
 import { FileExploreToolsOptions, FileQueryToolsOptions } from './FileToolOptions'
@@ -16,7 +17,12 @@ interface FileActionButtonAccessFileProps {
   metadata: FileMetadata
   ingestInProgress: boolean
   isDeaccessioned: boolean
-  isDraft: boolean
+  isDraft?: boolean
+  canEdit?: boolean
+  guestbookId?: number
+  datasetPersistentId?: string
+  datasetLicense?: DatasetLicense
+  datasetCustomTerms?: CustomTerms
   asIcon?: boolean
 }
 
@@ -28,6 +34,11 @@ export function AccessFileMenu({
   ingestInProgress,
   isDeaccessioned,
   isDraft,
+  canEdit,
+  guestbookId,
+  datasetPersistentId,
+  datasetLicense,
+  datasetCustomTerms,
   asIcon = false
 }: FileActionButtonAccessFileProps) {
   const { t } = useTranslation('files')
@@ -48,15 +59,11 @@ export function AccessFileMenu({
     return <></>
   }
 
-  // // TODO: remove this when access datafile supports bearer tokens
-  if (isDraft) {
-    return <></>
-  }
-
   return (
     <MenuWrapper>
       <DropdownButton
         id={`action-button-access-file-${id}`}
+        data-testid={`access-file-button-${id}`}
         title={asIcon ? '' : t('actions.accessFileMenu.title')}
         asButtonGroup
         variant={asIcon ? 'secondary' : 'primary'}
@@ -77,11 +84,18 @@ export function AccessFileMenu({
           isActivelyEmbargoed={metadata.isActivelyEmbargoed}
         />
         <FileDownloadOptions
+          fileId={id}
           type={metadata.type}
           downloadUrls={metadata.downloadUrls}
           ingestInProgress={ingestInProgress}
           isTabular={metadata.isTabular}
           userHasDownloadPermission={userHasDownloadPermission}
+          isDraft={isDraft}
+          canEdit={canEdit}
+          guestbookId={guestbookId}
+          datasetPersistentId={datasetPersistentId}
+          datasetLicense={datasetLicense}
+          datasetCustomTerms={datasetCustomTerms}
         />
         {userHasDownloadPermission && (
           <>
