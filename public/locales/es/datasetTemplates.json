@@ -44,7 +44,11 @@
     "deleteSuccess": "Plantilla eliminada.",
     "deleteError": "Algo salió mal al eliminar la plantilla. Inténtelo de nuevo más tarde.",
     "copySuccess": "Plantilla copiada.",
-    "copyError": "Algo salió mal al copiar la plantilla. Inténtelo de nuevo más tarde."
+    "copyError": "Algo salió mal al copiar la plantilla. Inténtelo de nuevo más tarde.",
+    "setDefaultSuccess": "La plantilla ha sido seleccionada como la plantilla predeterminada para este dataverse.",
+    "setDefaultError": "Algo salió mal al establecer la plantilla como predeterminada. Inténtelo de nuevo más tarde.",
+    "unsetDefaultSuccess": "La plantilla ha sido eliminada como la plantilla predeterminada para este dataverse.",
+    "unsetDefaultError": "Algo salió mal al eliminar la plantilla predeterminada. Inténtelo de nuevo más tarde."
   },
   "copyNamePrefix": "copia {{name}}",
   "preview": {

@@ -34,12 +34,11 @@ import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepo
 import { useCollection } from '../collection/useCollection'
 import { useGetTemplatesByCollectionId } from '@/templates/domain/hooks/useGetTemplatesByCollectionId'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
-import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
-import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { Template } from '@/templates/domain/models/Template'
 import { ConfirmDeleteTemplateModal } from './confirm-delete-template-modal/ConfirmDeleteTemplateModal'
 import { TemplatePreviewModal } from './template-preview-modal/TemplatePreviewModal'
 import { useCopyTemplate } from './useCopyTemplate'
+import { useSetTemplateAsDefault } from './useSetTemplateAsDefault'
 
 import styles from './DatasetTemplates.module.scss'
 
@@ -59,7 +58,6 @@ export const DatasetTemplates = ({
   const { t } = useTranslation('datasetTemplates')
   const { t: tDataset } = useTranslation('dataset')
   const navigate = useNavigate()
-  const { isModalOpen, hideModal, showModal } = useNotImplementedModal()
   const [sortBy, setSortBy] = useState<'name' | 'created' | 'usage' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [templateToDelete, setTemplateToDelete] = useState<Template | undefined>(undefined)
@@ -75,7 +73,8 @@ export const DatasetTemplates = ({
     datasetTemplates,
     isLoadingDatasetTemplates,
     errorGetDatasetTemplates,
-    fetchDatasetTemplates
+    fetchDatasetTemplates,
+    toggleDefaultTemplate
   } = useGetTemplatesByCollectionId({
     templateRepository,
     collectionIdOrAlias: collectionId
@@ -85,6 +84,11 @@ export const DatasetTemplates = ({
     templateRepository,
     metadataBlockInfoRepository
   })
+  const { handleSetTemplateAsDefault, handleUnsetTemplateAsDefault, isSettingDefault } =
+    useSetTemplateAsDefault({
+      collectionId,
+      templateRepository
+    })
 
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: collectionId,
@@ -211,7 +215,6 @@ export const DatasetTemplates = ({
 
   return (
     <>
-      <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
       <ConfirmDeleteTemplateModal
         show={Boolean(templateToDelete)}
         handleClose={handleCloseDeleteModal}
@@ -330,15 +333,30 @@ export const DatasetTemplates = ({
                         className={styles['action-group']}
                         aria-label={t('table.action')}>
                         {template.isDefault ? (
-                          <Button variant="secondary" size="sm" disabled>
-                            <CheckLg />
-                            {t('actions.default')}
-                          </Button>
+                          <span
+                            onClick={async () => {
+                              if (isSettingDefault) return
+                              const didUnset = await handleUnsetTemplateAsDefault()
+                              if (didUnset) {
+                                toggleDefaultTemplate(null)
+                              }
+                            }}>
+                            <Button variant="secondary" size="sm" disabled>
+                              <CheckLg />
+                              {t('actions.default')}
+                            </Button>
+                          </span>
                         ) : (
                           <Button
                             variant="secondary"
                             size="sm"
-                            onClick={showModal}
+                            disabled={isSettingDefault}
+                            onClick={async () => {
+                              const didSet = await handleSetTemplateAsDefault(template.id)
+                              if (didSet) {
+                                toggleDefaultTemplate(template.id)
+                              }
+                            }}
                             className={styles['make-default-button']}>
                             {t('actions.makeDefault')}
                           </Button>

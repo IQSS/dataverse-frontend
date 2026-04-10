@@ -36,4 +36,20 @@ export class TemplateMockRepository implements TemplateRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  setTemplateAsDefault(_templateId: number, _collectionIdOrAlias: number | string): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  unsetTemplateAsDefault(_collectionIdOrAlias: number | string): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

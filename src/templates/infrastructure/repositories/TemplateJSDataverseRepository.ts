@@ -2,7 +2,9 @@ import {
   createTemplate,
   deleteTemplate,
   getTemplate,
-  getTemplatesByCollectionId
+  getTemplatesByCollectionId,
+  setTemplateAsDefault,
+  unsetTemplateAsDefault
 } from '@iqss/dataverse-client-javascript'
 import { Template } from '@/templates/domain/models/Template'
 import { TemplateInfo } from '@/templates/domain/models/TemplateInfo'
@@ -26,5 +28,13 @@ export class TemplateJSDataverseRepository implements TemplateRepository {
 
   deleteTemplate(templateId: number): Promise<void> {
     return deleteTemplate.execute(templateId)
+  }
+
+  setTemplateAsDefault(templateId: number, collectionIdOrAlias: number | string): Promise<void> {
+    return setTemplateAsDefault.execute(templateId, collectionIdOrAlias)
+  }
+
+  unsetTemplateAsDefault(collectionIdOrAlias: number | string): Promise<void> {
+    return unsetTemplateAsDefault.execute(collectionIdOrAlias)
   }
 }

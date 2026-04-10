@@ -282,6 +282,17 @@ export class DatasetHelper extends DataverseApiHelper {
     )
   }
 
+  static async setTemplateAsDefault(
+    templateId: number,
+    collectionAlias = ROOT_COLLECTION_ALIAS
+  ): Promise<void> {
+    return this.request(`/dataverses/${collectionAlias}/defaultTemplate/${templateId}`, 'PUT')
+  }
+
+  static async unsetTemplateAsDefault(collectionAlias = ROOT_COLLECTION_ALIAS): Promise<void> {
+    return this.request(`/dataverses/${collectionAlias}/defaultTemplate`, 'DELETE')
+  }
+
   static async deleteDatasetTemplate(templateId: number): Promise<void> {
     try {
       return await this.request(`/admin/template/${templateId}`, 'DELETE')

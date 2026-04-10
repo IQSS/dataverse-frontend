@@ -136,6 +136,148 @@ describe('Dataset Templates', () => {
       })
   })
 
+  describe('Set/Unset Default Template', () => {
+    it('toggles a non-default template to default and updates buttons without refetching', () => {
+      const [templateDefault, templateOther] = TemplateMother.createTemplates([
+        { id: 1, name: 'Template Default', isDefault: true },
+        { id: 2, name: 'Template Other', isDefault: false }
+      ])
+      templateRepository.getTemplatesByCollectionId = cy
+        .stub()
+        .resolves([templateDefault, templateOther])
+      templateRepository.setTemplateAsDefault = cy.stub().resolves()
+
+      mountDatasetTemplates()
+
+      cy.findByText('Template Other')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Make Default' }).click()
+        })
+
+      cy.findByText(
+        /The template has been selected as the default template for this dataverse./i
+      ).should('exist')
+
+      cy.findByText('Template Other')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Default' }).should('be.disabled')
+          cy.findByRole('button', { name: 'Make Default' }).should('not.exist')
+        })
+
+      cy.findByText('Template Default')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Make Default' }).should('exist')
+          cy.findByRole('button', { name: 'Default' }).should('not.exist')
+        })
+
+      cy.wrap(templateRepository.getTemplatesByCollectionId).should('have.been.calledOnce')
+    })
+
+    it('unsets a default template and updates buttons without refetching', () => {
+      const [templateDefault, templateOther] = TemplateMother.createTemplates([
+        { id: 1, name: 'Template Default', isDefault: true },
+        { id: 2, name: 'Template Other', isDefault: false }
+      ])
+      templateRepository.getTemplatesByCollectionId = cy
+        .stub()
+        .resolves([templateDefault, templateOther])
+      templateRepository.unsetTemplateAsDefault = cy.stub().resolves()
+
+      mountDatasetTemplates()
+
+      cy.findByText('Template Default')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Default' }).click({ force: true })
+        })
+
+      cy.findByText(
+        /The template has been removed as the default template for this dataverse./i
+      ).should('exist')
+
+      cy.findByText('Template Default')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Make Default' }).should('exist')
+        })
+
+      cy.findByText('Template Other')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Make Default' }).should('exist')
+        })
+
+      cy.wrap(templateRepository.getTemplatesByCollectionId).should('have.been.calledOnce')
+    })
+
+    it('shows an error toast when setting default fails', () => {
+      const [templateDefault, templateOther] = TemplateMother.createTemplates([
+        { id: 1, name: 'Template Default', isDefault: true },
+        { id: 2, name: 'Template Other', isDefault: false }
+      ])
+      templateRepository.getTemplatesByCollectionId = cy
+        .stub()
+        .resolves([templateDefault, templateOther])
+      templateRepository.setTemplateAsDefault = cy
+        .stub()
+        .rejects(new WriteError('Set default failed'))
+
+      mountDatasetTemplates()
+
+      cy.findByText('Template Other')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Make Default' }).click()
+        })
+
+      cy.findByText(/Set default failed/i).should('exist')
+
+      cy.findByText('Template Other')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Make Default' }).should('exist')
+        })
+
+      cy.findByText('Template Default')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Default' }).should('be.disabled')
+        })
+    })
+
+    it('shows an error toast when unsetting default fails', () => {
+      const [templateDefault, templateOther] = TemplateMother.createTemplates([
+        { id: 1, name: 'Template Default', isDefault: true },
+        { id: 2, name: 'Template Other', isDefault: false }
+      ])
+      templateRepository.getTemplatesByCollectionId = cy
+        .stub()
+        .resolves([templateDefault, templateOther])
+      templateRepository.unsetTemplateAsDefault = cy.stub().rejects(new Error('Unset failed'))
+
+      mountDatasetTemplates()
+
+      cy.findByText('Template Default')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Default' }).click({ force: true })
+        })
+
+      cy.findByText(/Something went wrong removing the default template. Try again later./i).should(
+        'exist'
+      )
+
+      cy.findByText('Template Default')
+        .closest('tr')
+        .within(() => {
+          cy.findByRole('button', { name: 'Default' }).should('be.disabled')
+        })
+    })
+  })
+
   it('hides the edit dropdown when the user cannot edit the collection', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves({
       canAddCollection: false,

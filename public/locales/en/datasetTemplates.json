@@ -45,7 +45,11 @@
     "deleteSuccess": "Template deleted.",
     "deleteError": "Something went wrong deleting the template. Try again later.",
     "copySuccess": "Template copied.",
-    "copyError": "Something went wrong copying the template. Try again later."
+    "copyError": "Something went wrong copying the template. Try again later.",
+    "setDefaultSuccess": "The template has been selected as the default template for this dataverse.",
+    "setDefaultError": "Something went wrong setting the template as default. Try again later.",
+    "unsetDefaultSuccess": "The template has been removed as the default template for this dataverse.",
+    "unsetDefaultError": "Something went wrong removing the default template. Try again later."
   },
   "copyNamePrefix": "copy {{name}}",
   "preview": {
