@@ -1,7 +1,8 @@
 export interface DatasetType {
   id: number
   name: string
-  description: string
+  displayName: string
   linkedMetadataBlocks?: string[]
   availableLicenses?: string[]
+  description?: string
 }
