@@ -15,6 +15,7 @@ import { RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { usePrefillFieldsWithUserData } from './usePrefillFieldsWithUserData'
 import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 import styles from './index.module.scss'
 
 interface FormProps {
@@ -26,6 +27,7 @@ interface FormProps {
   datasetPersistentID?: string
   datasetLastUpdateTime?: string
   datasetTemplateInstructions?: DatasetTemplateInstruction[]
+  datasetTypeName?: DatasetType['name']
 }
 
 export const MetadataForm = ({
@@ -36,7 +38,8 @@ export const MetadataForm = ({
   datasetRepository,
   datasetPersistentID,
   datasetLastUpdateTime,
-  datasetTemplateInstructions
+  datasetTemplateInstructions,
+  datasetTypeName
 }: FormProps) => {
   const { user } = useSession()
   const navigate = useNavigate()
@@ -57,7 +60,8 @@ export const MetadataForm = ({
     datasetRepository,
     onSubmitDatasetError,
     datasetPersistentID,
-    datasetLastUpdateTime
+    datasetLastUpdateTime,
+    datasetTypeName
   )
 
   usePrefillFieldsWithUserData({ mode, user, formDefaultValues, setValue })

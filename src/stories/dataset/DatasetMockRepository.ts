@@ -20,6 +20,8 @@ import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
+import { DatasetTypeMother } from '@tests/component/dataset/domain/models/DatasetTypeMother'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -231,6 +233,14 @@ export class DatasetMockRepository implements DatasetRepository {
           numberOfFilesRemaining: 10,
           storageQuotaRemaining: 10737418240 // 10 GB in bytes
         })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getAvailableDatasetTypes(): Promise<DatasetType[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([DatasetTypeMother.creatDefaultDatasetType(), ...DatasetTypeMother.createMany(2)])
       }, FakerHelper.loadingTimout())
     })
   }
