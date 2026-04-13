@@ -335,7 +335,9 @@ describe('Dataset', () => {
             return { dataset, guestbook }
           })
         ).then(({ dataset, guestbook }) => {
-          cy.visit(`/spa/datasets?persistentId=${dataset.persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${dataset.persistentId}&version=${DRAFT_PARAM}`
+          )
 
           cy.findByRole('tab', { name: /Terms and Guestbook/ }).click()
           cy.findByTestId('dataset-terms-guestbook-accordion-header')
@@ -794,7 +796,7 @@ describe('Dataset', () => {
         .then((persistentId: string) => {
           TestsUtils.logout()
           cy.wait(1500) // Wait for the dataset to be published and the session to clear
-          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}`)
           cy.wait(1500) // Wait for the page to load
 
           cy.findByText('Files').should('exist')
@@ -824,7 +826,7 @@ describe('Dataset', () => {
             return dataset
           })
         ).then((publishedDataset) => {
-          cy.visit(`/spa/datasets?persistentId=${publishedDataset.persistentId}`)
+          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${publishedDataset.persistentId}`)
           cy.wait(1500) // Wait for the page to load
 
           cy.findByText('Files').should('exist')
@@ -856,7 +858,7 @@ describe('Dataset', () => {
           })
         ).then((publishedDataset) => {
           TestsUtils.logout()
-          cy.visit(`/spa/datasets?persistentId=${publishedDataset.persistentId}`)
+          cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${publishedDataset.persistentId}`)
           cy.wait(1500)
 
           cy.findByText('Files').should('exist')

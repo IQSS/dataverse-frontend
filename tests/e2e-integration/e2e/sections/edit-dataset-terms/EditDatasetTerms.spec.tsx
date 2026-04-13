@@ -231,7 +231,9 @@ describe('Edit Dataset Terms', () => {
           const searchParams = new URLSearchParams()
           searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
           searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-          const editDatasetTermsUrl = `/spa${Route.EDIT_DATASET_TERMS}?${searchParams.toString()}`
+          const editDatasetTermsUrl = `${FRONTEND_BASE_PATH}${
+            Route.EDIT_DATASET_TERMS
+          }?${searchParams.toString()}`
 
           cy.visit(editDatasetTermsUrl)
 
