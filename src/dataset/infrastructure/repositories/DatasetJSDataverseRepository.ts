@@ -66,7 +66,6 @@ import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
-import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 const includeDeaccessioned = true
 
@@ -332,8 +331,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   }
 
   create(
-    dataset: DatasetDTO, 
-    collectionId: string, 
+    dataset: DatasetDTO,
+    collectionId: string,
     datasetType?: string
   ): Promise<{ persistentId: string }> {
     return createDataset

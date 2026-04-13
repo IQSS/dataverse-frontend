@@ -41,14 +41,16 @@ export function CreateDataset({
   const { isModalOpen, hideModal } = useNotImplementedModal()
   const { setIsLoading } = useLoading()
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
-  const [selectedDatasetType, setSelectedDatasetType] = useState<DatasetType | null>(null)
+  const [selectedType, setSelectedType] = useState<DatasetType | null>(null)
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionId
   )
 
-  const { datasetTypes, isLoading: isLoadingDatasetTypes } = useGetAvailableDatasetTypes({ datasetRepository })
+  const { datasetTypes, isLoading: isLoadingDatasetTypes } = useGetAvailableDatasetTypes({
+    datasetRepository
+  })
 
   const { collectionUserPermissions, isLoading: isLoadingCollectionUserPermissions } =
     useGetCollectionUserPermissions({
@@ -77,9 +79,9 @@ export function CreateDataset({
   }
 
   const isLoadingData =
-    isLoadingCollectionUserPermissions || 
-    isLoadingCollection || 
-    isLoadingDatasetTemplates || 
+    isLoadingCollectionUserPermissions ||
+    isLoadingCollection ||
+    isLoadingDatasetTemplates ||
     isLoadingDatasetTypes
 
   useEffect(() => {
@@ -166,7 +168,7 @@ export function CreateDataset({
           datasetRepository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetTemplate={selectedTemplate ?? undefined}
-          datasetTypeName={selectedType ? selectedType.name : undefined}          
+          datasetTypeName={selectedType ? selectedType.name : undefined}
           key={formKey}
         />
       </section>
