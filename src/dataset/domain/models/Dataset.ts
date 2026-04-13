@@ -439,6 +439,7 @@ export class Dataset {
     public readonly nextMinorVersion?: string,
     public readonly requiresMajorVersionUpdate?: boolean,
     public readonly fileStore?: string,
+    public readonly guestbookId?: number,
     public readonly datasetType?: string
   ) {}
 
@@ -535,8 +536,8 @@ export class Dataset {
       public readonly nextMinorVersionNumber?: string,
       public readonly requiresMajorVersionUpdate?: boolean,
       public readonly fileStore?: string,
+      public readonly guestbookId?: number,
       public readonly datasetType?: string
-
     ) {
       this.withAlerts()
     }
@@ -609,6 +610,7 @@ export class Dataset {
         this.nextMinorVersionNumber,
         this.requiresMajorVersionUpdate,
         this.fileStore,
+        this.guestbookId,
         this.datasetType
       )
     }

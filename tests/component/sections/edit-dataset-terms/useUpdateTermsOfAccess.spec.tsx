@@ -3,6 +3,7 @@ import { useUpdateTermsOfAccess } from '@/sections/edit-dataset-terms/edit-terms
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { TermsOfAccess } from '@/dataset/domain/models/Dataset'
 import { WriteError } from '@iqss/dataverse-client-javascript'
+import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 
 describe('useUpdateTermsOfAccess', () => {
   let datasetRepository: DatasetRepository
@@ -60,9 +61,15 @@ describe('useUpdateTermsOfAccess', () => {
   })
 
   describe('Error handling', () => {
-    it('should handle WriteError and set formatted error message', async () => {
+    it('should handle WriteError and set formatted error message from reason without status code', async () => {
       const mockWriteError = new WriteError()
       datasetRepository.updateTermsOfAccess = cy.stub().rejects(mockWriteError)
+      cy.stub(JSDataverseWriteErrorHandler.prototype, 'getReasonWithoutStatusCode').returns(
+        'Formatted write error'
+      )
+      cy.stub(JSDataverseWriteErrorHandler.prototype, 'getErrorMessage').returns(
+        'Fallback write error'
+      )
 
       const { result } = renderHook(() =>
         useUpdateTermsOfAccess({
@@ -78,9 +85,32 @@ describe('useUpdateTermsOfAccess', () => {
       expect(datasetRepository.updateTermsOfAccess).to.have.been.calledWith(123, sampleTerms)
       expect(onSuccessfulUpdateTermsOfAccess).to.not.have.been.called
       expect(result.current.isLoading).to.deep.equal(false)
-      expect(result.current.error).to.deep.equal(
-        'An error occurred while updating the dataset terms of access. Please try again.'
+      expect(result.current.error).to.deep.equal('Formatted write error')
+    })
+
+    it('should fall back to handler getErrorMessage when reason without status code is null', async () => {
+      const mockWriteError = new WriteError()
+      datasetRepository.updateTermsOfAccess = cy.stub().rejects(mockWriteError)
+      cy.stub(JSDataverseWriteErrorHandler.prototype, 'getReasonWithoutStatusCode').returns(null)
+      cy.stub(JSDataverseWriteErrorHandler.prototype, 'getErrorMessage').returns(
+        'Fallback write error'
       )
+
+      const { result } = renderHook(() =>
+        useUpdateTermsOfAccess({
+          datasetRepository,
+          onSuccessfulUpdateTermsOfAccess
+        })
+      )
+
+      await act(async () => {
+        await result.current.handleUpdateTermsOfAccess(123, sampleTerms)
+      })
+
+      expect(datasetRepository.updateTermsOfAccess).to.have.been.calledWith(123, sampleTerms)
+      expect(onSuccessfulUpdateTermsOfAccess).to.not.have.been.called
+      expect(result.current.isLoading).to.deep.equal(false)
+      expect(result.current.error).to.deep.equal('Fallback write error')
     })
 
     it('should handle unknown errors and set default error message', async () => {

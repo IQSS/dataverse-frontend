@@ -43,6 +43,8 @@ function extractInfoFromInterceptedResponse(interception: Interception) {
 }
 
 describe('Collection Items Panel', () => {
+  let collectionId: string
+
   beforeEach(() => {
     TestsUtils.login().then((token) => {
       cy.wrap(TestsUtils.setup(token)).then(async () => {
@@ -52,6 +54,7 @@ describe('Collection Items Panel', () => {
 
         const collectionName = 'ItemsTestCollection'
         const collection = await CollectionHelper.create(`${collectionName}-${Date.now()}`)
+        collectionId = collection.id
         // Creates 8 datasets with 1 file each
         for (const _number of numbersOfDatasetsToCreate) {
           await DatasetHelper.createWithFileAndTitle(
@@ -330,6 +333,7 @@ describe('Collection Items Panel', () => {
     }).as('getSortedCollectionItems')
     cy.findByRole('button', { name: /Sort/ }).click({ force: true })
     cy.contains('Name (Z-A)').click({ force: true })
+    cy.wait('@getCollectionItems')
 
     cy.wait('@getSortedCollectionItems').then(() => {
       const sortExpectedUrl = new URLSearchParams({

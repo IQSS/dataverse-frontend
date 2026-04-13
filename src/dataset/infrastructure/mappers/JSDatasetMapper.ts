@@ -102,6 +102,7 @@ export class JSDatasetMapper {
       ),
       JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff),
       fileStore,
+      jsDataset.guestbookId as number,
       datasetType
     ).build()
   }
@@ -255,8 +256,8 @@ export class JSDatasetMapper {
     version: DatasetVersion
   ): DatasetDownloadUrls {
     return {
-      original: `/api/access/dataset/:persistentId/versions/${version.number.toString()}?persistentId=${jsDatasetPersistentId}&format=original`,
-      archival: `/api/access/dataset/:persistentId/versions/${version.number.toString()}?persistentId=${jsDatasetPersistentId}`
+      original: `/api/access/dataset/${jsDatasetPersistentId}/versions/${version.number.toString()}?format=original`,
+      archival: `/api/access/dataset/${jsDatasetPersistentId}/versions/${version.number.toString()}`
     }
   }
 

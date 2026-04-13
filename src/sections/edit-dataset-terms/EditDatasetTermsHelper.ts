@@ -2,7 +2,7 @@ export class EditDatasetTermsHelper {
   static EDIT_DATASET_TERMS_TABS_KEYS = {
     datasetTerms: 'datasetTerms',
     restrictedFilesTerms: 'restrictedFilesTerms',
-    guestBook: 'guestBook'
+    guestbook: 'guestbook'
   } as const
 
   static EDIT_DATASET_TERMS_TAB_QUERY_KEY = 'tab'
