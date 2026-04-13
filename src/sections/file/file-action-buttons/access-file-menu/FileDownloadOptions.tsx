@@ -1,29 +1,76 @@
+import { useState } from 'react'
 import { DropdownHeader } from '@iqss/dataverse-design-system'
 import { Download } from 'react-bootstrap-icons'
 import { FileTabularDownloadOptions } from './FileTabularDownloadOptions'
 import { FileNonTabularDownloadOptions } from './FileNonTabularDownloadOptions'
 import { useTranslation } from 'react-i18next'
-import { FileDownloadUrls, FileType } from '../../../../files/domain/models/FileMetadata'
+import {
+  FileDownloadMode,
+  FileDownloadUrls,
+  FileType
+} from '../../../../files/domain/models/FileMetadata'
+import { useDataset } from '@/sections/dataset/DatasetContext'
+import {
+  CustomTerms,
+  DatasetLicense,
+  DatasetPublishingStatus
+} from '@/dataset/domain/models/Dataset'
+import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
 
 interface FileDownloadOptionsProps {
+  fileId: number
   type: FileType
   isTabular: boolean
   ingestInProgress: boolean
   downloadUrls: FileDownloadUrls
   userHasDownloadPermission: boolean
+  isDraft?: boolean
+  canEdit?: boolean
+  guestbookId?: number
+  datasetPersistentId?: string
+  datasetLicense?: DatasetLicense
+  datasetCustomTerms?: CustomTerms
 }
 
 export function FileDownloadOptions({
+  fileId,
   type,
   isTabular,
   ingestInProgress,
   downloadUrls,
-  userHasDownloadPermission
+  userHasDownloadPermission,
+  isDraft,
+  canEdit,
+  guestbookId,
+  datasetPersistentId,
+  datasetLicense,
+  datasetCustomTerms
 }: FileDownloadOptionsProps) {
   const { t } = useTranslation('files')
+  const { dataset } = useDataset()
+  const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
+  const [selectedDownloadFormat, setSelectedDownloadFormat] = useState<string | FileDownloadMode>(
+    FileDownloadMode.ORIGINAL
+  )
 
   if (!userHasDownloadPermission) {
     return <></>
+  }
+
+  const resolvedGuestbookId = guestbookId ?? dataset?.guestbookId
+  const resolvedDatasetPersistentId = datasetPersistentId ?? dataset?.persistentId
+  const resolvedDatasetLicense = datasetLicense ?? dataset?.license
+  const resolvedDatasetCustomTerms = datasetCustomTerms ?? dataset?.termsOfUse?.customTerms
+  const isLockedFromFileDownload = !!dataset?.isLockedFromFileDownload
+  const resolvedIsDraftDataset =
+    isDraft ?? dataset?.version.publishingStatus === DatasetPublishingStatus.DRAFT
+  const resolvedCanEdit = canEdit ?? dataset?.permissions.canUpdateDataset ?? false
+  const hasGuestbook =
+    resolvedGuestbookId !== undefined && !resolvedIsDraftDataset && !resolvedCanEdit
+
+  const openGuestbookModal = (format: string | FileDownloadMode) => {
+    setSelectedDownloadFormat(format)
+    setShowDownloadWithGuestbookModal(true)
   }
 
   return (
@@ -33,20 +80,39 @@ export function FileDownloadOptions({
       </DropdownHeader>
       {isTabular ? (
         <FileTabularDownloadOptions
+          fileId={fileId}
           type={type}
           ingestInProgress={ingestInProgress}
           downloadUrls={downloadUrls}
+          hasGuestbook={hasGuestbook}
+          onOpenGuestbookModal={openGuestbookModal}
+          isLockedFromFileDownload={isLockedFromFileDownload}
         />
       ) : (
         <FileNonTabularDownloadOptions
+          fileId={fileId}
+          hasGuestbook={hasGuestbook}
+          onOpenGuestbookModal={() => openGuestbookModal(FileDownloadMode.ORIGINAL)}
           type={type}
           ingestIsInProgress={ingestInProgress}
           downloadUrlOriginal={downloadUrls.original}
+          isLockedFromFileDownload={isLockedFromFileDownload}
+        />
+      )}
+      {hasGuestbook && showDownloadWithGuestbookModal && (
+        <DownloadWithGuestbookModal
+          fileId={fileId}
+          guestbookId={resolvedGuestbookId}
+          format={selectedDownloadFormat}
+          datasetPersistentId={resolvedDatasetPersistentId}
+          datasetLicense={resolvedDatasetLicense}
+          datasetCustomTerms={resolvedDatasetCustomTerms}
+          show={showDownloadWithGuestbookModal}
+          handleClose={() => setShowDownloadWithGuestbookModal(false)}
         />
       )}
     </>
   )
 }
 
-// TODO: Add guestbook support
 // TODO: Add file package support

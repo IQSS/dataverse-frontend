@@ -9,6 +9,8 @@ import { FileHelper } from '../../../shared/files/FileHelper'
 import moment from 'moment-timezone'
 import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from '../../../../../src/sections/dataset/config'
+import { GuestbookHelper } from '../../../shared/guestbooks/GuestbookHelper'
+import { faker } from '@faker-js/faker'
 
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
@@ -322,6 +324,39 @@ describe('Dataset', () => {
           cy.findByText(/The dataset has been deleted./i).should('exist')
         })
     })
+
+    it('shows the assigned guestbook and opens the preview modal from the dataset page', () => {
+      const guestbookName = `Guestbook ${faker.datatype.uuid()}`
+
+      cy.wrap(DatasetHelper.create()).then((dataset) => {
+        cy.wrap(
+          GuestbookHelper.createAndGetByName(guestbookName).then(async (guestbook) => {
+            await GuestbookHelper.assignToDataset(Number(dataset.id), guestbook.id)
+            return { dataset, guestbook }
+          })
+        ).then(({ dataset, guestbook }) => {
+          cy.visit(`/spa/datasets?persistentId=${dataset.persistentId}&version=${DRAFT_PARAM}`)
+
+          cy.findByRole('tab', { name: /Terms and Guestbook/ }).click()
+          cy.findByTestId('dataset-terms-guestbook-accordion-header')
+            .should('have.text', 'Guestbook')
+            .click()
+          cy.findByTestId('dataset-terms-guestbook-accordion-body').should(
+            'contain.text',
+            'The following guestbook will prompt a user to provide additional information when downloading a file.'
+          )
+          cy.findByTestId('dataset-guestbook-name').should('contain.text', guestbook.name)
+          cy.findByRole('button', { name: 'Preview Guestbook' }).click()
+
+          cy.findByRole('dialog')
+            .should('be.visible')
+            .within(() => {
+              cy.findByText(guestbook.name).should('exist')
+              cy.findByText('Account Information').should('exist')
+            })
+        })
+      })
+    })
   })
 
   describe('Visualizing the Files Tab', () => {
@@ -431,7 +466,7 @@ describe('Dataset', () => {
 
           cy.findByText('Upload Files').should('exist')
           cy.get('#edit-files-menu').should('exist')
-          cy.findAllByRole('button', { name: 'Access File' }).should('not.exist') // TODO: change this to 'exist' when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
+          cy.findAllByRole('button', { name: 'Access File' }).should('exist')
           cy.findAllByRole('button', { name: 'File Options' }).should('exist')
         })
     })
@@ -458,8 +493,7 @@ describe('Dataset', () => {
         })
     })
 
-    // TODO: Bring back this test when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
-    it.skip('loads the restricted files when the user is logged in as owner', () => {
+    it('loads the restricted files when the user is logged in as owner', () => {
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
         .its('persistentId')
         .then((persistentId: string) => {
@@ -545,11 +579,10 @@ describe('Dataset', () => {
 
           cy.get('#edit-files-menu').should('exist')
 
-          // TODO: Bring back this part of the test when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
-          // cy.findByRole('button', { name: 'Access File' }).as('accessButton')
-          // cy.get('@accessButton').should('exist')
-          // cy.get('@accessButton').click()
-          // cy.findByText('Embargoed').should('exist')
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('exist')
+          cy.get('@accessButton').click()
+          cy.findByText('Embargoed').should('exist')
         })
     })
 
@@ -743,14 +776,100 @@ describe('Dataset', () => {
 
           cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
 
-          cy.findByRole('link', { name: /Original Format ZIP/ })
+          cy.findByRole('button', { name: /Original Format ZIP/ })
             .should('exist')
             .click({ force: true })
 
+          cy.findByText('Your download has started.').should('exist')
+        })
+    })
+
+    it('downloads the dataset as a guest', () => {
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(2)).then((dataset) =>
+          DatasetHelper.publish(dataset.persistentId)
+        )
+      )
+        .its('persistentId')
+        .then((persistentId: string) => {
+          TestsUtils.logout()
+          cy.wait(1500) // Wait for the dataset to be published and the session to clear
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.wait(1500) // Wait for the page to load
+
+          cy.findByText('Files').should('exist')
+
+          cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
+
+          cy.findByRole('button', { name: /Original Format ZIP/ })
+            .should('exist')
+            .click({ force: true })
+
+          cy.findByText('Your download has started.').should('exist')
           cy.reload()
 
           cy.findAllByText('1 Downloads').should('exist')
         })
+    })
+
+    it('downloads the dataset directly for dataset editors even when a guestbook is assigned', () => {
+      const guestbookName = `Guestbook ${faker.datatype.uuid()}`
+
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then((dataset) => {
+        cy.wrap(
+          GuestbookHelper.createAndGetByName(guestbookName).then(async (guestbook) => {
+            await GuestbookHelper.assignToDataset(Number(dataset.id), guestbook.id)
+            await DatasetHelper.publish(dataset.persistentId)
+
+            return dataset
+          })
+        ).then((publishedDataset) => {
+          cy.visit(`/spa/datasets?persistentId=${publishedDataset.persistentId}`)
+          cy.wait(1500) // Wait for the page to load
+
+          cy.findByText('Files').should('exist')
+          cy.window().then((window) => {
+            cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+          })
+          cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
+          cy.findByRole('button', { name: /Original Format ZIP/ })
+            .should('exist')
+            .click({ force: true })
+
+          cy.get('@anchorClick').should('have.been.calledOnce')
+          cy.findByRole('dialog').should('not.exist')
+          cy.findByText('Your download has started.').should('exist')
+        })
+      })
+    })
+
+    it('opens the guestbook modal for guests when downloading a dataset with an assigned guestbook', () => {
+      const guestbookName = `Guestbook ${faker.datatype.uuid()}`
+
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then((dataset) => {
+        cy.wrap(
+          GuestbookHelper.createAndGetByName(guestbookName).then(async (guestbook) => {
+            await GuestbookHelper.assignToDataset(Number(dataset.id), guestbook.id)
+            await DatasetHelper.publish(dataset.persistentId)
+
+            return dataset
+          })
+        ).then((publishedDataset) => {
+          TestsUtils.logout()
+          cy.visit(`/spa/datasets?persistentId=${publishedDataset.persistentId}`)
+          cy.wait(1500)
+
+          cy.findByText('Files').should('exist')
+          cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
+          cy.findByRole('button', { name: /Original Format ZIP/ })
+            .should('exist')
+            .click({ force: true })
+
+          cy.findByRole('dialog').should('be.visible')
+          cy.findByLabelText(/name/i).should('be.enabled')
+          cy.findByLabelText(/email/i).should('be.enabled')
+        })
+      })
     })
 
     it('downloads a file', () => {
