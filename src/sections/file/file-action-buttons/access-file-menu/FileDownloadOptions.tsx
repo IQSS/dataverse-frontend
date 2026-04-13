@@ -13,9 +13,10 @@ import { useDataset } from '@/sections/dataset/DatasetContext'
 import {
   CustomTerms,
   DatasetLicense,
-  DatasetPublishingStatus
+  DatasetPublishingStatus,
+  defaultLicense
 } from '@/dataset/domain/models/Dataset'
-import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import { DownloadWithTermsAndGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithTermsAndGuestbookModal'
 
 interface FileDownloadOptionsProps {
   fileId: number
@@ -48,7 +49,8 @@ export function FileDownloadOptions({
 }: FileDownloadOptionsProps) {
   const { t } = useTranslation('files')
   const { dataset } = useDataset()
-  const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
+  const [showDownloadWithTermsAndGuestbookModal, setShowDownloadWithTermsAndGuestbookModal] =
+    useState(false)
   const [selectedDownloadFormat, setSelectedDownloadFormat] = useState<string | FileDownloadMode>(
     FileDownloadMode.ORIGINAL
   )
@@ -57,7 +59,6 @@ export function FileDownloadOptions({
     return <></>
   }
 
-  const resolvedGuestbookId = guestbookId ?? dataset?.guestbookId
   const resolvedDatasetPersistentId = datasetPersistentId ?? dataset?.persistentId
   const resolvedDatasetLicense = datasetLicense ?? dataset?.license
   const resolvedDatasetCustomTerms = datasetCustomTerms ?? dataset?.termsOfUse?.customTerms
@@ -65,12 +66,17 @@ export function FileDownloadOptions({
   const resolvedIsDraftDataset =
     isDraft ?? dataset?.version.publishingStatus === DatasetPublishingStatus.DRAFT
   const resolvedCanEdit = canEdit ?? dataset?.permissions.canUpdateDataset ?? false
-  const hasGuestbook =
-    resolvedGuestbookId !== undefined && !resolvedIsDraftDataset && !resolvedCanEdit
+  const bypassTermsGuard = resolvedIsDraftDataset || resolvedCanEdit
+  const hasGuestbook = guestbookId !== undefined
+  const hasNonDefaultLicense =
+    resolvedDatasetLicense !== undefined && resolvedDatasetLicense.name !== defaultLicense.name
+  const hasCustomTerms = resolvedDatasetCustomTerms !== undefined
+  const shouldShowModal =
+    !bypassTermsGuard && (hasGuestbook || hasCustomTerms || hasNonDefaultLicense)
 
   const openGuestbookModal = (format: string | FileDownloadMode) => {
     setSelectedDownloadFormat(format)
-    setShowDownloadWithGuestbookModal(true)
+    setShowDownloadWithTermsAndGuestbookModal(true)
   }
 
   return (
@@ -84,14 +90,14 @@ export function FileDownloadOptions({
           type={type}
           ingestInProgress={ingestInProgress}
           downloadUrls={downloadUrls}
-          hasGuestbook={hasGuestbook}
+          requiresTermsOrGuestbook={shouldShowModal}
           onOpenGuestbookModal={openGuestbookModal}
           isLockedFromFileDownload={isLockedFromFileDownload}
         />
       ) : (
         <FileNonTabularDownloadOptions
           fileId={fileId}
-          hasGuestbook={hasGuestbook}
+          requiresTermsOrGuestbook={shouldShowModal}
           onOpenGuestbookModal={() => openGuestbookModal(FileDownloadMode.ORIGINAL)}
           type={type}
           ingestIsInProgress={ingestInProgress}
@@ -99,16 +105,16 @@ export function FileDownloadOptions({
           isLockedFromFileDownload={isLockedFromFileDownload}
         />
       )}
-      {hasGuestbook && showDownloadWithGuestbookModal && (
-        <DownloadWithGuestbookModal
+      {shouldShowModal && showDownloadWithTermsAndGuestbookModal && (
+        <DownloadWithTermsAndGuestbookModal
           fileId={fileId}
-          guestbookId={resolvedGuestbookId}
+          guestbookId={guestbookId}
           format={selectedDownloadFormat}
           datasetPersistentId={resolvedDatasetPersistentId}
           datasetLicense={resolvedDatasetLicense}
           datasetCustomTerms={resolvedDatasetCustomTerms}
-          show={showDownloadWithGuestbookModal}
-          handleClose={() => setShowDownloadWithGuestbookModal(false)}
+          show={showDownloadWithTermsAndGuestbookModal}
+          handleClose={() => setShowDownloadWithTermsAndGuestbookModal(false)}
         />
       )}
     </>

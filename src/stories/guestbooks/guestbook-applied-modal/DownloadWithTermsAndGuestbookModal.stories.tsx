@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import { DownloadWithTermsAndGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithTermsAndGuestbookModal'
 import { WithI18next } from '@/stories/WithI18next'
 import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
 import { GuestbookMockRepository } from '@/stories/shared-mock-repositories/guestbook/GuestbookMockRepository'
@@ -25,9 +25,9 @@ const accessRepository: AccessRepository = {
 
 const guestbookRepository = new GuestbookMockRepository()
 
-const meta: Meta<typeof DownloadWithGuestbookModal> = {
-  title: 'Sections/Guestbooks/DownloadWithGuestbookModal',
-  component: DownloadWithGuestbookModal,
+const meta: Meta<typeof DownloadWithTermsAndGuestbookModal> = {
+  title: 'Sections/Guestbooks/DownloadWithTermsAndGuestbookModal',
+  component: DownloadWithTermsAndGuestbookModal,
   decorators: [
     WithI18next,
     WithLoggedInUser,
@@ -49,7 +49,7 @@ const meta: Meta<typeof DownloadWithGuestbookModal> = {
 }
 
 export default meta
-type Story = StoryObj<typeof DownloadWithGuestbookModal>
+type Story = StoryObj<typeof DownloadWithTermsAndGuestbookModal>
 
 export const SingleFile: Story = {
   args: {

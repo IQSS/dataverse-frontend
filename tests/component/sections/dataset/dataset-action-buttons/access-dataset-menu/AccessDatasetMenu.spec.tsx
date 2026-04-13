@@ -9,6 +9,7 @@ import { getGuestbook, submitGuestbookForDatasetDownload } from '@iqss/dataverse
 import { ReactNode, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
+import { DatasetPermissions } from '@/dataset/domain/models/Dataset'
 import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
 
 function TranslationPreloader({ children }: { children: ReactNode }) {
@@ -287,7 +288,7 @@ describe('AccessDatasetMenu', () => {
     cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')
   })
 
-  it('opens DownloadWithGuestbookModal when guestbook exists and download option is clicked', () => {
+  it('opens DownloadWithTermsAndGuestbookModal when guestbook exists and download option is clicked', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions =
       DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions()
@@ -433,7 +434,7 @@ describe('AccessDatasetMenu', () => {
     cy.findByRole('dialog').should('exist')
   })
 
-  it('closes DownloadWithGuestbookModal when cancel is clicked', () => {
+  it('closes DownloadWithTermsAndGuestbookModal when cancel is clicked', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions =
       DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions()
@@ -676,6 +677,173 @@ describe('AccessDatasetMenu', () => {
     cy.findByRole('button', { name: /Download ZIP/ }).click()
 
     cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText('Your download has started.').should('exist')
+  })
+
+  it('opens the terms modal when custom terms exist without a guestbook', () => {
+    const version = DatasetVersionMother.createReleased()
+    const permissions: DatasetPermissions =
+      DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions()
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
+    ]
+
+    cy.customMount(
+      withAccessRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              datasetNumericId={2}
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={false}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              customTerms={{
+                termsOfUse: 'Custom terms for testing'
+              }}
+            />
+          </TranslationPreloader>
+        </Suspense>
+      )
+    )
+
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.findByRole('button', { name: /Download ZIP/ })
+      .should('exist')
+      .click()
+
+    cy.findByRole('dialog').should('exist')
+    cy.findByText('Custom Dataset Terms').should('exist')
+    // Guestbook fields should not be visible since there is no guestbook
+    cy.findByLabelText(/name/i).should('not.exist')
+    cy.findByLabelText(/email/i).should('not.exist')
+  })
+
+  it('opens the terms modal when CC BY 4.0 license exists without a guestbook', () => {
+    const version = DatasetVersionMother.createReleased()
+    const permissions: DatasetPermissions =
+      DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions()
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
+    ]
+
+    cy.customMount(
+      withAccessRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              datasetNumericId={2}
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={false}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              license={{
+                name: 'CC BY 4.0',
+                uri: 'https://creativecommons.org/licenses/by/4.0',
+                iconUri: 'https://licensebuttons.net/l/by/4.0/88x31.png'
+              }}
+            />
+          </TranslationPreloader>
+        </Suspense>
+      )
+    )
+
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.findByRole('button', { name: /Download ZIP/ })
+      .should('exist')
+      .click()
+
+    cy.findByRole('dialog').should('exist')
+    // Guestbook fields should not be visible since there is no guestbook
+    cy.findByLabelText(/name/i).should('not.exist')
+    cy.findByLabelText(/email/i).should('not.exist')
+  })
+
+  it('downloads directly when custom terms exist but user can edit the dataset', () => {
+    const version = DatasetVersionMother.createReleased()
+    const permissions = DatasetPermissionsMother.create({
+      canDownloadFiles: true,
+      canUpdateDataset: true
+    })
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
+    ]
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.customMount(
+      withAccessRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              datasetNumericId={2}
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={false}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              customTerms={{
+                termsOfUse: 'Custom terms for testing'
+              }}
+            />
+          </TranslationPreloader>
+        </Suspense>
+      )
+    )
+
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.findByRole('button', { name: /Download ZIP/ }).click()
+
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText('Your download has started.').should('exist')
+  })
+
+  it('bypasses the custom terms modal for draft datasets', () => {
+    const version = DatasetVersionMother.createDraft()
+    const permissions =
+      DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions()
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
+    ]
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.customMount(
+      withAccessRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              datasetNumericId={2}
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={false}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              customTerms={{
+                termsOfUse: 'Custom terms for testing'
+              }}
+            />
+          </TranslationPreloader>
+        </Suspense>
+      )
+    )
+
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.findByRole('button', { name: /Download ZIP/ }).click()
+
     cy.get('@anchorClick').should('have.been.calledOnce')
     cy.findByRole('dialog').should('not.exist')
     cy.findByText('Your download has started.').should('exist')
