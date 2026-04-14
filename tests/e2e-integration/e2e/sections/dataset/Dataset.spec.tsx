@@ -875,7 +875,7 @@ describe('Dataset', () => {
       })
     })
 
-    it.only('opens the custom terms modal for guests when downloading a dataset with custom terms and no guestbook', () => {
+    it('opens the custom terms modal for guests when downloading a dataset with custom terms and no guestbook', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then(async (dataset) => {
           await DatasetHelper.setCustomTermsOfUse(dataset.id, {
