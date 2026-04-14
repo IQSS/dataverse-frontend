@@ -191,7 +191,7 @@ describe('File', () => {
             cy.get('@accessButton').click()
             cy.findByTestId('download-original-file').should('exist').click({ force: true })
 
-            cy.findByRole('dialog').should('be.visible')
+            cy.findByRole('dialog').find('.modal-title').should('contain.text', 'Dataset Terms')
             cy.findByLabelText(/name/i).should('be.enabled')
             cy.findByLabelText(/email/i).should('be.enabled')
           })

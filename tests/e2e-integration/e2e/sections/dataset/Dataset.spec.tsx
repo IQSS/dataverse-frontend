@@ -868,13 +868,14 @@ describe('Dataset', () => {
             .click({ force: true })
 
           cy.findByRole('dialog').should('be.visible')
+          cy.findByText(/Dataset Terms/i).should('exist')
           cy.findByLabelText(/name/i).should('be.enabled')
           cy.findByLabelText(/email/i).should('be.enabled')
         })
       })
     })
 
-    it('opens the custom terms modal for guests when downloading a dataset with custom terms and no guestbook', () => {
+    it.only('opens the custom terms modal for guests when downloading a dataset with custom terms and no guestbook', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then(async (dataset) => {
           await DatasetHelper.setCustomTermsOfUse(dataset.id, {
@@ -895,7 +896,7 @@ describe('Dataset', () => {
           .click({ force: true })
 
         cy.findByRole('dialog').should('be.visible')
-        cy.findByText('Custom Dataset Terms').should('exist')
+        cy.findByRole('dialog').find('.modal-title').should('contain.text', 'Dataset Terms')
         // Guestbook fields should not be visible since there is no guestbook
         cy.findByLabelText(/name/i).should('not.exist')
         cy.findByLabelText(/email/i).should('not.exist')
