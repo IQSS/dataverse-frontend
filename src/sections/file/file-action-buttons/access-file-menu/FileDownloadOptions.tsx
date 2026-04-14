@@ -66,8 +66,9 @@ export function FileDownloadOptions({
   const resolvedIsDraftDataset =
     isDraft ?? dataset?.version.publishingStatus === DatasetPublishingStatus.DRAFT
   const resolvedCanEdit = canEdit ?? dataset?.permissions.canUpdateDataset ?? false
+  const resolvedGuestbookId = guestbookId ?? dataset?.guestbookId
+  const hasGuestbook = resolvedGuestbookId !== undefined
   const bypassTermsGuard = resolvedIsDraftDataset || resolvedCanEdit
-  const hasGuestbook = guestbookId !== undefined
   const hasNonDefaultLicense =
     resolvedDatasetLicense !== undefined && resolvedDatasetLicense.name !== defaultLicense.name
   const hasCustomTerms = resolvedDatasetCustomTerms !== undefined
@@ -108,7 +109,7 @@ export function FileDownloadOptions({
       {shouldShowModal && showDownloadWithTermsAndGuestbookModal && (
         <DownloadWithTermsAndGuestbookModal
           fileId={fileId}
-          guestbookId={guestbookId}
+          guestbookId={resolvedGuestbookId}
           format={selectedDownloadFormat}
           datasetPersistentId={resolvedDatasetPersistentId}
           datasetLicense={resolvedDatasetLicense}
