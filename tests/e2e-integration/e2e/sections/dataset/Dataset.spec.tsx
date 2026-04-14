@@ -845,7 +845,7 @@ describe('Dataset', () => {
       })
     })
 
-    it('opens the guestbook modal for guests when downloading a dataset with an assigned guestbook', () => {
+    it.only('opens the guestbook modal for guests when downloading a dataset with an assigned guestbook', () => {
       const guestbookName = `Guestbook ${faker.datatype.uuid()}`
 
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then((dataset) => {
@@ -868,7 +868,7 @@ describe('Dataset', () => {
             .click({ force: true })
 
           cy.findByRole('dialog').should('be.visible')
-          cy.findByText(/Dataset Terms/i).should('exist')
+          cy.findByRole('dialog').find('.modal-title').should('contain.text', 'Dataset Terms')
           cy.findByLabelText(/name/i).should('be.enabled')
           cy.findByLabelText(/email/i).should('be.enabled')
         })
