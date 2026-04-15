@@ -845,7 +845,7 @@ describe('Dataset', () => {
       })
     })
 
-    it.only('opens the guestbook modal for guests when downloading a dataset with an assigned guestbook', () => {
+    it('opens the guestbook modal for guests when downloading a dataset with an assigned guestbook', () => {
       const guestbookName = `Guestbook ${faker.datatype.uuid()}`
 
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then((dataset) => {
