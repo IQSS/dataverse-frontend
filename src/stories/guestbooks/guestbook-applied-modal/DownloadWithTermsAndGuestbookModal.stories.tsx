@@ -68,3 +68,29 @@ export const MultipleFiles: Story = {
     guestbookId: 3
   }
 }
+
+export const CustomTermsOnly: Story = {
+  args: {
+    show: true,
+    handleClose: () => {},
+    fileId: 123,
+    datasetCustomTerms: {
+      termsOfUse: 'These are custom terms of use for this dataset.',
+      confidentialityDeclaration: 'All data must be kept confidential.',
+      restrictions: 'Do not redistribute without permission.'
+    }
+  }
+}
+
+export const NonDefaultLicenseOnly: Story = {
+  args: {
+    show: true,
+    handleClose: () => {},
+    fileId: 123,
+    datasetLicense: {
+      name: 'CC BY 4.0',
+      uri: 'https://creativecommons.org/licenses/by/4.0',
+      iconUri: 'https://licensebuttons.net/l/by/4.0/88x31.png'
+    }
+  }
+}

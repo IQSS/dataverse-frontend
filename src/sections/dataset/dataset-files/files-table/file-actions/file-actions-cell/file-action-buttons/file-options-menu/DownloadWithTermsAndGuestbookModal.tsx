@@ -17,7 +17,7 @@ import {
   GuestbookAnswerDTO,
   GuestbookResponseDTO
 } from '@/access/domain/repositories/AccessRepository'
-import { downloadFromSignedUrl } from '@/shared/helpers/DownloadHelper'
+import { downloadFromSignedUrl, EMPTY_GUESTBOOK_RESPONSE } from '@/shared/helpers/DownloadHelper'
 import { FileDownloadMode } from '@/files/domain/models/FileMetadata'
 
 interface DownloadWithTermsAndGuestbookModalProps {
@@ -179,6 +179,10 @@ export function DownloadWithTermsAndGuestbookModal({
   }
 
   const buildGuestbookResponse = (): GuestbookResponseDTO => {
+    if (!guestbook) {
+      return EMPTY_GUESTBOOK_RESPONSE
+    }
+
     const customQuestionAnswers = customQuestions.reduce<GuestbookAnswerDTO[]>(
       (answers, question, index) => {
         const fieldName = getGuestbookCustomQuestionFieldName(question, index)
