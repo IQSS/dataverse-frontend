@@ -5,6 +5,7 @@ import { keycloakify } from "keycloakify/vite-plugin";
 import * as path from 'path'
 
 export default defineConfig({
+  base: '/modern',
   plugins: [
     react(),
     istanbul({
