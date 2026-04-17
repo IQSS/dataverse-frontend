@@ -233,7 +233,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     cy.findByRole('link', { name: 'Custom Dataset Terms' }).should(
       'have.attr',
       'href',
-      '/spa/datasets?persistentId=doi%3A10.5072%2FFK2%2FFILEPAGE&tab=terms&termsTab=guestbook'
+      '/modern/datasets?persistentId=doi%3A10.5072%2FFK2%2FFILEPAGE&tab=terms&termsTab=guestbook'
     )
   })
 

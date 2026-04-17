@@ -16,7 +16,6 @@ type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
 }
 const DRAFT_PARAM = DatasetNonNumericVersionSearchParam.DRAFT
-const FRONTEND_BASE_PATH = '/spa'
 
 describe('Dataset', () => {
   beforeEach(() => {

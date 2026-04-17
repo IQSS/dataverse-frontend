@@ -6,8 +6,6 @@ import { FileHelper } from '../../../shared/files/FileHelper'
 import { GuestbookHelper } from '../../../shared/guestbooks/GuestbookHelper'
 import { faker } from '@faker-js/faker'
 
-const FRONTEND_BASE_PATH = '/spa'
-
 describe('File', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {

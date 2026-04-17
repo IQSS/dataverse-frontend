@@ -54,7 +54,7 @@ export function GuestbookCollectForm({
     [guestbook?.customQuestions]
   )
   const customTermsHref = datasetPersistentId
-    ? `/spa${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${encodeURIComponent(
+    ? `/modern${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${encodeURIComponent(
         datasetPersistentId
       )}&${QueryParamKey.TAB}=terms&termsTab=guestbook`
     : undefined
