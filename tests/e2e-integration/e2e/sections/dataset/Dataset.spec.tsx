@@ -1,3 +1,4 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import {
   DatasetLabelValue,
   DatasetNonNumericVersionSearchParam

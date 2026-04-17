@@ -5,6 +5,9 @@ on:
     branches:
       - develop
 
+env:
+  FRONTEND_BASE_PATH: /modern
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,7 +34,7 @@ jobs:
         run: npm run build
 
       - name: Build with base path
-        run: npm run build -- --base=/spa
+        run: npm run build -- --base=${{ env.FRONTEND_BASE_PATH }}
 
       - name: Override runtime config.js for BETA
         env:
@@ -115,4 +118,4 @@ jobs:
             ASADMIN='/usr/local/payara6/bin/asadmin --user admin'
             DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
             $ASADMIN undeploy $DATAVERSE_FRONTEND
-            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /spa $APPLICATION_WAR_PATH
+            $ASADMIN deploy --name $APPLICATION_NAME --contextroot ${{ env.FRONTEND_BASE_PATH }} $APPLICATION_WAR_PATH

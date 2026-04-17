@@ -13,7 +13,7 @@ export function Layout() {
       {HeaderFactory.create()}
       {/* <div className="alert alert-warning rounded-0" role="alert">
         <div className="container">
-          You are using the new Dataverse <strong>SPA version</strong>. This is an early release and
+          You are using the new Dataverse <strong>Modern version</strong>. This is an early release and
           some features from the original site are not yet available.
         </div>
       </div> */}
