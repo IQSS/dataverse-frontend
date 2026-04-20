@@ -27,7 +27,7 @@ describe('Footer component', () => {
     cy.findByText('Privacy Policy').should('exist')
     cy.findByAltText('The Dataverse Project logo').should('exist')
     cy.findByText(testVersion).should('exist')
-    cy.findByText(`SPA: ${spaVersion}`).should('exist')
+    cy.findByText(`frontend version: ${spaVersion}`).should('exist')
   })
 
   it('should call dataverseInfoRepository.getVersion on mount', () => {
