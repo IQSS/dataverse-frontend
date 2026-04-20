@@ -12,7 +12,7 @@ on:
           - qa
           - demo
       basepath:
-        description: 'Server base path (without slashes) for serving the application (e.g., spa). If left blank, it will try to deploy to the root base path.'
+        description: 'Server base path (without slashes) for serving the application (e.g., modern). If left blank, it will try to deploy to the root base path.'
         type: string
         required: false
 

@@ -35,6 +35,7 @@ export default defineConfig({
     }
   },
   env: {
+    frontendBasePath: '/modern',
     backendUrl: 'http://localhost:8000',
     oidcClientId: 'test',
     oidcAuthorizationEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/auth',

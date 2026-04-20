@@ -31,13 +31,16 @@ export function DatasetActionButtons({
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
       <AccessDatasetMenu
+        datasetNumericId={dataset.id}
         version={dataset.version}
         permissions={dataset.permissions}
         hasOneTabularFileAtLeast={dataset.hasOneTabularFileAtLeast}
         fileDownloadSizes={dataset.fileDownloadSizes}
-        downloadUrls={dataset.downloadUrls}
         fileStore={dataset.fileStore}
         persistentId={dataset.persistentId}
+        guestbookId={dataset.guestbookId}
+        license={dataset.license}
+        customTerms={dataset.termsOfUse.customTerms}
       />
       <PublishDatasetMenu dataset={dataset} datasetRepository={datasetRepository} />
       <SubmitForReviewButton dataset={dataset} />

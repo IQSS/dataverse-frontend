@@ -1,9 +1,13 @@
 import { ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import { EditLicenseAndTerms } from '@/sections/edit-dataset-terms/edit-license-and-terms/EditLicenseAndTerms'
 import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
 import { LicenseRepository } from '@/licenses/domain/repositories/LicenseRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
+import {
+  DatasetMother,
+  DatasetVersionMother
+} from '@tests/component/dataset/domain/models/DatasetMother'
 import { TermsOfUseMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { License } from '@/licenses/domain/models/License'
@@ -52,10 +56,28 @@ const mockDatasetWithLicense = DatasetMother.create({
   license: mockLicenses[0]
 })
 
+const LocationDisplay = () => {
+  const location = useLocation()
+  return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>
+}
+
 describe('EditLicenseAndTerms', () => {
   const withProviders = (component: ReactNode, dataset: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
+
+    return (
+      <DatasetProvider
+        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+        repository={datasetRepository}>
+        {component}
+      </DatasetProvider>
+    )
+  }
+
+  const withLoadingDataset = (component: ReactNode) => {
+    datasetRepository.getByPersistentId = cy.stub().returns(new Promise(() => {}))
+    datasetRepository.getByPrivateUrlToken = cy.stub().returns(new Promise(() => {}))
 
     return (
       <DatasetProvider
@@ -179,6 +201,71 @@ describe('EditLicenseAndTerms', () => {
       )
 
       cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
+    })
+
+    it('does not submit update when dataset is not loaded', () => {
+      datasetRepository.updateDatasetLicense = cy.stub().as('updateDatasetLicense')
+
+      cy.customMount(
+        withLoadingDataset(
+          <EditLicenseAndTerms
+            licenseRepository={licenseRepository}
+            datasetRepository={datasetRepository}
+          />
+        )
+      )
+
+      cy.get('select').select('CC0 1.0')
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+      cy.get('@updateDatasetLicense').should('not.have.been.called')
+    })
+  })
+
+  describe('Navigation', () => {
+    it('navigates to dataset view using DRAFT version when cancel is clicked on a draft dataset', () => {
+      const draftDataset = DatasetMother.create({
+        persistentId: 'doi:10.5072/FK2/DRAFTPID',
+        version: DatasetVersionMother.createDraft()
+      })
+
+      cy.customMount(
+        withProviders(
+          <>
+            <EditLicenseAndTerms
+              licenseRepository={licenseRepository}
+              datasetRepository={datasetRepository}
+            />
+            <LocationDisplay />
+          </>,
+          draftDataset
+        )
+      )
+
+      cy.findByRole('button', { name: 'Cancel' }).click()
+      cy.findByTestId('location-display').should(
+        'have.text',
+        '/datasets?persistentId=doi%3A10.5072%2FFK2%2FDRAFTPID&version=DRAFT'
+      )
+    })
+
+    it('does not navigate when cancel is clicked before dataset is loaded', () => {
+      cy.customMount(
+        withLoadingDataset(
+          <>
+            <EditLicenseAndTerms
+              licenseRepository={licenseRepository}
+              datasetRepository={datasetRepository}
+            />
+            <LocationDisplay />
+          </>
+        ),
+        ['/edit-terms']
+      )
+
+      cy.findByTestId('location-display').should('contain', '/edit-terms')
+      cy.findByRole('button', { name: 'Cancel' }).click()
+      cy.findByTestId('location-display').should('contain', '/edit-terms')
     })
   })
 

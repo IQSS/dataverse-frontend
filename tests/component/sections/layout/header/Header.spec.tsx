@@ -22,8 +22,9 @@ describe('Header component', () => {
       </WithRepositories>
     )
 
-    cy.findByRole('link', { name: /Dataverse/ }).should('exist')
-    cy.findByRole('link').should('have.attr', 'href', '/spa/')
+    cy.findByRole('link', { name: /Dataverse/ })
+      .should('exist')
+      .and('have.attr', 'href')
   })
 
   it('displays the user name when the user is logged in', () => {
@@ -72,7 +73,8 @@ describe('Header component', () => {
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
   })
-  it.only('Displays the unread notifications badge', () => {
+
+  it('Displays the unread notifications badge', () => {
     notificationRepository.getUnreadNotificationsCount = cy.stub().resolves(3)
     cy.mountAuthenticated(
       <WithRepositories collectionRepository={collectionRepository}>

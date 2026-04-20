@@ -1,3 +1,4 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
@@ -43,6 +44,8 @@ function extractInfoFromInterceptedResponse(interception: Interception) {
 }
 
 describe('Collection Items Panel', () => {
+  let collectionId: string
+
   beforeEach(() => {
     TestsUtils.login().then((token) => {
       cy.wrap(TestsUtils.setup(token)).then(async () => {
@@ -52,6 +55,7 @@ describe('Collection Items Panel', () => {
 
         const collectionName = 'ItemsTestCollection'
         const collection = await CollectionHelper.create(`${collectionName}-${Date.now()}`)
+        collectionId = collection.id
         // Creates 8 datasets with 1 file each
         for (const _number of numbersOfDatasetsToCreate) {
           await DatasetHelper.createWithFileAndTitle(
@@ -71,7 +75,7 @@ describe('Collection Items Panel', () => {
   })
 
   it('performs different search, filtering and respond to back and forward navigation', () => {
-    cy.visit(`/spa/collections`)
+    cy.visit(`${FRONTEND_BASE_PATH}/collections`)
 
     cy.wait('@getCollectionItems').then((interception) => {
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
@@ -320,7 +324,7 @@ describe('Collection Items Panel', () => {
         .should('have.length', 2)
     })
     // 8 Sort by Name (Z-A)
-    cy.visit(`/spa/collections`)
+    cy.visit(`${FRONTEND_BASE_PATH}/collections`)
     cy.intercept({
       pathname: '/api/v1/search',
       query: {
@@ -330,6 +334,7 @@ describe('Collection Items Panel', () => {
     }).as('getSortedCollectionItems')
     cy.findByRole('button', { name: /Sort/ }).click({ force: true })
     cy.contains('Name (Z-A)').click({ force: true })
+    cy.wait('@getCollectionItems')
 
     cy.wait('@getSortedCollectionItems').then(() => {
       const sortExpectedUrl = new URLSearchParams({

@@ -19,6 +19,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added runtime configuration options for homepage branding and support link.
 - Added an environment variable to docker-compose-dev.yml to hide the OIDC client used in the SPA from the JSF frontend: DATAVERSE_AUTH_OIDC_HIDDEN_JSF: 1
 - Added a message note to the login page
+- Download with terms of use and guestbook.
 
 ### Changed
 
@@ -63,6 +64,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Upgrade Keycloak to 26.3.2; updated SPI and test realm JSON.
 - Truncate long collection and dataset descriptions with expandable content. (#789)
 - UI polish: Files Table always shows action buttons. (#800)
+- Removed hard-coded references to /spa path and SPA name, changed to /modern (#945)
 
 ### Fixed
 
