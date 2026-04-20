@@ -9,11 +9,8 @@ import type { KcContext } from './KcContext'
 import { Alert, DropdownButton, DropdownButtonItem, Tooltip } from '@iqss/dataverse-design-system'
 import { ArrowUpRightSquareFill } from 'react-bootstrap-icons'
 import dataverse_logo from '@/assets/dataverse_brand_icon.svg'
+import { SignInNotice } from './components/SignInNotice'
 import styles from './template.module.scss'
-
-const DATAVERSE_BASE_URL =
-  import.meta.env.VITE_DATAVERSE_BASE_URL ?? 'https://dataverse.harvard.edu'
-const HARVARD_SIGN_UP_URL = `${DATAVERSE_BASE_URL}/dataverseuser.xhtml?editMode=CREATE&redirectPage=%2Fdataverse_homepage.xhtml`
 
 /*
  * This is a Layout common to every keycloak page.
@@ -68,16 +65,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
 
   return (
     <div className={styles.login} id="kc-login-template">
-      {kcContext.pageId === 'login.ftl' && (
-        <div className={styles['top-notice']}>
-          <Alert variant="warning" customHeading={msgStr('signInNoticeTitle')} dismissible={false}>
-            <>
-              {msg('signInNoticeBodyPrefix')}
-              <a href={HARVARD_SIGN_UP_URL}>{msg('signInNoticeSignUpLinkText')}</a>
-            </>
-          </Alert>
-        </div>
-      )}
+      {kcContext.pageId === 'login.ftl' && <SignInNotice i18n={i18n} />}
       <div id="kc-header">
         <div id="kc-header-wrapper" className={styles['header-wrapper']}>
           <img src={dataverse_logo} alt="Brand Logo Image" />
