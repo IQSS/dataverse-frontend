@@ -5,6 +5,7 @@ import { Footer } from '../../../../../src/sections/layout/footer/Footer'
 import { applyTestAppConfig } from '../../../../support/bootstrapAppConfig'
 import type { AppConfig } from '@/config'
 import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
+import { spaVersion } from '@/version/spaVersion'
 
 describe('Footer component', () => {
   const sandbox: SinonSandbox = createSandbox()
@@ -26,6 +27,7 @@ describe('Footer component', () => {
     cy.findByText('Privacy Policy').should('exist')
     cy.findByAltText('The Dataverse Project logo').should('exist')
     cy.findByText(testVersion).should('exist')
+    cy.findByText(`SPA: ${spaVersion}`).should('exist')
   })
 
   it('should call dataverseInfoRepository.getVersion on mount', () => {
