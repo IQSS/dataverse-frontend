@@ -6,6 +6,9 @@ import { keycloakify } from 'keycloakify/vite-plugin'
 import * as path from 'path'
 import { resolveSpaVersionDisplay } from './src/version/resolveSpaVersionDisplay'
 
+const nodeEnv = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process
+  ?.env
+
 function readTextFile(filePath: string): string | undefined {
   try {
     return readFileSync(filePath, 'utf8').trim() || undefined
@@ -88,16 +91,15 @@ function readGitHeadInfo(projectRoot: string): { commitSha?: string; exactTag?: 
 const projectRoot = path.resolve(__dirname)
 const packageVersion = readPackageVersion(projectRoot)
 const gitHeadInfo = readGitHeadInfo(projectRoot)
-const shortCommitSha = process.env.GITHUB_SHA?.slice(0, 9) ?? gitHeadInfo.commitSha
+const shortCommitSha = nodeEnv?.GITHUB_SHA?.slice(0, 9) ?? gitHeadInfo.commitSha
 const exactTag =
-  (process.env.GITHUB_REF_TYPE === 'tag' ? process.env.GITHUB_REF_NAME : undefined) ??
-  gitHeadInfo.exactTag
+  (nodeEnv?.GITHUB_REF_TYPE === 'tag' ? nodeEnv.GITHUB_REF_NAME : undefined) ?? gitHeadInfo.exactTag
 const spaDisplayVersion = resolveSpaVersionDisplay({
   packageVersion,
   commitSha: shortCommitSha,
   exactTag,
-  refName: process.env.GITHUB_REF_NAME,
-  refType: process.env.GITHUB_REF_TYPE
+  refName: nodeEnv?.GITHUB_REF_NAME,
+  refType: nodeEnv?.GITHUB_REF_TYPE
 })
 
 export default defineConfig({
@@ -106,8 +108,8 @@ export default defineConfig({
     'import.meta.env.VITE_APP_VERSION': JSON.stringify(packageVersion),
     'import.meta.env.VITE_COMMIT_SHA_SHORT': JSON.stringify(shortCommitSha),
     'import.meta.env.VITE_GIT_EXACT_TAG': JSON.stringify(exactTag),
-    'import.meta.env.VITE_GITHUB_REF_NAME': JSON.stringify(process.env.GITHUB_REF_NAME),
-    'import.meta.env.VITE_GITHUB_REF_TYPE': JSON.stringify(process.env.GITHUB_REF_TYPE),
+    'import.meta.env.VITE_GITHUB_REF_NAME': JSON.stringify(nodeEnv?.GITHUB_REF_NAME),
+    'import.meta.env.VITE_GITHUB_REF_TYPE': JSON.stringify(nodeEnv?.GITHUB_REF_TYPE),
     'import.meta.env.VITE_SPA_DISPLAY_VERSION': JSON.stringify(spaDisplayVersion)
   },
   plugins: [
