@@ -2,5 +2,5 @@
   "copyright": "Copyright © {{year}}, {{copyrightHolder}}",
   "privacyPolicy": "Política de privacidad",
   "poweredBy": "Desarrollado por",
-  "spaVersion": "frontend version: {{version}}"
+  "spaVersion": "versión del frontend: {{version}}"
 }
