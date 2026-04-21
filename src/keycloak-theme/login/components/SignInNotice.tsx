@@ -19,6 +19,7 @@ export function SignInNotice({ i18n }: SignInNoticeProps) {
         <>
           {msg('signInNoticeBodyPrefix')}
           <a href={HARVARD_SIGN_UP_URL}>{msg('signInNoticeSignUpLinkText')}</a>
+          {msg('signInNoticeBodySuffix')}
         </>
       </Alert>
     </div>
