@@ -31,6 +31,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added disclaimer text and custom popup text to Publish Dataset modal for better communication of the implications of publishing a dataset. The text can be configured through the runtime configuration.
 - Dataset page Terms tab title now depends on permissions: users with dataset update permission see `Terms and Guestbook`, and read-only users see `Terms`.
 - Avoided prop-drilling for collection repository, so used context to share epository instances.
+- Added frontend version to the footer of the application, which is retrieved from the `version` field in `package.json` at build time.
 
 ### Fixed
 
