@@ -18,6 +18,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added Notifications tab in Account Page
 - Added runtime configuration options for homepage branding and support link.
 - Added an environment variable to docker-compose-dev.yml to hide the OIDC client used in the SPA from the JSF frontend: DATAVERSE_AUTH_OIDC_HIDDEN_JSF: 1
+- Added a message note to the login page
 - Download with terms of use and guestbook.
 - Show terms modal before download when dataset has custom terms, a non-default license (not CC0 1.0), or a guestbook. Draft datasets and dataset editors bypass the modal.
 
