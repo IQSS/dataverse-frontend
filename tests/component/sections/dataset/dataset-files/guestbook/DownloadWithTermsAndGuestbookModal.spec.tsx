@@ -1,4 +1,4 @@
-import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import { DownloadWithTermsAndGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithTermsAndGuestbookModal'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { DatasetLicense } from '@/dataset/domain/models/Dataset'
@@ -90,7 +90,7 @@ const datasetLicense: DatasetLicense = {
   uri: 'https://creativecommons.org/publicdomain/zero/1.0/'
 }
 
-describe('DownloadWithGuestbookModal', () => {
+describe('DownloadWithTermsAndGuestbookModal', () => {
   let getGuestbookImpl: (guestbookId: number) => Promise<Guestbook>
   let submitGuestbookForDatafileDownloadImpl: (
     fileId: number | string,
@@ -176,7 +176,7 @@ describe('DownloadWithGuestbookModal', () => {
   it('renders modal title and actions', () => {
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -196,7 +196,7 @@ describe('DownloadWithGuestbookModal', () => {
   it('renders dataset terms and license when they are provided', () => {
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -213,7 +213,7 @@ describe('DownloadWithGuestbookModal', () => {
   it('renders custom dataset terms when custom terms are available', () => {
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -233,23 +233,59 @@ describe('DownloadWithGuestbookModal', () => {
     cy.findByRole('link', { name: 'Custom Dataset Terms' }).should(
       'have.attr',
       'href',
-      '/spa/datasets?persistentId=doi%3A10.5072%2FFK2%2FFILEPAGE&tab=terms&termsTab=guestbook'
+      '/modern/datasets?persistentId=doi%3A10.5072%2FFK2%2FFILEPAGE&tab=terms&termsTab=guestbook'
     )
   })
 
-  it('keeps accept disabled when no guestbook is loaded', () => {
+  it('enables accept when no guestbook but custom terms exist (custom terms only)', () => {
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
-          guestbookId={undefined as unknown as number}
+          guestbookId={undefined}
           fileId={10}
+          datasetCustomTerms={{
+            termsOfUse: 'Custom terms for this dataset'
+          }}
         />
       )
     )
 
-    cy.findByRole('button', { name: 'Accept' }).should('be.disabled')
+    cy.findByRole('button', { name: 'Accept' }).should('not.be.disabled')
+    cy.findByText('Custom terms for this dataset').should('exist')
+    // Guestbook fields should not be shown
+    cy.findByLabelText(/^Name/).should('not.exist')
+    cy.findByLabelText(/^Email/).should('not.exist')
+  })
+
+  it('downloads file when accepting custom terms only (no guestbook)', () => {
+    const handleClose = cy.stub().as('handleClose')
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.customMount(
+      withAnonymousSession(
+        <DownloadWithTermsAndGuestbookModal
+          show
+          handleClose={handleClose}
+          guestbookId={undefined}
+          fileId={10}
+          datasetCustomTerms={{
+            termsOfUse: 'Custom terms for this dataset'
+          }}
+        />
+      )
+    )
+
+    cy.findByRole('button', { name: 'Accept' }).click()
+
+    cy.get('@submitGuestbookForDatafileDownload').should('have.been.calledOnce')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.get('@handleClose').should('have.been.calledOnce')
+    cy.findByText('Your download has started.').should('exist')
   })
 
   it('calls handleClose when clicking cancel', () => {
@@ -257,7 +293,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
           guestbookId={undefined as unknown as number}
@@ -279,7 +315,12 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal show handleClose={handleClose} guestbookId={10} fileId={10} />
+        <DownloadWithTermsAndGuestbookModal
+          show
+          handleClose={handleClose}
+          guestbookId={10}
+          fileId={10}
+        />
       )
     )
 
@@ -306,7 +347,12 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal show handleClose={handleClose} guestbookId={10} fileId={10} />
+        <DownloadWithTermsAndGuestbookModal
+          show
+          handleClose={handleClose}
+          guestbookId={10}
+          fileId={10}
+        />
       )
     )
 
@@ -334,7 +380,12 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal show handleClose={handleClose} guestbookId={10} fileId={10} />
+        <DownloadWithTermsAndGuestbookModal
+          show
+          handleClose={handleClose}
+          guestbookId={10}
+          fileId={10}
+        />
       )
     )
 
@@ -359,7 +410,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
           guestbookId={10}
@@ -391,7 +442,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
           guestbookId={10}
@@ -415,7 +466,7 @@ describe('DownloadWithGuestbookModal', () => {
   it('disables name and email fields for authenticated users', () => {
     cy.mountAuthenticated(
       withRepositories(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -437,7 +488,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
           guestbookId={10}
@@ -472,7 +523,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
           guestbookId={10}
@@ -499,7 +550,7 @@ describe('DownloadWithGuestbookModal', () => {
   it('shows required field validation after clicking accept', () => {
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -516,7 +567,7 @@ describe('DownloadWithGuestbookModal', () => {
   it('does not show required field validation before clicking accept', () => {
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -533,7 +584,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -567,7 +618,12 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal show handleClose={handleClose} guestbookId={10} fileId={10} />
+        <DownloadWithTermsAndGuestbookModal
+          show
+          handleClose={handleClose}
+          guestbookId={10}
+          fileId={10}
+        />
       )
     )
 
@@ -618,7 +674,12 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal show handleClose={handleClose} guestbookId={10} fileId={10} />
+        <DownloadWithTermsAndGuestbookModal
+          show
+          handleClose={handleClose}
+          guestbookId={10}
+          fileId={10}
+        />
       )
     )
 
@@ -666,7 +727,12 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal show handleClose={handleClose} guestbookId={10} fileId={10} />
+        <DownloadWithTermsAndGuestbookModal
+          show
+          handleClose={handleClose}
+          guestbookId={10}
+          fileId={10}
+        />
       )
     )
 
@@ -686,7 +752,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -706,7 +772,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -724,7 +790,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -754,7 +820,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}
@@ -781,7 +847,7 @@ describe('DownloadWithGuestbookModal', () => {
 
     cy.customMount(
       withAnonymousSession(
-        <DownloadWithGuestbookModal
+        <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
           guestbookId={10}

@@ -198,9 +198,82 @@ describe('File', () => {
             cy.get('@accessButton').click()
             cy.findByTestId('download-original-file').should('exist').click({ force: true })
 
-            cy.findByRole('dialog').should('be.visible')
+            cy.findByRole('dialog').find('.modal-title').should('contain.text', 'Dataset Terms')
             cy.findByLabelText(/name/i).should('be.enabled')
             cy.findByLabelText(/email/i).should('be.enabled')
+          })
+      })
+    })
+
+    it('opens the custom terms modal for guests on the file page when custom terms exist without a guestbook', () => {
+      cy.wrap(DatasetHelper.createWithFile(FileHelper.create())).then((dataset) => {
+        if (!dataset.file) {
+          throw new Error('Expected created dataset to include a file')
+        }
+        const file = dataset.file
+
+        return cy
+          .wrap(
+            DatasetHelper.setCustomTermsOfUse(dataset.id, {
+              termsOfUse: 'File page custom terms for testing'
+            }).then(async () => {
+              await DatasetHelper.publish(dataset.persistentId)
+              return file
+            })
+          )
+          .then((file) => {
+            TestsUtils.logout()
+            cy.visit(`${FRONTEND_BASE_PATH}/files?id=${file.id}`)
+            cy.wait(1500)
+
+            cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+            cy.get('@accessButton').should('be.visible')
+            cy.wait(500)
+            cy.get('@accessButton').click()
+            cy.findByTestId('download-original-file').should('exist').click({ force: true })
+
+            cy.findByRole('dialog').should('be.visible')
+            cy.findByText('Custom Dataset Terms').should('exist')
+            // Guestbook fields should not be visible since there is no guestbook
+            cy.findByLabelText(/name/i).should('not.exist')
+            cy.findByLabelText(/email/i).should('not.exist')
+          })
+      })
+    })
+
+    it('downloads the file directly for editors on the file page when custom terms exist without a guestbook', () => {
+      cy.wrap(DatasetHelper.createWithFile(FileHelper.create())).then((dataset) => {
+        if (!dataset.file) {
+          throw new Error('Expected created dataset to include a file')
+        }
+        const file = dataset.file
+
+        return cy
+          .wrap(
+            DatasetHelper.setCustomTermsOfUse(dataset.id, {
+              termsOfUse: 'File page custom terms for testing'
+            }).then(async () => {
+              await DatasetHelper.publish(dataset.persistentId)
+              return file
+            })
+          )
+          .then((file) => {
+            cy.visit(`${FRONTEND_BASE_PATH}/files?id=${file.id}`)
+            cy.wait(1500)
+
+            cy.window().then((window) => {
+              cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+            })
+
+            cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+            cy.get('@accessButton').should('be.visible')
+            cy.wait(500)
+            cy.get('@accessButton').click()
+            cy.findByTestId('download-original-file').should('exist').click({ force: true })
+
+            cy.get('@anchorClick').should('have.been.calledOnce')
+            cy.findByRole('dialog').should('not.exist')
+            cy.findByText('Your download has started.').should('exist')
           })
       })
     })

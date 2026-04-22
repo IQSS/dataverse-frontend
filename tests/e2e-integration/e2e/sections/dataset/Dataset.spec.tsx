@@ -868,9 +868,66 @@ describe('Dataset', () => {
             .click({ force: true })
 
           cy.findByRole('dialog').should('be.visible')
+          cy.findByRole('dialog').find('.modal-title').should('contain.text', 'Dataset Terms')
           cy.findByLabelText(/name/i).should('be.enabled')
           cy.findByLabelText(/email/i).should('be.enabled')
         })
+      })
+    })
+
+    it('opens the custom terms modal for guests when downloading a dataset with custom terms and no guestbook', () => {
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(2)).then(async (dataset) => {
+          await DatasetHelper.setCustomTermsOfUse(dataset.id, {
+            termsOfUse: 'These are custom terms of use for testing'
+          })
+          await DatasetHelper.publish(dataset.persistentId)
+          return dataset
+        })
+      ).then((dataset) => {
+        TestsUtils.logout()
+        cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${dataset.persistentId}`)
+        cy.wait(1500)
+
+        cy.findByText('Files').should('exist')
+        cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
+        cy.findByRole('button', { name: /Original Format ZIP/ })
+          .should('exist')
+          .click({ force: true })
+
+        cy.findByRole('dialog').should('be.visible')
+        cy.findByRole('dialog').find('.modal-title').should('contain.text', 'Dataset Terms')
+        // Guestbook fields should not be visible since there is no guestbook
+        cy.findByLabelText(/name/i).should('not.exist')
+        cy.findByLabelText(/email/i).should('not.exist')
+      })
+    })
+
+    it('downloads the dataset directly for editors even when custom terms exist without a guestbook', () => {
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(2)).then(async (dataset) => {
+          await DatasetHelper.setCustomTermsOfUse(dataset.id, {
+            termsOfUse: 'These are custom terms of use for testing'
+          })
+          await DatasetHelper.publish(dataset.persistentId)
+          return dataset
+        })
+      ).then((dataset) => {
+        cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${dataset.persistentId}`)
+        cy.wait(1500)
+
+        cy.findByText('Files').should('exist')
+        cy.window().then((window) => {
+          cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+        })
+        cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
+        cy.findByRole('button', { name: /Original Format ZIP/ })
+          .should('exist')
+          .click({ force: true })
+
+        cy.get('@anchorClick').should('have.been.calledOnce')
+        cy.findByRole('dialog').should('not.exist')
+        cy.findByText('Your download has started.').should('exist')
       })
     })
 
