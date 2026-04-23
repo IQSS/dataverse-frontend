@@ -19,6 +19,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added runtime configuration options for homepage branding and support link.
 - Added an environment variable to docker-compose-dev.yml to hide the OIDC client used in the SPA from the JSF frontend: DATAVERSE_AUTH_OIDC_HIDDEN_JSF: 1
 - Download with terms of use and guestbook.
+- Layout: added a configurable homepage banner for announcements and important messages. (#787)
 
 ### Changed
 
