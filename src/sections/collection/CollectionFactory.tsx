@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
+import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { Collection } from './Collection'
 import { INFINITE_SCROLL_ENABLED } from './config'
 import { useGetCollectionQueryParams } from './useGetCollectionQueryParams'
@@ -10,6 +11,7 @@ import { RepositoriesProvider } from '@/shared/contexts/repositories/Repositorie
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
+const datasetRepository = new DatasetJSDataverseRepository()
 
 export class CollectionFactory {
   static create(): ReactElement {
@@ -32,7 +34,9 @@ function CollectionWithSearchParams() {
     Boolean(sessionStorage.getItem(ACCOUNT_CREATED_SESSION_STORAGE_KEY)) ?? false
 
   return (
-    <RepositoriesProvider collectionRepository={collectionRepository}>
+    <RepositoriesProvider
+      collectionRepository={collectionRepository}
+      datasetRepository={datasetRepository}>
       <Collection
         collectionIdFromParams={collectionId}
         created={created}

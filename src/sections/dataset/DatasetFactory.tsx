@@ -80,13 +80,14 @@ function DatasetWithSearchParams() {
 
   if (privateUrlToken) {
     return (
-      <RepositoriesProvider collectionRepository={collectionRepository}>
+      <RepositoriesProvider
+        collectionRepository={collectionRepository}
+        datasetRepository={datasetRepository}>
         <DatasetProvider
           repository={datasetRepository}
           searchParams={{ privateUrlToken: privateUrlToken }}
           isPublishing={publishInProgress}>
           <Dataset
-            datasetRepository={datasetRepository}
             fileRepository={fileRepository}
             metadataBlockInfoRepository={metadataBlockInfoRepository}
             contactRepository={contactRepository}
@@ -100,13 +101,14 @@ function DatasetWithSearchParams() {
   }
 
   return (
-    <RepositoriesProvider collectionRepository={collectionRepository}>
+    <RepositoriesProvider
+      collectionRepository={collectionRepository}
+      datasetRepository={datasetRepository}>
       <DatasetProvider
         repository={datasetRepository}
         searchParams={{ persistentId: persistentId, version: version }}
         isPublishing={publishInProgress}>
         <Dataset
-          datasetRepository={datasetRepository}
           fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           contactRepository={contactRepository}

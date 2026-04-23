@@ -57,16 +57,9 @@ export const createColumnsDefinition = (
         files={table.getRowModel().rows.map((row) => row.original)}
         fileSelection={fileSelection}
         fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
       />
     ),
     accessorKey: 'status',
-    cell: (props) => (
-      <FileActionsCell
-        file={props.row.original}
-        fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
-      />
-    )
+    cell: (props) => <FileActionsCell file={props.row.original} fileRepository={fileRepository} />
   }
 ]

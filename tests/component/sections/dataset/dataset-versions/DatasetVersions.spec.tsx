@@ -8,6 +8,7 @@ import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 import { DatasetVersionsSummariesMother } from '../../../dataset/domain/models/DatasetVersionsSummariesMother'
 import { DatasetVersionDiffMother } from '../../../dataset/domain/models/DatasetVersionDiffMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetsRepository: DatasetRepository = {} as DatasetRepository
 
@@ -64,13 +65,14 @@ describe('DatasetVersions', () => {
 
   it('should not show view detail buttons if the version is deaccessioned', () => {
     cy.customMount(
-      <DatasetVersions
-        datasetId={'datasetId'}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'1.0'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={'datasetId'}
+          currentVersionNumber={'1.0'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
     datasetsRepository.getDatasetVersionsSummaries = cy
       .stub()
@@ -82,13 +84,14 @@ describe('DatasetVersions', () => {
 
   it('should show view detail buttons if previous version is deaccessioned', () => {
     cy.customMount(
-      <DatasetVersions
-        datasetId={'datasetId'}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'1.0'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={'datasetId'}
+          currentVersionNumber={'1.0'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
     const versionSummaryInfoNoPreviousVersion = [
       {
@@ -111,13 +114,14 @@ describe('DatasetVersions', () => {
 
   beforeEach(() => {
     cy.customMount(
-      <DatasetVersions
-        datasetId={'datasetId'}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'1.0'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={'datasetId'}
+          currentVersionNumber={'1.0'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummariesSubset)
     datasetsRepository.getVersionDiff = cy.stub().resolves(datasetVersionDiff)
@@ -202,13 +206,14 @@ describe('DatasetVersions', () => {
 
   it('should not render the dataset version table if dataset is undefined', () => {
     cy.customMount(
-      <DatasetVersions
-        datasetId={''}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'1.0'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={''}
+          currentVersionNumber={'1.0'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
     cy.findByTestId('dataset-versions-table').should('not.exist')
   })
@@ -218,13 +223,14 @@ describe('DatasetVersions', () => {
       .stub()
       .returns(new Promise<DatasetVersionSummarySubset>(() => {}))
     cy.customMount(
-      <DatasetVersions
-        datasetId={'datasetId'}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'1.0'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={'datasetId'}
+          currentVersionNumber={'1.0'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
     cy.findByTestId('dataset-loading-skeleton').should('exist')
     cy.findByTestId('dataset-versions-table').should('not.exist')
@@ -232,13 +238,14 @@ describe('DatasetVersions', () => {
 
   it('should render view differences button, open a modal if click', () => {
     cy.customMount(
-      <DatasetVersions
-        datasetId={''}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'1.0'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={''}
+          currentVersionNumber={'1.0'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
 
     cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
@@ -250,13 +257,14 @@ describe('DatasetVersions', () => {
 
   it('should render view differences button, close modal if cancel', () => {
     cy.customMount(
-      <DatasetVersions
-        datasetId={''}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'1.0'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={''}
+          currentVersionNumber={'1.0'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
 
     cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
@@ -270,13 +278,14 @@ describe('DatasetVersions', () => {
 
   it('should render view differences button, close modal if click outside', () => {
     cy.customMount(
-      <DatasetVersions
-        datasetId={''}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'DRAFT'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={''}
+          currentVersionNumber={'DRAFT'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
 
     cy.get('input[type="checkbox"]').first().check()
@@ -294,13 +303,14 @@ describe('DatasetVersions', () => {
       .resolves(DatasetVersionsSummariesMother.createDeaccessioned())
 
     cy.customMount(
-      <DatasetVersions
-        datasetId={''}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'DRAFT'}
-        canUpdateDataset={false}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={''}
+          currentVersionNumber={'DRAFT'}
+          canUpdateDataset={false}
+          isInView
+        />
+      </WithRepositories>
     )
 
     cy.get('input[type="checkbox"]').first().should('be.disabled')
@@ -334,13 +344,14 @@ describe('DatasetVersions', () => {
       ))
 
     cy.customMount(
-      <DatasetVersions
-        datasetId={'pid'}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'3.0'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={'pid'}
+          currentVersionNumber={'3.0'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
 
     cy.findAllByTestId('select-checkbox').eq(0).check().should('be.checked')
@@ -380,13 +391,14 @@ describe('DatasetVersions', () => {
       ))
 
     cy.customMount(
-      <DatasetVersions
-        datasetId={'pid'}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'5.0'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={'pid'}
+          currentVersionNumber={'5.0'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
 
     cy.findAllByTestId('select-checkbox').eq(0).check().should('be.checked')

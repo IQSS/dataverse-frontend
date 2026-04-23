@@ -4,6 +4,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { DatasetMockRepository } from '../DatasetMockRepository'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof DatasetMetrics> = {
   title: 'Sections/Dataset Page/DatasetMetrics',
@@ -25,12 +26,18 @@ datasetMockRepoWithoutMakeDataCount.getDownloadCount = () => {
 
 export const WithoutMakeDataCountEnabled: Story = {
   render: () => (
-    <DatasetMetrics datasetRepository={datasetMockRepoWithoutMakeDataCount} datasetId={1} />
+    <RepositoriesStoryProvider datasetRepository={datasetMockRepoWithoutMakeDataCount}>
+      <DatasetMetrics datasetId={1} />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const WithMakeDataCountEnabled: Story = {
-  render: () => <DatasetMetrics datasetRepository={new DatasetMockRepository()} datasetId={1} />
+  render: () => (
+    <RepositoriesStoryProvider datasetRepository={new DatasetMockRepository()}>
+      <DatasetMetrics datasetId={1} />
+    </RepositoriesStoryProvider>
+  )
 }
 
 export const WithBigNumbersMDCEnabled: Story = {
@@ -60,6 +67,10 @@ export const WithBigNumbersMDCEnabled: Story = {
       })
     }
 
-    return <DatasetMetrics datasetRepository={datasetMockRepoWithBigNumbers} datasetId={1} />
+    return (
+      <RepositoriesStoryProvider datasetRepository={datasetMockRepoWithBigNumbers}>
+        <DatasetMetrics datasetId={1} />
+      </RepositoriesStoryProvider>
+    )
   }
 }

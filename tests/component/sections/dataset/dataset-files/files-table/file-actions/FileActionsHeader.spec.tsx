@@ -7,6 +7,7 @@ import {
 } from '../../../../../dataset/domain/models/DatasetMother'
 import { FilePreviewMother } from '../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 describe('FileActionsHeader', () => {
   it('renders the file actions header', () => {
@@ -19,16 +20,13 @@ describe('FileActionsHeader', () => {
     datasetRepository.getByPersistentId = cy.stub().resolves(datasetWithUpdatePermissions)
     const files = FilePreviewMother.createMany(2)
     cy.mountAuthenticated(
-      <DatasetProvider
-        repository={datasetRepository}
-        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-        <FileActionsHeader
-          files={files}
-          fileSelection={{}}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />
-      </DatasetProvider>
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetProvider
+          repository={datasetRepository}
+          searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
+          <FileActionsHeader files={files} fileSelection={{}} fileRepository={fileRepository} />
+        </DatasetProvider>
+      </WithRepositories>
     )
 
     cy.get('#edit-files-menu').should('exist')

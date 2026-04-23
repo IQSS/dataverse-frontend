@@ -23,6 +23,7 @@ import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMothe
 import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const testFiles: FilePreview[] = FilePreviewMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -71,12 +72,13 @@ describe('DatasetFiles', () => {
 
   it('renders the files table', () => {
     cy.customMount(
-      <DatasetFiles
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('table').should('exist')
@@ -86,12 +88,13 @@ describe('DatasetFiles', () => {
   describe('Pagination navigation', () => {
     it('renders the files table with the correct header on a page different than the first one ', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: '6' }).click()
@@ -101,12 +104,13 @@ describe('DatasetFiles', () => {
 
     it('renders the files table with the correct page selected after updating the pageSize', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: '3' }).click()
@@ -120,12 +124,13 @@ describe('DatasetFiles', () => {
 
     it('renders the files table with the correct header with a different page size ', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByLabelText('Files per page').select('50')
@@ -143,12 +148,13 @@ describe('DatasetFiles', () => {
       fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
 
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: '1' }).should('not.exist')
@@ -178,12 +184,13 @@ describe('DatasetFiles', () => {
       fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
 
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: '1' }).should('not.exist')
@@ -210,12 +217,13 @@ describe('DatasetFiles', () => {
 
     it('maintains the selection when the page changes', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
 
@@ -244,12 +252,13 @@ describe('DatasetFiles', () => {
 
     it('maintains the selection when the page size changes', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
 
@@ -269,12 +278,13 @@ describe('DatasetFiles', () => {
 
     it('removes the selection when the filters change', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
 
@@ -290,12 +300,13 @@ describe('DatasetFiles', () => {
 
     it('removes the selection when the Sort by changes', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
 
@@ -311,12 +322,13 @@ describe('DatasetFiles', () => {
 
     it('removes the selection when the Search bar is used', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
 
@@ -341,14 +353,15 @@ describe('DatasetFiles', () => {
       })
 
       cy.customMount(
-        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-          <DatasetFiles
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-            datasetRepository={datasetRepository}
-          />
-        </SettingsProvider>
+        <WithRepositories datasetRepository={datasetRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+            <DatasetFiles
+              filesRepository={fileRepository}
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        </WithRepositories>
       )
 
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -368,14 +381,15 @@ describe('DatasetFiles', () => {
 
     it('renders the zip download limit message when selecting all rows', () => {
       cy.customMount(
-        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-          <DatasetFiles
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-            datasetRepository={datasetRepository}
-          />
-        </SettingsProvider>
+        <WithRepositories datasetRepository={datasetRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+            <DatasetFiles
+              filesRepository={fileRepository}
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        </WithRepositories>
       )
 
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
@@ -387,14 +401,15 @@ describe('DatasetFiles', () => {
 
     it('renders the zip download limit message when selecting all rows and then navigating to other page', () => {
       cy.customMount(
-        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-          <DatasetFiles
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-            datasetRepository={datasetRepository}
-          />
-        </SettingsProvider>
+        <WithRepositories datasetRepository={datasetRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+            <DatasetFiles
+              filesRepository={fileRepository}
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        </WithRepositories>
       )
 
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
@@ -409,12 +424,13 @@ describe('DatasetFiles', () => {
   describe('Calling use cases', () => {
     it('calls the useFiles hook with the correct parameters', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
@@ -432,12 +448,13 @@ describe('DatasetFiles', () => {
 
     it('calls the useFiles hook with the correct parameters when sortBy criteria changes', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: /Sort/ }).click()
@@ -453,12 +470,13 @@ describe('DatasetFiles', () => {
 
     it('calls the useFiles hook with the correct parameters when filterByType criteria changes', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
@@ -474,12 +492,13 @@ describe('DatasetFiles', () => {
 
     it('calls the useFiles hook with the correct parameters when filterByAccess criteria changes', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Access: All' }).click()
@@ -495,12 +514,13 @@ describe('DatasetFiles', () => {
 
     it('calls the useFiles hook with the correct parameters when filterByTag criteria changes', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'File Tags: All' }).click()
@@ -516,12 +536,13 @@ describe('DatasetFiles', () => {
 
     it('calls the useFiles hook with the correct parameters when searchText criteria changes', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByLabelText('Search').type('test{enter}')
@@ -536,12 +557,13 @@ describe('DatasetFiles', () => {
 
     it('calls the useFiles hook with the correct parameters when paginationInfo changes', () => {
       cy.customMount(
-        <DatasetFiles
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: '5' }).click()
@@ -555,14 +577,15 @@ describe('DatasetFiles', () => {
 
     it('calls getFilesTotalDownloadSizeByDatasetPersistentId with the correct parameters when applying search file criteria', () => {
       cy.customMount(
-        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-          <DatasetFiles
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-            datasetRepository={datasetRepository}
-          />
-        </SettingsProvider>
+        <WithRepositories datasetRepository={datasetRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+            <DatasetFiles
+              filesRepository={fileRepository}
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'File Type: All' }).click()

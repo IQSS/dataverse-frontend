@@ -9,13 +9,18 @@ import { ExternalToolsProvider } from '@/shared/contexts/external-tools/External
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
+import { WithRepositories } from '@/stories/WithRepositories'
 
 const storyFile = FileMother.createRealistic()
 
 const meta: Meta<typeof EditFileMenu> = {
   title: 'Sections/File Page/Action Buttons/EditFileMenu',
   component: EditFileMenu,
-  decorators: [WithI18next, WithSettings]
+  decorators: [
+    WithI18next,
+    WithSettings,
+    WithRepositories({ datasetRepository: new DatasetMockRepository() })
+  ]
 }
 
 export default meta
@@ -26,7 +31,6 @@ export const Default: Story = {
     <EditFileMenu
       fileId={storyFile.id}
       fileRepository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
       isRestricted={false}
       datasetInfo={{
         persistentId: storyFile.datasetPersistentId,
@@ -56,7 +60,6 @@ export const WithConfigureToolOption: Story = {
       <EditFileMenu
         fileId={storyFile.id}
         fileRepository={new FileMockRepository()}
-        datasetRepository={new DatasetMockRepository()}
         isRestricted={false}
         datasetInfo={{
           persistentId: storyFile.datasetPersistentId,

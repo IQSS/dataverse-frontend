@@ -1,12 +1,14 @@
 import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { CreateCollection } from './CreateCollection'
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
+const datasetRepository = new DatasetJSDataverseRepository()
 
 export class CreateCollectionFactory {
   static create(): ReactElement {
@@ -19,7 +21,9 @@ function CreateCollectionWithParams() {
     parentCollectionId: string
   }
   return (
-    <RepositoriesProvider collectionRepository={collectionRepository}>
+    <RepositoriesProvider
+      collectionRepository={collectionRepository}
+      datasetRepository={datasetRepository}>
       <CreateCollection
         parentCollectionId={parentCollectionId}
         metadataBlockInfoRepository={metadataBlockInfoRepository}

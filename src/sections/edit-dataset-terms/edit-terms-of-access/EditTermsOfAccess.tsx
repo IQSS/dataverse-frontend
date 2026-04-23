@@ -9,21 +9,18 @@ import {
   DatasetPublishingStatus,
   TermsOfAccess
 } from '@/dataset/domain/models/Dataset'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useDataset } from '../../dataset/DatasetContext'
 import { useUpdateTermsOfAccess } from './useUpdateTermsOfAccess'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { useNavigate } from 'react-router-dom'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface EditTermsOfAccessProps {
-  datasetRepository: DatasetRepository
   onFormStateChange?: (isDirty: boolean) => void
 }
 
-export function EditTermsOfAccess({
-  datasetRepository,
-  onFormStateChange
-}: EditTermsOfAccessProps) {
+export function EditTermsOfAccess({ onFormStateChange }: EditTermsOfAccessProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const { dataset, refreshDataset } = useDataset()

@@ -18,7 +18,6 @@ import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { DraftAlert } from './draft-alert/DraftAlert'
 import { FileVersions } from './file-version/FileVersions'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { FilePageHelper } from './FilePageHelper'
 import { FileEmbeddedExternalTool } from './file-embedded-external-tool/FileEmbeddedExternalTool'
@@ -31,7 +30,6 @@ import { ShareFileButton } from './share-file-button/ShareFileButton'
 interface FileProps {
   id: number
   repository: FileRepository
-  datasetRepository: DatasetRepository
   dataverseInfoRepository: DataverseInfoRepository
   contactRepository: ContactRepository
   datasetVersionNumber?: string
@@ -41,7 +39,6 @@ interface FileProps {
 export function File({
   id,
   repository,
-  datasetRepository,
   dataverseInfoRepository,
   contactRepository,
   datasetVersionNumber,
@@ -140,7 +137,6 @@ export function File({
               <DatasetCitation
                 version={file.datasetVersion}
                 withoutThumbnail
-                datasetRepository={datasetRepository}
                 datasetId={file.datasetPersistentId}
               />
             </Col>
@@ -177,7 +173,6 @@ export function File({
                     existingLabels={file.metadata.labels}
                     isTabularFile={file.metadata.isTabular}
                     fileType={file.metadata.type.value}
-                    datasetRepository={datasetRepository}
                   />
                 )}
 

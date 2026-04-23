@@ -11,6 +11,7 @@ import {
 import { TermsOfUseMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { License } from '@/licenses/domain/models/License'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const licenseRepository: LicenseRepository = {} as LicenseRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -67,11 +68,13 @@ describe('EditLicenseAndTerms', () => {
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
 
     return (
-      <DatasetProvider
-        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
-        repository={datasetRepository}>
-        {component}
-      </DatasetProvider>
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetProvider
+          searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+          repository={datasetRepository}>
+          {component}
+        </DatasetProvider>
+      </WithRepositories>
     )
   }
 
@@ -80,11 +83,13 @@ describe('EditLicenseAndTerms', () => {
     datasetRepository.getByPrivateUrlToken = cy.stub().returns(new Promise(() => {}))
 
     return (
-      <DatasetProvider
-        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
-        repository={datasetRepository}>
-        {component}
-      </DatasetProvider>
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetProvider
+          searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+          repository={datasetRepository}>
+          {component}
+        </DatasetProvider>
+      </WithRepositories>
     )
   }
 
@@ -95,13 +100,7 @@ describe('EditLicenseAndTerms', () => {
   describe('License Selection', () => {
     it('renders license dropdown with available licenses', () => {
       cy.customMount(
-        withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
+        withProviders(<EditLicenseAndTerms licenseRepository={licenseRepository} />, mockDataset)
       )
 
       cy.findByRole('option', { name: 'CC0 1.0' }).should('exist')
@@ -112,10 +111,7 @@ describe('EditLicenseAndTerms', () => {
     it('allows user to change license selection', () => {
       cy.customMount(
         withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
+          <EditLicenseAndTerms licenseRepository={licenseRepository} />,
           mockDatasetWithLicense
         )
       )
@@ -130,13 +126,7 @@ describe('EditLicenseAndTerms', () => {
   describe('Custom Terms', () => {
     it('shows custom terms fields when "Custom Dataset Terms" is selected', () => {
       cy.customMount(
-        withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
+        withProviders(<EditLicenseAndTerms licenseRepository={licenseRepository} />, mockDataset)
       )
 
       cy.findByTestId('customTerms.termsOfUse').should('exist')
@@ -153,13 +143,7 @@ describe('EditLicenseAndTerms', () => {
       datasetRepository.updateDatasetLicense = cy.stub().resolves()
 
       cy.customMount(
-        withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
+        withProviders(<EditLicenseAndTerms licenseRepository={licenseRepository} />, mockDataset)
       )
 
       cy.findByTestId('customTerms.termsOfUse').clear()
@@ -172,13 +156,7 @@ describe('EditLicenseAndTerms', () => {
 
     it('allows switching between license and custom terms', () => {
       cy.customMount(
-        withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
+        withProviders(<EditLicenseAndTerms licenseRepository={licenseRepository} />, mockDataset)
       )
 
       cy.get('select').select('Custom Dataset Terms')
@@ -191,13 +169,7 @@ describe('EditLicenseAndTerms', () => {
   describe('Form Actions', () => {
     it('enables save button when form is valid', () => {
       cy.customMount(
-        withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
+        withProviders(<EditLicenseAndTerms licenseRepository={licenseRepository} />, mockDataset)
       )
 
       cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
@@ -207,12 +179,7 @@ describe('EditLicenseAndTerms', () => {
       datasetRepository.updateDatasetLicense = cy.stub().as('updateDatasetLicense')
 
       cy.customMount(
-        withLoadingDataset(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />
-        )
+        withLoadingDataset(<EditLicenseAndTerms licenseRepository={licenseRepository} />)
       )
 
       cy.get('select').select('CC0 1.0')
@@ -232,10 +199,7 @@ describe('EditLicenseAndTerms', () => {
       cy.customMount(
         withProviders(
           <>
-            <EditLicenseAndTerms
-              licenseRepository={licenseRepository}
-              datasetRepository={datasetRepository}
-            />
+            <EditLicenseAndTerms licenseRepository={licenseRepository} />
             <LocationDisplay />
           </>,
           draftDataset
@@ -253,10 +217,7 @@ describe('EditLicenseAndTerms', () => {
       cy.customMount(
         withLoadingDataset(
           <>
-            <EditLicenseAndTerms
-              licenseRepository={licenseRepository}
-              datasetRepository={datasetRepository}
-            />
+            <EditLicenseAndTerms licenseRepository={licenseRepository} />
             <LocationDisplay />
           </>
         ),
@@ -274,13 +235,7 @@ describe('EditLicenseAndTerms', () => {
       licenseRepository.getAvailableStandardLicenses = cy.stub().returns(new Promise(() => {}))
 
       cy.customMount(
-        withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
+        withProviders(<EditLicenseAndTerms licenseRepository={licenseRepository} />, mockDataset)
       )
 
       cy.findByRole('option', { name: 'Custom Dataset Terms' }).should('exist')
@@ -292,13 +247,7 @@ describe('EditLicenseAndTerms', () => {
       datasetRepository.updateDatasetLicense = cy.stub().returns(new Promise(() => {}))
 
       cy.customMount(
-        withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
+        withProviders(<EditLicenseAndTerms licenseRepository={licenseRepository} />, mockDataset)
       )
 
       cy.findByRole('option', { name: 'Custom Dataset Terms' }).should('exist')
@@ -317,13 +266,7 @@ describe('EditLicenseAndTerms', () => {
         .rejects(new Error('Failed to load licenses'))
 
       cy.customMount(
-        withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
+        withProviders(<EditLicenseAndTerms licenseRepository={licenseRepository} />, mockDataset)
       )
 
       cy.findByText(/Something went wrong getting the licenses. Try again later./i).should('exist')
@@ -333,13 +276,7 @@ describe('EditLicenseAndTerms', () => {
       datasetRepository.updateDatasetLicense = cy.stub().rejects(new Error())
 
       cy.customMount(
-        withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
+        withProviders(<EditLicenseAndTerms licenseRepository={licenseRepository} />, mockDataset)
       )
 
       cy.findByRole('option', { name: 'Custom Dataset Terms' }).should('exist')
@@ -357,10 +294,7 @@ describe('EditLicenseAndTerms', () => {
 
       cy.customMount(
         withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
+          <EditLicenseAndTerms licenseRepository={licenseRepository} />,
           mockDatasetWithLicense
         )
       )
@@ -377,13 +311,7 @@ describe('EditLicenseAndTerms', () => {
       datasetRepository.updateDatasetLicense = cy.stub().resolves()
 
       cy.customMount(
-        withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDataset
-        )
+        withProviders(<EditLicenseAndTerms licenseRepository={licenseRepository} />, mockDataset)
       )
 
       cy.findByTestId('customTerms.termsOfUse').clear().type('Updated custom terms')

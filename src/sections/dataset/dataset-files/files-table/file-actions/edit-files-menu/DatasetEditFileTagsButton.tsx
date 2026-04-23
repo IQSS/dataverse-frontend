@@ -11,7 +11,6 @@ import { useFilesContext } from '@/sections/file/FilesContext'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface EditFileTagsButtonProps {
   fileId: number
@@ -19,7 +18,6 @@ interface EditFileTagsButtonProps {
   existingLabels?: FileLabel[]
   datasetPersistentId: string
   isTabularFile: boolean
-  datasetRepository: DatasetRepository
 }
 
 export const DatasetEditFileTagsButton = ({
@@ -27,8 +25,7 @@ export const DatasetEditFileTagsButton = ({
   fileRepository,
   existingLabels,
   datasetPersistentId,
-  isTabularFile,
-  datasetRepository
+  isTabularFile
 }: EditFileTagsButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { t } = useTranslation('file')
@@ -91,7 +88,6 @@ export const DatasetEditFileTagsButton = ({
         isUpdatingTabularTags={isUpdatingTabularTags}
         errorUpdatingTabularTags={errorUpdatingTabularTags}
         isTabularFile={isTabularFile}
-        datasetRepository={datasetRepository}
         datasetPersistentId={datasetPersistentId}
       />
     </>

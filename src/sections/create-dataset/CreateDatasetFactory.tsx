@@ -27,9 +27,10 @@ function CreateDatasetWithSearchParams() {
   const { collectionId } = useParams<{ collectionId: string }>() as { collectionId: string }
 
   return (
-    <RepositoriesProvider collectionRepository={collectionRepository}>
+    <RepositoriesProvider
+      collectionRepository={collectionRepository}
+      datasetRepository={datasetRepository}>
       <CreateDataset
-        datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionId={collectionId}

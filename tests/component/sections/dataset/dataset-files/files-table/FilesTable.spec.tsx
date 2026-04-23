@@ -14,6 +14,7 @@ import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMo
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -24,15 +25,16 @@ const defaultCriteria = new FileCriteria()
 describe('FilesTable', () => {
   it('renders the files table', () => {
     cy.customMount(
-      <FilesTable
-        files={testFiles}
-        paginationInfo={paginationInfo}
-        isLoading={false}
-        filesTotalDownloadSize={testFilesTotalDownloadSize}
-        criteria={defaultCriteria}
-        fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <FilesTable
+          files={testFiles}
+          paginationInfo={paginationInfo}
+          isLoading={false}
+          filesTotalDownloadSize={testFilesTotalDownloadSize}
+          criteria={defaultCriteria}
+          fileRepository={fileRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('table').should('exist')
@@ -46,15 +48,16 @@ describe('FilesTable', () => {
 
   it('renders the spinner when the data isLoading', () => {
     cy.customMount(
-      <FilesTable
-        files={testFiles}
-        paginationInfo={paginationInfo}
-        isLoading={true}
-        filesTotalDownloadSize={testFilesTotalDownloadSize}
-        criteria={defaultCriteria}
-        fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <FilesTable
+          files={testFiles}
+          paginationInfo={paginationInfo}
+          isLoading={true}
+          filesTotalDownloadSize={testFilesTotalDownloadSize}
+          criteria={defaultCriteria}
+          fileRepository={fileRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByLabelText('Files loading spinner symbol').should('exist')
@@ -62,15 +65,16 @@ describe('FilesTable', () => {
 
   it('renders the no files message when there are no files', () => {
     cy.customMount(
-      <FilesTable
-        files={[]}
-        paginationInfo={paginationInfo}
-        isLoading={false}
-        filesTotalDownloadSize={testFilesTotalDownloadSize}
-        criteria={defaultCriteria}
-        fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <FilesTable
+          files={[]}
+          paginationInfo={paginationInfo}
+          isLoading={false}
+          filesTotalDownloadSize={testFilesTotalDownloadSize}
+          criteria={defaultCriteria}
+          fileRepository={fileRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('There are no files in this dataset.').should('exist')
@@ -79,15 +83,16 @@ describe('FilesTable', () => {
   describe('Row selection', () => {
     it('selects all rows in the current page when the header checkbox is clicked', () => {
       cy.customMount(
-        <FilesTable
-          files={testFiles}
-          paginationInfo={paginationInfo}
-          isLoading={false}
-          filesTotalDownloadSize={testFilesTotalDownloadSize}
-          criteria={defaultCriteria}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <FilesTable
+            files={testFiles}
+            paginationInfo={paginationInfo}
+            isLoading={false}
+            filesTotalDownloadSize={testFilesTotalDownloadSize}
+            criteria={defaultCriteria}
+            fileRepository={fileRepository}
+          />
+        </WithRepositories>
       )
 
       cy.wait(1000) // wait for the table to load
@@ -101,15 +106,16 @@ describe('FilesTable', () => {
 
     it('clears row selection for the current page when the header checkbox is clicked', () => {
       cy.customMount(
-        <FilesTable
-          files={testFiles}
-          paginationInfo={paginationInfo}
-          isLoading={false}
-          filesTotalDownloadSize={testFilesTotalDownloadSize}
-          criteria={defaultCriteria}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <FilesTable
+            files={testFiles}
+            paginationInfo={paginationInfo}
+            isLoading={false}
+            filesTotalDownloadSize={testFilesTotalDownloadSize}
+            criteria={defaultCriteria}
+            fileRepository={fileRepository}
+          />
+        </WithRepositories>
       )
 
       cy.wait(1000) // wait for the table to load
@@ -127,15 +133,16 @@ describe('FilesTable', () => {
 
     it("selects all rows when the 'Select all' button is clicked", () => {
       cy.customMount(
-        <FilesTable
-          files={testFiles}
-          paginationInfo={paginationInfo}
-          isLoading={false}
-          filesTotalDownloadSize={testFilesTotalDownloadSize}
-          criteria={defaultCriteria}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <FilesTable
+            files={testFiles}
+            paginationInfo={paginationInfo}
+            isLoading={false}
+            filesTotalDownloadSize={testFilesTotalDownloadSize}
+            criteria={defaultCriteria}
+            fileRepository={fileRepository}
+          />
+        </WithRepositories>
       )
 
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -149,15 +156,16 @@ describe('FilesTable', () => {
 
     it('clears the selection when the clear selection button is clicked', () => {
       cy.customMount(
-        <FilesTable
-          files={testFiles}
-          paginationInfo={paginationInfo}
-          isLoading={false}
-          filesTotalDownloadSize={testFilesTotalDownloadSize}
-          criteria={defaultCriteria}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <FilesTable
+            files={testFiles}
+            paginationInfo={paginationInfo}
+            isLoading={false}
+            filesTotalDownloadSize={testFilesTotalDownloadSize}
+            criteria={defaultCriteria}
+            fileRepository={fileRepository}
+          />
+        </WithRepositories>
       )
 
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -173,15 +181,16 @@ describe('FilesTable', () => {
 
     it('highlights the selected rows', () => {
       cy.customMount(
-        <FilesTable
-          files={testFiles}
-          paginationInfo={paginationInfo}
-          isLoading={false}
-          filesTotalDownloadSize={testFilesTotalDownloadSize}
-          criteria={defaultCriteria}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <FilesTable
+            files={testFiles}
+            paginationInfo={paginationInfo}
+            isLoading={false}
+            filesTotalDownloadSize={testFilesTotalDownloadSize}
+            criteria={defaultCriteria}
+            fileRepository={fileRepository}
+          />
+        </WithRepositories>
       )
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
 
@@ -205,17 +214,18 @@ describe('FilesTable', () => {
       .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(500, FileSizeUnit.BYTES)))
 
     cy.customMount(
-      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-        <FilesTable
-          files={testFiles}
-          paginationInfo={paginationInfo}
-          isLoading={false}
-          filesTotalDownloadSize={testFilesTotalDownloadSize}
-          criteria={defaultCriteria}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />
-      </SettingsProvider>
+      <WithRepositories datasetRepository={datasetRepository}>
+        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+          <FilesTable
+            files={testFiles}
+            paginationInfo={paginationInfo}
+            isLoading={false}
+            filesTotalDownloadSize={testFilesTotalDownloadSize}
+            criteria={defaultCriteria}
+            fileRepository={fileRepository}
+          />
+        </SettingsProvider>
+      </WithRepositories>
     )
 
     cy.findByText(
@@ -231,15 +241,16 @@ describe('FilesTable', () => {
 
   it('renders the file actions column', () => {
     cy.customMount(
-      <FilesTable
-        files={testFiles}
-        paginationInfo={paginationInfo}
-        isLoading={false}
-        filesTotalDownloadSize={testFilesTotalDownloadSize}
-        criteria={defaultCriteria}
-        fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <FilesTable
+          files={testFiles}
+          paginationInfo={paginationInfo}
+          isLoading={false}
+          filesTotalDownloadSize={testFilesTotalDownloadSize}
+          criteria={defaultCriteria}
+          fileRepository={fileRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('columnheader', { name: 'File Actions' }).should('exist')

@@ -10,6 +10,7 @@ import {
 } from '../../../../../../dataset/domain/models/DatasetMother'
 import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const fileRepository: FileRepository = {} as FileRepository
@@ -24,23 +25,20 @@ describe('EditFilesMenu', () => {
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
 
     return (
-      <DatasetProvider
-        repository={datasetRepository}
-        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-        {component}
-      </DatasetProvider>
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetProvider
+          repository={datasetRepository}
+          searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
+          {component}
+        </DatasetProvider>
+      </WithRepositories>
     )
   }
 
   it('renders the Edit Files menu', () => {
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu
-          files={files}
-          fileSelection={{}}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />,
+        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
         datasetWithUpdatePermissions
       )
     )
@@ -51,12 +49,7 @@ describe('EditFilesMenu', () => {
   it('does not render the Edit Files menu when the user is not authenticated', () => {
     cy.customMount(
       withDataset(
-        <EditFilesMenu
-          files={files}
-          fileSelection={{}}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />,
+        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
         datasetWithUpdatePermissions
       )
     )
@@ -67,12 +60,7 @@ describe('EditFilesMenu', () => {
   it('does not render the Edit Files menu when there are no files in the dataset', () => {
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu
-          files={[]}
-          fileSelection={{}}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />,
+        <EditFilesMenu files={[]} fileSelection={{}} fileRepository={fileRepository} />,
         datasetWithUpdatePermissions
       )
     )
@@ -83,12 +71,7 @@ describe('EditFilesMenu', () => {
   it('renders the Edit Files options', () => {
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu
-          files={files}
-          fileSelection={{}}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />,
+        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
         datasetWithUpdatePermissions
       )
     )
@@ -104,12 +87,7 @@ describe('EditFilesMenu', () => {
 
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu
-          files={files}
-          fileSelection={{}}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />,
+        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
         datasetWithNoUpdatePermissions
       )
     )
@@ -125,12 +103,7 @@ describe('EditFilesMenu', () => {
 
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu
-          files={files}
-          fileSelection={{}}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />,
+        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
         datasetWithUpdatePermissions
       )
     )
@@ -146,12 +119,7 @@ describe('EditFilesMenu', () => {
 
     cy.mountAuthenticated(
       withDataset(
-        <EditFilesMenu
-          files={files}
-          fileSelection={{}}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />,
+        <EditFilesMenu files={files} fileSelection={{}} fileRepository={fileRepository} />,
         datasetWithUpdatePermissions
       )
     )

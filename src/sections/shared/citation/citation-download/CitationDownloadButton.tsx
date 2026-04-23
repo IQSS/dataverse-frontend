@@ -3,23 +3,19 @@ import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-syste
 import { ViewStyledCitationModal } from './ViewStyledCitationModal'
 import { useState } from 'react'
 import { CitationFormat } from '@/dataset/domain/models/DatasetCitation'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useDownloadCitation } from './useDownloadCitation'
 import { FormattedCitation } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/FormattedCitation'
 import { toast } from 'react-toastify'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from '../Citation.module.scss'
 
 interface CitationDownloadProps {
-  datasetRepository: DatasetRepository
   datasetId: string
   version: string
 }
 
-export function CitationDownloadButton({
-  datasetRepository,
-  datasetId,
-  version
-}: CitationDownloadProps) {
+export function CitationDownloadButton({ datasetId, version }: CitationDownloadProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const { t } = useTranslation('shared', { keyPrefix: 'downloadCitation' })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [styledCitation, setStyledCitation] = useState<FormattedCitation | null>(null)

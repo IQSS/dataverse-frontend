@@ -28,14 +28,20 @@ const mountAuthenticatedLinkDatasetButton = (
   repository: CollectionRepository = collectionRepository
 ) =>
   cy.mountAuthenticated(
-    <WithRepositories collectionRepository={repository}>{component}</WithRepositories>
+    <WithRepositories collectionRepository={repository} datasetRepository={datasetRepository}>
+      {component}
+    </WithRepositories>
   )
 
 const mountUnauthenticatedLinkDatasetButton = (
   component: JSX.Element,
   repository: CollectionRepository = collectionRepository
 ) =>
-  cy.customMount(<WithRepositories collectionRepository={repository}>{component}</WithRepositories>)
+  cy.customMount(
+    <WithRepositories collectionRepository={repository} datasetRepository={datasetRepository}>
+      {component}
+    </WithRepositories>
+  )
 
 describe('LinkDatasetButton', () => {
   beforeEach(() => {
@@ -54,11 +60,7 @@ describe('LinkDatasetButton', () => {
 
   it('renders the LinkDatasetButton if the user is authenticated and the dataset version is not deaccessioned and the dataset is released', () => {
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />
+      <LinkDatasetButton dataset={dataset} updateParent={() => {}} />
     )
 
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
@@ -66,11 +68,7 @@ describe('LinkDatasetButton', () => {
 
   it('does not render the LinkDatasetButton if the user is not authenticated', () => {
     mountUnauthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />
+      <LinkDatasetButton dataset={dataset} updateParent={() => {}} />
     )
 
     cy.findByRole('button', { name: 'Link Dataset' }).should('not.exist')
@@ -82,11 +80,7 @@ describe('LinkDatasetButton', () => {
     })
 
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={datasetDeaccessioned}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />
+      <LinkDatasetButton dataset={datasetDeaccessioned} updateParent={() => {}} />
     )
 
     cy.findByRole('button', { name: 'Link Dataset' }).should('not.exist')
@@ -96,11 +90,7 @@ describe('LinkDatasetButton', () => {
     const updateParentSpy = cy.spy().as('updateParentSpy')
 
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={updateParentSpy}
-      />
+      <LinkDatasetButton dataset={dataset} updateParent={updateParentSpy} />
     )
 
     clickLinkDatasetButton()
@@ -138,11 +128,7 @@ describe('LinkDatasetButton', () => {
 
   it('searchs for a collection to link', () => {
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />,
+      <LinkDatasetButton dataset={dataset} updateParent={() => {}} />,
       new CollectionMockRepository()
     )
 
@@ -173,11 +159,7 @@ describe('LinkDatasetButton', () => {
     collectionRepository.getForLinking = cy.stub().resolves([])
 
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />
+      <LinkDatasetButton dataset={dataset} updateParent={() => {}} />
     )
 
     clickLinkDatasetButton()
@@ -203,11 +185,7 @@ describe('LinkDatasetButton', () => {
     ])
 
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />
+      <LinkDatasetButton dataset={dataset} updateParent={() => {}} />
     )
 
     clickLinkDatasetButton()
@@ -240,11 +218,7 @@ describe('LinkDatasetButton', () => {
     datasetRepository.link = cy.stub().as('linkDataset').rejects(new Error('Linking failed'))
 
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />
+      <LinkDatasetButton dataset={dataset} updateParent={() => {}} />
     )
 
     clickLinkDatasetButton()
@@ -282,11 +256,7 @@ describe('LinkDatasetButton', () => {
       .rejects(new WriteError('A WriteError received'))
 
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />
+      <LinkDatasetButton dataset={dataset} updateParent={() => {}} />
     )
 
     clickLinkDatasetButton()
@@ -321,11 +291,7 @@ describe('LinkDatasetButton', () => {
     collectionRepository.getForLinking = cy.stub().rejects(new Error('Fetching collections failed'))
 
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />
+      <LinkDatasetButton dataset={dataset} updateParent={() => {}} />
     )
 
     clickLinkDatasetButton()
@@ -343,11 +309,7 @@ describe('LinkDatasetButton', () => {
     collectionRepository.getForLinking = cy.stub().rejects(new ReadError('A ReadError received'))
 
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />
+      <LinkDatasetButton dataset={dataset} updateParent={() => {}} />
     )
 
     clickLinkDatasetButton()
@@ -373,11 +335,7 @@ describe('LinkDatasetButton', () => {
       .resolves(linked)
 
     mountAuthenticatedLinkDatasetButton(
-      <LinkDatasetButton
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        updateParent={() => {}}
-      />
+      <LinkDatasetButton dataset={dataset} updateParent={() => {}} />
     )
 
     clickLinkDatasetButton()

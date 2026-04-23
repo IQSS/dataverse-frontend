@@ -4,6 +4,7 @@ import { FilePreviewMother } from '../../../../../../files/domain/models/FilePre
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { FileAccessMother } from '@tests/component/files/domain/models/FileAccessMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const files = FilePreviewMother.createMany(2, { access: FileAccessMother.createPublic() })
 const fileRepository: FileRepository = {} as FileRepository
@@ -20,13 +21,14 @@ const datasetInfo = {
 describe('EditFilesOptions', () => {
   it('renders the EditFilesOptions', () => {
     cy.customMount(
-      <EditFilesOptions
-        files={files}
-        fileSelection={{}}
-        fileRepository={fileRepository}
-        isHeader={true}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          isHeader={true}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Metadata' }).should('exist')
@@ -39,13 +41,14 @@ describe('EditFilesOptions', () => {
   it('renders the restrict option if some file is unrestricted', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
-      <EditFilesOptions
-        files={[fileUnrestricted]}
-        fileSelection={{}}
-        fileRepository={fileRepository}
-        isHeader={true}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          files={[fileUnrestricted]}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          isHeader={true}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Restrict' }).should('exist').click()
@@ -56,13 +59,14 @@ describe('EditFilesOptions', () => {
   it('renders the unrestrict option if some file is restricted', () => {
     const fileRestricted = FilePreviewMother.createRestricted()
     cy.customMount(
-      <EditFilesOptions
-        files={[fileRestricted]}
-        fileSelection={{}}
-        fileRepository={fileRepository}
-        isHeader={true}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          files={[fileRestricted]}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          isHeader={true}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Unrestrict' }).should('exist').click()
@@ -72,13 +76,14 @@ describe('EditFilesOptions', () => {
 
   it.skip('renders the embargo option if the embargo is allowed by settings', () => {
     cy.customMount(
-      <EditFilesOptions
-        files={files}
-        fileSelection={{}}
-        fileRepository={fileRepository}
-        isHeader={true}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          isHeader={true}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Embargo' }).should('exist').click()
@@ -88,13 +93,14 @@ describe('EditFilesOptions', () => {
 
   it.skip('renders provenance option if provenance is enabled in config', () => {
     cy.customMount(
-      <EditFilesOptions
-        files={files}
-        fileSelection={{}}
-        fileRepository={fileRepository}
-        isHeader={true}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          isHeader={true}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Provenance' }).should('exist').click()
@@ -104,13 +110,14 @@ describe('EditFilesOptions', () => {
 
   it('shows the No Selected Files message when no files are selected and one option is clicked', () => {
     cy.customMount(
-      <EditFilesOptions
-        files={files}
-        fileSelection={{}}
-        fileRepository={fileRepository}
-        isHeader={true}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          files={files}
+          fileSelection={{}}
+          fileRepository={fileRepository}
+          isHeader={true}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Metadata' }).click()
@@ -124,13 +131,14 @@ describe('EditFilesOptions', () => {
 
   it('does not show the No Selected Files message when files are selected and one option is clicked', () => {
     cy.customMount(
-      <EditFilesOptions
-        files={files}
-        fileSelection={{ 'some-file-id': FilePreviewMother.create() }}
-        fileRepository={fileRepository}
-        isHeader={true}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          files={files}
+          fileSelection={{ 'some-file-id': FilePreviewMother.create() }}
+          fileRepository={fileRepository}
+          isHeader={true}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Metadata' }).click()
@@ -145,13 +153,14 @@ describe('EditFilesOptions for a single file', () => {
   it('renders the EditFilesOptions', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
-      <EditFilesOptions
-        file={fileUnrestricted}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileUnrestricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Restrict' }).should('exist')
@@ -173,13 +182,14 @@ describe('EditFilesOptions for a single file', () => {
   it('renders the restrict option if some file is unrestricted', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
-      <EditFilesOptions
-        file={fileUnrestricted}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileUnrestricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Restrict' }).should('exist').click()
@@ -192,13 +202,14 @@ describe('EditFilesOptions for a single file', () => {
   it('renders the unrestrict option if file is restricted', () => {
     const fileRestricted = FilePreviewMother.createRestricted()
     cy.customMount(
-      <EditFilesOptions
-        file={fileRestricted}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileRestricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Unrestrict' }).should('exist').click()
@@ -212,13 +223,14 @@ describe('EditFilesOptions for a single file', () => {
   it('renders delete modal', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
-      <EditFilesOptions
-        file={fileUnrestricted}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileUnrestricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Delete' }).should('exist').click()
@@ -231,13 +243,14 @@ describe('EditFilesOptions for a single file', () => {
   it('should delete file if delete button clicked', () => {
     fileRepository.delete = cy.stub().resolves()
     cy.customMount(
-      <EditFilesOptions
-        file={FilePreviewMother.createDefault()}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={FilePreviewMother.createDefault()}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Delete' }).click()
@@ -250,13 +263,14 @@ describe('EditFilesOptions for a single file', () => {
   it('should reset the modal if cancel is clicked in delete modal', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
-      <EditFilesOptions
-        file={fileUnrestricted}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileUnrestricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Delete' }).click()
@@ -278,13 +292,14 @@ describe('EditFilesOptions for a single file', () => {
     const fileToDelete = FilePreviewMother.createDefault()
 
     cy.customMount(
-      <EditFilesOptions
-        file={fileToDelete}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />,
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileToDelete}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>,
       [
         `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetInfo.persistentId}&${QueryParamKey.VERSION}=DRAFT`
       ]
@@ -309,13 +324,14 @@ describe('EditFilesOptions for a single file', () => {
   it('should restrict file if restrict button clicked', () => {
     fileRepository.restrict = cy.stub().resolves()
     cy.customMount(
-      <EditFilesOptions
-        file={FilePreviewMother.createDefault()}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={FilePreviewMother.createDefault()}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Restrict' }).click()
@@ -330,13 +346,14 @@ describe('EditFilesOptions for a single file', () => {
     const fileRestricted = FilePreviewMother.createRestricted()
 
     cy.customMount(
-      <EditFilesOptions
-        file={fileRestricted}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileRestricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Unrestrict' }).click()
@@ -350,13 +367,14 @@ describe('EditFilesOptions for a single file', () => {
   it('should restrict file and call refreshFiles if restrict button clicked in draft version', () => {
     fileRepository.restrict = cy.stub().resolves()
     cy.customMount(
-      <EditFilesOptions
-        file={FilePreviewMother.createDefault()}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />,
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={FilePreviewMother.createDefault()}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>,
       [
         `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetInfo.persistentId}&${QueryParamKey.VERSION}=DRAFT`
       ]
@@ -372,13 +390,14 @@ describe('EditFilesOptions for a single file', () => {
   it('should reset the modal if cancel is clicked in restrict modal', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
-      <EditFilesOptions
-        file={fileUnrestricted}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileUnrestricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Restrict' }).click()
@@ -394,13 +413,14 @@ describe('EditFilesOptions for a single file', () => {
   it('opens and closes the edit file tags modal', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
-      <EditFilesOptions
-        file={fileUnrestricted}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileUnrestricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Tags' }).click()
@@ -414,13 +434,14 @@ describe('EditFilesOptions for a single file', () => {
     const fileWithTags = FilePreviewMother.createWithLabels()
 
     cy.customMount(
-      <EditFilesOptions
-        file={fileWithTags}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileWithTags}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Tags' }).click()
@@ -439,13 +460,14 @@ describe('EditFilesOptions for a single file', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
 
     cy.customMount(
-      <EditFilesOptions
-        file={fileUnrestricted}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileUnrestricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Restrict' }).click()
@@ -460,13 +482,14 @@ describe('EditFilesOptions for a single file', () => {
     const fileRestricted = FilePreviewMother.createRestricted()
 
     cy.customMount(
-      <EditFilesOptions
-        file={fileRestricted}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileRestricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Unrestrict' }).click()
@@ -481,13 +504,14 @@ describe('EditFilesOptions for a single file', () => {
     const fileToDelete = FilePreviewMother.createDefault()
 
     cy.customMount(
-      <EditFilesOptions
-        file={fileToDelete}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileToDelete}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Delete' }).click()
@@ -504,13 +528,14 @@ describe('EditFilesOptions for a single file', () => {
     fileRepository.updateCategories = cy.stub().resolves()
 
     cy.customMount(
-      <EditFilesOptions
-        file={fileWithTags}
-        fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
-        isHeader={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFilesOptions
+          file={fileWithTags}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+          isHeader={false}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Tags' }).click()

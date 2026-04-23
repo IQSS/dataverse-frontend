@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useMemo } from 'react'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 export interface RepositoriesContextValue {
   collectionRepository: CollectionRepository
+  datasetRepository: DatasetRepository
 }
 
 const RepositoriesContext = createContext<RepositoriesContextValue | undefined>(undefined)
@@ -13,13 +15,15 @@ interface RepositoriesProviderProps extends RepositoriesContextValue {
 
 export function RepositoriesProvider({
   children,
-  collectionRepository
+  collectionRepository,
+  datasetRepository
 }: RepositoriesProviderProps) {
   const value = useMemo(
     () => ({
-      collectionRepository
+      collectionRepository,
+      datasetRepository
     }),
-    [collectionRepository]
+    [collectionRepository, datasetRepository]
   )
 
   return <RepositoriesContext.Provider value={value}>{children}</RepositoriesContext.Provider>
@@ -39,4 +43,10 @@ export function useCollectionRepositories() {
   const { collectionRepository } = useRepositories()
 
   return { collectionRepository }
+}
+
+export function useDatasetRepositories() {
+  const { datasetRepository } = useRepositories()
+
+  return { datasetRepository }
 }

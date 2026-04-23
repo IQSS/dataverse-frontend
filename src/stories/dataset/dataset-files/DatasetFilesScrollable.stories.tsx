@@ -8,11 +8,16 @@ import { WithSettings } from '../../WithSettings'
 import { FileMockNoFiltersRepository } from '../../file/FileMockNoFiltersRepository'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 import { DatasetMockRepository } from '../../dataset/DatasetMockRepository'
+import { WithRepositories } from '../../WithRepositories'
 
 const meta: Meta<typeof DatasetFilesScrollable> = {
   title: 'Sections/Dataset Page/DatasetFilesScrollable',
   component: DatasetFilesScrollable,
-  decorators: [WithI18next, WithSettings],
+  decorators: [
+    WithI18next,
+    WithSettings,
+    WithRepositories({ datasetRepository: new DatasetMockRepository() })
+  ],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -28,7 +33,6 @@ export const Default: Story = {
   render: () => (
     <DatasetFilesScrollable
       filesRepository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -39,7 +43,6 @@ export const Loading: Story = {
   render: () => (
     <DatasetFilesScrollable
       filesRepository={new FileMockLoadingRepository()}
-      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -50,7 +53,6 @@ export const NoFiles: Story = {
   render: () => (
     <DatasetFilesScrollable
       filesRepository={new FileMockNoDataRepository()}
-      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -61,7 +63,6 @@ export const NoFilters: Story = {
   render: () => (
     <DatasetFilesScrollable
       filesRepository={new FileMockNoFiltersRepository()}
-      datasetRepository={new DatasetMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />

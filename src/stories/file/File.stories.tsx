@@ -13,11 +13,16 @@ import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { DataverseInfoMockRepository } from '../shared-mock-repositories/info/DataverseInfoMockRepository'
 import { ContactMockRepository } from '../shared-mock-repositories/contact/ContactMockRepository'
+import { WithRepositories } from '../WithRepositories'
 
 const meta: Meta<typeof File> = {
   title: 'Pages/File',
   component: File,
-  decorators: [WithI18next, WithLayout],
+  decorators: [
+    WithI18next,
+    WithLayout,
+    WithRepositories({ datasetRepository: new DatasetMockRepository() })
+  ],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -31,7 +36,6 @@ export const Default: Story = {
   render: () => (
     <File
       repository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       id={56}
@@ -43,7 +47,6 @@ export const Restricted: Story = {
   render: () => (
     <File
       repository={new FileMockRepository(FileMother.createRestricted())}
-      datasetRepository={new DatasetMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       id={56}
@@ -55,7 +58,6 @@ export const RestrictedWithAccessGranted: Story = {
   render: () => (
     <File
       repository={new FileMockRepository(FileMother.createRestrictedWithAccessGranted())}
-      datasetRepository={new DatasetMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       id={56}
@@ -67,7 +69,6 @@ export const Loading: Story = {
   render: () => (
     <File
       repository={new FileMockLoadingRepository()}
-      datasetRepository={new DatasetMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       id={56}
@@ -79,7 +80,6 @@ export const FileNotFound: Story = {
   render: () => (
     <File
       repository={new FileMockNoDataRepository()}
-      datasetRepository={new DatasetMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       id={56}
@@ -92,7 +92,6 @@ export const WithMultipleExternalTools: Story = {
     <ExternalToolsProvider externalToolsRepository={new ExternalToolsMockRepository()}>
       <File
         repository={new FileMockRepository(FileMother.createRealistic())}
-        datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
         id={56}
@@ -116,7 +115,6 @@ export const WithOnlyOnePreviewExternalTool: Story = {
     <ExternalToolsProvider externalToolsRepository={externalToolsRepositoryOnlyPreviewTool}>
       <File
         repository={new FileMockRepository(FileMother.createRealistic())}
-        datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
         id={56}
@@ -140,7 +138,6 @@ export const WithOnlyOneQueryExternalTool: Story = {
     <ExternalToolsProvider externalToolsRepository={externalToolsRepositoryOnlyQueryTool}>
       <File
         repository={new FileMockRepository(FileMother.createRealistic())}
-        datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
         id={56}

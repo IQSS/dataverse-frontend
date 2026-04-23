@@ -309,7 +309,9 @@ describe('Dataset', () => {
     cy.customMount(
       <LoadingProvider>
         <AlertProvider>
-          <WithRepositories collectionRepository={collectionRepository}>
+          <WithRepositories
+            collectionRepository={collectionRepository}
+            datasetRepository={datasetRepository}>
             <AnonymizedContext.Provider
               value={{ anonymizedView: anonymizedView, setAnonymizedView }}>
               <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
@@ -325,7 +327,6 @@ describe('Dataset', () => {
   it('renders skeleton while loading', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -343,7 +344,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -361,7 +361,6 @@ describe('Dataset', () => {
     mountWithDataset(
       <Dataset
         publishInProgress={true}
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -379,7 +378,6 @@ describe('Dataset', () => {
   it('renders the breadcrumbs', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -395,7 +393,6 @@ describe('Dataset', () => {
   it('renders the Dataset page title and labels', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -414,7 +411,6 @@ describe('Dataset', () => {
   it('renders the Dataset Metadata tab', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -436,7 +432,6 @@ describe('Dataset', () => {
   it('renders the Dataset Terms tab', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -463,7 +458,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -479,7 +473,6 @@ describe('Dataset', () => {
   it('renders the Dataset Files tab', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -502,7 +495,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -523,7 +515,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -540,7 +531,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -561,7 +551,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -578,7 +567,6 @@ describe('Dataset', () => {
   it('renders the Dataset Action Buttons', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -593,7 +581,6 @@ describe('Dataset', () => {
   it('renders the Dataset Files list table with infinite scrolling enabled', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         filesTabInfiniteScrollEnabled={true}
@@ -611,7 +598,6 @@ describe('Dataset', () => {
   it('shows the toast when the information was sent to contact successfully', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -645,7 +631,6 @@ describe('Dataset', () => {
   it('does not show the tooltip for contact owner button', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
@@ -668,7 +653,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}

@@ -15,7 +15,6 @@ import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFile
 import { useSettings } from '@/sections/settings/SettingsContext'
 import { SettingName } from '@/settings/domain/models/Setting'
 import { DatasetEditFileTagsButton } from './DatasetEditFileTagsButton'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 type EditFilesOptionsProps =
   | {
@@ -25,7 +24,6 @@ type EditFilesOptionsProps =
       fileRepository: FileRepository
       datasetInfo?: never
       isHeader: true
-      datasetRepository: DatasetRepository
     }
   | {
       files?: never
@@ -34,7 +32,6 @@ type EditFilesOptionsProps =
       fileRepository: FileRepository
       datasetInfo: EditFilesMenuDatasetInfo
       isHeader: false
-      datasetRepository: DatasetRepository
     }
 
 export interface EditFilesMenuDatasetInfo {
@@ -52,8 +49,7 @@ export function EditFilesOptions({
   fileSelection,
   fileRepository,
   datasetInfo,
-  isHeader,
-  datasetRepository
+  isHeader
 }: EditFilesOptionsProps) {
   const { t } = useTranslation('files')
   const { t: tFile } = useTranslation('file')
@@ -105,7 +101,6 @@ export function EditFilesOptions({
           datasetPersistentId={datasetInfo.persistentId}
           existingLabels={file.metadata.labels}
           isTabularFile={file.metadata.isTabular}
-          datasetRepository={datasetRepository}
         />
 
         <DatasetDeleteFileButton

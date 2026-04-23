@@ -13,14 +13,15 @@ import {
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
 import { FileMockFailedRepository } from '@/stories/file/FileMockFailedUploadRepository'
 import FileUploadInputStyles from '../../../../../src/sections/shared/file-uploader/file-upload-input/FileUploadInput.module.scss'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const fileMockRepository = new FileMockRepository()
 const datasetMockRepository = new DatasetMockRepository()
 
-type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never
-
-const TestFileUploader = (props: DistributiveOmit<FileUploaderProps, 'datasetRepository'>) => (
-  <FileUploader {...props} datasetRepository={datasetMockRepository} />
+const TestFileUploader = (props: FileUploaderProps) => (
+  <WithRepositories datasetRepository={datasetMockRepository}>
+    <FileUploader {...props} />
+  </WithRepositories>
 )
 
 const ORIGINAL_FILE_NAME = 'File Title'

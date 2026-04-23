@@ -10,6 +10,7 @@ import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/mod
 import { UserMother } from '../../../users/domain/models/UserMother'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -221,12 +222,13 @@ describe('DatasetMetadataForm', () => {
 
   it('renders the form in create mode', () => {
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByTestId('metadata-form').should('exist')
@@ -234,15 +236,16 @@ describe('DatasetMetadataForm', () => {
 
   it('renders the form in edit mode', () => {
     cy.customMount(
-      <DatasetMetadataForm
-        mode="edit"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        datasetPersistentID={dataset.persistentId}
-        datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-        datasetLastUpdateTime={dataset.version.lastUpdateTime}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="edit"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetPersistentID={dataset.persistentId}
+          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
+        />
+      </WithRepositories>
     )
 
     cy.findByTestId('metadata-form').should('exist')
@@ -250,12 +253,13 @@ describe('DatasetMetadataForm', () => {
 
   it('renders the correct metadata block form sections', () => {
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
     cy.findByText(/Citation Metadata/i).should('exist')
     cy.findByText(/Geospatial Metadata/i).should('exist')
@@ -268,12 +272,13 @@ describe('DatasetMetadataForm', () => {
   describe('renders the Citation and Geospatial Metadata Form Fields correctly on create mode', () => {
     beforeEach(() => {
       cy.customMount(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+          />
+        </WithRepositories>
       )
     })
     it('renders the correct form fields from Citation Metadata Block', () => {
@@ -494,15 +499,16 @@ describe('DatasetMetadataForm', () => {
   describe('renders the Citation and Geospatial Metadata Form Fields correctly on edit mode', () => {
     beforeEach(() => {
       cy.customMount(
-        <DatasetMetadataForm
-          mode="edit"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetPersistentID={dataset.persistentId}
-          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetLastUpdateTime={dataset.version.lastUpdateTime}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="edit"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetPersistentID={dataset.persistentId}
+            datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            datasetLastUpdateTime={dataset.version.lastUpdateTime}
+          />
+        </WithRepositories>
       )
     })
 
@@ -1224,12 +1230,13 @@ describe('DatasetMetadataForm', () => {
   describe('should display required errors when submitting the form with required fields empty', () => {
     it('on create mode', () => {
       cy.customMount(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+          />
+        </WithRepositories>
       )
       // Fill one non required field to undisable the Save button, is disabled if fields are not dirty
       cy.findByLabelText(/^Notes/i).type('Some note')
@@ -1248,15 +1255,16 @@ describe('DatasetMetadataForm', () => {
 
     it('on edit mode', () => {
       cy.customMount(
-        <DatasetMetadataForm
-          mode="edit"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetPersistentID={dataset.persistentId}
-          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetLastUpdateTime={dataset.version.lastUpdateTime}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="edit"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetPersistentID={dataset.persistentId}
+            datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            datasetLastUpdateTime={dataset.version.lastUpdateTime}
+          />
+        </WithRepositories>
       )
       // Clear title field to undisable the Save button and unfill a required field that is already filled as it is in edit mode
       cy.findByLabelText(/^Title/i).clear()
@@ -1279,12 +1287,13 @@ describe('DatasetMetadataForm', () => {
     it('on create mode', () => {
       cy.spy(needsUpdateStore, 'setNeedsUpdate').as('setNeedsUpdate')
       cy.customMount(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+          />
+        </WithRepositories>
       )
       fillRequiredFieldsOnCreate()
       cy.findByText(/Save Dataset/i).click()
@@ -1302,15 +1311,16 @@ describe('DatasetMetadataForm', () => {
 
     it('on edit mode', () => {
       cy.customMount(
-        <DatasetMetadataForm
-          mode="edit"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetPersistentID={dataset.persistentId}
-          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetLastUpdateTime={dataset.version.lastUpdateTime}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="edit"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetPersistentID={dataset.persistentId}
+            datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            datasetLastUpdateTime={dataset.version.lastUpdateTime}
+          />
+        </WithRepositories>
       )
       cy.findByLabelText(/^Title/i)
         .clear()
@@ -1338,12 +1348,13 @@ describe('DatasetMetadataForm', () => {
       .resolves(metadataBlocksInfoOnCreateModeWithAstroBlock)
 
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
     cy.get('.accordion > :nth-child(1)').within(() => {
       cy.findByText('Keyword')
@@ -1399,12 +1410,13 @@ describe('DatasetMetadataForm', () => {
       .resolves(metadataBlocksInfoOnCreateModeWithAstroBlock)
 
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
     cy.get('.accordion > :nth-child(1)').within(() => {
       cy.findByText('Keyword')
@@ -1466,12 +1478,13 @@ describe('DatasetMetadataForm', () => {
     const expectedDepositDate = DateHelper.toISO8601Format(new Date())
 
     cy.mountAuthenticated(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
     cy.findByText('Author')
       .closest('.row')
@@ -1500,12 +1513,13 @@ describe('DatasetMetadataForm', () => {
 
   it('shows the skeleton while loading', () => {
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByTestId('metadata-form-loading-skeleton').should('exist')
@@ -1517,12 +1531,13 @@ describe('DatasetMetadataForm', () => {
       .rejects(new Error('some error'))
 
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('Error').should('exist')
@@ -1530,12 +1545,13 @@ describe('DatasetMetadataForm', () => {
 
   it('cancel button is clickable', () => {
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByText(/Cancel/i).click()
@@ -1543,12 +1559,13 @@ describe('DatasetMetadataForm', () => {
 
   it('open closed accordion that has fields with errors on it and scrolls to the focused field', () => {
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     // Fill one non required field to undisable the Save button, is disabled if fields are not dirty
@@ -1577,12 +1594,13 @@ describe('DatasetMetadataForm', () => {
         .resolves(wrongCollectionMetadataBlocksInfo)
 
       cy.customMount(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+          />
+        </WithRepositories>
       )
 
       // Fill one non required field to undisable the Save button, is disabled if fields are not dirty
@@ -1604,12 +1622,13 @@ describe('DatasetMetadataForm', () => {
         )
 
       cy.customMount(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+          />
+        </WithRepositories>
       )
       // Fields are being send correctly, we are just forcing a create error to check if the error message is being displayed correctly
       fillRequiredFieldsOnCreate()
@@ -1626,12 +1645,13 @@ describe('DatasetMetadataForm', () => {
       datasetRepository.create = cy.stub().rejects('Some not expected error')
 
       cy.customMount(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+          />
+        </WithRepositories>
       )
 
       fillRequiredFieldsOnCreate()
@@ -1655,15 +1675,16 @@ describe('DatasetMetadataForm', () => {
         .resolves(wrongCollectionMetadataBlocksInfo)
 
       cy.customMount(
-        <DatasetMetadataForm
-          mode="edit"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetPersistentID={dataset.persistentId}
-          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetLastUpdateTime={dataset.version.lastUpdateTime}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="edit"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetPersistentID={dataset.persistentId}
+            datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            datasetLastUpdateTime={dataset.version.lastUpdateTime}
+          />
+        </WithRepositories>
       )
 
       // Fill one non required field to undisable the Save button, is disabled if fields are not dirty
@@ -1687,15 +1708,16 @@ describe('DatasetMetadataForm', () => {
         )
 
       cy.customMount(
-        <DatasetMetadataForm
-          mode="edit"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetPersistentID={dataset.persistentId}
-          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetLastUpdateTime={dataset.version.lastUpdateTime}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="edit"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetPersistentID={dataset.persistentId}
+            datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            datasetLastUpdateTime={dataset.version.lastUpdateTime}
+          />
+        </WithRepositories>
       )
 
       cy.findByLabelText(/^Title/i)
@@ -1716,15 +1738,16 @@ describe('DatasetMetadataForm', () => {
       datasetRepository.updateMetadata = cy.stub().rejects('Some not expected error')
 
       cy.customMount(
-        <DatasetMetadataForm
-          mode="edit"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetPersistentID={dataset.persistentId}
-          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetLastUpdateTime={dataset.version.lastUpdateTime}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="edit"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetPersistentID={dataset.persistentId}
+            datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            datasetLastUpdateTime={dataset.version.lastUpdateTime}
+          />
+        </WithRepositories>
       )
 
       cy.findByLabelText(/^Title/i)
@@ -1744,12 +1767,13 @@ describe('DatasetMetadataForm', () => {
 
   it('adds a new field and removes a field to a composed  multiple field', () => {
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('Author')
@@ -1773,15 +1797,16 @@ describe('DatasetMetadataForm', () => {
 
   it('adds a new field and removes a field to a primitive multiple field', () => {
     cy.customMount(
-      <DatasetMetadataForm
-        mode="edit"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        datasetPersistentID={dataset.persistentId}
-        datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-        datasetLastUpdateTime={dataset.version.lastUpdateTime}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="edit"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetPersistentID={dataset.persistentId}
+          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+          datasetLastUpdateTime={dataset.version.lastUpdateTime}
+        />
+      </WithRepositories>
     )
 
     cy.findByLabelText(/^Alternative Title/i).type('Alternative Title 1')
@@ -1797,12 +1822,13 @@ describe('DatasetMetadataForm', () => {
 
   it('should not submit the form when pressing enter key if submit button is not focused', () => {
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     // We simulate using focusing on an input and pressing enter key
@@ -1815,12 +1841,13 @@ describe('DatasetMetadataForm', () => {
   })
   it('should submit the form when pressing enter key if submit button is indeed focused', () => {
     cy.customMount(
-      <DatasetMetadataForm
-        mode="create"
-        collectionId="root"
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetadataForm
+          mode="create"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     // Type something so submit button is not disabled
@@ -1837,15 +1864,16 @@ describe('DatasetMetadataForm', () => {
   describe('should make field required if some of the siblings are filled and viceversa and show helper message', () => {
     it('for a composed field multiple', () => {
       cy.customMount(
-        <DatasetMetadataForm
-          mode="edit"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetPersistentID={dataset.persistentId}
-          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetLastUpdateTime={dataset.version.lastUpdateTime}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="edit"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetPersistentID={dataset.persistentId}
+            datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            datasetLastUpdateTime={dataset.version.lastUpdateTime}
+          />
+        </WithRepositories>
       )
 
       cy.findByText('Producer')
@@ -1877,15 +1905,16 @@ describe('DatasetMetadataForm', () => {
         .resolves(metadataBlocksInfoOnCreateModeWithComposedNotMultipleField)
 
       cy.customMount(
-        <DatasetMetadataForm
-          mode="edit"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetPersistentID={dataset.persistentId}
-          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-          datasetLastUpdateTime={dataset.version.lastUpdateTime}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="edit"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetPersistentID={dataset.persistentId}
+            datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            datasetLastUpdateTime={dataset.version.lastUpdateTime}
+          />
+        </WithRepositories>
       )
 
       cy.get('.accordion > :nth-child(3)').within(() => {
@@ -1937,13 +1966,14 @@ describe('DatasetMetadataForm', () => {
       })
 
       cy.mountAuthenticated(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetTemplate={testTemplate}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetTemplate={testTemplate}
+          />
+        </WithRepositories>
       )
 
       cy.findByLabelText(/^Title/i).should('have.value', 'Test Template Title')
@@ -1980,13 +2010,14 @@ describe('DatasetMetadataForm', () => {
       })
 
       cy.mountAuthenticated(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetTemplate={testTemplate}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetTemplate={testTemplate}
+          />
+        </WithRepositories>
       )
 
       cy.findByLabelText(/^Subtitle/i)
@@ -2018,13 +2049,14 @@ describe('DatasetMetadataForm', () => {
       })
 
       cy.mountAuthenticated(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetTemplate={testTemplate}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetTemplate={testTemplate}
+          />
+        </WithRepositories>
       )
 
       // The astro metadata block is not part of the fields for display on create
@@ -2070,13 +2102,14 @@ describe('DatasetMetadataForm', () => {
       })
 
       cy.mountAuthenticated(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetTemplate={testTemplate}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetTemplate={testTemplate}
+          />
+        </WithRepositories>
       )
 
       cy.findByLabelText(/^Title/i).should('have.value', 'Test Template Title')
@@ -2185,13 +2218,14 @@ describe('DatasetMetadataForm', () => {
       })
 
       cy.mountAuthenticated(
-        <DatasetMetadataForm
-          mode="create"
-          collectionId="root"
-          datasetRepository={datasetRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          datasetTemplate={testTemplate}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetTemplate={testTemplate}
+          />
+        </WithRepositories>
       )
 
       cy.findByText('An author field instruction.').should('exist')
