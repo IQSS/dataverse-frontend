@@ -10,6 +10,7 @@ declare global {
 }
 
 function buildTestConfig(): AppConfig {
+  const bannerMessage = Cypress.env('bannerMessage') as AppConfig['bannerMessage']
   const branding = (Cypress.env('branding') as AppConfig['branding']) ?? {
     dataverseName: 'Dataverse'
   }
@@ -23,6 +24,7 @@ function buildTestConfig(): AppConfig {
 
   return {
     backendUrl: Cypress.env('backendUrl') as string,
+    bannerMessage,
     oidc: {
       clientId: Cypress.env('oidcClientId') as string,
       authorizationEndpoint: Cypress.env('oidcAuthorizationEndpoint') as string,
