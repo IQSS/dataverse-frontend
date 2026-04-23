@@ -20,6 +20,10 @@ import { FileMetadataMother } from '../../../../../../files/domain/models/FileMe
 import { MultipleFileDownloadProvider } from '../../../../../../../../src/sections/file/multiple-file-download/MultipleFileDownloadProvider'
 import { FileRepository } from '../../../../../../../../src/files/domain/repositories/FileRepository'
 import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
+import {
+  CustomTermsMother,
+  TermsOfUseMother
+} from '../../../../../../dataset/domain/models/TermsOfUseMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const fileRepository = {} as FileRepository
@@ -637,6 +641,104 @@ describe('DownloadFilesButton', () => {
     cy.get('#download-files').click()
 
     cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText('Your download has started.').should('exist')
+  })
+
+  it('opens the terms modal when custom terms exist without a guestbook for non-tabular files', () => {
+    const datasetWithCustomTerms = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions(),
+      hasOneTabularFileAtLeast: false,
+      termsOfUse: TermsOfUseMother.create({
+        customTerms: CustomTermsMother.create({ termsOfUse: 'Custom terms for bulk download' })
+      })
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createNonTabular()
+    })
+    const fileSelection = {
+      'some-file-id': files[0]
+    }
+
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+        datasetWithCustomTerms
+      )
+    )
+
+    cy.get('#download-files').click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByText('Custom terms for bulk download').should('exist')
+    // Guestbook fields should not be visible since there is no guestbook
+    cy.findByLabelText(/^Name/).should('not.exist')
+    cy.findByLabelText(/^Email/).should('not.exist')
+    cy.findByRole('button', { name: 'Accept' }).should('exist').and('not.be.disabled')
+  })
+
+  it('opens the terms modal when custom terms exist without a guestbook for tabular files', () => {
+    const datasetWithCustomTerms = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowedButNotUpdatePermissions(),
+      hasOneTabularFileAtLeast: true,
+      termsOfUse: TermsOfUseMother.create({
+        customTerms: CustomTermsMother.create({ termsOfUse: 'Custom terms for bulk download' })
+      })
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
+    })
+    const fileSelection = {
+      'some-file-id': files[0]
+    }
+
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+        datasetWithCustomTerms
+      )
+    )
+
+    cy.get('#download-files').click()
+    cy.findByRole('button', { name: 'Original Format' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByText('Custom terms for bulk download').should('exist')
+    cy.findByRole('button', { name: 'Accept' }).should('exist').and('not.be.disabled')
+  })
+
+  it('bypasses the terms modal for editors even when custom terms exist', () => {
+    const datasetWithCustomTerms = DatasetMother.create({
+      permissions: DatasetPermissionsMother.create({
+        canDownloadFiles: true,
+        canUpdateDataset: true
+      }),
+      hasOneTabularFileAtLeast: false,
+      termsOfUse: TermsOfUseMother.create({
+        customTerms: CustomTermsMother.create({ termsOfUse: 'Custom terms for bulk download' })
+      })
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createNonTabular()
+    })
+    const fileSelection = {
+      'some-file-id': files[0]
+    }
+
+    cy.window().then((window) => {
+      cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+
+    cy.mountAuthenticated(
+      withAccessRepository(
+        withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithCustomTerms
+        )
+      )
+    )
+
+    cy.get('#download-files').click()
+
     cy.get('@anchorClick').should('have.been.calledOnce')
     cy.findByRole('dialog').should('not.exist')
     cy.findByText('Your download has started.').should('exist')

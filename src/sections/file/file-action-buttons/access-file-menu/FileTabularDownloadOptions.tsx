@@ -17,7 +17,7 @@ interface FileTabularDownloadOptionsProps {
   type: FileType
   ingestInProgress: boolean
   downloadUrls: FileDownloadUrls
-  hasGuestbook: boolean
+  requiresTermsOrGuestbook: boolean
   onOpenGuestbookModal: (format: string) => void
   isLockedFromFileDownload: boolean
 }
@@ -27,7 +27,7 @@ export function FileTabularDownloadOptions({
   type,
   ingestInProgress,
   downloadUrls,
-  hasGuestbook,
+  requiresTermsOrGuestbook,
   onOpenGuestbookModal,
   isLockedFromFileDownload
 }: FileTabularDownloadOptionsProps) {
@@ -42,7 +42,7 @@ export function FileTabularDownloadOptions({
 
     event.preventDefault()
 
-    if (hasGuestbook) {
+    if (requiresTermsOrGuestbook) {
       onOpenGuestbookModal(format)
       return
     }

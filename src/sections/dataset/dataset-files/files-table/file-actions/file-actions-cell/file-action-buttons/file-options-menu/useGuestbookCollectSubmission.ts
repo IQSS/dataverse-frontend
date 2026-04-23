@@ -10,7 +10,6 @@ import {
   AccessRepository,
   GuestbookResponseDTO
 } from '@/access/domain/repositories/AccessRepository'
-import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 
 interface UseGuestbookCollectSubmissionProps {
@@ -25,7 +24,6 @@ interface UseGuestbookCollectSubmissionProps {
 
 interface HandleSubmitProps {
   hasFormErrors: boolean
-  guestbook?: Guestbook
   guestbookResponse: GuestbookResponseDTO
 }
 
@@ -62,11 +60,11 @@ export const useGuestbookCollectSubmission = ({
       : undefined
 
   const handleSubmit = useCallback(
-    async ({ hasFormErrors, guestbook, guestbookResponse }: HandleSubmitProps) => {
+    async ({ hasFormErrors, guestbookResponse }: HandleSubmitProps) => {
       setHasAttemptedAccept(true)
       setErrorDownloadSignedUrlFile(null)
 
-      if (hasFormErrors || !guestbook) {
+      if (hasFormErrors) {
         return
       }
 

@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
+  readonly VITE_DATAVERSE_BASE_URL?: string
   readonly VITE_APP_VERSION?: string
   readonly VITE_COMMIT_SHA_SHORT?: string
   readonly VITE_GIT_EXACT_TAG?: string

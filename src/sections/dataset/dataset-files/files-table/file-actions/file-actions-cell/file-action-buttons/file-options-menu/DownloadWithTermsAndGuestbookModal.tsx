@@ -17,10 +17,10 @@ import {
   GuestbookAnswerDTO,
   GuestbookResponseDTO
 } from '@/access/domain/repositories/AccessRepository'
-import { downloadFromSignedUrl } from '@/shared/helpers/DownloadHelper'
+import { downloadFromSignedUrl, EMPTY_GUESTBOOK_RESPONSE } from '@/shared/helpers/DownloadHelper'
 import { FileDownloadMode } from '@/files/domain/models/FileMetadata'
 
-interface DownloadWithGuestbookModalProps {
+interface DownloadWithTermsAndGuestbookModalProps {
   fileId?: number | string
   fileIds?: Array<number>
   format?: string | FileDownloadMode
@@ -34,7 +34,7 @@ interface DownloadWithGuestbookModalProps {
 }
 
 type GuestbookFormValues = Record<string, string>
-export function DownloadWithGuestbookModal({
+export function DownloadWithTermsAndGuestbookModal({
   fileId,
   fileIds,
   format,
@@ -45,18 +45,19 @@ export function DownloadWithGuestbookModal({
   datasetCustomTerms,
   show,
   handleClose
-}: DownloadWithGuestbookModalProps) {
+}: DownloadWithTermsAndGuestbookModalProps) {
   const { t: tFiles } = useTranslation('files')
   const { t: tDataset } = useTranslation('dataset')
   const { user } = useSession()
   const accessRepository = useAccessRepository()
   const guestbookRepository = useGuestbookRepository()
 
+  const hasGuestbook = guestbookId !== undefined
   const [formValues, setFormValues] = useState<GuestbookFormValues>({})
   const { guestbook, isLoadingGuestbook, errorGetGuestbook } = useGetGuestbookById({
     guestbookRepository,
     guestbookId,
-    enabled: show
+    enabled: show && hasGuestbook
   })
   const accountFieldKeys = useMemo(() => ['name', 'email', 'institution', 'position'], [])
 
@@ -178,6 +179,10 @@ export function DownloadWithGuestbookModal({
   }
 
   const buildGuestbookResponse = (): GuestbookResponseDTO => {
+    if (!guestbook) {
+      return EMPTY_GUESTBOOK_RESPONSE
+    }
+
     const customQuestionAnswers = customQuestions.reduce<GuestbookAnswerDTO[]>(
       (answers, question, index) => {
         const fieldName = getGuestbookCustomQuestionFieldName(question, index)
@@ -275,12 +280,14 @@ export function DownloadWithGuestbookModal({
           onClick={() =>
             void handleSubmit({
               hasFormErrors: hasAccountFieldErrors || hasCustomQuestionErrors,
-              guestbook,
               guestbookResponse: buildGuestbookResponse()
             })
           }
           disabled={
-            isLoadingGuestbook || isSubmittingGuestbook || !!errorGetGuestbook || !guestbook
+            isLoadingGuestbook ||
+            isSubmittingGuestbook ||
+            !!errorGetGuestbook ||
+            (hasGuestbook && !guestbook)
           }
           aria-label={tFiles('requestAccess.confirmation')}>
           {isSubmittingGuestbook ? <Spinner variant="light" animation="border" size="sm" /> : null}{' '}

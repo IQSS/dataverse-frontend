@@ -12,7 +12,7 @@ import {
 
 interface FileNonTabularDownloadOptionsProps {
   fileId: number
-  hasGuestbook: boolean
+  requiresTermsOrGuestbook: boolean
   onOpenGuestbookModal: () => void
   type: FileType
   downloadUrlOriginal: string
@@ -22,7 +22,7 @@ interface FileNonTabularDownloadOptionsProps {
 
 export function FileNonTabularDownloadOptions({
   fileId,
-  hasGuestbook,
+  requiresTermsOrGuestbook,
   onOpenGuestbookModal,
   type,
   ingestIsInProgress,
@@ -37,7 +37,7 @@ export function FileNonTabularDownloadOptions({
       return
     }
 
-    if (hasGuestbook) {
+    if (requiresTermsOrGuestbook) {
       event.preventDefault()
       onOpenGuestbookModal()
       return
