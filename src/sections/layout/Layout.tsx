@@ -19,7 +19,7 @@ export function Layout() {
       <TopBarProgressIndicator />
       {HeaderFactory.create()}
       {sanitizedBannerMessage ? (
-        <div className="alert alert-warning rounded-0" role="alert">
+        <div className={`alert alert-warning rounded-0 ${styles['banner-message']}`} role="alert">
           <div className="container" dangerouslySetInnerHTML={{ __html: sanitizedBannerMessage }} />
         </div>
       ) : null}
