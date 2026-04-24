@@ -5,6 +5,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # Non Published Changes
 
+# [2.2.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@2.1.0...@iqss/dataverse-design-system@2.2.0) (2026-04-24)
+
 ### Fixed
 
 - **FormText:** Add `className` prop to allow custom styling.
