@@ -10,6 +10,7 @@ let CONFIG: AppConfig | undefined
 
 const AppConfigSchema = z.object({
   backendUrl: z.url(),
+  bannerMessage: z.string().optional(),
   oidc: z.object({
     clientId: z.string(),
     authorizationEndpoint: z.url(),
