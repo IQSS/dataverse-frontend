@@ -44,25 +44,7 @@ jobs:
           OIDC_TOKEN_ENDPOINT: ${{ secrets.BETA_OIDC_TOKEN_ENDPOINT }}
           OIDC_LOGOUT_ENDPOINT: ${{ secrets.BETA_OIDC_LOGOUT_ENDPOINT }}
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.BETA_OIDC_STORAGE_KEY_PREFIX }}
-        run: |
-          mkdir -p ./dist
-          cat > ./dist/config.js <<EOF
-          window.__APP_CONFIG__ = {
-            backendUrl: "${DATAVERSE_BACKEND_URL}",
-            oidc: {
-              clientId: "${OIDC_CLIENT_ID}",
-              authorizationEndpoint: "${OIDC_AUTHORIZATION_ENDPOINT}",
-              tokenEndpoint: "${OIDC_TOKEN_ENDPOINT}",
-              logoutEndpoint: "${OIDC_LOGOUT_ENDPOINT}",
-              localStorageKeyPrefix: "${OIDC_STORAGE_KEY_PREFIX}"
-            },
-            languages: [
-              { code: 'en', name: 'English' },
-              { code: 'es', name: 'Español' }
-            ],
-            defaultLanguage: 'en'
-          }
-          EOF
+        run: node ./scripts/write-runtime-config.mjs
         shell: bash
 
       - uses: actions/upload-artifact@v4
