@@ -21,6 +21,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added a message note to the login page
 - Download with terms of use and guestbook.
 - Show terms modal before download when dataset has custom terms, a non-default license (not CC0 1.0), or a guestbook. Draft datasets and dataset editors bypass the modal.
+- Layout: added a configurable homepage banner for announcements and important messages. (#787)
 
 ### Changed
 
@@ -33,7 +34,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added disclaimer text and custom popup text to Publish Dataset modal for better communication of the implications of publishing a dataset. The text can be configured through the runtime configuration.
 - Dataset page Terms tab title now depends on permissions: users with dataset update permission see `Terms and Guestbook`, and read-only users see `Terms`.
 - Avoided prop-drilling for collection repository, so used context to share epository instances.
-- Avoided prop-drilling for dataset repository, so used context to share repository instances. (#963)
+- Added frontend version to the footer of the application, which is retrieved from the `version` field in `package.json` at build time.
 
 ### Fixed
 
