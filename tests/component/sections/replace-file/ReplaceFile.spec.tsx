@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { ReplaceFile, ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
 import {
@@ -6,8 +7,15 @@ import {
 } from '@tests/component/files/domain/models/FileMetadataMother'
 import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 import { FileMockRepository } from '../../../../src/stories/file/FileMockRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const fileMockRepository = new FileMockRepository()
+
+const withProviders = (component: ReactNode) => (
+  <WithRepositories>
+    <LoadingProvider>{component}</LoadingProvider>
+  </WithRepositories>
+)
 
 const GET_FILE_BY_ID_LOADING_TIME = 200
 const ORIGINAL_FILE_NAME = 'File Title'
@@ -30,7 +38,7 @@ describe('ReplaceFile', () => {
 
   it('renders the breadcrumbs', () => {
     cy.customMount(
-      <LoadingProvider>
+      withProviders(
         <ReplaceFile
           datasetVersionFromParams=":latest"
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
@@ -38,7 +46,7 @@ describe('ReplaceFile', () => {
           fileRepository={fileMockRepository}
           referrer={ReplaceFileReferrer.FILE}
         />
-      </LoadingProvider>
+      )
     )
 
     cy.findByRole('link', { name: 'Root' }).should('exist')
@@ -48,7 +56,7 @@ describe('ReplaceFile', () => {
 
   it('renders skeleton while loading', () => {
     cy.customMount(
-      <LoadingProvider>
+      withProviders(
         <ReplaceFile
           datasetVersionFromParams=":latest"
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
@@ -56,7 +64,7 @@ describe('ReplaceFile', () => {
           fileRepository={fileMockRepository}
           referrer={ReplaceFileReferrer.FILE}
         />
-      </LoadingProvider>
+      )
     )
 
     cy.clock()
@@ -71,7 +79,7 @@ describe('ReplaceFile', () => {
     fileMockRepository.getById = cy.stub().rejects()
 
     cy.customMount(
-      <LoadingProvider>
+      withProviders(
         <ReplaceFile
           datasetVersionFromParams=":latest"
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
@@ -79,7 +87,7 @@ describe('ReplaceFile', () => {
           fileRepository={fileMockRepository}
           referrer={ReplaceFileReferrer.FILE}
         />
-      </LoadingProvider>
+      )
     )
 
     cy.findByTestId('not-found-page').should('exist')
@@ -87,7 +95,7 @@ describe('ReplaceFile', () => {
 
   it('renders the file being replaced info', () => {
     cy.customMount(
-      <LoadingProvider>
+      withProviders(
         <ReplaceFile
           datasetVersionFromParams=":latest"
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
@@ -95,7 +103,7 @@ describe('ReplaceFile', () => {
           fileRepository={fileMockRepository}
           referrer={ReplaceFileReferrer.FILE}
         />
-      </LoadingProvider>
+      )
     )
 
     cy.findByText('Original File').should('exist')
@@ -109,7 +117,7 @@ describe('ReplaceFile', () => {
 
   it('replace the file successfully', () => {
     cy.customMount(
-      <LoadingProvider>
+      withProviders(
         <ReplaceFile
           datasetVersionFromParams=":latest"
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
@@ -117,7 +125,7 @@ describe('ReplaceFile', () => {
           fileRepository={fileMockRepository}
           referrer={ReplaceFileReferrer.FILE}
         />
-      </LoadingProvider>
+      )
     )
 
     cy.findByTestId('file-uploader-drop-zone').as('dnd')
@@ -140,7 +148,7 @@ describe('ReplaceFile', () => {
 
   it('replace the file successfully coming from Dataset page', () => {
     cy.customMount(
-      <LoadingProvider>
+      withProviders(
         <ReplaceFile
           datasetVersionFromParams=":latest"
           datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
@@ -148,7 +156,7 @@ describe('ReplaceFile', () => {
           fileRepository={fileMockRepository}
           referrer={ReplaceFileReferrer.DATASET}
         />
-      </LoadingProvider>
+      )
     )
 
     cy.findByTestId('file-uploader-drop-zone').as('dnd')

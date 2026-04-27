@@ -516,11 +516,13 @@ describe('EditDatasetTerms', () => {
       datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
       datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
       return (
-        <DatasetProvider
-          searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
-          repository={datasetRepository}>
-          {component}
-        </DatasetProvider>
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetProvider
+            searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+            repository={datasetRepository}>
+            {component}
+          </DatasetProvider>
+        </WithRepositories>
       )
     }
 
