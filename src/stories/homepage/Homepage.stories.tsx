@@ -7,6 +7,7 @@ import { FeaturedItemMother } from '@tests/component/collection/domain/models/Fe
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { DataverseHubMockRepository } from '../dataverse-hub/DataverseHubMockRepository'
 import { SearchMockRepository } from '../shared-mock-repositories/search/SearchMockRepository'
+import { WithRepositories } from '../WithRepositories'
 
 const meta: Meta<typeof Homepage> = {
   title: 'Pages/Homepage',
@@ -22,9 +23,9 @@ export default meta
 type Story = StoryObj<typeof Homepage>
 
 export const Default: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <Homepage
-      collectionRepository={new CollectionMockRepository()}
       dataverseHubRepository={new DataverseHubMockRepository()}
       searchRepository={new SearchMockRepository()}
     />
@@ -62,9 +63,9 @@ collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
 }
 
 export const WithFeaturedItems: Story = {
+  decorators: [WithRepositories({ collectionRepository: collectionRepositoryWithFeaturedItems })],
   render: () => (
     <Homepage
-      collectionRepository={collectionRepositoryWithFeaturedItems}
       dataverseHubRepository={new DataverseHubMockRepository()}
       searchRepository={new SearchMockRepository()}
     />

@@ -1,4 +1,7 @@
-import { AlertVariant } from '@iqss/dataverse-design-system/dist/components/alert/AlertVariant'
+import { ComponentProps } from 'react'
+import { Alert as DesignSystemAlert } from '@iqss/dataverse-design-system'
+
+type AlertVariant = ComponentProps<typeof DesignSystemAlert>['variant']
 
 export enum AlertMessageKey {
   DRAFT_VERSION = 'draftVersion',
@@ -19,6 +22,6 @@ export class Alert {
   constructor(
     public readonly variant: AlertVariant,
     public readonly messageKey: AlertMessageKey,
-    public dynamicFields?: object
+    public dynamicFields?: Record<string, unknown>
   ) {}
 }

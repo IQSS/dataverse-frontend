@@ -1,8 +1,10 @@
+import { ComponentProps } from 'react'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { EditCollectionDropdown } from '@/sections/collection/edit-collection-dropdown/EditCollectionDropdown'
+import { EditCollectionDropdown as BaseEditCollectionDropdown } from '@/sections/collection/edit-collection-dropdown/EditCollectionDropdown'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { UpwardHierarchyNodeMother } from '@tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const collectionRepository = {} as CollectionRepository
 
@@ -24,6 +26,19 @@ const rootCollection = CollectionMother.create({
 })
 
 const openDropdown = () => cy.findByRole('button', { name: /Edit/i }).click()
+
+function EditCollectionDropdown({
+  collectionRepository,
+  ...props
+}: ComponentProps<typeof BaseEditCollectionDropdown> & {
+  collectionRepository: CollectionRepository
+}) {
+  return (
+    <WithRepositories collectionRepository={collectionRepository}>
+      <BaseEditCollectionDropdown {...props} />
+    </WithRepositories>
+  )
+}
 
 describe('EditCollectionDropdown', () => {
   beforeEach(() => {
@@ -111,6 +126,41 @@ describe('EditCollectionDropdown', () => {
     )
   })
 
+  it('shows the not implemented collection edit options', () => {
+    cy.mountAuthenticated(
+      <EditCollectionDropdown
+        collection={rootCollection}
+        collectionRepository={collectionRepository}
+        canUserDeleteCollection={false}
+      />
+    )
+
+    openDropdown()
+
+    cy.findByRole('button', { name: 'Theme + Widgets' }).should('exist')
+    cy.findByRole('button', { name: 'Permissions' }).should('exist')
+    cy.findByRole('button', { name: 'Groups' }).should('exist')
+    cy.findByRole('button', { name: 'Dataset Templates' }).should('exist')
+    cy.findByRole('button', { name: 'Dataset Guestbooks' }).should('exist')
+  })
+
+  it('shows the not implemented modal when a new edit option is clicked', () => {
+    cy.mountAuthenticated(
+      <EditCollectionDropdown
+        collection={rootCollection}
+        collectionRepository={collectionRepository}
+        canUserDeleteCollection={false}
+      />
+    )
+
+    openDropdown()
+
+    cy.findByRole('button', { name: 'Permissions' }).click()
+
+    cy.findByText('Not Implemented').should('exist')
+    cy.findByText(/This feature is not implemented yet in the Modern version./i).should('exist')
+  })
+
   describe('delete button', () => {
     it('shows the delete button if user can delete collection, collection is not root and collection has no data', () => {
       cy.mountAuthenticated(
@@ -174,9 +224,18 @@ describe('EditCollectionDropdown', () => {
     })
 
     it('closes the modal and shows toast success message when delete collection succeeds', () => {
+      collectionRepository.delete = cy
+        .stub()
+        .as('deleteStub')
+        .callsFake(() => {
+          return Cypress.Promise.delay(200).then(() => undefined)
+        })
+
+      const testCollection = CollectionMother.createSubCollectionWithNoChildObjects()
+
       cy.mountAuthenticated(
         <EditCollectionDropdown
-          collection={CollectionMother.createSubCollectionWithNoChildObjects()}
+          collection={testCollection}
           collectionRepository={collectionRepository}
           canUserDeleteCollection={true}
         />
@@ -192,10 +251,18 @@ describe('EditCollectionDropdown', () => {
       // The loading spinner inside delete button
       cy.findByRole('status').should('exist')
 
-      cy.findByRole('dialog').should('not.exist')
-      cy.findByText(/Your collection has been deleted./)
-        .should('exist')
-        .should('be.visible')
+      // The dialog can't be closed while deleting when pressing escape
+      cy.get('body').type('{esc}')
+      cy.findByRole('dialog').should('exist')
+
+      cy.get('@deleteStub').then((spy) => {
+        const deleteSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+        const deletedCollectionId = deleteSpy.getCall(0).args[0] as string
+
+        expect(deletedCollectionId).to.equal(testCollection.id)
+        cy.findByRole('dialog', { timeout: 10_000 }).should('not.exist')
+        cy.findByText(/Your collection has been deleted./, { timeout: 10_000 }).should('exist')
+      })
     })
 
     it('shows the js-dataverse WriteError message if delete collection fails with a js-dataverse WriteError', () => {

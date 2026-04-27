@@ -1,5 +1,4 @@
 import { ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
@@ -21,10 +20,12 @@ import { Route } from '../Route.enum'
 import { CollectionHelper } from './CollectionHelper'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
+import { LinkCollectionDropdown } from './link-collection-dropdown/LinkCollectionDropdown'
+import { useSession } from '../session/SessionContext'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
-  collectionRepository: CollectionRepository
   collectionIdFromParams: string | undefined
   created: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
@@ -35,16 +36,16 @@ interface CollectionProps {
 
 export function Collection({
   collectionIdFromParams,
-  collectionRepository,
   created,
   collectionQueryParams,
   contactRepository,
   accountCreated
 }: CollectionProps) {
+  const { collectionRepository } = useCollectionRepositories()
   useScrollTop()
   const { previousPath } = useHistoryTracker()
   const previousPathIsHomepage = previousPath === Route.HOME
-
+  const { user } = useSession()
   const {
     collection,
     isLoading: isLoadingCollection,
@@ -61,8 +62,6 @@ export function Collection({
   const canUserDeleteCollection = Boolean(collectionUserPermissions?.canDeleteCollection)
 
   const showAddDataActions = canUserAddCollection || canUserAddDataset
-  const showPublishButton = !collection?.isReleased && canUserPublishCollection
-  const showEditButton = canUserEditCollection
 
   if (isLoadingCollection) {
     return <CollectionSkeleton />
@@ -91,7 +90,6 @@ export function Collection({
               collection.hierarchy
             ) ? /* istanbul ignore next */ null : (
               <FeaturedItems
-                collectionRepository={collectionRepository}
                 collectionId={collection.id}
                 className={styles['featured-items-spacing']}
                 withLoadingSkeleton={false}
@@ -110,20 +108,28 @@ export function Collection({
 
                 <ShareCollectionButton />
 
-                {(showPublishButton || showEditButton) && (
+                {(canUserPublishCollection || canUserEditCollection) && (
                   <ButtonGroup>
-                    {showPublishButton && (
+                    {!collection?.isReleased && canUserPublishCollection && (
                       <PublishCollectionButton
                         repository={collectionRepository}
                         collectionId={collection.id}
                         refetchCollection={refetchCollection}
                       />
                     )}
-                    {showEditButton && (
+
+                    {user?.superuser &&
+                      !CollectionHelper.isRootCollection(collection.hierarchy) && (
+                        <LinkCollectionDropdown
+                          collectionId={collection.id}
+                          collectionName={collection.name}
+                        />
+                      )}
+
+                    {canUserEditCollection && (
                       <EditCollectionDropdown
                         collection={collection}
                         canUserDeleteCollection={canUserDeleteCollection}
-                        collectionRepository={collectionRepository}
                       />
                     )}
                   </ButtonGroup>
@@ -134,7 +140,6 @@ export function Collection({
             <CollectionItemsPanel
               key={collection.id}
               collectionId={collection.id}
-              collectionRepository={collectionRepository}
               collectionQueryParams={collectionQueryParams}
               addDataSlot={
                 showAddDataActions ? (

@@ -7,7 +7,7 @@ import { Alert, Button, Col, Form, Modal, Stack } from '@iqss/dataverse-design-s
 import { useDataset } from '../DatasetContext'
 import { Deaccessioned } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { isValidURL } from '@/metadata-block-info/domain/models/fieldValidations'
+import { Validator } from '@/shared/helpers/Validator'
 import { useGetDatasetVersionsSummaries } from '../dataset-versions/useGetDatasetVersionsSummaries'
 import { DeaccessionFormData } from './DeaccessionFormData'
 import { ConfirmationModal } from './ConfirmationModal'
@@ -27,6 +27,7 @@ export function DeaccessionDatasetModal({
   handleCloseDeaccessionModal
 }: DeaccessionDatasetModalProps) {
   const { t } = useTranslation(['dataset', 'shared'])
+  const modalTitle = 'Deaccession Dataset'
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const { refreshDataset } = useDataset()
 
@@ -100,7 +101,7 @@ export function DeaccessionDatasetModal({
     if (value.trim() === '') {
       return true // Consider empty strings as valid
     }
-    return isValidURL(value)
+    return Validator.isValidURL(value)
   }
 
   const handleCloseWithReset = () => {
@@ -110,9 +111,9 @@ export function DeaccessionDatasetModal({
 
   return (
     <>
-      <Modal show={show} onHide={handleCloseWithReset} size="lg">
+      <Modal show={show} onHide={handleCloseWithReset} size="lg" ariaLabel={modalTitle}>
         <Modal.Header>
-          <Modal.Title>Deaccession Dataset</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {isLoadingDatasetVersionSummaries ? (

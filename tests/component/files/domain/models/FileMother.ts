@@ -22,7 +22,10 @@ export class FileMother {
       metadata: FileMetadataMother.create(),
       permissions: FilePermissionsMother.create(),
       ingest: FileIngestMother.create(),
-      fileVersionSummaries: [],
+      fileVersionSummaries: {
+        summaries: [],
+        totalCount: 0
+      },
       ...props
     }
   }
@@ -37,7 +40,10 @@ export class FileMother {
       access: FileAccessMother.createPublic(),
       permissions: FilePermissionsMother.createWithGrantedPermissions(),
       metadata: FileMetadataMother.createDefault(),
-      fileVersionSummaries: this.createFileVersionSummary(),
+      fileVersionSummaries: {
+        summaries: this.createFileVersionSummary(),
+        totalCount: this.createFileVersionSummary().length
+      },
       ...props
     })
   }

@@ -1,0 +1,88 @@
+import { Meta, StoryObj } from '@storybook/react'
+import { within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { WithI18next } from '../../../WithI18next'
+import { WithSettings } from '../../../WithSettings'
+import {
+  DatasetMother,
+  DatasetVersionMother
+} from '../../../../../tests/component/dataset/domain/models/DatasetMother'
+import { UnlinkDatasetButton } from '@/sections/dataset/dataset-action-buttons/link-and-unlink-actions/unlink-dataset-button/UnlinkDatasetButton'
+import { DatasetMockRepository } from '../../DatasetMockRepository'
+import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
+import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
+import { FakerHelper } from '@tests/component/shared/FakerHelper'
+import { WithToasts } from '@/stories/WithToasts'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
+
+const meta: Meta<typeof UnlinkDatasetButton> = {
+  title: 'Sections/Dataset Page/DatasetActionButtons/UnlinkDatasetButton',
+  component: UnlinkDatasetButton,
+  decorators: [WithI18next, WithSettings, WithLoggedInUser, WithToasts],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
+  }
+}
+
+export default meta
+type Story = StoryObj<typeof UnlinkDatasetButton>
+
+export const Default: Story = {
+  render: () => (
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <UnlinkDatasetButton
+        dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
+        datasetRepository={new DatasetMockRepository()}
+        updateParent={() => {}}
+      />
+    </RepositoriesStoryProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const dropdownBtn = await canvas.findByRole(
+      'button',
+      { name: 'Unlink Dataset' },
+      { timeout: 6000 }
+    )
+    userEvent.click(dropdownBtn)
+  }
+}
+
+const withOnlyOneCollectionToUnlinkRepo = new CollectionMockRepository()
+withOnlyOneCollectionToUnlinkRepo.getForUnlinking = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
+        {
+          id: 2,
+          alias: 'only-collection-to-link',
+          displayName: 'Only Collection to Unlink'
+        }
+      ])
+    }, FakerHelper.loadingTimout())
+  })
+}
+
+export const WithOnlyOneCollectionToUnlink: Story = {
+  render: () => (
+    <RepositoriesStoryProvider collectionRepository={withOnlyOneCollectionToUnlinkRepo}>
+      <UnlinkDatasetButton
+        dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
+        datasetRepository={new DatasetMockRepository()}
+        updateParent={() => {}}
+      />
+    </RepositoriesStoryProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const dropdownBtn = await canvas.findByRole(
+      'button',
+      { name: 'Unlink Dataset' },
+      { timeout: 6000 }
+    )
+    userEvent.click(dropdownBtn)
+  }
+}

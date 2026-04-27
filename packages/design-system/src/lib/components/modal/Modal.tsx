@@ -10,11 +10,19 @@ interface ModalProps {
   onHide: () => void
   centered?: boolean
   size?: 'sm' | 'lg' | 'xl'
+  ariaLabel?: string
 }
 
-function Modal({ show, onHide, centered, size, children }: PropsWithChildren<ModalProps>) {
+function Modal({
+  show,
+  onHide,
+  centered,
+  size,
+  children,
+  ariaLabel
+}: PropsWithChildren<ModalProps>) {
   return (
-    <BSModal centered={centered} show={show} onHide={onHide} size={size}>
+    <BSModal centered={centered} show={show} onHide={onHide} size={size} aria-label={ariaLabel}>
       {children}
     </BSModal>
   )

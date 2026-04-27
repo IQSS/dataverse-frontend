@@ -12,6 +12,7 @@ import { ExternalToolsMockRepository } from '../shared-mock-repositories/externa
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { DataverseInfoMockRepository } from '../shared-mock-repositories/info/DataverseInfoMockRepository'
+import { ContactMockRepository } from '../shared-mock-repositories/contact/ContactMockRepository'
 
 const meta: Meta<typeof File> = {
   title: 'Pages/File',
@@ -32,6 +33,7 @@ export const Default: Story = {
       repository={new FileMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
+      contactRepository={new ContactMockRepository()}
       id={56}
     />
   )
@@ -43,6 +45,7 @@ export const Restricted: Story = {
       repository={new FileMockRepository(FileMother.createRestricted())}
       datasetRepository={new DatasetMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
+      contactRepository={new ContactMockRepository()}
       id={56}
     />
   )
@@ -54,6 +57,7 @@ export const RestrictedWithAccessGranted: Story = {
       repository={new FileMockRepository(FileMother.createRestrictedWithAccessGranted())}
       datasetRepository={new DatasetMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
+      contactRepository={new ContactMockRepository()}
       id={56}
     />
   )
@@ -65,6 +69,7 @@ export const Loading: Story = {
       repository={new FileMockLoadingRepository()}
       datasetRepository={new DatasetMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
+      contactRepository={new ContactMockRepository()}
       id={56}
     />
   )
@@ -76,6 +81,7 @@ export const FileNotFound: Story = {
       repository={new FileMockNoDataRepository()}
       datasetRepository={new DatasetMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
+      contactRepository={new ContactMockRepository()}
       id={56}
     />
   )
@@ -88,6 +94,7 @@ export const WithMultipleExternalTools: Story = {
         repository={new FileMockRepository(FileMother.createRealistic())}
         datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
         id={56}
         toolTypeSelectedQueryParam="preview"
       />
@@ -111,6 +118,7 @@ export const WithOnlyOnePreviewExternalTool: Story = {
         repository={new FileMockRepository(FileMother.createRealistic())}
         datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
         id={56}
         toolTypeSelectedQueryParam="preview"
       />
@@ -134,6 +142,7 @@ export const WithOnlyOneQueryExternalTool: Story = {
         repository={new FileMockRepository(FileMother.createRealistic())}
         datasetRepository={new DatasetMockRepository()}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
         id={56}
         toolTypeSelectedQueryParam="query"
       />

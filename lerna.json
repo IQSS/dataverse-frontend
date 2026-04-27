@@ -1,12 +1,13 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "independent",
+  "npmClient": "npm",
+  "packages": ["packages/*"],
   "command": {
     "version": {
-      "conventionalCommits": true,
-      "changelogPreset": "angular"
+      "npmClientArgs": [
+        "--legacy-peer-deps"
+      ]
     }
-  },
-  "npmClient": "npm",
-  "packages": ["packages/*"]
+  }
 }

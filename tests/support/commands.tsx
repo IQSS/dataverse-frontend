@@ -1,4 +1,5 @@
 import { UserMother } from '../component/users/domain/models/UserMother'
+import { FRONTEND_BASE_PATH } from '../e2e-integration/shared/basePath'
 
 export {}
 /// <reference types="cypress" />
@@ -48,7 +49,7 @@ import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { Utils } from '@/shared/helpers/Utils'
 import { SessionContext } from '@/sections/session/SessionContext'
 import { User } from '@/users/domain/models/User'
-import { OIDC_AUTH_CONFIG } from '@/config'
+import { requireAppConfig } from '@/config'
 import { ToastContainer } from 'react-toastify'
 import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
@@ -122,7 +123,7 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add('login', () => {
-  cy.visit('/spa/')
+  cy.visit(`${FRONTEND_BASE_PATH}/`)
   cy.wait(1_000)
   cy.findByTestId('oidc-login').click()
 
@@ -131,10 +132,11 @@ Cypress.Commands.add('login', () => {
   cy.wait(1_500)
 
   cy.url()
-    .should('eq', `${Cypress.config().baseUrl as string}/spa`)
+    .should('eq', `${Cypress.config().baseUrl as string}${FRONTEND_BASE_PATH}`)
     .then(() => {
+      const appConfig = requireAppConfig()
       const token = Utils.getLocalStorageItem<string>(
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+        `${appConfig.oidc.localStorageKeyPrefix}token`
       )
 
       if (!token) {
@@ -146,7 +148,7 @@ Cypress.Commands.add('login', () => {
 })
 
 Cypress.Commands.add('logout', () => {
-  cy.visit('/spa/')
+  cy.visit(`${FRONTEND_BASE_PATH}/`)
   cy.get('#dropdown-user').click()
   cy.findByTestId('oidc-logout').click()
 })

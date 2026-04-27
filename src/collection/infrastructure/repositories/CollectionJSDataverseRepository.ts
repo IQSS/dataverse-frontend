@@ -13,7 +13,10 @@ import {
   updateCollectionFeaturedItems,
   deleteCollectionFeaturedItems,
   deleteCollection,
-  deleteCollectionFeaturedItem
+  deleteCollectionFeaturedItem,
+  getCollectionsForLinking,
+  linkCollection,
+  getCollectionLinks
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
@@ -28,6 +31,9 @@ import { FeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/FeaturedItem
 import { MyDataCollectionItemSubset } from '@/collection/domain/models/MyDataCollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
+import { CollectionLinks } from '@/collection/domain/models/CollectionLinks'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -87,8 +93,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     roleIds: number[],
     collectionItemTypes: CollectionItemType[],
     publicationStatuses: PublicationStatus[],
-    limit?: number,
-    selectedPage?: number,
+    paginationInfo?: CollectionItemsPaginationInfo,
     searchText?: string,
     otherUserName?: string
   ): Promise<MyDataCollectionItemSubset> {
@@ -97,8 +102,8 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
         roleIds,
         collectionItemTypes,
         publicationStatuses,
-        limit,
-        selectedPage,
+        paginationInfo?.pageSize,
+        paginationInfo?.page,
         searchText,
         otherUserName
       )
@@ -141,5 +146,32 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
 
   deleteFeaturedItem(featuredItemId: number): Promise<void> {
     return deleteCollectionFeaturedItem.execute(featuredItemId)
+  }
+
+  getForLinking(
+    objectType: LinkingObjectType,
+    id: number | string,
+    searchTerm?: string
+  ): Promise<CollectionSummary[]> {
+    return getCollectionsForLinking.execute(objectType, id, searchTerm)
+  }
+
+  getForUnlinking(
+    objectType: LinkingObjectType,
+    id: number | string,
+    searchTerm?: string
+  ): Promise<CollectionSummary[]> {
+    return getCollectionsForLinking.execute(objectType, id, searchTerm, true)
+  }
+
+  link(
+    linkedCollectionIdOrAlias: number | string,
+    linkingCollectionIdOrAlias: number | string
+  ): Promise<void> {
+    return linkCollection.execute(linkedCollectionIdOrAlias, linkingCollectionIdOrAlias)
+  }
+
+  getLinks(collectionIdOrAlias: number | string): Promise<CollectionLinks> {
+    return getCollectionLinks.execute(collectionIdOrAlias)
   }
 }

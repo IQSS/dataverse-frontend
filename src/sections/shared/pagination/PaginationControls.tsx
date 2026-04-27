@@ -6,27 +6,28 @@ import { PaginationInfo } from '../../../shared/pagination/domain/models/Paginat
 import { useEffect, useState } from 'react'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
-import { useSearchParams } from 'react-router-dom'
+import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
 
 interface PaginationProps {
   onPaginationInfoChange: (
-    paginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
+    paginationInfo: PaginationInfo<
+      DatasetPaginationInfo | FilePaginationInfo | NotificationsPaginationInfo
+    >
   ) => void
-  initialPaginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
+  initialPaginationInfo: PaginationInfo<
+    DatasetPaginationInfo | FilePaginationInfo | NotificationsPaginationInfo
+  >
   showPageSizeSelector?: boolean
-  updateQueryParam?: boolean
 }
 const MINIMUM_NUMBER_OF_PAGES_TO_DISPLAY_PAGINATION = 2
 export function PaginationControls({
   onPaginationInfoChange,
   initialPaginationInfo,
-  showPageSizeSelector = true,
-  updateQueryParam = false
+  showPageSizeSelector = true
 }: PaginationProps) {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo | FilePaginationInfo>(
-    initialPaginationInfo
-  )
+  const [paginationInfo, setPaginationInfo] = useState<
+    DatasetPaginationInfo | FilePaginationInfo | NotificationsPaginationInfo
+  >(initialPaginationInfo)
   const goToPage = (newPage: number) => {
     setPaginationInfo(paginationInfo.goToPage(newPage))
   }
@@ -48,12 +49,6 @@ export function PaginationControls({
 
   useEffect(() => {
     onPaginationInfoChange(paginationInfo)
-    if (updateQueryParam) {
-      if (searchParams.get('page') !== paginationInfo.page.toString()) {
-        searchParams.set('page', paginationInfo.page.toString())
-        setSearchParams(searchParams)
-      }
-    }
     // TODO: Not a priority as not used for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationInfo.page])
@@ -64,26 +59,13 @@ export function PaginationControls({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialPaginationInfo.totalItems])
 
-  useEffect(() => {
-    if (updateQueryParam) {
-      if (searchParams.get('page') !== paginationInfo.page.toString()) {
-        const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1
-        searchParams.set('page', page.toString())
-        setSearchParams(searchParams, { replace: true })
-        goToPage(page)
-      }
-    }
-    // TODO: Not a priority as not used for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams])
-
   if (paginationInfo.totalPages < MINIMUM_NUMBER_OF_PAGES_TO_DISPLAY_PAGINATION) {
     return <></>
   }
   return (
     <Row className={styles.row}>
       <Col md="auto">
-        <div className={styles.container}>
+        <div data-testid="pagination-controls" className={styles.container}>
           <Pagination>
             <Pagination.First
               onClick={() => goToPage(1)}

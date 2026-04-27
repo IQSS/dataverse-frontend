@@ -55,12 +55,16 @@ export class JSFileMapper {
       jsDataset.versionInfo,
       JSDatasetMapper.toDatasetTitle(jsDataset.metadataBlocks),
       datasetCitation,
+      jsDataset.versionInfo.lastUpdateTime,
       jsDataset.publicationDate,
       jsDataset.termsOfUse?.termsOfAccess
     )
     return {
       id: this.toFileId(jsFile.id),
       datasetPersistentId: jsDataset.persistentId,
+      guestbookId: jsDataset.guestbookId,
+      datasetLicense: jsDataset.license,
+      datasetCustomTerms: jsDataset.termsOfUse?.customTerms,
       name: this.toFileName(jsFile.name),
       access: JSFileAccessMapper.toFileAccess(jsFile.restricted, jsFile.fileAccessRequest || false),
       datasetVersion: datasetVersion,

@@ -14,6 +14,8 @@ const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataB
 const dataset = DatasetMother.createRealistic()
 const metadataBlocksInfoOnEditMode =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateFalse()
+const metadataBlocksInfoOnCreateMode =
+  MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
 
 describe('EditDatasetMetadata', () => {
   const mountWithDataset = (component: ReactNode, dataset: DatasetModel | undefined) => {
@@ -21,8 +23,13 @@ describe('EditDatasetMetadata', () => {
 
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(metadataBlocksInfoOnEditMode)
+    metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+      .stub()
+      .resolves(metadataBlocksInfoOnCreateMode)
     datasetRepository.updateMetadata = cy.stub().resolves(undefined)
-    datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(undefined)
+    datasetRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves({ summaries: [], totalCount: 0 })
 
     cy.customMount(
       <LoadingProvider>

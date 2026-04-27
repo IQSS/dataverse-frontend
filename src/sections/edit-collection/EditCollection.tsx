@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
@@ -15,18 +14,18 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { EditCreateCollectionForm } from '../shared/form/EditCreateCollectionForm/EditCreateCollectionForm'
 import { EditCollectionSkeleton } from './EditCollectionSkeleton'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface EditCollectionProps {
   collectionId: string
-  collectionRepository: CollectionRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
 export const EditCollection = ({
   collectionId,
-  collectionRepository,
   metadataBlockInfoRepository
 }: EditCollectionProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('editCollection')
   const { setIsLoading } = useLoading()
   const { user } = useSession()
@@ -113,7 +112,6 @@ export const EditCollection = ({
               }
             : undefined
         }
-        collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     </section>

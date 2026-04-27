@@ -9,14 +9,15 @@ export function NotImplementedModal({ show, handleClose }: NotImplementedModalPr
   const protocol = window.location.protocol
   const host = window.location.host
   const baseUrl = `${protocol}//${host}`
+  const modalTitle = 'Not Implemented'
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={show} onHide={handleClose} size="lg" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>Not Implemented</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>This feature is not implemented yet in SPA.</p>
+        <p>This feature is not implemented yet in the Modern version.</p>
         <p>
           If you want to use this feature you can go to the original{' '}
           <a href={baseUrl}>Dataverse page</a>.

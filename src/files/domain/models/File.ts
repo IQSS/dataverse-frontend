@@ -1,14 +1,17 @@
-import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import { CustomTerms, DatasetLicense, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FileMetadata } from './FileMetadata'
 import { FileAccess } from './FileAccess'
 import { FilePermissions } from './FilePermissions'
 import { FileIngest } from './FileIngest'
 import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { FileVersionSummaryInfo } from './FileVersionSummaryInfo'
+import { FileVersionSummarySubset } from './FileVersionSummaryInfo'
 
 export interface File {
   id: number
   datasetPersistentId: string
+  guestbookId?: number
+  datasetLicense?: DatasetLicense
+  datasetCustomTerms?: CustomTerms
   name: string
   access: FileAccess
   datasetVersion: DatasetVersion
@@ -17,5 +20,5 @@ export interface File {
   permissions: FilePermissions
   metadata: FileMetadata
   ingest: FileIngest
-  fileVersionSummaries?: FileVersionSummaryInfo[]
+  fileVersionSummaries?: FileVersionSummarySubset
 }

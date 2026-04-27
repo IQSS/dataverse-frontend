@@ -46,7 +46,8 @@ export class DatasetItemTypePreviewMother {
       parentCollectionName: datasetPreview.parentCollectionName,
       parentCollectionAlias: datasetPreview.parentCollectionAlias,
       thumbnail: datasetPreview.thumbnail,
-      userRoles: datasetPreview.userRoles
+      userRoles: datasetPreview.userRoles,
+      isLinked: datasetPreview.isLinked
     }
   }
 
@@ -90,6 +91,12 @@ export class DatasetItemTypePreviewMother {
       version: DatasetVersionMother.createDraft(),
       publicationStatuses: [PublicationStatus.Draft, PublicationStatus.InReview],
       thumbnail: undefined
+    })
+  }
+
+  static createLinked(): DatasetItemTypePreview {
+    return this.create({
+      isLinked: true
     })
   }
 }

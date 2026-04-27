@@ -35,6 +35,28 @@ export default defineConfig({
     }
   },
   env: {
+    frontendBasePath: '/modern',
+    backendUrl: 'http://localhost:8000',
+    oidcClientId: 'test',
+    oidcAuthorizationEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/auth',
+    oidcTokenEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/token',
+    oidcLogoutEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/logout',
+    oidcLocalStorageKeyPrefix: 'DV_',
+    languages: [
+      { code: 'en', name: 'English' },
+      { code: 'es', name: 'Español' }
+    ],
+    defaultLanguage: 'en',
+    branding: {
+      dataverseName: 'Dataverse'
+    },
+    homepage: {
+      supportUrl: 'https://support.dataverse.harvard.edu/'
+    },
+    footer: {
+      copyrightHolder: 'The President & Fellows of Harvard College',
+      privacyPolicyUrl: 'https://support.dataverse.harvard.edu/harvard-dataverse-privacy-policy'
+    },
     codeCoverage: {
       exclude: ['tests/**/*.*', '**/ErrorPage.tsx']
     }

@@ -1,9 +1,9 @@
 import { NavDropdown as NavDropdownBS } from 'react-bootstrap'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, ReactNode } from 'react'
 import { NavbarDropdownItem } from './NavbarDropdownItem'
 
 interface DropdownProps {
-  title: string
+  title: ReactNode
   id: string
 }
 

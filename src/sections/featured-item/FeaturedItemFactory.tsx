@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { FeaturedItem } from './FeaturedItem'
+import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 
@@ -18,10 +19,11 @@ function FeaturedItemWithParams() {
   }
 
   return (
-    <FeaturedItem
-      collectionRepository={collectionRepository}
-      parentCollectionIdFromParams={parentCollectionId}
-      featuredItemId={featuredItemId}
-    />
+    <RepositoriesProvider collectionRepository={collectionRepository}>
+      <FeaturedItem
+        parentCollectionIdFromParams={parentCollectionId}
+        featuredItemId={featuredItemId}
+      />
+    </RepositoriesProvider>
   )
 }

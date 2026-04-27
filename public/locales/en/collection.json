@@ -52,6 +52,12 @@
   "editCollection": {
     "edit": "Edit",
     "generalInfo": "General Information",
+    "themeAndWidgets": "Theme + Widgets",
+    "permissions": "Permissions",
+    "groups": "Groups",
+    "datasetTemplates": "Dataset Templates",
+    "datasetGuestbooks": "Dataset Guestbooks",
+    "featuredDataverses": "Featured Dataverses",
     "deleteCollection": "Delete Collection"
   },
   "featuredItems": {
@@ -69,5 +75,11 @@
   },
   "collectionDeletedSuccess": "Your collection has been deleted.",
   "defaultCollectionDeleteError": "Something went wrong deleting the collection. Try again later.",
-  "description": "Description"
+  "description": "Description",
+  "linkCollection": {
+    "title": "Link Collection",
+    "helper": "Choose which of your collections you would like to link this collection to.",
+    "save": "Save Linked Collection",
+    "success": "<wrapper>{{linkedCollectionName}} has been successfully linked to <a>{{linkingCollectionName}}</a></wrapper>"
+  }
 }

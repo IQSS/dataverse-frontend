@@ -103,6 +103,7 @@ const fileExpectedData = (id: number, datasetPid: string): Omit<File, 'hierarchy
     name: 'blob',
     datasetPersistentId: datasetPid,
     datasetVersion: {
+      lastUpdateTime: dateNow,
       labels: [
         { semanticMeaning: DatasetLabelSemanticMeaning.DATASET, value: DatasetLabelValue.DRAFT },
         {
@@ -308,7 +309,7 @@ describe('File JSDataverse Repository', () => {
       await TestsUtils.waitForNoLocks(datasetResponse.persistentId) // Wait for the dataset to be published
 
       await FileHelper.download(datasetResponse.files[0].id)
-      await TestsUtils.wait(3000) // Wait for the file to be downloaded
+      await TestsUtils.wait(5000) // Wait for the file to be downloaded
 
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')

@@ -22,6 +22,7 @@ import { editCollection } from '@/collection/domain/useCases/editCollection'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { CollectionFormHelper } from '../CollectionFormHelper'
+import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -109,6 +110,7 @@ export function useSubmitCollection(
         .then(() => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
+          needsUpdateStore.setNeedsUpdate(true)
 
           navigate(RouteWithParams.COLLECTIONS(newOrUpdatedCollection.alias), {
             state: { created: true }

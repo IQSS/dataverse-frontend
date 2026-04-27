@@ -30,9 +30,13 @@ describe('DeaccessionDatasetButton', () => {
       summary: {}
     })
   ]
+  const versionSummariesSubset = {
+    summaries: versionSummaries,
+    totalCount: versionSummaries.length
+  }
 
   beforeEach(() => {
-    repository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaries)
+    repository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummariesSubset)
   })
 
   it('renders the DeaccessionDatasetButton if the user has publish dataset permissions and the dataset is released', () => {
@@ -69,6 +73,18 @@ describe('DeaccessionDatasetButton', () => {
     cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
   })
 
+  it('does not render when dataset is not released and user cannot publish', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetNotAllowed(),
+      version: DatasetVersionMother.createNotReleased()
+    })
+
+    cy.customMount(<DeaccessionDatasetButton datasetRepository={repository} dataset={dataset} />)
+
+    cy.findByRole('separator').should('not.exist')
+    cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
+  })
+
   describe('Tests the deaccession modal', () => {
     it('renders the DeaccessionDatasetButton and opens the modal on click', () => {
       const dataset = DatasetMother.create({
@@ -86,6 +102,38 @@ describe('DeaccessionDatasetButton', () => {
       cy.get('input[type="checkbox"]').should('have.length', 3)
       cy.get('select').should('exist')
       cy.get('textarea').should('exist')
+    })
+
+    it('stops propagation when opening deaccession modal', () => {
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+        version: DatasetVersionMother.createReleased()
+      })
+      const parentClick = cy.stub().as('parentClick')
+
+      cy.customMount(
+        <div onClick={parentClick}>
+          <DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />
+        </div>
+      )
+
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
+      cy.get('@parentClick').should('not.have.been.called')
+      cy.findByRole('dialog').should('exist')
+    })
+
+    it('closes deaccession modal when cancel is clicked', () => {
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+        version: DatasetVersionMother.createReleased()
+      })
+
+      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
+      cy.findByRole('dialog').should('exist')
+      cy.findByRole('button', { name: 'Cancel' }).click()
+      cy.findByRole('dialog').should('not.exist')
     })
 
     it('displays the confirm modal when the deaccession modal is submitted', () => {
@@ -118,7 +166,9 @@ describe('DeaccessionDatasetButton', () => {
         })
       ]
 
-      repository.getDatasetVersionsSummaries = cy.stub().resolves(singleVersionList)
+      repository.getDatasetVersionsSummaries = cy
+        .stub()
+        .resolves({ summaries: singleVersionList, totalCount: singleVersionList.length })
 
       const dataset = DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
@@ -156,7 +206,9 @@ describe('DeaccessionDatasetButton', () => {
           summary: {}
         }
       ]
-      repository.getDatasetVersionsSummaries = cy.stub().resolves(singleVersionList)
+      repository.getDatasetVersionsSummaries = cy
+        .stub()
+        .resolves({ summaries: singleVersionList, totalCount: singleVersionList.length })
 
       const dataset = DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
@@ -249,9 +301,10 @@ describe('DeaccessionDatasetButton', () => {
         publishedOn: '2021-01-02',
         id: 2
       })
-      repository.getDatasetVersionsSummaries = cy
-        .stub()
-        .resolves([versionSummary1, versionSummary2])
+      repository.getDatasetVersionsSummaries = cy.stub().resolves({
+        summaries: [versionSummary1, versionSummary2],
+        totalCount: 2
+      })
       repository.deaccession = cy.stub().resolves()
       const dataset = DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
@@ -300,7 +353,9 @@ describe('DeaccessionDatasetButton', () => {
           summary: {}
         }
       ]
-      repository.getDatasetVersionsSummaries = cy.stub().resolves(versionsSummaries)
+      repository.getDatasetVersionsSummaries = cy
+        .stub()
+        .resolves({ summaries: versionsSummaries, totalCount: versionsSummaries.length })
       const dataset = DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
         version: DatasetVersionMother.createReleased()
@@ -339,7 +394,9 @@ describe('DeaccessionDatasetButton', () => {
         }
       ]
 
-      repository.getDatasetVersionsSummaries = cy.stub().resolves(versionsSummaries)
+      repository.getDatasetVersionsSummaries = cy
+        .stub()
+        .resolves({ summaries: versionsSummaries, totalCount: versionsSummaries.length })
 
       const dataset = DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),

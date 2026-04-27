@@ -144,7 +144,7 @@ export class FeaturedItemsFormHelper {
   }
 
   /**
-   * @description This method parses a URL to extract the type and identifier of a Dataverse object (Collection, Dataset, or File). Works for URL's from the SPA and JSF versions of Dataverse.
+   * @description This method parses a URL to extract the type and identifier of a Dataverse object (Collection, Dataset, or File). Works for URLs from the modern frontend and JSF versions of Dataverse.
    * @param input - The URL or DOI string to parse.
    * @returns An object containing the type and identifier of the Dataverse object, or null if the input is not a valid URL or does not match any known patterns.
    */
@@ -165,7 +165,7 @@ export class FeaturedItemsFormHelper {
 
     try {
       const url = new URL(value)
-      const path = url.pathname.replace(/^\/spa/, '') // reomve "/spa" if exists
+      const path = url.pathname.replace(/^\/modern/, '') // remove "/modern" if exists
       const searchParams = url.searchParams
 
       // --- COLLECTION ---
@@ -213,7 +213,7 @@ export class FeaturedItemsFormHelper {
   }
 
   /**
-   * @description This method transforms the type and identifier of a Dataverse object into a URL for the SPA version of Dataverse.
+   * @description This method transforms the type and identifier of a Dataverse object into a URL for the Modern version of Dataverse.
    * @param type - The type of the Dataverse object (Collection, Dataset, or File).
    * @param identifier - The identifier of the Dataverse object (e.g., alias for Collection, persistent ID for Dataset, or file ID for File).
    * @returns A string representing the URL for the specified Dataverse object.
@@ -244,7 +244,7 @@ export class FeaturedItemsFormHelper {
 
     try {
       const url = new URL(trimmed)
-      const path = url.pathname.replace(/^\/spa/, '') // remove "/spa" if exists
+      const path = url.pathname.replace(/^\/modern/, '') // remove "/modern" if exists
       const searchParams = url.searchParams
 
       // --- COLLECTION ---

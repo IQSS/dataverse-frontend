@@ -112,6 +112,49 @@ describe('SessionProvider', () => {
     cy.clock().then((clock) => clock.restore())
   })
 
+  it('should call repository only when refetchUserSession is invoked if token is missing', () => {
+    const getAuthenticatedStub = cy.stub().resolves(testUser)
+    userRepository.getAuthenticated = getAuthenticatedStub
+
+    renderComponent({
+      loginInProgress: false,
+      withTokenPresent: false
+    })
+
+    cy.wrap(getAuthenticatedStub).should('not.have.been.called')
+
+    cy.findByRole('button', { name: 'Refetch User' }).click()
+
+    cy.wrap(getAuthenticatedStub).should('have.been.calledOnce')
+    cy.findByText(testUser.displayName).should('exist')
+  })
+
+  it('should not fetch user when token is missing', () => {
+    const getAuthenticatedStub = cy.stub().resolves(testUser)
+    userRepository.getAuthenticated = getAuthenticatedStub
+
+    renderComponent({
+      loginInProgress: false,
+      withTokenPresent: false
+    })
+
+    cy.wrap(getAuthenticatedStub).should('not.have.been.called')
+    cy.findByText(testUser.displayName).should('not.exist')
+  })
+
+  it('should not fetch user when login is in progress even if token exists', () => {
+    const getAuthenticatedStub = cy.stub().resolves(testUser)
+    userRepository.getAuthenticated = getAuthenticatedStub
+
+    renderComponent({
+      loginInProgress: true,
+      withTokenPresent: true
+    })
+
+    cy.wrap(getAuthenticatedStub).should('not.have.been.called')
+    cy.findByText(testUser.displayName).should('not.exist')
+  })
+
   it('should detect BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE and redirect to sign up page', () => {
     userRepository.getAuthenticated = cy
       .stub()
@@ -126,24 +169,41 @@ describe('SessionProvider', () => {
   })
 
   it('should detect any other ReadError instances', () => {
-    userRepository.getAuthenticated = cy.stub().rejects(new ReadError())
-
+    userRepository.getAuthenticated = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(DELAYED_TIME).then(() => {
+        throw new ReadError()
+      })
+    })
+    cy.clock()
     renderComponent({
       loginInProgress: false,
       withTokenPresent: true
     })
 
+    cy.findByText('Loading...').should('exist')
+    cy.tick(DELAYED_TIME)
     cy.findByText('There was an error when reading the resource.').should('exist')
+    cy.findByText('Loading...').should('not.exist')
+    cy.clock().then((clock) => clock.restore())
   })
 
   it('should show default error message when error is not a ReadError', () => {
-    userRepository.getAuthenticated = cy.stub().rejects(new Error('Some error'))
+    userRepository.getAuthenticated = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(DELAYED_TIME).then(() => {
+        throw new Error('Some error')
+      })
+    })
 
     renderComponent({
       loginInProgress: false,
       withTokenPresent: true
     })
 
+    cy.clock()
+    cy.findByText('Loading...').should('exist')
+    cy.tick(DELAYED_TIME)
     cy.findByText('An unexpected error occurred while getting the user.').should('exist')
+    cy.findByText('Loading...').should('not.exist')
+    cy.clock().then((clock) => clock.restore())
   })
 })

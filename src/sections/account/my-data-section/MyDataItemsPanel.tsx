@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Stack } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import {
@@ -22,9 +21,9 @@ import { UserNameSearch } from '@/sections/account/my-data-section/user-name-sea
 import styles from './MyDataItemsPanel.module.scss'
 import { RoleRepository } from '@/roles/domain/repositories/RoleRepository'
 import { useSelectableRoles } from '@/sections/account/my-data-section/useSelectableRoles'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface MyDataItemsPanelProps {
-  collectionRepository: CollectionRepository
   roleRepository: RoleRepository
 }
 
@@ -37,10 +36,8 @@ interface MyDataItemsPanelProps {
  * 4. When the user changes the item types, roles or publication statuses in the filter panel
  */
 
-export const MyDataItemsPanel = ({
-  collectionRepository,
-  roleRepository
-}: MyDataItemsPanelProps) => {
+export const MyDataItemsPanel = ({ roleRepository }: MyDataItemsPanelProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { user } = useSession()
   const { t } = useTranslation('account')
   const [roleIds, setRoleIds] = useState<number[]>([])

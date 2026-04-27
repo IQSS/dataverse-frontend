@@ -5,6 +5,9 @@ on:
     branches:
       - develop
 
+env:
+  FRONTEND_BASE_PATH: /modern
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,7 +33,10 @@ jobs:
         working-directory: packages/design-system
         run: npm run build
 
-      - name: Create and populate .env file
+      - name: Build with base path
+        run: npm run build -- --base=${{ env.FRONTEND_BASE_PATH }}
+
+      - name: Override runtime config.js for BETA
         env:
           DATAVERSE_BACKEND_URL: ${{ secrets.BETA_DATAVERSE_BACKEND_URL }}
           OIDC_CLIENT_ID: ${{ secrets.BETA_OIDC_CLIENT_ID }}
@@ -38,18 +44,8 @@ jobs:
           OIDC_TOKEN_ENDPOINT: ${{ secrets.BETA_OIDC_TOKEN_ENDPOINT }}
           OIDC_LOGOUT_ENDPOINT: ${{ secrets.BETA_OIDC_LOGOUT_ENDPOINT }}
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.BETA_OIDC_STORAGE_KEY_PREFIX }}
-        run: |
-          touch .env
-          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
-          echo VITE_OIDC_CLIENT_ID="$OIDC_CLIENT_ID" >> .env
-          echo VITE_OIDC_AUTHORIZATION_ENDPOINT="$OIDC_AUTHORIZATION_ENDPOINT" >> .env
-          echo VITE_OIDC_TOKEN_ENDPOINT="$OIDC_TOKEN_ENDPOINT" >> .env
-          echo VITE_OIDC_LOGOUT_ENDPOINT="$OIDC_LOGOUT_ENDPOINT" >> .env
-          echo VITE_OIDC_STORAGE_KEY_PREFIX="$OIDC_STORAGE_KEY_PREFIX" >> .env
+        run: node ./scripts/write-runtime-config.mjs
         shell: bash
-
-      - name: Build with base path
-        run: npm run build -- --base=/spa
 
       - uses: actions/upload-artifact@v4
         with:
@@ -104,4 +100,4 @@ jobs:
             ASADMIN='/usr/local/payara6/bin/asadmin --user admin'
             DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
             $ASADMIN undeploy $DATAVERSE_FRONTEND
-            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /spa $APPLICATION_WAR_PATH
+            $ASADMIN deploy --name $APPLICATION_NAME --contextroot ${{ env.FRONTEND_BASE_PATH }} $APPLICATION_WAR_PATH

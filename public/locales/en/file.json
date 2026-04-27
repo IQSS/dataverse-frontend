@@ -12,6 +12,7 @@
     "summary": "Summary",
     "contributors": "Contributors",
     "noChange": "No changes associated with this version.",
+    "noVersions": "File not included in this version.",
     "file": "file",
     "fileChanged": "[File {{name}}]",
     "access": "File Access",
@@ -28,7 +29,6 @@
     },
     "error": "Error on loading file versions"
   },
-  "fileNotChange": "No changes associated with this version",
   "subtext": "This file is part of \"{{datasetTitle}}\".",
   "datasetCitationTitle": "Dataset Citation",
   "fileCitationTitle": "File Citation",
@@ -84,6 +84,22 @@
         "unrestrict": "Unrestrict",
         "replace": "Replace",
         "delete": "Delete"
+      }
+    },
+    "share": {
+      "title": "Share File",
+      "helpText": "Share this file on your favorite social media networks."
+    }
+  },
+  "actions": {
+    "optionsMenu": {
+      "guestbookCollectModal": {
+        "submitError": "Something went wrong submitting guestbook responses. Try again later.",
+        "downloadError": "Something went wrong downloading the file. Try again later.",
+        "validation": {
+          "required": "This field is required.",
+          "invalidEmail": "Please enter a valid email address."
+        }
       }
     }
   },

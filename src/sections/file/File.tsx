@@ -24,12 +24,16 @@ import { FilePageHelper } from './FilePageHelper'
 import { FileEmbeddedExternalTool } from './file-embedded-external-tool/FileEmbeddedExternalTool'
 import { useScrollTop } from '@/shared/hooks/useScrollTop'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { ContactButton } from '../shared/contact/ContactButton'
+import { ShareFileButton } from './share-file-button/ShareFileButton'
 
 interface FileProps {
   id: number
   repository: FileRepository
   datasetRepository: DatasetRepository
   dataverseInfoRepository: DataverseInfoRepository
+  contactRepository: ContactRepository
   datasetVersionNumber?: string
   toolTypeSelectedQueryParam?: string
 }
@@ -39,6 +43,7 @@ export function File({
   repository,
   datasetRepository,
   dataverseInfoRepository,
+  contactRepository,
   datasetVersionNumber,
   toolTypeSelectedQueryParam
 }: FileProps) {
@@ -67,6 +72,9 @@ export function File({
     t,
     file?.metadata.type.value
   )
+
+  const isDeaccessioned =
+    file?.datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -144,10 +152,13 @@ export function File({
                   userHasDownloadPermission={file.permissions.canDownloadFile}
                   metadata={file.metadata}
                   ingestInProgress={file.ingest.isInProgress}
-                  isDeaccessioned={
-                    file.datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
-                  }
+                  isDeaccessioned={isDeaccessioned}
                   isDraft={file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT}
+                  canEdit={file.permissions.canEditOwnerDataset}
+                  guestbookId={file.guestbookId}
+                  datasetPersistentId={file.datasetPersistentId}
+                  datasetLicense={file.datasetLicense}
+                  datasetCustomTerms={file.datasetCustomTerms}
                 />
                 {file.permissions.canEditOwnerDataset && (
                   <EditFileMenu
@@ -169,6 +180,17 @@ export function File({
                     datasetRepository={datasetRepository}
                   />
                 )}
+
+                <ButtonGroup className={styles['contact-owner-and-share-group']}>
+                  <ContactButton
+                    toContactName={file.datasetVersion.title}
+                    contactObjectType="dataset"
+                    id={file.datasetPersistentId}
+                    contactRepository={contactRepository}
+                  />
+
+                  {!isDeaccessioned && <ShareFileButton />}
+                </ButtonGroup>
               </ButtonGroup>
             </Col>
           </Row>

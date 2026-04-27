@@ -32,7 +32,7 @@
     <br />
     <br />
     <a href="https://www.dataverse.org">Website</a> |
-    <a href="https://beta.dataverse.org/spa">View Demo (BETA)</a> |
+    <a href="https://beta.dataverse.org/modern">View Demo (BETA)</a> |
     <a href="https://github.com/IQSS/dataverse-frontend/issues">Report Bug</a> |
     <a href="https://github.com/IQSS/dataverse-frontend/issues">Request Feature</a>
   </p>
@@ -139,21 +139,21 @@ All environments follow an “all-in-one” setup, where the frontend and backen
 The **Beta** environment provides a remote space for testing the latest changes. GitHub Actions automatically deploy the current `develop` branches of both the frontend and backend.
 
 - **Audience:** Development team, QA analysts, project managers, selected users for early feedback
-- **URL:** [beta.dataverse.org/spa][dv_app_beta_spa_url]
+- **URL:** [beta.dataverse.org/modern][dv_app_beta_modern_url]
 
 #### Demo
 
 The **Demo** environment showcases the latest officially released version of the SPA, compatible with the latest Dataverse backend release. Deployments target specific tagged releases (e.g., `0.1.0`) and are performed on demand.
 
 - **Audience:** Project managers, curation team, early adoption testers
-- **URL:** [demo.dataverse.org/spa][dv_app_demo_spa_url]
+- **URL:** [demo.dataverse.org/modern][dv_app_demo_modern_url]
 
 #### QA
 
 The **QA** environment is a dedicated, short-lived testing space. It is deployed on demand with feature branches (e.g., `feature/xxx`), frequently overwritten, and used for validating new features and bug fixes before merging into development.
 
 - **Audience:** QA analysts, development team
-- **URL:** [qa.dataverse.org/spa][dv_app_qa_spa_url]
+- **URL:** [qa.dataverse.org/modern][dv_app_qa_modern_url]
 
 #### Spike Environments
 
@@ -397,15 +397,15 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 <!-- Application Instances -->
 <!-- [dv_app_] -->
 
-[dv_app_beta_spa_url]: https://beta.dataverse.org/spa
-[dv_app_demo_spa_url]: https://demo.dataverse.org/spa
-[dv_app_qa_spa_url]: https://qa.dataverse.org/spa
+[dv_app_beta_modern_url]: https://beta.dataverse.org/modern
+[dv_app_demo_modern_url]: https://demo.dataverse.org/modern
+[dv_app_qa_modern_url]: https://qa.dataverse.org/modern
 [dv_app_beta_legacyjsf_url]: https://beta.dataverse.org
 [dv_app_legacyjsf_demo_url]: https://demo.dataverse.org/
 [dv_app_localhost_build_url]: http://localhost:5173
 [dv_app_localhost_storybook_url]: http://localhost:6006/
 [dv_app_localhost_designsystem_url]: http://localhost:6007/
-[dv_app_localhost_spa_url]: http://localhost:8000/spa
+[dv_app_localhost_modern_url]: http://localhost:8000/modern
 [dv_app_localhost_legacy_url]: http://localhost:8000/
 
 <!-- @gdcc/dataverse -->

@@ -5,11 +5,15 @@ import { act, renderHook } from '@testing-library/react'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 
 const fileVersionSummaries = FileMother.createFileVersionSummary()
+const fileVersionSummariesSubset = {
+  summaries: fileVersionSummaries,
+  totalCount: fileVersionSummaries.length
+}
 const fileRepository: FileRepository = {} as FileRepository
 
 describe('useGetFileVersionsSummaries', () => {
   it('should return file version summaries correctly', async () => {
-    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummaries)
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummariesSubset)
     const { result } = renderHook(() =>
       useGetFileVersionsSummaries({
         fileRepository,
@@ -75,7 +79,7 @@ describe('useGetFileVersionsSummaries', () => {
   })
 
   it('should not fetch data if autoFetch is false', async () => {
-    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummaries)
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummariesSubset)
     const { result } = renderHook(() =>
       useGetFileVersionsSummaries({
         fileRepository,
@@ -100,7 +104,7 @@ describe('useGetFileVersionsSummaries', () => {
   })
 
   it('should fetch data when refetch is called', () => {
-    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummaries)
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummariesSubset)
     const { result } = renderHook(() =>
       useGetFileVersionsSummaries({
         fileRepository,

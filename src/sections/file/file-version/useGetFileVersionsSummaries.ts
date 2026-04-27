@@ -2,12 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { FileVersionSummaryInfo } from '@/files/domain/models/FileVersionSummaryInfo'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { getFileVersionSummaries } from '@/files/domain/useCases/getFileVersionSummaries'
+import { FileVersionPaginationInfo } from '@/files/domain/models/FileVersionPaginationInfo'
 
 interface UseGetFileVersionsSummaries {
   fileVersionSummaries: FileVersionSummaryInfo[] | undefined
   error: string | null
   isLoading: boolean
-  fetchSummaries: () => Promise<void>
+  fetchSummaries: (paginationInfo?: FileVersionPaginationInfo) => Promise<void>
 }
 
 interface Props {
@@ -25,22 +26,29 @@ export const useGetFileVersionsSummaries = ({
   const [isLoading, setIsLoading] = useState<boolean>(autoFetch)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchSummaries = useCallback(async () => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const versionSummaries = await getFileVersionSummaries(fileRepository, fileId)
-      setSummaries(versionSummaries)
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error && err.message
-          ? err.message
-          : 'Something went wrong getting the information from the file versions summaries. Try again later.'
-      setError(errorMessage)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [fileRepository, fileId])
+  const fetchSummaries = useCallback(
+    async (paginationInfo?: FileVersionPaginationInfo) => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const versionSummaries = await getFileVersionSummaries(
+          fileRepository,
+          fileId,
+          paginationInfo
+        )
+        setSummaries(versionSummaries.summaries)
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong getting the information from the file versions summaries. Try again later.'
+        setError(errorMessage)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [fileRepository, fileId]
+  )
 
   useEffect(() => {
     if (autoFetch) {

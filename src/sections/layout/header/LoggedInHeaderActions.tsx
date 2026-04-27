@@ -6,24 +6,29 @@ import { Navbar } from '@iqss/dataverse-design-system'
 import { User } from '@/users/domain/models/User'
 import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
 import { RouteWithParams, Route } from '@/sections//Route.enum'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { AccountHelper } from '@/sections/account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
+import UnreadNotificationBadge from '@/sections/layout/header/UnreadNotificationBadge'
+import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
+import { useUnreadCount } from '@/notifications/domain/hooks/useUnreadCount'
+import { SessionContext } from '@/sections/session/SessionContext'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface LoggedInHeaderActionsProps {
   user: User
-  collectionRepository: CollectionRepository
+  notificationRepository: NotificationRepository
 }
 
 export const LoggedInHeaderActions = ({
   user,
-  collectionRepository
+  notificationRepository
 }: LoggedInHeaderActionsProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('header')
   const { logOut } = useContext(AuthContext)
-
+  const { setUser } = useContext(SessionContext)
+  const unreadCount = useUnreadCount(user, notificationRepository)
   const { collection } = useCollection(collectionRepository)
-
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: undefined,
     collectionRepository: collectionRepository
@@ -39,6 +44,10 @@ export const LoggedInHeaderActions = ({
   const canUserAddCollectionToRoot = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserAddDatasetToRoot = Boolean(collectionUserPermissions?.canAddDataset)
 
+  const handleLogout = () => {
+    setUser(null)
+    logOut()
+  }
   return (
     <>
       <Navbar.Dropdown title={t('navigation.addData')} id="dropdown-addData">
@@ -52,11 +61,26 @@ export const LoggedInHeaderActions = ({
           {t('navigation.newDataset')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>
-      <Navbar.Dropdown title={user.displayName} id="dropdown-user">
+      <Navbar.Dropdown
+        title={
+          <span className="d-inline-flex align-items-center">
+            {user.displayName}
+            <UnreadNotificationBadge unreadCount={unreadCount} />
+          </span>
+        }
+        id="dropdown-user">
         <Navbar.Dropdown.Item
           as={Link}
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.myData}`}>
           {t('navigation.myData')}
+        </Navbar.Dropdown.Item>
+        <Navbar.Dropdown.Item
+          as={Link}
+          to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}`}>
+          <span className="d-inline-flex align-items-center">
+            {t('navigation.notifications')}
+            <UnreadNotificationBadge unreadCount={unreadCount} />
+          </span>
         </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item
           as={Link}
@@ -69,7 +93,7 @@ export const LoggedInHeaderActions = ({
           {t('navigation.apiToken')}
         </Navbar.Dropdown.Item>
 
-        <Navbar.Dropdown.Item href="#" onClick={() => logOut()} data-testid="oidc-logout">
+        <Navbar.Dropdown.Item href="#" onClick={() => handleLogout()} data-testid="oidc-logout">
           {t('logOut')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>

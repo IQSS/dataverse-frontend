@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import {
   CollectionSearchCriteria,
@@ -27,11 +26,11 @@ import { SearchInput } from '@/sections/collection/collection-items-panel/search
 import { ItemTypeChange } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
 import { SelectedFacets } from '@/sections/collection/collection-items-panel/selected-facets/SelectedFacets'
 import { RouteWithParams } from '@/sections/Route.enum'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './CollectionItemsPanel.module.scss'
 
 interface CollectionItemsPanelProps {
   collectionId: string
-  collectionRepository: CollectionRepository
   collectionQueryParams: UseCollectionQueryParamsReturnType
   addDataSlot: JSX.Element | null
 }
@@ -54,10 +53,10 @@ interface CollectionItemsPanelProps {
 
 export const CollectionItemsPanel = ({
   collectionId,
-  collectionRepository,
   collectionQueryParams,
   addDataSlot
 }: CollectionItemsPanelProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { setIsLoading } = useLoading()
   const [_, setSearchParams] = useSearchParams()
   const { t } = useTranslation('collection')

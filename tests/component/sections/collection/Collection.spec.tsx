@@ -1,10 +1,13 @@
-import { Collection } from '@/sections/collection/Collection'
+import { ComponentProps } from 'react'
+import { Collection as BaseCollection } from '@/sections/collection/Collection'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { UpwardHierarchyNodeMother } from '@tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const collectionRepository = {} as CollectionRepository
 const contactRepository = {} as ContactRepository
@@ -23,6 +26,17 @@ const itemsWithCount: CollectionItemSubset = {
   items,
   facets,
   totalItemCount: 200
+}
+
+function Collection({
+  collectionRepository,
+  ...props
+}: ComponentProps<typeof BaseCollection> & { collectionRepository: CollectionRepository }) {
+  return (
+    <WithRepositories collectionRepository={collectionRepository}>
+      <BaseCollection {...props} />
+    </WithRepositories>
+  )
 }
 
 describe('Collection page', () => {
@@ -353,5 +367,65 @@ describe('Collection page', () => {
       })
     cy.findByTestId('dialog').should('not.exist')
     cy.findByText(/Message sent./).should('exist')
+  })
+
+  describe('Link Collection Dropdown visibility', () => {
+    it('shows the Link Collection dropdown only when users is superuser and collection is not root', () => {
+      collectionRepository.getById = cy.stub().resolves(
+        CollectionMother.create({
+          childCount: 0,
+          hierarchy: UpwardHierarchyNodeMother.createSubCollection()
+        })
+      )
+      cy.mountSuperuser(
+        <Collection
+          collectionRepository={collectionRepository}
+          contactRepository={contactRepository}
+          collectionIdFromParams="collection"
+          created={false}
+          accountCreated={false}
+          collectionQueryParams={{ pageQuery: 1 }}
+        />
+      )
+
+      cy.findByRole('button', { name: /Link/i }).should('exist')
+    })
+
+    it('hides the Link Collection dropdown when user is not superuser', () => {
+      collectionRepository.getById = cy.stub().resolves(
+        CollectionMother.create({
+          childCount: 0,
+          hierarchy: UpwardHierarchyNodeMother.createSubCollection()
+        })
+      )
+
+      cy.mountAuthenticated(
+        <Collection
+          collectionRepository={collectionRepository}
+          contactRepository={contactRepository}
+          collectionIdFromParams="collection"
+          created={false}
+          accountCreated={false}
+          collectionQueryParams={{ pageQuery: 1 }}
+        />
+      )
+
+      cy.findByRole('button', { name: /Link/i }).should('not.exist')
+    })
+
+    it('hides the Link Collection dropdown when the collection is root', () => {
+      cy.mountSuperuser(
+        <Collection
+          collectionRepository={collectionRepository}
+          contactRepository={contactRepository}
+          collectionIdFromParams="root"
+          created={false}
+          accountCreated={false}
+          collectionQueryParams={{ pageQuery: 1 }}
+        />
+      )
+
+      cy.findByRole('button', { name: /Link/i }).should('not.exist')
+    })
   })
 })

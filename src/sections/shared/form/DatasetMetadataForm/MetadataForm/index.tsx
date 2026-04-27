@@ -14,7 +14,7 @@ import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { usePrefillFieldsWithUserData } from './usePrefillFieldsWithUserData'
-import { DatasetTemplateInstruction } from '@/dataset/domain/models/DatasetTemplate'
+import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
 import styles from './index.module.scss'
 
 interface FormProps {
@@ -24,7 +24,7 @@ interface FormProps {
   metadataBlocksInfo: MetadataBlockInfo[]
   datasetRepository: DatasetRepository
   datasetPersistentID?: string
-  datasetInternalVersionNumber?: number
+  datasetLastUpdateTime?: string
   datasetTemplateInstructions?: DatasetTemplateInstruction[]
 }
 
@@ -35,7 +35,7 @@ export const MetadataForm = ({
   metadataBlocksInfo,
   datasetRepository,
   datasetPersistentID,
-  datasetInternalVersionNumber,
+  datasetLastUpdateTime,
   datasetTemplateInstructions
 }: FormProps) => {
   const { user } = useSession()
@@ -57,7 +57,7 @@ export const MetadataForm = ({
     datasetRepository,
     onSubmitDatasetError,
     datasetPersistentID,
-    datasetInternalVersionNumber
+    datasetLastUpdateTime
   )
 
   usePrefillFieldsWithUserData({ mode, user, formDefaultValues, setValue })

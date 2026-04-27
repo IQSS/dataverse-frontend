@@ -7,8 +7,8 @@
 - [Use the Latest Dataverse Client Javascript Version](#use-the-latest-dataverse-client-javascript-version)
 - [Merge "release branch" into "main"](#merge-release-branch-into-main)
 - [Create a Draft Release on GitHub and Tag the Version](#create-a-draft-release-on-github-and-tag-the-version)
-- [Merge "release branch" into "develop"](#merge-release-branch-into-develop)
-- [Delete "release branch"](#delete-release-branch)
+- [Sync "develop" branch with changes from "main"](#sync-develop-branch-with-changes-from-main)
+- [Delete "release branch" and "sync develop" branch](#delete-release-branch-and-sync-develop-branch)
 
 ## Introduction
 
@@ -127,17 +127,18 @@ Go to https://github.com/IQSS/dataverse-frontend/releases/new to start creating 
 
 At this point you can send around the draft release for any final feedback. Make corrections to the draft, if necessary. Publish once everything is ok.
 
-## Merge "release branch" into "develop"
+## Sync develop branch with changes from main
 
 After merging the release branch into `main`, ensure the develop branch is updated with the latest changes.
 
-Create a pull request to merge the `main` branch into `develop` branch also.
+Create a pull request to sync the `develop` branch with the `main` branch. Create the branch from `main` and name it `sync-develop-v[version-number]`.
 
-## Delete "release branch"
+This is a good time to revert or adjust any release-specific changes that are **not needed in `develop`**, such as:
 
-Once the release process is complete and the `release` branch has been merged into both `main` and `develop`, you can safely delete the `release` branch to keep the repository clean.
+- Using the npm version of the latest `@iqss/dataverse-client-javascript` package — check what alpha version is used in `develop` and revert to that version.
+- Updating the `E2E_DATAVERSE_IMAGE_TAG` in `workflows/test.yml` — revert it to the value used in `develop` (usually `unstable`).
+- Any other release-only changes or configuration updates that should not persist in `develop`.
 
-- Delete the branch locally from your repository.
-- Delete the branch remotely from the remote repository.
+## Delete "release branch" and "sync-develop" branch.
 
-This ensures that the `release` branch is no longer present in either your local or remote repositories.
+Once the release process is complete and the changes have been merged into both `main` and `develop`, you can delete the `release` branch and the `sync-develop` branch to keep the repository clean.

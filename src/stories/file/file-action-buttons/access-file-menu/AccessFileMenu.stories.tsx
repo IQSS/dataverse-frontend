@@ -25,7 +25,6 @@ export const Default: Story = {
       userHasDownloadPermission
       isDeaccessioned={false}
       ingestInProgress={false}
-      isDraft={false}
     />
   )
 }
@@ -40,7 +39,6 @@ export const AsIcon: Story = {
       isDeaccessioned={false}
       ingestInProgress={false}
       asIcon
-      isDraft={false}
     />
   )
 }
@@ -54,7 +52,6 @@ export const NonTabularFiles: Story = {
       userHasDownloadPermission
       isDeaccessioned={false}
       ingestInProgress={false}
-      isDraft={false}
     />
   )
 }
@@ -68,7 +65,6 @@ export const TabularFiles: Story = {
       userHasDownloadPermission
       isDeaccessioned={false}
       ingestInProgress={false}
-      isDraft={false}
     />
   )
 }
@@ -82,7 +78,6 @@ export const Restricted: Story = {
       userHasDownloadPermission={false}
       isDeaccessioned={false}
       ingestInProgress={false}
-      isDraft={false}
     />
   )
 }
@@ -96,7 +91,6 @@ export const RestrictedWithAccessRequestAllowed: Story = {
       userHasDownloadPermission={false}
       isDeaccessioned={false}
       ingestInProgress={false}
-      isDraft={false}
     />
   )
 }
@@ -110,7 +104,6 @@ export const RestrictedWithAccessRequestPending: Story = {
       userHasDownloadPermission={false}
       isDeaccessioned={false}
       ingestInProgress={false}
-      isDraft={false}
     />
   )
 }
@@ -124,7 +117,6 @@ export const RestrictedWithAccessGranted: Story = {
       userHasDownloadPermission
       isDeaccessioned={false}
       ingestInProgress={false}
-      isDraft={false}
     />
   )
 }
@@ -138,7 +130,6 @@ export const WithEmbargo: Story = {
       userHasDownloadPermission
       isDeaccessioned={false}
       ingestInProgress={false}
-      isDraft={false}
     />
   )
 }
@@ -152,7 +143,6 @@ export const WithEmbargoAndRestricted: Story = {
       userHasDownloadPermission={false}
       isDeaccessioned={false}
       ingestInProgress={false}
-      isDraft={false}
     />
   )
 }
@@ -166,7 +156,6 @@ export const WithEmbargoAndRestrictedWithAccessGranted: Story = {
       userHasDownloadPermission
       isDeaccessioned={false}
       ingestInProgress={false}
-      isDraft={false}
     />
   )
 }
@@ -181,7 +170,6 @@ export const WithExploreAndQueryOptionsTools: Story = {
         userHasDownloadPermission
         isDeaccessioned={false}
         ingestInProgress={false}
-        isDraft={false}
       />
     </ExternalToolsProvider>
   )

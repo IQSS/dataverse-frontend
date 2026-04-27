@@ -1,11 +1,12 @@
 import {
   DatasetVersionSummaryInfo,
   DatasetVersionSummaryStringValues,
+  DatasetVersionSummarySubset,
   Deaccessioned
 } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 export class DatasetVersionsSummariesMother {
-  static create(): DatasetVersionSummaryInfo[] {
+  static create(): DatasetVersionSummarySubset {
     const versionSummaryInfo: DatasetVersionSummaryInfo[] = [
       {
         id: 11,
@@ -103,10 +104,13 @@ export class DatasetVersionsSummariesMother {
         publishedOn: '2025-03-11'
       }
     ]
-    return versionSummaryInfo
+    return {
+      summaries: versionSummaryInfo,
+      totalCount: versionSummaryInfo.length
+    }
   }
 
-  static createDeaccessioned(): DatasetVersionSummaryInfo[] {
+  static createDeaccessioned(): DatasetVersionSummarySubset {
     const deaccessioned: Deaccessioned = {
       reason: 'deaccessioned test'
     }
@@ -160,6 +164,9 @@ export class DatasetVersionsSummariesMother {
         publishedOn: '2025-03-11'
       }
     ]
-    return versionSummaryInfo
+    return {
+      summaries: versionSummaryInfo,
+      totalCount: versionSummaryInfo.length
+    }
   }
 }
