@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Tabs } from '@iqss/dataverse-design-system'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { useDataset } from '../dataset/DatasetContext'
@@ -12,9 +13,13 @@ import styles from './UploadDatasetFiles.module.scss'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
+  datasetRepository: DatasetRepository
 }
 
-export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDatasetFilesProps) => {
+export const UploadDatasetFiles = ({
+  fileRepository: fileRepository,
+  datasetRepository
+}: UploadDatasetFilesProps) => {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading: isLoadingDataset } = useDataset()
   const { t } = useTranslation('uploadDatasetFiles')
@@ -44,6 +49,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
           <div className={styles.tab_container}>
             <FileUploader
               fileRepository={fileRepository}
+              datasetRepository={datasetRepository}
               datasetPersistentId={dataset.persistentId}
               storageType="S3"
               operationType={OperationType.ADD_FILES_TO_DATASET}
