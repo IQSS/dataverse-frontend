@@ -9,7 +9,6 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
 import { uploadFile } from '@/files/domain/useCases/uploadFile'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useFileUploaderContext } from '../context/FileUploaderContext'
 import { FileUploadState, FileUploadStatus } from '../context/fileUploaderReducer'
 import { OperationType } from '../FileUploader'
@@ -20,12 +19,8 @@ import { useUploadLimit } from './useUploadLimit'
 
 type FileUploadInputProps = {
   fileRepository: FileRepository
-  datasetRepository: DatasetRepository
   datasetPersistentId: string
-  fetchUploadLimits?: (
-    datasetId: string | number,
-    datasetRepository: DatasetRepository
-  ) => Promise<DatasetUploadLimits>
+  fetchUploadLimits?: (datasetId: string | number) => Promise<DatasetUploadLimits>
 }
 
 const limit = 6
@@ -35,7 +30,6 @@ const maxFilesPerUpload = 1000
 
 const FileUploadInput = ({
   fileRepository,
-  datasetRepository,
   datasetPersistentId,
   fetchUploadLimits
 }: FileUploadInputProps) => {
@@ -59,7 +53,7 @@ const FileUploadInput = ({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [isDragging, setIsDragging] = useState(false)
-  const { uploadLimit } = useUploadLimit(datasetPersistentId, datasetRepository, fetchUploadLimits)
+  const { uploadLimit } = useUploadLimit(datasetPersistentId, fetchUploadLimits)
 
   const totalFiles = Object.keys(fileUploaderState.files).length
 

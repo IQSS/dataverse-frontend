@@ -1,7 +1,6 @@
 import { File as FileModel } from '@/files/domain/models/File'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { FileUploaderProvider } from './context/FileUploaderContext'
 import { useGetFixityAlgorithm } from './useGetFixityAlgorithm'
@@ -12,29 +11,21 @@ import FileUploaderPanel from './FileUploaderPanel'
 export type FileUploaderProps =
   | {
       fileRepository: FileRepository
-      datasetRepository: DatasetRepository
       datasetPersistentId: string
       storageType: StorageType
       operationType: OperationType.REPLACE_FILE
       originalFile: FileModel
       referrer?: ReplaceFileReferrer
-      fetchUploadLimits?: (
-        datasetId: string | number,
-        datasetRepository: DatasetRepository
-      ) => Promise<DatasetUploadLimits>
+      fetchUploadLimits?: (datasetId: string | number) => Promise<DatasetUploadLimits>
     }
   | {
       fileRepository: FileRepository
-      datasetRepository: DatasetRepository
       datasetPersistentId: string
       storageType: StorageType
       operationType: OperationType.ADD_FILES_TO_DATASET
       originalFile?: never
       referrer?: never
-      fetchUploadLimits?: (
-        datasetId: string | number,
-        datasetRepository: DatasetRepository
-      ) => Promise<DatasetUploadLimits>
+      fetchUploadLimits?: (datasetId: string | number) => Promise<DatasetUploadLimits>
     }
 
 export type StorageType = 'S3'
@@ -49,7 +40,6 @@ export enum OperationType {
 
 export const FileUploader = ({
   fileRepository,
-  datasetRepository,
   datasetPersistentId,
   storageType,
   operationType,
@@ -81,7 +71,6 @@ export const FileUploader = ({
     <FileUploaderProvider initialConfig={initialConfig}>
       <FileUploaderPanel
         fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
         datasetPersistentId={datasetPersistentId}
         fetchUploadLimits={fetchUploadLimits}
         referrer={referrer}

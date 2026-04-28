@@ -4,7 +4,6 @@ import {
   OperationType,
   type FileUploaderProps
 } from '@/sections/shared/file-uploader/FileUploader'
-import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
 import {
   FileMetadataMother,
@@ -15,13 +14,8 @@ import { FileMockFailedRepository } from '@/stories/file/FileMockFailedUploadRep
 import FileUploadInputStyles from '../../../../../src/sections/shared/file-uploader/file-upload-input/FileUploadInput.module.scss'
 
 const fileMockRepository = new FileMockRepository()
-const datasetMockRepository = new DatasetMockRepository()
 
-type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never
-
-const TestFileUploader = (props: DistributiveOmit<FileUploaderProps, 'datasetRepository'>) => (
-  <FileUploader {...props} datasetRepository={datasetMockRepository} />
-)
+const TestFileUploader = (props: FileUploaderProps) => <FileUploader {...props} />
 
 const ORIGINAL_FILE_NAME = 'File Title'
 const ORIGINAL_FILE_TYPE = 'application/json'

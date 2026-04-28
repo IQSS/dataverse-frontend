@@ -3,7 +3,6 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { UploadDatasetFiles } from '../../sections/upload-dataset-files/UploadDatasetFiles'
 import { FileMockRepository } from '../file/FileMockRepository'
-import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { WithDataset } from '../dataset/WithDataset'
 
 const meta: Meta<typeof UploadDatasetFiles> = {
@@ -21,10 +20,5 @@ type Story = StoryObj<typeof UploadDatasetFiles>
 
 export const Default: Story = {
   decorators: [WithLayout, WithDataset],
-  render: () => (
-    <UploadDatasetFiles
-      fileRepository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-    />
-  )
+  render: () => <UploadDatasetFiles fileRepository={new FileMockRepository()} />
 }

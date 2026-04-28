@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { FileSize, FileSizeUnit } from '@/files/domain/models/FileMetadata'
 import { getDatasetUploadLimits } from '@/dataset/domain/useCases/getDatasetUploadLimits'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 
 interface UploadLimit {
@@ -11,24 +11,29 @@ interface UploadLimit {
   storageQuotaRemainingFormatted?: string
 }
 
+const defaultDatasetRepository = new DatasetJSDataverseRepository()
+
 export function useUploadLimit(
   datasetPersistentId: string,
-  datasetRepository: DatasetRepository,
-  fetchUploadLimits: (
-    datasetId: string | number,
-    datasetRepository: DatasetRepository
-  ) => Promise<DatasetUploadLimits> = getDatasetUploadLimits
+  fetchUploadLimits?: (datasetId: string | number) => Promise<DatasetUploadLimits>
 ) {
   const [uploadLimit, setUploadLimit] = useState<UploadLimit>({})
   const [isLoadingUploadLimits, setIsLoadingUploadLimits] = useState<boolean>(true)
   const [errorUploadLimits, setErrorUploadLimits] = useState<string | null>(null)
+
+  const fetcher = useMemo<(datasetId: string | number) => Promise<DatasetUploadLimits>>(
+    () =>
+      fetchUploadLimits ??
+      ((datasetId) => getDatasetUploadLimits(datasetId, defaultDatasetRepository)),
+    [fetchUploadLimits]
+  )
 
   const fetchUploadLimitsCallback = useCallback(async () => {
     setIsLoadingUploadLimits(true)
     setErrorUploadLimits(null)
 
     try {
-      const limits = await fetchUploadLimits(datasetPersistentId, datasetRepository)
+      const limits = await fetcher(datasetPersistentId)
 
       if (Object.keys(limits).length === 0) {
         setUploadLimit({})
@@ -59,7 +64,7 @@ export function useUploadLimit(
     } finally {
       setIsLoadingUploadLimits(false)
     }
-  }, [datasetPersistentId, datasetRepository, fetchUploadLimits])
+  }, [datasetPersistentId, fetcher])
 
   useEffect(() => {
     void fetchUploadLimitsCallback()
