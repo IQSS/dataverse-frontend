@@ -8,7 +8,7 @@ interface UseGetFileVersionsSummaries {
   fileVersionSummaries: FileVersionSummaryInfo[] | undefined
   error: string | null
   isLoading: boolean
-  fetchSummaries: (paginationInfo?: FileVersionPaginationInfo) => Promise<void>
+  fetchSummaries: (paginationInfo?: FileVersionPaginationInfo) => Promise<number | undefined>
 }
 
 interface Props {
@@ -37,12 +37,14 @@ export const useGetFileVersionsSummaries = ({
           paginationInfo
         )
         setSummaries(versionSummaries.summaries)
+        return versionSummaries.totalCount
       } catch (err) {
         const errorMessage =
           err instanceof Error && err.message
             ? err.message
             : 'Something went wrong getting the information from the file versions summaries. Try again later.'
         setError(errorMessage)
+        return undefined
       } finally {
         setIsLoading(false)
       }

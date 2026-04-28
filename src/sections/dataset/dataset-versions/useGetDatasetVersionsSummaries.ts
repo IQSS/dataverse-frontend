@@ -8,7 +8,7 @@ interface UseGetDatasetVersionsSummaries {
   datasetVersionSummaries: DatasetVersionSummaryInfo[] | undefined
   error: string | null
   isLoading: boolean
-  fetchSummaries: (paginationInfo?: DatasetVersionPaginationInfo) => Promise<void>
+  fetchSummaries: (paginationInfo?: DatasetVersionPaginationInfo) => Promise<number | undefined>
 }
 
 interface Props {
@@ -38,12 +38,14 @@ export const useGetDatasetVersionsSummaries = ({
           paginationInfo
         )
         setSummaries(versionSummaries.summaries)
+        return versionSummaries.totalCount
       } catch (err) {
         const errorMessage =
           err instanceof Error && err.message
             ? err.message
             : 'Something went wrong getting the information from the dataset versions summaries. Try again later.'
         setError(errorMessage)
+        return undefined
       } finally {
         setIsLoading(false)
       }

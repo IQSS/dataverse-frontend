@@ -172,9 +172,8 @@ export function Dataset({
                     datasetId={dataset.persistentId}
                     currentVersionNumber={currentVersionNumber}
                     canUpdateDataset={canUpdateDataset}
-                    isInView={activeTab === 'versions'}
+                    isInView
                     key={dataset.internalVersionNumber}
-                    isCurrentVersionDeaccessioned={isCurrentVersionDeaccessioned}
                   />
                 </div>
               </Tabs.Tab>

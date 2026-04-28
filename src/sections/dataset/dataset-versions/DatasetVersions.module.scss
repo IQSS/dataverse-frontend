@@ -34,6 +34,13 @@
   }
 }
 
+.dataset-versions-table-loading {
+  tbody {
+    opacity: 0.55;
+    transition: opacity 120ms ease-in-out;
+  }
+}
+
 .visually-hidden {
   position: absolute;
   clip: rect(1px, 1px, 1px, 1px);

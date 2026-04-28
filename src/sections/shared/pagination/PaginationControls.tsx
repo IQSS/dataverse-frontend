@@ -7,16 +7,19 @@ import { useEffect, useState } from 'react'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
 import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
+import { FileVersionPaginationInfo } from '@/files/domain/models/FileVersionPaginationInfo'
+
+type SupportedPaginationInfo =
+  | DatasetPaginationInfo
+  | FilePaginationInfo
+  | NotificationsPaginationInfo
+  | DatasetVersionPaginationInfo
+  | FileVersionPaginationInfo
 
 interface PaginationProps {
-  onPaginationInfoChange: (
-    paginationInfo: PaginationInfo<
-      DatasetPaginationInfo | FilePaginationInfo | NotificationsPaginationInfo
-    >
-  ) => void
-  initialPaginationInfo: PaginationInfo<
-    DatasetPaginationInfo | FilePaginationInfo | NotificationsPaginationInfo
-  >
+  onPaginationInfoChange: (paginationInfo: PaginationInfo<SupportedPaginationInfo>) => void
+  initialPaginationInfo: PaginationInfo<SupportedPaginationInfo>
   showPageSizeSelector?: boolean
 }
 const MINIMUM_NUMBER_OF_PAGES_TO_DISPLAY_PAGINATION = 2
@@ -25,9 +28,8 @@ export function PaginationControls({
   initialPaginationInfo,
   showPageSizeSelector = true
 }: PaginationProps) {
-  const [paginationInfo, setPaginationInfo] = useState<
-    DatasetPaginationInfo | FilePaginationInfo | NotificationsPaginationInfo
-  >(initialPaginationInfo)
+  const [paginationInfo, setPaginationInfo] =
+    useState<SupportedPaginationInfo>(initialPaginationInfo)
   const goToPage = (newPage: number) => {
     setPaginationInfo(paginationInfo.goToPage(newPage))
   }
