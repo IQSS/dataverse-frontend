@@ -10,7 +10,6 @@ import {
 } from '../../../../../../../../dataset/domain/models/DatasetMother'
 import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { WithRepositories } from '@tests/component/WithRepositories'
 
 const file = FilePreviewMother.createDefault()
@@ -26,7 +25,7 @@ describe('FileOptionsMenu', () => {
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
 
     return (
-      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+      <WithRepositories datasetRepository={datasetRepository}>
         <DatasetProvider
           repository={datasetRepository}
           searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>

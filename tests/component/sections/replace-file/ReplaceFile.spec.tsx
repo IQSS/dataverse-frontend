@@ -7,12 +7,14 @@ import {
 } from '@tests/component/files/domain/models/FileMetadataMother'
 import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 import { FileMockRepository } from '../../../../src/stories/file/FileMockRepository'
+import { DatasetMockRepository } from '../../../../src/stories/dataset/DatasetMockRepository'
 import { WithRepositories } from '@tests/component/WithRepositories'
 
 const fileMockRepository = new FileMockRepository()
+const datasetMockRepository = new DatasetMockRepository()
 
 const withProviders = (component: ReactNode) => (
-  <WithRepositories>
+  <WithRepositories datasetRepository={datasetMockRepository}>
     <LoadingProvider>{component}</LoadingProvider>
   </WithRepositories>
 )
