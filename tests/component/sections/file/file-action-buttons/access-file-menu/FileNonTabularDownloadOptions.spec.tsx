@@ -35,7 +35,7 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.customMount(
       <FileNonTabularDownloadOptions
         fileId={defaultProps.fileId}
-        hasGuestbook={false}
+        requiresTermsOrGuestbook={false}
         onOpenGuestbookModal={cy.stub()}
         type={unknownType}
         downloadUrlOriginal={downloadUrls.original}
@@ -53,7 +53,7 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.customMount(
       <FileNonTabularDownloadOptions
         fileId={defaultProps.fileId}
-        hasGuestbook={false}
+        requiresTermsOrGuestbook={false}
         onOpenGuestbookModal={cy.stub()}
         type={textType}
         downloadUrlOriginal={downloadUrls.original}
@@ -71,7 +71,7 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.customMount(
       <FileNonTabularDownloadOptions
         fileId={defaultProps.fileId}
-        hasGuestbook={false}
+        requiresTermsOrGuestbook={false}
         onOpenGuestbookModal={cy.stub()}
         type={textType}
         downloadUrlOriginal={downloadUrls.original}
@@ -87,7 +87,7 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.customMount(
       <FileNonTabularDownloadOptions
         fileId={defaultProps.fileId}
-        hasGuestbook={false}
+        requiresTermsOrGuestbook={false}
         onOpenGuestbookModal={cy.stub()}
         type={textType}
         downloadUrlOriginal={downloadUrls.original}
@@ -105,7 +105,7 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.customMount(
       <FileNonTabularDownloadOptions
         fileId={defaultProps.fileId}
-        hasGuestbook
+        requiresTermsOrGuestbook
         onOpenGuestbookModal={onOpenGuestbookModal}
         type={textType}
         downloadUrlOriginal={downloadUrls.original}
@@ -128,7 +128,7 @@ describe('FileNonTabularDownloadOptions', () => {
       withAccessRepository(
         <FileNonTabularDownloadOptions
           fileId={defaultProps.fileId}
-          hasGuestbook={false}
+          requiresTermsOrGuestbook={false}
           onOpenGuestbookModal={cy.stub()}
           type={textType}
           downloadUrlOriginal={downloadUrls.original}

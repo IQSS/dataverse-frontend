@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { MouseEvent, useState } from 'react'
 import { toast } from 'react-toastify'
-import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
+import { DatasetPublishingStatus, defaultLicense } from '@/dataset/domain/models/Dataset'
 import { FileDownloadMode } from '../../../../../../files/domain/models/FileMetadata'
 import { useDataset } from '../../../../DatasetContext'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
-import { DownloadWithGuestbookModal } from '../file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import { DownloadWithTermsAndGuestbookModal } from '../file-actions-cell/file-action-buttons/file-options-menu/DownloadWithTermsAndGuestbookModal'
 import {
   downloadFromSignedUrl,
   EMPTY_GUESTBOOK_RESPONSE,
@@ -31,7 +31,8 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const { t } = useTranslation('files')
   const { dataset } = useDataset()
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
-  const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
+  const [showDownloadWithTermsAndGuestbookModal, setShowDownloadWithTermsAndGuestbookModal] =
+    useState(false)
   const [selectedDownloadFormat, setSelectedDownloadFormat] = useState<FileDownloadMode>(
     FileDownloadMode.ORIGINAL
   )
@@ -43,10 +44,15 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const fileIdsForGuestbookSubmission = allFilesSelected
     ? undefined
     : getFileIdsFromSelection(fileSelection)
-  const hasGuestbook =
-    dataset?.guestbookId !== undefined &&
-    dataset?.version.publishingStatus !== DatasetPublishingStatus.DRAFT &&
-    !dataset?.permissions.canUpdateDataset
+  const isDraftDataset = dataset?.version.publishingStatus === DatasetPublishingStatus.DRAFT
+  const canEdit = dataset?.permissions.canUpdateDataset ?? false
+  const bypassTermsGuard = isDraftDataset || canEdit
+  const hasGuestbook = dataset?.guestbookId !== undefined
+  const hasNonDefaultLicense =
+    dataset?.license !== undefined && dataset.license.name !== defaultLicense.name
+  const hasCustomTerms = dataset?.termsOfUse?.customTerms !== undefined
+  const shouldShowModal =
+    !bypassTermsGuard && (hasGuestbook || hasCustomTerms || hasNonDefaultLicense)
 
   const onClick = (event: MouseEvent<HTMLElement>, downloadMode: FileDownloadMode) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {
@@ -55,10 +61,10 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
       return
     }
 
-    if (hasGuestbook) {
+    if (shouldShowModal) {
       event.preventDefault()
       setSelectedDownloadFormat(downloadMode)
-      setShowDownloadWithGuestbookModal(true)
+      setShowDownloadWithTermsAndGuestbookModal(true)
       return
     }
 
@@ -101,15 +107,17 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
         show={showNoFilesSelectedModal}
         handleClose={() => setShowNoFilesSelectedModal(false)}
       />
-      {hasGuestbook && showDownloadWithGuestbookModal && (
-        <DownloadWithGuestbookModal
+      {shouldShowModal && showDownloadWithTermsAndGuestbookModal && (
+        <DownloadWithTermsAndGuestbookModal
           fileIds={fileIdsForGuestbookSubmission}
           datasetId={allFilesSelected ? dataset.id : undefined}
           guestbookId={dataset.guestbookId}
           format={selectedDownloadFormat}
           datasetPersistentId={dataset.persistentId}
-          show={showDownloadWithGuestbookModal}
-          handleClose={() => setShowDownloadWithGuestbookModal(false)}
+          datasetLicense={dataset.license}
+          datasetCustomTerms={dataset.termsOfUse?.customTerms}
+          show={showDownloadWithTermsAndGuestbookModal}
+          handleClose={() => setShowDownloadWithTermsAndGuestbookModal(false)}
         />
       )}
     </>
@@ -140,27 +148,15 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   // no tabular file content
   return (
     <>
-      {hasGuestbook ? (
-        <Button
-          id="download-files"
-          variant="secondary"
-          icon={<Download className={styles.icon} />}
-          aria-label={t('actions.downloadFiles.title')}
-          withSpacing
-          onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}>
-          {dropdownButtonTitle}
-        </Button>
-      ) : (
-        <Button
-          id="download-files"
-          variant="secondary"
-          icon={<Download className={styles.icon} />}
-          aria-label={t('actions.downloadFiles.title')}
-          withSpacing
-          onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}>
-          {dropdownButtonTitle}
-        </Button>
-      )}
+      <Button
+        id="download-files"
+        variant="secondary"
+        icon={<Download className={styles.icon} />}
+        aria-label={t('actions.downloadFiles.title')}
+        withSpacing
+        onClick={(event) => onClick(event, FileDownloadMode.ORIGINAL)}>
+        {dropdownButtonTitle}
+      </Button>
 
       {downloadFeedbackModals}
     </>

@@ -6,7 +6,7 @@ import { CustomTerms as CustomTermsModel, DatasetLicense } from '@/dataset/domai
 import { Validator as validator } from '@/shared/helpers/Validator'
 import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
-import styles from './DownloadWithGuestbookModal.module.scss'
+import styles from './DownloadWithTermsAndGuestbookModal.module.scss'
 
 interface GuestbookCollectFormProps {
   license?: DatasetLicense
@@ -54,7 +54,7 @@ export function GuestbookCollectForm({
     [guestbook?.customQuestions]
   )
   const customTermsHref = datasetPersistentId
-    ? `/spa${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${encodeURIComponent(
+    ? `/modern${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${encodeURIComponent(
         datasetPersistentId
       )}&${QueryParamKey.TAB}=terms&termsTab=guestbook`
     : undefined
@@ -176,65 +176,69 @@ export function GuestbookCollectForm({
       </Form.Group>
       <CustomTerms customTerms={customTerms} />
 
-      {accountFieldKeys.map((accountFieldKey) => {
-        const fieldLabel = tGuestbooks(`create.fields.dataCollected.options.${accountFieldKey}`)
-        const isRequired = isAccountFieldRequired(accountFieldKey)
-        const isIdentityField = accountFieldKey === 'name' || accountFieldKey === 'email'
-        const shouldDisableInput = shouldLockIdentityFields && isIdentityField
-        const invalid = hasAttemptedAccept && accountFieldErrors[accountFieldKey] !== null
+      {guestbook && (
+        <>
+          {accountFieldKeys.map((accountFieldKey) => {
+            const fieldLabel = tGuestbooks(`create.fields.dataCollected.options.${accountFieldKey}`)
+            const isRequired = isAccountFieldRequired(accountFieldKey)
+            const isIdentityField = accountFieldKey === 'name' || accountFieldKey === 'email'
+            const shouldDisableInput = shouldLockIdentityFields && isIdentityField
+            const invalid = hasAttemptedAccept && accountFieldErrors[accountFieldKey] !== null
 
-        return (
-          <Form.Group
-            key={accountFieldKey}
-            as={Row}
-            className={styles['form-row']}
-            controlId={`guestbook-${accountFieldKey}`}>
-            <Col sm={3}>
-              <Form.Group.Label className={styles['row-label']}>
-                {fieldLabel}
-                {isRequired && <span className={styles.required}>*</span>}
-              </Form.Group.Label>
-            </Col>
-            <Col sm={9}>
-              <Form.Group.Input
-                type="text"
-                value={formValues[accountFieldKey] ?? ''}
-                onChange={(event) =>
-                  onFieldChange(accountFieldKey, (event.target as HTMLInputElement).value)
-                }
-                isInvalid={invalid}
-                disabled={shouldDisableInput}
-                aria-required={isRequired}
-              />
-              <Form.Group.Feedback type="invalid">
-                {invalid ? accountFieldErrors[accountFieldKey] : undefined}
-              </Form.Group.Feedback>
-            </Col>
-          </Form.Group>
-        )
-      })}
+            return (
+              <Form.Group
+                key={accountFieldKey}
+                as={Row}
+                className={styles['form-row']}
+                controlId={`guestbook-${accountFieldKey}`}>
+                <Col sm={3}>
+                  <Form.Group.Label className={styles['row-label']}>
+                    {fieldLabel}
+                    {isRequired && <span className={styles.required}>*</span>}
+                  </Form.Group.Label>
+                </Col>
+                <Col sm={9}>
+                  <Form.Group.Input
+                    type="text"
+                    value={formValues[accountFieldKey] ?? ''}
+                    onChange={(event) =>
+                      onFieldChange(accountFieldKey, (event.target as HTMLInputElement).value)
+                    }
+                    isInvalid={invalid}
+                    disabled={shouldDisableInput}
+                    aria-required={isRequired}
+                  />
+                  <Form.Group.Feedback type="invalid">
+                    {invalid ? accountFieldErrors[accountFieldKey] : undefined}
+                  </Form.Group.Feedback>
+                </Col>
+              </Form.Group>
+            )
+          })}
 
-      {customQuestions.length > 0 && (
-        <Form.Group as={Row} className={styles['form-row']}>
-          <Col sm={3}>
-            <Form.Group.Label className={styles['row-label']}>
-              {tFiles('actions.optionsMenu.guestbookCollectModal.additionalQuestions')}
-            </Form.Group.Label>
-          </Col>
-          <Col sm={9} className={styles['question-list']}>
-            {customQuestions.map((question, index) => (
-              <div
-                key={`${question.question}-${question.displayOrder}-${index}`}
-                className={styles['question-item']}>
-                <label className={styles['question-label']}>
-                  {question.question}
-                  {question.required && <span className={styles.required}>*</span>}
-                </label>
-                {renderCustomQuestionField(question, index)}
-              </div>
-            ))}
-          </Col>
-        </Form.Group>
+          {customQuestions.length > 0 && (
+            <Form.Group as={Row} className={styles['form-row']}>
+              <Col sm={3}>
+                <Form.Group.Label className={styles['row-label']}>
+                  {tFiles('actions.optionsMenu.guestbookCollectModal.additionalQuestions')}
+                </Form.Group.Label>
+              </Col>
+              <Col sm={9} className={styles['question-list']}>
+                {customQuestions.map((question, index) => (
+                  <div
+                    key={`${question.question}-${question.displayOrder}-${index}`}
+                    className={styles['question-item']}>
+                    <label className={styles['question-label']}>
+                      {question.question}
+                      {question.required && <span className={styles.required}>*</span>}
+                    </label>
+                    {renderCustomQuestionField(question, index)}
+                  </div>
+                ))}
+              </Col>
+            </Form.Group>
+          )}
+        </>
       )}
     </Form>
   )

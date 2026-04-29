@@ -8,12 +8,13 @@ import {
   DatasetLicense,
   DatasetPermissions,
   DatasetPublishingStatus,
-  DatasetVersion
+  DatasetVersion,
+  defaultLicense
 } from '../../../../dataset/domain/models/Dataset'
 import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/FileMetadata'
 import { DatasetExploreOptions } from '../DatasetToolsOptions'
 import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
-import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import { DownloadWithTermsAndGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithTermsAndGuestbookModal'
 import {
   downloadFromSignedUrl,
   EMPTY_GUESTBOOK_RESPONSE,
@@ -47,14 +48,18 @@ export function AccessDatasetMenu({
   customTerms
 }: AccessDatasetMenuProps) {
   const { t } = useTranslation('dataset')
-  const [showDownloadWithGuestbookModal, setShowDownloadWithGuestbookModal] = useState(false)
+  const [showDownloadWithTermsAndGuestbookModal, setShowDownloadWithTermsAndGuestbookModal] =
+    useState(false)
   const [selectedDownloadFormat, setSelectedDownloadFormat] = useState<FileDownloadMode>(
     FileDownloadMode.ORIGINAL
   )
-  const hasGuestbook =
-    guestbookId !== undefined &&
-    version.publishingStatus !== DatasetPublishingStatus.DRAFT &&
-    !permissions.canUpdateDataset
+  const isDraft = version.publishingStatus === DatasetPublishingStatus.DRAFT
+  const bypassTermsGuard = isDraft || permissions.canUpdateDataset
+  const hasGuestbook = guestbookId !== undefined
+  const hasNonDefaultLicense = license !== undefined && license.name !== defaultLicense.name
+  const hasCustomTerms = customTerms !== undefined
+  const shouldShowModal =
+    !bypassTermsGuard && (hasGuestbook || hasCustomTerms || hasNonDefaultLicense)
 
   const flesToDownloadSizeIsZero =
     fileDownloadSizes.map(({ value }) => value).reduce((acc, curr) => acc + curr, 0) === 0
@@ -79,7 +84,7 @@ export function AccessDatasetMenu({
   ) => {
     event.preventDefault()
     setSelectedDownloadFormat(mode)
-    setShowDownloadWithGuestbookModal(true)
+    setShowDownloadWithTermsAndGuestbookModal(true)
   }
 
   return (
@@ -96,15 +101,15 @@ export function AccessDatasetMenu({
           datasetNumericId={datasetNumericId}
           hasOneTabularFileAtLeast={hasOneTabularFileAtLeast}
           fileDownloadSizes={fileDownloadSizes}
-          hasGuestbook={hasGuestbook}
+          requiresTermsOrGuestbook={shouldShowModal}
           onDownloadWithGuestbook={handleDownloadWithGuestbook}
         />
         <DatasetExploreOptions persistentId={persistentId} />
       </DropdownButton>
-      {hasGuestbook && showDownloadWithGuestbookModal && (
-        <DownloadWithGuestbookModal
-          show={showDownloadWithGuestbookModal}
-          handleClose={() => setShowDownloadWithGuestbookModal(false)}
+      {shouldShowModal && showDownloadWithTermsAndGuestbookModal && (
+        <DownloadWithTermsAndGuestbookModal
+          show={showDownloadWithTermsAndGuestbookModal}
+          handleClose={() => setShowDownloadWithTermsAndGuestbookModal(false)}
           datasetId={datasetNumericId} // TODO: we should allow this to pass persistentId when we have the backend support for guestbook submission with persistentId
           datasetPersistentId={persistentId}
           guestbookId={guestbookId}
@@ -121,7 +126,7 @@ interface DatasetDownloadOptionsProps {
   datasetNumericId?: number | string
   hasOneTabularFileAtLeast: boolean
   fileDownloadSizes: FileDownloadSize[]
-  hasGuestbook: boolean
+  requiresTermsOrGuestbook: boolean
   onDownloadWithGuestbook: (event: React.MouseEvent<HTMLElement>, mode: FileDownloadMode) => void
 }
 
@@ -129,7 +134,7 @@ const DatasetDownloadOptions = ({
   datasetNumericId,
   hasOneTabularFileAtLeast,
   fileDownloadSizes,
-  hasGuestbook,
+  requiresTermsOrGuestbook,
   onDownloadWithGuestbook
 }: DatasetDownloadOptionsProps) => {
   const { t } = useTranslation('dataset')
@@ -140,7 +145,7 @@ const DatasetDownloadOptions = ({
     event: React.MouseEvent<HTMLElement>,
     mode: FileDownloadMode
   ): void => {
-    if (hasGuestbook) {
+    if (requiresTermsOrGuestbook) {
       onDownloadWithGuestbook(event, mode)
       return
     }

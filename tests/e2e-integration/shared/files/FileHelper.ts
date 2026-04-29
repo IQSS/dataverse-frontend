@@ -1,3 +1,4 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { DataverseApiHelper } from '../DataverseApiHelper'
 import { FileLabel, FileLabelType } from '../../../../src/files/domain/models/FileMetadata'
 import { faker } from '@faker-js/faker'
@@ -98,7 +99,7 @@ export class FileHelper extends DataverseApiHelper {
 
   static download(id: number): Promise<void> {
     return new Cypress.Promise((resolve) => {
-      cy.visit(`/spa/files?id=${id}`)
+      cy.visit(`${FRONTEND_BASE_PATH}/files?id=${id}`)
       cy.get(`#action-button-access-file-${id}`).click()
       cy.findByTestId(`download-original-file`).click()
       cy.then(() => resolve())

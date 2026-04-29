@@ -1,5 +1,6 @@
 {
   "copyright": "Copyright © {{year}}, {{copyrightHolder}}",
   "privacyPolicy": "Política de privacidad",
-  "poweredBy": "Desarrollado por"
+  "poweredBy": "Desarrollado por",
+  "spaVersion": "versión del frontend: {{version}}"
 }

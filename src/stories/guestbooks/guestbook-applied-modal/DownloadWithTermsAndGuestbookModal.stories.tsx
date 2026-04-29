@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { DownloadWithGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithGuestbookModal'
+import { DownloadWithTermsAndGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithTermsAndGuestbookModal'
 import { WithI18next } from '@/stories/WithI18next'
 import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
 import { GuestbookMockRepository } from '@/stories/shared-mock-repositories/guestbook/GuestbookMockRepository'
@@ -25,9 +25,9 @@ const accessRepository: AccessRepository = {
 
 const guestbookRepository = new GuestbookMockRepository()
 
-const meta: Meta<typeof DownloadWithGuestbookModal> = {
-  title: 'Sections/Guestbooks/DownloadWithGuestbookModal',
-  component: DownloadWithGuestbookModal,
+const meta: Meta<typeof DownloadWithTermsAndGuestbookModal> = {
+  title: 'Sections/Guestbooks/DownloadWithTermsAndGuestbookModal',
+  component: DownloadWithTermsAndGuestbookModal,
   decorators: [
     WithI18next,
     WithLoggedInUser,
@@ -49,7 +49,7 @@ const meta: Meta<typeof DownloadWithGuestbookModal> = {
 }
 
 export default meta
-type Story = StoryObj<typeof DownloadWithGuestbookModal>
+type Story = StoryObj<typeof DownloadWithTermsAndGuestbookModal>
 
 export const SingleFile: Story = {
   args: {
@@ -66,5 +66,31 @@ export const MultipleFiles: Story = {
     handleClose: () => {},
     fileIds: [123, 124],
     guestbookId: 3
+  }
+}
+
+export const CustomTermsOnly: Story = {
+  args: {
+    show: true,
+    handleClose: () => {},
+    fileId: 123,
+    datasetCustomTerms: {
+      termsOfUse: 'These are custom terms of use for this dataset.',
+      confidentialityDeclaration: 'All data must be kept confidential.',
+      restrictions: 'Do not redistribute without permission.'
+    }
+  }
+}
+
+export const NonDefaultLicenseOnly: Story = {
+  args: {
+    show: true,
+    handleClose: () => {},
+    fileId: 123,
+    datasetLicense: {
+      name: 'CC BY 4.0',
+      uri: 'https://creativecommons.org/licenses/by/4.0',
+      iconUri: 'https://licensebuttons.net/l/by/4.0/88x31.png'
+    }
   }
 }

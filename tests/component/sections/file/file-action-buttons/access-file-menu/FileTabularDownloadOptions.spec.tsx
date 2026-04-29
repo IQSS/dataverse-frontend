@@ -18,7 +18,7 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={tabularType}
         downloadUrls={downloadUrls}
-        hasGuestbook={false}
+        requiresTermsOrGuestbook={false}
         onOpenGuestbookModal={cy.stub()}
         ingestInProgress={false}
         isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
@@ -40,7 +40,7 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={unknownType}
         downloadUrls={downloadUrls}
-        hasGuestbook={false}
+        requiresTermsOrGuestbook={false}
         onOpenGuestbookModal={cy.stub()}
         ingestInProgress={false}
         isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
@@ -60,7 +60,7 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={tabularType}
         downloadUrls={downloadUrls}
-        hasGuestbook={false}
+        requiresTermsOrGuestbook={false}
         onOpenGuestbookModal={cy.stub()}
         ingestInProgress
         isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
@@ -82,7 +82,7 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={tabularType}
         downloadUrls={downloadUrls}
-        hasGuestbook={false}
+        requiresTermsOrGuestbook={false}
         onOpenGuestbookModal={cy.stub()}
         ingestInProgress={false}
         isLockedFromFileDownload
@@ -105,7 +105,7 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={rDataType}
         downloadUrls={downloadUrls}
-        hasGuestbook={false}
+        requiresTermsOrGuestbook={false}
         onOpenGuestbookModal={cy.stub()}
         ingestInProgress={false}
         isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
@@ -129,7 +129,7 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={tabularType}
         downloadUrls={downloadUrls}
-        hasGuestbook
+        requiresTermsOrGuestbook
         onOpenGuestbookModal={onOpenGuestbookModal}
         ingestInProgress={false}
         isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
@@ -149,7 +149,7 @@ describe('FileTabularDownloadOptions', () => {
         fileId={defaultProps.fileId}
         type={tabularType}
         downloadUrls={downloadUrls}
-        hasGuestbook
+        requiresTermsOrGuestbook
         onOpenGuestbookModal={onOpenGuestbookModal}
         ingestInProgress={false}
         isLockedFromFileDownload={defaultProps.isLockedFromFileDownload}
