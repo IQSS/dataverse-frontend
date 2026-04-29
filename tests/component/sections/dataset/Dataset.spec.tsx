@@ -453,6 +453,7 @@ describe('Dataset', () => {
     termsTab.click()
 
     cy.findByText('Dataset Terms').should('exist')
+    cy.findByTestId('dataset-guestbook-section').should('exist')
   })
 
   it('renders the read-only terms tab title when user cannot edit dataset', () => {

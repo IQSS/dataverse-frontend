@@ -100,6 +100,46 @@ describe('DatasetToolOptions', () => {
       })
   })
 
+  it('calls getDatasetExternalToolResolved with preview=false and locale', () => {
+    testExternalToolsRepository.getDatasetExternalToolResolved = cy
+      .stub()
+      .as('getDatasetExternalToolResolved')
+      .resolves(
+        DatasetExternalToolResolvedMother.create({
+          toolUrlResolved: 'https://example.com/external-tool'
+        })
+      )
+
+    const fakeWindow = {
+      closed: false,
+      document: { title: '' },
+      location: { href: '' },
+      close: cy.stub().as('windowCloseStub')
+    }
+
+    cy.window().then((win) => {
+      cy.stub(win, 'open').as('windowOpen').returns(fakeWindow)
+    })
+
+    cy.customMount(
+      <ExternalToolsProvider externalToolsRepository={testExternalToolsRepository}>
+        <DatasetExploreOptions persistentId="some-persistent-id" />
+      </ExternalToolsProvider>
+    )
+
+    cy.findByText('Dataset Explore Tool').click()
+
+    cy.get('@getDatasetExternalToolResolved')
+      .should('have.been.calledOnce')
+      .its('firstCall.args')
+      .then((args) => {
+        expect(args[0]).to.equal('some-persistent-id')
+        expect(args[1]).to.equal(testDatasetExploreTool.id)
+        expect(args[2]).to.have.property('preview', false)
+        expect(args[2]).to.have.property('locale').that.is.a('string').and.is.not.empty
+      })
+  })
+
   it('shows an error toast if fetching the tool URL fails', () => {
     testExternalToolsRepository.getDatasetExternalToolResolved = cy
       .stub()
@@ -132,6 +172,37 @@ describe('DatasetToolOptions', () => {
         )
         cy.get('@windowCloseStub').should('have.been.calledOnce')
       })
+  })
+
+  it('does not close popup when it is already closed during error handling', () => {
+    const fakeWindow = {
+      closed: false,
+      document: { title: '' },
+      location: { href: '' },
+      close: cy.stub().as('windowCloseStub')
+    }
+
+    testExternalToolsRepository.getDatasetExternalToolResolved = cy.stub().callsFake(() => {
+      fakeWindow.closed = true
+      return Promise.reject(new Error('Failed to fetch tool URL'))
+    })
+
+    cy.window().then((win) => {
+      cy.stub(win, 'open').as('windowOpen').returns(fakeWindow)
+    })
+
+    cy.customMount(
+      <ExternalToolsProvider externalToolsRepository={testExternalToolsRepository}>
+        <DatasetExploreOptions persistentId="some-persistent-id" />
+      </ExternalToolsProvider>
+    )
+
+    cy.findByText('Dataset Explore Tool').click()
+
+    cy.findByText(/There was a problem opening the external tool. Please try again./).should(
+      'exist'
+    )
+    cy.get('@windowCloseStub').should('not.have.been.called')
   })
 
   it('does not open multiple windows if the tool option is clicked rapidly', () => {

@@ -8,6 +8,20 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
+
+### Changed
+
+### Fixed
+
+### Removed
+
+---
+
+## [v0.3.0] -- 2026-04-24
+
+### Added
+
 - Added the value entered by the user in the error messages for metadata field validation errors in EMAIL and URL type fields. For example, instead of showing “Point of Contact E-mail is not a valid email address.“, we now show “Point of Contact E-mail foo is not a valid email address.”
 - Contact Owner button in File Page.
 - Share button in File Page.
@@ -18,7 +32,10 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added Notifications tab in Account Page
 - Added runtime configuration options for homepage branding and support link.
 - Added an environment variable to docker-compose-dev.yml to hide the OIDC client used in the SPA from the JSF frontend: DATAVERSE_AUTH_OIDC_HIDDEN_JSF: 1
-- Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
+- Added a message note to the login page
+- Download with terms of use and guestbook.
+- Show terms modal before download when dataset has custom terms, a non-default license (not CC0 1.0), or a guestbook. Draft datasets and dataset editors bypass the modal.
+- Layout: added a configurable homepage banner for announcements and important messages. (#787)
 
 ### Changed
 
@@ -31,6 +48,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added disclaimer text and custom popup text to Publish Dataset modal for better communication of the implications of publishing a dataset. The text can be configured through the runtime configuration.
 - Dataset page Terms tab title now depends on permissions: users with dataset update permission see `Terms and Guestbook`, and read-only users see `Terms`.
 - Avoided prop-drilling for collection repository, so used context to share epository instances.
+- Added frontend version to the footer of the application, which is retrieved from the `version` field in `package.json` at build time.
 
 ### Fixed
 
@@ -63,6 +81,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Upgrade Keycloak to 26.3.2; updated SPI and test realm JSON.
 - Truncate long collection and dataset descriptions with expandable content. (#789)
 - UI polish: Files Table always shows action buttons. (#800)
+- Removed hard-coded references to /spa path and SPA name, changed to /modern (#945)
 
 ### Fixed
 

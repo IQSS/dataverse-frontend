@@ -10,12 +10,13 @@ import {
   TermsOfAccessMother,
   TermsOfUseMother
 } from '@tests/component/dataset/domain/models/TermsOfUseMother'
-import {
-  Dataset,
-  DatasetPublishingStatus,
-  DatasetVersionNumber
-} from '@/dataset/domain/models/Dataset'
+import { Dataset } from '@/dataset/domain/models/Dataset'
 import { useLocation } from 'react-router-dom'
+
+const LocationDisplay = () => {
+  const location = useLocation()
+  return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>
+}
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
@@ -36,12 +37,7 @@ const mockDataset = DatasetMother.create({
 })
 
 describe('EditTermsOfAccess', () => {
-  const LocationDisplay = () => {
-    const location = useLocation()
-    return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>
-  }
-
-  const withProviders = (component: ReactNode, dataset?: Dataset) => {
+  const withProviders = (component: ReactNode, dataset: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
 
@@ -49,7 +45,19 @@ describe('EditTermsOfAccess', () => {
       <DatasetProvider
         searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
         repository={datasetRepository}>
-        <LocationDisplay />
+        {component}
+      </DatasetProvider>
+    )
+  }
+
+  const withLoadingDataset = (component: ReactNode) => {
+    datasetRepository.getByPersistentId = cy.stub().returns(new Promise(() => {}))
+    datasetRepository.getByPrivateUrlToken = cy.stub().returns(new Promise(() => {}))
+
+    return (
+      <DatasetProvider
+        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+        repository={datasetRepository}>
         {component}
       </DatasetProvider>
     )
@@ -155,6 +163,17 @@ describe('EditTermsOfAccess', () => {
 
       cy.wrap(datasetRepository.updateTermsOfAccess).should('have.been.calledOnce')
     })
+
+    it('shows "Saving" while terms are being submitted and disables the button', () => {
+      datasetRepository.updateTermsOfAccess = cy.stub().returns(new Promise(() => {}))
+
+      cy.customMount(
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
+      )
+
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+      cy.findByRole('button', { name: 'Saving' }).should('exist').and('be.disabled')
+    })
   })
 
   it('handles empty initial terms of access', () => {
@@ -166,53 +185,24 @@ describe('EditTermsOfAccess', () => {
     cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
   })
 
-  describe('Cancel', () => {
-    it('does nothing when dataset is not loaded', () => {
-      cy.customMount(withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />))
-
-      cy.findByTestId('location-display').should('have.text', '/')
-      cy.findByRole('button', { name: 'Cancel' }).click()
-      cy.findByTestId('location-display').should('have.text', '/')
-    })
-
-    it('navigates to the dataset page with DRAFT version param when publishingStatus is draft', () => {
-      const dataset = DatasetMother.create({
-        persistentId: 'pid-123',
-        version: DatasetVersionMother.createDraft()
-      })
-
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, dataset)
-      )
-
-      cy.findByRole('button', { name: 'Cancel' }).click()
-
-      cy.findByTestId('location-display').should(
-        'have.text',
-        '/datasets?persistentId=pid-123&version=DRAFT'
-      )
-    })
-
-    it('navigates to the dataset page with numeric version param when publishingStatus is not draft', () => {
-      const dataset = DatasetMother.create({
-        persistentId: 'pid-999',
-        version: DatasetVersionMother.create({
-          publishingStatus: DatasetPublishingStatus.RELEASED,
-          number: new DatasetVersionNumber(2, 7)
+  it('treats undefined fileAccessRequest as enabled by default', () => {
+    const datasetWithUndefinedRequest = DatasetMother.create({
+      termsOfUse: TermsOfUseMother.withoutCustomTerms({
+        termsOfAccess: TermsOfAccessMother.create({
+          fileAccessRequest: undefined as unknown as boolean,
+          termsOfAccessForRestrictedFiles: undefined
         })
       })
-
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, dataset)
-      )
-
-      cy.findByRole('button', { name: 'Cancel' }).click()
-
-      cy.findByTestId('location-display').should(
-        'have.text',
-        '/datasets?persistentId=pid-999&version=2.7'
-      )
     })
+
+    cy.customMount(
+      withProviders(
+        <EditTermsOfAccess datasetRepository={datasetRepository} />,
+        datasetWithUndefinedRequest
+      )
+    )
+
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
   })
 
   it('reports dirty state changes via onFormStateChange', () => {
@@ -253,6 +243,70 @@ describe('EditTermsOfAccess', () => {
     cy.wrap(null).then(() => resolveUpdate())
 
     cy.findByText('The terms for this dataset have been updated.').should('exist')
+  })
+
+  describe('Cancel navigation', () => {
+    it('returns early and does not navigate when dataset is not loaded yet', () => {
+      cy.customMount(
+        withLoadingDataset(
+          <>
+            <EditTermsOfAccess datasetRepository={datasetRepository} />
+            <LocationDisplay />
+          </>
+        ),
+        ['/edit-terms']
+      )
+
+      cy.findByTestId('location-display').should('contain', '/edit-terms')
+      cy.findByRole('button', { name: 'Cancel' }).click()
+      cy.findByTestId('location-display').should('contain', '/edit-terms')
+    })
+
+    it('navigates to dataset page with DRAFT version query param when dataset is draft', () => {
+      const draftDataset = DatasetMother.create({
+        persistentId: 'doi:10.5072/FK2/DRAFTPID',
+        version: DatasetVersionMother.createDraft()
+      })
+
+      cy.customMount(
+        withProviders(
+          <>
+            <EditTermsOfAccess datasetRepository={datasetRepository} />
+            <LocationDisplay />
+          </>,
+          draftDataset
+        )
+      )
+
+      cy.findByRole('button', { name: 'Cancel' }).click()
+      cy.findByTestId('location-display').should(
+        'have.text',
+        '/datasets?persistentId=doi%3A10.5072%2FFK2%2FDRAFTPID&version=DRAFT'
+      )
+    })
+
+    it('navigates to dataset page with numeric version query param when dataset is released', () => {
+      const releasedDataset = DatasetMother.create({
+        persistentId: 'doi:10.5072/FK2/RELEASEDPID',
+        version: DatasetVersionMother.createReleased()
+      })
+
+      cy.customMount(
+        withProviders(
+          <>
+            <EditTermsOfAccess datasetRepository={datasetRepository} />
+            <LocationDisplay />
+          </>,
+          releasedDataset
+        )
+      )
+
+      cy.findByRole('button', { name: 'Cancel' }).click()
+      cy.findByTestId('location-display').should(
+        'have.text',
+        '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0'
+      )
+    })
   })
 
   describe('Toast Notifications', () => {

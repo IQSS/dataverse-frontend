@@ -236,7 +236,7 @@ project files and shut down any running containers.
 
 Once the script has finished, you will be able to access Dataverse via:
 
-- Dataverse SPA Frontend: [http://localhost:8000/spa][dv_app_localhost_spa_url]
+- Dataverse MODERN Frontend: [http://localhost:8000/modern][dv_app_localhost_modern_url]
 - Dataverse JSF Application: [http://localhost:8000][dv_app_localhost_legacy_url]
 
 Note: The Dataverse configbaker takes some time to start the application, so the application will not be accessible until
@@ -802,7 +802,7 @@ describe('Create Dataset', () => {
   })
 
   it('navigates to the new dataset after submitting a valid form', () => {
-    cy.visit('/spa/datasets/root/create')
+    cy.visit(`${FRONTEND_BASE_PATH}/datasets/root/create`)
 
     cy.findByLabelText(/Title/i).type('Test Dataset Title')
     cy.findByLabelText(/Author Name/i).type('Test author name', { force: true })
@@ -885,7 +885,7 @@ it(
       }
     )
 
-    cy.visit('/spa/')
+    cy.visit(`${FRONTEND_BASE_PATH}/`)
 
     // Assertions that rely on your overridden config
     cy.findByText('English').should('exist')
@@ -1134,7 +1134,7 @@ path included will redirect to the frontend application.
 [dv_app_localhost_build_url]: http://localhost:5173
 [dv_app_localhost_storybook_url]: http://localhost:6006/
 [dv_app_localhost_designsystem_url]: http://localhost:6007/
-[dv_app_localhost_spa_url]: http://localhost:8000/spa
+[dv_app_localhost_modern_url]: http://localhost:8000/modern
 [dv_app_localhost_legacy_url]: http://localhost:8000/
 
 <!-- @gdcc/dataverse -->

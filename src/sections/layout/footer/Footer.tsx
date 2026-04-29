@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Container, Row, Col } from '@iqss/dataverse-design-system'
 import { requireAppConfig } from '@/config'
+import { spaVersion } from '@/version/spaVersion'
 import { DataverseInfoRepository } from '../../../info/domain/repositories/DataverseInfoRepository'
 import { useDataverseVersion } from './useDataverseVersion'
 import dataverseProjectLogo from '@/assets/dataverse-project-logo.svg'
@@ -41,20 +42,26 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
           </Col>
           <Col sm={4}>
             <div className={styles['powered-by-container']}>
-              <span className={styles['powered-by-text']}>{t('poweredBy')}</span>
-              <a
-                href="https://dataverse.org/"
-                title="The Dataverse Project"
-                target="_blank"
-                rel="noreferrer">
-                <img
-                  src={dataverseProjectLogo}
-                  width="118"
-                  height="40"
-                  alt="The Dataverse Project logo"
-                />
-              </a>
-              <span className={styles.version}>{dataverseVersion}</span>
+              <div className={styles['branding-row']}>
+                <span className={styles['powered-by-text']}>{t('poweredBy')}</span>
+                <a
+                  href="https://dataverse.org/"
+                  title="The Dataverse Project"
+                  target="_blank"
+                  rel="noreferrer">
+                  <img
+                    src={dataverseProjectLogo}
+                    width="118"
+                    height="40"
+                    alt="The Dataverse Project logo"
+                  />
+                </a>
+              </div>
+              <div className={styles['versions-row']}>
+                {dataverseVersion && <span className={styles.version}>{dataverseVersion}</span>}
+                {dataverseVersion && <span className={styles.separator}>|</span>}
+                <span className={styles.version}>{t('spaVersion', { version: spaVersion })}</span>
+              </div>
             </div>
           </Col>
         </Row>
