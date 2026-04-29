@@ -53,18 +53,18 @@ export function FileVersions({
 
       void fetchSummaries(paginationInfoToFetch).then((totalCount) => {
         if (typeof totalCount === 'number') {
-          setPaginationInfo(paginationInfoToFetch.withTotal(totalCount))
+          setPaginationInfo((currentPaginationInfo) => currentPaginationInfo.withTotal(totalCount))
         }
       })
     }
   }, [isInView, fetchSummaries, paginationInfo.page, paginationInfo.pageSize])
 
-  if (!fileVersionSummaries) {
-    return <FileVersionsLoadingSkeleton />
-  }
-
   if (error) {
     return <Alert variant="danger">{t('fileVersion.error')}</Alert>
+  }
+
+  if (!fileVersionSummaries) {
+    return <FileVersionsLoadingSkeleton />
   }
 
   const datasetVersionDisplayMap: Record<string, string> = {
@@ -144,15 +144,7 @@ export function FileVersions({
       </div>
       <PaginationControls
         initialPaginationInfo={paginationInfo}
-        onPaginationInfoChange={(newPaginationInfo) =>
-          setPaginationInfo(
-            new FileVersionPaginationInfo(
-              newPaginationInfo.page,
-              newPaginationInfo.pageSize,
-              newPaginationInfo.totalItems
-            )
-          )
-        }
+        onPaginationInfoChange={setPaginationInfo}
       />
     </>
   )

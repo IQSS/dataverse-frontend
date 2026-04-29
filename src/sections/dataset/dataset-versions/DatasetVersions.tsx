@@ -89,7 +89,7 @@ export function DatasetVersions({
 
       void fetchSummaries(paginationInfoToFetch).then((totalCount) => {
         if (typeof totalCount === 'number') {
-          setPaginationInfo(paginationInfoToDisplay.withTotal(totalCount))
+          setPaginationInfo((currentPaginationInfo) => currentPaginationInfo.withTotal(totalCount))
         }
       })
     }
@@ -99,12 +99,12 @@ export function DatasetVersions({
     setSelectedVersions([])
   }, [paginationInfo.page, paginationInfo.pageSize])
 
-  if (!datasetVersionSummaries) {
-    return <DatasetVersionsLoadingSkeleton />
-  }
-
   if (error) {
     return <Alert variant="danger">Error loading dataset versions</Alert>
+  }
+
+  if (!datasetVersionSummaries) {
+    return <DatasetVersionsLoadingSkeleton />
   }
 
   return (
@@ -217,15 +217,7 @@ export function DatasetVersions({
       </div>
       <PaginationControls
         initialPaginationInfo={paginationInfo}
-        onPaginationInfoChange={(newPaginationInfo) =>
-          setPaginationInfo(
-            new DatasetVersionPaginationInfo(
-              newPaginationInfo.page,
-              newPaginationInfo.pageSize,
-              newPaginationInfo.totalItems
-            )
-          )
-        }
+        onPaginationInfoChange={setPaginationInfo}
       />
     </>
   )

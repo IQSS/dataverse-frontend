@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { FileVersionSummaryInfo } from '@/files/domain/models/FileVersionSummaryInfo'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { getFileVersionSummaries } from '@/files/domain/useCases/getFileVersionSummaries'
@@ -25,9 +25,12 @@ export const useGetFileVersionsSummaries = ({
   const [summaries, setSummaries] = useState<FileVersionSummaryInfo[]>()
   const [isLoading, setIsLoading] = useState<boolean>(autoFetch)
   const [error, setError] = useState<string | null>(null)
+  const latestRequestId = useRef(0)
 
   const fetchSummaries = useCallback(
     async (paginationInfo?: FileVersionPaginationInfo) => {
+      const requestId = latestRequestId.current + 1
+      latestRequestId.current = requestId
       setIsLoading(true)
       setError(null)
       try {
@@ -36,9 +39,15 @@ export const useGetFileVersionsSummaries = ({
           fileId,
           paginationInfo
         )
+        if (requestId !== latestRequestId.current) {
+          return undefined
+        }
         setSummaries(versionSummaries.summaries)
         return versionSummaries.totalCount
       } catch (err) {
+        if (requestId !== latestRequestId.current) {
+          return undefined
+        }
         const errorMessage =
           err instanceof Error && err.message
             ? err.message
@@ -46,7 +55,9 @@ export const useGetFileVersionsSummaries = ({
         setError(errorMessage)
         return undefined
       } finally {
-        setIsLoading(false)
+        if (requestId === latestRequestId.current) {
+          setIsLoading(false)
+        }
       }
     },
     [fileRepository, fileId]

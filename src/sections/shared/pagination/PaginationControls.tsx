@@ -4,32 +4,19 @@ import { PageSizeSelector } from './PageSizeSelector'
 import styles from './Pagination.module.scss'
 import { PaginationInfo } from '../../../shared/pagination/domain/models/PaginationInfo'
 import { useEffect, useState } from 'react'
-import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
-import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
-import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
-import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
-import { FileVersionPaginationInfo } from '@/files/domain/models/FileVersionPaginationInfo'
 
-type SupportedPaginationInfo =
-  | DatasetPaginationInfo
-  | FilePaginationInfo
-  | NotificationsPaginationInfo
-  | DatasetVersionPaginationInfo
-  | FileVersionPaginationInfo
-
-interface PaginationProps {
-  onPaginationInfoChange: (paginationInfo: PaginationInfo<SupportedPaginationInfo>) => void
-  initialPaginationInfo: PaginationInfo<SupportedPaginationInfo>
+interface PaginationProps<T extends PaginationInfo<T>> {
+  onPaginationInfoChange: (paginationInfo: T) => void
+  initialPaginationInfo: T
   showPageSizeSelector?: boolean
 }
 const MINIMUM_NUMBER_OF_PAGES_TO_DISPLAY_PAGINATION = 2
-export function PaginationControls({
+export function PaginationControls<T extends PaginationInfo<T>>({
   onPaginationInfoChange,
   initialPaginationInfo,
   showPageSizeSelector = true
-}: PaginationProps) {
-  const [paginationInfo, setPaginationInfo] =
-    useState<SupportedPaginationInfo>(initialPaginationInfo)
+}: PaginationProps<T>) {
+  const [paginationInfo, setPaginationInfo] = useState<T>(initialPaginationInfo)
   const goToPage = (newPage: number) => {
     setPaginationInfo(paginationInfo.goToPage(newPage))
   }
