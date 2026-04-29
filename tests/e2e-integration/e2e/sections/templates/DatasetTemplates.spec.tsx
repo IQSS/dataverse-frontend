@@ -1,8 +1,9 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper } from '@tests/e2e-integration/shared/datasets/DatasetHelper'
 
-const CREATE_TEMPLATE_PAGE_URL = '/spa/root/templates/create'
-const TEMPLATES_PAGE_URL = '/spa/root/templates'
+const CREATE_TEMPLATE_PAGE_URL = `${FRONTEND_BASE_PATH}/root/templates/create`
+const TEMPLATES_PAGE_URL = `${FRONTEND_BASE_PATH}/root/templates`
 
 describe('Dataset Templates', () => {
   let templateName: string
