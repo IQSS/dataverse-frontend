@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   Alert,
@@ -23,7 +23,7 @@ import {
   Trash
 } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
-import { RouteWithParams } from '@/sections/Route.enum'
+import { RouteWithParams, TemplateEditMode } from '@/sections/Route.enum'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { DatasetTemplatesSkeleton } from './DatasetTemplatesSkeleton'
 import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
@@ -56,8 +56,16 @@ export const DatasetTemplates = ({
   collectionId
 }: DatasetTemplatesProps) => {
   const { t } = useTranslation('datasetTemplates')
-  const { t: tDataset } = useTranslation('dataset')
   const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    const state = location.state as { fromEditTemplate?: boolean } | null
+    if (state?.fromEditTemplate) {
+      toast.success(t('alerts.editSuccess'))
+      navigate(location.pathname, { replace: true, state: null })
+    }
+  }, [location, navigate, t])
   const [sortBy, setSortBy] = useState<'name' | 'created' | 'usage' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [templateToDelete, setTemplateToDelete] = useState<Template | undefined>(undefined)
@@ -179,11 +187,9 @@ export const DatasetTemplates = ({
   }
 
   const handleEditTemplateAction = (template: Template, action: 'metadata' | 'terms') => {
-    if (action === 'metadata') {
-      navigate(RouteWithParams.TEMPLATES_EDIT_METADATA(collectionId, template.id))
-      return
-    }
-    navigate(RouteWithParams.TEMPLATES_EDIT_TERMS(collectionId, template.id))
+    const editMode =
+      action === 'metadata' ? TemplateEditMode.METADATA : TemplateEditMode.LICENSE
+    navigate(RouteWithParams.TEMPLATES_EDIT(collectionId, template.id, editMode))
   }
 
   const handleOpenPreviewModal = (template: Template) => {
@@ -396,12 +402,11 @@ export const DatasetTemplates = ({
                               onSelect={(eventKey) =>
                                 handleEditTemplateAction(template, eventKey as 'metadata' | 'terms')
                               }>
-                              {/* waiting for Edit Template api support */}
-                              <DropdownButtonItem eventKey="metadata" as="button" disabled>
-                                {tDataset('datasetActionButtons.editDataset.metadata')}
+                              <DropdownButtonItem eventKey="metadata" as="button">
+                                {t('editTemplate.actions.metadata')}
                               </DropdownButtonItem>
-                              <DropdownButtonItem eventKey="terms" as="button" disabled>
-                                {tDataset('datasetActionButtons.editDataset.terms')}
+                              <DropdownButtonItem eventKey="terms" as="button">
+                                {t('editTemplate.actions.terms')}
                               </DropdownButtonItem>
                             </DropdownButton>
                             <Tooltip

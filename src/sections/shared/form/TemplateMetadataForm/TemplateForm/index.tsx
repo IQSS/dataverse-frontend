@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -20,14 +20,16 @@ import {
 } from '../../DatasetMetadataForm/MetadataFieldsHelper'
 import { MetadataBlockFormFields } from '../../DatasetMetadataForm/MetadataForm/MetadataBlockFormFields'
 import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
-import { RouteWithParams } from '@/sections/Route.enum'
+import { RouteWithParams, TemplateEditMode } from '@/sections/Route.enum'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
+import { Template } from '@/templates/domain/models/Template'
 import { useGetTemplatesByCollectionId } from '@/templates/domain/hooks/useGetTemplatesByCollectionId'
 import { SubmissionStatus, useSubmitTemplate } from '../useSubmitTemplate'
 import { TemplateInfo, TemplateInstructionInfo } from '@/templates/domain/models/TemplateInfo'
+import { UpdateTemplateMetadataInfo } from '@/templates/domain/models/UpdateTemplateMetadataInfo'
 import styles from './index.module.scss'
 
-interface TemplateFormProps {
+type CommonTemplateFormProps = {
   collectionId: string
   templateRepository: TemplateRepository
   metadataBlocksInfo: MetadataBlockInfo[]
@@ -35,21 +37,52 @@ interface TemplateFormProps {
   metadataFieldsForMapping: Record<string, Record<string, MetadataField>>
 }
 
-export const TemplateForm = ({
-  collectionId,
-  templateRepository,
-  metadataBlocksInfo,
-  formDefaultValues,
-  metadataFieldsForMapping
-}: TemplateFormProps) => {
+type TemplateFormProps =
+  | (CommonTemplateFormProps & {
+      mode: 'create'
+      template?: never
+    })
+  | (CommonTemplateFormProps & {
+      mode: 'edit'
+      template: Template
+    })
+
+export const TemplateForm = (props: TemplateFormProps) => {
+  const {
+    mode,
+    collectionId,
+    templateRepository,
+    metadataBlocksInfo,
+    formDefaultValues,
+    metadataFieldsForMapping
+  } = props
+  const template = mode === 'edit' ? props.template : undefined
+
   const { t } = useTranslation('datasetTemplates')
+  const { t: tShared } = useTranslation('shared')
   const navigate = useNavigate()
   const [validationError, setValidationError] = useState<string | null>(null)
-  const [templateName, setTemplateName] = useState('')
-  const [templateInstructions, setTemplateInstructions] = useState<
-    Record<string, TemplateInstructionInfo>
-  >({})
-  const { submissionStatus, submitError, submitTemplate } = useSubmitTemplate(collectionId)
+  const [templateName, setTemplateName] = useState(template?.name ?? '')
+
+  const initialInstructionsMap = useMemo<Record<string, TemplateInstructionInfo>>(() => {
+    if (!template?.instructions) return {}
+    return template.instructions.reduce<Record<string, TemplateInstructionInfo>>(
+      (acc, instruction) => {
+        acc[instruction.instructionField] = instruction
+        return acc
+      },
+      {}
+    )
+  }, [template])
+
+  const [templateInstructions, setTemplateInstructions] =
+    useState<Record<string, TemplateInstructionInfo>>(initialInstructionsMap)
+
+  const submitOptions =
+    mode === 'edit'
+      ? ({ mode: 'edit', templateRepository, templateId: template!.id } as const)
+      : ({ mode: 'create', templateRepository, collectionId } as const)
+  const { submissionStatus, submitError, submitTemplate } = useSubmitTemplate(submitOptions)
 
   const { fetchDatasetTemplates } = useGetTemplatesByCollectionId({
     templateRepository,
@@ -75,7 +108,7 @@ export const TemplateForm = ({
     })
   }
 
-  const handleSaveAndAddTerms = () => {
+  const handleSubmit = () => {
     if (!templateName.trim()) {
       setValidationError(t('createTemplate.errors.nameRequired'))
       return
@@ -87,7 +120,7 @@ export const TemplateForm = ({
       const formValuesBackToDots = MetadataFieldsHelper.replaceSlashKeysWithDot(formValues)
       const datasetDto = MetadataFieldsHelper.formatFormValuesToDatasetDTO(
         formValuesBackToDots,
-        'create'
+        mode === 'edit' ? 'edit' : 'create'
       )
       const templateFields = datasetDto.metadataBlocks.flatMap((metadataBlock) =>
         MetadataFieldsHelper.buildTemplateFieldsFromMetadataValues(
@@ -97,6 +130,21 @@ export const TemplateForm = ({
       )
 
       const instructions = Object.values(templateInstructions)
+
+      if (mode === 'edit') {
+        const updatePayload: UpdateTemplateMetadataInfo = {
+          name: templateName.trim(),
+          fields: templateFields,
+          instructions
+        }
+        const didSubmit = await submitTemplate(updatePayload)
+        if (!didSubmit) return
+
+        navigate(RouteWithParams.COLLECTION_TEMPLATES(collectionId), {
+          state: { fromEditTemplate: true }
+        })
+        return
+      }
 
       const templatePayload: TemplateInfo = {
         name: templateName.trim(),
@@ -110,21 +158,27 @@ export const TemplateForm = ({
       const updatedTemplates = await fetchDatasetTemplates()
       const normalizedName = templateName.trim().toLowerCase()
       const createdTemplate = updatedTemplates.find(
-        (template) => template.name.trim().toLowerCase() === normalizedName
+        (currentTemplate) => currentTemplate.name.trim().toLowerCase() === normalizedName
       )
 
       if (!createdTemplate) return
 
-      navigate(RouteWithParams.TEMPLATES_EDIT_TERMS(collectionId, createdTemplate.id), {
-        state: { fromCreateTemplate: true }
-      })
+      navigate(
+        RouteWithParams.TEMPLATES_EDIT(collectionId, createdTemplate.id, TemplateEditMode.LICENSE),
+        {
+          state: { fromCreateTemplate: true }
+        }
+      )
     })()
   }
+
+  const submitButtonLabel =
+    mode === 'edit' ? tShared('saveChanges') : t('createTemplate.saveAddTerms')
 
   return (
     <FormProvider {...form}>
       <form noValidate={true}>
-        {submissionStatus === SubmissionStatus.SubmitComplete && (
+        {submissionStatus === SubmissionStatus.SubmitComplete && mode === 'create' && (
           <Alert variant="success" dismissible={false}>
             {t('createTemplate.alerts.success')}
           </Alert>
@@ -181,16 +235,15 @@ export const TemplateForm = ({
         <div className={styles['form-actions']}>
           <Button
             type="button"
-            onClick={handleSaveAndAddTerms}
+            onClick={handleSubmit}
             disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-            {t('createTemplate.saveAddTerms')}
+            {submitButtonLabel}
           </Button>
           <Button
             type="button"
             variant="secondary"
-            withSpacing
             onClick={() => navigate(RouteWithParams.COLLECTION_TEMPLATES(collectionId))}>
-            {t('createTemplate.cancel')}
+            {tShared('cancel')}
           </Button>
         </div>
       </form>

@@ -1,4 +1,3 @@
-import { createTemplate } from '@iqss/dataverse-client-javascript'
 import { useLocation } from 'react-router-dom'
 import { TemplateMetadataForm } from '@/sections/shared/form/TemplateMetadataForm/TemplateMetadataForm'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
@@ -25,6 +24,7 @@ describe('TemplateMetadataForm', () => {
     cy.customMount(
       <>
         <TemplateMetadataForm
+          mode="create"
           collectionId="root"
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           templateRepository={templateRepository}
@@ -125,7 +125,7 @@ describe('TemplateMetadataForm', () => {
   })
 
   it('should not enforce required validation when creating a template', () => {
-    const executeStub = cy.stub(createTemplate, 'execute').resolves()
+    templateRepository.createTemplate = cy.stub().resolves()
 
     mountTemplateMetadataForm()
 
@@ -137,8 +137,6 @@ describe('TemplateMetadataForm', () => {
     cy.findByText('Point of Contact E-mail is required').should('not.exist')
     cy.findByText('Description Text is required').should('not.exist')
     cy.findByText('Subject is required').should('not.exist')
-
-    executeStub.restore()
   })
 
   it('should show correct errors when filling inputs with invalid formats', () => {
@@ -172,7 +170,8 @@ describe('TemplateMetadataForm', () => {
   })
 
   it('should save custom instructions for template fields', () => {
-    const executeStub = cy.stub(createTemplate, 'execute').resolves()
+    const createStub = cy.stub().resolves()
+    templateRepository.createTemplate = createStub
 
     mountTemplateMetadataForm()
 
@@ -190,7 +189,7 @@ describe('TemplateMetadataForm', () => {
     cy.findByTestId('custom-instructions-toggle-authorName').should('not.exist')
 
     cy.findByRole('button', { name: 'Save + Add Terms' }).click()
-    cy.wrap(executeStub).should('have.been.calledOnce')
+    cy.wrap(createStub).should('have.been.calledOnce')
   })
 
   it('should discard custom instructions when canceling edit', () => {
@@ -219,7 +218,8 @@ describe('TemplateMetadataForm', () => {
   })
 
   it('removes cleared custom instructions from the submit payload', () => {
-    const executeStub = cy.stub(createTemplate, 'execute').resolves()
+    const createStub = cy.stub().resolves()
+    templateRepository.createTemplate = createStub
 
     mountTemplateMetadataForm()
 
@@ -235,15 +235,18 @@ describe('TemplateMetadataForm', () => {
 
     cy.findByRole('button', { name: 'Save + Add Terms' }).click()
 
-    cy.wrap(executeStub).should('have.been.calledOnce')
-    cy.wrap(executeStub).then((stub) => {
-      const payload = stub.getCall(0).args[0] as { instructions?: unknown[] }
+    cy.wrap(createStub).should('have.been.calledOnce')
+    cy.wrap(createStub).then((stub) => {
+      const payload = (stub as unknown as sinon.SinonStub).getCall(0).args[0] as {
+        instructions?: unknown[]
+      }
       expect(payload.instructions).to.equal(undefined)
     })
   })
 
   it('removes only the cleared instruction when multiple exist', () => {
-    const executeStub = cy.stub(createTemplate, 'execute').resolves()
+    const createStub = cy.stub().resolves()
+    templateRepository.createTemplate = createStub
 
     mountTemplateMetadataForm()
 
@@ -263,9 +266,11 @@ describe('TemplateMetadataForm', () => {
 
     cy.findByRole('button', { name: 'Save + Add Terms' }).click()
 
-    cy.wrap(executeStub).should('have.been.calledOnce')
-    cy.wrap(executeStub).then((stub) => {
-      const payload = stub.getCall(0).args[0] as { instructions?: unknown[] }
+    cy.wrap(createStub).should('have.been.calledOnce')
+    cy.wrap(createStub).then((stub) => {
+      const payload = (stub as unknown as sinon.SinonStub).getCall(0).args[0] as {
+        instructions?: { instructionField: string }[]
+      }
       expect(payload.instructions).to.have.length(1)
       expect(payload.instructions?.[0]).to.have.property('instructionField', 'author')
     })
