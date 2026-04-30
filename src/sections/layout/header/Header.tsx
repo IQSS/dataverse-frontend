@@ -12,6 +12,8 @@ import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/Au
 import { LanguageSwitcher } from './LanguageSwitcher'
 import styles from './Header.module.scss'
 
+const BASENAME_URL = import.meta.env.BASE_URL ?? ''
+
 interface HeaderProps {
   notficationRepository: NotificationRepository
 }
@@ -32,7 +34,7 @@ export function Header({ notficationRepository }: HeaderProps) {
     <Navbar
       brand={{
         title: t('brandTitle'),
-        href: `/spa${Route.HOME}`,
+        href: `${BASENAME_URL}${Route.HOME}`,
         logoImgSrc: dataverse_logo
       }}
       className={styles.navbar}>

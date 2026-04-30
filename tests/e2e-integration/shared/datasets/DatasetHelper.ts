@@ -262,6 +262,22 @@ export class DatasetHelper extends DataverseApiHelper {
     }>(`/datasets/${id}/lock/${reason}`, 'POST')
   }
 
+  static async setCustomTermsOfUse(
+    datasetId: string | number,
+    customTerms: {
+      termsOfUse: string
+      confidentialityDeclaration?: string
+      specialPermissions?: string
+      restrictions?: string
+      citationRequirements?: string
+      depositorRequirements?: string
+      conditions?: string
+      disclaimer?: string
+    }
+  ): Promise<void> {
+    await this.request(`/datasets/${datasetId}/license`, 'PUT', { customTerms })
+  }
+
   static async createTemplate(collectionAlias?: string): Promise<{ id: number }> {
     if (collectionAlias == undefined) {
       collectionAlias = ':root'

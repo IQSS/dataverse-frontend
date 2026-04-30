@@ -4,7 +4,5 @@ import { DataverseInfoRepository } from '../repositories/DataverseInfoRepository
 export function getTermsOfUse(
   dataverseInfoRepository: DataverseInfoRepository
 ): Promise<TermsOfUse> {
-  return dataverseInfoRepository.getTermsOfUse().catch((error) => {
-    throw error
-  })
+  return dataverseInfoRepository.getTermsOfUse()
 }

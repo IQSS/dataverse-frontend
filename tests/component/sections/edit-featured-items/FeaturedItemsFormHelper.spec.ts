@@ -79,18 +79,18 @@ const testFormFields: FeaturedItemField[] = [
   {
     type: FeaturedItemType.COLLECTION,
     dvObjectIdentifier: 'sample-collection-id',
-    dvObjectUrl: 'http://localhost:8000/spa/collections/sample-collection-id',
+    dvObjectUrl: 'http://localhost:8000/modern/collections/sample-collection-id',
     itemId: 4
   },
   {
     type: FeaturedItemType.DATASET,
     dvObjectIdentifier: 'doi:10.5072/FK2/ABC123',
-    dvObjectUrl: 'http://localhost:8000/spa/datasets?persistentId=doi:10.5072/FK2/ABC123'
+    dvObjectUrl: 'http://localhost:8000/modern/datasets?persistentId=doi:10.5072/FK2/ABC123'
   },
   {
     type: FeaturedItemType.FILE,
     dvObjectIdentifier: '44',
-    dvObjectUrl: 'http://localhost:8000/spa/files?id=44&datasetVersion=2.0',
+    dvObjectUrl: 'http://localhost:8000/modern/files?id=44&datasetVersion=2.0',
     itemId: 6
   }
 ]
@@ -249,9 +249,9 @@ describe('FeaturedItemsFormHelper', () => {
       })
     })
 
-    it('should return collection type and identifier from SPA URL', () => {
+    it('should return collection type and identifier from modern frontend URL', () => {
       const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue(
-        'http://localhost:8000/spa/collections/dataverse-admin-collection'
+        'http://localhost:8000/modern/collections/dataverse-admin-collection'
       )
 
       expect(result).to.deep.equal({
@@ -271,9 +271,9 @@ describe('FeaturedItemsFormHelper', () => {
       })
     })
 
-    it('should return dataset type and identifier from SPA URL', () => {
+    it('should return dataset type and identifier from modern frontend URL', () => {
       const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue(
-        'http://localhost:8000/spa/datasets?persistentId=doi:10.5072/FK2/HIS9DO'
+        'http://localhost:8000/modern/datasets?persistentId=doi:10.5072/FK2/HIS9DO'
       )
 
       expect(result).to.deep.equal({
@@ -293,9 +293,9 @@ describe('FeaturedItemsFormHelper', () => {
       })
     })
 
-    it('should return file type and identifier from SPA URL', () => {
+    it('should return file type and identifier from modern frontend URL', () => {
       const result = FeaturedItemsFormHelper.extractDvObjectTypeAndIdentiferFromUrlValue(
-        'http://localhost:8000/spa/files?id=4&datasetVersion=2.0'
+        'http://localhost:8000/modern/files?id=4&datasetVersion=2.0'
       )
 
       expect(result).to.deep.equal({
@@ -371,7 +371,7 @@ describe('FeaturedItemsFormHelper', () => {
     })
   })
 
-  describe('transformDvObjectTypeAndIdentifierToSpaURL', () => {
+  describe('transformDvObjectTypeAndIdentifierToURL', () => {
     it('should return collection page URL when type is collection', () => {
       const identifier = 'sample-collection-id'
       const result = FeaturedItemsFormHelper.transformDvObjectTypeAndIdentifierToSpaURL(

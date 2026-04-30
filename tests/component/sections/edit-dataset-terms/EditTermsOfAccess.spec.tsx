@@ -55,6 +55,19 @@ describe('EditTermsOfAccess', () => {
     )
   }
 
+  const withLoadingDataset = (component: ReactNode) => {
+    datasetRepository.getByPersistentId = cy.stub().returns(new Promise(() => {}))
+    datasetRepository.getByPrivateUrlToken = cy.stub().returns(new Promise(() => {}))
+
+    return (
+      <DatasetProvider
+        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+        repository={datasetRepository}>
+        {component}
+      </DatasetProvider>
+    )
+  }
+
   describe('Request Access Section', () => {
     it('renders the request access checkbox', () => {
       cy.customMount(
@@ -154,6 +167,17 @@ describe('EditTermsOfAccess', () => {
       cy.findByRole('button', { name: 'Save Changes' }).click()
 
       cy.wrap(datasetRepository.updateTermsOfAccess).should('have.been.calledOnce')
+    })
+
+    it('shows "Saving" while terms are being submitted and disables the button', () => {
+      datasetRepository.updateTermsOfAccess = cy.stub().returns(new Promise(() => {}))
+
+      cy.customMount(
+        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
+      )
+
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+      cy.findByRole('button', { name: 'Saving' }).should('exist').and('be.disabled')
     })
   })
 

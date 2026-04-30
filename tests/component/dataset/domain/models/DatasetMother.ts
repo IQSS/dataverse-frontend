@@ -158,6 +158,12 @@ export class DatasetPermissionsMother {
     return this.create({ canDownloadFiles: true })
   }
 
+  static createWithFilesDownloadAllowedButNotUpdatePermissions(): DatasetPermissions {
+    return this.create({
+      canDownloadFiles: true,
+      canUpdateDataset: false
+    })
+  }
   static createWithFilesDownloadNotAllowed(): DatasetPermissions {
     return this.create({ canDownloadFiles: false })
   }
@@ -471,7 +477,8 @@ export class DatasetMother {
       dataset.nextMajorVersion,
       dataset.nextMinorVersion,
       dataset.requiresMajorVersionUpdate,
-      dataset.fileStore
+      dataset.fileStore,
+      dataset.guestbookId
     ).build()
   }
 
