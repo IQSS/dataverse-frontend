@@ -187,8 +187,7 @@ export const DatasetTemplates = ({
   }
 
   const handleEditTemplateAction = (template: Template, action: 'metadata' | 'terms') => {
-    const editMode =
-      action === 'metadata' ? TemplateEditMode.METADATA : TemplateEditMode.LICENSE
+    const editMode = action === 'metadata' ? TemplateEditMode.METADATA : TemplateEditMode.LICENSE
     navigate(RouteWithParams.TEMPLATES_EDIT(collectionId, template.id, editMode))
   }
 

@@ -42,9 +42,12 @@ describe('EditTemplateTermsOfAccess', () => {
 
     cy.wrap(templateRepository.updateTemplateTermsOfAccess).should('have.been.calledOnce')
     cy.wrap(templateRepository.updateTemplateTermsOfAccess).then((stub) => {
-      const [templateId, payload] = (stub as unknown as sinon.SinonStub).getCall(0).args
-      expect(templateId).to.equal(9)
-      expect((payload as { fileAccessRequest: boolean }).fileAccessRequest).to.equal(true)
+      const args = (stub as unknown as sinon.SinonStub).getCall(0).args as [
+        number,
+        { fileAccessRequest: boolean }
+      ]
+      expect(args[0]).to.equal(9)
+      expect(args[1].fileAccessRequest).to.equal(true)
     })
     cy.wrap(onSuccess).should('have.been.calledOnce')
   })

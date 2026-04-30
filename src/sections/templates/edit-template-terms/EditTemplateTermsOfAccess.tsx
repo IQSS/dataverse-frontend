@@ -199,7 +199,12 @@ export function EditTemplateTermsOfAccess({
               {isLoading ? tShared('saving') : tShared('saveChanges')}
             </Button>
             {onCancel && (
-              <Button type="button" variant="secondary" onClick={onCancel} disabled={isLoading}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={onCancel}
+                disabled={isLoading}
+                data-testid="cancel-edit-template-terms-of-access-button">
                 {tShared('close')}
               </Button>
             )}

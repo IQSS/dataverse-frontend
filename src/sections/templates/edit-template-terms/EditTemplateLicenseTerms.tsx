@@ -271,7 +271,12 @@ export function EditTemplateLicenseTerms({
               {isLoading ? tShared('saving') : tShared('saveChanges')}
             </Button>
             {onCancel && (
-              <Button type="button" variant="secondary" onClick={onCancel} disabled={isLoading}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={onCancel}
+                disabled={isLoading}
+                data-testid="cancel-edit-template-license-terms-button">
                 {tShared('close')}
               </Button>
             )}

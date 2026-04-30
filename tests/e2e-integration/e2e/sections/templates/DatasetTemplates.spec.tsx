@@ -1,9 +1,10 @@
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper } from '@tests/e2e-integration/shared/datasets/DatasetHelper'
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 
-const CREATE_TEMPLATE_PAGE_URL = '/spa/root/templates/create'
-const TEMPLATES_PAGE_URL = '/spa/root/templates'
-const CREATE_DATASET_PAGE_URL = '/spa/datasets/root/create'
+const CREATE_TEMPLATE_PAGE_URL = `${FRONTEND_BASE_PATH}/root/templates/create`
+const TEMPLATES_PAGE_URL = `${FRONTEND_BASE_PATH}/root/templates`
+const CREATE_DATASET_PAGE_URL = `${FRONTEND_BASE_PATH}/datasets/root/create`
 describe('Dataset Templates', () => {
   let templateName: string
 
@@ -61,7 +62,7 @@ describe('Dataset Templates', () => {
     cy.findByRole('button', { name: 'Save + Add Terms' }).click()
     cy.findByText(/Success! Template has been created./i).should('exist')
 
-    cy.findByTestId('cancel-edit-template-terms-button').click()
+    cy.findByTestId('cancel-edit-template-license-terms-button').click()
     cy.url().should('include', TEMPLATES_PAGE_URL)
 
     cy.findByText(templateName)
@@ -107,7 +108,7 @@ describe('Dataset Templates', () => {
       })
 
     cy.findByRole('button', { name: 'Save + Add Terms' }).click()
-    cy.findByTestId('cancel-edit-template-terms-button').click()
+    cy.findByTestId('cancel-edit-template-license-terms-button').click()
     cy.url().should('include', TEMPLATES_PAGE_URL)
 
     cy.findByText(templateName)
@@ -155,7 +156,7 @@ describe('Dataset Templates', () => {
 
     cy.findByRole('button', { name: 'Save + Add Terms' }).click()
     cy.findByText(/Success! Template has been created./i).should('exist')
-    cy.findByTestId('cancel-edit-template-terms-button').click()
+    cy.findByTestId('cancel-edit-template-license-terms-button').click()
     cy.url().should('include', TEMPLATES_PAGE_URL)
 
     cy.findByText(templateName)
@@ -225,7 +226,7 @@ describe('Dataset Templates', () => {
 
     cy.findByRole('button', { name: 'Save + Add Terms' }).click()
     cy.findByText(/Success! Template has been created./i).should('exist')
-    cy.findByTestId('cancel-edit-template-terms-button').click()
+    cy.findByTestId('cancel-edit-template-license-terms-button').click()
 
     cy.findByText(templateName)
       .closest('tr')

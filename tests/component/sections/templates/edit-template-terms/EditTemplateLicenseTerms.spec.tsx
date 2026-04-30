@@ -69,9 +69,12 @@ describe('EditTemplateLicenseTerms', () => {
 
     cy.wrap(templateRepository.updateTemplateLicenseTerms).should('have.been.calledOnce')
     cy.wrap(templateRepository.updateTemplateLicenseTerms).then((stub) => {
-      const [templateId, payload] = (stub as unknown as sinon.SinonStub).getCall(0).args
-      expect(templateId).to.equal(5)
-      expect((payload as { name?: string }).name).to.match(/CC0 1\.0|CC BY 4\.0/)
+      const args = (stub as unknown as sinon.SinonStub).getCall(0).args as [
+        number,
+        { name?: string }
+      ]
+      expect(args[0]).to.equal(5)
+      expect(args[1].name).to.match(/CC0 1\.0|CC BY 4\.0/)
     })
     cy.wrap(onSuccess).should('have.been.calledOnce')
   })

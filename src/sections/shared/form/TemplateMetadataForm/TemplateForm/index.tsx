@@ -79,8 +79,8 @@ export const TemplateForm = (props: TemplateFormProps) => {
     useState<Record<string, TemplateInstructionInfo>>(initialInstructionsMap)
 
   const submitOptions =
-    mode === 'edit'
-      ? ({ mode: 'edit', templateRepository, templateId: template!.id } as const)
+    mode === 'edit' && template
+      ? ({ mode: 'edit', templateRepository, templateId: template.id } as const)
       : ({ mode: 'create', templateRepository, collectionId } as const)
   const { submissionStatus, submitError, submitTemplate } = useSubmitTemplate(submitOptions)
 
@@ -242,7 +242,8 @@ export const TemplateForm = (props: TemplateFormProps) => {
           <Button
             type="button"
             variant="secondary"
-            onClick={() => navigate(RouteWithParams.COLLECTION_TEMPLATES(collectionId))}>
+            onClick={() => navigate(RouteWithParams.COLLECTION_TEMPLATES(collectionId))}
+            data-testid="cancel-edit-template-metadata-button">
             {tShared('cancel')}
           </Button>
         </div>

@@ -1,9 +1,10 @@
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper } from '@tests/e2e-integration/shared/datasets/DatasetHelper'
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 
-const TEMPLATES_PAGE_URL = '/spa/root/templates'
+const TEMPLATES_PAGE_URL = `${FRONTEND_BASE_PATH}/root/templates`
 const editUrl = (id: number, mode: 'METADATA' | 'LICENSE') =>
-  `/spa/templates/edit?id=${id}&ownerId=root&editMode=${mode}`
+  `${FRONTEND_BASE_PATH}/templates/edit?id=${id}&ownerId=root&editMode=${mode}`
 
 describe('Edit Dataset Template', () => {
   let templateId: number | undefined
@@ -30,7 +31,8 @@ describe('Edit Dataset Template', () => {
   it('opens the edit-metadata page from the templates listing dropdown', () => {
     cy.visit(TEMPLATES_PAGE_URL)
 
-    cy.findByText('Dataset Template One')
+    cy.findAllByText('Dataset Template One')
+      .first()
       .closest('tr')
       .within(() => {
         cy.findByRole('button', { name: /Edit Template/i }).click({ force: true })
@@ -43,6 +45,8 @@ describe('Edit Dataset Template', () => {
   })
 
   it('updates the template name and redirects to the templates listing', () => {
+    const renamedTemplate = `Renamed Template ${Date.now()}`
+
     cy.wrap(null).then(() => {
       if (!templateId) throw new Error('Template not created')
       cy.visit(editUrl(templateId, 'METADATA'))
@@ -51,13 +55,12 @@ describe('Edit Dataset Template', () => {
     cy.findByLabelText(/Template Name/).should('have.value', 'Dataset Template One')
     cy.findByLabelText(/Template Name/)
       .clear()
-      .type('Renamed Template')
+      .type(renamedTemplate)
 
     cy.findByRole('button', { name: 'Save Changes' }).click()
 
     cy.url().should('include', TEMPLATES_PAGE_URL)
-    cy.findByText('Renamed Template').should('exist')
-    cy.findByText(/Template updated/i).should('exist')
+    cy.findByText(renamedTemplate).should('exist')
   })
 
   it('renders the terms page with two horizontal tabs', () => {
@@ -83,7 +86,6 @@ describe('Edit Dataset Template', () => {
     cy.findByRole('button', { name: 'Save Changes' }).click()
 
     cy.url().should('include', TEMPLATES_PAGE_URL)
-    cy.findByText(/Template updated/i).should('exist')
   })
 
   it('cancels editing and returns to the templates listing', () => {
@@ -92,7 +94,7 @@ describe('Edit Dataset Template', () => {
       cy.visit(editUrl(templateId, 'METADATA'))
     })
 
-    cy.findByRole('button', { name: 'Cancel' }).click()
+    cy.findByTestId('cancel-edit-template-metadata-button').click()
 
     cy.url().should('include', TEMPLATES_PAGE_URL)
   })

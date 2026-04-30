@@ -99,9 +99,12 @@ describe('EditTemplateMetadata', () => {
 
     cy.wrap(templateRepository.updateTemplateMetadata).should('have.been.calledOnce')
     cy.wrap(templateRepository.updateTemplateMetadata).then((stub) => {
-      const [templateId, payload] = (stub as unknown as sinon.SinonStub).getCall(0).args
-      expect(templateId).to.equal(1)
-      expect((payload as { name: string }).name).to.equal('Renamed Template')
+      const args = (stub as unknown as sinon.SinonStub).getCall(0).args as [
+        number,
+        { name: string }
+      ]
+      expect(args[0]).to.equal(1)
+      expect(args[1].name).to.equal('Renamed Template')
     })
   })
 
