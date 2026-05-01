@@ -155,7 +155,7 @@ services:
       dev_solr_initializer:
         condition: service_completed_successfully
     restart: on-failure
-    expose:
+    ports:
       - '8983:8983'
     networks:
       - dataverse

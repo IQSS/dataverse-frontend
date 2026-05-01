@@ -3,6 +3,8 @@ import { FileVersions } from '../../../../../src/sections/file/file-version/File
 import { FileMother } from '../../../files/domain/models/FileMother'
 import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
+import { FileVersionPaginationInfo } from '@/files/domain/models/FileVersionPaginationInfo'
+import { FileVersionSummarySubset } from '@/files/domain/models/FileVersionSummaryInfo'
 
 const fileVersionSummaries = FileMother.createFileVersionSummary()
 const fileVersionSummariesSubset = {
@@ -212,5 +214,58 @@ describe('FileVersions', () => {
       />
     )
     cy.contains('File not included in this version.').should('exist')
+  })
+
+  it('fetches file versions with pagination when changing pages', () => {
+    const paginatedVersions = Array.from({ length: 11 }, (_, index) => ({
+      ...fileVersionSummaries[0],
+      datafileId: index + 1,
+      datasetVersion: `${11 - index}.0`
+    }))
+    const getFileVersionSummariesStub = cy
+      .stub()
+      .callsFake(
+        (
+          _fileId: number,
+          paginationInfo: FileVersionPaginationInfo
+        ): Promise<FileVersionSummarySubset> => {
+          const start = paginationInfo.offset
+          return Promise.resolve({
+            summaries: paginatedVersions.slice(start, start + paginationInfo.pageSize),
+            totalCount: paginatedVersions.length
+          })
+        }
+      )
+    fileRepository.getFileVersionSummaries = getFileVersionSummariesStub
+
+    cy.customMount(
+      <FileVersions
+        fileId={1}
+        datasetVersionNumber={'11.0'}
+        fileRepository={fileRepository}
+        canEditOwnerDataset={true}
+        isInView
+      />
+    )
+
+    cy.wrap(getFileVersionSummariesStub).should(() => {
+      const firstCallPaginationInfo = getFileVersionSummariesStub.getCall(0)
+        .args[1] as FileVersionPaginationInfo
+      expect(firstCallPaginationInfo.page).to.equal(1)
+      expect(firstCallPaginationInfo.pageSize).to.equal(10)
+      expect(firstCallPaginationInfo.offset).to.equal(0)
+    })
+
+    cy.findByRole('button', { name: 'Next' }).click()
+
+    cy.wrap(getFileVersionSummariesStub).should(() => {
+      const secondCallPaginationInfo = getFileVersionSummariesStub.getCall(1)
+        .args[1] as FileVersionPaginationInfo
+      expect(secondCallPaginationInfo.page).to.equal(2)
+      expect(secondCallPaginationInfo.pageSize).to.equal(10)
+      expect(secondCallPaginationInfo.offset).to.equal(10)
+    })
+    cy.findByText('1.0').should('exist')
+    cy.findByText('11.0').should('not.exist')
   })
 })
