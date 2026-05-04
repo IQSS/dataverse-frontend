@@ -22,11 +22,12 @@ export const VersionDetailModal = ({
 }: VersionDetailModalProps) => {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
+  const modalTitle = t('versions.viewDifferencesDetail')
 
   return (
-    <Modal show={show} onHide={handleClose} centered size="xl">
+    <Modal show={show} onHide={handleClose} centered size="xl" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('versions.viewDifferencesDetail')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

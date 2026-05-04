@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import cn from 'classnames'
 import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
+import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useFileUploaderContext } from '../context/FileUploaderContext'
 import { FileUploadStatus } from '../context/fileUploaderReducer'
 import { OperationType } from '../FileUploader'
@@ -13,13 +15,26 @@ import { useFileUploadOperations } from '../useFileUploadOperations'
 import { SwalModal } from '../../swal-modal/SwalModal'
 import { UploaderFileRepository } from '../types'
 import styles from './FileUploadInput.module.scss'
+import { useUploadLimit } from './useUploadLimit'
 
 type FileUploadInputProps = {
   fileRepository: UploaderFileRepository
+  datasetRepository?: DatasetRepository
   datasetPersistentId: string
+  fetchUploadLimits?: (
+    datasetId: string | number,
+    datasetRepository: DatasetRepository
+  ) => Promise<DatasetUploadLimits>
 }
 
-const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInputProps) => {
+const maxFilesPerUpload = 1000
+
+const FileUploadInput = ({
+  fileRepository,
+  datasetRepository,
+  datasetPersistentId,
+  fetchUploadLimits
+}: FileUploadInputProps) => {
   const {
     fileUploaderState,
     addFile,
@@ -41,6 +56,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
   const folderInputRef = useRef<HTMLInputElement>(null)
 
   const [isDragging, setIsDragging] = useState(false)
+  const { uploadLimit } = useUploadLimit(datasetPersistentId, datasetRepository, fetchUploadLimits)
 
   const totalFiles = Object.keys(fileUploaderState.files).length
 
@@ -51,7 +67,6 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
   const canKeepUploading =
     operationType === OperationType.ADD_FILES_TO_DATASET ? true : totalFiles === 0
 
-  // File type validation for replace operation
   const validateBeforeUpload = useCallback(
     async (file: File): Promise<boolean> => {
       if (
@@ -64,7 +79,6 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
         )
 
         if (!shouldContinue) {
-          // Reset the file input
           if (inputRef.current) {
             inputRef.current.value = ''
           }
@@ -77,7 +91,6 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
     [operationType, originalFile]
   )
 
-  // Use the shared upload operations hook
   const { uploadOneFile, handleDroppedItems } = useFileUploadOperations({
     fileRepository,
     datasetPersistentId,
@@ -200,6 +213,27 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
         <Accordion.Item eventKey="0">
           <Accordion.Header>{t('fileUploader.accordionTitle')}</Accordion.Header>
           <Accordion.Body>
+            <p className={styles.helper_text}>
+              {t('fileUploader.uploadWidgetHelp', {
+                maxFilesPerUpload: maxFilesPerUpload.toLocaleString()
+              })}
+              {uploadLimit.maxFilesAvailableToUploadFormatted && (
+                <>
+                  {' '}
+                  {t('fileUploader.uploadWidgetMaxFilesHelp', {
+                    maxFilesAvailableToUpload: uploadLimit.maxFilesAvailableToUploadFormatted
+                  })}
+                </>
+              )}
+              {uploadLimit.storageQuotaRemainingFormatted && (
+                <>
+                  {' '}
+                  {t('fileUploader.uploadWidgetStorageQuotaHelp', {
+                    storageQuotaRemaining: uploadLimit.storageQuotaRemainingFormatted
+                  })}
+                </>
+              )}
+            </p>
             <Card>
               <Card.Header>
                 <Button

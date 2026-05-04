@@ -3,6 +3,7 @@ import { FileMother } from '../../../files/domain/models/FileMother'
 import { useGetFileVersionsSummaries } from '@/sections/file/file-version/useGetFileVersionsSummaries'
 import { act, renderHook } from '@testing-library/react'
 import { ReadError } from '@iqss/dataverse-client-javascript'
+import { FileVersionPaginationInfo } from '@/files/domain/models/FileVersionPaginationInfo'
 
 const fileVersionSummaries = FileMother.createFileVersionSummary()
 const fileVersionSummariesSubset = {
@@ -129,6 +130,32 @@ describe('useGetFileVersionsSummaries', () => {
       expect(result.current.isLoading).to.deep.equal(false)
       expect(result.current.fileVersionSummaries).to.deep.equal(fileVersionSummaries)
       expect(fileRepository.getFileVersionSummaries).to.have.been.calledWith(1)
+    })
+  })
+
+  it('should fetch data with pagination info and return the total count', () => {
+    const paginationInfo = new FileVersionPaginationInfo(2, 10, 11)
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummariesSubset)
+    const { result } = renderHook(() =>
+      useGetFileVersionsSummaries({
+        fileRepository,
+        fileId: 1,
+        autoFetch: false
+      })
+    )
+
+    let totalCount: number | undefined
+
+    act(() => {
+      void result.current.fetchSummaries(paginationInfo).then((count) => {
+        totalCount = count
+      })
+    })
+
+    cy.wrap(null).should(() => {
+      expect(result.current.isLoading).to.deep.equal(false)
+      expect(fileRepository.getFileVersionSummaries).to.have.been.calledWith(1, paginationInfo)
+      expect(totalCount).to.deep.equal(fileVersionSummariesSubset.totalCount)
     })
   })
 })

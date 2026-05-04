@@ -3,26 +3,25 @@ import { useTranslation } from 'react-i18next'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { Button, useTheme } from '@iqss/dataverse-design-system'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { FeaturedItemType } from '@/collection/domain/models/FeaturedItem'
 import { useGetFeaturedItems } from '../useGetFeaturedItems'
 import { CustomFeaturedItemCard } from './custom-featured-item-card/CustomFeaturedItemCard'
 import { DvObjectFeaturedItemCard } from './dv-object-featured-item-card/DvObjectFeaturedItemCard'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './FeaturedItems.module.scss'
 
 export interface FeaturedItemsProps {
-  collectionRepository: CollectionRepository
   collectionId: string
   className?: string
   withLoadingSkeleton?: boolean
 }
 
 export const FeaturedItems = ({
-  collectionRepository,
   collectionId,
   className,
   withLoadingSkeleton
 }: FeaturedItemsProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('collection')
   const theme = useTheme()
   const sliderRef = useRef<HTMLDivElement | null>(null)

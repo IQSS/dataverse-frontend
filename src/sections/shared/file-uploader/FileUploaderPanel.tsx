@@ -1,16 +1,11 @@
-/**
- * SPA File Uploader Panel
- *
- * This is the React Router-aware wrapper for FileUploaderPanelCore.
- * It handles SPA-specific concerns: route navigation, useBlocker for unsaved changes.
- */
-
 import { useMemo, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useBlocker, useNavigate } from 'react-router-dom'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
+import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFileReferrer'
 import { useFileUploaderContext } from './context/FileUploaderContext'
 import { FileUploaderPanelCore } from './FileUploaderPanelCore'
@@ -19,14 +14,21 @@ import styles from './FileUploaderPanel.module.scss'
 
 interface FileUploaderPanelProps {
   fileRepository: FileRepository
+  datasetRepository: DatasetRepository
   datasetPersistentId: string
   referrer?: ReplaceFileReferrer
+  fetchUploadLimits?: (
+    datasetId: string | number,
+    datasetRepository: DatasetRepository
+  ) => Promise<DatasetUploadLimits>
 }
 
 const FileUploaderPanel = ({
   fileRepository,
+  datasetRepository,
   datasetPersistentId,
-  referrer
+  referrer,
+  fetchUploadLimits
 }: FileUploaderPanelProps) => {
   const navigate = useNavigate()
   const { t } = useTranslation('shared')
@@ -36,7 +38,6 @@ const FileUploaderPanel = ({
     removeAllFiles
   } = useFileUploaderContext()
 
-  // Block navigation when there are unsaved changes
   const shouldBlockAwayNavigation = useMemo(() => {
     return Object.keys(files).length > 0 || isSaving || uploadingToCancelMap.size > 0
   }, [files, isSaving, uploadingToCancelMap.size])
@@ -59,7 +60,6 @@ const FileUploaderPanel = ({
     }
   }
 
-  // Navigation callbacks for the core component
   const handleCancel = useCallback(() => navigate(-1), [navigate])
 
   const datasetPageUrl = `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
@@ -100,7 +100,9 @@ const FileUploaderPanel = ({
       </p>
       <FileUploaderPanelCore
         fileRepository={fileRepository}
+        datasetRepository={datasetRepository}
         datasetPersistentId={datasetPersistentId}
+        fetchUploadLimits={fetchUploadLimits}
         onCancel={handleCancel}
         onFilesAddedSuccess={handleFilesAddedSuccess}
         onFileReplacedSuccess={handleFileReplacedSuccess}

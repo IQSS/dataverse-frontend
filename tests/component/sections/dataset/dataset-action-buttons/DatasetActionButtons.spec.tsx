@@ -9,6 +9,7 @@ import {
   DatasetVersionMother
 } from '../../../dataset/domain/models/DatasetMother'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const collectionRepository: CollectionRepository = {} as CollectionRepository
@@ -25,16 +26,17 @@ describe('DatasetActionButtons', () => {
     })
 
     cy.mountAuthenticated(
-      <DatasetActionButtons
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        contactRepository={contactRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <DatasetActionButtons
+          dataset={dataset}
+          datasetRepository={datasetRepository}
+          contactRepository={contactRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
-    cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist') // TODO: change this to 'exist' when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
+    cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
@@ -56,16 +58,17 @@ describe('DatasetActionButtons', () => {
     })
 
     cy.mountAuthenticated(
-      <DatasetActionButtons
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        contactRepository={contactRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <DatasetActionButtons
+          dataset={dataset}
+          datasetRepository={datasetRepository}
+          contactRepository={contactRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
-    cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist') // TODO: change this to 'exist' when access datafile supports bearer tokens, downloading of files temporary disabled for draft datasets
+    cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Submit for Review' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
@@ -78,12 +81,13 @@ describe('DatasetActionButtons', () => {
       version: DatasetVersionMother.createDeaccessioned()
     })
     cy.mountAuthenticated(
-      <DatasetActionButtons
-        dataset={dataset}
-        datasetRepository={datasetRepository}
-        collectionRepository={collectionRepository}
-        contactRepository={contactRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <DatasetActionButtons
+          dataset={dataset}
+          datasetRepository={datasetRepository}
+          contactRepository={contactRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Share' }).should('not.exist')

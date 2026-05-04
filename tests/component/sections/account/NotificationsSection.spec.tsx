@@ -1,0 +1,146 @@
+import { NotificationsSection } from '@/sections/account/notifications-section/NotificationsSection'
+import { NotificationMother } from '@tests/component/notifications/domain/models/NotificationMother'
+import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
+import { NotificationType } from '@/notifications/domain/models/Notification'
+
+const notificationsRepository: NotificationRepository = {} as NotificationRepository
+
+const createDatasetNotification = NotificationMother.create({
+  datasetDisplayName: 'Climate Data',
+  datasetPersistentIdentifier: 'doi:10.5072/FK2/CLIMATE',
+  type: NotificationType.CREATE_DATASET,
+  displayAsRead: false,
+  id: 1
+})
+const createDatasetNotificationSubset = {
+  totalItemCount: 1,
+  items: [createDatasetNotification]
+}
+const multipleNotificationSubset = {
+  totalItemCount: 3,
+  items: NotificationMother.createMany(2).concat([createDatasetNotification])
+}
+const paginationNotificationSubset = {
+  totalItemCount: 25,
+  items: NotificationMother.createMany(10)
+}
+
+const singleNotificationRepository = {
+  getAllNotificationsByUser: () => Promise.resolve(createDatasetNotificationSubset),
+  markNotificationAsRead: (_id: number) => Promise.resolve(),
+  deleteNotification: (_id: number) => Promise.resolve(),
+  getUnreadNotificationsCount: () => Promise.resolve(1)
+}
+const multipleNotificationRepository = {
+  getAllNotificationsByUser: () => Promise.resolve(multipleNotificationSubset),
+  markNotificationAsRead: (_id: number) => Promise.resolve(),
+  deleteNotification: (_id: number) => Promise.resolve(),
+  getUnreadNotificationsCount: () => Promise.resolve(1)
+}
+
+const mockErrorRepository = {
+  markNotificationAsRead: (_id: number) => Promise.resolve(),
+  deleteNotification: (_id: number) => Promise.resolve(),
+  getAllNotificationsByUser: () => Promise.reject(new Error('Failed to fetch')),
+  getUnreadNotificationsCount: () => Promise.resolve(1)
+}
+
+const emptyNotificationRepository = {
+  getAllNotificationsByUser: () =>
+    Promise.resolve({
+      totalItemCount: 0,
+      items: []
+    }),
+  markNotificationAsRead: (_id: number) => Promise.resolve(),
+  deleteNotification: (_id: number) => Promise.resolve(),
+  getUnreadNotificationsCount: () => Promise.resolve(0)
+}
+describe('multiple page notifications', () => {
+  before(() => {
+    notificationsRepository.getAllNotificationsByUser = cy
+      .stub()
+      .resolves(paginationNotificationSubset)
+  })
+
+  it('renders Pagination controls', () => {
+    cy.mountAuthenticated(<NotificationsSection notificationRepository={notificationsRepository} />)
+    cy.findByText('Displaying 1 - 10 of 25 Notifications').should('exist')
+    cy.findByRole('button', { name: 'Clear All Notifications on this Page' }).should('exist')
+    cy.findByTestId('pagination-controls').should('exist')
+  })
+})
+
+describe('single page notifications', () => {
+  before(() => {
+    notificationsRepository.getAllNotificationsByUser = cy.stub().resolves({
+      totalItemCount: 3,
+      items: [
+        createDatasetNotification,
+        NotificationMother.create({ id: 2 }),
+        NotificationMother.create({ id: 3 })
+      ]
+    })
+  })
+
+  it('handles Clear All Notifications', () => {
+    cy.spy(multipleNotificationRepository, 'deleteNotification').as('deleteNotification')
+
+    cy.mountAuthenticated(
+      <NotificationsSection notificationRepository={multipleNotificationRepository} />
+    )
+
+    cy.contains('Climate Data was created').should('exist')
+
+    cy.findByRole('button', { name: 'Clear All Notifications' }).click()
+    cy.get('@deleteNotification').should('have.been.calledThrice')
+  })
+  it("doesn't display pagination controls", () => {
+    cy.mountAuthenticated(
+      <NotificationsSection notificationRepository={multipleNotificationRepository} />
+    )
+
+    cy.findByText('Displaying 1 - 3 of 3 Notifications').should('exist')
+    cy.findByTestId('pagination-controls').should('not.exist')
+  })
+})
+describe('NotificationsSection', () => {
+  it('renders notifications and handles dismiss', () => {
+    cy.spy(singleNotificationRepository, 'deleteNotification').as('deleteNotification')
+    cy.mountAuthenticated(
+      <NotificationsSection notificationRepository={singleNotificationRepository} />
+    )
+
+    cy.contains('Climate Data was created').should('exist')
+    cy.get('[data-testid="dismiss-notification-1"]').click()
+    cy.get('@deleteNotification').should('have.been.calledOnceWith', 1)
+  })
+  it('shows loading and error states', () => {
+    cy.mountAuthenticated(<NotificationsSection notificationRepository={mockErrorRepository} />)
+
+    cy.contains('Failed to ').should('exist')
+  })
+  it('should mark notifications as read after delay', () => {
+    cy.clock()
+    cy.spy(singleNotificationRepository, 'markNotificationAsRead').as('markAsRead')
+    cy.mountAuthenticated(
+      <NotificationsSection notificationRepository={singleNotificationRepository} />
+    )
+
+    cy.contains('Climate Data was created').should('exist')
+
+    cy.get('@markAsRead').should('not.have.been.called')
+
+    cy.tick(2500)
+
+    cy.get('@markAsRead').should('have.been.calledOnceWith', Cypress.sinon.match.number)
+  })
+
+  it('does not render notifications display count when there are no notifications', () => {
+    cy.mountAuthenticated(
+      <NotificationsSection notificationRepository={emptyNotificationRepository} />
+    )
+
+    cy.findByText(/Displaying .* Notifications/).should('not.exist')
+    cy.findByText('No notifications available.').should('exist')
+  })
+})

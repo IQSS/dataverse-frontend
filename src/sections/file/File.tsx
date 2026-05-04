@@ -154,6 +154,11 @@ export function File({
                   ingestInProgress={file.ingest.isInProgress}
                   isDeaccessioned={isDeaccessioned}
                   isDraft={file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT}
+                  canEdit={file.permissions.canEditOwnerDataset}
+                  guestbookId={file.guestbookId}
+                  datasetPersistentId={file.datasetPersistentId}
+                  datasetLicense={file.datasetLicense}
+                  datasetCustomTerms={file.datasetCustomTerms}
                 />
                 {file.permissions.canEditOwnerDataset && (
                   <EditFileMenu

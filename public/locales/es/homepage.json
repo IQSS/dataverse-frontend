@@ -20,7 +20,7 @@
   "usage": {
     "datasets": {
       "title": "Deposita y comparte tus datos. Obtén crédito académico.",
-      "content": "Harvard Dataverse es un repositorio para datos de investigación. Deposita aquí tus datos y código.",
+      "content": "{{dataverseName}} es un repositorio para datos de investigación. Deposita aquí tus datos y código.",
       "text_button": "Agregar un dataset"
     },
     "collections": {
@@ -29,7 +29,7 @@
       "text_button": "Agregar una colección"
     },
     "general": {
-      "title": "¡Publicar tus datos es fácil en Harvard Dataverse!",
+      "title": "¡Publicar tus datos es fácil en {{dataverseName}}!",
       "content": "Aprende cómo comenzar a crear tu propio repositorio Dataverse aquí.",
       "text_button": "Comenzar"
     }

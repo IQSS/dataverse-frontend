@@ -4,7 +4,7 @@
     "node": ">=22 <23"
   },
   "name": "dataverse-frontend",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "private": true,
   "workspaces": {
@@ -62,7 +62,7 @@
     "zod": "4.1.12"
   },
   "scripts": {
-    "start": "vite --base=/spa",
+    "start": "vite",
     "build": "tsc && vite build",
     "build-uploader": "vite build --config vite.config.uploader.ts && cp -r public/locales dist-uploader/ && cp src/standalone-uploader/dvwebloaderV2.html dist-uploader/ && sass --no-source-map src/standalone-uploader/standalone-page.scss dist-uploader/standalone-page.css",
     "build-keycloak-theme": "npm run build && keycloakify build",

@@ -11,7 +11,7 @@ import {
   CitationMetadataBlock,
   DatasetMetadataBlock
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
-import { DatasetLockReason } from '../../../../../src/dataset/domain/models/Dataset'
+import { DatasetLockReason, TermsOfAccess } from '../../../../../src/dataset/domain/models/Dataset'
 import {
   FileDownloadMode,
   FileDownloadSize,
@@ -25,9 +25,9 @@ import {
 chai.use(chaiAsPromised)
 const expect = chai.expect
 
-const termsOfAccess = {
+const termsOfAccess: TermsOfAccess = {
   fileAccessRequest: true,
-  termsOfAccess: 'New terms',
+  termsOfAccessForRestrictedFiles: 'New terms',
   dataAccessPlace: 'New place',
   originalArchive: 'New archive',
   availabilityStatus: 'New status',
@@ -49,17 +49,9 @@ const jsDataset = {
     deaccessionNote: undefined
   },
   internalVersionNumber: 1,
+  guestbookId: 1001,
   termsOfUse: {
-    termsOfAccess: {
-      fileAccessRequest: true,
-      termsOfAccess: 'New terms',
-      dataAccessPlace: 'New place',
-      originalArchive: 'New archive',
-      availabilityStatus: 'New status',
-      contactForAccess: 'New contact',
-      sizeOfCollection: 'New size',
-      studyCompletion: 'New completion'
-    }
+    termsOfAccess: termsOfAccess
   },
   metadataBlocks: [
     {
@@ -240,6 +232,7 @@ const expectedDataset = {
   internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
+  guestbookId: 1001,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -261,16 +254,7 @@ const expectedDataset = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    termsOfAccess: {
-      fileAccessRequest: true,
-      termsOfAccess: 'New terms',
-      dataAccessPlace: 'New place',
-      originalArchive: 'New archive',
-      availabilityStatus: 'New status',
-      contactForAccess: 'New contact',
-      sizeOfCollection: 'New size',
-      studyCompletion: 'New completion'
-    }
+    termsOfAccess: termsOfAccess
   },
   metadataBlocks: [
     {
@@ -315,8 +299,8 @@ const expectedDataset = {
     new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
   ],
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -357,6 +341,7 @@ const expectedDatasetWithPublicationDate = {
   internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
+  guestbookId: 1001,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -378,16 +363,7 @@ const expectedDatasetWithPublicationDate = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    termsOfAccess: {
-      fileAccessRequest: true,
-      termsOfAccess: 'New terms',
-      dataAccessPlace: 'New place',
-      originalArchive: 'New archive',
-      availabilityStatus: 'New status',
-      contactForAccess: 'New contact',
-      sizeOfCollection: 'New size',
-      studyCompletion: 'New completion'
-    }
+    termsOfAccess: termsOfAccess
   },
   metadataBlocks: [
     {
@@ -433,8 +409,8 @@ const expectedDatasetWithPublicationDate = {
     new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
   ],
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -475,6 +451,7 @@ const expectedDatasetWithNextVersionNumbers = {
   internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
+  guestbookId: 1001,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -496,16 +473,7 @@ const expectedDatasetWithNextVersionNumbers = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    termsOfAccess: {
-      fileAccessRequest: true,
-      termsOfAccess: 'New terms',
-      dataAccessPlace: 'New place',
-      originalArchive: 'New archive',
-      availabilityStatus: 'New status',
-      contactForAccess: 'New contact',
-      sizeOfCollection: 'New size',
-      studyCompletion: 'New completion'
-    }
+    termsOfAccess: termsOfAccess
   },
   metadataBlocks: [
     {
@@ -551,8 +519,8 @@ const expectedDatasetWithNextVersionNumbers = {
     new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
   ],
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -597,6 +565,7 @@ const expectedDatasetAlternateVersion = {
   internalVersionNumber: 1,
   requestedVersion: '4.0',
   publicationDate: undefined,
+  guestbookId: 1001,
   hasValidTermsOfAccess: true,
   hasOneTabularFileAtLeast: true,
   isValid: true,
@@ -637,16 +606,7 @@ const expectedDatasetAlternateVersion = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    termsOfAccess: {
-      fileAccessRequest: true,
-      termsOfAccess: 'New terms',
-      dataAccessPlace: 'New place',
-      originalArchive: 'New archive',
-      availabilityStatus: 'New status',
-      contactForAccess: 'New contact',
-      sizeOfCollection: 'New size',
-      studyCompletion: 'New completion'
-    }
+    termsOfAccess: termsOfAccess
   },
   locks: [
     {
@@ -683,8 +643,8 @@ const expectedDatasetAlternateVersion = {
   },
   thumbnail: undefined,
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -713,6 +673,34 @@ describe('JS Dataset Mapper', () => {
       jsDatasetFilesTotalArchivalDownloadSize
     )
     expect(mapped).to.deep.equal(expectedDataset)
+  })
+
+  it('maps guestbookId when present in jsDataset', () => {
+    const mapped = JSDatasetMapper.toDataset(
+      jsDataset,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
+    )
+
+    expect(mapped.guestbookId).to.equal(1001)
+  })
+
+  it('does not set guestbookId when jsDataset has no guestbook', () => {
+    const mapped = JSDatasetMapper.toDataset(
+      { ...jsDataset, guestbookId: undefined },
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
+    )
+
+    expect(mapped.guestbookId).to.equal(undefined)
   })
 
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {

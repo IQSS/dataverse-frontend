@@ -1,4 +1,4 @@
-import { Dataset, DatasetLock } from '../../dataset/domain/models/Dataset'
+import { Dataset, DatasetLock, TermsOfAccess } from '../../dataset/domain/models/Dataset'
 import { DatasetVersionDiff } from '../../dataset/domain/models/DatasetVersionDiff'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
@@ -15,11 +15,11 @@ import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
 import { CitationFormat, FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
-import { DatasetTemplate } from '@/dataset/domain/models/DatasetTemplate'
-import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
+import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLicenseUpdateRequest'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
+import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -170,10 +170,10 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
-  getTemplates(_collectionIdOrAlias: number | string): Promise<DatasetTemplate[]> {
+  updateTermsOfAccess(_datasetId: string | number, _termsOfAccess: TermsOfAccess): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(DatasetTemplateMother.createMany(3))
+        resolve()
       }, FakerHelper.loadingTimout())
     })
   }
@@ -209,6 +209,28 @@ export class DatasetMockRepository implements DatasetRepository {
             alias: 'collection-bar'
           })
         ])
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  updateDatasetLicense(
+    _datasetId: string | number,
+    _licenseUpdateRequest: DatasetLicenseUpdateRequest
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getDatasetUploadLimits(_datasetId: string | number): Promise<DatasetUploadLimits> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          numberOfFilesRemaining: 10,
+          storageQuotaRemaining: 10737418240 // 10 GB in bytes
+        })
       }, FakerHelper.loadingTimout())
     })
   }

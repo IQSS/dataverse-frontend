@@ -1,8 +1,9 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
 import { DatasetHelper } from '@tests/e2e-integration/shared/datasets/DatasetHelper'
 
-const CREATE_DATASET_PAGE_URL = '/spa/datasets/root/create'
+const CREATE_DATASET_PAGE_URL = `${FRONTEND_BASE_PATH}/datasets/root/create`
 
 describe('Create Dataset', () => {
   beforeEach(() => {
@@ -49,8 +50,8 @@ describe('Create Dataset', () => {
     let datasetTemplateId: number
 
     beforeEach(async () => {
-      await DatasetHelper.createDatasetTemplate()
-      const templates = await DatasetHelper.getDatasetTemplates()
+      await DatasetHelper.createTemplate()
+      const templates = await DatasetHelper.getTemplatesByCollectionId()
 
       const { id } = templates[0]
       datasetTemplateId = id

@@ -3,6 +3,7 @@ import { DatasetRepository } from '@/dataset/domain/repositories/DatasetReposito
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionsSummariesMother } from '@tests/component/dataset/domain/models/DatasetVersionsSummariesMother'
 import { useGetDatasetVersionsSummaries } from '@/sections/dataset/dataset-versions/useGetDatasetVersionsSummaries'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
@@ -107,6 +108,38 @@ describe('useGetDatasetVersionsSummaries', () => {
       expect(result.current.isLoading).to.equal(false)
       expect(result.current.datasetVersionSummaries).to.deep.equal(datasetVersionsSummariesMock)
       expect(datasetRepository.getDatasetVersionsSummaries).to.have.been.calledOnce
+    })
+  })
+
+  it('should fetch summaries with pagination info and return the total count', () => {
+    const paginationInfo = new DatasetVersionPaginationInfo(2, 10, 11)
+    datasetRepository.getDatasetVersionsSummaries = cy
+      .stub()
+      .resolves(datasetVersionsSummariesSubsetMock)
+
+    const { result } = renderHook(() =>
+      useGetDatasetVersionsSummaries({
+        datasetRepository,
+        persistentId: 'doi:10.5072/FK2/ABC123',
+        autoFetch: false
+      })
+    )
+
+    let totalCount: number | undefined
+
+    act(() => {
+      void result.current.fetchSummaries(paginationInfo).then((count) => {
+        totalCount = count
+      })
+    })
+
+    cy.wrap(null).should(() => {
+      expect(result.current.isLoading).to.equal(false)
+      expect(datasetRepository.getDatasetVersionsSummaries).to.have.been.calledWith(
+        'doi:10.5072/FK2/ABC123',
+        paginationInfo
+      )
+      expect(totalCount).to.equal(datasetVersionsSummariesSubsetMock.totalCount)
     })
   })
 

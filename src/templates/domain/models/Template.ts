@@ -1,7 +1,7 @@
 import { License } from '@/licenses/domain/models/License'
-import { DatasetMetadataBlock, DatasetTermsOfUse } from './Dataset'
+import { DatasetMetadataBlock, DatasetTermsOfUse } from '@/dataset/domain/models/Dataset'
 
-export interface DatasetTemplate {
+export interface Template {
   id: number
   name: string
   collectionAlias: string

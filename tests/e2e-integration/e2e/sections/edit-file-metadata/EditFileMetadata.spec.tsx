@@ -1,3 +1,4 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../../shared/files/FileHelper'
@@ -18,7 +19,7 @@ describe('EditFileMetadata', () => {
       )
         .its('id')
         .then((id: string) => {
-          cy.visit(`/spa/files?id=${id}`)
+          cy.visit(`${FRONTEND_BASE_PATH}/files?id=${id}`)
 
           cy.findByRole('heading', { name: 'blob' }).should('exist')
 
@@ -58,7 +59,7 @@ describe('EditFileMetadata', () => {
           return false
         }
       })
-      cy.visit(`/spa/files/edit-metadata?id=wrong-id`)
+      cy.visit(`${FRONTEND_BASE_PATH}/files/edit-metadata?id=wrong-id`)
       cy.findByText(/something went wrong/).should('exist')
     })
   })

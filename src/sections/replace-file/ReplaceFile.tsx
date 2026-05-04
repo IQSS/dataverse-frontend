@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { useFile } from '../file/useFile'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
@@ -17,6 +18,7 @@ export { ReplaceFileReferrer } from './ReplaceFileReferrer'
 
 interface ReplaceFileProps {
   fileRepository: FileRepository
+  datasetRepository: DatasetRepository
   fileIdFromParams: number
   datasetPidFromParams: string
   datasetVersionFromParams: string
@@ -25,6 +27,7 @@ interface ReplaceFileProps {
 
 export const ReplaceFile = ({
   fileRepository,
+  datasetRepository,
   fileIdFromParams,
   datasetPidFromParams,
   datasetVersionFromParams,
@@ -76,6 +79,7 @@ export const ReplaceFile = ({
           <div className={styles.tab_container}>
             <FileUploader
               fileRepository={fileRepository}
+              datasetRepository={datasetRepository}
               datasetPersistentId={datasetPidFromParams}
               storageType="S3"
               operationType={OperationType.REPLACE_FILE}

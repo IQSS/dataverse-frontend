@@ -18,6 +18,7 @@ export interface AddTagsModalResult {
 
 export function AddTagsModal({ show, availableTags, setTagOptions, update }: AddTagsModalProps) {
   const { t } = useTranslation('uploadDatasetFiles')
+  const modalTitle = t('addTags.title')
   const [tagsToAdd, setTagsToAdd] = useState<string[]>([])
   const [newCustomTag, setNewCustomTag] = useState('')
   const handleClose = (saved: boolean) => {
@@ -39,9 +40,9 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
     }
   }
   return (
-    <Modal show={show} onHide={() => handleClose(false)} size="lg">
+    <Modal show={show} onHide={() => handleClose(false)} size="lg" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('addTags.title')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className={styles.add_tags_form}>

@@ -7,7 +7,5 @@ export function getDatasetVersionsSummaries(
   datasetId: number | string,
   paginationInfo?: DatasetVersionPaginationInfo
 ): Promise<DatasetVersionSummarySubset> {
-  return datasetRepository.getDatasetVersionsSummaries(datasetId, paginationInfo).catch((error) => {
-    throw error
-  })
+  return datasetRepository.getDatasetVersionsSummaries(datasetId, paginationInfo)
 }

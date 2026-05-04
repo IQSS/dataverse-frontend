@@ -158,6 +158,12 @@ export class DatasetPermissionsMother {
     return this.create({ canDownloadFiles: true })
   }
 
+  static createWithFilesDownloadAllowedButNotUpdatePermissions(): DatasetPermissions {
+    return this.create({
+      canDownloadFiles: true,
+      canUpdateDataset: false
+    })
+  }
   static createWithFilesDownloadNotAllowed(): DatasetPermissions {
     return this.create({ canDownloadFiles: false })
   }
@@ -225,6 +231,26 @@ export class DatasetPermissionsMother {
       canManageDatasetPermissions: false,
       canManageFilesPermissions: false,
       canDeleteDataset: false
+    })
+  }
+
+  static createWithReadOnlyAllowed(): DatasetPermissions {
+    return this.create({
+      canDownloadFiles: true,
+      canUpdateDataset: false,
+      canPublishDataset: false,
+      canManageDatasetPermissions: false,
+      canManageFilesPermissions: false,
+      canDeleteDataset: false
+    })
+  }
+}
+
+export class DatasetWithoutPermissionsMother {
+  static create(props?: Partial<Dataset>): Dataset {
+    return DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithNoDatasetPermissions(),
+      ...props
     })
   }
 }
@@ -451,7 +477,8 @@ export class DatasetMother {
       dataset.nextMajorVersion,
       dataset.nextMinorVersion,
       dataset.requiresMajorVersionUpdate,
-      dataset.fileStore
+      dataset.fileStore,
+      dataset.guestbookId
     ).build()
   }
 
@@ -558,14 +585,7 @@ export class DatasetMother {
           }
         }
       ] as DatasetMetadataBlocks,
-      permissions: {
-        canDownloadFiles: true,
-        canUpdateDataset: false,
-        canPublishDataset: false,
-        canManageDatasetPermissions: false,
-        canManageFilesPermissions: false,
-        canDeleteDataset: false
-      },
+      permissions: DatasetPermissionsMother.createWithReadOnlyAllowed(),
       locks: [],
       hasValidTermsOfAccess: true,
       hasOneTabularFileAtLeast: true,
@@ -615,14 +635,7 @@ export class DatasetMother {
   static createDeaccessionedwithNoEditPermission(props?: Partial<Dataset>): Dataset {
     return this.create({
       version: DatasetVersionMother.createDeaccessioned(),
-      permissions: {
-        canDownloadFiles: true,
-        canUpdateDataset: false,
-        canPublishDataset: false,
-        canManageDatasetPermissions: false,
-        canManageFilesPermissions: false,
-        canDeleteDataset: false
-      },
+      permissions: DatasetPermissionsMother.createWithReadOnlyAllowed(),
       ...props
     })
   }
