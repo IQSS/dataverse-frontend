@@ -1,88 +1,91 @@
 <!DOCTYPE html>
-<html lang='en'>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dataverse WebLoader V2</title>
-        <!-- Configuration: set before the bundle loads -->
-        <script>
-            window.dvWebloaderConfig = {
-                useS3Tagging: false,     // Disable S3 tagging (for MinIO/S3-compatible storage)
-                maxRetries: 3,           // Retry multipart uploads up to 3 times
-                uploadTimeoutMs: 0,      // No timeout (0 = unlimited)
-                disableMD5Checksum: false // Calculate MD5 checksums
-            };
-        </script>
-        <style>
-            body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-                margin: 0;
-                padding: 20px;
-                background-color: #f8f9fa;
-            }
-            .page-container {
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-            .page-header h1 {
-                margin: 0 0 10px 0;
-                font-size: 1.75rem;
-                font-weight: 500;
-            }
-            .dataset-info {
-                margin: 0 0 15px 0;
-                font-size: 0.9rem;
-            }
-            .dataset-info code {
-                color: #d63384;
-                background: #f8f9fa;
-                padding: 2px 6px;
-                border-radius: 4px;
-            }
-            .helper-text {
-                font-size: 0.85rem;
-                color: #6c757d;
-                margin-bottom: 15px;
-            }
-            .helper-text a {
-                color: #0d6efd;
-            }
-            .footer {
-                margin-top: 30px;
-                padding-top: 20px;
-                border-top: 1px solid #dee2e6;
-                text-align: center;
-                font-size: 0.85rem;
-                color: #6c757d;
-            }
-            .footer a {
-                color: #0d6efd;
-            }
-        </style>
-        <!-- The bundle includes all CSS inlined via vite-plugin-css-injected-by-js -->
-        <script type="module" src="dvwebloader-v2.js"></script>
-    </head>
-    <body>
-        <div class="page-container">
-            <header class="page-header">
-                <h1>Upload Files</h1>
-                <p class="dataset-info">Uploading to dataset: <code id="dataset-pid"></code></p>
-            </header>
-            
-            <!-- React uploader mounts here -->
-            <div id="root"></div>
-            
-            <footer class="footer">
-                <a href="https://github.com/gdcc/dvwebloader" target="_blank" rel="noreferrer">DVWebloader V2</a>
-                <span> - Powered by Dataverse Frontend</span>
-            </footer>
-        </div>
-        
-        <script>
-            // Extract datasetPid from URL and display it
-            const urlParams = new URLSearchParams(window.location.search);
-            const datasetPid = urlParams.get('datasetPid') || 'Unknown';
-            document.getElementById('dataset-pid').textContent = datasetPid;
-        </script>
-    </body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dataverse WebLoader V2</title>
+    <!-- Configuration: set before the bundle loads -->
+    <script>
+      window.dvWebloaderConfig = {
+        useS3Tagging: false, // Disable S3 tagging (for MinIO/S3-compatible storage)
+        maxRetries: 3, // Retry multipart uploads up to 3 times
+        uploadTimeoutMs: 0, // No timeout (0 = unlimited)
+        disableMD5Checksum: false // Calculate MD5 checksums
+      }
+    </script>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+          sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+      }
+      .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .page-header h1 {
+        margin: 0 0 10px 0;
+        font-size: 1.75rem;
+        font-weight: 500;
+      }
+      .dataset-info {
+        margin: 0 0 15px 0;
+        font-size: 0.9rem;
+      }
+      .dataset-info code {
+        color: #d63384;
+        background: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .helper-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-bottom: 15px;
+      }
+      .helper-text a {
+        color: #0d6efd;
+      }
+      .footer {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #dee2e6;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #6c757d;
+      }
+      .footer a {
+        color: #0d6efd;
+      }
+    </style>
+    <!-- The bundle includes all CSS inlined via vite-plugin-css-injected-by-js -->
+    <script type="module" src="dvwebloader-v2.js"></script>
+  </head>
+  <body>
+    <div class="page-container">
+      <header class="page-header">
+        <h1>Upload Files</h1>
+        <p class="dataset-info">Uploading to dataset: <code id="dataset-pid"></code></p>
+      </header>
+
+      <!-- React uploader mounts here -->
+      <div id="root"></div>
+
+      <footer class="footer">
+        <a href="https://github.com/gdcc/dvwebloader" target="_blank" rel="noreferrer"
+          >DVWebloader V2</a
+        >
+        <span> - Powered by Dataverse Frontend</span>
+      </footer>
+    </div>
+
+    <script>
+      // Extract datasetPid from URL and display it
+      const urlParams = new URLSearchParams(window.location.search)
+      const datasetPid = urlParams.get('datasetPid') || 'Unknown'
+      document.getElementById('dataset-pid').textContent = datasetPid
+    </script>
+  </body>
 </html>

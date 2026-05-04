@@ -134,6 +134,7 @@
     "@types/chai-as-promised": "7.1.5",
     "@types/node-sass": "4.11.3",
     "@types/sinon": "10.0.13",
+    "@types/turndown": "^5.0.6",
     "@typescript-eslint/eslint-plugin": "5.51.0",
     "@typescript-eslint/parser": "5.51.0",
     "@vitejs/plugin-react": "4.3.1",

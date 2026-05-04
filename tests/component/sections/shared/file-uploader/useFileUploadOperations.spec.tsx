@@ -99,7 +99,7 @@ describe('useFileUploadOperations', () => {
       })
 
       expect(addUploadingToCancel).to.have.been.called
-      const [key, cancelFn] = addUploadingToCancel.firstCall.args
+      const [key, cancelFn] = addUploadingToCancel.firstCall.args as [string, () => void]
       expect(key).to.be.a('string')
       expect(cancelFn).to.be.a('function')
     })
@@ -144,9 +144,10 @@ describe('useFileUploadOperations', () => {
       const config = createConfig()
       const { result } = renderHook(() => useFileUploadOperations(config))
 
-      expect(result.current.semaphore).to.exist
-      expect(result.current.semaphore.acquire).to.be.a('function')
-      expect(result.current.semaphore.release).to.be.a('function')
+      const { semaphore } = result.current
+      expect(semaphore).to.exist
+      expect(typeof semaphore.acquire).to.equal('function')
+      expect(typeof semaphore.release).to.equal('function')
     })
   })
 
