@@ -1,8 +1,9 @@
 /**
- * Vite Configuration for Standalone DVWebloader V2 Bundle
+ * Vite Configuration for Reusable Dataverse Frontend Components
  *
- * This configuration builds the file uploader as a standalone bundle
- * that can be used independently from the main Dataverse SPA.
+ * This configuration builds reusable components as standalone ESM entry points.
+ * Shared dependencies are emitted as chunks so additional components can reuse
+ * React, i18n, and common libraries instead of bundling them repeatedly.
  */
 
 import { defineConfig } from 'vite'
@@ -33,20 +34,38 @@ export default defineConfig({
       transformMixedEsModules: true
     },
     rollupOptions: {
-      input: path.resolve(__dirname, 'src/standalone-uploader/index.tsx'),
+      input: {
+        'dv-uploader': path.resolve(__dirname, 'src/standalone-uploader/index.tsx')
+      },
       output: {
-        // Single entry file
-        entryFileNames: 'dvwebloader-v2.js',
-        // Inline all chunks into the main bundle
-        inlineDynamicImports: true,
-        // Asset file naming
-        assetFileNames: 'assets/[name].[ext]'
+        entryFileNames: 'reusable-components/[name].js',
+        chunkFileNames: 'reusable-components/chunks/[name]-[hash].js',
+        assetFileNames: 'reusable-components/assets/[name].[ext]',
+        manualChunks(id) {
+          if (
+            id.includes('/src/sections/shared/') ||
+            id.includes('/src/files/') ||
+            id.includes('/src/dataset/') ||
+            id.includes('/packages/design-system/')
+          ) {
+            return 'dataverse-shared'
+          }
+          if (!id.includes('node_modules')) {
+            return
+          }
+          if (id.includes('react') || id.includes('scheduler')) {
+            return 'react'
+          }
+          if (id.includes('i18next') || id.includes('react-i18next')) {
+            return 'i18n'
+          }
+          return 'vendor'
+        }
       }
     },
     // Copy translation files to dist
     copyPublicDir: false,
-    // Increase chunk size warning limit since we're bundling everything
-    chunkSizeWarningLimit: 2000,
+    chunkSizeWarningLimit: 1000,
     // Enable minification
     minify: 'esbuild',
     // Generate sourcemaps for debugging

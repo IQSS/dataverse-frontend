@@ -10,7 +10,7 @@
  *       locale:     'en'          // optional, default 'en'
  *     }
  *   </script>
- *   <script src=".../dvwebloader-v2.js"></script>
+ *   <script type="module" src=".../dvwebloader/reusable-components/dv-uploader.js"></script>
  *   <div id="dv-uploader"></div>
  *
  * Authentication is via the browser's JSESSIONID session cookie.

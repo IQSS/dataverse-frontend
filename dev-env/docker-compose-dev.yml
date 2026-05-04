@@ -13,6 +13,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./docker-dev-volumes/nginx/logs:/var/log/nginx/
+      - ../dist-uploader:/usr/share/nginx/html/dvwebloader:ro
 
   dev_frontend:
     container_name: 'dev_frontend'
@@ -50,6 +51,7 @@ services:
       DATAVERSE_FEATURE_API_BEARER_AUTH_USE_BUILTIN_USER_ON_ID_MATCH: 1
       DATAVERSE_FEATURE_API_SESSION_AUTH: 1
       DATAVERSE_FEATURE_API_SESSION_AUTH_HARDENING: 1
+      DATAVERSE_FEATURE_REACT_UPLOADER: 1
       DATAVERSE_AUTH_OIDC_ENABLED: 1
       DATAVERSE_AUTH_OIDC_CLIENT_ID: test
       DATAVERSE_AUTH_OIDC_CLIENT_SECRET: 94XHrfNRwXsjqTqApRrwWmhDLDHpIYV8

@@ -15,7 +15,7 @@
             locale:     'en'
           }
         </script>
-        <script src=".../dvwebloader-v2.js"></script>
+        <script type="module" src=".../reusable-components/dv-uploader.js"></script>
 
       Authentication uses the browser JSESSIONID session cookie.
       DATAVERSE_FEATURE_API_SESSION_AUTH must be enabled.
@@ -28,7 +28,7 @@
         locale: new URLSearchParams(window.location.search).get('dvLocale') || 'en'
       }
     </script>
-    <script type="module" src="dvwebloader-v2.js"></script>
+    <script type="module" src="reusable-components/dv-uploader.js"></script>
   </head>
   <body>
     <div id="dv-uploader"></div>
