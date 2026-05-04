@@ -4,7 +4,7 @@
     "node": ">=22 <23"
   },
   "name": "dataverse-frontend",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "private": true,
   "workspaces": {
