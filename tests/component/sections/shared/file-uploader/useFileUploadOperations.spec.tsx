@@ -15,6 +15,25 @@ describe('useFileUploadOperations', () => {
     return new File([content], name, { type: 'text/plain', lastModified: Date.now() })
   }
 
+  const createFileEntry = (file: File, fullPath: string): FileSystemFileEntry =>
+    ({
+      isFile: true,
+      isDirectory: false,
+      fullPath,
+      file: (successCallback: (file: File) => void) => successCallback(file)
+    } as FileSystemFileEntry)
+
+  const createDirectoryEntry = (batches: FileSystemEntry[][]): FileSystemDirectoryEntry =>
+    ({
+      isFile: false,
+      isDirectory: true,
+      createReader: () => ({
+        readEntries: (successCallback: (entries: FileSystemEntry[]) => void) => {
+          successCallback(batches.shift() ?? [])
+        }
+      })
+    } as FileSystemDirectoryReader)
+
   const createConfig = (
     overrides: Partial<FileUploadOperationsConfig> = {}
   ): FileUploadOperationsConfig => ({
@@ -102,6 +121,40 @@ describe('useFileUploadOperations', () => {
       const [key, cancelFn] = addUploadingToCancel.firstCall.args as [string, () => void]
       expect(key).to.be.a('string')
       expect(cancelFn).to.be.a('function')
+    })
+
+    it('should set an empty checksum when checksum calculation is disabled', async () => {
+      const updateFile = cy.stub()
+      const fileRepository = {
+        uploadFile: cy
+          .stub()
+          .callsFake(
+            (
+              _datasetId: string,
+              _fileHolder: { file: File },
+              _progress: (now: number) => void,
+              _abortController: AbortController,
+              getStorageId: (storageId: string) => void
+            ) => {
+              getStorageId('storage-1')
+              return Promise.resolve()
+            }
+          )
+      } as unknown as FileRepository
+      const config = createConfig({
+        fileRepository,
+        checksumAlgorithm: FixityAlgorithm.NONE,
+        updateFile
+      })
+
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      await act(async () => {
+        await result.current.uploadOneFile(createMockFile('test.txt'))
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      })
+
+      expect(updateFile).to.have.been.calledWith('test.txt', { checksumValue: '' })
     })
 
     it('should run validateBeforeUpload if provided', async () => {
@@ -202,6 +255,28 @@ describe('useFileUploadOperations', () => {
       const { result } = renderHook(() => useFileUploadOperations(config))
 
       expect(result.current.addFromDir).to.be.a('function')
+    })
+
+    it('should read all directory entry batches', async () => {
+      const addFile = cy.stub()
+      const config = createConfig({ addFile })
+
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      const firstFile = createMockFile('first.txt')
+      const secondFile = createMockFile('second.txt')
+      const directory = createDirectoryEntry([
+        [createFileEntry(firstFile, '/folder/first.txt')],
+        [createFileEntry(secondFile, '/folder/second.txt')],
+        []
+      ])
+
+      await act(async () => {
+        result.current.addFromDir(directory)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      })
+
+      expect(addFile).to.have.been.calledTwice
     })
   })
 })

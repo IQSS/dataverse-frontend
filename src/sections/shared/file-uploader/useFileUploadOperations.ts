@@ -1,10 +1,3 @@
-/**
- * useFileUploadOperations - Shared hook for file upload operations
- *
- * This hook provides the core upload logic (uploading files, handling directories,
- * computing checksums) that can be shared between the main SPA and standalone uploader.
- */
-
 import { useCallback, useRef } from 'react'
 import { Semaphore } from 'async-mutex'
 import { uploadFile } from '@/files/domain/useCases/uploadFile'
@@ -33,10 +26,7 @@ export interface FileUploadOperationsConfig {
   getFileByKey: (key: string) => { status: string } | undefined
   addUploadingToCancel: (key: string, cancel: () => void) => void
   removeUploadingToCancel: (key: string) => void
-  // Optional callbacks for notifications
   onFileSkipped?: (reason: 'ds_store' | 'already_uploaded', file: File) => void
-  onUploadCanceled?: (fileName: string) => void
-  // Optional callback for pre-upload validation (e.g., file type check for replace)
   validateBeforeUpload?: (file: File) => Promise<boolean>
 }
 
@@ -53,10 +43,6 @@ export interface FileUploadOperations {
   semaphore: Semaphore
 }
 
-/**
- * Hook that provides file upload operations.
- * Manages the upload process, directory traversal, and checksum calculation.
- */
 export function useFileUploadOperations(config: FileUploadOperationsConfig): FileUploadOperations {
   const {
     fileRepository,
@@ -71,7 +57,6 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
     validateBeforeUpload
   } = config
 
-  // Use a ref to persist semaphore across renders
   const semaphoreRef = useRef(new Semaphore(CONCURRENT_UPLOADS_LIMIT))
 
   const onFileUploadFailed = useCallback(
@@ -87,8 +72,9 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
       const fileKey = FileUploaderHelper.getFileKey(file)
 
       try {
-        // Skip checksum calculation if algorithm is NONE
-        if (checksumAlgorithm !== FixityAlgorithm.NONE) {
+        if (checksumAlgorithm === FixityAlgorithm.NONE) {
+          updateFile(fileKey, { checksumValue: '' })
+        } else {
           const checksumValue = await FileUploaderHelper.getChecksum(file, checksumAlgorithm)
           updateFile(fileKey, { checksumValue })
         }
@@ -102,20 +88,17 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
 
   const uploadOneFile = useCallback(
     async (file: File) => {
-      // Skip .DS_Store files
       if (FileUploaderHelper.isDS_StoreFile(file)) {
         onFileSkipped?.('ds_store', file)
         return
       }
 
-      // Check if file already uploaded
       const fileKey = FileUploaderHelper.getFileKey(file)
       if (getFileByKey(fileKey)) {
         onFileSkipped?.('already_uploaded', file)
         return
       }
 
-      // Run optional pre-upload validation
       if (validateBeforeUpload) {
         const shouldContinue = await validateBeforeUpload(file)
         if (!shouldContinue) {
@@ -162,29 +145,37 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
   const addFromDir = useCallback(
     (dir: FileSystemDirectoryEntry) => {
       const reader = dir.createReader()
-
-      reader.readEntries((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isFile) {
-            const fse = entry as FileSystemFileEntry
-            fse.file((file) => {
-              const fileWithPath = new File([file], file.name, {
-                type: file.type,
-                lastModified: file.lastModified
-              })
-
-              Object.defineProperty(fileWithPath, 'webkitRelativePath', {
-                value: entry.fullPath.startsWith('/') ? entry.fullPath.slice(1) : entry.fullPath,
-                writable: true
-              })
-
-              void uploadOneFile(fileWithPath)
-            })
-          } else if (entry.isDirectory) {
-            addFromDir(entry as FileSystemDirectoryEntry)
+      const readNextBatch = () => {
+        reader.readEntries((entries) => {
+          if (entries.length === 0) {
+            return
           }
+
+          entries.forEach((entry) => {
+            if (entry.isFile) {
+              const fse = entry as FileSystemFileEntry
+              fse.file((file) => {
+                const fileWithPath = new File([file], file.name, {
+                  type: file.type,
+                  lastModified: file.lastModified
+                })
+
+                Object.defineProperty(fileWithPath, 'webkitRelativePath', {
+                  value: entry.fullPath.startsWith('/') ? entry.fullPath.slice(1) : entry.fullPath,
+                  writable: true
+                })
+
+                void uploadOneFile(fileWithPath)
+              })
+            } else if (entry.isDirectory) {
+              addFromDir(entry as FileSystemDirectoryEntry)
+            }
+          })
+          readNextBatch()
         })
-      })
+      }
+
+      readNextBatch()
     },
     [uploadOneFile]
   )
@@ -202,7 +193,6 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
           handledViaEntry = true
           const fse = entry as FileSystemFileEntry
           fse.file((file) => {
-            // Create a new File with webkitRelativePath set for consistency
             const fileWithPath = new File([file], file.name, {
               type: file.type,
               lastModified: file.lastModified
@@ -216,7 +206,6 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
         }
       })
 
-      // Fallback for browsers where webkitGetAsEntry() returns null (e.g., Firefox in some cases)
       if (!handledViaEntry && fallbackFiles && fallbackFiles.length > 0) {
         Array.from(fallbackFiles).forEach((file) => {
           void uploadOneFile(file)
@@ -229,7 +218,6 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
   const retryUpload = useCallback(
     async (file: File) => {
       const fileKey = FileUploaderHelper.getFileKey(file)
-      // Reset status to uploading before retry
       updateFile(fileKey, { status: FileUploadStatus.UPLOADING, progress: 0 })
 
       await semaphoreRef.current.acquire(1)

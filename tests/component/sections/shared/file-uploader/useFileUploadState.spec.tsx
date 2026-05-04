@@ -216,6 +216,27 @@ describe('useFileUploadState', () => {
       expect(result.current.uploadedFiles[0].storageId).to.equal('storage-123')
       expect(result.current.uploadedFiles[0].checksumValue).to.equal('abc123')
     })
+
+    it('should add file to uploadedFiles when checksum calculation is disabled', () => {
+      const { result } = renderHook(() => useFileUploadState())
+      const mockFile = createMockFile('test.txt')
+
+      act(() => {
+        result.current.addFile(mockFile, FixityAlgorithm.NONE)
+      })
+
+      const fileKey = Object.keys(result.current.files)[0]
+
+      act(() => {
+        result.current.updateFile(fileKey, {
+          status: FileUploadStatus.DONE,
+          storageId: 'storage-123',
+          checksumValue: ''
+        })
+      })
+
+      expect(result.current.uploadedFiles).to.have.length(1)
+    })
   })
 
   describe('removeFile', () => {

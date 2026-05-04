@@ -205,13 +205,15 @@ describe('fileUploaderReducer', () => {
       })
 
       expect(state.uploadingToCancelMap.size).to.equal(1)
+      expect(state.uploadingToCancelMap).to.not.equal(initialStateAddFiles.uploadingToCancelMap)
     })
   })
 
   describe('REMOVE_UPLOADING_TO_CANCEL', () => {
     it('should remove a cancel function', () => {
+      const previousMap = new Map([['file.txt', () => {}]])
       const state = fileUploaderReducer(
-        { ...initialStateAddFiles, uploadingToCancelMap: new Map([['file.txt', () => {}]]) },
+        { ...initialStateAddFiles, uploadingToCancelMap: previousMap },
         {
           type: 'REMOVE_UPLOADING_TO_CANCEL',
           key: 'file.txt'
@@ -219,6 +221,7 @@ describe('fileUploaderReducer', () => {
       )
 
       expect(state.uploadingToCancelMap).to.not.have.property('file.txt')
+      expect(state.uploadingToCancelMap).to.not.equal(previousMap)
     })
   })
 

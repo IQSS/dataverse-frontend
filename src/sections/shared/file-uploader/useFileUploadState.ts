@@ -1,21 +1,9 @@
-/**
- * useFileUploadState - Shared hook for managing file upload state
- *
- * This hook provides the core state management logic for file uploads,
- * usable by both the main SPA (via context) and the standalone uploader.
- */
-
 import { useState, useMemo, useCallback } from 'react'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 import { FileUploaderHelper } from './FileUploaderHelper'
+import { FileUploadStatus } from './context/fileUploaderReducer'
 
-// Re-export from reducer for backward compatibility, but define our own minimal enum
-// for the standalone uploader that doesn't need the REMOVED status
-export enum FileUploadStatus {
-  UPLOADING = 'uploading',
-  DONE = 'done',
-  FAILED = 'failed'
-}
+export { FileUploadStatus } from './context/fileUploaderReducer'
 
 export interface FileUploadState {
   key: string
@@ -93,7 +81,9 @@ export function useFileUploadState(): FileUploadStateActions {
   const uploadedFiles = useMemo(() => {
     return Object.values(files).filter(
       (f): f is UploadedFile =>
-        f.status === FileUploadStatus.DONE && !!f.storageId && !!f.checksumValue
+        f.status === FileUploadStatus.DONE &&
+        !!f.storageId &&
+        (f.checksumAlgorithm === FixityAlgorithm.NONE || f.checksumValue !== undefined)
     )
   }, [files])
 
