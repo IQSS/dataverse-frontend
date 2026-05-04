@@ -34,7 +34,7 @@ import {
   deleteDatasetDraft,
   getDatasetCitationInOtherFormats,
   getDatasetAvailableCategories,
-  getDatasetTemplates,
+  getTemplatesByCollectionId as getDatasetTemplates,
   linkDataset,
   unlinkDataset,
   getDatasetLinkedCollections

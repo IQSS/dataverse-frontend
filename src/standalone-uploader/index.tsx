@@ -12,7 +12,7 @@ import { StrictMode } from 'react'
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import I18NextHttpBackend from 'i18next-http-backend'
-import { ApiConfig, FilesConfig } from '@iqss/dataverse-client-javascript'
+import { ApiConfig } from '@iqss/dataverse-client-javascript'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 import { ToastContainer } from 'react-toastify'
 import { parseUrlConfig } from './config'
@@ -40,9 +40,7 @@ function ConfigErrorDisplay({ error, missingParams }: { error: string; missingPa
       {missingParams.length > 0 && (
         <div>
           <p>Expected URL format:</p>
-          <code>
-            ?siteUrl=https://your-dataverse.edu&datasetPid=doi:10.5072/FK2/XXXXX&key=your-api-key
-          </code>
+          <code>?siteUrl=https://your-dataverse.edu&datasetPid=doi:10.5072/FK2/XXXXX</code>
         </div>
       )}
     </div>
@@ -114,19 +112,8 @@ async function init() {
 
   const config = configResult.config
 
-  // Initialize the API client with API key authentication
-  ApiConfig.init(`${config.siteUrl}/api/v1`, DataverseApiAuthMechanism.API_KEY, config.apiKey)
-
-  // Configure file upload settings
-  // These are critical for S3-compatible storage that may not support all S3 features
-  FilesConfig.init({
-    // useS3Tagging: Set to false for MinIO/S3-compatible storage without tagging support
-    useS3Tagging: config.useS3Tagging,
-    // maxMultipartRetries: Number of retry attempts for multipart upload failures
-    maxMultipartRetries: config.maxRetries,
-    // fileUploadTimeoutMs: Timeout for upload operations (0 = use axios default)
-    fileUploadTimeoutMs: config.uploadTimeoutMs || undefined
-  })
+  // Initialize the API client with session cookie authentication
+  ApiConfig.init(`${config.siteUrl}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
 
   // Determine the base path for loading translation files
   // In standalone mode, translations are bundled or loaded from the same origin
