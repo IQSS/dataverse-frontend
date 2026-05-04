@@ -17,9 +17,15 @@
         </script>
         <script type="module" src=".../reusable-components/dv-uploader.js"></script>
 
+      The host page is responsible for its own page-level styling. The bundle
+      below only ships component styles scoped to `.dv-uploader-root`. The
+      page styles loaded here (`standalone-page.css`) are for this demo only
+      and are NOT part of the embedded bundle.
+
       Authentication uses the browser JSESSIONID session cookie.
       DATAVERSE_FEATURE_API_SESSION_AUTH must be enabled.
     -->
+    <link rel="stylesheet" href="standalone-page.css" />
     <script>
       window.dvUploaderConfig = {
         siteUrl:
@@ -31,6 +37,8 @@
     <script type="module" src="reusable-components/dv-uploader.js"></script>
   </head>
   <body>
-    <div id="dv-uploader"></div>
+    <div class="standalone-uploader-page">
+      <div id="dv-uploader"></div>
+    </div>
   </body>
 </html>

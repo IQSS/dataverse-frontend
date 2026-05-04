@@ -81,13 +81,15 @@ async function init() {
   if (missingFields.length > 0 || !config) {
     root.render(
       <StrictMode>
-        <div className="standalone-error">
-          <p>
-            dvUploader: missing required config: <code>{missingFields.join(', ')}</code>
-          </p>
-          <p>
-            Set <code>window.dvUploaderConfig</code> before loading the script.
-          </p>
+        <div className="dv-uploader-root">
+          <div className="standalone-error">
+            <p>
+              dvUploader: missing required config: <code>{missingFields.join(', ')}</code>
+            </p>
+            <p>
+              Set <code>window.dvUploaderConfig</code> before loading the script.
+            </p>
+          </div>
         </div>
       </StrictMode>
     )
@@ -117,7 +119,7 @@ async function init() {
 
   root.render(
     <StrictMode>
-      <div className="standalone-uploader-container">
+      <div className="dv-uploader-root">
         <ToastContainer position="top-right" autoClose={5000} />
         <UploaderWrapper
           fileRepository={fileRepository}

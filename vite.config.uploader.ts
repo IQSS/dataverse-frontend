@@ -53,11 +53,16 @@ export default defineConfig({
           if (!id.includes('node_modules')) {
             return
           }
-          if (id.includes('react') || id.includes('scheduler')) {
-            return 'react'
-          }
-          if (id.includes('i18next') || id.includes('react-i18next')) {
+          // i18next first — `react-i18next` would otherwise match the broader
+          // react chunk below.
+          if (/\/node_modules\/(i18next|react-i18next|i18next-http-backend)\//.test(id)) {
             return 'i18n'
+          }
+          // Match only the React core packages so we don't sweep in unrelated
+          // packages whose names happen to include "react" (react-bootstrap,
+          // react-router-dom, react-toastify, etc.).
+          if (/\/node_modules\/(react|react-dom|scheduler)\//.test(id)) {
+            return 'react'
           }
           return 'vendor'
         }

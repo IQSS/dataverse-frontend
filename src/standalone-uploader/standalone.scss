@@ -1,49 +1,24 @@
 /**
- * Standalone Uploader Base Styles
+ * Standalone Uploader Embedded Styles
+ *
+ * These styles are bundled into the JS module loaded by JSF (and the demo page).
+ * They MUST be safe to inject into a host page — no html/body/#root rules,
+ * no resets that would override the host page chrome.
+ *
+ * Page-level styles (background, font, viewport-fill) belong in
+ * `standalone-page.scss`, which is only loaded by the standalone demo HTML.
  */
 
-// Reset and base styles for standalone mode
-html,
-body {
+// Wrapper applied to the React render root. Used as a future hook for
+// CSS scoping (e.g. PostCSS prefix or Shadow DOM) to limit Bootstrap 5
+// reset rules to within the embedded component.
+.dv-uploader-root {
+  // Reset margin/padding so the host container controls layout.
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    sans-serif;
-  background-color: #f5f5f5;
-  min-height: 100vh;
-}
 
-#root {
-  min-height: 100vh;
-}
-
-.standalone-uploader-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.standalone-uploader-header {
-  margin-bottom: 2rem;
-
-  h1 {
-    margin: 0 0 0.5rem;
-    font-size: 1.75rem;
-    color: #333;
-  }
-}
-
-.standalone-uploader-dataset-info {
-  margin: 0;
-  color: #666;
-
-  code {
-    background-color: #f8f9fa;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 0.9rem;
-  }
+  // Let React content size naturally inside whatever JSF panel hosts it.
+  width: 100%;
 }
 
 .standalone-error {
