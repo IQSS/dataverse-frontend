@@ -64,7 +64,7 @@
   "scripts": {
     "start": "vite --base=/spa",
     "build": "tsc && vite build",
-    "build-uploader": "vite build --config vite.config.uploader.ts && cp -r public/locales dist-uploader/ && cp src/standalone-uploader/dvwebloaderV2.html src/standalone-uploader/embeddedDvWebloader.html dist-uploader/",
+    "build-uploader": "vite build --config vite.config.uploader.ts && cp -r public/locales dist-uploader/ && cp src/standalone-uploader/dvwebloaderV2.html dist-uploader/",
     "build-keycloak-theme": "npm run build && keycloakify build",
     "preview": "vite preview",
     "lint": "npm run typecheck && npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",
