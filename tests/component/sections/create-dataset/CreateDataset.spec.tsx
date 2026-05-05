@@ -8,6 +8,7 @@ import { CollectionRepository } from '../../../../src/collection/domain/reposito
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { DatasetTypeMother } from '@tests/component/dataset/domain/models/DatasetTypeMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const templateRepository: TemplateRepository = {} as TemplateRepository
@@ -31,10 +32,13 @@ const mountCreateDataset = (component: JSX.Element): void => {
   )
 }
 
+const datasetTypesMock = DatasetTypeMother.creatDefaultDatasetType()
+
 describe('Create Dataset', () => {
   beforeEach(() => {
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
     templateRepository.getTemplatesByCollectionId = cy.stub().resolves([])
+    datasetRepository.getAvailableDatasetTypes = cy.stub().resolves([datasetTypesMock])
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
       .resolves(collectionMetadataBlocksInfo)
@@ -237,6 +241,156 @@ describe('Create Dataset', () => {
       })
 
       cy.findAllByText('Template 2').should('exist').should('have.length', 2) // Template 2 is selected, we see two
+    })    
+  })
+  
+  describe('dataset types functionality', () => {
+    it('should not show dataset types select when there is only one dataset type', () => {
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('not.exist')
+    })
+
+    it('should show dataset type select when there is more than one type', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo'
+        })
+      ]
+
+      datasetRepository.getAvailableDatasetTypes = cy.stub().resolves(datasetTypesMock)
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist')
+    })
+
+    it('should set dataset type with name "dataset" as the default one', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo'
+        })
+      ]
+
+      datasetRepository.getAvailableDatasetTypes = cy.stub().resolves(datasetTypesMock)
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist')
+      cy.findByTestId('selected-type').should('have.text', 'dataset')
+    })
+
+    it('should change dataset type when user selects another one', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo'
+        })
+      ]
+
+      datasetRepository.getAvailableDatasetTypes = cy.stub().resolves(datasetTypesMock)
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist').as('datasetTypeSelect')
+      cy.findByTestId('selected-type').should('have.text', 'dataset')
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.findByText(/foo/).click()
+      })
+
+      cy.findByTestId('selected-type').should('have.text', 'foo')
+    })
+
+    // This tests are to validate that the dataset type select dropdown is closed when clicking outside, focusing outside or pressing escape
+    it('should close dataset type select when clicking and focusing outside and pressing escape', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo'
+        })
+      ]
+
+      datasetRepository.getAvailableDatasetTypes = cy.stub().resolves(datasetTypesMock)
+
+      cy.customMount(
+        <CreateDataset
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist').as('datasetTypeSelect')
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.get('[role="menu"]').should('be.visible')
+      })
+
+      // Click outside test
+      cy.get('body').click(0, 0)
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.get('[role="menu"]').should('not.be.visible')
+      })
+
+      // Open again
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.get('[role="menu"]').should('be.visible')
+      })
+
+      // Focus outside test
+      cy.findByLabelText(/Title/).focus()
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.get('[role="menu"]').should('not.be.visible')
+      })
+
+      // Open again
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.get('[role="menu"]').should('be.visible')
+      })
+
+      // Press escape test
+      cy.get('body').trigger('keydown', { key: 'Escape', force: true })
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.get('[role="menu"]').should('not.be.visible')
+      })
     })
   })
 })

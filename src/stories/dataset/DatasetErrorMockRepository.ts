@@ -14,6 +14,7 @@ import { DatasetLicenseUpdateRequest } from '@/dataset/domain/models/DatasetLice
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 export class DatasetErrorMockRepository implements DatasetMockRepository {
   getAllWithCount: (
@@ -199,6 +200,14 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
   }
 
   getDatasetUploadLimits(_datasetId: string | number): Promise<DatasetUploadLimits> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getAvailableDatasetTypes(): Promise<DatasetType[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

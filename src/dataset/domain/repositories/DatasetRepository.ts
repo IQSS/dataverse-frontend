@@ -12,6 +12,7 @@ import { DatasetLicenseUpdateRequest } from '../models/DatasetLicenseUpdateReque
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetVersionPaginationInfo } from '../models/DatasetVersionPaginationInfo'
 import { DatasetUploadLimits } from '../models/DatasetUploadLimits'
+import { DatasetType } from '../models/DatasetType'
 
 export interface DatasetRepository {
   getByPersistentId: (
@@ -29,7 +30,11 @@ export interface DatasetRepository {
     includeDeaccessioned: boolean
   ) => Promise<DatasetVersionDiff>
 
-  create: (dataset: DatasetDTO, collectionId: string) => Promise<{ persistentId: string }>
+  create: (
+    dataset: DatasetDTO, 
+    collectionId: string, 
+    datasetType?: DatasetType
+  ) => Promise<{ persistentId: string }>
   updateMetadata: (
     datasetId: string | number,
     datasetDTO: DatasetDTO,
@@ -70,4 +75,5 @@ export interface DatasetRepository {
   unlink(datasetId: string | number, collectionIdOrAlias: string | number): Promise<void>
   getDatasetLinkedCollections: (datasetId: string | number) => Promise<CollectionSummary[]>
   getDatasetUploadLimits: (datasetId: string | number) => Promise<DatasetUploadLimits>
+  getAvailableDatasetTypes: () => Promise<DatasetType[]>
 }

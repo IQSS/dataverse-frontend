@@ -207,6 +207,7 @@ const jsDatasetFilesTotalArchivalDownloadSize = 7
 const expectedDataset = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
@@ -319,6 +320,7 @@ const expectedDataset = {
 const expectedDatasetWithPublicationDate = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
@@ -429,6 +431,7 @@ const expectedDatasetWithPublicationDate = {
 const expectedDatasetWithNextVersionNumbers = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
@@ -540,6 +543,7 @@ const expectedDatasetWithNextVersionNumbers = {
 const expectedDatasetAlternateVersion = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
