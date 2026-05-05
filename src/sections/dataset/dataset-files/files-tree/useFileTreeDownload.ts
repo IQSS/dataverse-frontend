@@ -22,7 +22,7 @@ export interface UseFileTreeDownloadArgs {
    * files (e.g. direct anchor click for one file, streaming zip for
    * many). The hook only owns the enumeration step.
    */
-  onDownloadFiles: (files: FileTreeFile[]) => Promise<void>
+  onDownloadFiles: (files: FileTreeFile[]) => Promise<void> | void
 }
 
 export interface UseFileTreeDownloadApi {

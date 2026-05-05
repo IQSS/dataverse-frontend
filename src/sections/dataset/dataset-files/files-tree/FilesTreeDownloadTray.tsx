@@ -29,8 +29,7 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
   const isError = state.status === 'error'
   const lastRecoverableFailure = [...state.failedSoFar].reverse().find((f) => f.recoverable)
 
-  const pct =
-    state.totalBytes > 0 ? Math.min(100, (state.bytesDone / state.totalBytes) * 100) : 0
+  const pct = state.totalBytes > 0 ? Math.min(100, (state.bytesDone / state.totalBytes) * 100) : 0
 
   let title: string = t('tree.download.tray.preparing', 'Preparing zip…')
   if (isPaused) title = t('tree.download.tray.paused', 'Download paused — file failed')
@@ -54,14 +53,14 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
   const nowText = isPaused
     ? t('tree.download.tray.now.paused', 'Paused')
     : isAwaitingRetry
-      ? t('tree.download.tray.now.awaiting', 'Awaiting retry decision')
-      : isDone
-        ? t('tree.download.tray.now.done', 'Done')
-        : isCancelled
-          ? t('tree.download.tray.now.cancelled', 'Cancelled')
-          : state.current
-            ? `▸ ${state.current.path}`
-            : '…'
+    ? t('tree.download.tray.now.awaiting', 'Awaiting retry decision')
+    : isDone
+    ? t('tree.download.tray.now.done', 'Done')
+    : isCancelled
+    ? t('tree.download.tray.now.cancelled', 'Cancelled')
+    : state.current
+    ? `▸ ${state.current.path}`
+    : '…'
 
   return (
     <>
@@ -84,9 +83,7 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
             <div className={styles['tray-meta']} data-testid="files-tree-download-tray-meta">
               {state.filesDone} / {state.totalFiles} {t('tree.download.tray.files', 'files')} ·{' '}
               {formatBytes(state.bytesDone)} / {formatBytes(state.totalBytes)}
-              {state.pass === 2 && (
-                <> · {t('tree.download.tray.pass2', 'pass 2 of 2')}</>
-              )}
+              {state.pass === 2 && <> · {t('tree.download.tray.pass2', 'pass 2 of 2')}</>}
             </div>
           </div>
           <Button

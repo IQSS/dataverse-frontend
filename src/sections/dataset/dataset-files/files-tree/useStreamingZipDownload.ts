@@ -120,13 +120,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
   // Engine control: a single "decision" promise that the iterator
   // awaits when paused. The UI calls retryCurrent/skipCurrent/etc.
   // which resolve this promise with the requested action.
-  type Decision =
-    | 'retry'
-    | 'skip'
-    | 'skip-all'
-    | 'defer-to-end'
-    | 'retry-failed'
-    | 'cancel'
+  type Decision = 'retry' | 'skip' | 'skip-all' | 'defer-to-end' | 'retry-failed' | 'cancel'
   const decisionRef = useRef<ResolveBag<Decision> | null>(null)
   const cancelledRef = useRef(false)
 
@@ -192,8 +186,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
       let strategy = initialStrategy
 
       async function* iterableForZip() {
-        let pass: 1 | 2 = 1
-
         // ----- helper: process a queue ----------------------------------
         const processQueue = async function* () {
           while (queue.length > 0) {
@@ -317,10 +309,9 @@ export function useStreamingZipDownload(): StreamingZipApi {
             update((prev) => ({
               ...prev,
               failedSoFar: prev.failedSoFar.filter((f) => !f.recoverable),
+              pass: 2,
               status: 'running'
             }))
-            pass = 2
-            update((prev) => ({ ...prev, pass: 2 }))
             yield* processQueue()
           }
         }
@@ -346,7 +337,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
         return bag.promise
       }
 
-      ;(async () => {
+      void (async () => {
         try {
           const response = downloadZip(iterableForZip())
           const blob = await response.blob()

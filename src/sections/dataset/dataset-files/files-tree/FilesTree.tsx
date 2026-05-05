@@ -110,7 +110,7 @@ export function FilesTree({
   }, [streamingZip.state.status])
 
   const onDownloadFiles = useCallback(
-    async (files: FileTreeFile[]) => {
+    (files: FileTreeFile[]) => {
       if (files.length === 0) {
         return
       }
@@ -296,10 +296,7 @@ export function FilesTree({
       const currentRank = itemRowIndices.indexOf(focusedRowIndex)
       const nextRank = Math.max(
         0,
-        Math.min(
-          itemRowIndices.length - 1,
-          (currentRank === -1 ? 0 : currentRank) + delta
-        )
+        Math.min(itemRowIndices.length - 1, (currentRank === -1 ? 0 : currentRank) + delta)
       )
       setFocusedRowIndex(itemRowIndices[nextRank])
     },
