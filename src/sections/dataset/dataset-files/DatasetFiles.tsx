@@ -24,6 +24,7 @@ interface DatasetFilesProps {
 }
 
 const VIEW_PARAM = 'view'
+const PATH_PARAM = 'path'
 
 export function DatasetFiles({
   filesRepository,
@@ -34,12 +35,23 @@ export function DatasetFiles({
 }: DatasetFilesProps) {
   const [searchParams, setSearchParams] = useSearchParams()
   const view: FilesViewMode = searchParams.get(VIEW_PARAM) === 'tree' ? 'tree' : 'table'
+  const treePath = searchParams.get(PATH_PARAM) ?? ''
   const setView = (next: FilesViewMode) => {
     const updated = new URLSearchParams(searchParams)
     if (next === 'tree') {
       updated.set(VIEW_PARAM, 'tree')
     } else {
       updated.delete(VIEW_PARAM)
+      updated.delete(PATH_PARAM)
+    }
+    setSearchParams(updated, { replace: true })
+  }
+  const setTreePath = (next: string) => {
+    const updated = new URLSearchParams(searchParams)
+    if (next) {
+      updated.set(PATH_PARAM, next)
+    } else {
+      updated.delete(PATH_PARAM)
     }
     setSearchParams(updated, { replace: true })
   }
@@ -56,6 +68,8 @@ export function DatasetFiles({
       datasetVersion={datasetVersion}
       onChangeView={setView}
       view={view}
+      initialPath={treePath}
+      onCurrentPathChange={setTreePath}
     />
   ) : (
     <DatasetFilesTableView
@@ -130,6 +144,8 @@ interface DatasetFilesTreeViewProps {
   datasetVersion: DatasetVersion
   onChangeView: (view: FilesViewMode) => void
   view: FilesViewMode
+  initialPath: string
+  onCurrentPathChange: (path: string) => void
 }
 
 function DatasetFilesTreeView({
@@ -137,7 +153,9 @@ function DatasetFilesTreeView({
   datasetPersistentId,
   datasetVersion,
   onChangeView,
-  view
+  view,
+  initialPath,
+  onCurrentPathChange
 }: DatasetFilesTreeViewProps) {
   return (
     <>
@@ -148,6 +166,8 @@ function DatasetFilesTreeView({
         treeRepository={treeRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
+        initialPath={initialPath}
+        onCurrentPathChange={onCurrentPathChange}
       />
     </>
   )

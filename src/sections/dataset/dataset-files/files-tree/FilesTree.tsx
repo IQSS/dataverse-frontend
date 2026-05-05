@@ -45,6 +45,17 @@ interface FilesTreeProps {
   order?: FileTreeOrder
   rowHeight?: number
   fallbackHeight?: number
+  /**
+   * Folder path to expand on mount (e.g. read from a `?path=` URL query
+   * param). All ancestors along the path are expanded.
+   */
+  initialPath?: string
+  /**
+   * Called with the deepest currently-expanded folder path whenever the
+   * expansion changes. The host can sync this to the URL for deep
+   * linking. Empty string means only the root is expanded.
+   */
+  onCurrentPathChange?: (path: string) => void
 }
 
 const DEFAULT_ROW_HEIGHT = 32
@@ -59,7 +70,9 @@ export function FilesTree({
   query,
   order = FileTreeOrder.NAME_AZ,
   rowHeight = DEFAULT_ROW_HEIGHT,
-  fallbackHeight = DEFAULT_FALLBACK_HEIGHT
+  fallbackHeight = DEFAULT_FALLBACK_HEIGHT,
+  initialPath = '',
+  onCurrentPathChange
 }: FilesTreeProps) {
   const { t } = useTranslation('files')
   const tree = useFileTree({
@@ -68,8 +81,18 @@ export function FilesTree({
     datasetVersion,
     pageSize,
     order,
-    include: FileTreeInclude.ALL
+    include: FileTreeInclude.ALL,
+    initialPath
   })
+
+  const lastPathRef = useRef<string>(initialPath)
+  useEffect(() => {
+    if (!onCurrentPathChange) return
+    if (tree.currentPath !== lastPathRef.current) {
+      lastPathRef.current = tree.currentPath
+      onCurrentPathChange(tree.currentPath)
+    }
+  }, [tree.currentPath, onCurrentPathChange])
   const selection = useFileTreeSelection()
   const accessRepository = useAccessRepository()
 

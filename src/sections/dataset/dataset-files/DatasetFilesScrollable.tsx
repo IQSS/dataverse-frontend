@@ -31,6 +31,7 @@ interface DatasetFilesScrollableProps {
 }
 
 const VIEW_PARAM = 'view'
+const PATH_PARAM = 'path'
 
 export type SentryRef = UseInfiniteScrollHookRefCallback
 
@@ -48,12 +49,23 @@ export function DatasetFilesScrollable({
 
   const [searchParams, setSearchParams] = useSearchParams()
   const view: FilesViewMode = searchParams.get(VIEW_PARAM) === 'tree' ? 'tree' : 'table'
+  const treePath = searchParams.get(PATH_PARAM) ?? ''
   const setView = (next: FilesViewMode) => {
     const updated = new URLSearchParams(searchParams)
     if (next === 'tree') {
       updated.set(VIEW_PARAM, 'tree')
     } else {
       updated.delete(VIEW_PARAM)
+      updated.delete(PATH_PARAM)
+    }
+    setSearchParams(updated, { replace: true })
+  }
+  const setTreePath = (next: string) => {
+    const updated = new URLSearchParams(searchParams)
+    if (next) {
+      updated.set(PATH_PARAM, next)
+    } else {
+      updated.delete(PATH_PARAM)
     }
     setSearchParams(updated, { replace: true })
   }
@@ -190,6 +202,8 @@ export function DatasetFilesScrollable({
           treeRepository={treeRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
+          initialPath={treePath}
+          onCurrentPathChange={setTreePath}
         />
       </section>
     )

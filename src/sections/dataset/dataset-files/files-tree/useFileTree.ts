@@ -23,12 +23,25 @@ export interface UseFileTreeArgs {
   pageSize?: number
   order?: FileTreeOrder
   include?: FileTreeInclude
+  /**
+   * Path to expand on mount — typically read from a `?path=` URL query
+   * param so a deep link opens the tree at the bookmarked folder. The
+   * hook expands every ancestor along the way (e.g. `data/raw/2024`
+   * causes `data`, `data/raw`, and `data/raw/2024` all to be expanded).
+   */
+  initialPath?: string
 }
 
 export interface UseFileTreeApi {
   rootNode: FolderNode
   nodes: ReadonlyMap<string, FolderNode>
   expanded: ReadonlySet<string>
+  /**
+   * The deepest folder currently in the expanded set. Empty string means
+   * only the root is expanded. Useful for surfacing a single canonical
+   * path to a URL bookmark.
+   */
+  currentPath: string
   toggleExpanded: (path: string) => Promise<void>
   expand: (path: string) => Promise<void>
   collapse: (path: string) => void
@@ -41,16 +54,62 @@ export interface UseFileTreeApi {
 
 const ROOT = ''
 
+/**
+ * Returns the chain of ancestor paths for a folder, including the folder
+ * itself but excluding the empty root. For `data/raw/2024` →
+ * `['data', 'data/raw', 'data/raw/2024']`.
+ */
+function ancestorChain(path: string): string[] {
+  if (!path) {
+    return []
+  }
+  const parts = path.split('/').filter((p) => p.length > 0)
+  const out: string[] = []
+  let acc = ''
+  for (const part of parts) {
+    acc = acc ? `${acc}/${part}` : part
+    out.push(acc)
+  }
+  return out
+}
+
+/**
+ * Picks the deepest folder from a set of expanded paths — used to derive
+ * `currentPath` for URL bookmarking. Returns `''` if no non-root folder
+ * is expanded.
+ */
+function deepestExpanded(set: ReadonlySet<string>): string {
+  let deepest = ''
+  let depth = 0
+  for (const path of set) {
+    if (!path) continue
+    const d = path.split('/').length
+    if (d > depth) {
+      deepest = path
+      depth = d
+    }
+  }
+  return deepest
+}
+
 export function useFileTree({
   repository,
   datasetPersistentId,
   datasetVersion,
   pageSize = 200,
   order = FileTreeOrder.NAME_AZ,
-  include = FileTreeInclude.ALL
+  include = FileTreeInclude.ALL,
+  initialPath = ''
 }: UseFileTreeArgs): UseFileTreeApi {
   const [nodes, setNodes] = useState<Map<string, FolderNode>>(() => new Map())
-  const [expanded, setExpanded] = useState<Set<string>>(() => new Set([ROOT]))
+  const initialExpanded = (() => {
+    const set = new Set<string>([ROOT])
+    for (const ancestor of ancestorChain(initialPath)) {
+      set.add(ancestor)
+    }
+    return set
+  })()
+  const [expanded, setExpanded] = useState<Set<string>>(() => initialExpanded)
   const knownFilesRef = useRef<Map<string, FileTreeFile>>(new Map())
   const inFlight = useRef<Map<string, Promise<void>>>(new Map())
   const versionKey = `${datasetPersistentId}::${datasetVersion.number.toString()}::${order}::${include}`
@@ -132,11 +191,20 @@ export function useFileTree({
     if (previousKey.current !== versionKey) {
       previousKey.current = versionKey
       setNodes(new Map())
-      setExpanded(new Set([ROOT]))
+      const reset = new Set<string>([ROOT])
+      for (const ancestor of ancestorChain(initialPath)) {
+        reset.add(ancestor)
+      }
+      setExpanded(reset)
       knownFilesRef.current = new Map()
       inFlight.current.clear()
     }
     void ensureLoaded(ROOT)
+    // Pre-fetch every initial-path ancestor so the tree opens to the
+    // bookmarked depth on mount without the user clicking through.
+    for (const ancestor of ancestorChain(initialPath)) {
+      void ensureLoaded(ancestor)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [versionKey])
 
@@ -230,6 +298,7 @@ export function useFileTree({
     rootNode,
     nodes,
     expanded,
+    currentPath: deepestExpanded(expanded),
     toggleExpanded,
     expand,
     collapse,
