@@ -35,7 +35,8 @@ export default defineConfig({
     },
     rollupOptions: {
       input: {
-        'dv-uploader': path.resolve(__dirname, 'src/standalone-uploader/index.tsx')
+        'dv-uploader': path.resolve(__dirname, 'src/standalone-uploader/index.tsx'),
+        'dv-tree-view': path.resolve(__dirname, 'src/standalone-tree-view/index.tsx')
       },
       output: {
         entryFileNames: 'reusable-components/[name].js',

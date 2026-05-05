@@ -56,6 +56,13 @@ interface FilesTreeProps {
    * linking. Empty string means only the root is expanded.
    */
   onCurrentPathChange?: (path: string) => void
+  /**
+   * Optional URL builder for the filename → file metadata link.
+   * Forwarded to FilesTreeRow. When provided, the row uses a plain
+   * anchor (suitable for JSF embeds without React Router); when
+   * omitted, the row falls back to the SPA `<Link>`.
+   */
+  buildFileMetadataUrl?: (file: FileTreeFile) => string
 }
 
 const DEFAULT_ROW_HEIGHT = 32
@@ -72,7 +79,8 @@ export function FilesTree({
   rowHeight = DEFAULT_ROW_HEIGHT,
   fallbackHeight = DEFAULT_FALLBACK_HEIGHT,
   initialPath = '',
-  onCurrentPathChange
+  onCurrentPathChange,
+  buildFileMetadataUrl
 }: FilesTreeProps) {
   const { t } = useTranslation('files')
   const tree = useFileTree({
@@ -351,6 +359,7 @@ export function FilesTree({
                 }}
                 onDownload={() => handleDownloadOne(item)}
                 datasetVersionNumber={datasetVersion.number}
+                buildFileMetadataUrl={buildFileMetadataUrl}
               />
             )
           })}

@@ -28,6 +28,14 @@ interface FilesTreeRowProps {
   onToggleExpansion?: () => void
   onDownload: () => void
   datasetVersionNumber: DatasetVersionNumber
+  /**
+   * Optional URL builder for the filename → file metadata link. When
+   * provided, the row renders a plain `<a href>` (works in JSF
+   * standalone embeds where there is no React Router). When omitted,
+   * the row falls back to a SPA `<Link>` pointing at the SPA file
+   * page.
+   */
+  buildFileMetadataUrl?: (file: FileTreeFile) => string
 }
 
 const INDENT_BASE = 14
@@ -43,7 +51,8 @@ export function FilesTreeRow({
   onToggleSelection,
   onToggleExpansion,
   onDownload,
-  datasetVersionNumber
+  datasetVersionNumber,
+  buildFileMetadataUrl
 }: FilesTreeRowProps) {
   const { t } = useTranslation('files')
   const isFile = isFileTreeFile(item)
@@ -115,13 +124,21 @@ export function FilesTreeRow({
           })}
           title={item.path}>
           {isFile ? (
-            <Link
-              to={`${Route.FILES}?${QueryParamKey.FILE_ID}=${item.id}&${
-                QueryParamKey.DATASET_VERSION
-              }=${datasetVersionNumber.toSearchParam()}`}
-              data-testid={`files-tree-file-link-${item.path}`}>
-              {item.name}
-            </Link>
+            buildFileMetadataUrl ? (
+              <a
+                href={buildFileMetadataUrl(item)}
+                data-testid={`files-tree-file-link-${item.path}`}>
+                {item.name}
+              </a>
+            ) : (
+              <Link
+                to={`${Route.FILES}?${QueryParamKey.FILE_ID}=${item.id}&${
+                  QueryParamKey.DATASET_VERSION
+                }=${datasetVersionNumber.toSearchParam()}`}
+                data-testid={`files-tree-file-link-${item.path}`}>
+                {item.name}
+              </Link>
+            )
           ) : (
             <span>{item.name}</span>
           )}

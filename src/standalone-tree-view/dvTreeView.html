@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dataverse Tree View — Standalone Demo</title>
+    <link rel="stylesheet" href="standalone-page.css" />
+  </head>
+  <body>
+    <!--
+      Direct-embed example. JSF integration is the same shape:
+
+        <div id="dv-tree-view"></div>
+        <script>
+          window.dvTreeViewConfig = {
+            siteUrl: '#{settingsWrapper.dataverseSiteUrl}',
+            datasetPid: '#{DatasetPage.dataset.globalId.asString()}',
+            datasetVersionId: '#{DatasetPage.workingVersion.versionState eq "RELEASED" ? "" : ":draft"}',
+            locale: '#{dataverseLocaleBean.localeCode}'
+          };
+        </script>
+        <script type="module" src="/dvwebloader/reusable-components/dv-tree-view.js"></script>
+    -->
+
+    <div id="dv-tree-view"></div>
+
+    <script>
+      // For browser testing: read config from URL params
+      const params = new URLSearchParams(window.location.search)
+      window.dvTreeViewConfig = {
+        siteUrl: params.get('siteUrl') ?? 'http://localhost:8000',
+        datasetPid: params.get('datasetPid') ?? '',
+        datasetVersionId: params.get('datasetVersionId') ?? ':latest',
+        locale: params.get('locale') ?? 'en'
+      }
+    </script>
+    <script type="module" src="reusable-components/dv-tree-view.js"></script>
+  </body>
+</html>
