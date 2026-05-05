@@ -3,10 +3,7 @@ import { StrictMode } from 'react'
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import I18NextHttpBackend from 'i18next-http-backend'
-import { ApiConfig } from '@iqss/dataverse-client-javascript'
-// TODO: switch to `import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript'`
-// once the SDK prerelease for #403 is republished — the public re-export is in `core/index.ts`.
-import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
+import { ApiConfig, DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript'
 import { ToastContainer } from 'react-toastify'
 import { StandaloneFileUploaderPanel } from './StandaloneFileUploaderPanel'
 import { StandaloneFileRepository } from './StandaloneFileRepository'
