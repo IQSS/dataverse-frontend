@@ -163,7 +163,7 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
                 Object.defineProperty(fileWithPath, 'webkitRelativePath', {
                   value: entry.fullPath?.startsWith('/')
                     ? entry.fullPath.slice(1)
-                    : (entry.fullPath ?? ''),
+                    : entry.fullPath ?? '',
                   writable: true
                 })
 
@@ -202,7 +202,7 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
             Object.defineProperty(fileWithPath, 'webkitRelativePath', {
               value: entry.fullPath?.startsWith('/')
                 ? entry.fullPath.slice(1)
-                : (entry.fullPath ?? ''),
+                : entry.fullPath ?? '',
               writable: true
             })
             void uploadOneFile(fileWithPath)
