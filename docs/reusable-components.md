@@ -194,7 +194,7 @@ The tree view ships:
 - Visible-row virtualisation; no `react-virtual` / `react-window` dep.
 - Full WAI-ARIA tree keyboard navigation (`ArrowUp/Down/Left/Right`, `Home/End`, `Space`, `Enter`).
 - URL bookmarkability: `?view=tree&path=<folder>` round-trips and pre-fetches every ancestor on mount.
-- **Client-side streaming-zip download.** Multi-file selections are zipped in the browser via [`client-zip`](https://github.com/Touffy/client-zip) (~3 KB gzip, the only new dep introduced by the tree). A bottom-sheet tray (`FilesTreeDownloadTray`) shows progress, the file currently being added, and surfaces retry / skip / skip-all decisions inline when a fetch fails. Single-file downloads bypass the zip wrap and anchor-click `file.downloadUrl` directly. **No server contract changes.**
+- **Client-side streaming-zip download.** Multi-file selections are zipped in the browser via [`client-zip`](https://github.com/Touffy/client-zip) (~3 KB gzip, the only new dep introduced by the tree). A bottom-sheet tray (`FilesTreeDownloadTray`) shows progress, the file currently being added, and surfaces an inline **Retry / Skip / Skip & retry at end / Skip all** decision row when a fetch fails. *Skip & retry at end* converts the run into a two-pass flow mid-flight (failures accumulate as recoverable, then the tray prompts to retry them at the end). *Skip all* switches to skip-with-manifest and writes a `manifest.txt` listing the failures into the root of the zip. Single-file downloads bypass the zip wrap and anchor-click `file.downloadUrl` directly. **No server contract changes.**
 
 ## Testing reusable components
 
