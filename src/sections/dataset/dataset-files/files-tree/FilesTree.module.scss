@@ -116,20 +116,21 @@ $indent-step: 18px;
 
 .row:focus-visible {
   outline: none;
+
   // Inset ring works around the absolute-positioned row clipping a
   // standard outline against neighbouring rows.
   box-shadow: inset 0 0 0 2px var(--bs-primary, #0d6efd);
-  background-color: rgba(13, 110, 253, 0.04);
+  background-color: rgb(13 110 253 / 4%);
   z-index: 1;
 }
 
 .row-selected,
 .row-selected:hover {
-  background-color: rgba(13, 110, 253, 0.08);
+  background-color: rgb(13 110 253 / 8%);
 }
 
 .row-selected:focus-visible {
-  background-color: rgba(13, 110, 253, 0.12);
+  background-color: rgb(13 110 253 / 12%);
 }
 
 .row-name {
@@ -155,7 +156,7 @@ $indent-step: 18px;
 }
 
 .row-twisty:hover {
-  background-color: rgba(0, 0, 0, 0.06);
+  background-color: rgb(0 0 0 / 6%);
   color: var(--bs-body-color);
 }
 
@@ -243,11 +244,6 @@ $indent-step: 18px;
   padding: 0;
 }
 
-.icon-btn:hover:not(:disabled) {
-  background-color: rgba(0, 0, 0, 0.06);
-  color: var(--bs-primary);
-}
-
 .icon-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -256,6 +252,11 @@ $indent-step: 18px;
 .icon-btn:focus-visible {
   outline: 2px solid var(--bs-primary);
   outline-offset: 1px;
+}
+
+.icon-btn:hover:not(:disabled) {
+  background-color: rgb(0 0 0 / 6%);
+  color: var(--bs-primary);
 }
 
 .checkbox {

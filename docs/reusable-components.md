@@ -53,7 +53,7 @@ The host page, in turn, **MUST**:
 
 ## Build pipeline
 
-Reusable components are built by `vite.config.uploader.ts` (poorly named — it builds *all* reusable components, not just the uploader). The output goes to `dist-uploader/reusable-components/`:
+Reusable components are built by `vite.config.uploader.ts` (poorly named — it builds _all_ reusable components, not just the uploader). The output goes to `dist-uploader/reusable-components/`:
 
 ```
 dist-uploader/
@@ -156,11 +156,11 @@ Config:
 
 ```ts
 interface DvUploaderConfig {
-  siteUrl: string                  // required
-  datasetPid: string               // required
-  locale?: string                  // default 'en'
-  localesPath?: string             // default `${siteUrl}/dvwebloader/locales/{{lng}}/{{ns}}.json`
-  rootElementId?: string           // default 'dv-uploader'
+  siteUrl: string // required
+  datasetPid: string // required
+  locale?: string // default 'en'
+  localesPath?: string // default `${siteUrl}/dvwebloader/locales/{{lng}}/{{ns}}.json`
+  rootElementId?: string // default 'dv-uploader'
   disableMD5Checksum?: boolean
 }
 ```
@@ -171,9 +171,9 @@ JSF integration:
 <div id="dv-uploader"></div>
 <script>
   window.dvUploaderConfig = {
-    siteUrl: "#{settingsWrapper.dataverseSiteUrl}",
-    datasetPid: "#{DatasetPage.dataset.globalId.asString()}",
-    locale: "#{dataverseLocaleBean.locale}"
+    siteUrl: '#{settingsWrapper.dataverseSiteUrl}',
+    datasetPid: '#{DatasetPage.dataset.globalId.asString()}',
+    locale: '#{dataverseLocaleBean.locale}'
   }
 </script>
 <script type="module" src="/dvwebloader/reusable-components/dv-uploader.js"></script>
@@ -194,7 +194,7 @@ The tree view ships:
 - Visible-row virtualisation; no `react-virtual` / `react-window` dep.
 - Full WAI-ARIA tree keyboard navigation (`ArrowUp/Down/Left/Right`, `Home/End`, `Space`, `Enter`).
 - URL bookmarkability: `?view=tree&path=<folder>` round-trips and pre-fetches every ancestor on mount.
-- **Client-side streaming-zip download.** Multi-file selections are zipped in the browser via [`client-zip`](https://github.com/Touffy/client-zip) (~3 KB gzip, the only new dep introduced by the tree). A bottom-sheet tray (`FilesTreeDownloadTray`) shows progress, the file currently being added, and surfaces an inline **Retry / Skip / Skip & retry at end / Skip all** decision row when a fetch fails. *Skip & retry at end* converts the run into a two-pass flow mid-flight (failures accumulate as recoverable, then the tray prompts to retry them at the end). *Skip all* switches to skip-with-manifest and writes a `manifest.txt` listing the failures into the root of the zip. Single-file downloads bypass the zip wrap and anchor-click `file.downloadUrl` directly. **No server contract changes.**
+- **Client-side streaming-zip download.** Multi-file selections are zipped in the browser via [`client-zip`](https://github.com/Touffy/client-zip) (~3 KB gzip, the only new dep introduced by the tree). A bottom-sheet tray (`FilesTreeDownloadTray`) shows progress, the file currently being added, and surfaces an inline **Retry / Skip / Skip & retry at end / Skip all** decision row when a fetch fails. _Skip & retry at end_ converts the run into a two-pass flow mid-flight (failures accumulate as recoverable, then the tray prompts to retry them at the end). _Skip all_ switches to skip-with-manifest and writes a `manifest.txt` listing the failures into the root of the zip. Single-file downloads bypass the zip wrap and anchor-click `file.downloadUrl` directly. **No server contract changes.**
 
 ## Testing reusable components
 

@@ -48,15 +48,27 @@ function fakeResponseBody(content: string): Response {
   })
 }
 
-describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
-  beforeEach(() => {
-    // Prevent `<a download>` clicks from actually navigating the cypress runner.
-    cy.window().then((win) => {
-      const noop = () => undefined
-      cy.stub(win.HTMLAnchorElement.prototype, 'click').callsFake(noop)
-    })
-  })
+type FetchHandler = (input: RequestInfo | URL) => Promise<Response>
 
+/**
+ * Installs the per-test fetch handler on the cypress iframe window
+ * AFTER the harness has mounted. Doing this before mount can race with
+ * cypress's iframe lifecycle; doing it after is deterministic.
+ *
+ * Direct assignment (rather than `cy.stub(win, 'fetch')`) sidesteps a
+ * Sinon defineProperty failure when the runtime declares fetch as a
+ * non-configurable getter.
+ */
+function installFetchHandler(handler: FetchHandler) {
+  cy.window().then((win) => {
+    ;(win as unknown as { fetch: FetchHandler }).fetch = handler
+    // Suppress the actual download trigger so cypress's runner doesn't
+    // navigate when the engine clicks the synthetic anchor.
+    cy.stub(win.HTMLAnchorElement.prototype, 'click').callsFake(() => undefined)
+  })
+}
+
+describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
   it('streams two files into a zip on the happy path', () => {
     const files: FileTreeFile[] = [
       FileTreeFileMother.create({
@@ -75,16 +87,14 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
       })
     ]
 
-    cy.window().then((win) => {
-      cy.stub(win, 'fetch').callsFake((input: RequestInfo | URL) => {
-        const url = String(input)
-        if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAAAA'))
-        if (url.endsWith('/access/2')) return Promise.resolve(fakeResponseBody('BBBBB'))
-        return Promise.reject(new Error(`unexpected fetch ${url}`))
-      })
+    cy.customMount(<StreamingZipHarness files={files} zipName="test.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAAAA'))
+      if (url.endsWith('/access/2')) return Promise.resolve(fakeResponseBody('BBBBB'))
+      return Promise.reject(new Error(`unexpected fetch ${url}`))
     })
 
-    cy.customMount(<StreamingZipHarness files={files} zipName="test.zip" />)
     cy.findByTestId('harness-start').click()
     cy.findByTestId('files-tree-download-tray').should('be.visible')
     cy.findByTestId('files-tree-download-tray-meta').should('contain.text', '2 / 2')
@@ -109,23 +119,21 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
       })
     ]
 
+    cy.customMount(<StreamingZipHarness files={files} zipName="retry.zip" />)
+
     let attempts = 0
-    cy.window().then((win) => {
-      cy.stub(win, 'fetch').callsFake((input: RequestInfo | URL) => {
-        const url = String(input)
-        if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
-        if (url.endsWith('/access/2')) {
-          attempts += 1
-          if (attempts === 1) return Promise.reject(new Error('network blip'))
-          return Promise.resolve(fakeResponseBody('BBB'))
-        }
-        return Promise.reject(new Error(`unexpected fetch ${url}`))
-      })
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      if (url.endsWith('/access/2')) {
+        attempts += 1
+        if (attempts === 1) return Promise.reject(new Error('network blip'))
+        return Promise.resolve(fakeResponseBody('BBB'))
+      }
+      return Promise.reject(new Error(`unexpected fetch ${url}`))
     })
 
-    cy.customMount(<StreamingZipHarness files={files} zipName="retry.zip" />)
     cy.findByTestId('harness-start').click()
-
     cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
     cy.contains(/Retry this file/i).click()
     cy.contains(/download complete/i).should('exist')
@@ -152,15 +160,13 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
       })
     ]
 
-    cy.window().then((win) => {
-      cy.stub(win, 'fetch').callsFake((input: RequestInfo | URL) => {
-        const url = String(input)
-        if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
-        return Promise.reject(new Error('permanently broken'))
-      })
+    cy.customMount(<StreamingZipHarness files={files} zipName="skip.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      return Promise.reject(new Error('permanently broken'))
     })
 
-    cy.customMount(<StreamingZipHarness files={files} zipName="skip.zip" />)
     cy.findByTestId('harness-start').click()
     cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
     cy.contains(/^Skip$/).click()
@@ -192,25 +198,23 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
       })
     ]
 
+    cy.customMount(<StreamingZipHarness files={files} zipName="twopass.zip" />)
+
     let flakyAttempts = 0
-    cy.window().then((win) => {
-      cy.stub(win, 'fetch').callsFake((input: RequestInfo | URL) => {
-        const url = String(input)
-        if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
-        if (url.endsWith('/access/3')) return Promise.resolve(fakeResponseBody('CCC'))
-        if (url.endsWith('/access/2')) {
-          flakyAttempts += 1
-          // Fails on the first pass; succeeds during the second-pass retry.
-          if (flakyAttempts === 1) return Promise.reject(new Error('flaky network'))
-          return Promise.resolve(fakeResponseBody('BBB'))
-        }
-        return Promise.reject(new Error(`unexpected fetch ${url}`))
-      })
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      if (url.endsWith('/access/3')) return Promise.resolve(fakeResponseBody('CCC'))
+      if (url.endsWith('/access/2')) {
+        flakyAttempts += 1
+        // Fails on the first pass; succeeds during the second-pass retry.
+        if (flakyAttempts === 1) return Promise.reject(new Error('flaky network'))
+        return Promise.resolve(fakeResponseBody('BBB'))
+      }
+      return Promise.reject(new Error(`unexpected fetch ${url}`))
     })
 
-    cy.customMount(<StreamingZipHarness files={files} zipName="twopass.zip" />)
     cy.findByTestId('harness-start').click()
-
     cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
     cy.contains(/Skip & retry at end/i).click()
 
