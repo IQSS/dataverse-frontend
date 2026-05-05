@@ -1,5 +1,6 @@
 import cn from 'classnames'
 import { useMemo, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import useInfiniteScroll, { UseInfiniteScrollHookRefCallback } from 'react-infinite-scroll-hook'
 import { Alert } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
@@ -14,6 +15,10 @@ import { FilesTableScrollable } from './files-table/FilesTableScrollable'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FilesContext } from '@/sections/file/FilesContext'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { FilesTree } from './files-tree/FilesTree'
+import { FilesViewToggle, FilesViewMode } from './files-view-toggle/FilesViewToggle'
+import { FileTreeRepository } from '@/files/domain/repositories/FileTreeRepository'
+import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
 import styles from './DatasetFilesScrollable.module.scss'
 
 interface DatasetFilesScrollableProps {
@@ -22,7 +27,10 @@ interface DatasetFilesScrollableProps {
   datasetVersion: DatasetVersion
   datasetRepository: DatasetRepository
   canUpdateDataset?: boolean
+  fileTreeRepository?: FileTreeRepository
 }
+
+const VIEW_PARAM = 'view'
 
 export type SentryRef = UseInfiniteScrollHookRefCallback
 
@@ -31,11 +39,29 @@ export function DatasetFilesScrollable({
   datasetPersistentId,
   datasetVersion,
   canUpdateDataset,
-  datasetRepository
+  datasetRepository,
+  fileTreeRepository
 }: DatasetFilesScrollableProps) {
   const scrollableContainerRef = useRef<HTMLDivElement | null>(null)
   const criteriaContainerRef = useRef<HTMLDivElement | null>(null)
   const criteriaContainerSize = useObserveElementSize(criteriaContainerRef)
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const view: FilesViewMode = searchParams.get(VIEW_PARAM) === 'tree' ? 'tree' : 'table'
+  const setView = (next: FilesViewMode) => {
+    const updated = new URLSearchParams(searchParams)
+    if (next === 'tree') {
+      updated.set(VIEW_PARAM, 'tree')
+    } else {
+      updated.delete(VIEW_PARAM)
+    }
+    setSearchParams(updated, { replace: true })
+  }
+
+  const treeRepository = useMemo<FileTreeRepository>(
+    () => fileTreeRepository ?? new FileTreeJSDataverseRepository(filesRepository),
+    [fileTreeRepository, filesRepository]
+  )
 
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(
     () => new FilePaginationInfo()
@@ -154,6 +180,21 @@ export function DatasetFilesScrollable({
       </>
     )
   }
+  if (view === 'tree') {
+    return (
+      <section>
+        <div className={styles['view-toggle-row']}>
+          <FilesViewToggle view={view} onChange={setView} />
+        </div>
+        <FilesTree
+          treeRepository={treeRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      </section>
+    )
+  }
+
   return (
     <section ref={rootRef}>
       <div
@@ -172,6 +213,9 @@ export function DatasetFilesScrollable({
             filesCountInfo={filesCountInfo}
             onInfiniteScrollMode
           />
+          <div className={styles['view-toggle-row']}>
+            <FilesViewToggle view={view} onChange={setView} />
+          </div>
         </header>
 
         <FilesContext.Provider

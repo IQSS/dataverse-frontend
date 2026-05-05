@@ -1,6 +1,52 @@
 {
   "files": "Files",
   "filesLoading": "Files loading spinner symbol",
+  "view": {
+    "toggle": {
+      "label": "Files view selector",
+      "table": "Table",
+      "tree": "Tree"
+    }
+  },
+  "tree": {
+    "head": {
+      "name": "Name",
+      "size": "Size",
+      "count": "Files",
+      "actions": "Actions"
+    },
+    "row": {
+      "expandFolder": "Expand {{name}}",
+      "collapseFolder": "Collapse {{name}}",
+      "selectFolder": "Select folder {{name}}",
+      "selectFile": "Select file {{name}}",
+      "downloadFolder": "Download folder {{name}}",
+      "downloadFile": "Download file {{name}}"
+    },
+    "selection": {
+      "none": "No files selected",
+      "fileCount_one": "file",
+      "fileCount_other": "files",
+      "includesFolders": "folders included",
+      "clear": "Clear"
+    },
+    "download": {
+      "button": "Download zip",
+      "enumerating": "Listing files…",
+      "preparing": "Preparing zip…"
+    },
+    "state": {
+      "loading": "Loading file index…",
+      "loadingFolder": "Loading folder…",
+      "loadingMore": "Loading…",
+      "loadMore": "Load more",
+      "error": "Couldn't load file index",
+      "retry": "Retry",
+      "empty": "This dataset has no files",
+      "noMatches": "No files match \"{{query}}\""
+    }
+  },
+
   "errorUnkownGetFilesFromDataset": "There was an error getting the files total download size",
   "errorUnkownGetFilesCountInfo": "There was an error getting the files count info",
   "errorUnkownGetFilesTotalDownloadSize": "There was an error getting the files total download size",
