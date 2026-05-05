@@ -181,9 +181,20 @@ JSF integration:
 
 Feature flag (server-side): `dataverse.feature.react-uploader`.
 
-### Tree view (in development — `#6691`)
+### Tree view (`#6691`)
 
-Will follow the same pattern. The SPA section already exists at `src/sections/dataset/dataset-files/files-tree/`; the standalone wrapper is M3 in [`dataverse-context/tree_view_plan.md`](../../dataverse-context/tree_view_plan.md). Until the JSF mount lands, the tree view is SPA-only and is reached via `?view=tree` on the dataset page.
+Built on the same pattern. The SPA section lives at `src/sections/dataset/dataset-files/files-tree/`; the standalone wrapper is in `src/standalone-tree-view/` and is the second entry point in `vite.config.uploader.ts` (`dv-tree-view`). The bundle config interface is `window.dvTreeViewConfig` (see [`src/standalone-tree-view/config.ts`](../src/standalone-tree-view/config.ts)).
+
+Feature flag (server-side): `dataverse.feature.react-tree-view`.
+
+The tree view ships:
+
+- Lazy folder loading with an opaque keyset cursor.
+- Path-keyed tri-state selection (folders without descendant enumeration; logical until download time).
+- Visible-row virtualisation; no `react-virtual` / `react-window` dep.
+- Full WAI-ARIA tree keyboard navigation (`ArrowUp/Down/Left/Right`, `Home/End`, `Space`, `Enter`).
+- URL bookmarkability: `?view=tree&path=<folder>` round-trips and pre-fetches every ancestor on mount.
+- **Client-side streaming-zip download.** Multi-file selections are zipped in the browser via [`client-zip`](https://github.com/Touffy/client-zip) (~3 KB gzip, the only new dep introduced by the tree). A bottom-sheet tray (`FilesTreeDownloadTray`) shows progress, the file currently being added, and surfaces retry / skip / skip-all decisions inline when a fetch fails. Single-file downloads bypass the zip wrap and anchor-click `file.downloadUrl` directly. **No server contract changes.**
 
 ## Testing reusable components
 
