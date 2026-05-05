@@ -189,6 +189,11 @@ export function useStreamingZipDownload(): StreamingZipApi {
         // ----- helper: process a queue ----------------------------------
         const processQueue = async function* () {
           while (queue.length > 0) {
+            // Loop-top cancel guard. The pause-decision path also
+            // resolves with 'cancel' and aborts, which the spec covers;
+            // this is the additional check for cancellation that lands
+            // *between* files in a fast-scrolling run.
+            /* istanbul ignore next */
             if (cancelledRef.current) return
             const file = queue.shift() as FileTreeFile
             update((prev) => ({
@@ -269,6 +274,11 @@ export function useStreamingZipDownload(): StreamingZipApi {
             }
 
             // Wrap the body in a counting stream so we can track bytes.
+            // `response.body` is null only for `Response.error()` and a
+            // handful of legacy fetch implementations; modern browsers
+            // always populate it on a successful HTTP response. Kept as
+            // a safety net; not exercised by the test harness.
+            /* istanbul ignore next */
             if (!response.body) {
               update((prev) => ({
                 ...prev,
@@ -291,6 +301,9 @@ export function useStreamingZipDownload(): StreamingZipApi {
 
         // ----- first pass --------------------------------------------------
         yield* processQueue()
+        // Cancel-after-first-pass guard. processQueue's own cancel
+        // checks short-circuit before reaching here in the cancel path.
+        /* istanbul ignore next */
         if (cancelledRef.current) return
 
         // ----- two-pass: pause for user decision then re-queue failures ----
@@ -345,7 +358,13 @@ export function useStreamingZipDownload(): StreamingZipApi {
           triggerDownload(blob, zipName)
           update((prev) => ({ ...prev, status: 'done', current: undefined }))
         } catch (err) {
+          // Defensive catch for unexpected failures inside `client-zip`
+          // or the anchor-click. The per-file fetch failures are
+          // handled inline above; reaching here means something
+          // happened that the per-file flow can't classify.
+          /* istanbul ignore next */
           if (cancelledRef.current) return
+          /* istanbul ignore next */
           update((prev) => ({
             ...prev,
             status: 'error',

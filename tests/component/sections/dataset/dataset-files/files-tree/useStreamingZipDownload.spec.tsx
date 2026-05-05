@@ -225,4 +225,78 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
       expect(flakyAttempts).to.equal(2)
     })
   })
+
+  it('cancels the run from the pause-on-fail dialog and reports cancelled state', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'broken.bin',
+        path: 'broken.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="cancel.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      return Promise.reject(new Error('permanently broken'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    // Cancel the run from the always-visible footer Cancel button.
+    cy.contains(/^Cancel$/).click()
+    cy.contains(/download cancelled/i).should('exist')
+  })
+
+  it('switches to skip-with-manifest on "Skip all remaining failures"', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'broken-1.bin',
+        path: 'broken-1.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      }),
+      FileTreeFileMother.create({
+        id: 3,
+        name: 'broken-2.bin',
+        path: 'broken-2.bin',
+        size: 3,
+        downloadUrl: '/access/3'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="skip-all.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      return Promise.reject(new Error('permanently broken'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    // First failure → tray pauses with the failure dialog.
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    // "Skip all remaining failures" switches the engine to skip mode;
+    // the second failure no longer pauses the run.
+    cy.contains(/Skip all remaining failures/i).click()
+    // Both broken-* files end up skipped → manifest line in the title.
+    cy.contains(/Download complete — 2 skipped/i).should('exist')
+  })
 })

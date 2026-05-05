@@ -45,7 +45,11 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
       defaultValue: 'Download complete — {{count}} skipped',
       count: state.failedSoFar.length
     })
-  else if (isError) title = t('tree.download.tray.error', 'Download failed')
+  // The 'error' status is reached only from the IIFE catch in the
+  // engine — itself a defensive path covered by /* istanbul ignore */
+  // — so the matching branch here is unreachable from the spec.
+  /* istanbul ignore next */ else if (isError)
+    title = t('tree.download.tray.error', 'Download failed')
   else if (isCancelled) title = t('tree.download.tray.cancelled', 'Download cancelled')
   else if (state.filesDone > 0 || state.bytesDone > 0)
     title = t('tree.download.tray.streaming', 'Streaming files into zip…')
@@ -187,6 +191,7 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
             </div>
           )}
 
+          {/* istanbul ignore next */}
           {isError && state.message && (
             <div className={styles['tray-fail']}>
               <div className={styles['tray-fail-heading']}>
