@@ -34,7 +34,45 @@
     "download": {
       "button": "Download zip",
       "enumerating": "Listing files…",
-      "preparing": "Preparing zip…"
+      "preparing": "Preparing zip…",
+      "streaming": "Streaming…",
+      "tray": {
+        "label": "Zip download progress",
+        "preparing": "Preparing zip…",
+        "streaming": "Streaming files into zip…",
+        "paused": "Download paused — file failed",
+        "firstPass_one": "First pass complete — {{count}} file failed",
+        "firstPass_other": "First pass complete — {{count}} files failed",
+        "complete": "Download complete",
+        "completeWithSkipped_one": "Download complete — {{count}} skipped",
+        "completeWithSkipped_other": "Download complete — {{count}} skipped",
+        "error": "Download failed",
+        "cancelled": "Download cancelled",
+        "files": "files",
+        "pass2": "pass 2 of 2",
+        "now": {
+          "paused": "Paused",
+          "awaiting": "Awaiting retry decision",
+          "done": "Done",
+          "cancelled": "Cancelled"
+        },
+        "failed": "Failed to fetch file",
+        "retry": "Retry this file",
+        "skip": "Skip",
+        "skipAll": "Skip all remaining failures",
+        "notIncluded_one": "{{count}} file was not included in the zip",
+        "notIncluded_other": "{{count}} files were not included in the zip",
+        "twopassHint": "First pass finished. The zip will be finalised after a second-pass retry of the failures.",
+        "retryFailed_one": "Download {{count}} missing file",
+        "retryFailed_other": "Download {{count}} missing files",
+        "done": "Done",
+        "skipped_one": "{{count}} file skipped",
+        "skipped_other": "{{count}} files skipped",
+        "skippedManifest": "A manifest.txt listing skipped files has been added to the root of the zip.",
+        "hint": "Streamed locally into one zip — no server-side ZIP.",
+        "cancel": "Cancel",
+        "close": "Close"
+      }
     },
     "state": {
       "loading": "Loading file index…",

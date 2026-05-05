@@ -18,11 +18,11 @@ export interface UseFileTreeDownloadArgs {
   selection: FileTreeSelection
   onError?: (error: unknown) => void
   /**
-   * Caller decides how to actually trigger the download for an array of file
-   * IDs (e.g. signed-URL flow with guestbook handling). The hook only owns the
-   * enumeration step.
+   * Caller decides how to actually trigger the download for a list of
+   * files (e.g. direct anchor click for one file, streaming zip for
+   * many). The hook only owns the enumeration step.
    */
-  onDownloadFileIds: (ids: number[]) => Promise<void>
+  onDownloadFiles: (files: FileTreeFile[]) => Promise<void>
 }
 
 export interface UseFileTreeDownloadApi {
@@ -38,7 +38,7 @@ export function useFileTreeDownload({
   datasetVersion,
   selection,
   onError,
-  onDownloadFileIds
+  onDownloadFiles
 }: UseFileTreeDownloadArgs): UseFileTreeDownloadApi {
   const [progress, setProgress] = useState<DownloadProgress>({
     status: 'idle',
@@ -49,25 +49,25 @@ export function useFileTreeDownload({
     setProgress({ status: 'idle', enumeratedCount: 0 })
   }, [])
 
-  const downloadFileIds = useCallback(
-    async (ids: number[]) => {
-      if (ids.length === 0) {
+  const dispatchFiles = useCallback(
+    async (files: FileTreeFile[]) => {
+      if (files.length === 0) {
         return
       }
-      setProgress({ status: 'requesting', enumeratedCount: ids.length })
+      setProgress({ status: 'requesting', enumeratedCount: files.length })
       try {
-        await onDownloadFileIds(ids)
-        setProgress({ status: 'success', enumeratedCount: ids.length })
+        await onDownloadFiles(files)
+        setProgress({ status: 'success', enumeratedCount: files.length })
       } catch (error) {
         setProgress({
           status: 'error',
-          enumeratedCount: ids.length,
+          enumeratedCount: files.length,
           message: error instanceof Error ? error.message : String(error)
         })
         onError?.(error)
       }
     },
-    [onDownloadFileIds, onError]
+    [onDownloadFiles, onError]
   )
 
   const collectExplicitFiles = useCallback((): FileTreeFile[] => {
@@ -109,12 +109,12 @@ export function useFileTreeDownload({
     }
 
     const merged = mergeFiles(explicit, enumerated, selection.deselectedFilePaths)
-    await downloadFileIds(merged.map((f) => f.id))
+    await dispatchFiles(merged)
   }, [
     collectExplicitFiles,
     datasetPersistentId,
     datasetVersion,
-    downloadFileIds,
+    dispatchFiles,
     onError,
     selection.deselectedFilePaths,
     selection.selectedFolderPaths,
@@ -124,7 +124,7 @@ export function useFileTreeDownload({
   const downloadNode = useCallback(
     async (node: FileTreeFile | FileTreeFolder) => {
       if (isFileTreeFile(node)) {
-        await downloadFileIds([node.id])
+        await dispatchFiles([node])
         return
       }
       setProgress({ status: 'enumerating', enumeratedCount: 0 })
@@ -134,7 +134,7 @@ export function useFileTreeDownload({
           datasetVersion,
           paths: [node.path]
         })
-        await downloadFileIds(files.map((f) => f.id))
+        await dispatchFiles(files)
       } catch (error) {
         setProgress({
           status: 'error',
@@ -144,7 +144,7 @@ export function useFileTreeDownload({
         onError?.(error)
       }
     },
-    [datasetPersistentId, datasetVersion, downloadFileIds, onError, treeRepository]
+    [datasetPersistentId, datasetVersion, dispatchFiles, onError, treeRepository]
   )
 
   return { progress, downloadSelection, downloadNode, reset }

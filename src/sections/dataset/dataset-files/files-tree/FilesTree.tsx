@@ -20,19 +20,14 @@ import {
   isFileTreeFolder
 } from '@/files/domain/models/FileTreeItem'
 import { DatasetVersion } from '@/dataset/domain/models/Dataset'
-import { useAccessRepository } from '@/sections/access/AccessRepositoryContext'
-import {
-  EMPTY_GUESTBOOK_RESPONSE,
-  downloadFromSignedUrl,
-  requestSignedDownloadUrlFromAccessApi
-} from '@/shared/helpers/DownloadHelper'
-import { FileDownloadMode } from '@/files/domain/models/FileMetadata'
 import { useFileTree } from './useFileTree'
 import { useFileTreeSelection } from './useFileTreeSelection'
 import { useFileTreeFlatten } from './useFileTreeFlatten'
 import { useFileTreeDownload } from './useFileTreeDownload'
+import { useStreamingZipDownload } from './useStreamingZipDownload'
 import { FilesTreeRow } from './FilesTreeRow'
 import { FilesTreeHeader } from './FilesTreeHeader'
+import { FilesTreeDownloadTray } from './FilesTreeDownloadTray'
 import { DownloadIcon, EmptyIcon, SpinnerIcon, WarnIcon } from './icons/FilesTreeIcons'
 import { formatBytes } from './format'
 import styles from './FilesTree.module.scss'
@@ -103,23 +98,45 @@ export function FilesTree({
     }
   }, [tree.currentPath, onCurrentPathChange])
   const selection = useFileTreeSelection()
-  const accessRepository = useAccessRepository()
+  const streamingZip = useStreamingZipDownload()
+  const [trayOpen, setTrayOpen] = useState(false)
 
-  const onDownloadFileIds = useCallback(
-    async (ids: number[]) => {
-      if (ids.length === 0) {
+  // Auto-close the tray when the engine returns to idle (after the user
+  // dismisses a finished/cancelled run via the close button).
+  useEffect(() => {
+    if (streamingZip.state.status === 'idle') {
+      setTrayOpen(false)
+    }
+  }, [streamingZip.state.status])
+
+  const onDownloadFiles = useCallback(
+    async (files: FileTreeFile[]) => {
+      if (files.length === 0) {
         return
       }
-      const url = await requestSignedDownloadUrlFromAccessApi({
-        accessRepository,
-        fileIds: ids,
-        guestbookResponse: EMPTY_GUESTBOOK_RESPONSE,
-        format: FileDownloadMode.ORIGINAL
-      })
-      await downloadFromSignedUrl(url)
-      toast.success(t('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
+      // Single file: bypass zipping and trigger a direct browser
+      // download. The browser handles content disposition and the
+      // session cookie auths the request when needed.
+      if (files.length === 1) {
+        const file = files[0]
+        const a = document.createElement('a')
+        a.href = file.downloadUrl
+        a.download = file.name
+        a.style.display = 'none'
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        toast.success(t('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
+        return
+      }
+      // Many files: build a zip in the browser, streaming each file
+      // body through `client-zip`. The tray surfaces progress and any
+      // per-file failure decisions.
+      const zipName = `${datasetPersistentId.replace(/[^a-zA-Z0-9._-]+/g, '_')}-files.zip`
+      streamingZip.start({ files, zipName })
+      setTrayOpen(true)
     },
-    [accessRepository, t]
+    [datasetPersistentId, streamingZip, t]
   )
 
   const download = useFileTreeDownload({
@@ -127,7 +144,7 @@ export function FilesTree({
     datasetPersistentId,
     datasetVersion,
     selection,
-    onDownloadFileIds,
+    onDownloadFiles,
     onError: () => toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
   })
 
@@ -435,9 +452,17 @@ export function FilesTree({
     )
   }
 
+  const streamingZipActive = !['idle', 'done', 'error', 'cancelled'].includes(
+    streamingZip.state.status
+  )
+
   return (
     <div className={styles['tree-wrap']} data-testid="files-tree">
-      <FilesTreeToolbar selection={selection} download={download} />
+      <FilesTreeToolbar
+        selection={selection}
+        download={download}
+        streamingZipActive={streamingZipActive}
+      />
       <FilesTreeHeader />
       <div
         ref={containerRef}
@@ -538,6 +563,14 @@ export function FilesTree({
           })}
         </div>
       </div>
+      <FilesTreeDownloadTray
+        api={streamingZip}
+        open={trayOpen}
+        onClose={() => {
+          setTrayOpen(false)
+          streamingZip.close()
+        }}
+      />
     </div>
   )
 }
@@ -546,9 +579,15 @@ interface FilesTreeToolbarProps {
   selection: ReturnType<typeof useFileTreeSelection>
   download: ReturnType<typeof useFileTreeDownload>
   disableDownload?: boolean
+  streamingZipActive?: boolean
 }
 
-function FilesTreeToolbar({ selection, download, disableDownload }: FilesTreeToolbarProps) {
+function FilesTreeToolbar({
+  selection,
+  download,
+  disableDownload,
+  streamingZipActive
+}: FilesTreeToolbarProps) {
   const { t } = useTranslation('files')
   const { count, bytes, hasLogicalFolders } = selection.totals
   const downloadable = !disableDownload && (count > 0 || hasLogicalFolders)
@@ -592,12 +631,14 @@ function FilesTreeToolbar({ selection, download, disableDownload }: FilesTreeToo
         <Button
           variant="primary"
           size="sm"
-          disabled={!downloadable || enumerating || requesting}
+          disabled={!downloadable || enumerating || requesting || streamingZipActive}
           onClick={() => void download.downloadSelection()}
           data-testid="files-tree-download-button">
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             <DownloadIcon />
-            {enumerating
+            {streamingZipActive
+              ? t('tree.download.streaming', 'Streaming…')
+              : enumerating
               ? t('tree.download.enumerating')
               : requesting
               ? t('tree.download.preparing')
