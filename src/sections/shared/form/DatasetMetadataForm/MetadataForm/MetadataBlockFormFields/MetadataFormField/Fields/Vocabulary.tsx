@@ -5,6 +5,7 @@ import useWatchFieldsThatTriggerRequired from '../useWatchFieldsThatTriggerRequi
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { type CommonFieldProps } from '..'
+import { CustomInstructionsEditor } from '../CustomInstructionsEditor'
 import styles from '../index.module.scss'
 
 interface VocabularyProps extends CommonFieldProps {
@@ -29,7 +30,10 @@ export const Vocabulary = ({
   fieldsArrayIndex,
   isFieldThatMayBecomeRequired,
   childFieldNamesThatTriggerRequired,
-  fieldInstructions
+  fieldInstructions,
+  instructionEditor,
+  requiredIndicator,
+  disableRequiredValidation
 }: VocabularyProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
 
@@ -62,14 +66,28 @@ export const Vocabulary = ({
 
   const updatedRulesToApply = useMemo(() => {
     if (isFieldThatMayBecomeRequired && fieldShouldBecomeRequired) {
+      if (disableRequiredValidation) {
+        return rulesToApply
+      }
       return {
         ...rulesToApply,
         required: t('field.required', { displayName, interpolation: { escapeValue: false } })
       }
     }
     return rulesToApply
-  }, [rulesToApply, fieldShouldBecomeRequired, displayName, isFieldThatMayBecomeRequired, t])
-
+  }, [
+    rulesToApply,
+    fieldShouldBecomeRequired,
+    displayName,
+    isFieldThatMayBecomeRequired,
+    t,
+    disableRequiredValidation
+  ])
+  const dynamicRequired =
+    !disableRequiredValidation && isFieldThatMayBecomeRequired && fieldShouldBecomeRequired
+  const labelRequired = disableRequiredValidation
+    ? requiredIndicator
+    : Boolean(rulesToApply?.required) || requiredIndicator || dynamicRequired
   const showSelectWithSearch = options.length > 10
 
   return (
@@ -83,7 +101,7 @@ export const Vocabulary = ({
           as={withinMultipleFieldsGroup ? Col : Row}>
           <Form.Group.Label
             message={description}
-            required={Boolean(updatedRulesToApply?.required)}
+            required={labelRequired}
             column={!withinMultipleFieldsGroup}
             className={styles['field-label']}
             htmlFor={showSelectWithSearch ? builtFieldName : undefined}
@@ -91,7 +109,15 @@ export const Vocabulary = ({
             {title}
           </Form.Group.Label>
           <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
-            {fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>}
+            {instructionEditor ? (
+              <CustomInstructionsEditor
+                value={instructionEditor.value}
+                onSave={instructionEditor.onSave}
+                fieldKey={instructionEditor.fieldKey}
+              />
+            ) : (
+              fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>
+            )}
             <Row>
               <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
                 {showSelectWithSearch ? (
@@ -108,7 +134,7 @@ export const Vocabulary = ({
                     onChange={onChange}
                     value={value as string}
                     isInvalid={invalid}
-                    aria-required={Boolean(updatedRulesToApply?.required)}
+                    aria-required={labelRequired ? 'true' : 'false'}
                     ref={ref}>
                     <option value="">Select</option>
                     {options.map((option) => (

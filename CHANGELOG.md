@@ -8,6 +8,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
+
 ### Changed
 
 ### Fixed

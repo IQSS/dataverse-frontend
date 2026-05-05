@@ -140,7 +140,6 @@ describe('EditCollectionDropdown', () => {
     cy.findByRole('button', { name: 'Theme + Widgets' }).should('exist')
     cy.findByRole('button', { name: 'Permissions' }).should('exist')
     cy.findByRole('button', { name: 'Groups' }).should('exist')
-    cy.findByRole('button', { name: 'Dataset Templates' }).should('exist')
     cy.findByRole('button', { name: 'Dataset Guestbooks' }).should('exist')
   })
 
@@ -159,6 +158,24 @@ describe('EditCollectionDropdown', () => {
 
     cy.findByText('Not Implemented').should('exist')
     cy.findByText(/This feature is not implemented yet in the Modern version./i).should('exist')
+  })
+
+  it('shows the Dataset Templates button with the correct link', () => {
+    cy.mountAuthenticated(
+      <EditCollectionDropdown
+        collection={rootCollection}
+        collectionRepository={collectionRepository}
+        canUserDeleteCollection={false}
+      />
+    )
+
+    openDropdown()
+
+    cy.findByRole('link', { name: 'Dataset Templates' }).should(
+      'have.attr',
+      'href',
+      '/root/templates'
+    )
   })
 
   describe('delete button', () => {
@@ -308,6 +325,50 @@ describe('EditCollectionDropdown', () => {
 
       cy.findByText('Something went wrong deleting the collection. Try again later.').should(
         'exist'
+      )
+    })
+  })
+
+  describe('DatasetTemplates', () => {
+    it('does not render Dataset Templates link when dropdown is closed', () => {
+      cy.mountAuthenticated(
+        <EditCollectionDropdown
+          collection={rootCollection}
+          collectionRepository={collectionRepository}
+          canUserDeleteCollection={false}
+        />
+      )
+
+      cy.findByRole('link', { name: 'Dataset Templates' }).should('not.exist')
+    })
+
+    it('updates Dataset Templates link when collection id changes', () => {
+      const anotherCollection = CollectionMother.create({
+        id: 'science',
+        name: 'Science',
+        contacts: [{ email: 'science@test.com', displayOrder: 0 }],
+        hierarchy: UpwardHierarchyNodeMother.createCollection({
+          id: 'science',
+          name: 'Science'
+        }),
+        isFacetRoot: true,
+        isMetadataBlockRoot: true
+      })
+
+      cy.mountAuthenticated(
+        <EditCollectionDropdown
+          collection={anotherCollection}
+          collectionRepository={collectionRepository}
+          canUserDeleteCollection={false}
+        />
+      )
+
+      openDropdown()
+
+      cy.findByRole('link', { name: 'Dataset Templates' }).should(
+        'have.attr',
+        'href',
+        '/science/templates'
       )
     })
   })

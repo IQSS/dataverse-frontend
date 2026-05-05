@@ -6,7 +6,7 @@ import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
-import { DatasetTemplateMother } from '@tests/component/dataset/domain/models/DatasetTemplateMother'
+import { TemplateMother } from '@tests/component/sections/templates/TemplateMother'
 import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -162,7 +162,7 @@ describe('Create Dataset', () => {
     })
 
     it('should show template select when there are templates', () => {
-      const testDatasetTemplate1 = DatasetTemplateMother.create({
+      const testDatasetTemplate1 = TemplateMother.create({
         name: 'Template 1',
         isDefault: false
       })
@@ -182,11 +182,11 @@ describe('Create Dataset', () => {
     })
 
     it('should set default template when there is one', () => {
-      const testDatasetTemplate1 = DatasetTemplateMother.create({
+      const testDatasetTemplate1 = TemplateMother.create({
         name: 'Template 1',
         isDefault: false
       })
-      const testDatasetTemplate2 = DatasetTemplateMother.create({
+      const testDatasetTemplate2 = TemplateMother.create({
         name: 'Template 2',
         isDefault: true
       })
@@ -208,11 +208,11 @@ describe('Create Dataset', () => {
     })
 
     it('should change template when user selects another one', () => {
-      const testDatasetTemplate1 = DatasetTemplateMother.create({
+      const testDatasetTemplate1 = TemplateMother.create({
         name: 'Template 1',
         isDefault: false
       })
-      const testDatasetTemplate2 = DatasetTemplateMother.create({
+      const testDatasetTemplate2 = TemplateMother.create({
         name: 'Template 2',
         isDefault: false
       })

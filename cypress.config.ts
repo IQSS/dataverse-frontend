@@ -58,7 +58,7 @@ export default defineConfig({
       privacyPolicyUrl: 'https://support.dataverse.harvard.edu/harvard-dataverse-privacy-policy'
     },
     codeCoverage: {
-      exclude: ['tests/**/*.*', '**/ErrorPage.tsx']
+      exclude: ['tests/**/*.*', '**/ErrorPage.tsx', '**/EditGuestBook.tsx']
     }
   }
 })

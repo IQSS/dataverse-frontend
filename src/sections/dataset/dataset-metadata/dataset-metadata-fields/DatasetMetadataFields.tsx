@@ -1,17 +1,20 @@
 import { DatasetMetadataField } from './DatasetMetadataField'
 import { DatasetMetadataFields as DatasetMetadataFieldsModel } from '../../../../dataset/domain/models/Dataset'
 import { MetadataBlockInfoDisplayFormat } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
 
 interface DatasetMetadataFieldsProps {
   metadataBlockName: string
   metadataFields: DatasetMetadataFieldsModel
   metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
+  datasetTemplateInstructions?: DatasetTemplateInstruction[]
 }
 
 export function DatasetMetadataFields({
   metadataBlockName,
   metadataFields,
-  metadataBlockDisplayFormatInfo
+  metadataBlockDisplayFormatInfo,
+  datasetTemplateInstructions
 }: DatasetMetadataFieldsProps) {
   return (
     <>
@@ -21,6 +24,7 @@ export function DatasetMetadataFields({
           metadataFieldName={metadataFieldName}
           metadataFieldValue={metadataFieldValue}
           metadataBlockDisplayFormatInfo={metadataBlockDisplayFormatInfo}
+          datasetTemplateInstructions={datasetTemplateInstructions}
         />
       ))}
     </>

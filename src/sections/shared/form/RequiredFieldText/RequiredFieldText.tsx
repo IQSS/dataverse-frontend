@@ -1,13 +1,19 @@
 import { Form, RequiredInputSymbol } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 
-export function RequiredFieldText() {
+interface RequiredFieldTextProps {
+  i18nKey?: string
+}
+
+export function RequiredFieldText({
+  i18nKey = 'asterisksIndicateRequiredFields'
+}: RequiredFieldTextProps) {
   const { t } = useTranslation('shared')
 
   return (
     <Form.Group.Text>
       <RequiredInputSymbol />
-      {t('asterisksIndicateRequiredFields')}
+      {t(i18nKey)}
     </Form.Group.Text>
   )
 }

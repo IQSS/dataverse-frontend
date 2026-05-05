@@ -1,16 +1,19 @@
 import {
-  CreateTemplateDTO,
   createTemplate,
   deleteTemplate,
   getTemplate,
   getTemplatesByCollectionId
 } from '@iqss/dataverse-client-javascript'
 import { Template } from '@/templates/domain/models/Template'
+import { TemplateInfo } from '@/templates/domain/models/TemplateInfo'
 import { TemplateRepository } from '../../domain/repositories/TemplateRepository'
 
 export class TemplateJSDataverseRepository implements TemplateRepository {
-  createTemplate(template: CreateTemplateDTO, collectionIdOrAlias: number | string): Promise<void> {
-    return createTemplate.execute(template, collectionIdOrAlias)
+  createTemplate(template: TemplateInfo, collectionIdOrAlias: number | string): Promise<void> {
+    return createTemplate.execute(
+      template as Parameters<typeof createTemplate.execute>[0],
+      collectionIdOrAlias
+    )
   }
 
   getTemplate(templateId: number): Promise<Template> {

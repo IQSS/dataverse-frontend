@@ -93,6 +93,28 @@ const EditFeaturedItems = lazy(() =>
   )
 )
 
+const DatasetTemplatesPage = lazy(() =>
+  import('../sections/templates/DatasetTemplatesFactory').then(({ DatasetTemplatesFactory }) => ({
+    default: () => DatasetTemplatesFactory.create()
+  }))
+)
+
+const CreateTemplatePage = lazy(() =>
+  import('../sections/templates/create-template/CreateTemplateFactory').then(
+    ({ CreateTemplateFactory }) => ({
+      default: () => CreateTemplateFactory.create()
+    })
+  )
+)
+
+const EditDatasetTemplateTermsPage = lazy(() =>
+  import('../sections/templates/edit-template-terms/EditTemplateTermsFactory').then(
+    ({ EditTemplateTermsFactory }) => ({
+      default: () => EditTemplateTermsFactory.create()
+    })
+  )
+)
+
 const ReplaceFile = lazy(() =>
   import('../sections/replace-file/ReplaceFileFactory').then(({ ReplaceFileFactory }) => ({
     default: () => ReplaceFileFactory.create()
@@ -288,6 +310,33 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <EditFeaturedItems />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.COLLECTION_TEMPLATES,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <DatasetTemplatesPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.TEMPLATES_CREATE,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <CreateTemplatePage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.TEMPLATES_EDIT_TERMS,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditDatasetTemplateTermsPage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

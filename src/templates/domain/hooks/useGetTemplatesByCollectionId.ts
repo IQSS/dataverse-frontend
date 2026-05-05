@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
+import { getTemplatesByCollectionId } from '@/templates/domain/useCases/getTemplatesByCollectionId'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { Template } from '@/templates/domain/models/Template'
-import { getTemplatesByCollectionId } from '@/templates/domain/useCases/getTemplatesByCollectionId'
 
 interface useGetTemplatesByCollectionIdProps {
   templateRepository: TemplateRepository
@@ -13,14 +13,13 @@ interface useGetTemplatesByCollectionIdProps {
 
 export const useGetTemplatesByCollectionId = ({
   templateRepository,
-  collectionIdOrAlias,
-  autoFetch = true
+  collectionIdOrAlias
 }: useGetTemplatesByCollectionIdProps) => {
   const [datasetTemplates, setDatasetTemplates] = useState<Template[]>([])
-  const [isLoadingDatasetTemplates, setIsLoadingDatasetTemplates] = useState<boolean>(autoFetch)
+  const [isLoadingDatasetTemplates, setIsLoadingDatasetTemplates] = useState<boolean>(false)
   const [errorGetDatasetTemplates, setErrorGetDatasetTemplates] = useState<string | null>(null)
 
-  const fetchDatasetTemplates = useCallback(async () => {
+  const fetchDatasetTemplates = useCallback(async (): Promise<Template[]> => {
     setIsLoadingDatasetTemplates(true)
     setErrorGetDatasetTemplates(null)
 
@@ -31,6 +30,7 @@ export const useGetTemplatesByCollectionId = ({
       )
 
       setDatasetTemplates(response)
+      return response
     } catch (err) {
       if (err instanceof ReadError) {
         const error = new JSDataverseReadErrorHandler(err)
@@ -43,16 +43,15 @@ export const useGetTemplatesByCollectionId = ({
           'Something went wrong getting the dataset templates. Try again later.'
         )
       }
+      return []
     } finally {
       setIsLoadingDatasetTemplates(false)
     }
   }, [templateRepository, collectionIdOrAlias])
 
   useEffect(() => {
-    if (autoFetch) {
-      void fetchDatasetTemplates()
-    }
-  }, [autoFetch, fetchDatasetTemplates])
+    void fetchDatasetTemplates()
+  }, [fetchDatasetTemplates])
 
   return {
     datasetTemplates,
