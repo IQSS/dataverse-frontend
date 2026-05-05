@@ -105,6 +105,7 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
               className={styles['progress-bar']}
               style={{ width: `${pct}%` }}
               role="progressbar"
+              aria-label={t('tree.download.tray.label', 'Zip download progress')}
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuenow={Math.round(pct)}
