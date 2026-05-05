@@ -190,7 +190,11 @@ describe('FileUploader', () => {
       )
 
       cy.findByText('Select file to add').should('exist').click()
-      cy.get('input[type=file]').selectFile(
+      // Two `input[type=file]` elements live in the drop zone now —
+      // the regular file input and the folder input
+      // (`webkitdirectory`). Target only the file input so cy.selectFile
+      // doesn't fail with "subject contained 2 elements".
+      cy.get('input[type=file]:not([webkitdirectory])').selectFile(
         {
           fileName: 'users1.json',
           contents: [{ name: 'John Doe the 1st' }]

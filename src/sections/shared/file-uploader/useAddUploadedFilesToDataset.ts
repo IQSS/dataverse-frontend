@@ -1,18 +1,12 @@
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
-import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
+import { UploadedFileDTO, WriteError } from '@iqss/dataverse-client-javascript'
 import { addUploadedFiles } from '@/files/domain/useCases/addUploadedFiles'
 import { UploadedFileDTOMapper } from '@/files/infrastructure/mappers/UploadedFileDTOMapper'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { useFileUploaderContext } from './context/FileUploaderContext'
 import { UploadedFile } from './context/fileUploaderReducer'
 import { UploaderFileRepository } from './types'
-
-// WriteError type for error handling - avoid importing from client library due to CommonJS issues with local linked package
-interface WriteErrorLike {
-  reason?: string
-  message?: string
-}
 
 interface UseAddUploadedFilesToDatasetReturn {
   submitUploadedFilesToDataset: (uploadedFiles: UploadedFile[]) => Promise<void>
@@ -49,12 +43,13 @@ export const useAddUploadedFilesToDataset = (
       removeAllFiles()
       setAddFilesToDatasetOperationInfo({ success: true })
     } catch (err: unknown) {
-      // Check if error has reason property (WriteError-like)
-      const writeError = err as WriteErrorLike
-      if (writeError && (writeError.reason || writeError.message)) {
-        // Cast to any to satisfy JSDataverseWriteErrorHandler which expects WriteError
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-        const error = new JSDataverseWriteErrorHandler(writeError as any)
+      // Only treat as a JSDataverse WriteError when the error actually
+      // is one — falling back to the default toast for any other thrown
+      // value. The previous structural duck-type check (`reason ||
+      // message`) caught plain `Error` instances too and printed their
+      // message instead of the user-friendly default.
+      if (err instanceof WriteError) {
+        const error = new JSDataverseWriteErrorHandler(err)
         const formattedError =
           error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
 

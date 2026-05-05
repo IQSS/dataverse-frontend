@@ -136,6 +136,8 @@ describe('FilesTree', () => {
       />
     )
     cy.findByTestId('files-tree-empty').should('exist')
-    cy.findByText(/no files/i).should('exist')
+    // Be specific: the toolbar's "No files selected" summary also
+    // matches /no files/i so the loose matcher would yield two hits.
+    cy.findByText(/this dataset has no files/i).should('exist')
   })
 })
