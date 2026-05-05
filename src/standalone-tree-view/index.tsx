@@ -5,8 +5,6 @@ import { initReactI18next } from 'react-i18next'
 import I18NextHttpBackend from 'i18next-http-backend'
 import { ApiConfig, DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript'
 import { ToastContainer } from 'react-toastify'
-import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
-import { AccessJSDataverseRepository } from '@/access/infrastructure/repositories/AccessJSDataverseRepository'
 import { FilesTree } from '@/sections/dataset/dataset-files/files-tree/FilesTree'
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
 import { DatasetVersion, DatasetVersionNumber } from '@/dataset/domain/models/Dataset'
@@ -114,7 +112,6 @@ async function init() {
     fileMetadataPath: config.fileMetadataPath ?? '/file.xhtml'
   }
   const treeRepository = new FileTreeJSDataverseRepository()
-  const accessRepository = new AccessJSDataverseRepository()
   const datasetVersion = syntheticVersion(mountConfig.datasetVersionId)
   const buildFileMetadataUrl = buildFileMetadataUrlFactory(mountConfig)
 
@@ -122,14 +119,12 @@ async function init() {
     <StrictMode>
       <div className="dv-tree-view-root">
         <ToastContainer position="top-right" autoClose={5000} />
-        <AccessRepositoryProvider repository={accessRepository}>
-          <FilesTree
-            treeRepository={treeRepository}
-            datasetPersistentId={mountConfig.datasetPid}
-            datasetVersion={datasetVersion}
-            buildFileMetadataUrl={buildFileMetadataUrl}
-          />
-        </AccessRepositoryProvider>
+        <FilesTree
+          treeRepository={treeRepository}
+          datasetPersistentId={mountConfig.datasetPid}
+          datasetVersion={datasetVersion}
+          buildFileMetadataUrl={buildFileMetadataUrl}
+        />
       </div>
     </StrictMode>
   )
