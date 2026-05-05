@@ -1,4 +1,4 @@
-import { CSSProperties, MouseEvent } from 'react'
+import { CSSProperties, KeyboardEvent, MouseEvent, RefObject } from 'react'
 import cn from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -36,6 +36,18 @@ interface FilesTreeRowProps {
    * page.
    */
   buildFileMetadataUrl?: (file: FileTreeFile) => string
+  /**
+   * Whether this row is the focused row in the roving-tabindex
+   * keyboard model. Only one row at a time has tabIndex=0; the rest
+   * are tabIndex=-1.
+   */
+  focused?: boolean
+  /** Called when this row receives focus (e.g. via Tab into the tree). */
+  onFocus?: () => void
+  /** Forwarded to the row's underlying div so the parent can scroll it into view. */
+  rowRef?: RefObject<HTMLDivElement>
+  /** Keyboard handler shared by all rows; lives on the parent for navigation logic. */
+  onRowKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void
 }
 
 const INDENT_BASE = 14
@@ -52,7 +64,11 @@ export function FilesTreeRow({
   onToggleExpansion,
   onDownload,
   datasetVersionNumber,
-  buildFileMetadataUrl
+  buildFileMetadataUrl,
+  focused,
+  onFocus,
+  rowRef,
+  onRowKeyDown
 }: FilesTreeRowProps) {
   const { t } = useTranslation('files')
   const isFile = isFileTreeFile(item)
@@ -78,13 +94,19 @@ export function FilesTreeRow({
   return (
     <div
       data-testid={`files-tree-row-${item.path}`}
-      role="row"
-      aria-selected={selectionState !== 'none'}
+      role="treeitem"
+      aria-selected={selectionState === 'all'}
+      aria-level={depth + 1}
+      aria-expanded={!isFile ? Boolean(expanded) : undefined}
+      tabIndex={focused ? 0 : -1}
+      ref={rowRef}
       className={cn(styles.row, {
         [styles['row-selected']]: selectionState !== 'none'
       })}
       style={rowStyle}
-      onClick={handleRowClick}>
+      onClick={handleRowClick}
+      onFocus={onFocus}
+      onKeyDown={onRowKeyDown}>
       <div className={styles['row-name']} style={indent}>
         {isFile ? (
           <span className={cn(styles['row-twisty'], styles['row-twisty-empty'])} aria-hidden />

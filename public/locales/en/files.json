@@ -9,6 +9,7 @@
     }
   },
   "tree": {
+    "label": "Dataset files",
     "head": {
       "name": "Name",
       "size": "Size",

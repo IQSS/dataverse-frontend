@@ -1,5 +1,6 @@
 import {
   CSSProperties,
+  KeyboardEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -209,6 +210,156 @@ export function FilesTree({
     [selection]
   )
 
+  // ---------- Keyboard navigation (WAI-ARIA tree pattern) ----------
+  const itemRowIndices = useMemo(() => {
+    const out: number[] = []
+    for (let i = 0; i < visibleRows.length; i++) {
+      if (visibleRows[i].kind === 'item') out.push(i)
+    }
+    return out
+  }, [visibleRows])
+
+  const [focusedRowIndex, setFocusedRowIndex] = useState<number>(-1)
+
+  // Reset / clamp focus when the visible rows change so we never point at a
+  // removed row. Default focus is the first item row.
+  useEffect(() => {
+    if (itemRowIndices.length === 0) {
+      setFocusedRowIndex(-1)
+      return
+    }
+    if (focusedRowIndex === -1 || !itemRowIndices.includes(focusedRowIndex)) {
+      setFocusedRowIndex(itemRowIndices[0])
+    }
+  }, [itemRowIndices, focusedRowIndex])
+
+  // Auto-scroll the focused row into view after focus changes.
+  useEffect(() => {
+    if (focusedRowIndex < 0) return
+    const el = containerRef.current
+    if (!el) return
+    const top = focusedRowIndex * rowHeight
+    const bottom = top + rowHeight
+    if (top < el.scrollTop) {
+      el.scrollTop = top
+    } else if (bottom > el.scrollTop + el.clientHeight) {
+      el.scrollTop = bottom - el.clientHeight
+    }
+  }, [focusedRowIndex, rowHeight])
+
+  const moveFocus = useCallback(
+    (delta: number | 'first' | 'last') => {
+      if (itemRowIndices.length === 0) return
+      if (delta === 'first') {
+        setFocusedRowIndex(itemRowIndices[0])
+        return
+      }
+      if (delta === 'last') {
+        setFocusedRowIndex(itemRowIndices[itemRowIndices.length - 1])
+        return
+      }
+      const currentRank = itemRowIndices.indexOf(focusedRowIndex)
+      const nextRank = Math.max(
+        0,
+        Math.min(
+          itemRowIndices.length - 1,
+          (currentRank === -1 ? 0 : currentRank) + delta
+        )
+      )
+      setFocusedRowIndex(itemRowIndices[nextRank])
+    },
+    [focusedRowIndex, itemRowIndices]
+  )
+
+  const moveToParent = useCallback(() => {
+    if (focusedRowIndex < 0) return
+    const focusedRow = visibleRows[focusedRowIndex]
+    if (focusedRow.kind !== 'item') return
+    const parentDepth = focusedRow.depth - 1
+    if (parentDepth < 0) return
+    for (let i = focusedRowIndex - 1; i >= 0; i--) {
+      const r = visibleRows[i]
+      if (r.kind === 'item' && r.depth === parentDepth) {
+        setFocusedRowIndex(i)
+        return
+      }
+    }
+  }, [focusedRowIndex, visibleRows])
+
+  const onRowKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (focusedRowIndex < 0) return
+      const focusedRow = visibleRows[focusedRowIndex]
+      if (focusedRow.kind !== 'item') return
+      const item = focusedRow.node
+      switch (event.key) {
+        case 'ArrowDown':
+          event.preventDefault()
+          moveFocus(1)
+          return
+        case 'ArrowUp':
+          event.preventDefault()
+          moveFocus(-1)
+          return
+        case 'Home':
+          event.preventDefault()
+          moveFocus('first')
+          return
+        case 'End':
+          event.preventDefault()
+          moveFocus('last')
+          return
+        case 'ArrowRight':
+          if (isFileTreeFolder(item)) {
+            event.preventDefault()
+            if (!tree.expanded.has(item.path)) {
+              void handleToggleExpansion(item)
+            } else {
+              moveFocus(1)
+            }
+          }
+          return
+        case 'ArrowLeft':
+          event.preventDefault()
+          if (isFileTreeFolder(item) && tree.expanded.has(item.path)) {
+            tree.collapse(item.path)
+          } else {
+            moveToParent()
+          }
+          return
+        case ' ':
+        case 'Spacebar':
+          event.preventDefault()
+          if (isFileTreeFile(item)) {
+            handleToggleSelectionFile(item)
+          } else {
+            handleToggleSelectionFolder(item)
+          }
+          return
+        case 'Enter':
+          if (isFileTreeFolder(item)) {
+            event.preventDefault()
+            void handleToggleExpansion(item)
+          }
+          // For files, let the default Enter behavior activate the
+          // filename anchor inside the row (browser handles it).
+          return
+        default:
+          return
+      }
+    },
+    [
+      focusedRowIndex,
+      handleToggleExpansion,
+      handleToggleSelectionFile,
+      handleToggleSelectionFolder,
+      moveFocus,
+      moveToParent,
+      tree,
+      visibleRows
+    ]
+  )
+
   const isInitialLoad = !tree.rootNode.loaded && tree.rootNode.loading
 
   if (isInitialLoad) {
@@ -274,8 +425,9 @@ export function FilesTree({
         ref={containerRef}
         className={styles['tree-viewport']}
         onScroll={onScroll}
-        role="grid"
-        aria-rowcount={totalRows}
+        role="tree"
+        aria-multiselectable="true"
+        aria-label={t('tree.label', 'Dataset files')}
         style={{ height: fallbackHeight }}>
         <div
           className={styles['tree-spacer']}
@@ -360,6 +512,9 @@ export function FilesTree({
                 onDownload={() => handleDownloadOne(item)}
                 datasetVersionNumber={datasetVersion.number}
                 buildFileMetadataUrl={buildFileMetadataUrl}
+                focused={absoluteIndex === focusedRowIndex}
+                onFocus={() => setFocusedRowIndex(absoluteIndex)}
+                onRowKeyDown={onRowKeyDown}
               />
             )
           })}
