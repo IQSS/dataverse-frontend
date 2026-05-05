@@ -181,6 +181,24 @@ export function FilesTree({
     setScrollTop(event.currentTarget.scrollTop)
   }
 
+  // Auto-load: whenever a "load-more" row enters the rendered slice and the
+  // corresponding folder is not already loading, trigger loadMore. The
+  // explicit button stays as a fallback (and a focus target) but the
+  // common case is now infinite-scroll-style.
+  useEffect(() => {
+    for (const row of slice) {
+      if (row.kind === 'load-more') {
+        const node = tree.nodes.get(row.path)
+        if (node?.nextCursor && !node.loading) {
+          void tree.loadMore(row.path)
+        }
+      }
+    }
+    // tree.nodes / tree.loadMore are stable callbacks; depending on `slice`
+    // is enough to re-evaluate when the visible range changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slice])
+
   const handleDownloadOne = useCallback(
     (item: FileTreeFile | FileTreeFolder) => {
       void download.downloadNode(item)
