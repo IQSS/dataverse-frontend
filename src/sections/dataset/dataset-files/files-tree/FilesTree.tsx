@@ -401,9 +401,14 @@ export function FilesTree({
     return (
       <div className={styles['tree-wrap']} data-testid="files-tree-loading">
         <FilesTreeHeader />
-        <div className={styles['tree-viewport']} style={{ height: fallbackHeight }}>
+        <div
+          className={styles['tree-viewport']}
+          style={{ height: fallbackHeight }}
+          role="status"
+          aria-busy="true"
+          aria-live="polite">
           <div className={styles['tree-state']}>
-            <div className={styles['tree-state-glyph']}>
+            <div className={styles['tree-state-glyph']} aria-hidden>
               <SpinnerIcon />
             </div>
             <div>{t('tree.state.loading')}</div>
@@ -417,11 +422,16 @@ export function FilesTree({
     return (
       <div className={styles['tree-wrap']} data-testid="files-tree-error">
         <FilesTreeHeader />
-        <div className={styles['tree-viewport']} style={{ height: fallbackHeight }}>
+        <div
+          className={styles['tree-viewport']}
+          style={{ height: fallbackHeight }}
+          role="alert"
+          aria-live="assertive">
           <div className={styles['tree-state']}>
             <div
               className={styles['tree-state-glyph']}
-              style={{ borderColor: 'var(--bs-danger)', color: 'var(--bs-danger)' }}>
+              style={{ borderColor: 'var(--bs-danger)', color: 'var(--bs-danger)' }}
+              aria-hidden>
               <WarnIcon />
             </div>
             <div>{t('tree.state.error')}</div>
@@ -440,9 +450,13 @@ export function FilesTree({
       <div className={styles['tree-wrap']} data-testid="files-tree-empty">
         <FilesTreeToolbar selection={selection} download={download} disableDownload />
         <FilesTreeHeader />
-        <div className={styles['tree-viewport']} style={{ height: fallbackHeight }}>
+        <div
+          className={styles['tree-viewport']}
+          style={{ height: fallbackHeight }}
+          role="status"
+          aria-live="polite">
           <div className={styles['tree-state']}>
-            <div className={styles['tree-state-glyph']}>
+            <div className={styles['tree-state-glyph']} aria-hidden>
               <EmptyIcon />
             </div>
             <div>{query ? t('tree.state.noMatches', { query }) : t('tree.state.empty')}</div>
@@ -595,9 +609,16 @@ function FilesTreeToolbar({
   const requesting = download.progress.status === 'requesting'
 
   return (
-    <div className={styles.toolbar}>
+    <div
+      className={styles.toolbar}
+      role="toolbar"
+      aria-label={t('tree.toolbar.label', 'Selection actions')}>
       <div className={styles['toolbar-left']}>
-        <span className={styles['selection-summary']} data-testid="files-tree-selection-summary">
+        <span
+          className={styles['selection-summary']}
+          data-testid="files-tree-selection-summary"
+          role="status"
+          aria-live="polite">
           {count === 0 && !hasLogicalFolders ? (
             <span>{t('tree.selection.none')}</span>
           ) : (

@@ -114,9 +114,22 @@ $indent-step: 18px;
   background-color: var(--bs-light, #f8f9fa);
 }
 
+.row:focus-visible {
+  outline: none;
+  // Inset ring works around the absolute-positioned row clipping a
+  // standard outline against neighbouring rows.
+  box-shadow: inset 0 0 0 2px var(--bs-primary, #0d6efd);
+  background-color: rgba(13, 110, 253, 0.04);
+  z-index: 1;
+}
+
 .row-selected,
 .row-selected:hover {
   background-color: rgba(13, 110, 253, 0.08);
+}
+
+.row-selected:focus-visible {
+  background-color: rgba(13, 110, 253, 0.12);
 }
 
 .row-name {

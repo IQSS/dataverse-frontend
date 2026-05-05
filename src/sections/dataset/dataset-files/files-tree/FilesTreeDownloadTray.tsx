@@ -74,7 +74,7 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
       />
       <div
         className={cn(styles.tray, { [styles['tray-open']]: open })}
-        role="dialog"
+        role="region"
         aria-live="polite"
         aria-label={t('tree.download.tray.label', 'Zip download progress')}
         data-testid="files-tree-download-tray">
@@ -131,6 +131,9 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
                 </Button>
                 <Button variant="secondary" size="sm" onClick={api.skipCurrent}>
                   {t('tree.download.tray.skip', 'Skip')}
+                </Button>
+                <Button variant="secondary" size="sm" onClick={api.deferCurrentToEnd}>
+                  {t('tree.download.tray.deferToEnd', 'Skip & retry at end')}
                 </Button>
                 <Button variant="link" size="sm" onClick={api.skipAllFailures}>
                   {t('tree.download.tray.skipAll', 'Skip all remaining failures')}

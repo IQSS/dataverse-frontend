@@ -166,4 +166,59 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/^Skip$/).click()
     cy.contains(/Download complete — 1 skipped/i).should('exist')
   })
+
+  it('switches to two-pass on "Skip & retry at end" and finishes after retry', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'flaky.bin',
+        path: 'flaky.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      }),
+      FileTreeFileMother.create({
+        id: 3,
+        name: 'c.txt',
+        path: 'c.txt',
+        size: 3,
+        downloadUrl: '/access/3'
+      })
+    ]
+
+    let flakyAttempts = 0
+    cy.window().then((win) => {
+      cy.stub(win, 'fetch').callsFake((input: RequestInfo | URL) => {
+        const url = String(input)
+        if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+        if (url.endsWith('/access/3')) return Promise.resolve(fakeResponseBody('CCC'))
+        if (url.endsWith('/access/2')) {
+          flakyAttempts += 1
+          // Fails on the first pass; succeeds during the second-pass retry.
+          if (flakyAttempts === 1) return Promise.reject(new Error('flaky network'))
+          return Promise.resolve(fakeResponseBody('BBB'))
+        }
+        return Promise.reject(new Error(`unexpected fetch ${url}`))
+      })
+    })
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="twopass.zip" />)
+    cy.findByTestId('harness-start').click()
+
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/Skip & retry at end/i).click()
+
+    cy.findByTestId('files-tree-download-tray-twopass').should('be.visible')
+    cy.contains(/Download 1 missing file/i).click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(flakyAttempts).to.equal(2)
+    })
+  })
 })

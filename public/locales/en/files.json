@@ -10,6 +10,9 @@
   },
   "tree": {
     "label": "Dataset files",
+    "toolbar": {
+      "label": "Selection actions"
+    },
     "head": {
       "name": "Name",
       "size": "Size",
@@ -59,6 +62,7 @@
         "failed": "Failed to fetch file",
         "retry": "Retry this file",
         "skip": "Skip",
+        "deferToEnd": "Skip & retry at end",
         "skipAll": "Skip all remaining failures",
         "notIncluded_one": "{{count}} file was not included in the zip",
         "notIncluded_other": "{{count}} files were not included in the zip",

@@ -62,6 +62,15 @@ export interface StreamingZipApi {
   retryCurrent: () => void
   skipCurrent: () => void
   skipAllFailures: () => void
+  /**
+   * Convert the current pause-on-fail dialog into a two-pass run:
+   * the failure stays in `failedSoFar` as recoverable, the strategy
+   * switches to `twopass`, and the engine keeps going without pausing
+   * on subsequent failures. After the first pass finishes the engine
+   * pauses with `status: 'awaiting-retry'` so the host can call
+   * `retryFailed`.
+   */
+  deferCurrentToEnd: () => void
   retryFailed: () => void
   cancel: () => void
   close: () => void
@@ -111,7 +120,13 @@ export function useStreamingZipDownload(): StreamingZipApi {
   // Engine control: a single "decision" promise that the iterator
   // awaits when paused. The UI calls retryCurrent/skipCurrent/etc.
   // which resolve this promise with the requested action.
-  type Decision = 'retry' | 'skip' | 'skip-all' | 'retry-failed' | 'cancel'
+  type Decision =
+    | 'retry'
+    | 'skip'
+    | 'skip-all'
+    | 'defer-to-end'
+    | 'retry-failed'
+    | 'cancel'
   const decisionRef = useRef<ResolveBag<Decision> | null>(null)
   const cancelledRef = useRef(false)
 
@@ -147,6 +162,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
   const retryCurrent = useCallback(() => sendDecision('retry'), [sendDecision])
   const skipCurrent = useCallback(() => sendDecision('skip'), [sendDecision])
   const skipAllFailures = useCallback(() => sendDecision('skip-all'), [sendDecision])
+  const deferCurrentToEnd = useCallback(() => sendDecision('defer-to-end'), [sendDecision])
   const retryFailed = useCallback(() => sendDecision('retry-failed'), [sendDecision])
 
   const start = useCallback(
@@ -224,6 +240,14 @@ export function useStreamingZipDownload(): StreamingZipApi {
                   queue.unshift(file)
                   continue
                 }
+                if (decision === 'defer-to-end') {
+                  // Switch to twopass: the failure stays recoverable in
+                  // failedSoFar, the engine stops pausing, and a second
+                  // pass will pick up all recoverable failures at the end.
+                  strategy = 'twopass'
+                  update((prev) => ({ ...prev, status: 'running' }))
+                  continue
+                }
                 if (decision === 'skip-all') {
                   strategy = 'skip'
                   // mark the just-added failure as non-recoverable too
@@ -240,7 +264,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
                     }
                   })
                 }
-                // 'skip' falls through
+                // 'skip' or 'skip-all' fall through
                 skippedManifest.push({ ...failure, recoverable: false })
                 continue
               }
@@ -348,6 +372,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
     retryCurrent,
     skipCurrent,
     skipAllFailures,
+    deferCurrentToEnd,
     retryFailed,
     cancel,
     close
