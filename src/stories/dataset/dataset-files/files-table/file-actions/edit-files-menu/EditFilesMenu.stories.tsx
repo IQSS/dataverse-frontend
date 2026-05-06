@@ -7,11 +7,18 @@ import { WithDatasetAllPermissionsGranted } from '../../../../WithDatasetAllPerm
 import { FilePreviewMother } from '../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
 import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
+import { WithRepositories } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof EditFilesMenu> = {
   title: 'Sections/Dataset Page/DatasetFiles/FilesTable/EditFilesMenu',
   component: EditFilesMenu,
-  decorators: [WithI18next, WithSettings, WithLoggedInUser, WithDatasetAllPermissionsGranted]
+  decorators: [
+    WithI18next,
+    WithSettings,
+    WithLoggedInUser,
+    WithDatasetAllPermissionsGranted,
+    WithRepositories({ datasetRepository: new DatasetMockRepository() })
+  ]
 }
 
 export default meta
@@ -23,7 +30,6 @@ export const Default: Story = {
       files={FilePreviewMother.createMany(2)}
       fileSelection={{}}
       fileRepository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }

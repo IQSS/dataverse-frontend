@@ -17,10 +17,10 @@ import { FileUploaderHelper } from '../FileUploaderHelper'
 import { SwalModal } from '../../swal-modal/SwalModal'
 import styles from './FileUploadInput.module.scss'
 import { useUploadLimit } from './useUploadLimit'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 type FileUploadInputProps = {
   fileRepository: FileRepository
-  datasetRepository: DatasetRepository
   datasetPersistentId: string
   fetchUploadLimits?: (
     datasetId: string | number,
@@ -35,10 +35,10 @@ const maxFilesPerUpload = 1000
 
 const FileUploadInput = ({
   fileRepository,
-  datasetRepository,
   datasetPersistentId,
   fetchUploadLimits
 }: FileUploadInputProps) => {
+  const { datasetRepository } = useDatasetRepositories()
   const {
     fileUploaderState,
     addFile,

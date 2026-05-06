@@ -1,13 +1,16 @@
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetCitation } from '../../../../../src/sections/dataset/dataset-citation/DatasetCitation'
 import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 describe('DatasetCitation', () => {
   it('renders the DatasetCitation fields of released Dataset', () => {
     const version = DatasetVersionMother.createRealistic()
     cy.customMount(
-      <DatasetCitation version={version} datasetId="123" datasetRepository={datasetRepository} />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetCitation version={version} datasetId="123" />
+      </WithRepositories>
     )
 
     cy.findByText('Data Citation Standards.').should('exist')
@@ -27,7 +30,9 @@ describe('DatasetCitation', () => {
   it('shows the draft tooltip when version is draft', () => {
     const version = DatasetVersionMother.createDraft()
     cy.customMount(
-      <DatasetCitation version={version} datasetId="123" datasetRepository={datasetRepository} />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetCitation version={version} datasetId="123" />
+      </WithRepositories>
     )
 
     cy.findByRole('img', { name: 'tooltip icon' }).should('exist').trigger('mouseover')
@@ -39,7 +44,9 @@ describe('DatasetCitation', () => {
   it('shows the deaccessioned tooltip when version is deaccessioned', () => {
     const version = DatasetVersionMother.createDeaccessioned()
     cy.customMount(
-      <DatasetCitation version={version} datasetId="123" datasetRepository={datasetRepository} />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetCitation version={version} datasetId="123" />
+      </WithRepositories>
     )
 
     cy.findByRole('img', { name: 'tooltip icon' }).should('exist').trigger('mouseover')
@@ -51,7 +58,9 @@ describe('DatasetCitation', () => {
   it('shows the deaccessioned reason when version is deaccessioned', () => {
     const version = DatasetVersionMother.createDeaccessioned()
     cy.customMount(
-      <DatasetCitation version={version} datasetId="123" datasetRepository={datasetRepository} />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetCitation version={version} datasetId="123" />
+      </WithRepositories>
     )
 
     cy.findByText(/Deaccession Reason/).should('exist')
@@ -60,12 +69,9 @@ describe('DatasetCitation', () => {
   it('does not render the thumbnail when withoutThumbnail prop is true', () => {
     const version = DatasetVersionMother.createRealistic()
     cy.customMount(
-      <DatasetCitation
-        version={version}
-        withoutThumbnail={true}
-        datasetId="123"
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetCitation version={version} withoutThumbnail={true} datasetId="123" />
+      </WithRepositories>
     )
 
     cy.findByLabelText('icon-dataset').should('not.exist')
@@ -74,7 +80,9 @@ describe('DatasetCitation', () => {
   it('renders the Cite Dataset button', () => {
     const version = DatasetVersionMother.createRealistic()
     cy.customMount(
-      <DatasetCitation version={version} datasetId="123" datasetRepository={datasetRepository} />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetCitation version={version} datasetId="123" />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Cite Dataset' }).should('exist')

@@ -188,15 +188,15 @@ describe('Dataset JSDataverse Repository', () => {
           dataset.version.lastUpdateTime
         )
         expect(dataset.license).to.deep.equal(datasetExpected.license)
-        // expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
-        // expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
-        // expect(dataset.version).to.deep.equal(datasetExpected.version)
-        // expect(dataset.metadataBlocks[0].fields.publicationDate).not.to.exist
-        // expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
-        // expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
-        // expect(dataset.locks).to.deep.equal(datasetExpected.locks)
+        expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
+        expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
+        expect(dataset.version).to.deep.equal(datasetExpected.version)
+        expect(dataset.metadataBlocks[0].fields.publicationDate).not.to.exist
+        expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+        expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
+        expect(dataset.locks).to.deep.equal(datasetExpected.locks)
         expect(dataset.downloadUrls).to.deep.equal(datasetExpected.downloadUrls)
-        // expect(dataset.fileDownloadSizes).to.deep.equal(datasetExpected.fileDownloadSizes)
+        expect(dataset.fileDownloadSizes).to.deep.equal(datasetExpected.fileDownloadSizes)
       })
   })
 

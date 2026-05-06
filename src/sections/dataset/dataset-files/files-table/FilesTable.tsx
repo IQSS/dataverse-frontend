@@ -11,7 +11,7 @@ import { FileSelection } from './row-selection/useFileSelection'
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface FilesTableProps {
   files: FilePreview[]
@@ -20,7 +20,6 @@ interface FilesTableProps {
   paginationInfo: FilePaginationInfo
   filesTotalDownloadSize: number
   criteria: FileCriteria
-  datasetRepository: DatasetRepository
 }
 
 export function FilesTable({
@@ -29,9 +28,9 @@ export function FilesTable({
   paginationInfo,
   filesTotalDownloadSize,
   fileRepository,
-  criteria,
-  datasetRepository
+  criteria
 }: FilesTableProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const { table, fileSelection, selectAllFiles, clearFileSelection } = useFilesTable(
     files,
     paginationInfo,

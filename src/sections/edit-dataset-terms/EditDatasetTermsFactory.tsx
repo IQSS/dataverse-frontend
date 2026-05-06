@@ -32,7 +32,6 @@ function EditDatasetTermsWithSearchParams() {
       <EditDatasetTerms
         defaultActiveTabKey={defaultActiveTabKey}
         licenseRepository={licenseRepository}
-        datasetRepository={datasetRepository}
         guestbookRepository={guestbookRepository}
       />
     </DatasetProvider>

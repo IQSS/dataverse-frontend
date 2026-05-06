@@ -12,7 +12,6 @@ import FileUploaderPanel from './FileUploaderPanel'
 export type FileUploaderProps =
   | {
       fileRepository: FileRepository
-      datasetRepository: DatasetRepository
       datasetPersistentId: string
       storageType: StorageType
       operationType: OperationType.REPLACE_FILE
@@ -25,7 +24,6 @@ export type FileUploaderProps =
     }
   | {
       fileRepository: FileRepository
-      datasetRepository: DatasetRepository
       datasetPersistentId: string
       storageType: StorageType
       operationType: OperationType.ADD_FILES_TO_DATASET
@@ -49,7 +47,6 @@ export enum OperationType {
 
 export const FileUploader = ({
   fileRepository,
-  datasetRepository,
   datasetPersistentId,
   storageType,
   operationType,
@@ -81,7 +78,6 @@ export const FileUploader = ({
     <FileUploaderProvider initialConfig={initialConfig}>
       <FileUploaderPanel
         fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
         datasetPersistentId={datasetPersistentId}
         fetchUploadLimits={fetchUploadLimits}
         referrer={referrer}

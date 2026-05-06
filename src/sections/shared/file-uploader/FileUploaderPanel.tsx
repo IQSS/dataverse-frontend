@@ -17,7 +17,6 @@ import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits
 
 interface FileUploaderPanelProps {
   fileRepository: FileRepository
-  datasetRepository: DatasetRepository
   datasetPersistentId: string
   referrer?: ReplaceFileReferrer
   fetchUploadLimits?: (
@@ -28,7 +27,6 @@ interface FileUploaderPanelProps {
 
 const FileUploaderPanel = ({
   fileRepository,
-  datasetRepository,
   datasetPersistentId,
   referrer,
   fetchUploadLimits
@@ -112,7 +110,6 @@ const FileUploaderPanel = ({
     <Stack gap={4}>
       <FileUploadInput
         fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
         datasetPersistentId={datasetPersistentId}
         fetchUploadLimits={fetchUploadLimits}
       />

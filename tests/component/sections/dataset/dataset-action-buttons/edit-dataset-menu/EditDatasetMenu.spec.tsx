@@ -8,6 +8,7 @@ import { EditDatasetMenu } from '../../../../../../src/sections/dataset/dataset-
 import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { QueryParamKey } from '@/sections/Route.enum'
 import { DatasetNonNumericVersion } from '@/dataset/domain/models/Dataset'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 describe('EditDatasetMenu', () => {
   it('renders the EditDatasetMenu if the user has update dataset permissions', () => {
@@ -19,7 +20,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').should('be.enabled').click()
@@ -42,7 +45,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.customMount(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).should('not.exist')
@@ -55,7 +60,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).should('not.exist')
@@ -68,7 +75,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').should('be.disabled')
@@ -82,7 +91,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
@@ -102,7 +113,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
@@ -120,7 +133,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
@@ -136,7 +151,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
@@ -151,7 +168,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
@@ -167,7 +186,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
@@ -184,7 +205,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
@@ -199,7 +222,9 @@ describe('EditDatasetMenu', () => {
       hasValidTermsOfAccess: true
     })
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
     cy.findByRole('button', { name: /Delete/ }).click()
@@ -226,7 +251,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
@@ -242,7 +269,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
@@ -261,7 +290,9 @@ describe('EditDatasetMenu', () => {
     })
 
     cy.mountAuthenticated(
-      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditDatasetMenu dataset={dataset} />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()

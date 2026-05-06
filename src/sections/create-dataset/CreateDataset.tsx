@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
-import { type DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { type MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { HostCollectionForm } from './HostCollectionForm/HostCollectionForm'
@@ -21,14 +20,12 @@ import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepo
 import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface CreateDatasetProps {
-  datasetRepository: DatasetRepository
   templateRepository: TemplateRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionId: string
 }
 
 export function CreateDataset({
-  datasetRepository,
   templateRepository,
   metadataBlockInfoRepository,
   collectionId
@@ -123,7 +120,6 @@ export function CreateDataset({
         <DatasetMetadataForm
           mode="create"
           collectionId={collectionId}
-          datasetRepository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetTemplate={selectedTemplate ?? undefined}
           key={selectedTemplate ? selectedTemplate.id : 'no-template-selected'} // We use the template id as key to force remounting the form when the template changes

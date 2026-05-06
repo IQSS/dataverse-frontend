@@ -31,9 +31,10 @@ export const Default: Story = {
   },
   render: () => (
     <NotImplementedModalProvider>
-      <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <RepositoriesStoryProvider
+        collectionRepository={new CollectionMockRepository()}
+        datasetRepository={new DatasetMockRepository()}>
         <CreateDataset
-          datasetRepository={new DatasetMockRepository()}
           templateRepository={new TemplateMockRepository()}
           metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
           collectionId={'collectionId'}
@@ -45,9 +46,10 @@ export const Default: Story = {
 
 export const Loading: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <CreateDataset
-        datasetRepository={new DatasetMockRepository()}
         templateRepository={new TemplateMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
         collectionId={'collectionId'}
@@ -72,9 +74,9 @@ collectionRepositoryWithoutPermissionsToCreateDataset.getUserPermissions = () =>
 export const NotAllowedToAddDataset: Story = {
   render: () => (
     <RepositoriesStoryProvider
-      collectionRepository={collectionRepositoryWithoutPermissionsToCreateDataset}>
+      collectionRepository={collectionRepositoryWithoutPermissionsToCreateDataset}
+      datasetRepository={new DatasetMockRepository()}>
       <CreateDataset
-        datasetRepository={new DatasetMockRepository()}
         templateRepository={new TemplateMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         collectionId={'collectionId'}

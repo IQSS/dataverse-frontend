@@ -5,27 +5,23 @@ import { Button, Modal, Spinner, Stack } from '@iqss/dataverse-design-system'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { Dataset, DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { useSession } from '@/sections/session/SessionContext'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { CollectionLinkSelect } from '@/sections/collection/link-collection-dropdown/collection-link-select/CollectionLinkSelect'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { unlinkDataset } from '@/dataset/domain/useCases/unlinkDataset'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { useGetDatasetLinkedCollections } from '@/dataset/domain/hooks/useGetDatasetLinkedCollections'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 
 interface UnlinkDatasetButtonProps {
   dataset: Dataset
-  datasetRepository: DatasetRepository
   updateParent: () => void
 }
 
-export function UnlinkDatasetButton({
-  dataset,
-  datasetRepository,
-  updateParent
-}: UnlinkDatasetButtonProps) {
+export function UnlinkDatasetButton({ dataset, updateParent }: UnlinkDatasetButtonProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const modalTitle = t('datasetActionButtons.unlinkDataset.title')

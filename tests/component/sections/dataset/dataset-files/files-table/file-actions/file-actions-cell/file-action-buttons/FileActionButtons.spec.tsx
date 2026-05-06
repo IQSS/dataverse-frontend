@@ -7,6 +7,7 @@ import {
 import { DatasetProvider } from '../../../../../../../../../src/sections/dataset/DatasetProvider'
 import { FilePreviewMother } from '../../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const file = FilePreviewMother.createDefault()
 const fileRepository: FileRepository = {} as FileRepository
@@ -15,11 +16,9 @@ const datasetRepository: DatasetRepository = {} as DatasetRepository
 describe('FileActionButtons', () => {
   it('renders the file action buttons', () => {
     cy.customMount(
-      <FileActionButtons
-        file={file}
-        fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <FileActionButtons file={file} fileRepository={fileRepository} />
+      </WithRepositories>
     )
 
     cy.findByRole('group', { name: 'File Action Buttons' }).should('exist')
@@ -36,15 +35,13 @@ describe('FileActionButtons', () => {
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(datasetWithUpdatePermissions)
 
     cy.mountAuthenticated(
-      <DatasetProvider
-        repository={datasetRepository}
-        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-        <FileActionButtons
-          file={file}
-          fileRepository={fileRepository}
-          datasetRepository={datasetRepository}
-        />
-      </DatasetProvider>
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetProvider
+          repository={datasetRepository}
+          searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
+          <FileActionButtons file={file} fileRepository={fileRepository} />
+        </DatasetProvider>
+      </WithRepositories>
     )
 
     cy.findByRole('group', { name: 'File Action Buttons' }).should('exist')

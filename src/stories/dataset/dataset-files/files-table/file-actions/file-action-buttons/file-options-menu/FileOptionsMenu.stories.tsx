@@ -12,12 +12,18 @@ import { ExternalToolsProvider } from '@/shared/contexts/external-tools/External
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
+import { WithRepositories } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof FileOptionsMenu> = {
   title:
     'Sections/Dataset Page/DatasetFiles/FilesTable/FileActionsCell/FileActionButtons/FileOptionsMenu',
   component: FileOptionsMenu,
-  decorators: [WithI18next, WithSettings, WithLoggedInUser]
+  decorators: [
+    WithI18next,
+    WithSettings,
+    WithLoggedInUser,
+    WithRepositories({ datasetRepository: new DatasetMockRepository() })
+  ]
 }
 
 export default meta
@@ -29,7 +35,6 @@ export const DefaultWithLoggedInUser: Story = {
     <FileOptionsMenu
       file={FilePreviewMother.createDefault()}
       fileRepository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -40,7 +45,6 @@ export const Restricted: Story = {
     <FileOptionsMenu
       file={FilePreviewMother.createRestricted()}
       fileRepository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -51,7 +55,6 @@ export const WithDatasetLocked: Story = {
     <FileOptionsMenu
       file={FilePreviewMother.createDefault()}
       fileRepository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -62,7 +65,6 @@ export const WithFileAlreadyDeleted: Story = {
     <FileOptionsMenu
       file={FilePreviewMother.createDeleted()}
       fileRepository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -83,7 +85,6 @@ export const WithConfigureTool: Story = {
       <FileOptionsMenu
         file={FilePreviewMother.createDefault()}
         fileRepository={new FileMockRepository()}
-        datasetRepository={new DatasetMockRepository()}
       />
     </ExternalToolsProvider>
   )

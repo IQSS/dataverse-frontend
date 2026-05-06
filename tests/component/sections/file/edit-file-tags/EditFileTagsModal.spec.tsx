@@ -1,6 +1,7 @@
 import { EditFileTagsModal } from '@/sections/file/file-action-buttons/edit-file-menu/edit-file-tags/edit-file-tags-modal/EditFileTagsModal'
 import { FileLabelType } from '@/files/domain/models/FileMetadata'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 describe('EditFileTagsModal', () => {
   let datasetRepository: DatasetRepository
@@ -10,20 +11,21 @@ describe('EditFileTagsModal', () => {
     const categoriesMock = ['Documentation', 'Code', 'Data', 'Category4']
     datasetRepository.getAvailableCategories = cy.stub().resolves(categoriesMock)
     cy.customMount(
-      <EditFileTagsModal
-        show={true}
-        handleClose={() => {}}
-        fileId={1}
-        handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-        isUpdatingFileCategories={false}
-        errorUpdatingFileCategories={null}
-        handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-        isUpdatingTabularTags={false}
-        errorUpdatingTabularTags={null}
-        isTabularFile={true}
-        datasetRepository={datasetRepository}
-        datasetPersistentId={'1'}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFileTagsModal
+          show={true}
+          handleClose={() => {}}
+          fileId={1}
+          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+          isUpdatingFileCategories={false}
+          errorUpdatingFileCategories={null}
+          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+          isUpdatingTabularTags={false}
+          errorUpdatingTabularTags={null}
+          isTabularFile={true}
+          datasetPersistentId={'1'}
+        />
+      </WithRepositories>
     )
   })
 
@@ -124,20 +126,21 @@ describe('EditFileTagsModal', () => {
 
   it('should hide tabular tags section when file is not tabular', () => {
     cy.customMount(
-      <EditFileTagsModal
-        show={true}
-        handleClose={() => {}}
-        fileId={1}
-        handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-        isUpdatingFileCategories={false}
-        errorUpdatingFileCategories={null}
-        handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-        isUpdatingTabularTags={false}
-        errorUpdatingTabularTags={null}
-        isTabularFile={false}
-        datasetRepository={datasetRepository}
-        datasetPersistentId={'1'}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFileTagsModal
+          show={true}
+          handleClose={() => {}}
+          fileId={1}
+          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+          isUpdatingFileCategories={false}
+          errorUpdatingFileCategories={null}
+          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+          isUpdatingTabularTags={false}
+          errorUpdatingTabularTags={null}
+          isTabularFile={false}
+          datasetPersistentId={'1'}
+        />
+      </WithRepositories>
     )
 
     cy.get('#file-tags-select').should('exist')
@@ -148,20 +151,21 @@ describe('EditFileTagsModal', () => {
 
   it('should only update file categories and not tabular tags when file is not tabular', () => {
     cy.customMount(
-      <EditFileTagsModal
-        show={true}
-        handleClose={() => {}}
-        fileId={1}
-        handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-        isUpdatingFileCategories={false}
-        errorUpdatingFileCategories={null}
-        handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-        isUpdatingTabularTags={false}
-        errorUpdatingTabularTags={null}
-        isTabularFile={false}
-        datasetRepository={datasetRepository}
-        datasetPersistentId={'1'}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFileTagsModal
+          show={true}
+          handleClose={() => {}}
+          fileId={1}
+          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+          isUpdatingFileCategories={false}
+          errorUpdatingFileCategories={null}
+          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+          isUpdatingTabularTags={false}
+          errorUpdatingTabularTags={null}
+          isTabularFile={false}
+          datasetPersistentId={'1'}
+        />
+      </WithRepositories>
     )
 
     cy.get('#file-tags-select').click()
@@ -186,21 +190,22 @@ describe('EditFileTagsModal', () => {
 
   it('should not call update handlers if no changes are made', () => {
     cy.customMount(
-      <EditFileTagsModal
-        show={true}
-        handleClose={() => {}}
-        fileId={1}
-        handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-        isUpdatingFileCategories={false}
-        errorUpdatingFileCategories={null}
-        handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-        isUpdatingTabularTags={false}
-        errorUpdatingTabularTags={null}
-        isTabularFile={true}
-        existingLabels={existingLabels}
-        datasetRepository={datasetRepository}
-        datasetPersistentId={'1'}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFileTagsModal
+          show={true}
+          handleClose={() => {}}
+          fileId={1}
+          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+          isUpdatingFileCategories={false}
+          errorUpdatingFileCategories={null}
+          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+          isUpdatingTabularTags={false}
+          errorUpdatingTabularTags={null}
+          isTabularFile={true}
+          existingLabels={existingLabels}
+          datasetPersistentId={'1'}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Save Changes' }).click()
@@ -208,21 +213,22 @@ describe('EditFileTagsModal', () => {
 
   it('should show error message if duplicated customized tag exists', () => {
     cy.customMount(
-      <EditFileTagsModal
-        show={true}
-        handleClose={() => {}}
-        fileId={1}
-        handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-        isUpdatingFileCategories={false}
-        errorUpdatingFileCategories={null}
-        handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-        isUpdatingTabularTags={false}
-        errorUpdatingTabularTags={null}
-        isTabularFile={true}
-        existingLabels={existingLabels}
-        datasetRepository={datasetRepository}
-        datasetPersistentId={'1'}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFileTagsModal
+          show={true}
+          handleClose={() => {}}
+          fileId={1}
+          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+          isUpdatingFileCategories={false}
+          errorUpdatingFileCategories={null}
+          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+          isUpdatingTabularTags={false}
+          errorUpdatingTabularTags={null}
+          isTabularFile={true}
+          existingLabels={existingLabels}
+          datasetPersistentId={'1'}
+        />
+      </WithRepositories>
     )
     cy.findByTestId('custom-file-tag-input').type('duplicated tag')
     cy.findByRole('button', { name: 'Apply' }).click()
@@ -240,21 +246,22 @@ describe('EditFileTagsModal', () => {
     const handleCloseSpy = cy.stub().as('handleClose')
 
     cy.customMount(
-      <EditFileTagsModal
-        show={true}
-        handleClose={handleCloseSpy}
-        fileId={1}
-        handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-        isUpdatingFileCategories={false}
-        errorUpdatingFileCategories={null}
-        handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-        isUpdatingTabularTags={false}
-        errorUpdatingTabularTags={null}
-        isTabularFile={true}
-        existingLabels={existingLabels}
-        datasetRepository={datasetRepository}
-        datasetPersistentId={'1'}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFileTagsModal
+          show={true}
+          handleClose={handleCloseSpy}
+          fileId={1}
+          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+          isUpdatingFileCategories={false}
+          errorUpdatingFileCategories={null}
+          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+          isUpdatingTabularTags={false}
+          errorUpdatingTabularTags={null}
+          isTabularFile={true}
+          existingLabels={existingLabels}
+          datasetPersistentId={'1'}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Cancel' }).click()
@@ -267,21 +274,22 @@ describe('EditFileTagsModal', () => {
     const handleCloseSpy = cy.stub().as('handleClose')
 
     cy.customMount(
-      <EditFileTagsModal
-        show={true}
-        handleClose={handleCloseSpy}
-        fileId={1}
-        handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-        isUpdatingFileCategories={false}
-        errorUpdatingFileCategories={null}
-        handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-        isUpdatingTabularTags={false}
-        errorUpdatingTabularTags={null}
-        isTabularFile={true}
-        existingLabels={existingLabels}
-        datasetRepository={datasetRepository}
-        datasetPersistentId={'1'}
-      />
+      <WithRepositories datasetRepository={datasetRepository}>
+        <EditFileTagsModal
+          show={true}
+          handleClose={handleCloseSpy}
+          fileId={1}
+          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+          isUpdatingFileCategories={false}
+          errorUpdatingFileCategories={null}
+          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+          isUpdatingTabularTags={false}
+          errorUpdatingTabularTags={null}
+          isTabularFile={true}
+          existingLabels={existingLabels}
+          datasetPersistentId={'1'}
+        />
+      </WithRepositories>
     )
 
     cy.get('.modal-header .btn-close').click()
@@ -292,20 +300,21 @@ describe('EditFileTagsModal', () => {
     it('should display file categories error message', () => {
       const errorMessage = 'Failed to update file categories'
       cy.customMount(
-        <EditFileTagsModal
-          show={true}
-          handleClose={() => {}}
-          fileId={1}
-          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-          isUpdatingFileCategories={false}
-          errorUpdatingFileCategories={errorMessage}
-          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-          isUpdatingTabularTags={false}
-          errorUpdatingTabularTags={null}
-          isTabularFile={true}
-          datasetRepository={datasetRepository}
-          datasetPersistentId={'1'}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <EditFileTagsModal
+            show={true}
+            handleClose={() => {}}
+            fileId={1}
+            handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+            isUpdatingFileCategories={false}
+            errorUpdatingFileCategories={errorMessage}
+            handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+            isUpdatingTabularTags={false}
+            errorUpdatingTabularTags={null}
+            isTabularFile={true}
+            datasetPersistentId={'1'}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('alert').should('have.class', 'alert-danger')
@@ -314,20 +323,21 @@ describe('EditFileTagsModal', () => {
     it('should display tabular tags error message', () => {
       const errorMessage = 'Failed to update tabular tags'
       cy.customMount(
-        <EditFileTagsModal
-          show={true}
-          handleClose={() => {}}
-          fileId={1}
-          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-          isUpdatingFileCategories={false}
-          errorUpdatingFileCategories={null}
-          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-          isUpdatingTabularTags={false}
-          errorUpdatingTabularTags={errorMessage}
-          isTabularFile={true}
-          datasetRepository={datasetRepository}
-          datasetPersistentId={'1'}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <EditFileTagsModal
+            show={true}
+            handleClose={() => {}}
+            fileId={1}
+            handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+            isUpdatingFileCategories={false}
+            errorUpdatingFileCategories={null}
+            handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+            isUpdatingTabularTags={false}
+            errorUpdatingTabularTags={errorMessage}
+            isTabularFile={true}
+            datasetPersistentId={'1'}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('alert').should('have.class', 'alert-danger')
@@ -338,20 +348,21 @@ describe('EditFileTagsModal', () => {
       datasetRepository.getAvailableCategories = cy.stub().rejects(new Error(errorMessage))
 
       cy.customMount(
-        <EditFileTagsModal
-          show={true}
-          handleClose={() => {}}
-          fileId={1}
-          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-          isUpdatingFileCategories={false}
-          errorUpdatingFileCategories={null}
-          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-          isUpdatingTabularTags={false}
-          errorUpdatingTabularTags={null}
-          isTabularFile={true}
-          datasetRepository={datasetRepository}
-          datasetPersistentId={'1'}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <EditFileTagsModal
+            show={true}
+            handleClose={() => {}}
+            fileId={1}
+            handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+            isUpdatingFileCategories={false}
+            errorUpdatingFileCategories={null}
+            handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+            isUpdatingTabularTags={false}
+            errorUpdatingTabularTags={null}
+            isTabularFile={true}
+            datasetPersistentId={'1'}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('alert').should('have.class', 'alert-danger')
@@ -359,20 +370,21 @@ describe('EditFileTagsModal', () => {
 
     it('should not display error messages when errors are null', () => {
       cy.customMount(
-        <EditFileTagsModal
-          show={true}
-          handleClose={() => {}}
-          fileId={1}
-          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-          isUpdatingFileCategories={false}
-          errorUpdatingFileCategories={null}
-          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-          isUpdatingTabularTags={false}
-          errorUpdatingTabularTags={null}
-          isTabularFile={true}
-          datasetRepository={datasetRepository}
-          datasetPersistentId={'1'}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <EditFileTagsModal
+            show={true}
+            handleClose={() => {}}
+            fileId={1}
+            handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+            isUpdatingFileCategories={false}
+            errorUpdatingFileCategories={null}
+            handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+            isUpdatingTabularTags={false}
+            errorUpdatingTabularTags={null}
+            isTabularFile={true}
+            datasetPersistentId={'1'}
+          />
+        </WithRepositories>
       )
 
       cy.get('.text-danger').should('not.exist')
@@ -380,20 +392,21 @@ describe('EditFileTagsModal', () => {
 
     it('should disable save button when updating file categories', () => {
       cy.customMount(
-        <EditFileTagsModal
-          show={true}
-          handleClose={() => {}}
-          fileId={1}
-          handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
-          isUpdatingFileCategories={true}
-          errorUpdatingFileCategories={null}
-          handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
-          isUpdatingTabularTags={false}
-          errorUpdatingTabularTags={null}
-          isTabularFile={true}
-          datasetRepository={datasetRepository}
-          datasetPersistentId={'1'}
-        />
+        <WithRepositories datasetRepository={datasetRepository}>
+          <EditFileTagsModal
+            show={true}
+            handleClose={() => {}}
+            fileId={1}
+            handleUpdateCategories={cy.stub().as('handleUpdateCategories')}
+            isUpdatingFileCategories={true}
+            errorUpdatingFileCategories={null}
+            handleUpdateTabularTags={cy.stub().as('handleUpdateTabularTags')}
+            isUpdatingTabularTags={false}
+            errorUpdatingTabularTags={null}
+            isTabularFile={true}
+            datasetPersistentId={'1'}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Saving' }).should('be.disabled')

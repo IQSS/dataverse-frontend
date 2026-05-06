@@ -7,11 +7,12 @@ import { WithI18next } from '@/stories/WithI18next'
 import { WithToasts } from '@/stories/WithToasts'
 import { Meta, StoryObj } from '@storybook/react'
 import { WithFileUploaderContext } from './WithFileUploaderContext'
+import { WithRepositories } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof FileUploadInput> = {
   title: 'Sections/Shared/File Uploader/File Upload Input',
   component: FileUploadInput,
-  decorators: [WithI18next],
+  decorators: [WithI18next, WithRepositories({ datasetRepository: new DatasetMockRepository() })],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -28,7 +29,6 @@ export const ReplaceMode: Story = {
       <FileUploadInput
         datasetPersistentId="doi:10.5072/FK2/8YOKQI"
         fileRepository={new FileMockRepository()}
-        datasetRepository={new DatasetMockRepository()}
       />
     </WithFileUploaderContext>
   )
@@ -41,7 +41,6 @@ export const AddMode: Story = {
       <FileUploadInput
         datasetPersistentId="doi:10.5072/FK2/8YOKQI"
         fileRepository={new FileMockRepository()}
-        datasetRepository={new DatasetMockRepository()}
       />
     </WithFileUploaderContext>
   )
@@ -54,7 +53,6 @@ export const WithUploadLimits: Story = {
       <FileUploadInput
         datasetPersistentId="doi:10.5072/FK2/8YOKQI"
         fileRepository={new FileMockRepository()}
-        datasetRepository={new DatasetMockRepository()}
         fetchUploadLimits={() =>
           Promise.resolve({ numberOfFilesRemaining: 5, storageQuotaRemaining: 1024 * 1024 * 1024 })
         }
@@ -102,7 +100,6 @@ export const WithUploadingFiles: Story = {
       <FileUploadInput
         datasetPersistentId="doi:10.5072/FK2/8YOKQI"
         fileRepository={new FileMockRepository()}
-        datasetRepository={new DatasetMockRepository()}
       />
     </WithFileUploaderContext>
   )
@@ -131,7 +128,6 @@ export const WithFailedFile: Story = {
       <FileUploadInput
         datasetPersistentId="doi:10.5072/FK2/8YOKQI"
         fileRepository={new FileMockRepository()}
-        datasetRepository={new DatasetMockRepository()}
       />
     </WithFileUploaderContext>
   )

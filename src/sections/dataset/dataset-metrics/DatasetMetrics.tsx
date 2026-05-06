@@ -1,16 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { QuestionMarkTooltip } from '@iqss/dataverse-design-system'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useGetDatasetDownloadCount } from './useGetDatasetDownloadCount'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './DatasetMetrics.module.scss'
 
 interface DatasetMetricsProps {
-  datasetRepository: DatasetRepository
   datasetId: number | string
 }
 
-export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsProps) => {
+export const DatasetMetrics = ({ datasetId }: DatasetMetricsProps) => {
+  const { datasetRepository } = useDatasetRepositories()
   const { t, i18n } = useTranslation('dataset')
   const {
     downloadCount: downloadCountIncludingMDC,

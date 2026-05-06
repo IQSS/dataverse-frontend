@@ -6,19 +6,16 @@ import { RouteWithParams } from '@/sections/Route.enum'
 import { Dataset, DatasetPublishingStatus } from '../../../../../dataset/domain/models/Dataset'
 import { useDeleteDraftDataset } from './useDeleteDraftDataset'
 import { DropdownButtonItem, DropdownSeparator } from '@iqss/dataverse-design-system'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersion } from '@/dataset/domain/models/Dataset'
 import { ConfirmDeleteDraftDatasetModal } from './ConfirmDeleteDraftDatasetModal'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface DeleteDraftDatasetButtonProps {
   dataset: Dataset
-  datasetRepository: DatasetRepository
 }
-export function DeleteDraftDatasetButton({
-  dataset,
-  datasetRepository
-}: DeleteDraftDatasetButtonProps) {
+export function DeleteDraftDatasetButton({ dataset }: DeleteDraftDatasetButtonProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const navigate = useNavigate()
   const { t } = useTranslation('dataset')

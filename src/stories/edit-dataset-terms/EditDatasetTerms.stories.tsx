@@ -10,11 +10,17 @@ import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { LicenseRepository } from '@/licenses/domain/repositories/LicenseRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { WithRepositories } from '../WithRepositories'
+
+const licenseRepository: LicenseRepository = new LicenseMockRepository() as LicenseRepository
+const datasetRepository: DatasetRepository = new DatasetMockRepository() as DatasetRepository
+const guestbookRepository: GuestbookRepository =
+  new GuestbookMockRepository() as GuestbookRepository
 
 const meta: Meta<typeof EditDatasetTerms> = {
   title: 'Pages/EditDatasetTerms',
   component: EditDatasetTerms,
-  decorators: [WithI18next, WithLayout, WithDataset],
+  decorators: [WithI18next, WithLayout, WithDataset, WithRepositories({ datasetRepository })],
   parameters: {
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
   }
@@ -23,17 +29,11 @@ const meta: Meta<typeof EditDatasetTerms> = {
 export default meta
 type Story = StoryObj<typeof EditDatasetTerms>
 
-const licenseRepository: LicenseRepository = new LicenseMockRepository() as LicenseRepository
-const datasetRepository: DatasetRepository = new DatasetMockRepository() as DatasetRepository
-const guestbookRepository: GuestbookRepository =
-  new GuestbookMockRepository() as GuestbookRepository
-
 export const EditLicenseAndTermsTab: Story = {
   render: () => (
     <EditDatasetTerms
       defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
       licenseRepository={licenseRepository}
-      datasetRepository={datasetRepository}
       guestbookRepository={guestbookRepository}
     />
   )
@@ -44,7 +44,6 @@ export const EditTermsOfAccessTab: Story = {
     <EditDatasetTerms
       defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.restrictedFilesTerms}
       licenseRepository={licenseRepository}
-      datasetRepository={datasetRepository}
       guestbookRepository={guestbookRepository}
     />
   )
@@ -55,7 +54,6 @@ export const EditGuestbookTab: Story = {
     <EditDatasetTerms
       defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
       licenseRepository={licenseRepository}
-      datasetRepository={datasetRepository}
       guestbookRepository={guestbookRepository}
     />
   )

@@ -61,9 +61,10 @@ WithDatasetGuestbook.displayName = 'WithDatasetGuestbook'
 export const Default: Story = {
   decorators: [WithLayout, WithDataset, WithNotImplementedModal],
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <Dataset
-        datasetRepository={new DatasetMockRepository()}
         fileRepository={new FileMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
@@ -76,9 +77,10 @@ export const Default: Story = {
 export const WithNormalPagination: Story = {
   decorators: [WithLayout, WithDataset, WithNotImplementedModal],
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <Dataset
-        datasetRepository={new DatasetMockRepository()}
         fileRepository={new FileMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
@@ -91,9 +93,10 @@ export const WithNormalPagination: Story = {
 export const DraftWithAllDatasetPermissions: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <Dataset
-        datasetRepository={new DatasetMockRepository()}
         fileRepository={new FileMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
@@ -106,9 +109,10 @@ export const DraftWithAllDatasetPermissions: Story = {
 export const Deaccessioned: Story = {
   decorators: [WithLayout, WithDeaccessionedDataset, WithLoggedInUser],
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <Dataset
-        datasetRepository={new DatasetMockRepository()}
         fileRepository={new FileMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
@@ -121,9 +125,10 @@ export const Deaccessioned: Story = {
 export const LoggedInAsOwner: Story = {
   decorators: [WithDataset, WithLayout, WithLoggedInUser, WithNotImplementedModal],
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <Dataset
-        datasetRepository={new DatasetMockRepository()}
         fileRepository={new FileMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
@@ -137,9 +142,10 @@ export const LoggedInAsOwner: Story = {
 export const Loading: Story = {
   decorators: [WithLayout, WithDatasetLoading],
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <Dataset
-        datasetRepository={new DatasetMockRepository()}
         fileRepository={new FileMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
@@ -153,9 +159,10 @@ export const Loading: Story = {
 export const DatasetNotFound: Story = {
   decorators: [WithLayout, WithDatasetNotFound],
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <Dataset
-        datasetRepository={new DatasetMockRepository()}
         fileRepository={new FileMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
@@ -169,9 +176,10 @@ export const DatasetNotFound: Story = {
 export const DatasetAnonymizedView: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDatasetPrivateUrl],
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <Dataset
-        datasetRepository={new DatasetMockRepository()}
         fileRepository={new FileMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
@@ -185,9 +193,10 @@ export const DatasetAnonymizedView: Story = {
 export const DatasetWithNoFiles: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDataset],
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <Dataset
-        datasetRepository={new DatasetMockRepository()}
         fileRepository={new FileMockNoDataRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         contactRepository={new ContactMockRepository()}
@@ -201,13 +210,16 @@ export const DatasetWithNoFiles: Story = {
 export const DatasetWithGuestbook: Story = {
   decorators: [WithLayout, WithDatasetGuestbook, WithNotImplementedModal],
   render: () => (
-    <Dataset
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      filesTabInfiniteScrollEnabled
-      dataverseInfoRepository={new DataverseInfoMockRepository()}
-    />
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
+      <Dataset
+        fileRepository={new FileMockRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+        filesTabInfiniteScrollEnabled
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }

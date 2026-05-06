@@ -5,12 +5,17 @@ import { Route } from './sections/Route.enum'
 import { requireAppConfig } from './config'
 import { ExternalToolsProvider } from './shared/contexts/external-tools/ExternalToolsProvider'
 import { ExternalToolsJSDataverseRepository } from './externalTools/infrastructure/repositories/ExternalToolsJSDataverseRepository'
+import { RepositoriesProvider } from './shared/contexts/repositories/RepositoriesProvider'
+import { CollectionJSDataverseRepository } from './collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import { DatasetJSDataverseRepository } from './dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import 'react-loading-skeleton/dist/skeleton.css'
 import './assets/global.scss'
 import './assets/react-toastify-custom.scss'
 import './assets/swal-custom.scss'
 
 const externalToolsRepository = new ExternalToolsJSDataverseRepository()
+const collectionRepository = new CollectionJSDataverseRepository()
+const datasetRepository = new DatasetJSDataverseRepository()
 
 function App() {
   const appConfig = requireAppConfig()
@@ -34,7 +39,11 @@ function App() {
     <>
       <AuthProvider authConfig={authConfig}>
         <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
-          <Router />
+          <RepositoriesProvider
+            collectionRepository={collectionRepository}
+            datasetRepository={datasetRepository}>
+            <Router />
+          </RepositoriesProvider>
         </ExternalToolsProvider>
       </AuthProvider>
       <ToastContainer position="top-right" autoClose={5000} pauseOnHover />

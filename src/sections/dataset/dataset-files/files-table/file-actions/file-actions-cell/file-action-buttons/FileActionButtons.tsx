@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { ButtonGroup } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { FilePreview } from '@/files/domain/models/FilePreview'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { AccessFileMenu } from '@/sections/file/file-action-buttons/access-file-menu/AccessFileMenu'
@@ -12,13 +11,8 @@ import { FileTools } from './FileTools'
 interface FileActionButtonsProps {
   file: FilePreview
   fileRepository: FileRepository
-  datasetRepository: DatasetRepository
 }
-export function FileActionButtons({
-  file,
-  fileRepository,
-  datasetRepository
-}: FileActionButtonsProps) {
+export function FileActionButtons({ file, fileRepository }: FileActionButtonsProps) {
   const { t } = useTranslation('files')
   const isBelow768px = useMediaQuery('(max-width: 768px)')
 
@@ -36,11 +30,7 @@ export function FileActionButtons({
         ingestInProgress={file.ingest.isInProgress}
         asIcon
       />
-      <FileOptionsMenu
-        file={file}
-        fileRepository={fileRepository}
-        datasetRepository={datasetRepository}
-      />
+      <FileOptionsMenu file={file} fileRepository={fileRepository} />
     </ButtonGroup>
   )
 }

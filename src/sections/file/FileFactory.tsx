@@ -1,7 +1,6 @@
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
-import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { File } from './File'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { searchParamVersionToDomainVersion } from '../../router'
@@ -14,7 +13,6 @@ import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repo
 import { GuestbookRepositoryProvider } from '../guestbooks/GuestbookRepositoryProvider'
 
 const repository = new FileJSDataverseRepository()
-const datasetRepository = new DatasetJSDataverseRepository()
 const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
 const accessRepository = new AccessJSDataverseRepository()
@@ -50,7 +48,6 @@ function FileWithSearchParams() {
       repository={repository}
       id={id}
       datasetVersionNumber={datasetVersionNumber}
-      datasetRepository={datasetRepository}
       toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
       dataverseInfoRepository={dataverseInfoRepository}
       contactRepository={contactRepository}

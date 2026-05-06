@@ -9,6 +9,7 @@ import { FileExternalToolResolvedMother } from '@tests/component/externalTools/d
 import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 import { ContactMockRepository } from '@/stories/shared-mock-repositories/contact/ContactMockRepository'
 import { DatasetVersionMother } from '@tests/component/dataset/domain/models/DatasetMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const fileRepository: FileRepository = {} as FileRepository
 
@@ -18,13 +19,14 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File
-        repository={fileRepository}
-        id={19}
-        datasetRepository={new DatasetMockRepository()}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-        contactRepository={new ContactMockRepository()}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <File
+          repository={fileRepository}
+          id={19}
+          dataverseInfoRepository={new DataverseInfoMockRepository()}
+          contactRepository={new ContactMockRepository()}
+        />
+      </WithRepositories>
     )
 
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
@@ -52,13 +54,14 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File
-        repository={fileRepository}
-        id={19}
-        datasetRepository={new DatasetMockRepository()}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-        contactRepository={new ContactMockRepository()}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <File
+          repository={fileRepository}
+          id={19}
+          dataverseInfoRepository={new DataverseInfoMockRepository()}
+          contactRepository={new ContactMockRepository()}
+        />
+      </WithRepositories>
     )
 
     cy.findByTestId('file-skeleton').should('exist')
@@ -70,13 +73,14 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(undefined)
 
     cy.customMount(
-      <File
-        repository={fileRepository}
-        id={19}
-        datasetRepository={new DatasetMockRepository()}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-        contactRepository={new ContactMockRepository()}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <File
+          repository={fileRepository}
+          id={19}
+          dataverseInfoRepository={new DataverseInfoMockRepository()}
+          contactRepository={new ContactMockRepository()}
+        />
+      </WithRepositories>
     )
 
     cy.findByTestId('not-found-page').should('exist')
@@ -87,13 +91,14 @@ describe('File', () => {
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
-      <File
-        repository={fileRepository}
-        id={19}
-        datasetRepository={new DatasetMockRepository()}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-        contactRepository={new ContactMockRepository()}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <File
+          repository={fileRepository}
+          id={19}
+          dataverseInfoRepository={new DataverseInfoMockRepository()}
+          contactRepository={new ContactMockRepository()}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('Restricted File Icon').should('exist')
@@ -108,14 +113,15 @@ describe('File', () => {
       .resolves({ summaries, totalCount: summaries.length })
 
     cy.customMount(
-      <File
-        repository={fileRepository}
-        id={19}
-        datasetVersionNumber={'2.0'}
-        datasetRepository={new DatasetMockRepository()}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-        contactRepository={new ContactMockRepository()}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <File
+          repository={fileRepository}
+          id={19}
+          datasetVersionNumber={'2.0'}
+          dataverseInfoRepository={new DataverseInfoMockRepository()}
+          contactRepository={new ContactMockRepository()}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('Version 1.0').should('exist')
@@ -135,14 +141,15 @@ describe('File', () => {
     fileRepository.getById = cy.stub().as('getFile').resolves(testFile)
 
     cy.customMount(
-      <File
-        repository={fileRepository}
-        id={19}
-        datasetVersionNumber={'2.0'}
-        datasetRepository={new DatasetMockRepository()}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-        contactRepository={new ContactMockRepository()}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <File
+          repository={fileRepository}
+          id={19}
+          datasetVersionNumber={'2.0'}
+          dataverseInfoRepository={new DataverseInfoMockRepository()}
+          contactRepository={new ContactMockRepository()}
+        />
+      </WithRepositories>
     )
     cy.findByText('Deaccessioned').should('exist')
     cy.findByRole('button', { name: 'Share' }).should('not.exist')
@@ -164,15 +171,16 @@ describe('File', () => {
 
     it('renders the External Tools tab with "Preview" title if only one tool applicable and is a preview tool', () => {
       cy.customMount(
-        <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
-          <File
-            repository={fileRepository}
-            id={19}
-            datasetRepository={new DatasetMockRepository()}
-            dataverseInfoRepository={new DataverseInfoMockRepository()}
-            contactRepository={new ContactMockRepository()}
-          />
-        </ExternalToolsProvider>
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
+            <File
+              repository={fileRepository}
+              id={19}
+              dataverseInfoRepository={new DataverseInfoMockRepository()}
+              contactRepository={new ContactMockRepository()}
+            />
+          </ExternalToolsProvider>
+        </WithRepositories>
       )
 
       cy.findByRole('tab', { name: 'Preview' }).should('exist')
@@ -184,15 +192,16 @@ describe('File', () => {
         .resolves([ExternalToolsMother.createFileQueryTool()])
 
       cy.customMount(
-        <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
-          <File
-            repository={fileRepository}
-            id={19}
-            datasetRepository={new DatasetMockRepository()}
-            dataverseInfoRepository={new DataverseInfoMockRepository()}
-            contactRepository={new ContactMockRepository()}
-          />
-        </ExternalToolsProvider>
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
+            <File
+              repository={fileRepository}
+              id={19}
+              dataverseInfoRepository={new DataverseInfoMockRepository()}
+              contactRepository={new ContactMockRepository()}
+            />
+          </ExternalToolsProvider>
+        </WithRepositories>
       )
 
       cy.findByRole('tab', { name: 'Query' }).should('exist')
@@ -207,15 +216,16 @@ describe('File', () => {
         ])
 
       cy.customMount(
-        <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
-          <File
-            repository={fileRepository}
-            id={19}
-            datasetRepository={new DatasetMockRepository()}
-            dataverseInfoRepository={new DataverseInfoMockRepository()}
-            contactRepository={new ContactMockRepository()}
-          />
-        </ExternalToolsProvider>
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
+            <File
+              repository={fileRepository}
+              id={19}
+              dataverseInfoRepository={new DataverseInfoMockRepository()}
+              contactRepository={new ContactMockRepository()}
+            />
+          </ExternalToolsProvider>
+        </WithRepositories>
       )
 
       cy.findByRole('tab', { name: 'File Tools' }).should('exist')
@@ -225,15 +235,16 @@ describe('File', () => {
       externalToolsRepository.getExternalTools = cy.stub().resolves([])
 
       cy.customMount(
-        <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
-          <File
-            repository={fileRepository}
-            id={19}
-            datasetRepository={new DatasetMockRepository()}
-            dataverseInfoRepository={new DataverseInfoMockRepository()}
-            contactRepository={new ContactMockRepository()}
-          />
-        </ExternalToolsProvider>
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
+            <File
+              repository={fileRepository}
+              id={19}
+              dataverseInfoRepository={new DataverseInfoMockRepository()}
+              contactRepository={new ContactMockRepository()}
+            />
+          </ExternalToolsProvider>
+        </WithRepositories>
       )
 
       cy.findByRole('tab', { name: 'File Tools' }).should('not.exist')
@@ -246,15 +257,16 @@ describe('File', () => {
       fileRepository.getById = cy.stub().resolves(testFile)
 
       cy.customMount(
-        <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
-          <File
-            repository={fileRepository}
-            id={19}
-            datasetRepository={new DatasetMockRepository()}
-            dataverseInfoRepository={new DataverseInfoMockRepository()}
-            contactRepository={new ContactMockRepository()}
-          />
-        </ExternalToolsProvider>
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <ExternalToolsProvider externalToolsRepository={externalToolsRepository}>
+            <File
+              repository={fileRepository}
+              id={19}
+              dataverseInfoRepository={new DataverseInfoMockRepository()}
+              contactRepository={new ContactMockRepository()}
+            />
+          </ExternalToolsProvider>
+        </WithRepositories>
       )
 
       cy.findByRole('tab', { name: 'File Tools' }).should('not.exist')

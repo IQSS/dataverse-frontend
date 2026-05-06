@@ -12,7 +12,7 @@ import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginati
 import { type SentryRef } from '../DatasetFilesScrollable'
 import styles from './FilesTable.module.scss'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface FilesTableScrollableProps {
   files: FilePreview[]
@@ -25,7 +25,6 @@ interface FilesTableScrollableProps {
   isEmptyFiles: boolean
   fileRepository: FileRepository
   accumulatedCount: number
-  datasetRepository: DatasetRepository
 }
 
 export const FilesTableScrollable = ({
@@ -38,9 +37,9 @@ export const FilesTableScrollable = ({
   showSentryRef,
   isEmptyFiles,
   fileRepository,
-  accumulatedCount,
-  datasetRepository
+  accumulatedCount
 }: FilesTableScrollableProps) => {
+  const { datasetRepository } = useDatasetRepositories()
   const { table, fileSelection, selectAllPossibleRows, clearRowsSelection } =
     useFilesTableScrollable(
       files,

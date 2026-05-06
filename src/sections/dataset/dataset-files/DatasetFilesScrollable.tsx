@@ -13,14 +13,12 @@ import { useObserveElementSize } from '../../../shared/hooks/useObserveElementSi
 import { FilesTableScrollable } from './files-table/FilesTableScrollable'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FilesContext } from '@/sections/file/FilesContext'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import styles from './DatasetFilesScrollable.module.scss'
 
 interface DatasetFilesScrollableProps {
   filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
-  datasetRepository: DatasetRepository
   canUpdateDataset?: boolean
 }
 
@@ -30,8 +28,7 @@ export function DatasetFilesScrollable({
   filesRepository,
   datasetPersistentId,
   datasetVersion,
-  canUpdateDataset,
-  datasetRepository
+  canUpdateDataset
 }: DatasetFilesScrollableProps) {
   const scrollableContainerRef = useRef<HTMLDivElement | null>(null)
   const criteriaContainerRef = useRef<HTMLDivElement | null>(null)
@@ -187,7 +184,6 @@ export function DatasetFilesScrollable({
             isEmptyFiles={isEmptyFiles}
             accumulatedCount={accumulatedCount}
             fileRepository={filesRepository}
-            datasetRepository={datasetRepository}
           />
         </FilesContext.Provider>
       </div>

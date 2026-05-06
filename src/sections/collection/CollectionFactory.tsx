@@ -1,14 +1,11 @@
 import { ReactElement } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
-import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 import { Collection } from './Collection'
 import { INFINITE_SCROLL_ENABLED } from './config'
 import { useGetCollectionQueryParams } from './useGetCollectionQueryParams'
 import { ACCOUNT_CREATED_SESSION_STORAGE_KEY } from './AccountCreatedAlert'
-import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 
-const collectionRepository = new CollectionJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
 
 export class CollectionFactory {
@@ -32,15 +29,13 @@ function CollectionWithSearchParams() {
     Boolean(sessionStorage.getItem(ACCOUNT_CREATED_SESSION_STORAGE_KEY)) ?? false
 
   return (
-    <RepositoriesProvider collectionRepository={collectionRepository}>
-      <Collection
-        collectionIdFromParams={collectionId}
-        created={created}
-        collectionQueryParams={collectionQueryParams}
-        accountCreated={accountCreated}
-        infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
-        contactRepository={contactRepository}
-      />
-    </RepositoriesProvider>
+    <Collection
+      collectionIdFromParams={collectionId}
+      created={created}
+      collectionQueryParams={collectionQueryParams}
+      accountCreated={accountCreated}
+      infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
+      contactRepository={contactRepository}
+    />
   )
 }

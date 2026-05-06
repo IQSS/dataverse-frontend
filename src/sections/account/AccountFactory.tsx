@@ -3,13 +3,10 @@ import { useSearchParams } from 'react-router-dom'
 import { AccountHelper } from './AccountHelper'
 import { Account } from './Account'
 import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
-import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { RoleJSDataverseRepository } from '@/roles/infrastructure/repositories/RoleJSDataverseRepository'
 import { NotificationJSDataverseRepository } from '@/notifications/infrastructure/repositories/NotificationJSDataverseRepository'
-import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const userRepository = new UserJSDataverseRepository()
-const collectionRepository = new CollectionJSDataverseRepository()
 const roleRepository = new RoleJSDataverseRepository()
 const notificationRepository = new NotificationJSDataverseRepository()
 
@@ -24,13 +21,11 @@ function AccountWithSearchParams() {
   const defaultActiveTabKey = AccountHelper.defineSelectedTabKey(searchParams)
 
   return (
-    <RepositoriesProvider collectionRepository={collectionRepository}>
-      <Account
-        defaultActiveTabKey={defaultActiveTabKey}
-        userRepository={userRepository}
-        roleRepository={roleRepository}
-        notificationRepository={notificationRepository}
-      />
-    </RepositoriesProvider>
+    <Account
+      defaultActiveTabKey={defaultActiveTabKey}
+      userRepository={userRepository}
+      roleRepository={roleRepository}
+      notificationRepository={notificationRepository}
+    />
   )
 }

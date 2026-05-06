@@ -12,6 +12,7 @@ import {
 } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { useLocation } from 'react-router-dom'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const LocationDisplay = () => {
   const location = useLocation()
@@ -42,11 +43,13 @@ describe('EditTermsOfAccess', () => {
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
 
     return (
-      <DatasetProvider
-        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
-        repository={datasetRepository}>
-        {component}
-      </DatasetProvider>
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetProvider
+          searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+          repository={datasetRepository}>
+          {component}
+        </DatasetProvider>
+      </WithRepositories>
     )
   }
 
@@ -55,28 +58,26 @@ describe('EditTermsOfAccess', () => {
     datasetRepository.getByPrivateUrlToken = cy.stub().returns(new Promise(() => {}))
 
     return (
-      <DatasetProvider
-        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
-        repository={datasetRepository}>
-        {component}
-      </DatasetProvider>
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetProvider
+          searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+          repository={datasetRepository}>
+          {component}
+        </DatasetProvider>
+      </WithRepositories>
     )
   }
 
   describe('Request Access Section', () => {
     it('renders the request access checkbox', () => {
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-      )
+      cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
 
       cy.findByLabelText('Enable access request').should('exist')
       cy.findByLabelText('Enable access request').should('be.checked')
     })
 
     it('shows info alert', () => {
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-      )
+      cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
 
       cy.findByText(/Restricting limits access to published files/).should('exist')
     })
@@ -84,9 +85,7 @@ describe('EditTermsOfAccess', () => {
 
   describe('Terms of Access Fields', () => {
     it('renders all terms of access fields', () => {
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-      )
+      cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
 
       cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
       cy.findByLabelText('Data Access Place').should('exist')
@@ -98,9 +97,7 @@ describe('EditTermsOfAccess', () => {
     })
 
     it('pre-fills fields with initial values', () => {
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-      )
+      cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
       cy.findByDisplayValue('Access requires approval').should('exist')
       cy.findByDisplayValue('Main office').should('exist')
       cy.findByDisplayValue('University archive').should('exist')
@@ -111,9 +108,7 @@ describe('EditTermsOfAccess', () => {
     })
 
     it('allows editing of terms of access fields', () => {
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-      )
+      cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
 
       cy.findByLabelText('Terms of Access for Restricted Files')
         .clear()
@@ -125,26 +120,20 @@ describe('EditTermsOfAccess', () => {
 
   describe('Form Actions', () => {
     it('renders save and cancel buttons', () => {
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-      )
+      cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
 
       cy.findByRole('button', { name: 'Save Changes' }).should('exist')
       cy.findByRole('button', { name: 'Cancel' }).should('exist')
     })
 
     it('enables save button when form is valid', () => {
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-      )
+      cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
 
       cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
     })
 
     it('disables save button when request access is disabled and terms are empty', () => {
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-      )
+      cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
 
       cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
       cy.findByLabelText(/Terms of Access for Restricted Files/i).type('Provide contact details')
@@ -152,9 +141,7 @@ describe('EditTermsOfAccess', () => {
     })
 
     it('submits form data when save is clicked', () => {
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-      )
+      cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
 
       cy.findByLabelText('Terms of Access for Restricted Files').clear().type('New terms')
       cy.findByRole('button', { name: 'Save Changes' }).click()
@@ -163,9 +150,7 @@ describe('EditTermsOfAccess', () => {
     it('shows "Saving" while terms are being submitted and disables the button', () => {
       datasetRepository.updateTermsOfAccess = cy.stub().returns(new Promise(() => {}))
 
-      cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-      )
+      cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
 
       cy.findByRole('button', { name: 'Save Changes' }).click()
       cy.findByRole('button', { name: 'Saving' }).should('exist').and('be.disabled')
@@ -173,9 +158,7 @@ describe('EditTermsOfAccess', () => {
   })
 
   it('handles empty initial terms of access', () => {
-    cy.customMount(
-      withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-    )
+    cy.customMount(withProviders(<EditTermsOfAccess />, mockDataset))
 
     cy.findByLabelText('Enable access request').should('exist')
     cy.findByLabelText('Terms of Access for Restricted Files').should('exist')
@@ -191,12 +174,7 @@ describe('EditTermsOfAccess', () => {
       })
     })
 
-    cy.customMount(
-      withProviders(
-        <EditTermsOfAccess datasetRepository={datasetRepository} />,
-        datasetWithUndefinedRequest
-      )
-    )
+    cy.customMount(withProviders(<EditTermsOfAccess />, datasetWithUndefinedRequest))
 
     cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
   })
@@ -206,7 +184,7 @@ describe('EditTermsOfAccess', () => {
       cy.customMount(
         withLoadingDataset(
           <>
-            <EditTermsOfAccess datasetRepository={datasetRepository} />
+            <EditTermsOfAccess />
             <LocationDisplay />
           </>
         ),
@@ -227,7 +205,7 @@ describe('EditTermsOfAccess', () => {
       cy.customMount(
         withProviders(
           <>
-            <EditTermsOfAccess datasetRepository={datasetRepository} />
+            <EditTermsOfAccess />
             <LocationDisplay />
           </>,
           draftDataset
@@ -250,7 +228,7 @@ describe('EditTermsOfAccess', () => {
       cy.customMount(
         withProviders(
           <>
-            <EditTermsOfAccess datasetRepository={datasetRepository} />
+            <EditTermsOfAccess />
             <LocationDisplay />
           </>,
           releasedDataset
@@ -274,7 +252,7 @@ describe('EditTermsOfAccess', () => {
 
       cy.customMount(
         withProviders(
-          <EditTermsOfAccess datasetRepository={datasetRepository} />,
+          <EditTermsOfAccess />,
           DatasetMother.create({
             id: 123,
             termsOfUse: { termsOfAccess }
@@ -298,7 +276,7 @@ describe('EditTermsOfAccess', () => {
 
       cy.customMount(
         withProviders(
-          <EditTermsOfAccess datasetRepository={datasetRepository} />,
+          <EditTermsOfAccess />,
           DatasetMother.create({
             id: 123,
             termsOfUse: { termsOfAccess }

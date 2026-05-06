@@ -5,6 +5,7 @@ import { WithLoggedInUser } from '../../WithLoggedInUser'
 import { DatasetMockRepository } from '../DatasetMockRepository'
 import { DatasetVersionSummaryStringValues } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetLoadingMockRepository } from '../DatasetLoadingMockRepository'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof DeaccessionDatasetModal> = {
   title: 'Sections/Dataset Page/Deaccession Dataset/DeaccessionDatasetModal',
@@ -20,12 +21,13 @@ export const Default: Story = {
   decorators: [WithLoggedInUser],
   render: () => {
     return (
-      <DeaccessionDatasetModal
-        show={true}
-        datasetRepository={new DatasetMockRepository()}
-        datasetPersistentId="test-dataset-id"
-        handleCloseDeaccessionModal={() => {}}
-      />
+      <RepositoriesStoryProvider datasetRepository={new DatasetMockRepository()}>
+        <DeaccessionDatasetModal
+          show={true}
+          datasetPersistentId="test-dataset-id"
+          handleCloseDeaccessionModal={() => {}}
+        />
+      </RepositoriesStoryProvider>
     )
   }
 }
@@ -54,12 +56,13 @@ export const WithOneVersion: Story = {
     }
 
     return (
-      <DeaccessionDatasetModal
-        show={true}
-        datasetRepository={datasetMockRepository}
-        datasetPersistentId="test-dataset-id"
-        handleCloseDeaccessionModal={() => {}}
-      />
+      <RepositoriesStoryProvider datasetRepository={datasetMockRepository}>
+        <DeaccessionDatasetModal
+          show={true}
+          datasetPersistentId="test-dataset-id"
+          handleCloseDeaccessionModal={() => {}}
+        />
+      </RepositoriesStoryProvider>
     )
   }
 }
@@ -67,11 +70,12 @@ export const WithOneVersion: Story = {
 export const LoadingDatasetVersionSummaries: Story = {
   decorators: [WithLoggedInUser],
   render: () => (
-    <DeaccessionDatasetModal
-      show={true}
-      datasetRepository={new DatasetLoadingMockRepository()}
-      datasetPersistentId="test-dataset-id"
-      handleCloseDeaccessionModal={() => {}}
-    />
+    <RepositoriesStoryProvider datasetRepository={new DatasetLoadingMockRepository()}>
+      <DeaccessionDatasetModal
+        show={true}
+        datasetPersistentId="test-dataset-id"
+        handleCloseDeaccessionModal={() => {}}
+      />
+    </RepositoriesStoryProvider>
   )
 }
