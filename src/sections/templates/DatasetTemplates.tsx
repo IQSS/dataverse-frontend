@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { startTransition, useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   Alert,
@@ -23,7 +23,7 @@ import {
   Trash
 } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
-import { RouteWithParams } from '@/sections/Route.enum'
+import { RouteWithParams, TemplateEditMode } from '@/sections/Route.enum'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { DatasetTemplatesSkeleton } from './DatasetTemplatesSkeleton'
 import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
@@ -34,12 +34,11 @@ import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepo
 import { useCollection } from '../collection/useCollection'
 import { useGetTemplatesByCollectionId } from '@/templates/domain/hooks/useGetTemplatesByCollectionId'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
-import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
-import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { Template } from '@/templates/domain/models/Template'
 import { ConfirmDeleteTemplateModal } from './confirm-delete-template-modal/ConfirmDeleteTemplateModal'
 import { TemplatePreviewModal } from './template-preview-modal/TemplatePreviewModal'
 import { useCopyTemplate } from './useCopyTemplate'
+import { useSetTemplateAsDefault } from './useSetTemplateAsDefault'
 
 import styles from './DatasetTemplates.module.scss'
 
@@ -57,9 +56,16 @@ export const DatasetTemplates = ({
   collectionId
 }: DatasetTemplatesProps) => {
   const { t } = useTranslation('datasetTemplates')
-  const { t: tDataset } = useTranslation('dataset')
   const navigate = useNavigate()
-  const { isModalOpen, hideModal, showModal } = useNotImplementedModal()
+  const location = useLocation()
+
+  useEffect(() => {
+    const state = location.state as { fromEditTemplate?: boolean } | null
+    if (state?.fromEditTemplate) {
+      toast.success(t('alerts.editSuccess'))
+      navigate(location.pathname, { replace: true, state: null })
+    }
+  }, [location, navigate, t])
   const [sortBy, setSortBy] = useState<'name' | 'created' | 'usage' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [templateToDelete, setTemplateToDelete] = useState<Template | undefined>(undefined)
@@ -75,7 +81,8 @@ export const DatasetTemplates = ({
     datasetTemplates,
     isLoadingDatasetTemplates,
     errorGetDatasetTemplates,
-    fetchDatasetTemplates
+    fetchDatasetTemplates,
+    toggleDefaultTemplate
   } = useGetTemplatesByCollectionId({
     templateRepository,
     collectionIdOrAlias: collectionId
@@ -85,6 +92,11 @@ export const DatasetTemplates = ({
     templateRepository,
     metadataBlockInfoRepository
   })
+  const { handleSetTemplateAsDefault, handleUnsetTemplateAsDefault, isSettingDefault } =
+    useSetTemplateAsDefault({
+      collectionId,
+      templateRepository
+    })
 
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: collectionId,
@@ -175,15 +187,14 @@ export const DatasetTemplates = ({
   }
 
   const handleEditTemplateAction = (template: Template, action: 'metadata' | 'terms') => {
-    if (action === 'metadata') {
-      navigate(RouteWithParams.TEMPLATES_EDIT_METADATA(collectionId, template.id))
-      return
-    }
-    navigate(RouteWithParams.TEMPLATES_EDIT_TERMS(collectionId, template.id))
+    const editMode = action === 'metadata' ? TemplateEditMode.METADATA : TemplateEditMode.LICENSE
+    navigate(RouteWithParams.TEMPLATES_EDIT(collectionId, template.id, editMode))
   }
 
   const handleOpenPreviewModal = (template: Template) => {
-    setTemplateToPreview(template)
+    startTransition(() => {
+      setTemplateToPreview(template)
+    })
   }
 
   const handleClosePreviewModal = () => {
@@ -211,7 +222,6 @@ export const DatasetTemplates = ({
 
   return (
     <>
-      <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
       <ConfirmDeleteTemplateModal
         show={Boolean(templateToDelete)}
         handleClose={handleCloseDeleteModal}
@@ -330,15 +340,30 @@ export const DatasetTemplates = ({
                         className={styles['action-group']}
                         aria-label={t('table.action')}>
                         {template.isDefault ? (
-                          <Button variant="secondary" size="sm" disabled>
-                            <CheckLg />
-                            {t('actions.default')}
-                          </Button>
+                          <span
+                            onClick={async () => {
+                              if (isSettingDefault) return
+                              const didUnset = await handleUnsetTemplateAsDefault()
+                              if (didUnset) {
+                                toggleDefaultTemplate(null)
+                              }
+                            }}>
+                            <Button variant="secondary" size="sm" disabled>
+                              <CheckLg />
+                              {t('actions.default')}
+                            </Button>
+                          </span>
                         ) : (
                           <Button
                             variant="secondary"
                             size="sm"
-                            onClick={showModal}
+                            disabled={isSettingDefault}
+                            onClick={async () => {
+                              const didSet = await handleSetTemplateAsDefault(template.id)
+                              if (didSet) {
+                                toggleDefaultTemplate(template.id)
+                              }
+                            }}
                             className={styles['make-default-button']}>
                             {t('actions.makeDefault')}
                           </Button>
@@ -378,12 +403,11 @@ export const DatasetTemplates = ({
                               onSelect={(eventKey) =>
                                 handleEditTemplateAction(template, eventKey as 'metadata' | 'terms')
                               }>
-                              {/* waiting for Edit Template api support */}
-                              <DropdownButtonItem eventKey="metadata" as="button" disabled>
-                                {tDataset('datasetActionButtons.editDataset.metadata')}
+                              <DropdownButtonItem eventKey="metadata" as="button">
+                                {t('editTemplate.actions.metadata')}
                               </DropdownButtonItem>
-                              <DropdownButtonItem eventKey="terms" as="button" disabled>
-                                {tDataset('datasetActionButtons.editDataset.terms')}
+                              <DropdownButtonItem eventKey="terms" as="button">
+                                {t('editTemplate.actions.terms')}
                               </DropdownButtonItem>
                             </DropdownButton>
                             <Tooltip
