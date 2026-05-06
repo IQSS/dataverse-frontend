@@ -61,6 +61,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Dataset versions: (1) file changes should be `Access: Restricted` instead of `isResticted: true/false`; (2) logic of View Detail button. (#879)
 - File versions: (1) logic of linking to a file version; (2)If file not included, show text information "File not included in this version.". (#879)
 - Dataset page publish flow now avoids rendering duplicate tab sets by making tabs skeleton and tabs content mutually exclusive.
+- Fixed custom terms navigation url while publishing a datsaet.
 
 ### Removed
 

@@ -34,7 +34,7 @@ const createCollectionRepository = (options: CreateRepositoryOptions = {}) => {
 type MountOptions = {
   mountAs?: 'authenticated' | 'superuser'
   repository?: DatasetRepository
-  collectionRepository: CollectionRepository | undefined
+  collectionRepository?: CollectionRepository | undefined
   parentCollection?: ReturnType<typeof UpwardHierarchyNodeMother.createCollection>
   handleClose?: sinon.SinonStub
   dataverseInfoRepository?: DataverseInfoRepository
@@ -242,7 +242,7 @@ describe('PublishDatasetModal', () => {
       .and('include', `/collections/${parentCollection.id}`)
   })
 
-  it('Displays custom terms when license is undefined', () => {
+  it('displays custom terms when license is undefined', () => {
     const parentCollection = UpwardHierarchyNodeMother.createCollection({ isReleased: false })
 
     mountPublishDatasetModal({
@@ -254,6 +254,51 @@ describe('PublishDatasetModal', () => {
     })
 
     cy.findByText(/Custom Dataset Terms/).should('exist')
+  })
+
+  it('renders the Custom Dataset Terms link when license is undefined', () => {
+    mountPublishDatasetModal({
+      props: {
+        license: undefined,
+        customTerms: CustomTermsMother.create()
+      }
+    })
+
+    cy.findByRole('link', { name: /Custom Dataset Terms/ }).should('exist')
+  })
+
+  it('does not render the Custom Dataset Terms link when license is defined', () => {
+    mountPublishDatasetModal({
+      props: {
+        license: LicenseMother.create(),
+        customTerms: undefined
+      }
+    })
+
+    cy.findByText(/Custom Dataset Terms/).should('not.exist')
+    cy.findByRole('link', { name: 'CC0 1.0' }).should('exist')
+  })
+
+  it('opens the terms tab URL when Custom Dataset Terms link is clicked', () => {
+    const windowOpenStub = cy.stub().as('windowOpen')
+    cy.window().then((win) => {
+      cy.stub(win, 'open').callsFake(windowOpenStub)
+    })
+
+    mountPublishDatasetModal({
+      props: {
+        license: undefined,
+        customTerms: CustomTermsMother.create()
+      }
+    })
+
+    cy.findByRole('link', { name: /Custom Dataset Terms/ }).click()
+
+    cy.get('@windowOpen').should('have.been.calledOnce')
+    cy.get('@windowOpen').then((stub) => {
+      const calledUrl = (stub as unknown as sinon.SinonStub).firstCall.args[0] as string
+      expect(calledUrl).to.include('tab=terms')
+    })
   })
 
   it('Displays disclaimer text from settings', () => {
