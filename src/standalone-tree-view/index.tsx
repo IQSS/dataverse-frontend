@@ -9,6 +9,7 @@ import { FilesTree } from '@/sections/dataset/dataset-files/files-tree/FilesTree
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
 import { DatasetVersion, DatasetVersionNumber } from '@/dataset/domain/models/Dataset'
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
+import { mountInShadowRoot } from '../standalone-shared/shadow-mount'
 
 import '../../packages/design-system/dist/style.css'
 // Bootstrap 5 base CSS is intentionally NOT imported here. The standalone
@@ -62,12 +63,14 @@ function buildFileMetadataUrlFactory(config: MountConfig) {
 async function init() {
   const config = window.dvTreeViewConfig
   const rootElementId = config?.rootElementId ?? 'dv-tree-view'
-  const container = document.getElementById(rootElementId)
-  if (!container) {
-    console.error(`[dvTreeView] Mount element #${rootElementId} not found`)
+  let reactRoot: HTMLElement
+  try {
+    reactRoot = mountInShadowRoot({ rootElementId }).reactRoot
+  } catch (err) {
+    console.error(`[dvTreeView] ${(err as Error).message}`)
     return
   }
-  const root = createRoot(container)
+  const root = createRoot(reactRoot)
 
   const missingFields: string[] = []
   if (!config) missingFields.push('siteUrl', 'datasetPid')

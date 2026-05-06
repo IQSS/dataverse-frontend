@@ -14,8 +14,28 @@ import * as path from 'path'
 export default defineConfig({
   plugins: [
     react(),
-    // Inject CSS into the JS bundle so we only have a single file to load
-    cssInjectedByJsPlugin()
+    // Bundle CSS into the JS module instead of emitting separate .css files.
+    //
+    // Default behaviour appends a `<style>` element to `document.head` at
+    // import time. We override it to push CSS strings onto a global queue
+    // (`window.__dvPendingStyles`) so the standalone wrapper can adopt the
+    // styles into a Shadow DOM root at mount time, isolating both
+    // directions: host-page CSS does not cascade into the component, and
+    // component CSS does not leak into the host page.
+    //
+    // The wrapper drains the queue in `mountInShadowRoot()` (see
+    // `src/standalone-shared/shadow-mount.ts`).
+    cssInjectedByJsPlugin({
+      // `cssCode` arrives already-JSON-encoded as a JS string literal.
+      // (Same convention as the plugin's default `injectCode` example.)
+      injectCode: (cssCode) =>
+        `(function(){if(typeof window!=='undefined'){(window.__dvPendingStyles=window.__dvPendingStyles||[]).push(${cssCode});}})()`,
+      // Inject the queue-push into every entry bundle, not just one.
+      // Without this, the plugin picks a single entry to host the
+      // injection; loading the other entry alone would leave its
+      // shadow root unstyled.
+      jsAssetsFilterFunction: (chunk) => chunk.isEntry === true
+    })
   ],
   // Don't copy public folder contents
   publicDir: false,

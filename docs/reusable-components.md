@@ -108,19 +108,30 @@ Don't accept `apiKey` or `apiToken` as a config field. If you find yourself want
 
 ## CSS isolation
 
-Bundled CSS is injected into `<head>` by `vite-plugin-css-injected-by-js`. To avoid bleeding into the host JSF page:
+Standalone bundles are mounted into Shadow DOM. The mounting helper lives at `src/standalone-shared/shadow-mount.ts` and is used by every standalone wrapper:
 
-1. Wrap the React render in a scoped root element: `<div className="dv-<component>-root">`.
-2. Keep all bundled CSS scoped to that class. Avoid `html`, `body`, or unscoped element selectors.
-3. Use **CSS Modules** for design-system styles (hashed class names cannot collide with PrimeFaces or Bootstrap 3).
-4. Page-level styling (background, fonts, viewport-fill) lives in a `standalone-page.scss` that is **only** loaded by the standalone demo HTML — not by the JSF-loaded bundle.
+```ts
+import { mountInShadowRoot } from '../standalone-shared/shadow-mount'
 
-**Known caveat — Bootstrap 5 vs 3.** The shared chunk imports `bootstrap/dist/css/bootstrap.min.css` (5.x) for react-bootstrap. Dataverse JSF pages already load Bootstrap 3.x. On selectors that exist in both versions (`.btn`, `.form-control`, the grid system) the later-loaded sheet wins. The reusable component is fine because it loads after JSF, but JSF panels rendered alongside it can pick up Bootstrap-5 rules on those selectors. PrimeFaces (`ui-*`), Glyphicon, and Dataverse-internal classes are unaffected.
+const { reactRoot } = mountInShadowRoot({ rootElementId: 'dv-tree-view' })
+createRoot(reactRoot).render(/* … your React tree … */)
+```
 
-Picking one of these before unflagging a feature in production:
+**What Shadow DOM gives us, and what it doesn't.**
 
-- A PostCSS scope-prefix plugin that wraps every bundled CSS rule under `.dv-<component>-root`.
-- A Shadow DOM mount that keeps injected `<style>` tags inside the shadow boundary.
+- Both directions are isolated. The host JSF/Bootstrap-3 stylesheet does **not** cascade into the bundle — `input { display: inline-block }` from PrimeFaces no longer overrides `<input hidden>`, and the host's `body { font-size: 14px }` does not override the component's typography. Symmetrically, the bundle's Bootstrap-5 reset / design-system tokens do **not** leak into the host's `<head>` and clobber the JSF page chrome.
+- The exception: anything that reaches outside the React tree via a portal. `react-toastify`'s `<ToastContainer>` renders inline in the React tree, so it stays inside the shadow root automatically. Anything that defaults to `document.body` (modal libraries, `react-bootstrap` `<Overlay>` / `<Tooltip>` / `<Popover>`, popperjs containers) **must** be passed an explicit container that lives inside the shadow root. The shadow root is exposed as `window.__dvShadowRoot[rootElementId]` for that purpose; importing it from `shadow-mount.ts` is preferred.
+- The momentary `document.body.appendChild(<a>)` anchor-click trick used for browser-triggered downloads is unaffected — it's browser-level navigation, not styling.
+
+**How the CSS reaches the shadow root.** `vite-plugin-css-injected-by-js` is configured with a custom `injectCode` (see `vite.config.uploader.ts`) that pushes every CSS chunk onto `window.__dvPendingStyles` instead of appending it to `<head>`. The shadow-mount helper drains that queue, creating one `<style>` element inside the shadow root per chunk. Each entry bundle carries the full CSS for self-sufficient mounting (controlled by `jsAssetsFilterFunction`); on a page that loads only `dv-uploader.js` the CSS is still adopted, on a page that loads only `dv-tree-view.js` the same.
+
+**Cookbook for adding a new reusable component:**
+
+1. Wrap the React tree in `<div className="dv-<component>-root">` (the className is for tests / inspector clarity only — not for isolation).
+2. Use **CSS Modules** for component styles. Hashed class names guarantee no collisions even outside the shadow root.
+3. Page-level styling (background, fonts, viewport-fill) lives in a `standalone-page.scss` that is **only** loaded by the standalone demo HTML via `<link rel="stylesheet">` — not by the bundle. The bundle is for embeds; the demo page chrome is for the demo page.
+4. Don't import `bootstrap/dist/css/bootstrap.min.css` from the standalone wrapper. The shadow root carries the design-system stylesheet (CSS-Modules + tokens) which is enough for the component to render correctly. Importing global Bootstrap here is the historical bug that motivated this whole section.
+5. If your component uses a portal-based library (modal, popover, tooltip), pass `portalContainer={shadow}` (or the equivalent) — get the shadow ref via the second return value of `mountInShadowRoot`. Never let a portal default to `document.body`.
 
 ## Adding a new reusable component
 

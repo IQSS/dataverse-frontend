@@ -13,6 +13,7 @@ import { OperationType, StorageType } from '@/sections/shared/file-uploader/File
 import { LoadingConfigSpinner } from '@/sections/shared/file-uploader/loading-config-spinner/LoadingConfigSpinner'
 import { useGetFixityAlgorithm } from '@/sections/shared/file-uploader/useGetFixityAlgorithm'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
+import { mountInShadowRoot } from '../standalone-shared/shadow-mount'
 
 import '../../packages/design-system/dist/style.css'
 // Bootstrap 5 base CSS is intentionally NOT imported here. The standalone
@@ -67,13 +68,15 @@ async function init() {
   const config = window.dvUploaderConfig
   const rootElementId = config?.rootElementId ?? 'dv-uploader'
 
-  const container = document.getElementById(rootElementId)
-  if (!container) {
-    console.error(`[dvUploader] Mount element #${rootElementId} not found`)
+  let reactRoot: HTMLElement
+  try {
+    reactRoot = mountInShadowRoot({ rootElementId }).reactRoot
+  } catch (err) {
+    console.error(`[dvUploader] ${(err as Error).message}`)
     return
   }
 
-  const root = createRoot(container)
+  const root = createRoot(reactRoot)
 
   const missingFields: string[] = []
   if (!config) missingFields.push('siteUrl', 'datasetPid')
