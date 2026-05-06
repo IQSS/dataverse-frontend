@@ -1,6 +1,6 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper } from '@tests/e2e-integration/shared/datasets/DatasetHelper'
-import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 
 const CREATE_TEMPLATE_PAGE_URL = `${FRONTEND_BASE_PATH}/root/templates/create`
 const TEMPLATES_PAGE_URL = `${FRONTEND_BASE_PATH}/root/templates`

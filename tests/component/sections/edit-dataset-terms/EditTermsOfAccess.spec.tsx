@@ -15,7 +15,6 @@ import {
   DatasetPublishingStatus,
   DatasetVersionNumber
 } from '@/dataset/domain/models/Dataset'
-import { useLocation } from 'react-router-dom'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
@@ -36,12 +35,7 @@ const mockDataset = DatasetMother.create({
 })
 
 describe('EditTermsOfAccess', () => {
-  const LocationDisplay = () => {
-    const location = useLocation()
-    return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>
-  }
-
-  const withProviders = (component: ReactNode, dataset?: Dataset) => {
+  const withProviders = (component: ReactNode, dataset: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
 
@@ -49,7 +43,6 @@ describe('EditTermsOfAccess', () => {
       <DatasetProvider
         searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
         repository={datasetRepository}>
-        <LocationDisplay />
         {component}
       </DatasetProvider>
     )
@@ -192,7 +185,7 @@ describe('EditTermsOfAccess', () => {
 
   describe('Cancel', () => {
     it('does nothing when dataset is not loaded', () => {
-      cy.customMount(withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />))
+      cy.customMount(<EditTermsOfAccess datasetRepository={datasetRepository} />)
 
       cy.findByTestId('location-display').should('have.text', '/')
       cy.findByRole('button', { name: 'Cancel' }).click()
@@ -237,101 +230,52 @@ describe('EditTermsOfAccess', () => {
         '/datasets?persistentId=pid-999&version=2.7'
       )
     })
-  })
-
-  it('reports dirty state changes via onFormStateChange', () => {
-    const onFormStateChange = cy.stub().as('onFormStateChange')
-
-    cy.customMount(
-      withProviders(
-        <EditTermsOfAccess
-          datasetRepository={datasetRepository}
-          onFormStateChange={onFormStateChange}
-        />,
-        mockDataset
-      )
-    )
-
-    cy.findByLabelText('Terms of Access for Restricted Files').clear().type('Updated terms')
-
-    cy.wrap(onFormStateChange).should('have.been.calledWith', true)
-  })
-
-  it('shows a saving state while update is in progress', () => {
-    let resolveUpdate: () => void
-    datasetRepository.updateTermsOfAccess = cy.stub().callsFake(
-      () =>
-        new Cypress.Promise<void>((resolve) => {
-          resolveUpdate = resolve
+    it('treats undefined fileAccessRequest as enabled by default', () => {
+      const datasetWithUndefinedRequest = DatasetMother.create({
+        termsOfUse: TermsOfUseMother.withoutCustomTerms({
+          termsOfAccess: TermsOfAccessMother.create({
+            fileAccessRequest: undefined as unknown as boolean,
+            termsOfAccessForRestrictedFiles: undefined
+          })
         })
-    )
-
-    cy.customMount(
-      withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
-    )
-
-    cy.findByRole('button', { name: 'Save Changes' }).click()
-
-    cy.findByRole('button', { name: 'Saving' }).should('be.disabled')
-
-    cy.wrap(null).then(() => resolveUpdate())
-
-    cy.findByText('The terms for this dataset have been updated.').should('exist')
-  })
-
-  describe('Toast Notifications', () => {
-    it('displays success toast when terms of access are updated successfully', () => {
-      const termsOfAccess = TermsOfAccessMother.create({
-        fileAccessRequest: false
       })
-      datasetRepository.updateTermsOfAccess = cy.stub().resolves()
 
       cy.customMount(
         withProviders(
           <EditTermsOfAccess datasetRepository={datasetRepository} />,
-          DatasetMother.create({
-            id: 123,
-            termsOfUse: { termsOfAccess }
-          })
+          datasetWithUndefinedRequest
         )
       )
 
-      cy.findByLabelText('Enable access request').check()
-      cy.findByLabelText('Terms of Access for Restricted Files').type('Please contact for access')
-
-      cy.findByRole('button', { name: 'Save Changes' }).click()
-
-      cy.findByText('The terms for this dataset have been updated.').should('exist')
+      cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
     })
 
-    it('displays success toast when request access checkbox is toggled', () => {
-      const termsOfAccess = TermsOfAccessMother.create({
-        fileAccessRequest: true
-      })
-      datasetRepository.updateTermsOfAccess = cy.stub().resolves()
+    it('reports dirty state changes via onFormStateChange', () => {
+      const onFormStateChange = cy.stub().as('onFormStateChange')
 
       cy.customMount(
         withProviders(
-          <EditTermsOfAccess datasetRepository={datasetRepository} />,
-          DatasetMother.create({
-            id: 123,
-            termsOfUse: { termsOfAccess }
-          })
+          <EditTermsOfAccess
+            datasetRepository={datasetRepository}
+            onFormStateChange={onFormStateChange}
+          />,
+          mockDataset
         )
       )
 
-      cy.findByLabelText('Enable access request').should('be.checked')
-      cy.findByLabelText('Enable access request').uncheck()
+      cy.findByLabelText('Terms of Access for Restricted Files').clear().type('Updated terms')
 
-      cy.findByRole('button', { name: 'Save Changes' }).click()
-
-      cy.findByText('The terms for this dataset have been updated.').should('exist')
+      cy.wrap(onFormStateChange).should('have.been.calledWith', true)
     })
-  })
 
-  describe('Error Handling', () => {
-    it('displays error when updating terms of access fails', () => {
-      datasetRepository.updateTermsOfAccess = cy.stub().rejects(new Error('Update failed'))
+    it('shows a saving state while update is in progress', () => {
+      let resolveUpdate: () => void
+      datasetRepository.updateTermsOfAccess = cy.stub().callsFake(
+        () =>
+          new Cypress.Promise<void>((resolve) => {
+            resolveUpdate = resolve
+          })
+      )
 
       cy.customMount(
         withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
@@ -339,9 +283,138 @@ describe('EditTermsOfAccess', () => {
 
       cy.findByRole('button', { name: 'Save Changes' }).click()
 
-      cy.findByText(
-        /An error occurred while updating the dataset terms of access. Please try again./i
-      ).should('exist')
+      cy.findByRole('button', { name: 'Saving' }).should('be.disabled')
+
+      cy.wrap(null).then(() => resolveUpdate())
+
+      cy.findByText('The terms for this dataset have been updated.').should('exist')
+    })
+
+    describe('Cancel navigation', () => {
+      it('returns early and does not navigate when dataset is not loaded yet', () => {
+        cy.customMount(
+          withLoadingDataset(
+            <>
+              <EditTermsOfAccess datasetRepository={datasetRepository} />
+            </>
+          ),
+          ['/edit-terms']
+        )
+
+        cy.findByTestId('location-display').should('contain', '/edit-terms')
+        cy.findByRole('button', { name: 'Cancel' }).click()
+        cy.findByTestId('location-display').should('contain', '/edit-terms')
+      })
+
+      it('navigates to dataset page with DRAFT version query param when dataset is draft', () => {
+        const draftDataset = DatasetMother.create({
+          persistentId: 'doi:10.5072/FK2/DRAFTPID',
+          version: DatasetVersionMother.createDraft()
+        })
+
+        cy.customMount(
+          withProviders(
+            <>
+              <EditTermsOfAccess datasetRepository={datasetRepository} />
+            </>,
+            draftDataset
+          )
+        )
+
+        cy.findByRole('button', { name: 'Cancel' }).click()
+        cy.findByTestId('location-display').should(
+          'have.text',
+          '/datasets?persistentId=doi%3A10.5072%2FFK2%2FDRAFTPID&version=DRAFT'
+        )
+      })
+
+      it('navigates to dataset page with numeric version query param when dataset is released', () => {
+        const releasedDataset = DatasetMother.create({
+          persistentId: 'doi:10.5072/FK2/RELEASEDPID',
+          version: DatasetVersionMother.createReleased()
+        })
+
+        cy.customMount(
+          withProviders(
+            <>
+              <EditTermsOfAccess datasetRepository={datasetRepository} />
+            </>,
+            releasedDataset
+          )
+        )
+
+        cy.findByRole('button', { name: 'Cancel' }).click()
+        cy.findByTestId('location-display').should(
+          'have.text',
+          '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0'
+        )
+      })
+    })
+
+    describe('Toast Notifications', () => {
+      it('displays success toast when terms of access are updated successfully', () => {
+        const termsOfAccess = TermsOfAccessMother.create({
+          fileAccessRequest: false
+        })
+        datasetRepository.updateTermsOfAccess = cy.stub().resolves()
+
+        cy.customMount(
+          withProviders(
+            <EditTermsOfAccess datasetRepository={datasetRepository} />,
+            DatasetMother.create({
+              id: 123,
+              termsOfUse: { termsOfAccess }
+            })
+          )
+        )
+
+        cy.findByLabelText('Enable access request').check()
+        cy.findByLabelText('Terms of Access for Restricted Files').type('Please contact for access')
+
+        cy.findByRole('button', { name: 'Save Changes' }).click()
+
+        cy.findByText('The terms for this dataset have been updated.').should('exist')
+      })
+
+      it('displays success toast when request access checkbox is toggled', () => {
+        const termsOfAccess = TermsOfAccessMother.create({
+          fileAccessRequest: true
+        })
+        datasetRepository.updateTermsOfAccess = cy.stub().resolves()
+
+        cy.customMount(
+          withProviders(
+            <EditTermsOfAccess datasetRepository={datasetRepository} />,
+            DatasetMother.create({
+              id: 123,
+              termsOfUse: { termsOfAccess }
+            })
+          )
+        )
+
+        cy.findByLabelText('Enable access request').should('be.checked')
+        cy.findByLabelText('Enable access request').uncheck()
+
+        cy.findByRole('button', { name: 'Save Changes' }).click()
+
+        cy.findByText('The terms for this dataset have been updated.').should('exist')
+      })
+    })
+
+    describe('Error Handling', () => {
+      it('displays error when updating terms of access fails', () => {
+        datasetRepository.updateTermsOfAccess = cy.stub().rejects(new Error('Update failed'))
+
+        cy.customMount(
+          withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, mockDataset)
+        )
+
+        cy.findByRole('button', { name: 'Save Changes' }).click()
+
+        cy.findByText(
+          /An error occurred while updating the dataset terms of access. Please try again./i
+        ).should('exist')
+      })
     })
   })
 })
