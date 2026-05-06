@@ -1,19 +1,16 @@
-import { useMemo } from 'react'
-import { useDeepCompareEffect } from 'use-deep-compare'
-import { toast } from 'react-toastify'
-import { useTranslation } from 'react-i18next'
+import { useMemo, useCallback } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useBlocker, useNavigate } from 'react-router-dom'
-import { Stack } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
-import { useFileUploaderContext } from './context/FileUploaderContext'
-import FileUploadInput from './file-upload-input/FileUploadInput'
-import { UploadedFilesList } from './uploaded-files-list/UploadedFilesList'
-import { ConfirmLeaveModal } from './confirm-leave-modal/ConfirmLeaveModal'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFileReferrer'
+import { useFileUploaderContext } from './context/FileUploaderContext'
+import { FileUploaderPanelCore } from './FileUploaderPanelCore'
+import { ConfirmLeaveModal } from './confirm-leave-modal/ConfirmLeaveModal'
+import styles from './FileUploaderPanel.module.scss'
 
 interface FileUploaderPanelProps {
   fileRepository: FileRepository
@@ -33,18 +30,11 @@ const FileUploaderPanel = ({
   referrer,
   fetchUploadLimits
 }: FileUploaderPanelProps) => {
-  const { t } = useTranslation('shared')
   const navigate = useNavigate()
+  const { t } = useTranslation('shared')
 
   const {
-    fileUploaderState: {
-      files,
-      isSaving,
-      uploadingToCancelMap,
-      replaceOperationInfo,
-      addFilesToDatasetOperationInfo
-    },
-    uploadedFiles,
+    fileUploaderState: { files, isSaving, uploadingToCancelMap },
     removeAllFiles
   } = useFileUploaderContext()
 
@@ -56,15 +46,9 @@ const FileUploaderPanel = ({
 
   const handleConfirmLeavePage = () => {
     if (navigationBlocker.state === 'blocked') {
-      // TODO - Remove the files from the S3 bucket we need an API endpoint for this.
-
       removeAllFiles()
-
-      // Cancel all the uploading files if there are any
       if (uploadingToCancelMap.size > 0) {
-        uploadingToCancelMap.forEach((cancel) => {
-          cancel()
-        })
+        uploadingToCancelMap.forEach((cancel) => cancel())
       }
       navigationBlocker.proceed()
     }
@@ -76,60 +60,60 @@ const FileUploaderPanel = ({
     }
   }
 
-  useDeepCompareEffect(() => {
-    const datasetPageRedirectUrl = `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+  const handleCancel = useCallback(() => navigate(-1), [navigate])
 
-    // Listens to the replace operation info result and navigates to the new file page if the operation was successful
-    if (replaceOperationInfo.success && replaceOperationInfo.newFileIdentifier) {
-      toast.success(t('fileUploader.fileReplacedSuccessfully'))
+  const datasetPageUrl = `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
 
+  const handleFilesAddedSuccess = useCallback(() => {
+    navigate(datasetPageUrl)
+  }, [navigate, datasetPageUrl])
+
+  const handleFileReplacedSuccess = useCallback(
+    (newFileId: number) => {
       if (referrer === ReplaceFileReferrer.DATASET) {
-        navigate(datasetPageRedirectUrl)
-      }
-
-      if (referrer === ReplaceFileReferrer.FILE) {
+        navigate(datasetPageUrl)
+      } else if (referrer === ReplaceFileReferrer.FILE) {
         navigate(
-          `${Route.FILES}?id=${replaceOperationInfo.newFileIdentifier}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+          `${Route.FILES}?id=${newFileId}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
         )
       }
-    }
-
-    // Listens to the add files to dataset operation info result and navigates to the dataset page if the operation was successful
-    if (addFilesToDatasetOperationInfo.success) {
-      toast.success(t('fileUploader.filesAddedToDatasetSuccessfully'))
-      navigate(datasetPageRedirectUrl)
-    }
-  }, [
-    replaceOperationInfo,
-    addFilesToDatasetOperationInfo,
-    datasetPersistentId,
-    t,
-    navigate,
-    referrer
-  ])
+    },
+    [navigate, datasetPageUrl, referrer]
+  )
 
   return (
-    <Stack gap={4}>
-      <FileUploadInput
+    <>
+      <p className={styles.helper_text}>
+        <Trans
+          t={t}
+          i18nKey="fileUploader.supportedFiles"
+          components={{
+            anchor: (
+              <a
+                href="https://guides.dataverse.org/en/latest/user/dataset-management.html#tabular-data-files"
+                target="_blank"
+                rel="noreferrer"
+              />
+            )
+          }}
+        />
+      </p>
+      <FileUploaderPanelCore
         fileRepository={fileRepository}
         datasetRepository={datasetRepository}
         datasetPersistentId={datasetPersistentId}
         fetchUploadLimits={fetchUploadLimits}
+        onCancel={handleCancel}
+        onFilesAddedSuccess={handleFilesAddedSuccess}
+        onFileReplacedSuccess={handleFileReplacedSuccess}
       />
-
-      {uploadedFiles.length > 0 && (
-        <UploadedFilesList
-          fileRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-        />
-      )}
 
       <ConfirmLeaveModal
         show={navigationBlocker.state === 'blocked'}
         onStay={handleCancelLeavePage}
         onLeave={handleConfirmLeavePage}
       />
-    </Stack>
+    </>
   )
 }
 

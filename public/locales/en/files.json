@@ -1,6 +1,95 @@
 {
   "files": "Files",
   "filesLoading": "Files loading spinner symbol",
+  "view": {
+    "toggle": {
+      "label": "Files view selector",
+      "table": "Table",
+      "tree": "Tree"
+    }
+  },
+  "tree": {
+    "label": "Dataset files",
+    "toolbar": {
+      "label": "Selection actions"
+    },
+    "head": {
+      "name": "Name",
+      "size": "Size",
+      "count": "Files",
+      "actions": "Actions"
+    },
+    "row": {
+      "expandFolder": "Expand {{name}}",
+      "collapseFolder": "Collapse {{name}}",
+      "selectFolder": "Select folder {{name}}",
+      "selectFile": "Select file {{name}}",
+      "downloadFolder": "Download folder {{name}}",
+      "downloadFile": "Download file {{name}}"
+    },
+    "selection": {
+      "none": "No files selected",
+      "fileCount_one": "file",
+      "fileCount_other": "files",
+      "includesFolders": "folders included",
+      "clear": "Clear"
+    },
+    "download": {
+      "button": "Download zip",
+      "enumerating": "Listing files…",
+      "preparing": "Preparing zip…",
+      "streaming": "Streaming…",
+      "tray": {
+        "label": "Zip download progress",
+        "preparing": "Preparing zip…",
+        "streaming": "Streaming files into zip…",
+        "paused": "Download paused — file failed",
+        "firstPass_one": "First pass complete — {{count}} file failed",
+        "firstPass_other": "First pass complete — {{count}} files failed",
+        "complete": "Download complete",
+        "completeWithSkipped_one": "Download complete — {{count}} skipped",
+        "completeWithSkipped_other": "Download complete — {{count}} skipped",
+        "error": "Download failed",
+        "cancelled": "Download cancelled",
+        "files": "files",
+        "pass2": "pass 2 of 2",
+        "now": {
+          "paused": "Paused",
+          "awaiting": "Awaiting retry decision",
+          "done": "Done",
+          "cancelled": "Cancelled"
+        },
+        "failed": "Failed to fetch file",
+        "retry": "Retry this file",
+        "skip": "Skip",
+        "deferToEnd": "Skip & retry at end",
+        "skipAll": "Skip all remaining failures",
+        "notIncluded_one": "{{count}} file was not included in the zip",
+        "notIncluded_other": "{{count}} files were not included in the zip",
+        "twopassHint": "First pass finished. The zip will be finalised after a second-pass retry of the failures.",
+        "retryFailed_one": "Download {{count}} missing file",
+        "retryFailed_other": "Download {{count}} missing files",
+        "done": "Done",
+        "skipped_one": "{{count}} file skipped",
+        "skipped_other": "{{count}} files skipped",
+        "skippedManifest": "A manifest.txt listing skipped files has been added to the root of the zip.",
+        "hint": "Streamed locally into one zip — no server-side ZIP.",
+        "cancel": "Cancel",
+        "close": "Close"
+      }
+    },
+    "state": {
+      "loading": "Loading file index…",
+      "loadingFolder": "Loading folder…",
+      "loadingMore": "Loading…",
+      "loadMore": "Load more",
+      "error": "Couldn't load file index",
+      "retry": "Retry",
+      "empty": "This dataset has no files",
+      "noMatches": "No files match \"{{query}}\""
+    }
+  },
+
   "errorUnkownGetFilesFromDataset": "There was an error getting the files total download size",
   "errorUnkownGetFilesCountInfo": "There was an error getting the files count info",
   "errorUnkownGetFilesTotalDownloadSize": "There was an error getting the files total download size",

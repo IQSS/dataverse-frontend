@@ -1,4 +1,5 @@
 export enum FixityAlgorithm {
+  NONE = 'NONE',
   MD5 = 'MD5',
   SHA1 = 'SHA-1',
   SHA256 = 'SHA-256',

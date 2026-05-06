@@ -1,0 +1,55 @@
+/**
+ * Standalone Uploader Embedded Styles
+ *
+ * These styles are bundled into the JS module loaded by JSF (and the demo page).
+ * They MUST be safe to inject into a host page — no html/body/#root rules,
+ * no resets that would override the host page chrome.
+ *
+ * Page-level styles (background, font, viewport-fill) belong in
+ * `standalone-page.scss`, which is only loaded by the standalone demo HTML.
+ */
+
+// Wrapper applied to the React render root. Used as a future hook for
+// CSS scoping (e.g. PostCSS prefix or Shadow DOM) to limit Bootstrap 5
+// reset rules to within the embedded component.
+.dv-uploader-root {
+  // Reset margin/padding so the host container controls layout.
+  margin: 0;
+  padding: 0;
+
+  // Let React content size naturally inside whatever JSF panel hosts it.
+  width: 100%;
+}
+
+.standalone-error {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff5f5;
+  border: 1px solid #dc3545;
+  border-radius: 8px;
+  text-align: center;
+
+  h1 {
+    color: #dc3545;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+
+  p {
+    color: #721c24;
+    margin-bottom: 1rem;
+  }
+
+  code {
+    display: block;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    font-family: monospace;
+    text-align: left;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    word-break: break-all;
+  }
+}

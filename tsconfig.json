@@ -26,6 +26,7 @@
     "tests",
     "cypress.config.ts",
     "vite.config.ts",
+    "vite.config.uploader.ts",
     "packages/design-system/src/",
     "public"
   ],

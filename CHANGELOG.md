@@ -8,7 +8,16 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- DVWebloader V2: A standalone file uploader build that reuses React file upload components, supporting S3 direct uploads with configurable tagging.
+- Shared file upload hooks (`useFileUploadState`, `useFileUploadOperations`) for better code reuse between the main SPA and standalone uploader.
+- Lazy file tree view on the dataset Files tab (`#6691`). A new `FilesViewToggle` flips between the existing files table and a virtualised, lazily-loaded folder tree. The tree supports tri-state path-keyed selection, full WAI-ARIA tree keyboard navigation (`Up/Down/Left/Right/Home/End/Space/Enter`), and URL bookmarkability via `?view=tree&path=<folder>`.
+- Client-side streaming-zip download of the tree's selection. Multi-file selections are zipped in the browser (single new dependency: [`client-zip`](https://github.com/Touffy/client-zip), ~3 KB gzip); a bottom-sheet tray surfaces inline **Retry / Skip / Skip & retry at end / Skip all** decisions on per-file failures. Single-file downloads bypass the zip wrap and trigger a direct browser download. No server-side ZIP endpoint is involved.
+- Standalone reusable bundle for the lazy tree (`dv-tree-view.js`), built by `vite.config.uploader.ts` alongside `dv-uploader`. Mounted on JSF dataset pages via the new `dataverse.feature.react-tree-view` flag in `IQSS/dataverse`.
+- Domain layer for the new tree (`src/files/domain/{models,repositories,useCases}/`) plus an SDK-backed `FileTreeJSDataverseRepository` (with a `JSFileTreeMapper`) and a previews-derived `FileTreeFromPreviewsRepository` fallback for older Dataverse instances.
+
 ### Changed
+
+- Bumped `@iqss/dataverse-client-javascript` to `2.2.0-pr403.0df68ec` (GitHub Packages prerelease) to consume the new `listDatasetTreeNode` and `iterateDatasetTreeNode` use cases.
 
 ### Fixed
 
