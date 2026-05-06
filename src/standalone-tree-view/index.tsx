@@ -11,7 +11,13 @@ import { DatasetVersion, DatasetVersionNumber } from '@/dataset/domain/models/Da
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
 
 import '../../packages/design-system/dist/style.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
+// Bootstrap 5 base CSS is intentionally NOT imported here. The standalone
+// bundle is mounted into pages whose own CSS context (e.g. JSF Bootstrap 3,
+// or an external host's stylesheet) we must not perturb. The component's own
+// styles are CSS-Modules (hashed class names, no global selectors) and the
+// `var(--bs-*)` references in those modules carry inline fallbacks. The
+// standalone *demo* HTML page (`dvTreeView.html`) imports Bootstrap directly
+// via a <link> tag for its own page chrome.
 import 'react-toastify/dist/ReactToastify.css'
 import './standalone.scss'
 
@@ -108,7 +114,7 @@ async function init() {
 
   const mountConfig: MountConfig = {
     datasetPid: config.datasetPid,
-    datasetVersionId: config.datasetVersionId ?? ':latest',
+    datasetVersionId: normaliseVersionId(config.datasetVersionId),
     fileMetadataPath: config.fileMetadataPath ?? '/file.xhtml'
   }
   const treeRepository = new FileTreeJSDataverseRepository()
@@ -128,6 +134,25 @@ async function init() {
       </div>
     </StrictMode>
   )
+}
+
+/**
+ * Translate the friendly version id JSF passes (`DRAFT`, `1.0`, …) into
+ * the wire form the API expects (`:draft`, `:latest`, `1.0`, …).
+ *
+ * `DatasetPage.workingVersion.friendlyVersionNumber` returns the literal
+ * string `"DRAFT"` for unpublished versions. The API uses the
+ * colon-prefixed token `:draft` instead — passing `DRAFT` raw produces
+ * `[400] Illegal version identifier 'DRAFT'`. We normalise here so JSF
+ * doesn't have to translate before populating `window.dvTreeViewConfig`.
+ */
+function normaliseVersionId(raw: string | undefined): string {
+  if (!raw) return ':latest'
+  const lower = raw.toLowerCase()
+  if (lower === 'draft') return ':draft'
+  if (lower === 'latest') return ':latest'
+  if (lower === 'latest-published') return ':latest-published'
+  return raw
 }
 
 init().catch((error) => {

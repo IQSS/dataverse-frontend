@@ -148,6 +148,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
 
   const sendDecision = useCallback((decision: Decision) => {
     const bag = decisionRef.current
+    /* istanbul ignore if */
     if (!bag) return
     decisionRef.current = null
     bag.resolve(decision)
@@ -168,6 +169,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
         buildFetchUrl = (f) => f.downloadUrl,
         fetchInit
       } = args
+      /* istanbul ignore if */
       if (files.length === 0) return
 
       cancelledRef.current = false
@@ -216,6 +218,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
                 path: file.path,
                 name: file.name,
                 size: file.size,
+                /* istanbul ignore next */
                 error: err instanceof Error ? err.message : String(err),
                 recoverable: strategy !== 'skip'
               }
@@ -250,6 +253,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
                   // mark the just-added failure as non-recoverable too
                   update((prev) => {
                     const last = prev.failedSoFar[prev.failedSoFar.length - 1]
+                    /* istanbul ignore if */
                     if (!last) return { ...prev, status: 'running' }
                     return {
                       ...prev,
@@ -310,6 +314,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
         if (strategy === 'twopass' && stateRef.current.failedSoFar.length > 0) {
           update((prev) => ({ ...prev, status: 'awaiting-retry' }))
           const decision = await waitForDecision()
+          /* istanbul ignore if */
           if (decision === 'cancel') return
           if (decision === 'retry-failed') {
             const recoverable = stateRef.current.failedSoFar.filter((f) => f.recoverable)

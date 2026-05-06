@@ -15,7 +15,12 @@ import { useGetFixityAlgorithm } from '@/sections/shared/file-uploader/useGetFix
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 
 import '../../packages/design-system/dist/style.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
+// Bootstrap 5 base CSS is intentionally NOT imported here. The standalone
+// bundle is mounted into pages whose own CSS context (e.g. JSF Bootstrap 3,
+// or an external host's stylesheet) we must not perturb. Component styles
+// are CSS-Modules with hashed class names. The standalone *demo* HTML page
+// (`dvwebloaderV2.html`) imports Bootstrap directly via a <link> tag for
+// its own page chrome.
 import 'react-toastify/dist/ReactToastify.css'
 import './standalone.scss'
 

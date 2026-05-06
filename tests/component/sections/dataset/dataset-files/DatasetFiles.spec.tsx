@@ -1,6 +1,10 @@
 import { FileMetadataMother } from '../../../files/domain/models/FileMetadataMother'
 import { DatasetFiles } from '../../../../../src/sections/dataset/dataset-files/DatasetFiles'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
+import { FileTreeRepository } from '../../../../../src/files/domain/repositories/FileTreeRepository'
+import { FileTreePage } from '../../../../../src/files/domain/models/FileTreePage'
+import { FileTreePageMother } from '../../../files/domain/models/FileTreePageMother'
+import { FileTreeFileMother } from '../../../files/domain/models/FileTreeItemMother'
 import {
   FileAccessOption,
   FileCriteria,
@@ -551,6 +555,30 @@ describe('DatasetFiles', () => {
         datasetVersion,
         new FilePaginationInfo(5, 10, 200)
       )
+    })
+
+    it('renders the files tree and switches back to the table when ?view=tree is set and the toggle is clicked', () => {
+      const treePage: FileTreePage = FileTreePageMother.create({
+        path: '',
+        items: [FileTreeFileMother.create({ id: 99, name: 'tree-file.txt', path: 'tree-file.txt' })]
+      })
+      const fileTreeRepository: FileTreeRepository = {
+        getNode: () => Promise.resolve(treePage)
+      }
+      cy.customMount(
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+          datasetRepository={datasetRepository}
+          fileTreeRepository={fileTreeRepository}
+        />,
+        ['/?view=tree']
+      )
+      cy.findByText('tree-file.txt').should('exist')
+      // Toggle back to table view; the table appears.
+      cy.findByRole('tab', { name: 'Table' }).click()
+      cy.findByRole('table').should('exist')
     })
 
     it('calls getFilesTotalDownloadSizeByDatasetPersistentId with the correct parameters when applying search file criteria', () => {
