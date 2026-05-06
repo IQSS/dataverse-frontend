@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import { EditTermsOfAccess } from '@/sections/edit-dataset-terms/edit-terms-of-access/EditTermsOfAccess'
 import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
@@ -17,6 +18,11 @@ import {
 } from '@/dataset/domain/models/Dataset'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
+
+const LocationDisplay = () => {
+  const location = useLocation()
+  return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>
+}
 
 const mockDataset = DatasetMother.create({
   id: 123,
@@ -185,7 +191,12 @@ describe('EditTermsOfAccess', () => {
 
   describe('Cancel', () => {
     it('does nothing when dataset is not loaded', () => {
-      cy.customMount(<EditTermsOfAccess datasetRepository={datasetRepository} />)
+      cy.customMount(
+        <>
+          <EditTermsOfAccess datasetRepository={datasetRepository} />
+          <LocationDisplay />
+        </>
+      )
 
       cy.findByTestId('location-display').should('have.text', '/')
       cy.findByRole('button', { name: 'Cancel' }).click()
@@ -199,7 +210,13 @@ describe('EditTermsOfAccess', () => {
       })
 
       cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, dataset)
+        withProviders(
+          <>
+            <EditTermsOfAccess datasetRepository={datasetRepository} />
+            <LocationDisplay />
+          </>,
+          dataset
+        )
       )
 
       cy.findByRole('button', { name: 'Cancel' }).click()
@@ -220,7 +237,13 @@ describe('EditTermsOfAccess', () => {
       })
 
       cy.customMount(
-        withProviders(<EditTermsOfAccess datasetRepository={datasetRepository} />, dataset)
+        withProviders(
+          <>
+            <EditTermsOfAccess datasetRepository={datasetRepository} />
+            <LocationDisplay />
+          </>,
+          dataset
+        )
       )
 
       cy.findByRole('button', { name: 'Cancel' }).click()
@@ -296,6 +319,7 @@ describe('EditTermsOfAccess', () => {
           withLoadingDataset(
             <>
               <EditTermsOfAccess datasetRepository={datasetRepository} />
+              <LocationDisplay />
             </>
           ),
           ['/edit-terms']
@@ -316,6 +340,7 @@ describe('EditTermsOfAccess', () => {
           withProviders(
             <>
               <EditTermsOfAccess datasetRepository={datasetRepository} />
+              <LocationDisplay />
             </>,
             draftDataset
           )
@@ -338,6 +363,7 @@ describe('EditTermsOfAccess', () => {
           withProviders(
             <>
               <EditTermsOfAccess datasetRepository={datasetRepository} />
+              <LocationDisplay />
             </>,
             releasedDataset
           )
