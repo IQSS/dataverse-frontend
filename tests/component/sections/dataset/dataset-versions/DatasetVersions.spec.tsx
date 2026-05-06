@@ -435,13 +435,14 @@ describe('DatasetVersions', () => {
     datasetsRepository.getDatasetVersionsSummaries = getDatasetVersionsSummariesStub
 
     cy.customMount(
-      <DatasetVersions
-        datasetId={'datasetId'}
-        datasetRepository={datasetsRepository}
-        currentVersionNumber={'11.0'}
-        canUpdateDataset={true}
-        isInView
-      />
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          datasetId={'datasetId'}
+          currentVersionNumber={'11.0'}
+          canUpdateDataset={true}
+          isInView
+        />
+      </WithRepositories>
     )
 
     cy.wrap(getDatasetVersionsSummariesStub).should(() => {
