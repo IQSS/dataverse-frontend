@@ -1,12 +1,6 @@
 import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
-import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
-import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { FeaturedItem } from './FeaturedItem'
-import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
-
-const collectionRepository = new CollectionJSDataverseRepository()
-const datasetRepository = new DatasetJSDataverseRepository()
 
 export class FeaturedItemFactory {
   static create(): ReactElement {
@@ -21,13 +15,9 @@ function FeaturedItemWithParams() {
   }
 
   return (
-    <RepositoriesProvider
-      collectionRepository={collectionRepository}
-      datasetRepository={datasetRepository}>
-      <FeaturedItem
-        parentCollectionIdFromParams={parentCollectionId}
-        featuredItemId={featuredItemId}
-      />
-    </RepositoriesProvider>
+    <FeaturedItem
+      parentCollectionIdFromParams={parentCollectionId}
+      featuredItemId={featuredItemId}
+    />
   )
 }

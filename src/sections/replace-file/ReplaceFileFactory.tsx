@@ -1,16 +1,11 @@
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FileJSDataverseRepository } from '@/files/infrastructure/FileJSDataverseRepository'
-import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
-import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
-import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 import { ReplaceFile, ReplaceFileReferrer } from './ReplaceFile'
 import { QueryParamKey } from '../Route.enum'
 import { searchParamVersionToDomainVersion } from '@/router'
 
 const fileRepository = new FileJSDataverseRepository()
-const datasetRepository = new DatasetJSDataverseRepository()
-const collectionRepository = new CollectionJSDataverseRepository()
 
 export class ReplaceFileFactory {
   static create(): ReactElement {
@@ -40,16 +35,12 @@ function ReplaceFileWithParams() {
     (searchParams.get(QueryParamKey.REFERRER) as ReplaceFileReferrer | null) ?? undefined
 
   return (
-    <RepositoriesProvider
-      collectionRepository={collectionRepository}
-      datasetRepository={datasetRepository}>
-      <ReplaceFile
-        fileRepository={fileRepository}
-        fileIdFromParams={fileId}
-        datasetPidFromParams={datasetId}
-        datasetVersionFromParams={datasetVersionNumber}
-        referrer={referrer}
-      />
-    </RepositoriesProvider>
+    <ReplaceFile
+      fileRepository={fileRepository}
+      fileIdFromParams={fileId}
+      datasetPidFromParams={datasetId}
+      datasetVersionFromParams={datasetVersionNumber}
+      referrer={referrer}
+    />
   )
 }

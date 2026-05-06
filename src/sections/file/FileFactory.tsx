@@ -1,7 +1,6 @@
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
-import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { File } from './File'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { searchParamVersionToDomainVersion } from '../../router'
@@ -12,16 +11,12 @@ import { AccessJSDataverseRepository } from '@/access/infrastructure/repositorie
 import { AccessRepositoryProvider } from '../access/AccessRepositoryProvider'
 import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
 import { GuestbookRepositoryProvider } from '../guestbooks/GuestbookRepositoryProvider'
-import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
-import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const repository = new FileJSDataverseRepository()
-const datasetRepository = new DatasetJSDataverseRepository()
 const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
 const accessRepository = new AccessJSDataverseRepository()
 const guestbookRepository = new GuestbookJSDataverseRepository()
-const collectionRepository = new CollectionJSDataverseRepository()
 
 export class FileFactory {
   static create(): ReactElement {
@@ -49,17 +44,13 @@ function FileWithSearchParams() {
   }
 
   return (
-    <RepositoriesProvider
-      collectionRepository={collectionRepository}
-      datasetRepository={datasetRepository}>
-      <File
-        repository={repository}
-        id={id}
-        datasetVersionNumber={datasetVersionNumber}
-        toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
-        dataverseInfoRepository={dataverseInfoRepository}
-        contactRepository={contactRepository}
-      />
-    </RepositoriesProvider>
+    <File
+      repository={repository}
+      id={id}
+      datasetVersionNumber={datasetVersionNumber}
+      toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
+      dataverseInfoRepository={dataverseInfoRepository}
+      contactRepository={contactRepository}
+    />
   )
 }
