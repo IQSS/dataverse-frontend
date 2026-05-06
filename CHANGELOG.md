@@ -16,6 +16,12 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ---
 
+## [v0.3.1] -- 2026-04-30
+
+- Added pagination to the Versions tabs on Dataset and File pages so version summaries are loaded and displayed one page at a time.
+
+---
+
 ## [v0.3.0] -- 2026-04-24
 
 ### Added

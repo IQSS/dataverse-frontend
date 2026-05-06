@@ -16,13 +16,14 @@ import { DatasetViewDetailButton } from './DatasetViewDetailButton'
 import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './DatasetVersions.module.scss'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
+import { PaginationControls } from '@/sections/shared/pagination/PaginationControls'
 
 interface DatasetVersionsProps {
   datasetId: string
   currentVersionNumber: string
   canUpdateDataset: boolean
   isInView: boolean
-  isCurrentVersionDeaccessioned?: boolean
 }
 
 const isVersionDeaccessioned = (version: DatasetVersionSummaryInfo) =>
@@ -34,12 +35,14 @@ export function DatasetVersions({
   datasetId,
   currentVersionNumber,
   canUpdateDataset,
-  isInView,
-  isCurrentVersionDeaccessioned
+  isInView
 }: DatasetVersionsProps) {
   const { datasetRepository } = useDatasetRepositories()
   const { t } = useTranslation('dataset')
   const [selectedVersions, setSelectedVersions] = useState<DatasetVersionSummaryInfo[]>([])
+  const [paginationInfo, setPaginationInfo] = useState<DatasetVersionPaginationInfo>(
+    new DatasetVersionPaginationInfo()
+  )
   const {
     datasetVersionSummaries,
     error,
@@ -48,7 +51,7 @@ export function DatasetVersions({
   } = useGetDatasetVersionsSummaries({
     datasetRepository,
     persistentId: datasetId,
-    autoFetch: isCurrentVersionDeaccessioned ? true : false
+    autoFetch: false
   })
 
   const handleCheckboxChange = (datasetSummary: DatasetVersionSummaryInfo) => {
@@ -63,23 +66,44 @@ export function DatasetVersions({
     })
   }
 
+  const visibleDatasetVersionSummaries = datasetVersionSummaries?.slice(0, paginationInfo.pageSize)
   const selectableVersions =
-    datasetVersionSummaries &&
-    datasetVersionSummaries.filter((version) => !isVersionDeaccessioned(version))
+    visibleDatasetVersionSummaries &&
+    visibleDatasetVersionSummaries.filter((version) => !isVersionDeaccessioned(version))
   const isCheckBoxValid = (selectableVersions?.length ?? 0) > 2
 
   useEffect(() => {
-    if (isInView && !datasetVersionSummaries) {
-      void fetchSummaries()
-    }
-  }, [isInView, fetchSummaries, datasetVersionSummaries])
+    if (isInView) {
+      const paginationInfoToDisplay = new DatasetVersionPaginationInfo(
+        paginationInfo.page,
+        paginationInfo.pageSize
+      )
+      const paginationInfoToFetch = new DatasetVersionPaginationInfo(
+        paginationInfo.page,
+        paginationInfo.pageSize + 1,
+        0,
+        'Version',
+        paginationInfoToDisplay.offset
+      )
 
-  if (isLoadingDatasetVersionSummaries || !datasetVersionSummaries) {
-    return <DatasetVersionsLoadingSkeleton />
-  }
+      void fetchSummaries(paginationInfoToFetch).then((totalCount) => {
+        if (typeof totalCount === 'number') {
+          setPaginationInfo((currentPaginationInfo) => currentPaginationInfo.withTotal(totalCount))
+        }
+      })
+    }
+  }, [isInView, fetchSummaries, paginationInfo.page, paginationInfo.pageSize])
+
+  useEffect(() => {
+    setSelectedVersions([])
+  }, [paginationInfo.page, paginationInfo.pageSize])
 
   if (error) {
     return <Alert variant="danger">Error loading dataset versions</Alert>
+  }
+
+  if (!datasetVersionSummaries) {
+    return <DatasetVersionsLoadingSkeleton />
   }
 
   return (
@@ -91,7 +115,12 @@ export function DatasetVersions({
         />
       )}
 
-      <div className={styles['dataset-versions-table']} data-testid="dataset-versions-table">
+      <div
+        className={`${styles['dataset-versions-table']} ${
+          isLoadingDatasetVersionSummaries ? styles['dataset-versions-table-loading'] : ''
+        }`}
+        data-testid="dataset-versions-table"
+        aria-busy={isLoadingDatasetVersionSummaries}>
         <Table>
           <thead>
             <tr>
@@ -108,7 +137,7 @@ export function DatasetVersions({
             </tr>
           </thead>
           <tbody>
-            {datasetVersionSummaries?.map((dataset, index) => {
+            {visibleDatasetVersionSummaries?.map((dataset, index) => {
               const findLastNonDeaccessionedPreviousVersion = () => {
                 for (let i = index + 1; i < datasetVersionSummaries.length; i++) {
                   const version = datasetVersionSummaries[i]
@@ -183,6 +212,10 @@ export function DatasetVersions({
           </tbody>
         </Table>
       </div>
+      <PaginationControls
+        initialPaginationInfo={paginationInfo}
+        onPaginationInfoChange={setPaginationInfo}
+      />
     </>
   )
 }

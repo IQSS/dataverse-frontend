@@ -9,6 +9,7 @@ import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 import { DatasetVersionsSummariesMother } from '../../../dataset/domain/models/DatasetVersionsSummariesMother'
 import { DatasetVersionDiffMother } from '../../../dataset/domain/models/DatasetVersionDiffMother'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 
 const datasetsRepository: DatasetRepository = {} as DatasetRepository
 
@@ -409,5 +410,58 @@ describe('DatasetVersions', () => {
 
     // Assert ordering: oldVersion '4.0', newVersion '5.0'
     cy.wrap(diffStub).should('have.been.calledWith', 'pid', '4.0', '5.0', true)
+  })
+
+  it('fetches dataset versions with pagination when changing pages', () => {
+    const paginatedVersions: DatasetVersionSummaryInfo[] = Array.from(
+      { length: 11 },
+      (_, index) => ({
+        id: index + 1,
+        versionNumber: `${11 - index}.0`,
+        summary: {},
+        contributors: 'Test ',
+        publishedOn: ''
+      })
+    )
+    const getDatasetVersionsSummariesStub = cy
+      .stub()
+      .callsFake((_datasetId: string, paginationInfo: DatasetVersionPaginationInfo) => {
+        const start = paginationInfo.offset
+        return Promise.resolve({
+          summaries: paginatedVersions.slice(start, start + paginationInfo.pageSize),
+          totalCount: paginatedVersions.length
+        })
+      })
+    datasetsRepository.getDatasetVersionsSummaries = getDatasetVersionsSummariesStub
+
+    cy.customMount(
+      <DatasetVersions
+        datasetId={'datasetId'}
+        datasetRepository={datasetsRepository}
+        currentVersionNumber={'11.0'}
+        canUpdateDataset={true}
+        isInView
+      />
+    )
+
+    cy.wrap(getDatasetVersionsSummariesStub).should(() => {
+      const firstCallPaginationInfo = getDatasetVersionsSummariesStub.getCall(0)
+        .args[1] as DatasetVersionPaginationInfo
+      expect(firstCallPaginationInfo.page).to.equal(1)
+      expect(firstCallPaginationInfo.pageSize).to.equal(11)
+      expect(firstCallPaginationInfo.offset).to.equal(0)
+    })
+
+    cy.findByRole('button', { name: 'Next' }).click()
+
+    cy.wrap(getDatasetVersionsSummariesStub).should(() => {
+      const secondCallPaginationInfo = getDatasetVersionsSummariesStub.getCall(1)
+        .args[1] as DatasetVersionPaginationInfo
+      expect(secondCallPaginationInfo.page).to.equal(2)
+      expect(secondCallPaginationInfo.pageSize).to.equal(11)
+      expect(secondCallPaginationInfo.offset).to.equal(10)
+    })
+    cy.findByText('1.0').should('exist')
+    cy.findByText('11.0').should('not.exist')
   })
 })
