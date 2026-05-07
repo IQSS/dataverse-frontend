@@ -90,13 +90,13 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
               {state.pass === 2 && <> · {t('tree.download.tray.pass2', 'pass 2 of 2')}</>}
             </div>
           </div>
-          <Button
-            variant="link"
-            size="sm"
+          <button
+            type="button"
+            className={styles['close-btn']}
             onClick={onClose}
             aria-label={t('tree.download.tray.close', 'Close')}>
             ×
-          </Button>
+          </button>
         </div>
 
         <div className={styles['tray-body']}>
