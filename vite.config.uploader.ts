@@ -94,8 +94,15 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     // Enable minification
     minify: 'esbuild',
-    // Generate sourcemaps for debugging
-    sourcemap: true
+    // 'hidden' instead of true: emit `.js.map` files locally (in
+    // `dist-uploader/`) for devtools-driven debugging when wanted, but
+    // do NOT add a `//# sourceMappingURL=...` comment to the deployed
+    // `.js` bundles. The dataverse repo ships only the `.js` files
+    // under `webapp/dvwebloader/`, so the comment would otherwise tell
+    // every browser DevTools session to fetch a sibling `.map` that
+    // isn't on disk and log a console-spamming 404. Hidden keeps the
+    // map files reachable when explicitly loaded by hand.
+    sourcemap: 'hidden'
   },
   resolve: {
     alias: {
