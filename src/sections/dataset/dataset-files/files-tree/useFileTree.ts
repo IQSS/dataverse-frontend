@@ -208,6 +208,16 @@ export function useFileTree({
       setExpanded(reset)
       knownFilesRef.current = new Map()
       inFlight.current.clear()
+      // Reset path: bypass ensureLoaded's cache check (which closes
+      // over the pre-reset `nodes` map and would short-circuit because
+      // the old root was `loaded: true`). fetchPage runs unconditionally
+      // and uses the latest fetchPage closure (which is keyed off the
+      // new versionKey via its useCallback deps).
+      void fetchPage(ROOT)
+      for (const ancestor of ancestorChain(initialPath)) {
+        void fetchPage(ancestor)
+      }
+      return
     }
     void ensureLoaded(ROOT)
     // Pre-fetch every initial-path ancestor so the tree opens to the

@@ -2,6 +2,7 @@ import { renderHook, act, waitFor } from '@testing-library/react'
 import { useFileTree } from '../../../../../../src/sections/dataset/dataset-files/files-tree/useFileTree'
 import { FileTreeRepository } from '../../../../../../src/files/domain/repositories/FileTreeRepository'
 import { FileTreePage } from '../../../../../../src/files/domain/models/FileTreePage'
+import { DatasetVersionNumber } from '../../../../../../src/dataset/domain/models/Dataset'
 import { DatasetVersionMother } from '../../../../dataset/domain/models/DatasetMother'
 import {
   FileTreeFileMother,
@@ -208,6 +209,107 @@ describe('useFileTree', () => {
 
     await waitFor(() => expect(result.current.rootNode.error).to.equal('repo boom'))
     expect(result.current.rootNode.loading).to.equal(false)
+  })
+
+  it('stringifies non-Error rejections from fetchPage (String(error) branch)', async () => {
+    // Repository that rejects with a plain object — exercises the
+    // false branch of `error instanceof Error ? error.message : String(error)`.
+    const repo: FileTreeRepository = {
+      getNode: () => Promise.reject({ kind: 'plain', detail: 'oops' } as unknown as Error)
+    }
+
+    const { result } = renderHook(() =>
+      useFileTree({
+        repository: repo,
+        datasetPersistentId: 'doi:test/AAA',
+        datasetVersion
+      })
+    )
+
+    await waitFor(() => expect(result.current.rootNode.error).to.equal('[object Object]'))
+    expect(result.current.rootNode.loading).to.equal(false)
+  })
+
+  it('reuses an in-flight fetch when expand() is called for a path mid-load', async () => {
+    // Hold the root response on a manual deferred so we can call expand()
+    // while the initial useEffect's ensureLoaded(ROOT) is still pending —
+    // exercising the `if (pending) return pending` cache-hit branch.
+    let resolveRoot!: (page: FileTreePage) => void
+    const rootPromise = new Promise<FileTreePage>((r) => {
+      resolveRoot = r
+    })
+    let getNodeCalls = 0
+    class DeferredRepo implements FileTreeRepository {
+      getNode(): Promise<FileTreePage> {
+        getNodeCalls += 1
+        return rootPromise
+      }
+    }
+
+    const { result } = renderHook(() =>
+      useFileTree({
+        repository: new DeferredRepo(),
+        datasetPersistentId: 'doi:test/AAA',
+        datasetVersion
+      })
+    )
+
+    expect(getNodeCalls, 'useEffect kicks off the first fetch').to.equal(1)
+
+    // Now hit expand('') while the first fetch is still pending. The
+    // in-flight check should return the existing promise without
+    // calling getNode again.
+    void result.current.expand('')
+    expect(getNodeCalls, 'in-flight cache hit must not refetch').to.equal(1)
+
+    await act(async () => {
+      resolveRoot(FileTreePageMother.create({ path: '', items: [] }))
+      await rootPromise
+    })
+
+    await waitFor(() => expect(result.current.rootNode.loaded).to.equal(true))
+  })
+
+  it('resets state when the versionKey changes (different datasetVersion)', async () => {
+    const root1 = FileTreePageMother.create({
+      path: '',
+      items: [FileTreeFileMother.create({ id: 1, name: 'v1.txt', path: 'v1.txt' })]
+    })
+    const root2 = FileTreePageMother.create({
+      path: '',
+      items: [FileTreeFileMother.create({ id: 9, name: 'v2.txt', path: 'v2.txt' })]
+    })
+
+    // Mutable-stub repo: swaps the response between renders so we can
+    // verify both the reset (clears the v1 items) and the refetch
+    // (lands the v2 items).
+    let nextResponse = root1
+    const repo: FileTreeRepository = {
+      getNode: () => Promise.resolve(nextResponse)
+    }
+
+    const v1 = DatasetVersionMother.create({ number: new DatasetVersionNumber(1, 0) })
+    const v2 = DatasetVersionMother.create({ number: new DatasetVersionNumber(2, 0) })
+
+    const { result, rerender } = renderHook(
+      ({ version }: { version: typeof datasetVersion }) =>
+        useFileTree({
+          repository: repo,
+          datasetPersistentId: 'doi:test/AAA',
+          datasetVersion: version
+        }),
+      { initialProps: { version: v1 } }
+    )
+
+    await waitFor(() => expect(result.current.rootNode.loaded).to.equal(true))
+    expect(result.current.rootNode.items.map((i) => i.path)).to.deep.equal(['v1.txt'])
+
+    nextResponse = root2
+    rerender({ version: v2 })
+
+    await waitFor(() =>
+      expect(result.current.rootNode.items.map((i) => i.path)).to.deep.equal(['v2.txt'])
+    )
   })
 
   it('registerKnownFile populates knownFiles', () => {
