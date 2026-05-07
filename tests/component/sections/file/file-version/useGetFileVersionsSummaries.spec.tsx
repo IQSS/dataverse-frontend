@@ -158,4 +158,71 @@ describe('useGetFileVersionsSummaries', () => {
       expect(totalCount).to.deep.equal(fileVersionSummariesSubset.totalCount)
     })
   })
+
+  it('does not fetch by default when autoFetch is omitted', () => {
+    fileRepository.getFileVersionSummaries = cy.stub().resolves(fileVersionSummariesSubset)
+    const { result } = renderHook(() => useGetFileVersionsSummaries({ fileRepository, fileId: 1 }))
+    expect(result.current.isLoading).to.equal(false)
+    expect(fileRepository.getFileVersionSummaries).not.to.have.been.called
+  })
+
+  it('discards a stale fetchSummaries result when a newer request is in flight', async () => {
+    let resolveFirst!: (v: typeof fileVersionSummariesSubset) => void
+    const firstPromise = new Promise<typeof fileVersionSummariesSubset>((r) => {
+      resolveFirst = r
+    })
+    const newer = {
+      summaries: FileMother.createFileVersionSummary(),
+      totalCount: 99
+    }
+    const stub = cy.stub()
+    stub.onFirstCall().returns(firstPromise)
+    stub.onSecondCall().resolves(newer)
+    fileRepository.getFileVersionSummaries = stub
+
+    const { result } = renderHook(() => useGetFileVersionsSummaries({ fileRepository, fileId: 1 }))
+
+    let firstResolved: number | undefined = -1
+    let secondResolved: number | undefined = -1
+    await act(async () => {
+      const p1 = result.current.fetchSummaries()
+      const p2 = result.current.fetchSummaries()
+      resolveFirst(fileVersionSummariesSubset)
+      ;[firstResolved, secondResolved] = await Promise.all([p1, p2])
+    })
+
+    expect(firstResolved).to.equal(undefined)
+    expect(secondResolved).to.equal(99)
+    expect(result.current.fileVersionSummaries).to.deep.equal(newer.summaries)
+  })
+
+  it('discards a stale fetchSummaries error when a newer request is in flight', async () => {
+    let rejectFirst!: (err: Error) => void
+    const firstPromise = new Promise<typeof fileVersionSummariesSubset>((_res, rej) => {
+      rejectFirst = rej
+    })
+    const newer = {
+      summaries: FileMother.createFileVersionSummary(),
+      totalCount: 99
+    }
+    const stub = cy.stub()
+    stub.onFirstCall().returns(firstPromise)
+    stub.onSecondCall().resolves(newer)
+    fileRepository.getFileVersionSummaries = stub
+
+    const { result } = renderHook(() => useGetFileVersionsSummaries({ fileRepository, fileId: 1 }))
+
+    let firstResolved: number | undefined = -1
+    await act(async () => {
+      const p1 = result.current.fetchSummaries()
+      const p2 = result.current.fetchSummaries()
+      rejectFirst(new Error('stale boom'))
+      firstResolved = await p1
+      await p2
+    })
+
+    expect(firstResolved).to.equal(undefined)
+    expect(result.current.error).to.equal(null)
+    expect(result.current.fileVersionSummaries).to.deep.equal(newer.summaries)
+  })
 })
