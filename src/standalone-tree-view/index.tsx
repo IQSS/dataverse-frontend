@@ -71,7 +71,7 @@ let mountedHostElement: HTMLElement | null = null
 let mountedReactRoot: Root | null = null
 let i18nReady: Promise<void> | null = null
 
-async function init() {
+async function init(opts: { fromObserver?: boolean } = {}) {
   const config = window.dvTreeViewConfig
   const rootElementId = config?.rootElementId ?? 'dv-tree-view'
 
@@ -86,6 +86,22 @@ async function init() {
     // Already mounted on this exact element; nothing to do.
     return
   }
+
+  // Config-not-yet-available short-circuit. When init() runs from the
+  // MutationObserver after a JSF partial update inserts a fresh host
+  // div, the inline `<script>` that assigns `window.dvTreeViewConfig`
+  // may not have executed YET in the same observer callback —
+  // PrimeFaces fires DOM mutations and inline-script execution in
+  // separate phases. Without this guard we'd render the "missing
+  // config" error UI into the host div, then the next observer tick
+  // would no-op because the host element identity is unchanged.
+  // Returning silently lets the next mutation (e.g. when the JSF
+  // partial-update fragment finishes inserting itself) re-trigger
+  // init() with the config now populated.
+  if (opts.fromObserver && !config) {
+    return
+  }
+
   // Host changed (or first mount). Tear down any prior root that's now
   // orphaned, then mount fresh.
   if (mountedReactRoot) {
@@ -268,7 +284,7 @@ if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') 
     const rootElementId = config?.rootElementId ?? 'dv-tree-view'
     const current = document.getElementById(rootElementId)
     if (current && current !== mountedHostElement) {
-      init().catch((error) => {
+      init({ fromObserver: true }).catch((error) => {
         console.error('[dvTreeView] re-init failed:', error)
       })
     }

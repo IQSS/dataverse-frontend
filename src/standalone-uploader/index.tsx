@@ -72,13 +72,19 @@ let mountedHostElement: HTMLElement | null = null
 let mountedReactRoot: Root | null = null
 let i18nReady: Promise<void> | null = null
 
-async function init() {
+async function init(opts: { fromObserver?: boolean } = {}) {
   const config = window.dvUploaderConfig
   const rootElementId = config?.rootElementId ?? 'dv-uploader'
 
   const hostElement = document.getElementById(rootElementId)
   if (!hostElement) return
   if (hostElement === mountedHostElement && mountedReactRoot) return
+  // Same race guard as the tree-view bundle: when init() runs from a
+  // MutationObserver tick the inline config <script> in the same JSF
+  // partial-update batch may not have executed yet. Returning silently
+  // lets the next mutation re-run init() with config populated, instead
+  // of rendering a misleading "missing config" error UI.
+  if (opts.fromObserver && !config) return
   if (mountedReactRoot) {
     try {
       mountedReactRoot.unmount()
@@ -196,7 +202,7 @@ if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') 
     const rootElementId = config?.rootElementId ?? 'dv-uploader'
     const current = document.getElementById(rootElementId)
     if (current && current !== mountedHostElement) {
-      init().catch((error) => {
+      init({ fromObserver: true }).catch((error) => {
         console.error('[dvUploader] re-init failed:', error)
       })
     }
