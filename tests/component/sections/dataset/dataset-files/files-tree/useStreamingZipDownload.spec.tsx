@@ -9,7 +9,15 @@ import { FileTreeFileMother } from '../../../../files/domain/models/FileTreeItem
  * starts the engine. Lets the spec drive the engine end-to-end via the
  * same code path the host (FilesTree) uses.
  */
-function StreamingZipHarness({ files, zipName }: { files: FileTreeFile[]; zipName: string }) {
+function StreamingZipHarness({
+  files,
+  zipName,
+  strategy
+}: {
+  files: FileTreeFile[]
+  zipName: string
+  strategy?: 'pause' | 'skip' | 'twopass'
+}) {
   const api = useStreamingZipDownload()
   const [open, setOpen] = useState(false)
   return (
@@ -18,10 +26,13 @@ function StreamingZipHarness({ files, zipName }: { files: FileTreeFile[]; zipNam
         type="button"
         data-testid="harness-start"
         onClick={() => {
-          api.start({ files, zipName })
+          api.start({ files, zipName, strategy })
           setOpen(true)
         }}>
         Start
+      </button>
+      <button type="button" data-testid="harness-retry-current" onClick={() => api.retryCurrent()}>
+        Spam Retry
       </button>
       <FilesTreeDownloadTray
         api={api}
@@ -256,6 +267,108 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     // Cancel the run from the always-visible footer Cancel button.
     cy.contains(/^Cancel$/).click()
     cy.contains(/download cancelled/i).should('exist')
+  })
+
+  it('treats a non-OK HTTP response (500) as a failure under pause strategy', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'server-error.bin',
+        path: 'server-error.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="non-ok.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      // Non-OK response — should hit the `if (!response.ok)` failure path
+      // rather than the network-error catch branch. Engine treats it the
+      // same as a thrown fetch and pauses for the user's decision.
+      return Promise.resolve(
+        new Response('boom', { status: 500, statusText: 'Internal Server Error' })
+      )
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/HTTP 500/i).should('exist')
+    cy.contains(/^Skip$/).click()
+    cy.contains(/Download complete — 1 skipped/i).should('exist')
+  })
+
+  it('starts in skip strategy and silently drops failures into the manifest', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'broken.bin',
+        path: 'broken.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      }),
+      FileTreeFileMother.create({
+        id: 3,
+        name: 'c.txt',
+        path: 'c.txt',
+        size: 3,
+        downloadUrl: '/access/3'
+      })
+    ]
+
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="skip-from-start.zip" strategy="skip" />
+    )
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      if (url.endsWith('/access/3')) return Promise.resolve(fakeResponseBody('CCC'))
+      return Promise.reject(new Error('permanently broken'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    // No pause dialog: the engine never stops because strategy === 'skip'
+    // from the very first call. Goes straight to "Download complete".
+    cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+    cy.contains(/Download complete — 1 skipped/i).should('exist')
+  })
+
+  it('does nothing when start() is called with an empty file list', () => {
+    cy.customMount(<StreamingZipHarness files={[]} zipName="empty.zip" />)
+    // No fetch handler needed — the engine should not call fetch at all.
+    cy.findByTestId('harness-start').click()
+    // Tray is the only thing the harness renders for the engine; with
+    // nothing to do the engine stays in idle.
+    cy.findByTestId('files-tree-download-tray').should('exist')
+    cy.contains(/download complete/i).should('not.exist')
+    cy.contains(/download cancelled/i).should('not.exist')
+  })
+
+  it('ignores stray decision clicks fired with no pending decision', () => {
+    // Spam-clicking "Retry" when the engine isn't paused must not throw
+    // and must not affect a subsequent run. Exercises the `if (!bag)`
+    // guard in sendDecision.
+    cy.customMount(<StreamingZipHarness files={[]} zipName="stray.zip" />)
+    cy.findByTestId('harness-retry-current').click()
+    cy.findByTestId('harness-retry-current').click()
+    // Tray is open from prior render of the harness — stray clicks must
+    // not have triggered any state-change visible to the user.
+    cy.contains(/download complete/i).should('not.exist')
   })
 
   it('switches to skip-with-manifest on "Skip all remaining failures"', () => {

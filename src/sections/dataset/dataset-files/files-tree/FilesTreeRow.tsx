@@ -107,6 +107,18 @@ export function FilesTreeRow({
       onClick={handleRowClick}
       onFocus={onFocus}
       onKeyDown={onRowKeyDown}>
+      <div className={styles['row-select']}>
+        <FilesTreeCheckbox
+          state={selectionState}
+          onToggle={onToggleSelection}
+          label={
+            isFile
+              ? t('tree.row.selectFile', { name: item.name })
+              : t('tree.row.selectFolder', { name: item.name })
+          }
+          testId={`files-tree-checkbox-${item.path}`}
+        />
+      </div>
       <div className={styles['row-name']} style={indent}>
         {isFile ? (
           <span className={cn(styles['row-twisty'], styles['row-twisty-empty'])} aria-hidden />
@@ -124,16 +136,6 @@ export function FilesTreeRow({
             <ChevronIcon />
           </button>
         )}
-        <FilesTreeCheckbox
-          state={selectionState}
-          onToggle={onToggleSelection}
-          label={
-            isFile
-              ? t('tree.row.selectFile', { name: item.name })
-              : t('tree.row.selectFolder', { name: item.name })
-          }
-          testId={`files-tree-checkbox-${item.path}`}
-        />
         <span
           className={cn(styles['row-icon'], {
             [styles['row-icon-folder']]: !isFile

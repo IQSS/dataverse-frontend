@@ -689,8 +689,11 @@ interface RowMessageProps {
 }
 
 function RowMessage({ top, height, depth, className, children }: RowMessageProps) {
+  // 14 row padding + 28 select column + 8 column gap + depth indent +
+  // 22 (twisty 18 + 4 gap) so the message text aligns with where a
+  // row's label would start.
   const indent: CSSProperties = {
-    paddingLeft: 14 + depth * 18 + 30,
+    paddingLeft: 14 + 28 + 8 + depth * 18 + 22,
     top,
     height
   }

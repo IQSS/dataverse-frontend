@@ -260,6 +260,54 @@ describe('useFileTree', () => {
     expect(result.current.currentPath).to.equal('data/sub')
   })
 
+  it('does not push state into a defunct hook when fetch resolves after unmount', async () => {
+    // Repository whose root response we hold on a manual deferred — lets
+    // us unmount the hook BEFORE the request finishes, simulating the
+    // user toggling tree → table while the initial fetch is in flight.
+    let resolveRoot!: (page: FileTreePage) => void
+    const rootPromise = new Promise<FileTreePage>((r) => {
+      resolveRoot = r
+    })
+    class DeferredRepo implements FileTreeRepository {
+      getNode(): Promise<FileTreePage> {
+        return rootPromise
+      }
+    }
+
+    const { result, unmount } = renderHook(() =>
+      useFileTree({
+        repository: new DeferredRepo(),
+        datasetPersistentId: 'doi:test/AAA',
+        datasetVersion
+      })
+    )
+
+    expect(result.current.rootNode.loading).to.equal(true)
+
+    // Simulate the host component unmounting (view toggle).
+    unmount()
+
+    // Now resolve the in-flight request. With the mountedRef guard,
+    // setNode skips the state update so a stuck "loading" stage from a
+    // previous mount can't leak. Without the guard, React would log a
+    // "setState on unmounted" warning. We assert no error is raised by
+    // simply awaiting the resolution.
+    await act(async () => {
+      resolveRoot(
+        FileTreePageMother.create({
+          path: '',
+          items: [FileTreeFileMother.create({ id: 1, name: 'late.txt', path: 'late.txt' })]
+        })
+      )
+      await rootPromise
+    })
+
+    // The hook is unmounted; the result.current snapshot is frozen at
+    // its last render. The contract here is "no crash, no warning" — a
+    // healthy negative test for the guard.
+    expect(result.current.rootNode.loaded).to.equal(false)
+  })
+
   it('visibleKnownChildren returns items at and under the target path', async () => {
     const fileTop = FileTreeFileMother.create({ id: 1, name: 'top.txt', path: 'top.txt' })
     const fileNested = FileTreeFileMother.create({

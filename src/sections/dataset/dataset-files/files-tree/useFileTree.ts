@@ -114,8 +114,18 @@ export function useFileTree({
   const inFlight = useRef<Map<string, Promise<void>>>(new Map())
   const versionKey = `${datasetPersistentId}::${datasetVersion.number.toString()}::${order}::${include}`
   const previousKey = useRef<string>(versionKey)
+  // True only while the hook's host component is mounted. Set to false
+  // by the cleanup effect below so any fetch promise that resolves AFTER
+  // unmount becomes a no-op instead of pushing state into a defunct
+  // hook instance. Without this guard, switching rapidly between the
+  // tree view and the table view occasionally left the next mount
+  // showing the "loading" spinner forever, because a slow getNode that
+  // started under the previous mount completed against the wrong
+  // setState closure.
+  const mountedRef = useRef(true)
 
   const setNode = useCallback((path: string, updater: (prev: FolderNode) => FolderNode) => {
+    if (!mountedRef.current) return
     setNodes((prev) => {
       const next = new Map(prev)
       const current = prev.get(path) ?? {
@@ -207,6 +217,13 @@ export function useFileTree({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [versionKey])
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
 
   const expand = useCallback(
     async (path: string) => {

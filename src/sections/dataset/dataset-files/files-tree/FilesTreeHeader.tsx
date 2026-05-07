@@ -13,6 +13,7 @@ export function FilesTreeHeader() {
   const { t } = useTranslation('files')
   return (
     <div className={styles['tree-head']} aria-hidden>
+      <div />
       <div>{t('tree.head.name', 'Name')}</div>
       <div className={styles['tree-head-size']}>{t('tree.head.size', 'Size')}</div>
       <div className={styles['tree-head-count']}>{t('tree.head.count', 'Files')}</div>

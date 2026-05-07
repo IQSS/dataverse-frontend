@@ -23,16 +23,26 @@ describe('useFileUploadOperations', () => {
       file: (successCallback: (file: File) => void) => successCallback(file)
     } as FileSystemFileEntry)
 
-  const createDirectoryEntry = (batches: FileSystemEntry[][]): FileSystemDirectoryEntry =>
+  const createDirectoryEntry = (
+    batches: FileSystemEntry[][],
+    extra: Partial<FileSystemDirectoryEntry> = {}
+  ): FileSystemDirectoryEntry =>
     ({
       isFile: false,
       isDirectory: true,
+      ...extra,
       createReader: () => ({
         readEntries: (successCallback: (entries: FileSystemEntry[]) => void) => {
           successCallback(batches.shift() ?? [])
         }
       })
-    } as FileSystemDirectoryReader)
+    } as FileSystemDirectoryEntry)
+
+  /** Build a DataTransferItemList-like object whose items return a fixed entry. */
+  const createDroppedItems = (entries: Array<FileSystemEntry | null>): DataTransferItemList =>
+    entries.map((entry) => ({
+      webkitGetAsEntry: () => entry
+    })) as unknown as DataTransferItemList
 
   const createConfig = (
     overrides: Partial<FileUploadOperationsConfig> = {}
@@ -247,6 +257,122 @@ describe('useFileUploadOperations', () => {
 
       expect(result.current.handleDroppedItems).to.be.a('function')
     })
+
+    it('uploads files dropped as direct file entries (entry?.isFile branch)', async () => {
+      const addFile = cy.stub()
+      const config = createConfig({ addFile })
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      const file = createMockFile('dropped.txt')
+      const items = createDroppedItems([createFileEntry(file, '/dropped.txt')])
+
+      await act(async () => {
+        result.current.handleDroppedItems(items)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      })
+
+      expect(addFile).to.have.been.calledOnce
+    })
+
+    it('descends into a directory dropped as a directory entry (entry?.isDirectory branch)', async () => {
+      const addFile = cy.stub()
+      const config = createConfig({ addFile })
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      const file = createMockFile('inside.txt')
+      const dir = createDirectoryEntry([[createFileEntry(file, '/folder/inside.txt')], []])
+      const items = createDroppedItems([dir])
+
+      await act(async () => {
+        result.current.handleDroppedItems(items)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      })
+
+      expect(addFile).to.have.been.calledOnce
+    })
+
+    it('falls back to fallbackFiles when no entry is handled (no-entry + fallback branch)', async () => {
+      const addFile = cy.stub()
+      const config = createConfig({ addFile })
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      // Items whose webkitGetAsEntry returns null — none of them is
+      // handled via the entry path, so the fallback FileList is used.
+      const items = createDroppedItems([null])
+      const fallback = {
+        length: 1,
+        0: createMockFile('fallback.txt'),
+        item(i: number) {
+          return (this as unknown as { [k: number]: File })[i] ?? null
+        }
+      } as unknown as FileList
+
+      await act(async () => {
+        result.current.handleDroppedItems(items, fallback)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      })
+
+      expect(addFile).to.have.been.calledOnce
+    })
+
+    it('does nothing when no entry is handled and no fallback is provided', async () => {
+      const addFile = cy.stub()
+      const config = createConfig({ addFile })
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      const items = createDroppedItems([null])
+
+      await act(async () => {
+        result.current.handleDroppedItems(items)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      })
+
+      expect(addFile).to.not.have.been.called
+    })
+
+    it('does nothing when no entry is handled and fallback is empty', async () => {
+      const addFile = cy.stub()
+      const config = createConfig({ addFile })
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      const items = createDroppedItems([null])
+      const fallback = {
+        length: 0,
+        item() {
+          return null
+        }
+      } as unknown as FileList
+
+      await act(async () => {
+        result.current.handleDroppedItems(items, fallback)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      })
+
+      expect(addFile).to.not.have.been.called
+    })
+
+    it('preserves webkitRelativePath stripped of the leading "/" for dropped file entries', async () => {
+      const captured: File[] = []
+      const addFile = cy.stub().callsFake((file: File) => {
+        captured.push(file)
+      })
+      const config = createConfig({ addFile })
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      const file = createMockFile('a.txt')
+      const items = createDroppedItems([createFileEntry(file, '/folder/a.txt')])
+
+      await act(async () => {
+        result.current.handleDroppedItems(items)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      })
+
+      expect(captured).to.have.length(1)
+      // The wrapper File has the leading slash stripped from webkitRelativePath
+      expect(
+        (captured[0] as unknown as { webkitRelativePath: string }).webkitRelativePath
+      ).to.equal('folder/a.txt')
+    })
   })
 
   describe('addFromDir', () => {
@@ -277,6 +403,82 @@ describe('useFileUploadOperations', () => {
       })
 
       expect(addFile).to.have.been.calledTwice
+    })
+
+    it('recurses into nested directory entries (entry.isDirectory branch in addFromDir)', async () => {
+      const addFile = cy.stub()
+      const config = createConfig({ addFile })
+
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      const innerFile = createMockFile('deep.txt')
+      const innerDir = createDirectoryEntry([
+        [createFileEntry(innerFile, '/outer/inner/deep.txt')],
+        []
+      ])
+      const outerDir = createDirectoryEntry([[innerDir], []])
+
+      await act(async () => {
+        result.current.addFromDir(outerDir)
+        // Allow the recursive readNextBatch chain to drain.
+        await new Promise((resolve) => setTimeout(resolve, 10))
+      })
+
+      expect(addFile).to.have.been.calledOnce
+    })
+
+    it('handles a file entry whose fullPath does NOT start with "/" (ternary else branch)', async () => {
+      const captured: File[] = []
+      const addFile = cy.stub().callsFake((file: File) => {
+        captured.push(file)
+      })
+      const config = createConfig({ addFile })
+
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      const file = createMockFile('weird.txt')
+      // Some browser implementations omit the leading slash. The component
+      // must fall through to use entry.fullPath as-is.
+      const directory = createDirectoryEntry([[createFileEntry(file, 'folder/weird.txt')], []])
+
+      await act(async () => {
+        result.current.addFromDir(directory)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      })
+
+      expect(captured).to.have.length(1)
+      expect(
+        (captured[0] as unknown as { webkitRelativePath: string }).webkitRelativePath
+      ).to.equal('folder/weird.txt')
+    })
+
+    it('handles a file entry whose fullPath is undefined (?? "" branch)', async () => {
+      const captured: File[] = []
+      const addFile = cy.stub().callsFake((file: File) => {
+        captured.push(file)
+      })
+      const config = createConfig({ addFile })
+
+      const { result } = renderHook(() => useFileUploadOperations(config))
+
+      const file = createMockFile('nameless.txt')
+      const fileEntry = {
+        isFile: true,
+        isDirectory: false,
+        // No fullPath — exercises the optional-chaining + nullish coalesce.
+        file: (cb: (f: File) => void) => cb(file)
+      } as unknown as FileSystemFileEntry
+      const directory = createDirectoryEntry([[fileEntry], []])
+
+      await act(async () => {
+        result.current.addFromDir(directory)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      })
+
+      expect(captured).to.have.length(1)
+      expect(
+        (captured[0] as unknown as { webkitRelativePath: string }).webkitRelativePath
+      ).to.equal('')
     })
   })
 })

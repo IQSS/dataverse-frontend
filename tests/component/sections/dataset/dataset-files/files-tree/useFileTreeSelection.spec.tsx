@@ -222,6 +222,62 @@ describe('useFileTreeSelection', () => {
     expect(result.current.totals.hasLogicalFolders).to.equal(false)
   })
 
+  it('deselecting an explicit folder leaves sibling folders, sibling files, and sibling deselect overrides intact', () => {
+    // Sets up state where the deselect-folder cleanup loops actually
+    // iterate over non-empty sets — exercising the per-entry
+    // `isStrictlyUnder` checks that decide which entries to remove vs.
+    // keep. Without sibling entries the loops short-circuit and the
+    // branch goes uncovered.
+    const root = FileTreeFolderMother.create({ name: 'root', path: 'root' })
+    const sibling = FileTreeFolderMother.create({ name: 'outside', path: 'outside' })
+    const innerFile = FileTreeFileMother.create({
+      id: 80,
+      name: 'inner.txt',
+      path: 'root/inner.txt'
+    })
+    const siblingFileTop = FileTreeFileMother.create({
+      id: 81,
+      name: 'top.txt',
+      path: 'top.txt'
+    })
+    const siblingFileOutside = FileTreeFileMother.create({
+      id: 82,
+      name: 'out.txt',
+      path: 'outside/out.txt'
+    })
+
+    const { result } = renderHook(() => useFileTreeSelection())
+    // Both folders explicitly selected, neither nested under the other.
+    act(() => result.current.toggleFolder(root, []))
+    act(() => result.current.toggleFolder(sibling, []))
+    // A file selected outside both folders (not under root).
+    act(() => result.current.toggleFile(siblingFileTop))
+    // A deselect override under the soon-to-be-removed root.
+    act(() => result.current.toggleFile(innerFile))
+    // A deselect override under the unrelated `outside` folder.
+    act(() => result.current.toggleFile(siblingFileOutside))
+
+    expect(result.current.selectedFolderPaths.has('root')).to.equal(true)
+    expect(result.current.selectedFolderPaths.has('outside')).to.equal(true)
+    expect(result.current.deselectedFilePaths.has('root/inner.txt')).to.equal(true)
+    expect(result.current.deselectedFilePaths.has('outside/out.txt')).to.equal(true)
+    expect(result.current.selectedFilePaths.has('top.txt')).to.equal(true)
+
+    // Deselect root. The cleanup loops should remove the under-root
+    // entries and leave everything else intact.
+    act(() => result.current.toggleFolder(root, []))
+
+    expect(result.current.selectedFolderPaths.has('root')).to.equal(false)
+    // sibling folder selection survives
+    expect(result.current.selectedFolderPaths.has('outside')).to.equal(true)
+    // top-level file selection survives
+    expect(result.current.selectedFilePaths.has('top.txt')).to.equal(true)
+    // deselect override under root removed
+    expect(result.current.deselectedFilePaths.has('root/inner.txt')).to.equal(false)
+    // deselect override under sibling preserved
+    expect(result.current.deselectedFilePaths.has('outside/out.txt')).to.equal(true)
+  })
+
   it('folderState reports partial when all known files are selected but a nested folder is also logically selected', () => {
     const root = FileTreeFolderMother.create({ name: 'root', path: 'root' })
     const inner = FileTreeFolderMother.create({ name: 'inner', path: 'root/inner' })

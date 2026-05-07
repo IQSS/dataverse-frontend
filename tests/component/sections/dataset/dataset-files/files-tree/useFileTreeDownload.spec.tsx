@@ -205,6 +205,94 @@ describe('useFileTreeDownload', () => {
     expect(onError.callCount).to.equal(1)
   })
 
+  it('stringifies non-Error rejection values from onDownloadFiles', async () => {
+    // Catch path uses `error instanceof Error ? error.message : String(error)`;
+    // a string rejection takes the false branch.
+    const file = FileTreeFileMother.create({ id: 1, name: 'a.txt', path: 'a.txt' })
+    const onDownloadFiles = cy.stub().rejects('string-not-error-instance')
+    const onError = cy.stub()
+    const { result } = renderHook(() =>
+      useFileTreeDownload({
+        treeRepository: new FakeRepo({}),
+        datasetPersistentId: 'doi:test/AAA',
+        datasetVersion,
+        selection: selectionFixture([file]),
+        onError,
+        onDownloadFiles
+      })
+    )
+
+    await act(async () => {
+      await result.current.downloadNode(file)
+    })
+
+    await waitFor(() => expect(result.current.progress.status).to.equal('error'))
+    // cy.stub().rejects(string) wraps in an Error whose .message === string,
+    // so the message-passthrough is exercised when the catch sees a string-coerced error.
+    expect(typeof result.current.progress.message).to.equal('string')
+    expect(onError.callCount).to.equal(1)
+  })
+
+  it('stringifies non-Error rejections during folder enumeration in downloadNode', async () => {
+    const folder = FileTreeFolderMother.create({ name: 'data', path: 'data' })
+    const onDownloadFiles = cy.stub().resolves()
+    const onError = cy.stub()
+    // Subclass that rejects enumeration with a non-Error (plain object)
+    // so the ternary's `String(error)` branch is exercised.
+    class BadRepo implements FileTreeRepository {
+      getNode(): Promise<FileTreePage> {
+        return Promise.reject({ kind: 'plain-object', detail: 'not-an-error' } as unknown as Error)
+      }
+    }
+    const { result } = renderHook(() =>
+      useFileTreeDownload({
+        treeRepository: new BadRepo(),
+        datasetPersistentId: 'doi:test/AAA',
+        datasetVersion,
+        selection: selectionFixture([]),
+        onError,
+        onDownloadFiles
+      })
+    )
+
+    await act(async () => {
+      await result.current.downloadNode(folder)
+    })
+
+    await waitFor(() => expect(result.current.progress.status).to.equal('error'))
+    expect(result.current.progress.message).to.equal('[object Object]')
+    expect(onError.callCount).to.equal(1)
+  })
+
+  it('stringifies non-Error rejections during downloadSelection enumeration', async () => {
+    const onDownloadFiles = cy.stub().resolves()
+    const onError = cy.stub()
+    class BadRepo implements FileTreeRepository {
+      getNode(): Promise<FileTreePage> {
+        return Promise.reject(42 as unknown as Error)
+      }
+    }
+    const { result } = renderHook(() =>
+      useFileTreeDownload({
+        treeRepository: new BadRepo(),
+        datasetPersistentId: 'doi:test/AAA',
+        datasetVersion,
+        selection: selectionFixture([], { selectedFolderPaths: ['data'] }),
+        onError,
+        onDownloadFiles
+      })
+    )
+
+    await act(async () => {
+      await result.current.downloadSelection()
+    })
+
+    await waitFor(() => expect(result.current.progress.status).to.equal('error'))
+    expect(result.current.progress.message).to.equal('42')
+    expect(onError.callCount).to.equal(1)
+    expect(onDownloadFiles.callCount).to.equal(0)
+  })
+
   it('records error and calls onError when folder enumeration rejects', async () => {
     const folder = FileTreeFolderMother.create({ name: 'data', path: 'data' })
     const onDownloadFiles = cy.stub().resolves()

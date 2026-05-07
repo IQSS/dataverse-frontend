@@ -16,6 +16,7 @@
 /coverage
 /cypress
 .nyc_output
+/.test-parallel
 /packages/design-system/coverage
 
 
