@@ -213,7 +213,15 @@ async function init(opts: { fromObserver?: boolean } = {}) {
   root.render(
     <StrictMode>
       <div className="dv-tree-view-root">
-        <ToastContainer position="top-right" autoClose={5000} />
+        {/*
+          The toast container is fixed-positioned against the viewport
+          (even when rendered inside a Shadow DOM). On JSF pages the
+          dataset header / nav bar sits at the top of the viewport and
+          partially covers the default `top: 1em` toast slot. Offsetting
+          to ~80px clears the typical Dataverse header without going so
+          far down that toasts feel detached from the page.
+        */}
+        <ToastContainer position="top-right" autoClose={5000} style={{ top: '80px' }} />
         <FilesTree
           treeRepository={treeRepository}
           datasetPersistentId={mountConfig.datasetPid}

@@ -180,7 +180,12 @@ async function init(opts: { fromObserver?: boolean } = {}) {
   root.render(
     <StrictMode>
       <div className="dv-uploader-root">
-        <ToastContainer position="top-right" autoClose={5000} />
+        {/*
+          See `standalone-tree-view/index.tsx` — same offset to clear
+          the JSF header that would otherwise cover the top of the
+          toast container.
+        */}
+        <ToastContainer position="top-right" autoClose={5000} style={{ top: '80px' }} />
         <UploaderWrapper
           fileRepository={fileRepository}
           datasetPersistentId={config.datasetPid}
