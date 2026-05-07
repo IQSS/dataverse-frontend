@@ -132,6 +132,53 @@ createRoot(reactRoot).render(/* … your React tree … */)
 3. Page-level styling (background, fonts, viewport-fill) lives in a `standalone-page.scss` that is **only** loaded by the standalone demo HTML via `<link rel="stylesheet">` — not by the bundle. The bundle is for embeds; the demo page chrome is for the demo page.
 4. Don't import `bootstrap/dist/css/bootstrap.min.css` from the standalone wrapper. The shadow root carries the design-system stylesheet (CSS-Modules + tokens) which is enough for the component to render correctly. Importing global Bootstrap here is the historical bug that motivated this whole section.
 5. If your component uses a portal-based library (modal, popover, tooltip), pass `portalContainer={shadow}` (or the equivalent) — get the shadow ref via the second return value of `mountInShadowRoot`. Never let a portal default to `document.body`.
+6. **Hardcode color fallbacks for any `var(--bs-*)` references in component CSS.** The shadow root inherits CSS custom properties from the host page. JSF pages use Bootstrap-3 (or no Bootstrap at all) and don't define the Bootstrap-5 token set the component expects, so `border: 1px solid var(--bs-border-color)` resolves to `1px solid` (invalid → invisible). Always provide a fallback: `var(--bs-border-color, #c4c8cc)`.
+
+## Surviving JSF partial updates
+
+The standalone bundles are loaded as ES modules from JSF pages. PrimeFaces partial updates can re-insert the host `<div>` in the DOM without re-executing the already-loaded module script — which leaves the React Root attached to a div that is no longer in the document, and the new div sits empty. The fix lives in each standalone wrapper:
+
+```ts
+let mountedHostElement: HTMLElement | null = null
+let mountedReactRoot: Root | null = null
+
+async function init() {
+  const hostElement = document.getElementById(rootElementId)
+  if (!hostElement) return
+  if (hostElement === mountedHostElement && mountedReactRoot) return
+  if (mountedReactRoot) {
+    try {
+      mountedReactRoot.unmount()
+    } catch {
+      /* old div already gone */
+    }
+  }
+  // … build a fresh root, render …
+  mountedHostElement = hostElement
+  mountedReactRoot = root
+}
+
+if (typeof MutationObserver !== 'undefined') {
+  const observer = new MutationObserver(() => {
+    const current = document.getElementById(rootElementId)
+    if (current && current !== mountedHostElement) {
+      void init()
+    }
+  })
+  observer.observe(document.body, { childList: true, subtree: true })
+}
+```
+
+The MutationObserver fires whenever the document tree changes; the cheap identity check (`current !== mountedHostElement`) makes unrelated DOM updates a no-op. Init() is itself idempotent for the same host element.
+
+`i18next.init()` and `ApiConfig.init()` should each only run once across remounts — guard them with module-scope flags. See `src/standalone-tree-view/index.tsx` and `src/standalone-uploader/index.tsx` for the canonical pattern.
+
+## Calling Dataverse APIs from the bundle
+
+The component's `fetch` calls are subject to browser CORS rules. Two pitfalls worth knowing:
+
+- **`credentials: 'include'` and S3 redirects.** Dataverse's download API often returns a 302 to a presigned S3 URL when storage has `download-redirect=true`. Browsers carry the credentials mode through the redirect, and an S3 response with `Allow-Origin: *` plus a request that says "include credentials" is rejected by the browser. Use `credentials: 'same-origin'` so cookies travel only on same-origin Dataverse calls and are dropped on the cross-origin S3 hop.
+- **Presigned-URL host signing.** S3 enforces that the request `Host` header matches what was signed. In docker-compose dev, Dataverse signs URLs against the docker-internal hostname (`localstack:4566`); the browser must reach the same hostname for the signature to verify. The standard fix is to add `127.0.0.1 localstack` to the developer's `/etc/hosts`. This is a property of presigned-URL networking, not a Dataverse bug.
 
 ## Adding a new reusable component
 
@@ -205,7 +252,8 @@ The tree view ships:
 - Visible-row virtualisation; no `react-virtual` / `react-window` dep.
 - Full WAI-ARIA tree keyboard navigation (`ArrowUp/Down/Left/Right`, `Home/End`, `Space`, `Enter`).
 - URL bookmarkability: `?view=tree&path=<folder>` round-trips and pre-fetches every ancestor on mount.
-- **Client-side streaming-zip download.** Multi-file selections are zipped in the browser via [`client-zip`](https://github.com/Touffy/client-zip) (~3 KB gzip, the only new dep introduced by the tree). A bottom-sheet tray (`FilesTreeDownloadTray`) shows progress, the file currently being added, and surfaces an inline **Retry / Skip / Skip & retry at end / Skip all** decision row when a fetch fails. _Skip & retry at end_ converts the run into a two-pass flow mid-flight (failures accumulate as recoverable, then the tray prompts to retry them at the end). _Skip all_ switches to skip-with-manifest and writes a `manifest.txt` listing the failures into the root of the zip. Single-file downloads bypass the zip wrap and anchor-click `file.downloadUrl` directly. **No server contract changes.**
+- **Client-side streaming-zip download.** Multi-file selections are zipped in the browser via [`client-zip`](https://github.com/Touffy/client-zip) (~3 KB gzip, the only new dep introduced by the tree). A bottom-sheet tray (`FilesTreeDownloadTray`) shows progress, the file currently being added, and surfaces an inline **Retry / Skip / Skip & retry at end / Skip all** decision row when a fetch fails. _Skip & retry at end_ converts the run into a two-pass flow mid-flight (failures accumulate as recoverable, then the tray prompts to retry them at the end). _Skip all_ switches to skip-with-manifest and writes a `manifest.txt` listing the failures into the root of the zip. Single-file downloads bypass the zip wrap and anchor-click `file.downloadUrl` directly. **No server contract changes.** Per-file fetches use `credentials: 'same-origin'` (not `'include'`) so the browser drops cookies on the cross-origin S3 hop after a `download-redirect=true` 302 — including credentials there would force `Access-Control-Allow-Credentials: true` on every S3 response and break against `Allow-Origin: *` rules.
+- **Header select-all checkbox.** Tristate (none / partial / all). Selects every top-level item when nothing is selected, clears everything otherwise.
 
 ## Testing reusable components
 
