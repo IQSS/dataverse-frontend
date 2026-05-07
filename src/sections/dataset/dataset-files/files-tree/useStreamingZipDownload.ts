@@ -259,9 +259,15 @@ export function useStreamingZipDownload(): StreamingZipApi {
                   update((prev) => ({ ...prev, status: 'running' }))
                   continue
                 }
-                if (decision === 'skip-all') {
-                  strategy = 'skip'
-                  // mark the just-added failure as non-recoverable too
+                if (decision === 'skip' || decision === 'skip-all') {
+                  // Both skip variants demote the just-added failure to
+                  // non-recoverable. Without this, a later 'defer-to-end'
+                  // decision on a different file would re-queue the
+                  // already-skipped file in its second pass (see the
+                  // recoverable filter in the awaiting-retry path).
+                  if (decision === 'skip-all') {
+                    strategy = 'skip'
+                  }
                   update((prev) => {
                     const last = prev.failedSoFar[prev.failedSoFar.length - 1]
                     /* istanbul ignore if */

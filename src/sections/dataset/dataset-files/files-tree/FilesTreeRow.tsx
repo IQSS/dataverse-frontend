@@ -26,7 +26,12 @@ interface FilesTreeRowProps {
   expanded?: boolean
   onToggleSelection: () => void
   onToggleExpansion?: () => void
-  onDownload: () => void
+  /**
+   * Per-row download trigger. When omitted, the download icon is
+   * hidden — used by hosts that need to gate downloads behind a
+   * terms-of-use modal that the row itself cannot open.
+   */
+  onDownload?: () => void
   datasetVersionNumber: DatasetVersionNumber
   /**
    * Optional URL builder for the filename → file metadata link. When
@@ -173,20 +178,22 @@ export function FilesTreeRow({
         {!isFile && item.counts ? formatCount(item.counts.files) : ''}
       </div>
       <div className={styles['row-actions']}>
-        <button
-          type="button"
-          className={styles['icon-btn']}
-          aria-label={
-            isFile
-              ? t('tree.row.downloadFile', { name: item.name })
-              : t('tree.row.downloadFolder', { name: item.name })
-          }
-          onClick={(event) => {
-            event.stopPropagation()
-            onDownload()
-          }}>
-          <DownloadIcon />
-        </button>
+        {onDownload ? (
+          <button
+            type="button"
+            className={styles['icon-btn']}
+            aria-label={
+              isFile
+                ? t('tree.row.downloadFile', { name: item.name })
+                : t('tree.row.downloadFolder', { name: item.name })
+            }
+            onClick={(event) => {
+              event.stopPropagation()
+              onDownload()
+            }}>
+            <DownloadIcon />
+          </button>
+        ) : null}
       </div>
     </div>
   )

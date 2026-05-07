@@ -19,6 +19,12 @@ import { FilesTree } from './files-tree/FilesTree'
 import { FilesViewToggle, FilesViewMode } from './files-view-toggle/FilesViewToggle'
 import { FileTreeRepository } from '@/files/domain/repositories/FileTreeRepository'
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
+import { useDataset } from '../DatasetContext'
+import {
+  Dataset,
+  DatasetPublishingStatus,
+  defaultLicense
+} from '../../../dataset/domain/models/Dataset'
 import styles from './DatasetFilesScrollable.module.scss'
 
 interface DatasetFilesScrollableProps {
@@ -35,6 +41,28 @@ const PATH_PARAM = 'path'
 
 export type SentryRef = UseInfiniteScrollHookRefCallback
 
+/**
+ * Mirror of `DatasetFiles.treeDownloadsRequireTermsGate` — kept inline
+ * here so the table and tree subviews of the scrollable variant don't
+ * have to share a separate util module just for this predicate.
+ */
+function treeDownloadsRequireTermsGate(
+  dataset:
+    | Pick<Dataset, 'version' | 'permissions' | 'guestbookId' | 'license' | 'termsOfUse'>
+    | undefined
+    | null
+): boolean {
+  if (!dataset) return false
+  const isDraft = dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT
+  const canEdit = dataset.permissions.canUpdateDataset
+  if (isDraft || canEdit) return false
+  const hasGuestbook = dataset.guestbookId !== undefined
+  const hasNonDefaultLicense =
+    dataset.license !== undefined && dataset.license.name !== defaultLicense.name
+  const hasCustomTerms = dataset.termsOfUse?.customTerms !== undefined
+  return hasGuestbook || hasNonDefaultLicense || hasCustomTerms
+}
+
 export function DatasetFilesScrollable({
   filesRepository,
   datasetPersistentId,
@@ -43,10 +71,6 @@ export function DatasetFilesScrollable({
   datasetRepository,
   fileTreeRepository
 }: DatasetFilesScrollableProps) {
-  const scrollableContainerRef = useRef<HTMLDivElement | null>(null)
-  const criteriaContainerRef = useRef<HTMLDivElement | null>(null)
-  const criteriaContainerSize = useObserveElementSize(criteriaContainerRef)
-
   const [searchParams, setSearchParams] = useSearchParams()
   const view: FilesViewMode = searchParams.get(VIEW_PARAM) === 'tree' ? 'tree' : 'table'
   const treePath = searchParams.get(PATH_PARAM) ?? ''
@@ -74,6 +98,97 @@ export function DatasetFilesScrollable({
     () => fileTreeRepository ?? new FileTreeJSDataverseRepository(filesRepository),
     [fileTreeRepository, filesRepository]
   )
+
+  // Branch on view BEFORE invoking either subview's hooks. The previous
+  // single-component layout fired the table-only data hooks
+  // (`useGetFilesCountInfo`, `useGetFilesTotalDownloadSize`,
+  // `useGetAccumulatedFiles`) on every render — including tree mode —
+  // and a transient error in any of them aborted the render with a
+  // top-level <Alert>, replacing a perfectly healthy tree response with
+  // an unrelated error banner.
+  return view === 'tree' ? (
+    <DatasetFilesScrollableTreeView
+      treeRepository={treeRepository}
+      datasetPersistentId={datasetPersistentId}
+      datasetVersion={datasetVersion}
+      view={view}
+      onChangeView={setView}
+      initialPath={treePath}
+      onCurrentPathChange={setTreePath}
+    />
+  ) : (
+    <DatasetFilesScrollableTableView
+      filesRepository={filesRepository}
+      datasetPersistentId={datasetPersistentId}
+      datasetVersion={datasetVersion}
+      datasetRepository={datasetRepository}
+      canUpdateDataset={canUpdateDataset}
+      view={view}
+      onChangeView={setView}
+    />
+  )
+}
+
+interface DatasetFilesScrollableTreeViewProps {
+  treeRepository: FileTreeRepository
+  datasetPersistentId: string
+  datasetVersion: DatasetVersion
+  view: FilesViewMode
+  onChangeView: (view: FilesViewMode) => void
+  initialPath: string
+  onCurrentPathChange: (path: string) => void
+}
+
+function DatasetFilesScrollableTreeView({
+  treeRepository,
+  datasetPersistentId,
+  datasetVersion,
+  view,
+  onChangeView,
+  initialPath,
+  onCurrentPathChange
+}: DatasetFilesScrollableTreeViewProps) {
+  const { dataset } = useDataset()
+  const downloadsDisabled = treeDownloadsRequireTermsGate(dataset)
+  return (
+    <section>
+      <div className={styles['view-toggle-row']}>
+        <FilesViewToggle view={view} onChange={onChangeView} />
+      </div>
+      <FilesTree
+        treeRepository={treeRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+        initialPath={initialPath}
+        onCurrentPathChange={onCurrentPathChange}
+        downloadsDisabled={downloadsDisabled}
+      />
+    </section>
+  )
+}
+
+interface DatasetFilesScrollableTableViewProps {
+  filesRepository: FileRepository
+  datasetPersistentId: string
+  datasetVersion: DatasetVersion
+  datasetRepository: DatasetRepository
+  canUpdateDataset?: boolean
+  view: FilesViewMode
+  onChangeView: (view: FilesViewMode) => void
+}
+
+function DatasetFilesScrollableTableView({
+  filesRepository,
+  datasetPersistentId,
+  datasetVersion,
+  canUpdateDataset,
+  datasetRepository,
+  view,
+  onChangeView
+}: DatasetFilesScrollableTableViewProps) {
+  const scrollableContainerRef = useRef<HTMLDivElement | null>(null)
+  const criteriaContainerRef = useRef<HTMLDivElement | null>(null)
+  const criteriaContainerSize = useObserveElementSize(criteriaContainerRef)
 
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(
     () => new FilePaginationInfo()
@@ -192,22 +307,6 @@ export function DatasetFilesScrollable({
       </>
     )
   }
-  if (view === 'tree') {
-    return (
-      <section>
-        <div className={styles['view-toggle-row']}>
-          <FilesViewToggle view={view} onChange={setView} />
-        </div>
-        <FilesTree
-          treeRepository={treeRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          initialPath={treePath}
-          onCurrentPathChange={setTreePath}
-        />
-      </section>
-    )
-  }
 
   return (
     <section ref={rootRef}>
@@ -228,7 +327,7 @@ export function DatasetFilesScrollable({
             onInfiniteScrollMode
           />
           <div className={styles['view-toggle-row']}>
-            <FilesViewToggle view={view} onChange={setView} />
+            <FilesViewToggle view={view} onChange={onChangeView} />
           </div>
         </header>
 

@@ -52,6 +52,11 @@ export function useFileTreeDownload({
   const dispatchFiles = useCallback(
     async (files: FileTreeFile[]) => {
       if (files.length === 0) {
+        // No files to dispatch (empty folder, or every selected file
+        // got filtered out by the deselect overrides). Reset progress
+        // back to idle so the toolbar doesn't get stuck showing
+        // `enumerating` / `requesting` indefinitely.
+        setProgress({ status: 'idle', enumeratedCount: 0 })
         return
       }
       setProgress({ status: 'requesting', enumeratedCount: files.length })

@@ -257,6 +257,17 @@ export function useFileTree({
       }
       const next = new Set(prev)
       next.delete(path)
+      // Also drop every descendant from the expanded set. Without this,
+      // collapsing `data` after the user opened `data/sub` leaves
+      // `data/sub` in the set; `currentPath` (deepest expanded) still
+      // reports `data/sub`, so the URL bookmark and a subsequent reload
+      // re-open the very branch the user just collapsed.
+      const prefix = path === '' ? '' : `${path}/`
+      for (const p of Array.from(next)) {
+        if (p !== path && (path === '' ? p !== '' : p.startsWith(prefix))) {
+          next.delete(p)
+        }
+      }
       return next
     })
   }, [])

@@ -59,6 +59,17 @@ interface FilesTreeProps {
    * omitted, the row falls back to the SPA `<Link>`.
    */
   buildFileMetadataUrl?: (file: FileTreeFile) => string
+  /**
+   * When `true`, every download action in the tree (per-row download
+   * icon, toolbar download button) is disabled. The host should set
+   * this on datasets where a guestbook, custom terms, or non-default
+   * license requires user acknowledgement before downloading — the
+   * acknowledgement modal lives on the table-view side and is not
+   * yet wired into the tree. See the SPA caller in `DatasetFiles.tsx`.
+   * Standalone JSF mounts default to `false`; the JSF page is
+   * responsible for its own gating in that flow.
+   */
+  downloadsDisabled?: boolean
 }
 
 const DEFAULT_ROW_HEIGHT = 32
@@ -76,7 +87,8 @@ export function FilesTree({
   fallbackHeight = DEFAULT_FALLBACK_HEIGHT,
   initialPath = '',
   onCurrentPathChange,
-  buildFileMetadataUrl
+  buildFileMetadataUrl,
+  downloadsDisabled = false
 }: FilesTreeProps) {
   const { t } = useTranslation('files')
   const tree = useFileTree({
@@ -513,6 +525,7 @@ export function FilesTree({
         selection={selection}
         download={download}
         streamingZipActive={streamingZipActive}
+        disableDownload={downloadsDisabled}
       />
       <FilesTreeHeader
         selectAllState={headerSelectAllStateRef.current}
@@ -606,7 +619,7 @@ export function FilesTree({
                     handleToggleSelectionFolder(item)
                   }
                 }}
-                onDownload={() => handleDownloadOne(item)}
+                onDownload={downloadsDisabled ? undefined : () => handleDownloadOne(item)}
                 datasetVersionNumber={datasetVersion.number}
                 buildFileMetadataUrl={buildFileMetadataUrl}
                 focused={absoluteIndex === focusedRowIndex}
