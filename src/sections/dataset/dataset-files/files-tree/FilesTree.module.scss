@@ -272,9 +272,16 @@ $indent-step: 18px;
 .checkbox {
   width: 16px;
   height: 16px;
-  border: 1px solid var(--bs-border-color);
+
+  // Hardcoded fallbacks because the standalone bundle is rendered into
+  // a Shadow DOM hosted by JSF pages that don't always define the full
+  // Bootstrap-5 --bs-* custom property set. Without fallbacks the
+  // border resolves to `1px solid` (invalid → invisible) and the
+  // checked-state background falls back to transparent — the user sees
+  // a white-on-white checkbox with no border.
+  border: 1px solid var(--bs-border-color, #c4c8cc);
   border-radius: 2px;
-  background-color: var(--bs-white);
+  background-color: var(--bs-white, #fff);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -285,18 +292,18 @@ $indent-step: 18px;
 }
 
 .checkbox:hover {
-  border-color: var(--bs-primary);
+  border-color: var(--bs-primary, #0d6efd);
 }
 
 .checkbox:focus-visible {
-  outline: 2px solid var(--bs-primary);
+  outline: 2px solid var(--bs-primary, #0d6efd);
   outline-offset: 1px;
 }
 
 .checkbox-checked,
 .checkbox-indeterminate {
-  background-color: var(--bs-primary);
-  border-color: var(--bs-primary);
+  background-color: var(--bs-primary, #0d6efd);
+  border-color: var(--bs-primary, #0d6efd);
 }
 
 .checkbox-checked::after {
