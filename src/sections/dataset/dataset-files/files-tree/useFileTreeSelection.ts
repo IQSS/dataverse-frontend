@@ -39,6 +39,15 @@ export interface FileTreeSelection {
   toggleFile: (file: FileTreeFile) => void
   toggleFolder: (folder: FileTreeFolder, knownChildren: FileTreeItem[]) => void
   clear: () => void
+  /**
+   * Header "select-all" action: if anything is currently selected,
+   * clears the selection; otherwise marks every supplied top-level
+   * item as selected (files go into selectedFilePaths, folders into
+   * selectedFolderPaths). Tree depth below the supplied items is
+   * implicitly covered by ancestor-selected logic, matching the
+   * row-checkbox semantics.
+   */
+  toggleAll: (topLevelItems: FileTreeItem[]) => void
   filesById: Map<number, FileTreeFile>
   registerFile: (file: FileTreeFile) => void
 }
@@ -246,6 +255,32 @@ export function useFileTreeSelection(): FileTreeSelection {
     setDeselectedFilePaths(new Set())
   }, [])
 
+  const toggleAll = useCallback(
+    (topLevelItems: FileTreeItem[]) => {
+      const anySelected = selectedFilePaths.size > 0 || selectedFolderPaths.size > 0
+      if (anySelected) {
+        setSelectedFilePaths(new Set())
+        setSelectedFolderPaths(new Set())
+        setDeselectedFilePaths(new Set())
+        return
+      }
+      const nextFiles = new Set<string>()
+      const nextFolders = new Set<string>()
+      for (const item of topLevelItems) {
+        if (isFileTreeFile(item)) {
+          filesById.set(item.id, item)
+          nextFiles.add(item.path)
+        } else {
+          nextFolders.add(item.path)
+        }
+      }
+      setSelectedFilePaths(nextFiles)
+      setSelectedFolderPaths(nextFolders)
+      setDeselectedFilePaths(new Set())
+    },
+    [filesById, selectedFilePaths, selectedFolderPaths]
+  )
+
   const totals = useMemo<FileTreeSelectionTotals>(() => {
     let count = 0
     let bytes = 0
@@ -273,6 +308,7 @@ export function useFileTreeSelection(): FileTreeSelection {
     toggleFile,
     toggleFolder,
     clear,
+    toggleAll,
     filesById,
     registerFile
   }

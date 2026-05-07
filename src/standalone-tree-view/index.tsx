@@ -1,4 +1,4 @@
-import { createRoot } from 'react-dom/client'
+import { createRoot, Root } from 'react-dom/client'
 import { StrictMode } from 'react'
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
@@ -60,9 +60,45 @@ function buildFileMetadataUrlFactory(config: MountConfig) {
     )}`
 }
 
+// Module-scope state lets us survive PrimeFaces partial updates that
+// re-insert the host `<div id="...">`. The browser does not re-execute
+// the already-loaded module script when JSF refreshes the fragment, so
+// the FIRST mount goes stale (orphaned root attached to a removed div)
+// and subsequent toggles produce an empty tree. We track the last host
+// element + Root we mounted, and a MutationObserver re-mounts whenever
+// the target id appears as a NEW element in the DOM.
+let mountedHostElement: HTMLElement | null = null
+let mountedReactRoot: Root | null = null
+let i18nReady: Promise<void> | null = null
+
 async function init() {
   const config = window.dvTreeViewConfig
   const rootElementId = config?.rootElementId ?? 'dv-tree-view'
+
+  const hostElement = document.getElementById(rootElementId)
+  if (!hostElement) {
+    // The host fragment isn't in the DOM right now (e.g. user is on
+    // table view). The MutationObserver below will fire init() again
+    // when JSF re-inserts the div.
+    return
+  }
+  if (hostElement === mountedHostElement && mountedReactRoot) {
+    // Already mounted on this exact element; nothing to do.
+    return
+  }
+  // Host changed (or first mount). Tear down any prior root that's now
+  // orphaned, then mount fresh.
+  if (mountedReactRoot) {
+    try {
+      mountedReactRoot.unmount()
+    } catch {
+      // The previous host element is already gone from the DOM, which
+      // makes React throw inside its commit-phase teardown. We're
+      // about to drop the reference anyway, so the throw is benign.
+    }
+    mountedReactRoot = null
+  }
+
   let reactRoot: HTMLElement
   try {
     reactRoot = mountInShadowRoot({ rootElementId }).reactRoot
@@ -71,6 +107,8 @@ async function init() {
     return
   }
   const root = createRoot(reactRoot)
+  mountedHostElement = hostElement
+  mountedReactRoot = root
 
   const missingFields: string[] = []
   if (!config) missingFields.push('siteUrl', 'datasetPid')
@@ -101,19 +139,26 @@ async function init() {
   const localesPath =
     config.localesPath ?? `${config.siteUrl}/dvwebloader/locales/{{lng}}/{{ns}}.json`
 
-  await i18next
-    .use(initReactI18next)
-    .use(I18NextHttpBackend)
-    .init({
-      lng: config.locale ?? 'en',
-      fallbackLng: 'en',
-      supportedLngs: ['en', 'de', 'fr', 'es', 'it', 'nl', 'pt', 'uk'],
-      lowerCaseLng: true,
-      ns: ['files', 'shared'],
-      defaultNS: 'files',
-      returnNull: false,
-      backend: { loadPath: localesPath }
-    })
+  // Initialise i18next exactly once — repeated init() calls log
+  // warnings and re-load locale resources unnecessarily. Subsequent
+  // mounts (after JSF partial updates) reuse the prior init promise.
+  if (!i18nReady) {
+    i18nReady = i18next
+      .use(initReactI18next)
+      .use(I18NextHttpBackend)
+      .init({
+        lng: config.locale ?? 'en',
+        fallbackLng: 'en',
+        supportedLngs: ['en', 'de', 'fr', 'es', 'it', 'nl', 'pt', 'uk'],
+        lowerCaseLng: true,
+        ns: ['files', 'shared'],
+        defaultNS: 'files',
+        returnNull: false,
+        backend: { loadPath: localesPath }
+      })
+      .then(() => undefined)
+  }
+  await i18nReady
 
   const mountConfig: MountConfig = {
     datasetPid: config.datasetPid,
@@ -161,3 +206,30 @@ function normaliseVersionId(raw: string | undefined): string {
 init().catch((error) => {
   console.error('[dvTreeView] init failed:', error)
 })
+
+/**
+ * PrimeFaces partial updates can replace the host fragment in the DOM
+ * without re-executing this module script. When that happens our
+ * already-mounted Root is orphaned (attached to a div that is no
+ * longer in the document) and the freshly inserted div sits empty.
+ *
+ * Observe the document for child-list changes; whenever the
+ * configured root element appears (or, more precisely, whenever the
+ * element returned by getElementById changes identity) re-run init().
+ * The init() guard is itself idempotent for the same host element, so
+ * extra observer firings during unrelated DOM updates are cheap
+ * no-ops.
+ */
+if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
+  const observer = new MutationObserver(() => {
+    const config = window.dvTreeViewConfig
+    const rootElementId = config?.rootElementId ?? 'dv-tree-view'
+    const current = document.getElementById(rootElementId)
+    if (current && current !== mountedHostElement) {
+      init().catch((error) => {
+        console.error('[dvTreeView] re-init failed:', error)
+      })
+    }
+  })
+  observer.observe(document.body, { childList: true, subtree: true })
+}

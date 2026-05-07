@@ -1,4 +1,4 @@
-import { createRoot } from 'react-dom/client'
+import { createRoot, Root } from 'react-dom/client'
 import { StrictMode } from 'react'
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
@@ -64,9 +64,30 @@ function UploaderWrapper({
   )
 }
 
+// Module-scope state mirrors the tree-view bundle: needed so
+// PrimeFaces partial updates that re-insert the uploader host div are
+// detected and remounted (otherwise the orphaned root sits attached to
+// a div that's no longer in the document, and the user sees nothing).
+let mountedHostElement: HTMLElement | null = null
+let mountedReactRoot: Root | null = null
+let i18nReady: Promise<void> | null = null
+
 async function init() {
   const config = window.dvUploaderConfig
   const rootElementId = config?.rootElementId ?? 'dv-uploader'
+
+  const hostElement = document.getElementById(rootElementId)
+  if (!hostElement) return
+  if (hostElement === mountedHostElement && mountedReactRoot) return
+  if (mountedReactRoot) {
+    try {
+      mountedReactRoot.unmount()
+    } catch {
+      // Previous host already detached; React's commit-phase teardown
+      // throws but we're discarding the reference anyway.
+    }
+    mountedReactRoot = null
+  }
 
   let reactRoot: HTMLElement
   try {
@@ -77,6 +98,8 @@ async function init() {
   }
 
   const root = createRoot(reactRoot)
+  mountedHostElement = hostElement
+  mountedReactRoot = root
 
   const missingFields: string[] = []
   if (!config) missingFields.push('siteUrl', 'datasetPid')
@@ -108,19 +131,23 @@ async function init() {
   const localesPath =
     config.localesPath ?? `${config.siteUrl}/dvwebloader/locales/{{lng}}/{{ns}}.json`
 
-  await i18next
-    .use(initReactI18next)
-    .use(I18NextHttpBackend)
-    .init({
-      lng: config.locale ?? 'en',
-      fallbackLng: 'en',
-      supportedLngs: ['en', 'de', 'fr', 'es', 'it', 'nl', 'pt', 'uk'],
-      lowerCaseLng: true,
-      ns: ['shared'],
-      defaultNS: 'shared',
-      returnNull: false,
-      backend: { loadPath: localesPath }
-    })
+  if (!i18nReady) {
+    i18nReady = i18next
+      .use(initReactI18next)
+      .use(I18NextHttpBackend)
+      .init({
+        lng: config.locale ?? 'en',
+        fallbackLng: 'en',
+        supportedLngs: ['en', 'de', 'fr', 'es', 'it', 'nl', 'pt', 'uk'],
+        lowerCaseLng: true,
+        ns: ['shared'],
+        defaultNS: 'shared',
+        returnNull: false,
+        backend: { loadPath: localesPath }
+      })
+      .then(() => undefined)
+  }
+  await i18nReady
 
   const fileRepository = new StandaloneFileRepository(config.siteUrl)
 
@@ -142,3 +169,17 @@ async function init() {
 init().catch((error) => {
   console.error('[dvUploader] init failed:', error)
 })
+
+if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
+  const observer = new MutationObserver(() => {
+    const config = window.dvUploaderConfig
+    const rootElementId = config?.rootElementId ?? 'dv-uploader'
+    const current = document.getElementById(rootElementId)
+    if (current && current !== mountedHostElement) {
+      init().catch((error) => {
+        console.error('[dvUploader] re-init failed:', error)
+      })
+    }
+  })
+  observer.observe(document.body, { childList: true, subtree: true })
+}

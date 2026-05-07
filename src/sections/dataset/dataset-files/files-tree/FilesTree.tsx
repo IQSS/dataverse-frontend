@@ -21,7 +21,7 @@ import {
 } from '@/files/domain/models/FileTreeItem'
 import { DatasetVersion } from '@/dataset/domain/models/Dataset'
 import { useFileTree } from './useFileTree'
-import { useFileTreeSelection } from './useFileTreeSelection'
+import { SelectionState, useFileTreeSelection } from './useFileTreeSelection'
 import { useFileTreeFlatten } from './useFileTreeFlatten'
 import { useFileTreeDownload } from './useFileTreeDownload'
 import { useStreamingZipDownload } from './useStreamingZipDownload'
@@ -404,6 +404,33 @@ export function FilesTree({
     ]
   )
 
+  // Header select-all state + handler. Must live above the early
+  // returns so the hook count stays stable when the component swaps
+  // between loading / error / empty / loaded states. The state value
+  // is recomputed each render (cheap), so we stash it on a ref the
+  // JSX below reads — that way we don't add a useMemo + churn.
+  const headerSelectAllStateRef = useRef<SelectionState>('none')
+  {
+    const totalCount = selection.totals.count
+    const hasFolders = selection.totals.hasLogicalFolders
+    const topLevel = tree.rootNode.items
+    if (totalCount === 0 && !hasFolders) {
+      headerSelectAllStateRef.current = 'none'
+    } else if (topLevel.length === 0) {
+      headerSelectAllStateRef.current = 'partial'
+    } else {
+      const everyTopSelected = topLevel.every((item) =>
+        isFileTreeFile(item)
+          ? selection.fileState(item) === 'all'
+          : selection.folderState(item, tree.visibleKnownChildren(item.path)) === 'all'
+      )
+      headerSelectAllStateRef.current = everyTopSelected ? 'all' : 'partial'
+    }
+  }
+  const onToggleSelectAll = useCallback(() => {
+    selection.toggleAll(tree.rootNode.items)
+  }, [selection, tree.rootNode.items])
+
   const isInitialLoad = !tree.rootNode.loaded && tree.rootNode.loading
 
   if (isInitialLoad) {
@@ -486,7 +513,10 @@ export function FilesTree({
         download={download}
         streamingZipActive={streamingZipActive}
       />
-      <FilesTreeHeader />
+      <FilesTreeHeader
+        selectAllState={headerSelectAllStateRef.current}
+        onToggleSelectAll={onToggleSelectAll}
+      />
       <div
         ref={containerRef}
         className={styles['tree-viewport']}
