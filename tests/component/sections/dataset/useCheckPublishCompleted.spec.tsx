@@ -94,14 +94,39 @@ describe('useCheckPublishCompleted Hook', () => {
       />
     )
 
-    // Initial fetch resolves with locks present → polling kicks off.
     cy.wrap(getLocksStub).should('have.been.calledOnce')
     cy.get('[data-testid="publish-completed"]').should('have.text', 'false')
 
-    // Real-time wait through the 2s poll interval; the follow-up lock
-    // fetch resolves with [] and handlePublishCompleted runs.
     cy.wait(2500)
     cy.get('[data-testid="publish-completed"]').should('have.text', 'true')
     cy.get('@setNeedsUpdate').should('have.been.calledWith', true)
+  })
+
+  it('stops polling and stays incomplete on a polling error (cancelled latch)', () => {
+    const datasetRepository: DatasetMockRepository = new DatasetMockRepository()
+    const getLocksStub = cy.stub(datasetRepository, 'getLocks')
+
+    // First call sees a lock → polling kicks in. Subsequent calls
+    // reject. With the cancelled latch in place, the catch fires once
+    // and no more polls run thereafter — call count stays at exactly 2
+    // even after several poll cycles' worth of wall clock have passed.
+    getLocksStub.onFirstCall().resolves([{ lockId: 'test-lock' }])
+    getLocksStub.rejects(new Error('locks api boom'))
+
+    cy.customMount(
+      <TestComponent
+        publishInProgress={true}
+        dataset={DatasetMother.create()}
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.wrap(getLocksStub).should('have.been.calledOnce')
+    cy.get('[data-testid="publish-completed"]').should('have.text', 'false')
+
+    cy.wait(7000)
+    cy.wrap(getLocksStub).should('have.callCount', 2)
+    cy.get('[data-testid="publish-completed"]').should('have.text', 'false')
+    cy.get('@setNeedsUpdate').should('not.have.been.called')
   })
 })
