@@ -423,6 +423,7 @@ function triggerDownload(blob: Blob, name: string): void {
   const a = document.createElement('a')
   a.href = url
   a.download = name
+  a.rel = 'noopener noreferrer'
   a.style.display = 'none'
   document.body.appendChild(a)
   a.click()

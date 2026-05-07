@@ -123,6 +123,7 @@ export function FilesTree({
         const a = document.createElement('a')
         a.href = file.downloadUrl
         a.download = file.name
+        a.rel = 'noopener noreferrer'
         a.style.display = 'none'
         document.body.appendChild(a)
         a.click()

@@ -134,6 +134,31 @@ async function init() {
     return
   }
 
+  // Validate `siteUrl` before threading it into the SDK. The host JSF
+  // page sets this from a server-side EL expression, but defending
+  // against a typo'd or attacker-controlled config is cheap: insist on
+  // an http(s) absolute URL. Anything else (`javascript:`, file paths,
+  // mismatched origins) gets rejected with a visible error rather than
+  // silently misdirecting every API call (with the user's session
+  // cookie in tow).
+  if (!isValidSiteUrl(config.siteUrl)) {
+    root.render(
+      <StrictMode>
+        <div className="dv-tree-view-root">
+          <div className="standalone-error">
+            <p>
+              dvTreeView: <code>siteUrl</code> must be an absolute http(s) URL.
+            </p>
+            <p>
+              Got: <code>{config.siteUrl}</code>
+            </p>
+          </div>
+        </div>
+      </StrictMode>
+    )
+    return
+  }
+
   ApiConfig.init(`${config.siteUrl}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
 
   const localesPath =
@@ -182,6 +207,23 @@ async function init() {
       </div>
     </StrictMode>
   )
+}
+
+/**
+ * Reject anything that is not a syntactically-valid absolute http(s)
+ * URL. The host page is normally trusted (server-rendered config), but
+ * a typo or an attacker-controlled config field would otherwise route
+ * every SDK call to whatever the misconfigured value points to —
+ * carrying the user's session cookie. Cheap defence-in-depth.
+ */
+function isValidSiteUrl(raw: string | undefined): boolean {
+  if (!raw) return false
+  try {
+    const u = new URL(raw)
+    return u.protocol === 'http:' || u.protocol === 'https:'
+  } catch {
+    return false
+  }
 }
 
 /**

@@ -126,6 +126,26 @@ async function init() {
     return
   }
 
+  // See `standalone-tree-view/index.tsx` for the rationale on why we
+  // reject non-http(s) `siteUrl`s before threading it into the SDK.
+  if (!isValidSiteUrl(config.siteUrl)) {
+    root.render(
+      <StrictMode>
+        <div className="dv-uploader-root">
+          <div className="standalone-error">
+            <p>
+              dvUploader: <code>siteUrl</code> must be an absolute http(s) URL.
+            </p>
+            <p>
+              Got: <code>{config.siteUrl}</code>
+            </p>
+          </div>
+        </div>
+      </StrictMode>
+    )
+    return
+  }
+
   ApiConfig.init(`${config.siteUrl}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
 
   const localesPath =
@@ -182,4 +202,14 @@ if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') 
     }
   })
   observer.observe(document.body, { childList: true, subtree: true })
+}
+
+function isValidSiteUrl(raw: string | undefined): boolean {
+  if (!raw) return false
+  try {
+    const u = new URL(raw)
+    return u.protocol === 'http:' || u.protocol === 'https:'
+  } catch {
+    return false
+  }
 }

@@ -18,10 +18,17 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Changed
 
 - Bumped `@iqss/dataverse-client-javascript` to `2.2.0-pr403.0df68ec` (GitHub Packages prerelease) to consume the new `listDatasetTreeNode` and `iterateDatasetTreeNode` use cases.
+- Streaming-zip download fetches now use `credentials: 'same-origin'` (previously `'include'`). Cookies still travel on the same-origin Dataverse hop, but are dropped on the cross-origin redirect to S3 — required for `Allow-Origin: *` buckets to accept the request.
+- Standalone bundles (`dv-tree-view`, `dv-uploader`) now mount inside a Shadow DOM root via `mountInShadowRoot`, isolating both directions from the host page's CSS context.
+- Component CSS that references `var(--bs-*)` Bootstrap-5 tokens carries hardcoded fallback values, so the bundle renders correctly on JSF hosts that don't define those custom properties.
 
 ### Fixed
 
-### Removed
+- Tree view now re-mounts cleanly when a JSF partial update re-inserts the host `<div>`. Both standalone bundles install a `MutationObserver` that detects host-element identity changes and re-runs `init()` (the orphaned-Root regression that left the tree empty after toggling Table↔Tree several times).
+- `useFileTree` no longer leaves the loading spinner forever when the host component unmounts mid-fetch; a `mountedRef` guard skips state updates after unmount, and the version-key-change reset path bypasses the stale-closure cache short-circuit so a refetch fires on schedule.
+- `useCheckPublishCompleted` polling no longer races itself: a `cancelled` latch + `inFlight` guard prevents a second `getDatasetLocks` call from firing while the first is still awaiting, fixing the rare double-success case and stopping extra requests after a poll-loop error.
+- Tree-view header now exposes a tristate select-all checkbox in its dedicated select column.
+- Streaming-zip download tray's close button is sized for normal-pointer hit-targets when the bundle renders inside a JSF page (was rendering as a tiny `link` button due to host-page font cascade).
 
 ---
 
