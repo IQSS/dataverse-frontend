@@ -207,7 +207,18 @@ export function useStreamingZipDownload(): StreamingZipApi {
             let response: Response
             try {
               response = await fetch(buildFetchUrl(file), {
-                credentials: 'include',
+                // `same-origin` keeps cookies on the initial Dataverse
+                // call (same-origin in both SPA and JSF embed) but
+                // drops them when the browser follows a redirect to
+                // S3-style storage. With `download-redirect=true` the
+                // 302 target is on the bucket's hostname; if we sent
+                // credentials there, the browser would require
+                // `Access-Control-Allow-Credentials: true` on the S3
+                // response — incompatible with the typical
+                // `Allow-Origin: *` rule and triggering a CORS block
+                // even when the bucket is otherwise correctly
+                // configured. Caller can override via `fetchInit`.
+                credentials: 'same-origin',
                 ...(fetchInit ?? {})
               })
               if (!response.ok) {
