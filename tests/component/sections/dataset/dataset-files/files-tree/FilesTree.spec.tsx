@@ -220,6 +220,26 @@ describe('FilesTree', () => {
     cy.findByTestId('files-tree-selection-summary').should('contain.text', 'folders included')
   })
 
+  it('does not steal focus from the host page on initial mount', () => {
+    const root = FileTreePageMother.create({
+      path: '',
+      items: [FileTreeFolderMother.create({ name: 'data', path: 'data' })]
+    })
+    const repo = new FakeTreeRepository({ '': root })
+    cy.customMount(
+      <FilesTree
+        treeRepository={repo}
+        datasetPersistentId="doi:10.5072/FK2/AAA"
+        datasetVersion={datasetVersion}
+      />
+    )
+    cy.findByText('data').should('exist')
+    // Tree owns the roving tabindex but should not yank focus out of
+    // whatever the host page already had focused; activeElement should
+    // be the document body, not a tree row.
+    cy.focused().should('not.exist')
+  })
+
   it('arrow-down moves focus to the next row', () => {
     const root = FileTreePageMother.create({
       path: '',
@@ -237,14 +257,14 @@ describe('FilesTree', () => {
       />
     )
     cy.findByText('data').should('exist')
-    // Focus the first row, then press ArrowDown. Logical focus is roving:
-    // moveFocus updates focusedRowIndex which flips the row's tabIndex
-    // attribute; DOM focus does not auto-follow (the standard ARIA
-    // tree pattern in this app expects the user to keep tabbing within
-    // the tree). We assert the roving-tabindex outcome.
+    // Focus the first row, then press ArrowDown. Logical focus is
+    // roving: moveFocus updates focusedRowIndex which flips the row's
+    // tabIndex attribute, and a useEffect follows DOM focus to the new
+    // row so the :focus-visible ring tracks the user's keypress.
     cy.get('[role="treeitem"]').first().focus().trigger('keydown', { key: 'ArrowDown' })
     cy.get('[role="treeitem"]').eq(1).should('have.attr', 'tabindex', '0')
     cy.get('[role="treeitem"]').first().should('have.attr', 'tabindex', '-1')
+    cy.get('[role="treeitem"]').eq(1).should('be.focused')
   })
 
   it('arrow-up after arrow-down returns focus to the previous row', () => {

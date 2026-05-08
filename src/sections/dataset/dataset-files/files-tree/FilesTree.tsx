@@ -302,6 +302,23 @@ export function FilesTree({
     }
   }, [focusedRowIndex, rowHeight])
 
+  // Move DOM focus to follow the roving tabindex. The state-only update
+  // above shifts which row carries `tabIndex=0`, but the browser's focus
+  // does not move on its own — without this, the user sees the
+  // `:focus-visible` ring stay on whichever row Tab originally landed
+  // on, even after pressing ArrowDown / ArrowUp. Only follow focus
+  // when the tree already owns it; otherwise we'd grab focus on
+  // initial mount and steal it from the rest of the page.
+  useEffect(() => {
+    if (focusedRowIndex < 0) return
+    const el = containerRef.current
+    /* istanbul ignore if */
+    if (!el) return
+    if (!el.contains(document.activeElement)) return
+    const target = el.querySelector<HTMLElement>('[role="treeitem"][tabindex="0"]')
+    target?.focus()
+  }, [focusedRowIndex])
+
   const moveFocus = useCallback(
     (delta: number | 'first' | 'last') => {
       /* istanbul ignore if */
