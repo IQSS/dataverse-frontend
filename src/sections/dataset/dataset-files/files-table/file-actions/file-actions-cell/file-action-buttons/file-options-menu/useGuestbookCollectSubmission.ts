@@ -20,6 +20,7 @@ interface UseGuestbookCollectSubmissionProps {
   handleClose: () => void
   accessRepository: AccessRepository
   downloadFromSignedUrl: (signedUrl: string) => Promise<void>
+  onSubmitSuccess?: () => void
 }
 
 interface HandleSubmitProps {
@@ -34,7 +35,8 @@ export const useGuestbookCollectSubmission = ({
   format,
   handleClose,
   accessRepository,
-  downloadFromSignedUrl
+  downloadFromSignedUrl,
+  onSubmitSuccess
 }: UseGuestbookCollectSubmissionProps) => {
   const { t: tFiles } = useTranslation('files')
   const [hasAttemptedAccept, setHasAttemptedAccept] = useState(false)
@@ -108,6 +110,12 @@ export const useGuestbookCollectSubmission = ({
         setIsSubmittingGuestbook(false)
       }
 
+      if (signedUrl && onSubmitSuccess) {
+        handleModalClose()
+        onSubmitSuccess()
+        return
+      }
+
       if (signedUrl) {
         void downloadFromSignedUrl(signedUrl)
           .then(() => {
@@ -132,6 +140,7 @@ export const useGuestbookCollectSubmission = ({
       fileIds,
       format,
       handleModalClose,
+      onSubmitSuccess,
       tFiles
     ]
   )
