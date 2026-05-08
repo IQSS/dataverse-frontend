@@ -17,8 +17,8 @@ function Harness({ initial }: { initial: FilesViewMode }) {
 describe('FilesViewToggle', () => {
   it('reflects the active view', () => {
     cy.customMount(<Harness initial="table" />)
-    cy.findByTestId('files-view-toggle-table').should('have.attr', 'aria-selected', 'true')
-    cy.findByTestId('files-view-toggle-tree').should('have.attr', 'aria-selected', 'false')
+    cy.findByTestId('files-view-toggle-table').should('have.attr', 'aria-pressed', 'true')
+    cy.findByTestId('files-view-toggle-tree').should('have.attr', 'aria-pressed', 'false')
   })
 
   it('switches to tree view on click', () => {

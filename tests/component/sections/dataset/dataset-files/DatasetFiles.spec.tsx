@@ -577,7 +577,7 @@ describe('DatasetFiles', () => {
       )
       cy.findByText('tree-file.txt').should('exist')
       // Toggle back to table view; the table appears.
-      cy.findByRole('tab', { name: 'Table' }).click()
+      cy.findByTestId('files-view-toggle-table').click()
       cy.findByRole('table').should('exist')
     })
 
