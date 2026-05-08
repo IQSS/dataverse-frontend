@@ -452,6 +452,13 @@ export class DatasetMother {
       termsOfUse: TermsOfUseMother.withoutCustomTerms(),
       versionsSummaries: DatasetVersionSummaryInfoMother.createList(3),
       fileStore: props?.fileStore ?? 's3',
+      storageDriver: props?.storageDriver ?? {
+        name: 's3',
+        type: 's3',
+        label: 'S3',
+        directUpload: true,
+        directDownload: true
+      },
       ...props
     }
     return new Dataset.Builder(
@@ -478,7 +485,8 @@ export class DatasetMother {
       dataset.nextMinorVersion,
       dataset.requiresMajorVersionUpdate,
       dataset.fileStore,
-      dataset.guestbookId
+      dataset.guestbookId,
+      dataset.storageDriver
     ).build()
   }
 

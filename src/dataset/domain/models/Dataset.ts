@@ -27,6 +27,22 @@ export class DatasetLabel {
   ) {}
 }
 
+/**
+ * The dataset's effective storage driver, surfaced to the SPA so feature
+ * gates can ask the right question — "is this driver capable of
+ * browser-direct upload to S3-compatible storage?" — instead of pattern-
+ * matching on the driver id (which is just an operator-chosen label).
+ *
+ * Mirrors the shape of `GET /api/datasets/{id}/storageDriver`.
+ */
+export interface DatasetStorageDriver {
+  name: string
+  type: string
+  label: string
+  directUpload: boolean
+  directDownload: boolean
+}
+
 // Only for testing purposes and checking the existence of the citation block in some parts of the code
 export enum MetadataBlockName {
   CITATION = 'citation',
@@ -439,7 +455,8 @@ export class Dataset {
     public readonly nextMinorVersion?: string,
     public readonly requiresMajorVersionUpdate?: boolean,
     public readonly fileStore?: string,
-    public readonly guestbookId?: number
+    public readonly guestbookId?: number,
+    public readonly storageDriver?: DatasetStorageDriver
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
@@ -535,7 +552,8 @@ export class Dataset {
       public readonly nextMinorVersionNumber?: string,
       public readonly requiresMajorVersionUpdate?: boolean,
       public readonly fileStore?: string,
-      public readonly guestbookId?: number
+      public readonly guestbookId?: number,
+      public readonly storageDriver?: DatasetStorageDriver
     ) {
       this.withAlerts()
     }
@@ -608,7 +626,8 @@ export class Dataset {
         this.nextMinorVersionNumber,
         this.requiresMajorVersionUpdate,
         this.fileStore,
-        this.guestbookId
+        this.guestbookId,
+        this.storageDriver
       )
     }
   }

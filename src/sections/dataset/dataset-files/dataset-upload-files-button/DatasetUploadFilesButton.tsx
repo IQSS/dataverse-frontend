@@ -21,8 +21,13 @@ export function DatasetUploadFilesButton() {
     return <></>
   }
 
-  // TODO: remove this when we can handle non-S3 files
-  if (!dataset?.fileStore?.startsWith('s3')) {
+  // The SPA upload flow requires browser-direct upload to S3-compatible
+  // storage. Check the driver's typed capabilities, not its operator-
+  // chosen id (the previous `fileStore?.startsWith('s3')` heuristic
+  // missed any S3-compatible driver registered under a different id —
+  // e.g., `minio1`, `wasabi`, `cloudflare-r2`).
+  const driver = dataset.storageDriver
+  if (!driver || driver.type !== 's3' || !driver.directUpload) {
     return <></>
   }
 

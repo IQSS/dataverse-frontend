@@ -314,7 +314,8 @@ const expectedDataset = {
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
   requiresMajorVersionUpdate: false,
-  fileStore: undefined
+  fileStore: undefined,
+  storageDriver: undefined
 }
 const expectedDatasetWithPublicationDate = {
   id: 505,
@@ -424,7 +425,8 @@ const expectedDatasetWithPublicationDate = {
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
   requiresMajorVersionUpdate: false,
-  fileStore: undefined
+  fileStore: undefined,
+  storageDriver: undefined
 }
 const expectedDatasetWithNextVersionNumbers = {
   id: 505,
@@ -534,7 +536,8 @@ const expectedDatasetWithNextVersionNumbers = {
   nextMajorVersion: '2.0',
   nextMinorVersion: '1.3',
   requiresMajorVersionUpdate: false,
-  fileStore: undefined
+  fileStore: undefined,
+  storageDriver: undefined
 }
 
 const expectedDatasetAlternateVersion = {
@@ -658,7 +661,8 @@ const expectedDatasetAlternateVersion = {
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
   requiresMajorVersionUpdate: false,
-  fileStore: undefined
+  fileStore: undefined,
+  storageDriver: undefined
 }
 
 describe('JS Dataset Mapper', () => {
