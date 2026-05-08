@@ -309,12 +309,21 @@ export function FilesTree({
   // on, even after pressing ArrowDown / ArrowUp. Only follow focus
   // when the tree already owns it; otherwise we'd grab focus on
   // initial mount and steal it from the rest of the page.
+  //
+  // We resolve the active element via `getRootNode()` rather than
+  // `document.activeElement` so the check works inside a Shadow DOM
+  // mount (the JSF standalone bundle): `document.activeElement` from
+  // outside the shadow returns the shadow host, not the focused
+  // descendant inside it, so a host-page-level check would always
+  // report the tree as not-owning-focus and the ring would never
+  // follow arrow keys in JSF.
   useEffect(() => {
     if (focusedRowIndex < 0) return
     const el = containerRef.current
     /* istanbul ignore if */
     if (!el) return
-    if (!el.contains(document.activeElement)) return
+    const root = el.getRootNode() as Document | ShadowRoot
+    if (!el.contains(root.activeElement)) return
     const target = el.querySelector<HTMLElement>('[role="treeitem"][tabindex="0"]')
     target?.focus()
   }, [focusedRowIndex])
