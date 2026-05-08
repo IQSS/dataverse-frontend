@@ -55,11 +55,13 @@ describe('DatasetToolOptions', () => {
   })
 
   it('renders only dataset explore tools for explore options', () => {
-    testExternalToolsRepository.getExternalTools = cy.stub().resolves([
-      testDatasetExploreTool,
-      testDatasetConfigureTool,
-      ExternalToolsMother.createFileExploreTool()
-    ])
+    testExternalToolsRepository.getExternalTools = cy
+      .stub()
+      .resolves([
+        testDatasetExploreTool,
+        testDatasetConfigureTool,
+        ExternalToolsMother.createFileExploreTool()
+      ])
 
     cy.customMount(
       <ExternalToolsProvider externalToolsRepository={testExternalToolsRepository}>
