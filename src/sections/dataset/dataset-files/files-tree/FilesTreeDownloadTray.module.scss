@@ -48,7 +48,7 @@
 }
 
 .tray-meta {
-  font-family: var(--bs-font-monospace, monospace);
+  font-family: inherit;
   font-size: 11.5px;
   color: var(--bs-secondary-color, #6c757d);
   margin-top: 2px;
@@ -120,7 +120,7 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 10px;
-  font-family: var(--bs-font-monospace, monospace);
+  font-family: inherit;
   font-size: 11.5px;
 }
 
@@ -159,14 +159,14 @@
 }
 
 .tray-fail-file {
-  font-family: var(--bs-font-monospace, monospace);
+  font-family: inherit;
   font-size: 12px;
   color: var(--bs-secondary-color, #6c757d);
   word-break: break-all;
 }
 
 .tray-fail-err {
-  font-family: var(--bs-font-monospace, monospace);
+  font-family: inherit;
   font-size: 11px;
   color: var(--bs-tertiary-color, #adb5bd);
   margin-top: 2px;
@@ -190,7 +190,7 @@
 }
 
 .tray-hint {
-  font-family: var(--bs-font-monospace, monospace);
+  font-family: inherit;
   font-size: 11px;
   color: var(--bs-tertiary-color, #adb5bd);
 }

@@ -320,15 +320,15 @@ function DatasetFilesScrollableTableView({
           ref={criteriaContainerRef}
           className={styles['criteria-form-container']}
           data-testid="criteria-form-container">
+          <div className={styles['view-toggle-row']}>
+            <FilesViewToggle view={view} onChange={onChangeView} />
+          </div>
           <FileCriteriaForm
             criteria={criteria}
             onCriteriaChange={handleCriteriaChange}
             filesCountInfo={filesCountInfo}
             onInfiniteScrollMode
           />
-          <div className={styles['view-toggle-row']}>
-            <FilesViewToggle view={view} onChange={onChangeView} />
-          </div>
         </header>
 
         <FilesContext.Provider

@@ -9,6 +9,8 @@
  * `standalone-page.scss`, which is only loaded by the standalone demo HTML.
  */
 
+@use '../standalone-shared/shadow-tokens';
+
 // Wrapper applied to the React render root. Used as a future hook for
 // CSS scoping (e.g. PostCSS prefix or Shadow DOM) to limit Bootstrap 5
 // reset rules to within the embedded component.

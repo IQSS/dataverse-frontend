@@ -146,14 +146,14 @@ function DatasetFilesTableView({
 
   return (
     <>
+      <div className={styles['view-toggle-row']}>
+        <FilesViewToggle view={view} onChange={onChangeView} />
+      </div>
       <FileCriteriaForm
         criteria={criteria}
         onCriteriaChange={setCriteria}
         filesCountInfo={filesCountInfo}
       />
-      <div className={styles['view-toggle-row']}>
-        <FilesViewToggle view={view} onChange={onChangeView} />
-      </div>
       <FilesTable
         files={files}
         fileRepository={filesRepository}

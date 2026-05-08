@@ -6,6 +6,8 @@
  * html/body/#root rules.
  */
 
+@use '../standalone-shared/shadow-tokens';
+
 .dv-tree-view-root {
   margin: 0;
   padding: 0;

@@ -705,19 +705,21 @@ function FilesTreeToolbar({
         <Button
           variant="primary"
           size="sm"
+          icon={
+            <span className={styles['download-btn-icon']}>
+              <DownloadIcon />
+            </span>
+          }
           disabled={!downloadable || enumerating || requesting || streamingZipActive}
           onClick={() => void download.downloadSelection()}
           data-testid="files-tree-download-button">
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <DownloadIcon />
-            {streamingZipActive
-              ? t('tree.download.streaming', 'Streaming…')
-              : enumerating
-              ? t('tree.download.enumerating')
-              : requesting
-              ? t('tree.download.preparing')
-              : t('tree.download.button')}
-          </span>
+          {streamingZipActive
+            ? t('tree.download.streaming', 'Streaming…')
+            : enumerating
+            ? t('tree.download.enumerating')
+            : requesting
+            ? t('tree.download.preparing')
+            : t('tree.download.button')}
         </Button>
       </div>
     </div>
