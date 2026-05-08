@@ -25,7 +25,7 @@ export const StandaloneFileUploaderPanel = ({
 }: StandaloneFileUploaderPanelProps) => {
   const { t } = useTranslation('shared')
   const {
-    fileUploaderState: { files, isSaving, uploadingToCancelMap }
+    fileUploaderState: { files, isSaving, uploadingToCancelMap, addFilesToDatasetOperationInfo }
   } = useFileUploaderContext()
 
   // Warn before leaving page if there are unsaved changes
@@ -52,17 +52,21 @@ export const StandaloneFileUploaderPanel = ({
     )}&version=DRAFT`
   }, [siteUrl, datasetPersistentId])
 
-  // Navigation callbacks
   const handleCancel = useCallback(() => {
     window.location.href = getDatasetUrl()
   }, [getDatasetUrl])
 
-  const handleFilesAddedSuccess = useCallback(() => {
-    // Small delay to let toast show before redirect
-    setTimeout(() => {
+  // Redirect after successful add. Small delay so the success toast is
+  // visible before the page navigates. Registered after the beforeunload
+  // listener effect so the listener has already picked up the now-clean
+  // state by the time we leave.
+  useEffect(() => {
+    if (!addFilesToDatasetOperationInfo.success) return
+    const timer = setTimeout(() => {
       window.location.href = getDatasetUrl()
     }, 1500)
-  }, [getDatasetUrl])
+    return () => clearTimeout(timer)
+  }, [addFilesToDatasetOperationInfo.success, getDatasetUrl])
 
   return (
     <>
@@ -85,7 +89,6 @@ export const StandaloneFileUploaderPanel = ({
         fileRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         onCancel={handleCancel}
-        onFilesAddedSuccess={handleFilesAddedSuccess}
       />
     </>
   )

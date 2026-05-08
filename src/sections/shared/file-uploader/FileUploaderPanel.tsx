@@ -1,4 +1,5 @@
 import { useMemo, useCallback } from 'react'
+import { useDeepCompareEffect } from 'use-deep-compare'
 import { Trans, useTranslation } from 'react-i18next'
 import { useBlocker, useNavigate } from 'react-router-dom'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
@@ -34,7 +35,13 @@ const FileUploaderPanel = ({
   const { t } = useTranslation('shared')
 
   const {
-    fileUploaderState: { files, isSaving, uploadingToCancelMap },
+    fileUploaderState: {
+      files,
+      isSaving,
+      uploadingToCancelMap,
+      replaceOperationInfo,
+      addFilesToDatasetOperationInfo
+    },
     removeAllFiles
   } = useFileUploaderContext()
 
@@ -64,22 +71,25 @@ const FileUploaderPanel = ({
 
   const datasetPageUrl = `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
 
-  const handleFilesAddedSuccess = useCallback(() => {
-    navigate(datasetPageUrl)
-  }, [navigate, datasetPageUrl])
-
-  const handleFileReplacedSuccess = useCallback(
-    (newFileId: number) => {
+  // Navigate after a successful save/replace. This effect is registered after
+  // useBlocker, so React fires useBlocker's predicate-update effect first —
+  // by the time navigate() runs, the router's blocker fn already returns false
+  // and the leave modal stays hidden.
+  useDeepCompareEffect(() => {
+    if (replaceOperationInfo.success && replaceOperationInfo.newFileIdentifier) {
       if (referrer === ReplaceFileReferrer.DATASET) {
         navigate(datasetPageUrl)
       } else if (referrer === ReplaceFileReferrer.FILE) {
         navigate(
-          `${Route.FILES}?id=${newFileId}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+          `${Route.FILES}?id=${replaceOperationInfo.newFileIdentifier}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
         )
       }
-    },
-    [navigate, datasetPageUrl, referrer]
-  )
+    }
+
+    if (addFilesToDatasetOperationInfo.success) {
+      navigate(datasetPageUrl)
+    }
+  }, [replaceOperationInfo, addFilesToDatasetOperationInfo, navigate, datasetPageUrl, referrer])
 
   return (
     <>
@@ -104,8 +114,6 @@ const FileUploaderPanel = ({
         datasetPersistentId={datasetPersistentId}
         fetchUploadLimits={fetchUploadLimits}
         onCancel={handleCancel}
-        onFilesAddedSuccess={handleFilesAddedSuccess}
-        onFileReplacedSuccess={handleFileReplacedSuccess}
       />
 
       <ConfirmLeaveModal

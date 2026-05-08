@@ -19,10 +19,6 @@ export interface FileUploaderPanelCoreProps {
   ) => Promise<DatasetUploadLimits>
   /** Called when user clicks Cancel */
   onCancel: () => void
-  /** Called when files are successfully added to dataset */
-  onFilesAddedSuccess: () => void
-  /** Called when file is successfully replaced (for replace mode) */
-  onFileReplacedSuccess?: (newFileId: number) => void
 }
 
 export const FileUploaderPanelCore = ({
@@ -30,9 +26,7 @@ export const FileUploaderPanelCore = ({
   datasetRepository,
   datasetPersistentId,
   fetchUploadLimits,
-  onCancel,
-  onFilesAddedSuccess,
-  onFileReplacedSuccess
+  onCancel
 }: FileUploaderPanelCoreProps) => {
   const { t } = useTranslation('shared')
 
@@ -41,23 +35,21 @@ export const FileUploaderPanelCore = ({
     uploadedFiles
   } = useFileUploaderContext()
 
+  // Toast on success only. Post-success navigation is owned by each parent
+  // (SPA / standalone) so it can be colocated with that parent's blocking
+  // mechanism — useBlocker in the SPA, beforeunload in the standalone. Keeping
+  // navigate next to useBlocker is what makes React fire the blocker's
+  // predicate-update effect before the navigate, so the leave modal doesn't
+  // latch on a stale blocker fn.
   useDeepCompareEffect(() => {
     if (replaceOperationInfo.success && replaceOperationInfo.newFileIdentifier) {
       toast.success(t('fileUploader.fileReplacedSuccessfully'))
-      onFileReplacedSuccess?.(replaceOperationInfo.newFileIdentifier)
     }
 
     if (addFilesToDatasetOperationInfo.success) {
       toast.success(t('fileUploader.filesAddedToDatasetSuccessfully'))
-      onFilesAddedSuccess()
     }
-  }, [
-    replaceOperationInfo,
-    addFilesToDatasetOperationInfo,
-    t,
-    onFilesAddedSuccess,
-    onFileReplacedSuccess
-  ])
+  }, [replaceOperationInfo, addFilesToDatasetOperationInfo, t])
 
   return (
     <Stack gap={4}>
