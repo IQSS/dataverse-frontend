@@ -93,8 +93,8 @@ npm run build-uploader
 Prerequisites on the Dataverse instance:
 
 - `DATAVERSE_FEATURE_API_SESSION_AUTH=1` (`dataverse.feature.api-session-auth`). **Required and enforced today.**
-- `DATAVERSE_FEATURE_API_SESSION_AUTH_HARDENING=1`. **Forward-compat only — the server does not yet consume this flag.** The Origin/Referer checks, the `X-Dataverse-CSRF-Token` header, and `GET /api/users/:csrf-token` ship separately with [`IQSS/dataverse#12188`](https://github.com/IQSS/dataverse/pull/12188). The reusable-component bundles do not depend on the hardening being live; the env var is pre-set in the dev compose so operators don't have to flip a separate switch when `#12188` lands.
-- `dataverse.siteUrl=<browser-facing URL>`. Required regardless. Will be checked against `Origin`/`Referer` once `#12188` lands.
+- `DATAVERSE_FEATURE_API_SESSION_AUTH_HARDENING=1` (`dataverse.feature.api-session-auth-hardening`). **Recommended for production.** Adds Origin/Referer + `X-Dataverse-CSRF-Token` enforcement on every session-cookie API request. The bundle's HTTP client bootstraps the CSRF token from `GET /api/users/:csrf-token` and attaches the header automatically — no extra wiring needed beyond a correct `siteUrl`. Delivered by [`IQSS/dataverse#12188`](https://github.com/IQSS/dataverse/pull/12188).
+- `dataverse.siteUrl=<browser-facing URL>`. Required regardless. Used for Origin/Referer validation when hardening is on.
 
 In each component's `index.tsx`:
 
