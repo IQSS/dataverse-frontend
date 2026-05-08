@@ -52,7 +52,14 @@ export interface StartStreamingZipArgs {
   strategy?: StreamingZipStrategy
   /** Allows a custom URL builder (e.g. JSF integration); defaults to `file.downloadUrl`. */
   buildFetchUrl?: (file: FileTreeFile) => string
-  /** Extra options forwarded to `fetch()` (defaults to `credentials: 'include'`). */
+  /**
+   * Extra options forwarded to `fetch()`. Defaults to
+   * `credentials: 'same-origin'` because the file-download URL typically
+   * 302s to S3 (or an S3-compatible store) which returns
+   * `Access-Control-Allow-Origin: *`, and browsers refuse `*` + credentials.
+   * `same-origin` carries the Dataverse session cookie on the Dataverse
+   * hop and drops it on the cross-origin S3 hop, which is what we want.
+   */
   fetchInit?: RequestInit
 }
 
