@@ -6,12 +6,7 @@ import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { useFiles } from './useFiles'
 import { PaginationControls } from '../../shared/pagination/PaginationControls'
-import {
-  Dataset,
-  DatasetPublishingStatus,
-  DatasetVersion,
-  defaultLicense
-} from '../../../dataset/domain/models/Dataset'
+import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { FilesTree } from './files-tree/FilesTree'
@@ -19,34 +14,8 @@ import { FilesViewToggle, FilesViewMode } from './files-view-toggle/FilesViewTog
 import { FileTreeRepository } from '@/files/domain/repositories/FileTreeRepository'
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
 import { useDataset } from '../DatasetContext'
+import { treeDownloadsRequireTermsGate } from './treeDownloadsRequireTermsGate'
 import styles from './DatasetFiles.module.scss'
-
-/**
- * Mirrors the table-view's `shouldShowModal` decision in
- * `DownloadFilesButton.tsx`: the dataset requires the user to accept
- * a guestbook, custom terms, or non-default license before downloading,
- * UNLESS the user is on a draft or has edit permission. The tree view
- * does not yet wire the same modal flow, so the SPA host disables tree
- * download actions when the gate would apply, with the user falling
- * back to the table view to download. Tracked as a follow-up; see PR
- * description for the explicit limitation note.
- */
-function treeDownloadsRequireTermsGate(
-  dataset:
-    | Pick<Dataset, 'version' | 'permissions' | 'guestbookId' | 'license' | 'termsOfUse'>
-    | undefined
-    | null
-): boolean {
-  if (!dataset) return false
-  const isDraft = dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT
-  const canEdit = dataset.permissions.canUpdateDataset
-  if (isDraft || canEdit) return false
-  const hasGuestbook = dataset.guestbookId !== undefined
-  const hasNonDefaultLicense =
-    dataset.license !== undefined && dataset.license.name !== defaultLicense.name
-  const hasCustomTerms = dataset.termsOfUse?.customTerms !== undefined
-  return hasGuestbook || hasNonDefaultLicense || hasCustomTerms
-}
 
 interface DatasetFilesProps {
   filesRepository: FileRepository

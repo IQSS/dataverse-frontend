@@ -20,11 +20,7 @@ import { FilesViewToggle, FilesViewMode } from './files-view-toggle/FilesViewTog
 import { FileTreeRepository } from '@/files/domain/repositories/FileTreeRepository'
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
 import { useDataset } from '../DatasetContext'
-import {
-  Dataset,
-  DatasetPublishingStatus,
-  defaultLicense
-} from '../../../dataset/domain/models/Dataset'
+import { treeDownloadsRequireTermsGate } from './treeDownloadsRequireTermsGate'
 import styles from './DatasetFilesScrollable.module.scss'
 
 interface DatasetFilesScrollableProps {
@@ -40,28 +36,6 @@ const VIEW_PARAM = 'view'
 const PATH_PARAM = 'path'
 
 export type SentryRef = UseInfiniteScrollHookRefCallback
-
-/**
- * Mirror of `DatasetFiles.treeDownloadsRequireTermsGate` — kept inline
- * here so the table and tree subviews of the scrollable variant don't
- * have to share a separate util module just for this predicate.
- */
-function treeDownloadsRequireTermsGate(
-  dataset:
-    | Pick<Dataset, 'version' | 'permissions' | 'guestbookId' | 'license' | 'termsOfUse'>
-    | undefined
-    | null
-): boolean {
-  if (!dataset) return false
-  const isDraft = dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT
-  const canEdit = dataset.permissions.canUpdateDataset
-  if (isDraft || canEdit) return false
-  const hasGuestbook = dataset.guestbookId !== undefined
-  const hasNonDefaultLicense =
-    dataset.license !== undefined && dataset.license.name !== defaultLicense.name
-  const hasCustomTerms = dataset.termsOfUse?.customTerms !== undefined
-  return hasGuestbook || hasNonDefaultLicense || hasCustomTerms
-}
 
 export function DatasetFilesScrollable({
   filesRepository,
