@@ -15,6 +15,12 @@ import { FileTreeRepository } from '@/files/domain/repositories/FileTreeReposito
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
 import { useDataset } from '../DatasetContext'
 import { treeDownloadsRequireTermsGate } from './treeDownloadsRequireTermsGate'
+import {
+  PATH_PARAM,
+  VIEW_PARAM,
+  nextSearchParamsForTreePath,
+  nextSearchParamsForView
+} from './filesViewSearchParams'
 import styles from './DatasetFiles.module.scss'
 
 interface DatasetFilesProps {
@@ -24,9 +30,6 @@ interface DatasetFilesProps {
   datasetRepository: DatasetRepository
   fileTreeRepository?: FileTreeRepository
 }
-
-const VIEW_PARAM = 'view'
-const PATH_PARAM = 'path'
 
 export function DatasetFiles({
   filesRepository,
@@ -39,23 +42,10 @@ export function DatasetFiles({
   const view: FilesViewMode = searchParams.get(VIEW_PARAM) === 'tree' ? 'tree' : 'table'
   const treePath = searchParams.get(PATH_PARAM) ?? ''
   const setView = (next: FilesViewMode) => {
-    const updated = new URLSearchParams(searchParams)
-    if (next === 'tree') {
-      updated.set(VIEW_PARAM, 'tree')
-    } else {
-      updated.delete(VIEW_PARAM)
-      updated.delete(PATH_PARAM)
-    }
-    setSearchParams(updated, { replace: true })
+    setSearchParams(nextSearchParamsForView(searchParams, next), { replace: true })
   }
   const setTreePath = (next: string) => {
-    const updated = new URLSearchParams(searchParams)
-    if (next) {
-      updated.set(PATH_PARAM, next)
-    } else {
-      updated.delete(PATH_PARAM)
-    }
-    setSearchParams(updated, { replace: true })
+    setSearchParams(nextSearchParamsForTreePath(searchParams, next), { replace: true })
   }
 
   const treeRepository = useMemo<FileTreeRepository>(
