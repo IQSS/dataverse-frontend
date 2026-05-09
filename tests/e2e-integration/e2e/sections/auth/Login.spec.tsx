@@ -38,41 +38,6 @@ describe('Login', () => {
 
     cy.wait(1_500)
 
-    /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-    // ---- diagnostic block: surfaces via cy.task('diag') → Node stdout → CI log
-    cy.url().then((url) => {
-      cy.task('diag', { stage: 'after-keycloak-wait', url })
-    })
-    cy.get('body').then(($body) => {
-      cy.task('diag', {
-        stage: 'sign-up-dom',
-        onSignUpPage: $body.find('[data-testid="sign-up-page"]').length > 0,
-        termsCheckbox: $body.find('#termsAccepted').length > 0,
-        createAccountBtn: $body.find('button:contains("Create Account")').length > 0
-      })
-    })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    cy.window().then((win: any) => {
-      const tokenKey = Object.keys(win.localStorage).find((k) => k.endsWith('token'))
-      const bearer = tokenKey ? (win.localStorage.getItem(tokenKey) as string) : null
-      cy.task('diag', { stage: 'localStorage-token', tokenKey, bearerLen: bearer?.length ?? 0 })
-      if (bearer) {
-        cy.request({
-          method: 'GET',
-          url: '/api/v1/users/:me',
-          headers: { Authorization: `Bearer ${bearer}` },
-          failOnStatusCode: false
-        }).then((resp) => {
-          const useridentifier = (
-            resp.body as { data?: { authenticatedUser?: { useridentifier?: string } } }
-          )?.data?.authenticatedUser?.useridentifier
-          cy.task('diag', { stage: 'users-me', status: resp.status, useridentifier })
-        })
-      }
-    })
-    // ---- end diagnostic block --------------------------------------------
-    /* eslint-enable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-
     TestsUtils.finishSignUp()
 
     cy.url().should((currentUrl) => {

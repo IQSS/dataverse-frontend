@@ -516,77 +516,13 @@ describe('Dataset', () => {
           cy.findByText('Restricted with Access Granted').should('exist')
 
           cy.findByRole('button', { name: 'File Options' }).should('exist').click()
-
-          /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-          // ---- diagnostic block: surfaces via cy.task('diag') → CI stdout
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          cy.window().then((win: any) => {
-            const tokenKey = Object.keys(win.localStorage).find((k) => k.endsWith('token'))
-            const bearer = tokenKey ? (win.localStorage.getItem(tokenKey) as string) : null
-            cy.task('diag', {
-              stage: 'context',
-              persistentId,
-              tokenKey,
-              bearerLen: bearer?.length ?? 0
-            })
-            if (!bearer) return
-
-            const auth = { Authorization: `Bearer ${bearer}` }
-
-            cy.request({ url: '/api/v1/users/:me', headers: auth, failOnStatusCode: false }).then(
-              (r) => {
-                const u = (
-                  r.body as {
-                    data?: { authenticatedUser?: { useridentifier?: string; superuser?: boolean } }
-                  }
-                )?.data?.authenticatedUser
-                cy.task('diag', {
-                  stage: 'users-me',
-                  status: r.status,
-                  useridentifier: u?.useridentifier,
-                  superuser: u?.superuser
-                })
-              }
-            )
-
-            cy.request({
-              url: `/api/v1/datasets/:persistentId/versions/:DRAFT/files?persistentId=${persistentId}`,
-              headers: auth,
-              failOnStatusCode: false
-            }).then((r) => {
-              const files = (r.body as { data?: Array<{ restricted?: boolean; label?: string }> })
-                ?.data
-              cy.task('diag', {
-                stage: 'files',
-                status: r.status,
-                count: files?.length ?? 0,
-                firstRestricted: files?.[0]?.restricted,
-                firstLabel: files?.[0]?.label
-              })
-            })
-
-            cy.request({
-              url: `/api/v1/datasets/:persistentId/userPermissions?persistentId=${persistentId}`,
-              headers: auth,
-              failOnStatusCode: false
-            }).then((r) => {
-              const p = (
-                r.body as {
-                  data?: {
-                    canEditDataset?: boolean
-                    canManageDatasetPermissions?: boolean
-                    canPublishDataset?: boolean
-                    canDeleteDatasetDraft?: boolean
-                  }
-                }
-              )?.data
-              cy.task('diag', { stage: 'userPermissions', status: r.status, perms: p })
-            })
-          })
-          // ---- end diagnostic block -----------------------------------------
-          /* eslint-enable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-
-          cy.findByText('Unrestrict').should('exist')
+          // The dropdown's <DropdownButtonItem> children mount on click,
+          // and the React-Bootstrap menu can lag a few hundred ms behind
+          // before the first DOM read picks them up. A short wait + a
+          // longer findByText timeout keeps Cypress's retry window open
+          // past that mount race instead of failing on the first read.
+          cy.wait(500)
+          cy.findByText('Unrestrict', { timeout: 20_000 }).should('exist')
         })
     })
 
