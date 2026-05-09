@@ -444,4 +444,116 @@ describe('useFileTree', () => {
     const allChildren = result.current.visibleKnownChildren('').map((i) => i.path)
     expect(allChildren).to.include.members(['top.txt', 'data/nested.txt', 'data'])
   })
+
+  it('versionKey change with initialPath re-pre-fetches every ancestor on the new version', async () => {
+    // Covers the reset-path branch in `useFileTree`'s versionKey effect:
+    // when the initialPath is non-empty, the reset must (a) seed the
+    // expanded set with each ancestor and (b) fetchPage each ancestor on
+    // the new version (bypassing ensureLoaded's stale `nodes` cache).
+    const v1Root = FileTreePageMother.create({
+      path: '',
+      items: [FileTreeFolderMother.create({ name: 'data', path: 'data' })]
+    })
+    const v1Data = FileTreePageMother.create({
+      path: 'data',
+      items: [FileTreeFolderMother.create({ name: 'sub', path: 'data/sub' })]
+    })
+    const v1Sub = FileTreePageMother.create({ path: 'data/sub', items: [] })
+    const v2Root = FileTreePageMother.create({
+      path: '',
+      items: [FileTreeFolderMother.create({ name: 'data', path: 'data' })]
+    })
+    const v2Data = FileTreePageMother.create({
+      path: 'data',
+      items: [FileTreeFolderMother.create({ name: 'sub', path: 'data/sub' })]
+    })
+    const v2Sub = FileTreePageMother.create({
+      path: 'data/sub',
+      items: [
+        FileTreeFileMother.create({ id: 7, name: 'v2-only.txt', path: 'data/sub/v2-only.txt' })
+      ]
+    })
+
+    let useV2 = false
+    const repo: FileTreeRepository & { calls: string[] } = {
+      calls: [],
+      getNode: ({ path = '' }: { path?: string }) => {
+        repo.calls.push(path)
+        const pages = useV2
+          ? { '': v2Root, data: v2Data, 'data/sub': v2Sub }
+          : { '': v1Root, data: v1Data, 'data/sub': v1Sub }
+        return Promise.resolve(pages[path as '' | 'data' | 'data/sub'])
+      }
+    }
+
+    const v1 = DatasetVersionMother.create({ number: new DatasetVersionNumber(1, 0) })
+    const v2 = DatasetVersionMother.create({ number: new DatasetVersionNumber(2, 0) })
+
+    const { result, rerender } = renderHook(
+      ({ version }: { version: typeof datasetVersion }) =>
+        useFileTree({
+          repository: repo,
+          datasetPersistentId: 'doi:test/AAA',
+          datasetVersion: version,
+          initialPath: 'data/sub'
+        }),
+      { initialProps: { version: v1 } }
+    )
+
+    await waitFor(() => expect(result.current.expanded.has('data/sub')).to.equal(true))
+    const callsAfterV1 = repo.calls.length
+
+    useV2 = true
+    rerender({ version: v2 })
+
+    // The reset path must fetchPage `''`, `'data'`, AND `'data/sub'` on the
+    // new version — covered by the for-loop in the reset branch that walks
+    // ancestorChain(initialPath).
+    await waitFor(() =>
+      expect(result.current.nodes.get('data/sub')?.items.map((i) => i.path)).to.deep.equal([
+        'data/sub/v2-only.txt'
+      ])
+    )
+    const v2Calls = repo.calls.slice(callsAfterV1)
+    expect(v2Calls).to.include.members(['', 'data', 'data/sub'])
+    // Ancestors stay expanded after the reset (the `reset.add(ancestor)` loop).
+    expect(result.current.expanded.has('data')).to.equal(true)
+    expect(result.current.expanded.has('data/sub')).to.equal(true)
+  })
+
+  it('collapse on a parent also drops every nested expanded descendant', async () => {
+    // Covers the descendant-cleanup branch in `collapse`: without it,
+    // collapsing `data` after the user opened `data/sub` would leave
+    // `data/sub` in the expanded set, so currentPath (deepest expanded)
+    // would still report `data/sub` and a URL bookmark would re-open the
+    // branch the user just collapsed.
+    const rootPage = FileTreePageMother.create({
+      path: '',
+      items: [FileTreeFolderMother.create({ name: 'data', path: 'data' })]
+    })
+    const dataPage = FileTreePageMother.create({
+      path: 'data',
+      items: [FileTreeFolderMother.create({ name: 'sub', path: 'data/sub' })]
+    })
+    const subPage = FileTreePageMother.create({ path: 'data/sub', items: [] })
+    const repo = new FakeRepo({ '': [rootPage], data: [dataPage], 'data/sub': [subPage] })
+
+    const { result } = renderHook(() =>
+      useFileTree({
+        repository: repo,
+        datasetPersistentId: 'doi:test/AAA',
+        datasetVersion,
+        initialPath: 'data/sub'
+      })
+    )
+
+    await waitFor(() => expect(result.current.expanded.has('data/sub')).to.equal(true))
+    expect(result.current.expanded.has('data')).to.equal(true)
+
+    act(() => result.current.collapse('data'))
+
+    // Both `data` and the previously-expanded descendant `data/sub` are gone.
+    expect(result.current.expanded.has('data')).to.equal(false)
+    expect(result.current.expanded.has('data/sub')).to.equal(false)
+  })
 })

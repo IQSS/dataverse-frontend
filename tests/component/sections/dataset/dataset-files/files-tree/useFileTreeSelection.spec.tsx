@@ -298,4 +298,50 @@ describe('useFileTreeSelection', () => {
     // unvisited paths under inner).
     expect(result.current.folderState(root, [inner, knownChild])).to.equal('partial')
   })
+
+  it('toggleAll selects every top-level item when nothing is selected', () => {
+    const { result } = renderHook(() => useFileTreeSelection())
+
+    act(() => result.current.toggleAll([fileTopLevel, folderData]))
+
+    expect(result.current.selectedFilePaths.has('top.txt')).to.equal(true)
+    expect(result.current.selectedFolderPaths.has('data')).to.equal(true)
+    expect(result.current.deselectedFilePaths.size).to.equal(0)
+    // The mixed-input loop walks both branches: file items get registered into
+    // `filesById`, folder items only get their path added to the folder set.
+    expect(result.current.filesById.get(fileTopLevel.id)).to.deep.equal(fileTopLevel)
+  })
+
+  it('toggleAll clears everything when something is already selected', () => {
+    const { result } = renderHook(() => useFileTreeSelection())
+    act(() => result.current.toggleFile(fileTopLevel))
+    act(() => result.current.toggleFolder(folderData, [fileA]))
+    // Sanity: at least one set is populated so `anySelected` is truthy.
+    expect(
+      result.current.selectedFilePaths.size + result.current.selectedFolderPaths.size
+    ).to.be.greaterThan(0)
+
+    act(() => result.current.toggleAll([fileTopLevel, folderData]))
+
+    expect(result.current.selectedFilePaths.size).to.equal(0)
+    expect(result.current.selectedFolderPaths.size).to.equal(0)
+    expect(result.current.deselectedFilePaths.size).to.equal(0)
+  })
+
+  it('toggleAll clearing also drops any pending deselect overrides', () => {
+    // Branch coverage for the third `setDeselectedFilePaths(new Set())` in
+    // the `anySelected` early-return path: if a user logically selected a
+    // folder and then deselected one of its files, toggleAll-to-clear must
+    // wipe both the folder and the deselect-override.
+    const { result } = renderHook(() => useFileTreeSelection())
+    act(() => result.current.toggleFolder(folderData, [fileA]))
+    act(() => result.current.toggleFile(fileA))
+    expect(result.current.deselectedFilePaths.has(fileA.path)).to.equal(true)
+
+    act(() => result.current.toggleAll([fileTopLevel, folderData]))
+
+    expect(result.current.selectedFilePaths.size).to.equal(0)
+    expect(result.current.selectedFolderPaths.size).to.equal(0)
+    expect(result.current.deselectedFilePaths.size).to.equal(0)
+  })
 })
