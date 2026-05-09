@@ -515,8 +515,8 @@ describe('Dataset', () => {
           cy.get('@accessButton').click()
           cy.findByText('Restricted with Access Granted').should('exist')
 
-          cy.findByRole('button', { name: 'File Options', timeout: 20_000 }).should('exist').click()
-          cy.findByText('Unrestrict', { timeout: 20_000 }).should('exist')
+          cy.findByRole('button', { name: 'File Options' }).should('exist').click()
+          cy.findByText('Unrestrict').should('exist')
         })
     })
 

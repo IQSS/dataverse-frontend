@@ -40,7 +40,7 @@ describe('Login', () => {
 
     TestsUtils.finishSignUp()
 
-    cy.url({ timeout: 20_000 }).should((currentUrl) => {
+    cy.url().should((currentUrl) => {
       const baseUrl = Cypress.config().baseUrl as string
       expect([
         `${baseUrl}${FRONTEND_BASE_PATH}`,

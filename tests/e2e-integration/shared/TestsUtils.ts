@@ -74,10 +74,15 @@ export class TestsUtils {
   }
 
   static finishSignUp() {
-    cy.url().then((currentUrl) => {
-      if (!currentUrl.includes('/sign-up')) return
+    cy.get('body').then(($body) => {
+      const isOnSignUpPage = $body.find('[data-testid="sign-up-page"]').length > 0
+      const hasTermsCheckbox = $body.find('#termsAccepted').length > 0
 
-      cy.get('#termsAccepted', { timeout: 20_000 }).check({ force: true })
+      if (!isOnSignUpPage || !hasTermsCheckbox) {
+        return
+      }
+
+      cy.get('#termsAccepted').check({ force: true })
       cy.findByRole('button', { name: 'Create Account' }).click()
     })
   }
