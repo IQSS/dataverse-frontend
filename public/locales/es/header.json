@@ -6,6 +6,7 @@
   "brandLogoImage": "Logotipo de Dataverse",
   "navigation": {
     "addData": "Agregar datos",
+    "notifications": "Notificaciones",
     "newCollection": "Nueva colección",
     "newDataset": "Nuevo dataset",
     "accountInfo": "Información de la cuenta",

@@ -61,31 +61,41 @@ export function useNotifications(
     return () => clearInterval(interval)
   }, [fetchNotifications, user])
 
-  const markAsRead = async (ids: number[]) => {
-    setNotifications((prev) =>
-      prev.map((n) => (ids.includes(n.id) ? { ...n, displayAsRead: true } : n))
-    )
-    try {
-      await Promise.all(ids.map((id) => repository.markNotificationAsRead(id)))
-      setError(null)
-      needsUpdateStore.setNeedsUpdate(true)
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to mark as read'
-      setError(message)
-    }
-  }
+  const markAsRead = useCallback(
+    async (ids: number[]) => {
+      if (ids.length === 0) return
 
-  const deleteMany = async (ids: number[]) => {
-    setNotifications((prev) => prev.filter((n) => !ids.includes(n.id)))
-    try {
-      await Promise.all(ids.map((id) => repository.deleteNotification(id)))
-      setError(null)
-      needsUpdateStore.setNeedsUpdate(true)
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to delete notifications'
-      setError(message)
-    }
-  }
+      setNotifications((prev) =>
+        prev.map((n) => (ids.includes(n.id) ? { ...n, displayAsRead: true } : n))
+      )
+      try {
+        await Promise.all(ids.map((id) => repository.markNotificationAsRead(id)))
+        setError(null)
+        needsUpdateStore.setNeedsUpdate(true)
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to mark as read'
+        setError(message)
+      }
+    },
+    [repository]
+  )
+
+  const deleteMany = useCallback(
+    async (ids: number[]) => {
+      if (ids.length === 0) return
+
+      setNotifications((prev) => prev.filter((n) => !ids.includes(n.id)))
+      try {
+        await Promise.all(ids.map((id) => repository.deleteNotification(id)))
+        setError(null)
+        needsUpdateStore.setNeedsUpdate(true)
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to delete notifications'
+        setError(message)
+      }
+    },
+    [repository]
+  )
 
   return {
     notifications,
