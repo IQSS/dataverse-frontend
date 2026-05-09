@@ -517,24 +517,22 @@ describe('Dataset', () => {
 
           cy.findByRole('button', { name: 'File Options' }).should('exist').click()
 
-          /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, no-console */
-          // ---- diagnostic block: prove or disprove "user is not the owner" --
-          // Tests the user's hypothesis that on CI the SPA-logged-in user
-          // doesn't actually own the dataset (so DatasetRestrictFileButton
-          // sees file.access.restricted as false / wrong perms / absent).
-          // We log the bearer-resolved user, dataset owner, file's
-          // server-side restricted state, and the user's permissions on
-          // the dataset. Pure observation; no behavior change.
+          /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+          // ---- diagnostic block: surfaces via cy.task('diag') → CI stdout
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           cy.window().then((win: any) => {
             const tokenKey = Object.keys(win.localStorage).find((k) => k.endsWith('token'))
             const bearer = tokenKey ? (win.localStorage.getItem(tokenKey) as string) : null
-            // eslint-disable-next-line no-console
-            console.log('[diag] persistentId:', persistentId, 'tokenKey:', tokenKey)
-            cy.log(`[diag] persistentId=${persistentId} tokenKey=${tokenKey}`)
+            cy.task('diag', {
+              stage: 'context',
+              persistentId,
+              tokenKey,
+              bearerLen: bearer?.length ?? 0
+            })
             if (!bearer) return
 
             const auth = { Authorization: `Bearer ${bearer}` }
+
             cy.request({ url: '/api/v1/users/:me', headers: auth, failOnStatusCode: false }).then(
               (r) => {
                 const u = (
@@ -542,11 +540,12 @@ describe('Dataset', () => {
                     data?: { authenticatedUser?: { useridentifier?: string; superuser?: boolean } }
                   }
                 )?.data?.authenticatedUser
-                // eslint-disable-next-line no-console
-                console.log('[diag] /users/:me:', r.status, u)
-                cy.log(
-                  `[diag] /users/:me status=${r.status} user=${u?.useridentifier} super=${u?.superuser}`
-                )
+                cy.task('diag', {
+                  stage: 'users-me',
+                  status: r.status,
+                  useridentifier: u?.useridentifier,
+                  superuser: u?.superuser
+                })
               }
             )
 
@@ -557,13 +556,13 @@ describe('Dataset', () => {
             }).then((r) => {
               const files = (r.body as { data?: Array<{ restricted?: boolean; label?: string }> })
                 ?.data
-              // eslint-disable-next-line no-console
-              console.log('[diag] /files response:', r.status, files)
-              cy.log(
-                `[diag] /files status=${r.status} count=${files?.length ?? 0} restricted=${
-                  files?.[0]?.restricted
-                }`
-              )
+              cy.task('diag', {
+                stage: 'files',
+                status: r.status,
+                count: files?.length ?? 0,
+                firstRestricted: files?.[0]?.restricted,
+                firstLabel: files?.[0]?.label
+              })
             })
 
             cy.request({
@@ -581,15 +580,11 @@ describe('Dataset', () => {
                   }
                 }
               )?.data
-              // eslint-disable-next-line no-console
-              console.log('[diag] /userPermissions:', r.status, p)
-              cy.log(
-                `[diag] /userPermissions status=${r.status} canEdit=${p?.canEditDataset} canManagePerm=${p?.canManageDatasetPermissions}`
-              )
+              cy.task('diag', { stage: 'userPermissions', status: r.status, perms: p })
             })
           })
           // ---- end diagnostic block -----------------------------------------
-          /* eslint-enable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, no-console */
+          /* eslint-enable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
 
           cy.findByText('Unrestrict').should('exist')
         })
