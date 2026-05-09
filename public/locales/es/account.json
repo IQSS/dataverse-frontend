@@ -47,5 +47,50 @@
         "datasetAndFile": "datasets o ficheros"
       }
     }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "userGuideLinkText": "Guía de usuario",
+    "demoServerLinkText": "Sitio de demostración",
+    "clearAllNotifications": "Borrar todas las notificaciones",
+    "clearAllOnThisPage": "Borrar todas las notificaciones de esta página",
+    "displayingNotifications": "Mostrando {{start}} - {{end}} de {{total}} notificaciones",
+    "dismiss": "Descartar",
+    "noNotifications": "No hay notificaciones disponibles.",
+    "notification": {
+      "createAcc": "¡Te damos la bienvenida a {{installationBrandName}}! Comienza agregando o buscando datos. ¿Tienes preguntas? Consulta la <userGuideLink>{{userGuideLinkText}}</userGuideLink>. ¿Quieres probar las funciones de Dataverse? Usa nuestro <demoLink>{{demoServerLinkText}}</demoLink>. Además, revisa tu correo de bienvenida para verificar tu dirección.",
+      "ingestCompleted": "El dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> tiene uno o más ficheros tabulares que completaron el <userGuideLink>proceso de ingestión tabular</userGuideLink> y están disponibles en formatos de archivo.",
+      "ingestCompletedWithErrors": "El dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> tiene uno o más ficheros tabulares disponibles, pero no son compatibles con la <b>ingestión tabular</b>.",
+      "genericObjectDeleted": "El dataverse, dataset o fichero de esta notificación ha sido eliminado.",
+      "assignRole": "Se te ha concedido el rol {{roleName}} para <objectLink>{{- objectName}}</objectLink>.",
+      "assignRoleFileDownloader": "Ahora tienes acceso a todos los ficheros publicados, restringidos y no restringidos, en <objectLink>{{- objectName}}</objectLink>.",
+      "revokeRole": "Se te ha eliminado de un rol en <objectLink>{{- objectName}}</objectLink>.",
+      "createCollection": "<collectionLink>{{- collectionDisplayName}}</collectionLink> se creó en <ownerLink>{{- ownerDisplayName}}</ownerLink>. Para obtener más información sobre lo que puedes hacer con tu colección, consulta la <userGuideLink>{{userGuideLinkText}}</userGuideLink>.",
+      "createDataset": "<datasetLink>{{- datasetDisplayName}}</datasetLink> se creó en <ownerLink>{{- ownerDisplayName}}</ownerLink>. Para obtener más información sobre lo que puedes hacer con tu dataset, consulta la <userGuideLink>{{userGuideLinkText}}</userGuideLink>.",
+      "requestFileAccess": "{{requestorFirstName}} {{requestorLastName}} ({{requestorEmail}}) solicitó acceso a ficheros para el dataset: <datasetLink>{{- datasetDisplayName}}</datasetLink>.",
+      "requestedFileAccess": "Has solicitado acceso a ficheros en el dataset: <datasetLink>{{- datasetDisplayName}}</datasetLink>.",
+      "grantFileAccess": "Acceso concedido a ficheros en el dataset: <datasetLink>{{- datasetDisplayName}}</datasetLink>.",
+      "rejectFileAccess": "Acceso rechazado para los ficheros solicitados en el dataset: <datasetLink>{{- datasetDisplayName}}</datasetLink>.",
+      "datasetCreated": "<datasetLink>{{- datasetDisplayName}}</datasetLink> fue creado en <ownerLink>{{- ownerDisplayName}}</ownerLink> por {{requestorFirstName}} {{requestorLastName}}.",
+      "submittedDataset": "<datasetLink>{{- datasetDisplayName}}</datasetLink> fue enviado para revisión con el fin de publicarse en <ownerLink>{{- ownerDisplayName}}</ownerLink>. ¡No olvides publicarlo o devolverlo al colaborador, {{requestorFirstName}} {{requestorLastName}} ({{requestorEmail}})!",
+      "returnedDataset": "<datasetLink>{{- datasetDisplayName}}</datasetLink> fue devuelto por la persona curadora de <ownerLink>{{- ownerDisplayName}}</ownerLink>.",
+      "publishedDataset": "<datasetLink>{{- datasetDisplayName}}</datasetLink> fue publicado en <ownerLink>{{- ownerDisplayName}}</ownerLink>.",
+      "publishFailedPidReg": "<datasetLink>{{- datasetDisplayName}}</datasetLink> en <ownerLink>{{- ownerDisplayName}}</ownerLink> no pudo publicarse debido a un error al registrar o actualizar el identificador global del dataset o de uno de sus ficheros. Contacta con soporte si esto sigue ocurriendo.",
+      "workflowFailure": "Ha fallado un flujo de trabajo externo ejecutado en <datasetLink>{{- datasetDisplayName}}</datasetLink> en <ownerLink>{{- ownerDisplayName}}</ownerLink>. Revisa tu correo electrónico o consulta la página del dataset, que puede contener detalles adicionales. Contacta con soporte si esto sigue ocurriendo.",
+      "workflowSuccess": "Un flujo de trabajo externo ejecutado en <datasetLink>{{- datasetDisplayName}}</datasetLink> en <ownerLink>{{- ownerDisplayName}}</ownerLink> se completó correctamente. Revisa tu correo electrónico o consulta la página del dataset, que puede contener detalles adicionales.",
+      "statusUpdated": "El estado del dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> se ha actualizado a {{currentCurationStatus}}.",
+      "pidreconciled": "El identificador persistente del dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> se ha actualizado a {{datasetPersistentId}}.",
+      "datasetMentioned": "Anuncio recibido: {{type}} recién publicado <relatedLink>{{- name}}</relatedLink> {{relationship}} dataset <datasetLink>{{- datasetDisplayName}}</datasetLink>.",
+      "datasetMentionedGeneric": "Anuncio recibido para el dataset <datasetLink>{{- datasetDisplayName}}</datasetLink>, información adicional: {{- additionalInfo}}.",
+      "checksumFail": "Uno o más ficheros de tu carga no superaron la validación de checksum para el dataset <datasetLink>{{- datasetDisplayName}}</datasetLink>. Vuelve a ejecutar el script de carga. Si el problema persiste, contacta con soporte.",
+      "importFilesystem": "El dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> se ha cargado y verificado correctamente.",
+      "globusUploadCompleted": "La transferencia de Globus al dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> se completó correctamente. Los ficheros se han cargado y verificado.",
+      "globusDownloadCompleted": "La transferencia de Globus desde el dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> se completó correctamente.",
+      "globusUploadCompletedWithErrors": "La transferencia de Globus al dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> se completó con errores.",
+      "globusUploadFailedRemotely": "La transferencia remota de datos entre colecciones de Globus para el dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> falló, según lo informado por la API de Globus.",
+      "globusUploadFailedLocally": "Dataverse recibió una confirmación de una transferencia de datos de Globus correcta para el dataset <datasetLink>{{- datasetDisplayName}}</datasetLink>, pero no pudo agregar los ficheros al dataset localmente.",
+      "globusDownloadCompletedWithErrors": "La transferencia de Globus desde el dataset <datasetLink>{{- datasetDisplayName}}</datasetLink> se completó con errores.",
+      "importChecksum": "<datasetLink>{{datasetDisplayName}}</datasetLink>, el dataset recibió checksums de ficheros mediante un proceso por lotes."
+    }
   }
 }

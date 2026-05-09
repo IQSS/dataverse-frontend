@@ -6,8 +6,11 @@ window.__APP_CONFIG__ = {
   // Base URL of your Dataverse backend
   backendUrl: 'http://localhost:8000',
   // Optional banner shown at the top of the app when set. Basic HTML markup is supported.
-  bannerMessage:
-    "You are using the new Dataverse <strong>Modern version</strong>. This is an early release and some features from the original site are not yet available. Please see the <a href='https://dataverse.harvard.edu/modern/featured-item/harvard/1'>Project Roadmap</a> for details.",
+  // Use a string for one message across all languages, or map language codes to localized messages.
+  bannerMessage: {
+    en: "You are using the new Dataverse <strong>Modern version</strong>. This is an early release and some features from the original site are not yet available. Please see the <a href='https://dataverse.harvard.edu/modern/featured-item/harvard/1'>Project Roadmap</a> for details.",
+    es: "Está utilizando la nueva <strong>versión moderna</strong> de Dataverse. Esta es una versión preliminar y algunas funciones del sitio original aún no están disponibles. Consulte la <a href='https://dataverse.harvard.edu/modern/featured-item/harvard/1'>hoja de ruta del proyecto</a> para más detalles."
+  },
   // OIDC provider settings
   oidc: {
     clientId: 'test',

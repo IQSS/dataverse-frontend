@@ -14,6 +14,8 @@ interface NotificationsSectionProps {
   notificationRepository: NotificationRepository
 }
 
+const DELETE_TRANSITION_DURATION_MS = 250
+
 export const NotificationsSection = ({ notificationRepository }: NotificationsSectionProps) => {
   const { t } = useTranslation('account')
   const [paginationInfo, setPaginationInfo] = useState<NotificationsPaginationInfo>(
@@ -27,34 +29,46 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
   )
 
   const [readIds, setReadIds] = useState<number[]>([])
+  const [deletingIds, setDeletingIds] = useState<number[]>([])
 
   useEffect(() => {
     const unreadIds = notifications
-      .filter((n) => !n.displayAsRead && !readIds.includes(n.id))
+      .filter((n) => !n.displayAsRead && !readIds.includes(n.id) && !deletingIds.includes(n.id))
       .map((n) => n.id)
     if (unreadIds.length > 0) {
       const timer = setTimeout(() => {
         void (async () => {
           await markAsRead(unreadIds)
-          setReadIds((prev) => [...prev, ...unreadIds])
-          await refetch()
+          setReadIds((prev) => Array.from(new Set([...prev, ...unreadIds])))
+          await refetch(true)
         })()
       }, 2000)
       return () => clearTimeout(timer)
     }
-  }, [notifications, readIds, markAsRead, refetch])
+  }, [notifications, readIds, deletingIds, markAsRead, refetch])
+
+  const removeNotifications = async (ids: number[]) => {
+    const idsToDelete = Array.from(new Set(ids)).filter((id) => !deletingIds.includes(id))
+
+    if (idsToDelete.length === 0) return
+
+    setDeletingIds((prev) => Array.from(new Set([...prev, ...idsToDelete])))
+
+    await new Promise<void>((resolve) => {
+      window.setTimeout(resolve, DELETE_TRANSITION_DURATION_MS)
+    })
+
+    await deleteMany(idsToDelete)
+    setDeletingIds((prev) => prev.filter((id) => !idsToDelete.includes(id)))
+    await refetch(true)
+  }
 
   const handleDelete = async (id: number) => {
-    await deleteMany([id])
-    await refetch()
+    await removeNotifications([id])
   }
 
   const handleClearAll = async () => {
-    const ids = notifications.map((n) => n.id)
-    if (ids.length > 0) {
-      await deleteMany(ids)
-      await refetch()
-    }
+    await removeNotifications(notifications.map((n) => n.id))
   }
 
   if (isLoading) return <NotificationSkeleton rows={5} />
@@ -94,21 +108,22 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
               variant="secondary"
               aria-label={clearAllKeyTranslation}
               onClick={handleClearAll}
-              disabled={isLoading}>
+              disabled={isLoading || deletingIds.length > 0}>
               {clearAllKeyTranslation}
             </Button>
           )}
         </Stack>
 
         {notifications.length > 0 ? (
-          <div className="d-flex flex-column gap-2">
+          <div className={styles['notifications-list']}>
             {notifications.map((notification) => {
               const isRead = notification.displayAsRead || readIds.includes(notification.id)
+              const isDeleting = deletingIds.includes(notification.id)
               return (
                 <div
                   className={`${styles['notification-item']} ${
                     isRead ? styles['read'] : styles['unread']
-                  }`}
+                  } ${isDeleting ? styles['deleting'] : ''}`}
                   key={notification.id}>
                   <div>
                     {getTranslatedNotification(notification, t)}
@@ -122,6 +137,7 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
                     }}
                     aria-label={t('notifications.dismiss')}
                     data-testid={`dismiss-notification-${notification.id}`}
+                    disabled={isDeleting}
                   />
                 </div>
               )

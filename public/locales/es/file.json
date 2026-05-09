@@ -12,6 +12,7 @@
     "summary": "Resumen",
     "contributors": "Colaboradores",
     "noChange": "No hay cambios asociados con esta versión.",
+    "noVersions": "El archivo no está incluido en esta versión.",
     "file": "archivo",
     "fileChanged": "[Fichero {{name}}]",
     "access": "Acceso al archivo",
