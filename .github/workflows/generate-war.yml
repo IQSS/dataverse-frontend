@@ -1,3 +1,4 @@
+# .github/workflows/generate-war.yml
 name: generate-war
 
 on:
@@ -11,6 +12,7 @@ on:
           - beta
           - qa
           - demo
+          - production
       basepath:
         description: 'Server base path (without slashes) for serving the application (e.g., modern). If left blank, it will try to deploy to the root base path.'
         type: string
@@ -77,6 +79,17 @@ jobs:
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.DEMO_OIDC_STORAGE_KEY_PREFIX }}
         run: node ./scripts/write-runtime-config.mjs
 
+      - name: Override runtime config.js for PRODUCTION
+        if: ${{ github.event.inputs.environment == 'production' }}
+        env:
+          DATAVERSE_BACKEND_URL: ${{ secrets.PROD_DATAVERSE_BACKEND_URL }}
+          OIDC_CLIENT_ID: ${{ secrets.PROD_OIDC_CLIENT_ID }}
+          OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.PROD_OIDC_AUTHORIZATION_ENDPOINT }}
+          OIDC_TOKEN_ENDPOINT: ${{ secrets.PROD_OIDC_TOKEN_ENDPOINT }}
+          OIDC_LOGOUT_ENDPOINT: ${{ secrets.PROD_OIDC_LOGOUT_ENDPOINT }}
+          OIDC_STORAGE_KEY_PREFIX: ${{ secrets.PROD_OIDC_STORAGE_KEY_PREFIX }}
+        run: node ./scripts/write-runtime-config.mjs
+
       - uses: actions/upload-artifact@v4
         with:
           name: built-site
@@ -92,7 +105,7 @@ jobs:
 
       - uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: zulu
           java-version: '11'
 
       - uses: actions/download-artifact@v4

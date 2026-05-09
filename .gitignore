@@ -16,13 +16,11 @@
 /coverage
 /cypress
 .nyc_output
-/.test-parallel
 /packages/design-system/coverage
 
 
 # production
 /dist
-/dist-uploader
 
 # storybook
 /storybook-static

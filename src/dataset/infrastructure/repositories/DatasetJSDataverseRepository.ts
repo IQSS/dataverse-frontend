@@ -45,7 +45,8 @@ import {
   getDatasetLinkedCollections,
   updateTermsOfAccess,
   updateDatasetLicense,
-  getDatasetUploadLimits
+  getDatasetUploadLimits,
+  getDatasetStorageDriver
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -435,42 +436,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return getDatasetLinkedCollections.execute(datasetId)
   }
 
-  /*
-    TODO: replace with the SDK's `getDatasetStorageDriver` use case
-    (already shipped in @iqss/dataverse-client-javascript@2.2.0).
-    Done inline today to avoid mixing the SDK migration with the
-    storage-driver-typing change.
-  */
   private async getStorageDriver(datasetId: number): Promise<DatasetStorageDriver | undefined> {
-    return axiosInstance
-      .get(
-        `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/storageDriver`
-      )
-      .then(
-        (
-          res: AxiosResponse<{
-            data: {
-              name: string
-              label: string
-              type: string
-              directDownload: boolean
-              directUpload: boolean
-            }
-          }>
-        ) => {
-          const d = res.data.data
-          return {
-            name: d.name,
-            type: d.type,
-            label: d.label,
-            directUpload: d.directUpload,
-            directDownload: d.directDownload
-          }
-        }
-      )
-      .catch(() => {
-        return undefined
-      })
+    return getDatasetStorageDriver.execute(datasetId).catch(() => undefined)
   }
 
   updateDatasetLicense(

@@ -12,7 +12,6 @@ deployment
 
 # Ignore dist folders from SPA, Design System and Keycloak custom theme
 dist
-/dist-uploader
 /packages/design-system/dist
 /dist_keycloak
 
