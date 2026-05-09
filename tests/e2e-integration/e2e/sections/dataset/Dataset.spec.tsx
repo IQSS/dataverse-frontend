@@ -516,6 +516,81 @@ describe('Dataset', () => {
           cy.findByText('Restricted with Access Granted').should('exist')
 
           cy.findByRole('button', { name: 'File Options' }).should('exist').click()
+
+          /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, no-console */
+          // ---- diagnostic block: prove or disprove "user is not the owner" --
+          // Tests the user's hypothesis that on CI the SPA-logged-in user
+          // doesn't actually own the dataset (so DatasetRestrictFileButton
+          // sees file.access.restricted as false / wrong perms / absent).
+          // We log the bearer-resolved user, dataset owner, file's
+          // server-side restricted state, and the user's permissions on
+          // the dataset. Pure observation; no behavior change.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          cy.window().then((win: any) => {
+            const tokenKey = Object.keys(win.localStorage).find((k) => k.endsWith('token'))
+            const bearer = tokenKey ? (win.localStorage.getItem(tokenKey) as string) : null
+            // eslint-disable-next-line no-console
+            console.log('[diag] persistentId:', persistentId, 'tokenKey:', tokenKey)
+            cy.log(`[diag] persistentId=${persistentId} tokenKey=${tokenKey}`)
+            if (!bearer) return
+
+            const auth = { Authorization: `Bearer ${bearer}` }
+            cy.request({ url: '/api/v1/users/:me', headers: auth, failOnStatusCode: false }).then(
+              (r) => {
+                const u = (
+                  r.body as {
+                    data?: { authenticatedUser?: { useridentifier?: string; superuser?: boolean } }
+                  }
+                )?.data?.authenticatedUser
+                // eslint-disable-next-line no-console
+                console.log('[diag] /users/:me:', r.status, u)
+                cy.log(
+                  `[diag] /users/:me status=${r.status} user=${u?.useridentifier} super=${u?.superuser}`
+                )
+              }
+            )
+
+            cy.request({
+              url: `/api/v1/datasets/:persistentId/versions/:DRAFT/files?persistentId=${persistentId}`,
+              headers: auth,
+              failOnStatusCode: false
+            }).then((r) => {
+              const files = (r.body as { data?: Array<{ restricted?: boolean; label?: string }> })
+                ?.data
+              // eslint-disable-next-line no-console
+              console.log('[diag] /files response:', r.status, files)
+              cy.log(
+                `[diag] /files status=${r.status} count=${files?.length ?? 0} restricted=${
+                  files?.[0]?.restricted
+                }`
+              )
+            })
+
+            cy.request({
+              url: `/api/v1/datasets/:persistentId/userPermissions?persistentId=${persistentId}`,
+              headers: auth,
+              failOnStatusCode: false
+            }).then((r) => {
+              const p = (
+                r.body as {
+                  data?: {
+                    canEditDataset?: boolean
+                    canManageDatasetPermissions?: boolean
+                    canPublishDataset?: boolean
+                    canDeleteDatasetDraft?: boolean
+                  }
+                }
+              )?.data
+              // eslint-disable-next-line no-console
+              console.log('[diag] /userPermissions:', r.status, p)
+              cy.log(
+                `[diag] /userPermissions status=${r.status} canEdit=${p?.canEditDataset} canManagePerm=${p?.canManageDatasetPermissions}`
+              )
+            })
+          })
+          // ---- end diagnostic block -----------------------------------------
+          /* eslint-enable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, no-console */
+
           cy.findByText('Unrestrict').should('exist')
         })
     })

@@ -19,26 +19,43 @@ const useCheckPublishCompleted = (
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null
+    // `cancelled` latches once the first poll settles (success or
+    // error) or the host unmounts. `inFlight` skips a tick while a
+    // previous poll is still mid-await. Together they prevent two
+    // failures: extra getLocks calls firing after the lock cleared,
+    // and concurrent polls running because tick N+1 fired before
+    // tick N's awaited fetch resolved.
+    let cancelled = false
+    let inFlight = false
 
     if (publishInProgress && dataset) {
       const waitForDatasetLocksReleased = async () => {
         const initialLocks = await getDatasetLocks(datasetRepository, dataset.persistentId)
+        if (cancelled) return
         if (initialLocks.length === 0) {
+          cancelled = true
           handlePublishCompleted()
         } else {
           intervalId = setInterval(() => {
-            const pollLocks = async () => {
+            if (cancelled || inFlight) return
+            inFlight = true
+            void (async () => {
               try {
                 const locks = await getDatasetLocks(datasetRepository, dataset.persistentId)
+                if (cancelled) return
                 if (locks.length === 0) {
+                  cancelled = true
                   if (intervalId) clearInterval(intervalId)
                   handlePublishCompleted()
                 }
               } catch (error) {
+                if (cancelled) return
+                cancelled = true
                 if (intervalId) clearInterval(intervalId)
+              } finally {
+                inFlight = false
               }
-            }
-            void pollLocks()
+            })()
           }, PUBLISH_DATASET_POLL_INTERVAL)
         }
       }
@@ -46,6 +63,7 @@ const useCheckPublishCompleted = (
     }
 
     return () => {
+      cancelled = true
       if (intervalId) {
         clearInterval(intervalId)
       }
