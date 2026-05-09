@@ -17,7 +17,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Changed
 
-- Bumped `@iqss/dataverse-client-javascript` to `2.2.0-pr403.460f36d` (GitHub Packages prerelease) to consume the new `listDatasetTreeNode` and `iterateDatasetTreeNode` use cases.
+- Bumped `@iqss/dataverse-client-javascript` to `2.2.0-pr403.3d6f638` (GitHub Packages prerelease) to consume the new `listDatasetTreeNode` and `iterateDatasetTreeNode` use cases. The pinned hash also carries the `x-amz-tagging` default fix so older Dataverse releases without the matching server PR keep getting `dv-state=temp` from the client.
 - Streaming-zip download fetches now use `credentials: 'same-origin'` (previously `'include'`). Cookies still travel on the same-origin Dataverse hop, but are dropped on the cross-origin redirect to S3 — required for `Allow-Origin: *` buckets to accept the request.
 - Standalone bundles (`dv-tree-view`, `dv-uploader`) now mount inside a Shadow DOM root via `mountInShadowRoot`, isolating both directions from the host page's CSS context.
 - Component CSS that references `var(--bs-*)` Bootstrap-5 tokens carries hardcoded fallback values, so the bundle renders correctly on JSF hosts that don't define those custom properties.
