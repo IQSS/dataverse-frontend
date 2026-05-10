@@ -517,31 +517,45 @@ describe('Dataset', () => {
 
           cy.findByRole('button', { name: 'File Options' }).should('exist').click()
           cy.wait(2_000)
-          // Diagnostic: when CI keeps failing on "Unable to find Unrestrict",
-          // dump the actual DOM state at the deadline to Node stdout via
-          // cy.task. The browser-side cy.log path doesn't reach the GHA log,
-          // and reading the cypress screenshot is offline-only. This block
-          // is the cheapest way to find out whether (a) the dropdown menu
-          // even opened, (b) it opened but didn't yet render its items,
-          // (c) the items rendered but `Unrestrict` is in a different
-          // subtree than `findByText` walks. Drop the block once the spec
-          // is consistently green.
-          cy.document().then((doc) => {
-            const menus = Array.from(doc.querySelectorAll('.dropdown-menu, [role="menu"]'))
-            const items = menus.flatMap((m) =>
-              Array.from(m.querySelectorAll('button, a, [role="menuitem"]')).map((el) => ({
-                text: (el.textContent ?? '').trim(),
-                visible: el.offsetParent !== null
-              }))
-            )
-            cy.task('diag', {
-              where: 'dataset.spec.before-Unrestrict',
-              menusFound: menus.length,
-              menusVisible: menus.filter((m) => m.offsetParent !== null).length,
-              itemCount: items.length,
-              items,
-              bodyHasUnrestrict: (doc.body.textContent ?? '').includes('Unrestrict'),
-              bodyHasFileOptions: (doc.body.textContent ?? '').includes('File Options')
+          // Diagnostic: previous run showed `bodyHasFileOptions: false` at
+          // the deadline, i.e. the *trigger* button is gone too — not a
+          // dropdown lazy-mount race, the page itself has shifted state.
+          // This pass widens the dump: URL, headings, error markers, body
+          // text length + leading slice, plus an explicit search for known
+          // page states (loading, error, dataset shell). Drop once green.
+          cy.url().then((url) => {
+            cy.document().then((doc) => {
+              const text = doc.body.textContent ?? ''
+              const menus = Array.from(doc.querySelectorAll('.dropdown-menu, [role="menu"]'))
+              const items = menus.flatMap((m) =>
+                Array.from(m.querySelectorAll('button, a, [role="menuitem"]')).map((el) => ({
+                  text: (el.textContent ?? '').trim(),
+                  visible: (el as HTMLElement).offsetParent !== null
+                }))
+              )
+              const headings = Array.from(doc.querySelectorAll('h1, h2'))
+                .map((h) => (h.textContent ?? '').trim())
+                .filter(Boolean)
+                .slice(0, 5)
+              const alerts = Array.from(doc.querySelectorAll('[role="alert"], .alert, .error'))
+                .map((a) => (a.textContent ?? '').trim().slice(0, 200))
+                .filter(Boolean)
+              cy.task('diag', {
+                where: 'dataset.spec.before-Unrestrict',
+                url,
+                menusFound: menus.length,
+                itemCount: items.length,
+                items,
+                bodyHasUnrestrict: text.includes('Unrestrict'),
+                bodyHasFileOptions: text.includes('File Options'),
+                bodyHasAccessGranted: text.includes('Restricted with Access Granted'),
+                bodyHasLoading: text.includes('Loading') || text.includes('loading'),
+                bodyHasError: text.includes('Something went wrong') || text.includes('error'),
+                headings,
+                alerts,
+                bodyTextLen: text.length,
+                bodyTextHead: text.slice(0, 400)
+              })
             })
           })
           cy.findByText('Unrestrict', { timeout: 20_000 }).should('exist')
