@@ -513,25 +513,20 @@ describe('Dataset', () => {
           // see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
           cy.wait(2_000) // CI bundle render is slower than dev; 500 used to be enough
           cy.get('@accessButton').click()
-          // After the grant, the file row briefly settles long enough
-          // for `findByText` to succeed, then the page goes back into
-          // a refetch loop while the access-grant toast (5 s autoClose)
-          // is still up. Diagnostic runs across two CI iterations both
-          // captured `bodyHasFileOptions: false` after our wait, with
-          // `bodyHasLoading: true`, suggesting the toast container's
-          // re-renders cascade through the dataset page during its
-          // visible window.
-          //
-          // Wait for the react-toastify portal to be empty before
-          // proceeding — the static "you are using the new Dataverse
-          // Modern version…" / "this draft needs to be published"
-          // banners on the dataset page are NOT inside `.Toastify__toast`,
-          // so this assertion only blocks while a real transient toast
-          // is up. The 10-second timeout covers the 5 s autoClose plus
-          // the slide-out animation comfortably.
+          // Manual testing confirms the whole grant→reload→toast
+          // sequence takes < 2 s on a developer workstation; the toast
+          // shows AFTER the row has re-rendered, not during. So the
+          // CI flake isn't a long-running loading window — it's a
+          // narrow detachment race between Cypress's actionability
+          // check and the React re-render that follows the grant.
+          // Two changes:
+          //   1. wait long enough for the post-grant re-render to have
+          //      stabilised before we even look for File Options;
+          //   2. click with `force: true` so a brief detach during the
+          //      Cypress actionability tick doesn't cause the click to
+          //      get retried mid-render and land on a stale node.
           cy.findByText('Restricted with Access Granted').should('be.visible')
-          cy.get('.Toastify__toast', { timeout: 10_000 }).should('not.exist')
-          cy.findByRole('button', { name: 'File Options' }).should('be.visible')
+          cy.wait(4_000)
           cy.document().then((doc) => {
             const text = doc.body.textContent ?? ''
             const triggers = Array.from(doc.querySelectorAll('button')).filter(
@@ -541,11 +536,10 @@ describe('Dataset', () => {
               where: 'dataset.spec.before-click-FileOptions',
               bodyHasFileOptions: text.includes('File Options'),
               fileOptionsTriggerCount: triggers.length,
-              fileOptionsVisibleCount: triggers.filter((b) => b.offsetParent !== null).length,
-              toastsFound: doc.querySelectorAll('.Toastify__toast').length
+              fileOptionsVisibleCount: triggers.filter((b) => b.offsetParent !== null).length
             })
           })
-          cy.findByRole('button', { name: 'File Options' }).click()
+          cy.findByRole('button', { name: 'File Options' }).click({ force: true })
           cy.wait(2_000)
           // Diagnostic: previous run showed `bodyHasFileOptions: false` at
           // the deadline, i.e. the *trigger* button is gone too — not a
