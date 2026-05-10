@@ -511,17 +511,12 @@ describe('Dataset', () => {
           cy.get('@accessButton').should('be.visible')
           // TODO: replace the hard-coded wait with the pipe() method?
           // see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
-          cy.wait(500) // wait for the event handler to attach to the button
+          cy.wait(2_000) // CI bundle render is slower than dev; 500 used to be enough
           cy.get('@accessButton').click()
           cy.findByText('Restricted with Access Granted').should('exist')
 
           cy.findByRole('button', { name: 'File Options' }).should('exist').click()
-          // The dropdown's <DropdownButtonItem> children mount on click,
-          // and the React-Bootstrap menu can lag a few hundred ms behind
-          // before the first DOM read picks them up. A short wait + a
-          // longer findByText timeout keeps Cypress's retry window open
-          // past that mount race instead of failing on the first read.
-          cy.wait(500)
+          cy.wait(2_000)
           cy.findByText('Unrestrict', { timeout: 20_000 }).should('exist')
         })
     })
