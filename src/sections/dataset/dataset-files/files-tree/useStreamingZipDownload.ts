@@ -449,11 +449,38 @@ export function useStreamingZipDownload(): StreamingZipApi {
 }
 
 /**
+ * Thrown by `fetchWithRetries` when the server returns a non-OK status.
+ * Carries the status code so callers can distinguish transient failures
+ * (worth retrying) from terminal ones (worth surfacing immediately).
+ */
+class HttpError extends Error {
+  constructor(public readonly status: number, statusText: string) {
+    super(`HTTP ${status} ${statusText}`)
+    this.name = 'HttpError'
+  }
+}
+
+/**
+ * `true` for HTTP statuses that have any reasonable chance of succeeding
+ * on a re-attempt: 5xx server errors, plus the few 4xx codes that the
+ * spec defines as transient (408 Request Timeout, 425 Too Early, 429
+ * Too Many Requests). Other 4xx codes (401, 403, 404, …) are user-
+ * facing terminal errors — retrying just wastes the budget while the
+ * user waits to see the failure tray.
+ */
+function isTransientHttpStatus(status: number): boolean {
+  if (status >= 500) return true
+  return status === 408 || status === 425 || status === 429
+}
+
+/**
  * One fetch with up to `retries` extra attempts. A `Range` header is
- * forwarded when supplied; a non-OK status is treated the same as a
- * thrown network error so transient 5xx and TCP drops both retry. When
- * all retries are exhausted the last error is re-thrown for the caller
- * to surface in its own failure UI.
+ * forwarded when supplied; a non-OK status is converted to an
+ * {@link HttpError} so the caller can react. Retry budget is skipped on
+ * terminal 4xx (no amount of retrying turns a 403 into a 200) — those
+ * errors propagate on the first attempt. Network errors and transient
+ * statuses retry normally. When all retries are exhausted the last
+ * error is re-thrown for the caller to surface in its own failure UI.
  */
 async function fetchWithRetries(args: {
   url: string
@@ -480,11 +507,15 @@ async function fetchWithRetries(args: {
         headers
       })
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status} ${response.statusText}`)
+        throw new HttpError(response.status, response.statusText)
       }
       return response
     } catch (err) {
       lastErr = err
+      // Terminal 4xx: bail before burning the rest of the budget.
+      if (err instanceof HttpError && !isTransientHttpStatus(err.status)) {
+        throw err
+      }
       if (attempt < args.retries) {
         await new Promise((resolve) => setTimeout(resolve, args.delayMs))
       }
@@ -492,6 +523,74 @@ async function fetchWithRetries(args: {
   }
   /* istanbul ignore next */
   throw lastErr instanceof Error ? lastErr : new Error(String(lastErr))
+}
+
+/**
+ * Append a query parameter to a URL string without dragging in a URL
+ * parser. Inputs are well-formed URLs from the SDK / our own builders,
+ * so the simple "find a `?` or add one" rule is sufficient — no need
+ * to handle weird relative-with-fragment cases.
+ */
+function appendQueryParam(url: string, key: string, value: string): string {
+  const sep = url.includes('?') ? '&' : '?'
+  return `${url}${sep}${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+}
+
+/**
+ * Range fetch with re-presign-on-403 fallback. When the cached
+ * `subsequentUrl` returns 403 (presigned URL has expired since the
+ * file's first chunk was retrieved), this helper transparently
+ * re-fetches the Dataverse access endpoint with `gbrecs=true` (so the
+ * download isn't double-counted in the guestbook), captures the new
+ * S3 redirect target, and returns the bytes for the requested range.
+ * Callers update their cached URL from the returned `refreshedUrl` so
+ * subsequent parts use the fresh presigning until *that* one expires.
+ *
+ * Anything other than 403 (network errors, 5xx, retried-out transient
+ * failures) propagates from the inner `fetchWithRetries` and aborts
+ * the chunked stream — re-presign helps for "URL expired", not for
+ * "access genuinely denied" or "S3 melted".
+ */
+async function fetchPartWithRefresh(args: {
+  cachedUrl: string
+  originalUrl: string
+  rangeHeader: string
+  fetchInit: RequestInit | undefined
+  retries: number
+  delayMs: number
+}): Promise<{ response: Response; refreshedUrl: string | null }> {
+  try {
+    const response = await fetchWithRetries({
+      url: args.cachedUrl,
+      rangeHeader: args.rangeHeader,
+      fetchInit: args.fetchInit,
+      retries: args.retries,
+      delayMs: args.delayMs
+    })
+    return { response, refreshedUrl: null }
+  } catch (err) {
+    if (!(err instanceof HttpError) || err.status !== 403) {
+      throw err
+    }
+    const refreshUrl = appendQueryParam(args.originalUrl, 'gbrecs', 'true')
+    const refreshed = await fetchWithRetries({
+      url: refreshUrl,
+      rangeHeader: args.rangeHeader,
+      fetchInit: args.fetchInit,
+      retries: args.retries,
+      delayMs: args.delayMs
+    })
+    // Prefer the post-redirect URL when fetch followed the 303 to S3
+    // (`response.url` differs from the request URL); fall back to the
+    // refresh URL itself when no redirect happened (test env, or a
+    // non-redirected storage driver). Either keeps subsequent parts
+    // off the guestbook path.
+    const newUrl =
+      refreshed.url && refreshed.url !== refreshUrl
+        ? /* istanbul ignore next */ refreshed.url
+        : refreshUrl
+    return { response: refreshed, refreshedUrl: newUrl }
+  }
 }
 
 /**
@@ -519,7 +618,11 @@ function buildChunkedStream(args: {
   const total = args.file.size
   const usedRange = args.initialResponse.status === 206
   const numParts = usedRange ? Math.ceil(total / args.partSize) : 1
-  const subsequentUrl =
+  // `subsequentUrl` is the URL chunks 1..N-1 hit. Mutable because a 403
+  // mid-download (presigned URL expired) triggers a re-presign that
+  // returns a fresh URL we cache here for the rest of the file. Same
+  // pattern repeats every time the new URL itself expires.
+  let subsequentUrl =
     args.initialResponse.url && args.initialResponse.url !== args.originalUrl
       ? /* istanbul ignore next */ args.initialResponse.url
       : args.originalUrl
@@ -551,13 +654,18 @@ function buildChunkedStream(args: {
           const end = Math.min(start + args.partSize, total) - 1
           let response: Response
           try {
-            response = await fetchWithRetries({
-              url: subsequentUrl,
+            const result = await fetchPartWithRefresh({
+              cachedUrl: subsequentUrl,
+              originalUrl: args.originalUrl,
               rangeHeader: `bytes=${start}-${end}`,
               fetchInit: args.fetchInit,
               retries: args.partRetries,
               delayMs: args.partRetryDelayMs
             })
+            response = result.response
+            if (result.refreshedUrl) {
+              subsequentUrl = result.refreshedUrl
+            }
           } catch (err) {
             controller.error(err instanceof Error ? err : new Error(String(err)))
             return

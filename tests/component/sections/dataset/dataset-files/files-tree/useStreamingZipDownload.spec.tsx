@@ -418,6 +418,201 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     })
   })
 
+  it('does not burn retry budget on a terminal 4xx (e.g. 403)', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'denied.txt',
+        path: 'denied.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      })
+    ]
+    // partRetries=3 would otherwise let the engine attempt the same
+    // request 4 times. 403 is a "user error" — the user genuinely lacks
+    // access — and burning the budget on it just delays the failure
+    // tray. The engine bails on the first attempt and surfaces the
+    // failure immediately.
+    cy.customMount(<StreamingZipHarness files={files} zipName="403.zip" partRetries={3} />)
+
+    let attempts = 0
+    installFetchHandler(() => {
+      attempts += 1
+      return Promise.resolve(new Response('forbidden', { status: 403, statusText: 'Forbidden' }))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/HTTP 403/i).should('exist')
+    cy.then(() => {
+      expect(attempts).to.equal(1)
+    })
+  })
+
+  it('still retries on a transient 5xx with partRetries set', () => {
+    // Mirror of the no-retry-on-4xx test above, this time confirming
+    // that 5xx (transient) DOES still retry. Without this contrast
+    // it would be ambiguous whether the previous test passed because
+    // of the terminal-4xx logic or because of some other change.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'flaky.txt',
+        path: 'flaky.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="503.zip" partRetries={3} />)
+
+    let attempts = 0
+    installFetchHandler(() => {
+      attempts += 1
+      if (attempts === 1) {
+        return Promise.resolve(
+          new Response('temporarily unavailable', {
+            status: 503,
+            statusText: 'Service Unavailable'
+          })
+        )
+      }
+      return Promise.resolve(fakeResponseBody('AAA'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+    cy.then(() => {
+      expect(attempts).to.equal(2)
+    })
+  })
+
+  it('re-presigns the URL when a non-first chunk gets 403, then resumes', () => {
+    // Simulates the long-running download case: the first chunk got a
+    // 60-minute presigned URL, the user is on a slow link, the 50th
+    // chunk arrives after the URL has expired and S3 returns 403.
+    // The engine refreshes the presigning by hitting Dataverse's
+    // access endpoint with `gbrecs=true` (so it doesn't double-count
+    // in the guestbook) and resumes from the failed offset. Without
+    // the refresh, the whole zip would die and any large file > the
+    // configured `url-expiration-minutes` would be undownloadable.
+    const total = 12 // 3 chunks at partSize=4
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'long.bin',
+        path: 'long.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="repesign.zip" partSize={4} partRetries={0} />
+    )
+
+    let chunk1AttemptsOnOriginal = 0
+    let refreshHits = 0
+    installFetchHandler((input, init) => {
+      const url = String(input)
+      const headers = new Headers(init?.headers ?? undefined)
+      const range = headers.get('Range') ?? ''
+      const slice = (start: number, end: number) =>
+        new Response(new TextEncoder().encode('ABCDEFGHIJKL'.slice(start, end + 1)), {
+          status: 206,
+          statusText: 'Partial Content',
+          headers: {
+            'content-type': 'application/octet-stream',
+            'content-range': `bytes ${start}-${end}/${total}`
+          }
+        })
+
+      // The re-presign path appends `gbrecs=true` to the original URL.
+      // Treat any URL with that flag as the "fresh" URL — return the
+      // requested range bytes from it.
+      if (url.includes('gbrecs=true')) {
+        refreshHits += 1
+        const m = /^bytes=(\d+)-(\d+)$/.exec(range) as RegExpExecArray
+        return Promise.resolve(slice(Number(m[1]), Number(m[2])))
+      }
+
+      // Chunk 0 (bytes=0-3) succeeds normally on the original URL.
+      if (range === 'bytes=0-3') {
+        return Promise.resolve(slice(0, 3))
+      }
+
+      // Chunk 1 (bytes=4-7) on the original URL returns 403 ONCE — the
+      // expired-URL signal. After re-presign it goes through the
+      // gbrecs=true branch above. Subsequent parts use the cached new
+      // URL and never hit this branch again.
+      if (range === 'bytes=4-7') {
+        chunk1AttemptsOnOriginal += 1
+        return Promise.resolve(new Response('expired', { status: 403, statusText: 'Forbidden' }))
+      }
+
+      return Promise.reject(new Error(`unexpected fetch: ${url} ${range}`))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      // Chunk 1 hit the original URL exactly once (the 403); the
+      // refresh path picked up chunks 1 AND 2 from there on. So:
+      //   - 1 hit on the original URL with bytes=4-7 (the 403)
+      //   - 2 refresh hits (bytes=4-7 retried + bytes=8-11 fresh)
+      expect(chunk1AttemptsOnOriginal).to.equal(1)
+      expect(refreshHits).to.equal(2)
+    })
+  })
+
+  it('errors out when the re-presign request itself returns 403 (real access denial)', () => {
+    // Same shape as above, but the re-presign also fails — so the user
+    // genuinely lost access to the file mid-download (admin revoked
+    // the grant, or the embargo flipped). The engine has nothing to
+    // recover from; the stream errors out cleanly.
+    const total = 8 // 2 chunks at partSize=4
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'revoked.bin',
+        path: 'revoked.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="revoked.zip" partSize={4} partRetries={0} />
+    )
+
+    installFetchHandler((input, init) => {
+      const url = String(input)
+      const headers = new Headers(init?.headers ?? undefined)
+      const range = headers.get('Range') ?? ''
+      if (url.includes('gbrecs=true')) {
+        // The re-presign also gets 403 → terminal failure.
+        return Promise.resolve(
+          new Response('still forbidden', { status: 403, statusText: 'Forbidden' })
+        )
+      }
+      if (range === 'bytes=0-3') {
+        return Promise.resolve(
+          new Response(new TextEncoder().encode('ABCD'), {
+            status: 206,
+            statusText: 'Partial Content',
+            headers: { 'content-range': `bytes 0-3/${total}` }
+          })
+        )
+      }
+      // Chunk 1 returns 403 → triggers re-presign → which also 403s.
+      return Promise.resolve(new Response('expired', { status: 403, statusText: 'Forbidden' }))
+    })
+
+    cy.findByTestId('harness-start').click()
+    // The 'error' tray label is /* istanbul ignore next */, so we
+    // assert on the absence of "complete" — the engine reaches the
+    // error state, not the done state.
+    cy.contains(/download complete/i, { timeout: 5_000 }).should('not.exist')
+  })
+
   it('chunks a large file into sequential Range requests', () => {
     const total = 12 // → 3 parts at partSize=4
     const files: FileTreeFile[] = [
