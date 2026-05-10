@@ -10,11 +10,19 @@ export interface FileTreeFolder {
   name: string
   path: string
   /**
-   * `bytes` is optional independently of the rest of `counts` so the SPA
-   * can render against an older SDK (or a server that hasn't yet rolled
-   * out the recursive byte total) without a type-cast workaround.
+   * Recursive aggregates over the folder's subtree. `bytes`, `restricted`,
+   * and `embargoed` are individually optional so the SPA keeps rendering
+   * against an older SDK (or a server that hasn't yet rolled out a given
+   * aggregate) without a type-cast workaround. The previews-based
+   * fallback also leaves them off — its counts are best-effort.
    */
-  counts?: { files: number; folders: number; bytes?: number }
+  counts?: {
+    files: number
+    folders: number
+    bytes?: number
+    restricted?: number
+    embargoed?: number
+  }
 }
 
 export interface FileTreeFile {
