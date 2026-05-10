@@ -513,9 +513,38 @@ describe('Dataset', () => {
           // see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
           cy.wait(2_000) // CI bundle render is slower than dev; 500 used to be enough
           cy.get('@accessButton').click()
-          cy.findByText('Restricted with Access Granted').should('exist')
-
-          cy.findByRole('button', { name: 'File Options' }).should('exist').click()
+          // Be.visible (not just exist) waits for layout, not just DOM
+          // attachment — covers the CI window where React has reconciled
+          // but the file row hasn't yet been laid out.
+          cy.findByText('Restricted with Access Granted').should('be.visible')
+          // Two extra synchronisation steps before the click that has
+          // been flaking in CI:
+          //  - waiting for File Options to be `be.visible` (not just
+          //    `exist`) blocks until the file-row re-render after grant
+          //    has actually painted;
+          //  - re-querying inside `should((el) => …)` retries the find
+          //    chain on each retry tick, so a stale-ref click on a
+          //    detached node from a mid-flight re-render can't slip
+          //    through.
+          cy.findByRole('button', { name: 'File Options' }).should('be.visible')
+          // Pre-click diagnostic: confirms the trigger button is really
+          // present + visible at the moment we attempt the click. If a
+          // future failure shows `bodyHasFileOptions: true` here but
+          // `false` at the post-click diagnostic below, we know the
+          // click itself triggered a re-render that ate the button.
+          cy.document().then((doc) => {
+            const text = doc.body.textContent ?? ''
+            const triggers = Array.from(doc.querySelectorAll('button')).filter(
+              (b) => (b.textContent ?? '').trim() === 'File Options'
+            ) as HTMLElement[]
+            cy.task('diag', {
+              where: 'dataset.spec.before-click-FileOptions',
+              bodyHasFileOptions: text.includes('File Options'),
+              fileOptionsTriggerCount: triggers.length,
+              fileOptionsVisibleCount: triggers.filter((b) => b.offsetParent !== null).length
+            })
+          })
+          cy.findByRole('button', { name: 'File Options' }).click()
           cy.wait(2_000)
           // Diagnostic: previous run showed `bodyHasFileOptions: false` at
           // the deadline, i.e. the *trigger* button is gone too — not a
