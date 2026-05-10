@@ -664,6 +664,93 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/failed checksum verification/i).should('be.visible')
   })
 
+  it('verifies a SHA-256 checksum via the buffered subtle.digest path', () => {
+    // SHA-* algorithms can't stream through `crypto.subtle.digest`
+    // (one-shot API), so the accumulator buffers chunks and digests at
+    // close. This pins the SHA branch of `makeDigestAccumulator` — same
+    // shape as the upload helper's SHA path.
+    // sha256("hello") computed externally.
+    const sha256OfHello = '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824'
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'SHA-256', value: sha256OfHello }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-sha.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
+  it('silently skips verification when the algorithm is unsupported', () => {
+    // Tree advertises a checksum with an algorithm we don't know how to
+    // compute (e.g. a future hash). `makeDigestAccumulator` returns
+    // null; `buildChunkedStream` treats null the same as "no checksum
+    // present" — no accumulator, no comparison, no failure. The
+    // download succeeds without a verification claim either way.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'BLAKE3', value: 'whatever' }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-unsupported.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
+  it('manifest combines skip failures and verification failures with a blank-line separator', () => {
+    // A run that hits BOTH a fetch-level skip AND a verification
+    // mismatch exercises the manifest's combined-section logic — the
+    // skipped-files section, followed by a blank line, followed by
+    // the verification-failed section. Without the separator branch
+    // the two would run together. Use `skip` strategy so the fetch
+    // failure goes silently to the manifest without a pause dialog.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'broken.bin',
+        path: 'broken.bin',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'verifyfail.txt',
+        path: 'verifyfail.txt',
+        size: 5,
+        downloadUrl: '/access/2',
+        checksum: { type: 'MD5', value: '00000000000000000000000000000000' }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="combined.zip" strategy="skip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.reject(new Error('permanently broken'))
+      if (url.endsWith('/access/2')) return Promise.resolve(fakeResponseBody('hello'))
+      return Promise.reject(new Error(`unexpected fetch ${url}`))
+    })
+
+    cy.findByTestId('harness-start').click()
+    // Verification-failure title takes precedence over skipped title
+    // when both happen in the same run (see tray's else-if chain).
+    cy.contains(/failed checksum verification/i).should('be.visible')
+  })
+
   it('skips verification when the file has no checksum advertised', () => {
     // Tree omits the per-file `checksum` block (e.g. ingested-tabular
     // default form on the backend; older server). Engine treats this
