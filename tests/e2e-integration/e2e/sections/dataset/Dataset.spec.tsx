@@ -520,7 +520,13 @@ describe('Dataset', () => {
           cy.findByText('Files').should('exist')
           cy.findByText('Restricted with access Icon').should('exist')
           cy.findByRole('button', { name: 'File Options' }).should('be.visible').click()
-          cy.findByText('Unrestrict', { timeout: 10_000 }).should('exist')
+          // `findByText('Unrestrict')` requires a single text node; the
+          // dropdown menu item renders as `<icon/>Unrestrict` (icon +
+          // label spans split by the design system), which Cypress's
+          // text-node matcher misses. `cy.contains` walks descendant
+          // text content and matches partial fragments, so it handles
+          // the icon-plus-label structure correctly.
+          cy.contains('Unrestrict', { timeout: 10_000 }).should('exist')
         })
     })
 
