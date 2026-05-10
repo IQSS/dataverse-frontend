@@ -613,6 +613,81 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/download complete/i, { timeout: 5_000 }).should('not.exist')
   })
 
+  it('verifies the MD5 checksum and finishes silently when it matches', () => {
+    // Bytes "hello" have a well-known MD5 digest; we make the tree row
+    // advertise that digest. After download the engine should have
+    // streamed the bytes through `md5.create()/update()/hex()` and
+    // matched — no entry in `verificationFailures`, no tray scolding.
+    const md5OfHello = '5d41402abc4b2a76b9719d911017c592'
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'MD5', value: md5OfHello }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-ok.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    // Specifically NOT the "failed checksum verification" wording — the
+    // match path should reach the plain "Download complete" title.
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
+  it('reports a verification failure when MD5 digest does not match', () => {
+    // The tree row claims the file's MD5 is "000…000" but the bytes
+    // streamed in are "hello". The engine streams the file through the
+    // zip (bytes are committed; you can't unwrite a stream client-zip
+    // is consuming), then on stream-close finalises the digest, finds
+    // the mismatch, and pushes into `verificationFailures`. The tray
+    // title surfaces the count; the manifest entry inside the zip
+    // would list which files to re-download.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'MD5', value: '00000000000000000000000000000000' }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-bad.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/failed checksum verification/i).should('be.visible')
+  })
+
+  it('skips verification when the file has no checksum advertised', () => {
+    // Tree omits the per-file `checksum` block (e.g. ingested-tabular
+    // default form on the backend; older server). Engine treats this
+    // as "not verifiable" rather than "failed verification" — no
+    // accumulator is constructed, no comparison runs, manifest stays
+    // empty.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'noChecksum.txt',
+        path: 'noChecksum.txt',
+        size: 5,
+        downloadUrl: '/access/1'
+        // checksum: undefined
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-none.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
   it('chunks a large file into sequential Range requests', () => {
     const total = 12 // → 3 parts at partSize=4
     const files: FileTreeFile[] = [

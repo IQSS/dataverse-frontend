@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { downloadZip } from 'client-zip'
+import { md5 } from 'js-md5'
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
 
 /**
@@ -26,6 +27,22 @@ export interface StreamingZipFailure {
   recoverable: boolean
 }
 
+/**
+ * Per-file checksum-verification miss. The file's bytes ARE in the zip
+ * (you can't unwrite a stream after client-zip has consumed it), but
+ * its computed digest doesn't match what the tree response advertised.
+ * Surfaced in the tray so users know which files to re-download and
+ * appended to `manifest.txt` for the `skip` strategy.
+ */
+export interface StreamingZipVerificationFailure {
+  path: string
+  name: string
+  size: number
+  algorithm: string
+  expected: string
+  actual: string
+}
+
 export interface StreamingZipState {
   status:
     | 'idle'
@@ -42,6 +59,13 @@ export interface StreamingZipState {
   bytesDone: number
   current?: { name: string; path: string; size: number }
   failedSoFar: StreamingZipFailure[]
+  /**
+   * Files whose bytes flowed into the zip successfully but whose
+   * computed digest didn't match the tree response's advertised
+   * `checksum`. Empty when no verification was attempted (older server)
+   * or all files verified clean.
+   */
+  verificationFailures: StreamingZipVerificationFailure[]
   pass: 1 | 2
   message?: string
 }
@@ -105,6 +129,7 @@ const initialState: StreamingZipState = {
   totalBytes: 0,
   bytesDone: 0,
   failedSoFar: [],
+  verificationFailures: [],
   pass: 1
 }
 
@@ -346,6 +371,11 @@ export function useStreamingZipDownload(): StreamingZipApi {
               fetchInit,
               onProgress: (delta) =>
                 update((prev) => ({ ...prev, bytesDone: prev.bytesDone + delta })),
+              onVerificationFailure: (failure) =>
+                update((prev) => ({
+                  ...prev,
+                  verificationFailures: [...prev.verificationFailures, failure]
+                })),
               cancelled: () => cancelledRef.current
             })
             yield {
@@ -388,13 +418,29 @@ export function useStreamingZipDownload(): StreamingZipApi {
           }
         }
 
-        // ----- skip strategy: append a manifest.txt with failures ----------
-        if (skippedManifest.length > 0) {
-          const lines = [
-            'The following files were skipped during this zip download:',
-            '',
-            ...skippedManifest.map((f) => `${f.path} — ${f.error}`)
-          ]
+        // ----- manifest.txt: list any skipped or verification-failed files ----
+        // Both populate the manifest; the zip is closing and this is the
+        // last yield, so we collect from `stateRef` (which has any
+        // mid-stream verification failures the per-file pull pushed
+        // through the update callback) plus `skippedManifest` (the
+        // fetch-level failures from the per-file loop).
+        const verifyFails = stateRef.current.verificationFailures
+        if (skippedManifest.length > 0 || verifyFails.length > 0) {
+          const lines: string[] = []
+          if (skippedManifest.length > 0) {
+            lines.push('The following files were skipped during this zip download:')
+            lines.push('')
+            for (const f of skippedManifest) lines.push(`${f.path} — ${f.error}`)
+          }
+          if (verifyFails.length > 0) {
+            if (lines.length > 0) lines.push('')
+            lines.push('The following files were downloaded but failed checksum verification.')
+            lines.push('Their bytes are in this zip; re-download to confirm integrity:')
+            lines.push('')
+            for (const v of verifyFails) {
+              lines.push(`${v.path} — ${v.algorithm}: expected ${v.expected}, got ${v.actual}`)
+            }
+          }
           yield {
             name: 'manifest.txt',
             input: new Blob([lines.join('\n')], { type: 'text/plain' }),
@@ -594,6 +640,70 @@ async function fetchPartWithRefresh(args: {
 }
 
 /**
+ * Streaming digest accumulator. Two branches matching what
+ * `FileUploaderHelper` already does for upload:
+ *   - MD5 (Dataverse default): `js-md5`'s `create()/update()/hex()` —
+ *     true streaming, no buffer of the file's bytes.
+ *   - SHA-1 / SHA-256 / SHA-512: `crypto.subtle.digest` is one-shot,
+ *     so we accumulate chunks (1 MiB max per slice) and digest the
+ *     concatenation when the file closes. Memory cost is the file
+ *     size for SHA — fine for typical research-data sizes, the same
+ *     trade-off the upload helper accepts. A streaming-SHA WASM
+ *     library would close the gap if it ever bites; not in scope.
+ *
+ * `null` for unsupported / unknown algorithm names — caller treats it
+ * as "skip verification for this file" rather than erroring out, so a
+ * file whose `checksum.type` is something exotic doesn't kill the zip.
+ */
+function makeDigestAccumulator(
+  algorithm: string
+): { update: (bytes: Uint8Array) => void; finalize: () => Promise<string> } | null {
+  const upper = algorithm.toUpperCase()
+  if (upper === 'MD5') {
+    const hash = md5.create()
+    return {
+      update: (bytes) => hash.update(bytes),
+      // Wrapped in Promise.resolve to unify the return type with the
+      // SHA path's `subtle.digest` Promise — caller awaits in both
+      // cases, MD5 just resolves synchronously.
+      finalize: () => Promise.resolve(hash.hex())
+    }
+  }
+  // Map Dataverse's stored algorithm name to the Web Crypto identifier.
+  const subtleAlgo =
+    upper === 'SHA-1' || upper === 'SHA1'
+      ? 'SHA-1'
+      : upper === 'SHA-256' || upper === 'SHA256'
+      ? 'SHA-256'
+      : upper === 'SHA-512' || upper === 'SHA512'
+      ? 'SHA-512'
+      : null
+  if (!subtleAlgo) return null
+  const chunks: Uint8Array[] = []
+  return {
+    update: (bytes) => {
+      // Copy the slice — the source buffer may be reused by the
+      // fetch reader between ticks.
+      chunks.push(new Uint8Array(bytes))
+    },
+    finalize: async () => {
+      const total = chunks.reduce((s, c) => s + c.length, 0)
+      const buf = new Uint8Array(total)
+      let off = 0
+      for (const c of chunks) {
+        buf.set(c, off)
+        off += c.length
+      }
+      const digest = await window.crypto.subtle.digest(subtleAlgo, buf as BufferSource)
+      const out = new Uint8Array(digest)
+      let hex = ''
+      for (const b of out) hex += b.toString(16).padStart(2, '0')
+      return hex
+    }
+  }
+}
+
+/**
  * Wraps the first-part response and lazily fetches the remaining parts
  * via Range requests as `client-zip` pulls bytes through the stream.
  *
@@ -603,6 +713,12 @@ async function fetchPartWithRefresh(args: {
  * (after the 303 to S3) is used for the subsequent part requests so
  * those bypass Dataverse entirely; that's the path that gives us the
  * resilience win on flaky cross-region links.
+ *
+ * When the file's tree row carries a `checksum`, the bytes are also
+ * fed into a streaming digest accumulator and compared at end-of-stream
+ * — a mismatch is reported via `onVerificationFailure` but does NOT
+ * fail the file (its bytes are already in the zip; the user is told
+ * which files need re-downloading).
  */
 function buildChunkedStream(args: {
   file: FileTreeFile
@@ -613,6 +729,7 @@ function buildChunkedStream(args: {
   partRetryDelayMs: number
   fetchInit: RequestInit | undefined
   onProgress: (delta: number) => void
+  onVerificationFailure: (failure: StreamingZipVerificationFailure) => void
   cancelled: () => boolean
 }): ReadableStream<Uint8Array> {
   const total = args.file.size
@@ -634,6 +751,14 @@ function buildChunkedStream(args: {
   let partIndex = 0
   let currentReader: ReadableStreamDefaultReader<Uint8Array> | null = initialBody.getReader()
 
+  // Digest accumulator: present only when the tree response gave us a
+  // checksum AND the algorithm is one we can compute. Files where the
+  // tree omitted `checksum` (e.g. ingested-tabular default form) get
+  // no accumulator — skipped silently. Files with an exotic algorithm
+  // also fall through to skip rather than error.
+  const expectedChecksum = args.file.checksum
+  const digest = expectedChecksum ? makeDigestAccumulator(expectedChecksum.type) : null
+
   return new ReadableStream<Uint8Array>({
     async pull(controller) {
       if (args.cancelled()) {
@@ -647,6 +772,23 @@ function buildChunkedStream(args: {
       for (;;) {
         if (!currentReader) {
           if (partIndex >= numParts) {
+            // Stream is closing — if we have a digest, finalize and
+            // compare against the expected value. Mismatch is reported
+            // via the callback (the bytes are already in the zip; the
+            // user is told which files to re-download).
+            if (digest && expectedChecksum) {
+              const actual = await digest.finalize()
+              if (actual.toLowerCase() !== expectedChecksum.value.toLowerCase()) {
+                args.onVerificationFailure({
+                  path: args.file.path,
+                  name: args.file.name,
+                  size: args.file.size,
+                  algorithm: expectedChecksum.type,
+                  expected: expectedChecksum.value,
+                  actual
+                })
+              }
+            }
             controller.close()
             return
           }
@@ -685,6 +827,7 @@ function buildChunkedStream(args: {
           continue
         }
         if (value && value.byteLength > 0) {
+          if (digest) digest.update(value)
           args.onProgress(value.byteLength)
           controller.enqueue(value)
           return

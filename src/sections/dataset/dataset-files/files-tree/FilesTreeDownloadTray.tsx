@@ -38,12 +38,22 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
       defaultValue: 'First pass complete — {{count}} file(s) failed',
       count: state.failedSoFar.length
     })
-  else if (isDone && state.failedSoFar.length === 0)
+  else if (isDone && state.failedSoFar.length === 0 && state.verificationFailures.length === 0)
     title = t('tree.download.tray.complete', 'Download complete')
-  else if (isDone && state.failedSoFar.length > 0)
+  else if (isDone && state.failedSoFar.length > 0 && state.verificationFailures.length === 0)
     title = t('tree.download.tray.completeWithSkipped', {
       defaultValue: 'Download complete — {{count}} skipped',
       count: state.failedSoFar.length
+    })
+  // The verification-failure title takes precedence over the
+  // skipped-files variant when both happen in the same run — the
+  // verification miss is the surprising, actionable signal (user
+  // should re-download the bad file), the skips already had their
+  // own dialog earlier. Both still appear in `manifest.txt`.
+  else if (isDone && state.verificationFailures.length > 0)
+    title = t('tree.download.tray.completeWithVerificationFailures', {
+      defaultValue: 'Download complete — {{count}} file(s) failed checksum verification',
+      count: state.verificationFailures.length
     })
   // The 'error' status is reached only from the IIFE catch in the
   // engine — itself a defensive path covered by /* istanbul ignore */

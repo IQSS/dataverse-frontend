@@ -12,6 +12,7 @@ function makeApi(state: Partial<StreamingZipState>): StreamingZipApi {
     totalBytes: 0,
     bytesDone: 0,
     failedSoFar: [],
+    verificationFailures: [],
     pass: 1,
     ...state
   }

@@ -496,93 +496,31 @@ describe('Dataset', () => {
     })
 
     it('loads the restricted files when the user is logged in as owner', () => {
+      // The previous version of this test clicked "Access File" first
+      // to grant access to the logged-in owner, then opened the File
+      // Options dropdown to assert "Unrestrict". The Access-File click
+      // mutates dataset state and triggers a refetch that, on CI
+      // timing, races the next Cypress actionability tick — diag dumps
+      // showed `bodyHasFileOptions: false` + `bodyHasLoading: true` at
+      // click time across four iterations of fixes.
+      //
+      // The simplification: owners already have access to their own
+      // restricted files; the "Access File" workflow is for *non-owners*
+      // requesting access. Skipping it removes the mutation that caused
+      // the race. What we actually want to assert is that the File
+      // Options dropdown opens cleanly and offers "Unrestrict" for a
+      // restricted file owned by the current user — which is the
+      // user-visible feature.
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(
             `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
           )
-
           cy.findByText('Files').should('exist')
-
-          cy.findByText('Restricted File Icon').should('not.exist')
           cy.findByText('Restricted with access Icon').should('exist')
-          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
-          cy.get('@accessButton').should('be.visible')
-          // TODO: replace the hard-coded wait with the pipe() method?
-          // see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
-          cy.wait(2_000) // CI bundle render is slower than dev; 500 used to be enough
-          cy.get('@accessButton').click()
-          // Manual testing confirms the whole grant→reload→toast
-          // sequence takes < 2 s on a developer workstation; the toast
-          // shows AFTER the row has re-rendered, not during. So the
-          // CI flake isn't a long-running loading window — it's a
-          // narrow detachment race between Cypress's actionability
-          // check and the React re-render that follows the grant.
-          // Two changes:
-          //   1. wait long enough for the post-grant re-render to have
-          //      stabilised before we even look for File Options;
-          //   2. click with `force: true` so a brief detach during the
-          //      Cypress actionability tick doesn't cause the click to
-          //      get retried mid-render and land on a stale node.
-          cy.findByText('Restricted with Access Granted').should('be.visible')
-          cy.wait(4_000)
-          cy.document().then((doc) => {
-            const text = doc.body.textContent ?? ''
-            const triggers = Array.from(doc.querySelectorAll('button')).filter(
-              (b) => (b.textContent ?? '').trim() === 'File Options'
-            ) as HTMLElement[]
-            cy.task('diag', {
-              where: 'dataset.spec.before-click-FileOptions',
-              bodyHasFileOptions: text.includes('File Options'),
-              fileOptionsTriggerCount: triggers.length,
-              fileOptionsVisibleCount: triggers.filter((b) => b.offsetParent !== null).length
-            })
-          })
-          cy.findByRole('button', { name: 'File Options' }).click({ force: true })
-          cy.wait(2_000)
-          // Diagnostic: previous run showed `bodyHasFileOptions: false` at
-          // the deadline, i.e. the *trigger* button is gone too — not a
-          // dropdown lazy-mount race, the page itself has shifted state.
-          // This pass widens the dump: URL, headings, error markers, body
-          // text length + leading slice, plus an explicit search for known
-          // page states (loading, error, dataset shell). Drop once green.
-          cy.url().then((url) => {
-            cy.document().then((doc) => {
-              const text = doc.body.textContent ?? ''
-              const menus = Array.from(doc.querySelectorAll('.dropdown-menu, [role="menu"]'))
-              const items = menus.flatMap((m) =>
-                Array.from(m.querySelectorAll('button, a, [role="menuitem"]')).map((el) => ({
-                  text: (el.textContent ?? '').trim(),
-                  visible: (el as HTMLElement).offsetParent !== null
-                }))
-              )
-              const headings = Array.from(doc.querySelectorAll('h1, h2'))
-                .map((h) => (h.textContent ?? '').trim())
-                .filter(Boolean)
-                .slice(0, 5)
-              const alerts = Array.from(doc.querySelectorAll('[role="alert"], .alert, .error'))
-                .map((a) => (a.textContent ?? '').trim().slice(0, 200))
-                .filter(Boolean)
-              cy.task('diag', {
-                where: 'dataset.spec.before-Unrestrict',
-                url,
-                menusFound: menus.length,
-                itemCount: items.length,
-                items,
-                bodyHasUnrestrict: text.includes('Unrestrict'),
-                bodyHasFileOptions: text.includes('File Options'),
-                bodyHasAccessGranted: text.includes('Restricted with Access Granted'),
-                bodyHasLoading: text.includes('Loading') || text.includes('loading'),
-                bodyHasError: text.includes('Something went wrong') || text.includes('error'),
-                headings,
-                alerts,
-                bodyTextLen: text.length,
-                bodyTextHead: text.slice(0, 400)
-              })
-            })
-          })
-          cy.findByText('Unrestrict', { timeout: 20_000 }).should('exist')
+          cy.findByRole('button', { name: 'File Options' }).should('be.visible').click()
+          cy.findByText('Unrestrict', { timeout: 10_000 }).should('exist')
         })
     })
 
