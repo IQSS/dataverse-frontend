@@ -21,6 +21,14 @@
 
 # production
 /dist
+# Standalone-bundle build output. `npm run build-uploader` writes the
+# `dv-tree-view` / `dv-uploader` JS+CSS here; the files are then copied
+# into `dataverse/.../webapp/dvwebloader/reusable-components/` for the
+# WAR bake. Tracking the build folder makes manual post-build cleanup
+# brittle: `git checkout .` to clean stray edits also reverts the
+# generated build files (or vice-versa, source-file edits get swept up
+# alongside build-artefact resets). Ignore it instead.
+/dist-uploader
 
 # storybook
 /storybook-static
