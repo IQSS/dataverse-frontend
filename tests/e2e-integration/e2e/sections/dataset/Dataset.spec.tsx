@@ -513,25 +513,25 @@ describe('Dataset', () => {
           // see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
           cy.wait(2_000) // CI bundle render is slower than dev; 500 used to be enough
           cy.get('@accessButton').click()
-          // Be.visible (not just exist) waits for layout, not just DOM
-          // attachment — covers the CI window where React has reconciled
-          // but the file row hasn't yet been laid out.
+          // After the grant, the file row briefly settles long enough
+          // for `findByText` to succeed, then the page goes back into
+          // a refetch loop while the access-grant toast (5 s autoClose)
+          // is still up. Diagnostic runs across two CI iterations both
+          // captured `bodyHasFileOptions: false` after our wait, with
+          // `bodyHasLoading: true`, suggesting the toast container's
+          // re-renders cascade through the dataset page during its
+          // visible window.
+          //
+          // Wait for the react-toastify portal to be empty before
+          // proceeding — the static "you are using the new Dataverse
+          // Modern version…" / "this draft needs to be published"
+          // banners on the dataset page are NOT inside `.Toastify__toast`,
+          // so this assertion only blocks while a real transient toast
+          // is up. The 10-second timeout covers the 5 s autoClose plus
+          // the slide-out animation comfortably.
           cy.findByText('Restricted with Access Granted').should('be.visible')
-          // Two extra synchronisation steps before the click that has
-          // been flaking in CI:
-          //  - waiting for File Options to be `be.visible` (not just
-          //    `exist`) blocks until the file-row re-render after grant
-          //    has actually painted;
-          //  - re-querying inside `should((el) => …)` retries the find
-          //    chain on each retry tick, so a stale-ref click on a
-          //    detached node from a mid-flight re-render can't slip
-          //    through.
+          cy.get('.Toastify__toast', { timeout: 10_000 }).should('not.exist')
           cy.findByRole('button', { name: 'File Options' }).should('be.visible')
-          // Pre-click diagnostic: confirms the trigger button is really
-          // present + visible at the moment we attempt the click. If a
-          // future failure shows `bodyHasFileOptions: true` here but
-          // `false` at the post-click diagnostic below, we know the
-          // click itself triggered a re-render that ate the button.
           cy.document().then((doc) => {
             const text = doc.body.textContent ?? ''
             const triggers = Array.from(doc.querySelectorAll('button')).filter(
@@ -541,7 +541,8 @@ describe('Dataset', () => {
               where: 'dataset.spec.before-click-FileOptions',
               bodyHasFileOptions: text.includes('File Options'),
               fileOptionsTriggerCount: triggers.length,
-              fileOptionsVisibleCount: triggers.filter((b) => b.offsetParent !== null).length
+              fileOptionsVisibleCount: triggers.filter((b) => b.offsetParent !== null).length,
+              toastsFound: doc.querySelectorAll('.Toastify__toast').length
             })
           })
           cy.findByRole('button', { name: 'File Options' }).click()
