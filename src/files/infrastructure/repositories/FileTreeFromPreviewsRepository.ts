@@ -134,6 +134,7 @@ interface FolderAccumulator {
   name: string
   path: string
   fileCount: number
+  bytes: number
   subfolderNames: Set<string>
 }
 
@@ -168,11 +169,13 @@ function collectImmediateChildren(
         name: segment,
         path: folderPath,
         fileCount: 0,
+        bytes: 0,
         subfolderNames: new Set<string>()
       }
       folders.set(folderPath, entry)
     }
     entry.fileCount += 1
+    entry.bytes += preview.metadata.size?.toBytes() ?? 0
     if (directory !== folderPath) {
       // Track distinct subfolder names (the next path segment after this folder).
       const sub = directory.slice(folderPath.length + 1).split('/')[0]
@@ -186,7 +189,7 @@ function collectImmediateChildren(
     type: FileTreeItemType.FOLDER,
     name: f.name,
     path: f.path,
-    counts: { files: f.fileCount, folders: f.subfolderNames.size }
+    counts: { files: f.fileCount, folders: f.subfolderNames.size, bytes: f.bytes }
   }))
 
   sortByName(folderItems, order)

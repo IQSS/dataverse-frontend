@@ -9,7 +9,12 @@ export interface FileTreeFolder {
   type: FileTreeItemType.FOLDER
   name: string
   path: string
-  counts?: { files: number; folders: number }
+  /**
+   * `bytes` is optional independently of the rest of `counts` so the SPA
+   * can render against an older SDK (or a server that hasn't yet rolled
+   * out the recursive byte total) without a type-cast workaround.
+   */
+  counts?: { files: number; folders: number; bytes?: number }
 }
 
 export interface FileTreeFile {

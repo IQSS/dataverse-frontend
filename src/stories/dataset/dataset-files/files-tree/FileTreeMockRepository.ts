@@ -14,11 +14,11 @@ import {
   FileTreeOrder
 } from '../../../../files/domain/models/FileTreePage'
 
-const folder = (name: string, path: string, files = 0, folders = 0): FileTreeFolder => ({
+const folder = (name: string, path: string, files = 0, folders = 0, bytes = 0): FileTreeFolder => ({
   type: FileTreeItemType.FOLDER,
   name,
   path,
-  counts: { files, folders }
+  counts: { files, folders, bytes }
 })
 
 const file = (id: number, name: string, path: string, size: number): FileTreeFile => ({

@@ -205,7 +205,7 @@ describe('FilesTree', () => {
     const dataFolder = FileTreeFolderMother.create({
       name: 'data',
       path: 'data',
-      counts: { files: 5, folders: 1 }
+      counts: { files: 5, folders: 1, bytes: 0 }
     })
     const root = FileTreePageMother.create({ path: '', items: [dataFolder] })
     const repo = new FakeTreeRepository({ '': root })

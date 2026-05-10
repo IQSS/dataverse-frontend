@@ -10,7 +10,7 @@ export class FileTreeFolderMother {
       type: FileTreeItemType.FOLDER,
       name: props.name,
       path: props.path,
-      counts: props.counts ?? { files: 0, folders: 0 }
+      counts: props.counts ?? { files: 0, folders: 0, bytes: 0 }
     }
   }
 }

@@ -120,7 +120,8 @@ describe('FileTreeFromPreviewsRepository', () => {
     })
     const dataFolder = page.items.filter(isFileTreeFolder).find((f) => f.name === 'data')
     expect(dataFolder).to.not.equal(undefined)
-    expect(dataFolder?.counts).to.deep.equal({ files: 4, folders: 2 })
+    // Each preview defaults to 1024 bytes; 4 files in this subtree.
+    expect(dataFolder?.counts).to.deep.equal({ files: 4, folders: 2, bytes: 4096 })
   })
 
   it('lists files inside a folder by exact path match only', async () => {
