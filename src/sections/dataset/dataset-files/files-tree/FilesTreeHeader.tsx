@@ -35,6 +35,9 @@ export function FilesTreeHeader({ selectAllState, onToggleSelectAll }: FilesTree
       <div aria-hidden className={styles['tree-head-size']}>
         {t('tree.head.size', 'Size')}
       </div>
+      <div aria-hidden className={styles['tree-head-access']}>
+        {t('tree.head.access', 'Access')}
+      </div>
       <div aria-hidden className={styles['tree-head-count']}>
         {t('tree.head.count', 'Files')}
       </div>

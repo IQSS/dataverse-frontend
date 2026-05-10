@@ -127,30 +127,19 @@ export function FilesTree({
       if (files.length === 0) {
         return
       }
-      // Single file: bypass zipping and trigger a direct browser
-      // download. The browser handles content disposition and the
-      // session cookie auths the request when needed.
-      if (files.length === 1) {
-        const file = files[0]
-        const a = document.createElement('a')
-        a.href = file.downloadUrl
-        a.download = file.name
-        a.rel = 'noopener noreferrer'
-        a.style.display = 'none'
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        toast.success(t('actions.optionsMenu.guestbookCollectModal.downloadStarted'))
-        return
-      }
-      // Many files: build a zip in the browser, streaming each file
-      // body through `client-zip`. The tray surfaces progress and any
-      // per-file failure decisions.
+      // Single source of truth: every download — one file or many — is
+      // assembled into a zip via the chunked streaming engine. Means a
+      // single big file gets the per-part Range / retry resilience, the
+      // tray gives consistent progress UX, and the button label
+      // ("Download zip") never lies about what the user is going to
+      // get. The historical "anchor-click for one file" bypass was
+      // removed because it lost the per-part resume on large files and
+      // forked the UX.
       const zipName = `${datasetPersistentId.replace(/[^a-zA-Z0-9._-]+/g, '_')}-files.zip`
       streamingZip.start({ files, zipName })
       setTrayOpen(true)
     },
-    [datasetPersistentId, streamingZip, t]
+    [datasetPersistentId, streamingZip]
   )
 
   const download = useFileTreeDownload({

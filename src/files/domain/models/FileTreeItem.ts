@@ -1,5 +1,7 @@
 import { FileAccess } from './FileAccess'
 
+export type FileAccessStatus = 'public' | 'restricted' | 'embargoed'
+
 export enum FileTreeItemType {
   FOLDER = 'folder',
   FILE = 'file'
@@ -33,6 +35,15 @@ export interface FileTreeFile {
   size: number
   contentType?: string
   access?: FileAccess
+  /**
+   * Three-way access marker mirroring the per-file `access` string the
+   * SDK exposes on the tree response: `'public' | 'restricted' |
+   * 'embargoed'`. Kept separate from `access` (the boolean-ish
+   * `FileAccess` object used elsewhere in the SPA) because that shape
+   * collapses restricted and embargoed into the same `restricted: true`
+   * flag — fine for permission gating, lossy for tree display.
+   */
+  accessStatus?: FileAccessStatus
   checksum?: { type: string; value: string }
   downloadUrl: string
 }

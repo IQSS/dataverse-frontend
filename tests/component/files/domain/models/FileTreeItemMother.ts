@@ -27,6 +27,7 @@ export class FileTreeFileMother {
       size: props.size ?? 1024,
       contentType: props.contentType ?? 'text/plain',
       access: props.access,
+      accessStatus: props.accessStatus,
       checksum: props.checksum,
       downloadUrl: props.downloadUrl ?? `/api/access/datafile/${props.id}`
     }

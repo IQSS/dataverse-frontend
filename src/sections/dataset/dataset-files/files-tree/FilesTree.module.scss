@@ -54,7 +54,7 @@ $indent-step: 18px;
 
 .tree-head {
   display: grid;
-  grid-template-columns: 28px 1fr 110px 80px 40px;
+  grid-template-columns: 28px 1fr 110px 130px 80px 40px;
   gap: 8px;
   padding: 8px 14px;
   border-bottom: 1px solid var(--bs-border-color);
@@ -69,6 +69,10 @@ $indent-step: 18px;
 .tree-head-size,
 .tree-head-count {
   text-align: right;
+}
+
+.tree-head-access {
+  text-align: left;
 }
 
 .tree-viewport {
@@ -98,7 +102,7 @@ $indent-step: 18px;
   left: 0;
   right: 0;
   display: grid;
-  grid-template-columns: 28px 1fr 110px 80px 40px;
+  grid-template-columns: 28px 1fr 110px 130px 80px 40px;
   gap: 8px;
   align-items: center;
   height: $row-height-comfortable;
@@ -232,6 +236,24 @@ $indent-step: 18px;
   font-size: 11.5px;
   color: var(--bs-secondary-color);
   text-align: right;
+}
+
+.row-access {
+  font-family: inherit;
+  font-size: 11.5px;
+  color: var(--bs-secondary-color);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row-access-restricted {
+  color: var(--bs-warning-text-emphasis, #997404);
+}
+
+.row-access-embargoed {
+  color: var(--bs-info-text-emphasis, #087990);
 }
 
 .row-actions {

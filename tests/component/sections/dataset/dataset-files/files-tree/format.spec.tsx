@@ -1,6 +1,8 @@
 import {
   formatBytes,
-  formatCount
+  formatCount,
+  formatFileAccess,
+  formatFolderAccess
 } from '../../../../../../src/sections/dataset/dataset-files/files-tree/format'
 
 describe('formatBytes', () => {
@@ -41,5 +43,45 @@ describe('formatCount', () => {
     expect(formatCount(1000)).to.equal('1.0k')
     expect(formatCount(1500)).to.equal('1.5k')
     expect(formatCount(12345)).to.equal('12.3k')
+  })
+})
+
+describe('formatFileAccess', () => {
+  it('returns empty string for undefined access (older server / SDK)', () => {
+    expect(formatFileAccess(undefined)).to.equal('')
+  })
+
+  it('capitalises each access bucket', () => {
+    expect(formatFileAccess('public')).to.equal('Public')
+    expect(formatFileAccess('restricted')).to.equal('Restricted')
+    expect(formatFileAccess('embargoed')).to.equal('Embargoed')
+  })
+})
+
+describe('formatFolderAccess', () => {
+  it('returns empty string when counts are absent', () => {
+    expect(formatFolderAccess(undefined)).to.equal('')
+  })
+
+  it('returns empty string when subtree is all public (default case is silent)', () => {
+    expect(formatFolderAccess({ restricted: 0, embargoed: 0 })).to.equal('')
+    // Both fields are individually optional — undefined coerces to 0.
+    expect(formatFolderAccess({})).to.equal('')
+  })
+
+  it('reports a restricted-only subtree with the exact count', () => {
+    expect(formatFolderAccess({ restricted: 3, embargoed: 0 })).to.equal('3 restricted')
+    expect(formatFolderAccess({ restricted: 1 })).to.equal('1 restricted')
+  })
+
+  it('reports an embargoed-only subtree with the exact count', () => {
+    expect(formatFolderAccess({ restricted: 0, embargoed: 1 })).to.equal('1 embargoed')
+    expect(formatFolderAccess({ embargoed: 4 })).to.equal('4 embargoed')
+  })
+
+  it('combines counts when the subtree mixes restricted and embargoed', () => {
+    expect(formatFolderAccess({ restricted: 3, embargoed: 1 })).to.equal(
+      '3 restricted · 1 embargoed'
+    )
   })
 })

@@ -15,7 +15,7 @@ import {
 } from './icons/FilesTreeIcons'
 import styles from './FilesTree.module.scss'
 import { SelectionState } from './useFileTreeSelection'
-import { formatBytes, formatCount } from './format'
+import { formatBytes, formatCount, formatFileAccess, formatFolderAccess } from './format'
 
 interface FilesTreeRowProps {
   depth: number
@@ -173,7 +173,21 @@ export function FilesTreeRow({
           )}
         </span>
       </div>
-      <div className={styles['row-size']}>{isFile ? formatBytes(item.size) : ''}</div>
+      <div className={styles['row-size']}>
+        {isFile ? formatBytes(item.size) : formatBytes(item.counts?.bytes)}
+      </div>
+      <div
+        className={cn(styles['row-access'], {
+          [styles['row-access-restricted']]: isFile
+            ? item.accessStatus === 'restricted'
+            : (item.counts?.restricted ?? 0) > 0,
+          [styles['row-access-embargoed']]: isFile
+            ? item.accessStatus === 'embargoed'
+            : (item.counts?.restricted ?? 0) === 0 && (item.counts?.embargoed ?? 0) > 0
+        })}
+        data-testid={`files-tree-row-access-${item.path}`}>
+        {isFile ? formatFileAccess(item.accessStatus) : formatFolderAccess(item.counts)}
+      </div>
       <div className={styles['row-count']}>
         {!isFile && item.counts ? formatCount(item.counts.files) : ''}
       </div>

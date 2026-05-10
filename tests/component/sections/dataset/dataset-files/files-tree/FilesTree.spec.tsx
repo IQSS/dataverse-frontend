@@ -437,10 +437,24 @@ describe('FilesTree', () => {
     cy.get('[role="treeitem"]').first().should('have.attr', 'tabindex', '0')
   })
 
-  it('clicking the download icon on a single-file row fires a single dispatch', () => {
+  it('clicking the download icon on a single-file row routes through the streaming-zip tray', () => {
+    // Used to bypass the streaming engine for one-file downloads (anchor
+    // click on the access URL). That fork meant a single big file lost
+    // the per-part Range/retry resilience; we now route every download
+    // through the same engine and surface the tray uniformly. This test
+    // pins that contract: a single-file row click opens the tray and
+    // the run completes through the streaming path.
     const root = FileTreePageMother.create({
       path: '',
-      items: [FileTreeFileMother.create({ id: 7, name: 'sample.txt', path: 'sample.txt' })]
+      items: [
+        FileTreeFileMother.create({
+          id: 7,
+          name: 'sample.txt',
+          path: 'sample.txt',
+          size: 5,
+          downloadUrl: '/access/7'
+        })
+      ]
     })
     const repo = new FakeTreeRepository({ '': root })
     cy.customMount(
@@ -451,23 +465,35 @@ describe('FilesTree', () => {
       />
     )
     cy.findByText('sample.txt').should('exist')
-    // Single-file dispatch creates an <a> element, clicks it, removes it. We
-    // can't easily intercept that, but we can stub document.createElement to
-    // verify the anchor gets created with the expected href.
+    // Stub fetch on the iframe window so the streaming engine can
+    // synthesise a fake response body, and silence the anchor click the
+    // engine fires when the zip blob is ready (otherwise cypress's
+    // runner navigates).
     cy.window().then((win) => {
-      const original = win.document.createElement.bind(win.document)
-      cy.stub(win.document, 'createElement').callsFake((tag: string) => {
-        const el = original(tag)
-        if (tag === 'a') {
-          // Block the actual click so the test runner does not try to
-          // navigate away when the row's download icon is exercised.
-          ;(el as HTMLAnchorElement).click = () => undefined
-        }
-        return el
-      })
+      const respond = (content: string): Response => {
+        const stream = new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode(content))
+            controller.close()
+          }
+        })
+        return new Response(stream, {
+          status: 200,
+          headers: { 'content-type': 'application/octet-stream' }
+        })
+      }
+      ;(win as unknown as { fetch: (input: RequestInfo | URL) => Promise<Response> }).fetch = (
+        input
+      ) => {
+        const url = String(input)
+        if (url.endsWith('/access/7')) return Promise.resolve(respond('AAAAA'))
+        return Promise.reject(new Error(`unexpected fetch ${url}`))
+      }
+      cy.stub(win.HTMLAnchorElement.prototype, 'click').callsFake(() => undefined)
     })
     cy.findByLabelText(/Download file sample\.txt/i).click()
-    cy.findByTestId('files-tree-selection-summary').should('exist')
+    cy.findByTestId('files-tree-download-tray').should('be.visible')
+    cy.contains(/download complete/i).should('exist')
   })
 
   it('onCurrentPathChange fires when the user expands a folder', () => {

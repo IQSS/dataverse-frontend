@@ -81,6 +81,10 @@ export class JSFileTreeMapper {
             requested: false
           }
         : undefined,
+      // Preserve the three-way distinction (public / restricted /
+      // embargoed) lost by the FileAccess flat shape above — needed for
+      // the tree row's access column.
+      accessStatus: item.access,
       checksum: item.checksum,
       downloadUrl: item.downloadUrl
     }
