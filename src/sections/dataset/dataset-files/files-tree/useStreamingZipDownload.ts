@@ -61,7 +61,22 @@ export interface StartStreamingZipArgs {
    * hop and drops it on the cross-origin S3 hop, which is what we want.
    */
   fetchInit?: RequestInit
+  /**
+   * Files larger than this are fetched as a sequence of HTTP `Range`
+   * requests instead of one full GET. Each part is retried on its own
+   * (`partRetries`), so a transient TCP drop mid-file no longer aborts
+   * the whole download. Default `10 * 1024 * 1024` (10 MiB).
+   */
+  partSize?: number
+  /** Per-part retry budget for chunked fetches. Default `3`. */
+  partRetries?: number
+  /** Backoff between part retries, in ms. Default `500`. */
+  partRetryDelayMs?: number
 }
+
+const DEFAULT_PART_SIZE_BYTES = 10 * 1024 * 1024
+const DEFAULT_PART_RETRIES = 3
+const DEFAULT_PART_RETRY_DELAY_MS = 500
 
 export interface StreamingZipApi {
   state: StreamingZipState
@@ -116,8 +131,10 @@ function deferred<T>(): ResolveBag<T> {
  * the zip in memory; future work can swap the blob save for the
  * File System Access API or a Service Worker stream-saver.
  *
- * Per-file progress is tracked through a `TransformStream` that counts
- * bytes as `client-zip` pulls them from the response body.
+ * Per-file progress is tracked inside the custom `ReadableStream` that
+ * `buildChunkedStream` returns: it tallies bytes as `client-zip` pulls
+ * them, and lazily fetches additional Range parts when the file is
+ * larger than `partSize`.
  */
 export function useStreamingZipDownload(): StreamingZipApi {
   const [state, setState] = useState<StreamingZipState>(initialState)
@@ -174,7 +191,10 @@ export function useStreamingZipDownload(): StreamingZipApi {
         zipName = 'dataset.zip',
         strategy: initialStrategy = 'pause',
         buildFetchUrl = (f) => f.downloadUrl,
-        fetchInit
+        fetchInit,
+        partSize = DEFAULT_PART_SIZE_BYTES,
+        partRetries = DEFAULT_PART_RETRIES,
+        partRetryDelayMs = DEFAULT_PART_RETRY_DELAY_MS
       } = args
       /* istanbul ignore if */
       if (files.length === 0) return
@@ -211,26 +231,28 @@ export function useStreamingZipDownload(): StreamingZipApi {
               current: { name: file.name, path: file.path, size: file.size }
             }))
 
+            const url = buildFetchUrl(file)
+            // Files larger than `partSize` are fetched as a sequence of
+            // Range requests so a transient drop mid-file only invalidates
+            // the active part instead of the whole file. The first part
+            // still goes through the existing retry/skip/defer dialog on
+            // hard failure (the body hasn't started streaming into the
+            // zip yet); subsequent parts can only retry inline because
+            // client-zip is already consuming the stream.
+            const useRange = file.size > partSize
+            const firstPartRange = useRange
+              ? `bytes=0-${Math.min(partSize, file.size) - 1}`
+              : undefined
+
             let response: Response
             try {
-              response = await fetch(buildFetchUrl(file), {
-                // `same-origin` keeps cookies on the initial Dataverse
-                // call (same-origin in both SPA and JSF embed) but
-                // drops them when the browser follows a redirect to
-                // S3-style storage. With `download-redirect=true` the
-                // 302 target is on the bucket's hostname; if we sent
-                // credentials there, the browser would require
-                // `Access-Control-Allow-Credentials: true` on the S3
-                // response — incompatible with the typical
-                // `Allow-Origin: *` rule and triggering a CORS block
-                // even when the bucket is otherwise correctly
-                // configured. Caller can override via `fetchInit`.
-                credentials: 'same-origin',
-                ...(fetchInit ?? {})
+              response = await fetchWithRetries({
+                url,
+                rangeHeader: firstPartRange,
+                fetchInit,
+                retries: partRetries,
+                delayMs: partRetryDelayMs
               })
-              if (!response.ok) {
-                throw new Error(`HTTP ${response.status} ${response.statusText}`)
-              }
             } catch (err) {
               const failure: StreamingZipFailure = {
                 path: file.path,
@@ -301,7 +323,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
               continue
             }
 
-            // Wrap the body in a counting stream so we can track bytes.
             // `response.body` is null only for `Response.error()` and a
             // handful of legacy fetch implementations; modern browsers
             // always populate it on a successful HTTP response. Kept as
@@ -315,12 +336,21 @@ export function useStreamingZipDownload(): StreamingZipApi {
               }))
               continue
             }
-            const counted = countingStream(response.body, (delta) => {
-              update((prev) => ({ ...prev, bytesDone: prev.bytesDone + delta }))
+            const stream = buildChunkedStream({
+              file,
+              initialResponse: response,
+              originalUrl: url,
+              partSize,
+              partRetries,
+              partRetryDelayMs,
+              fetchInit,
+              onProgress: (delta) =>
+                update((prev) => ({ ...prev, bytesDone: prev.bytesDone + delta })),
+              cancelled: () => cancelledRef.current
             })
             yield {
               name: file.path,
-              input: counted,
+              input: stream,
               lastModified: new Date()
             }
             update((prev) => ({ ...prev, filesDone: prev.filesDone + 1 }))
@@ -418,17 +448,152 @@ export function useStreamingZipDownload(): StreamingZipApi {
   }
 }
 
-function countingStream(
-  source: ReadableStream<Uint8Array>,
+/**
+ * One fetch with up to `retries` extra attempts. A `Range` header is
+ * forwarded when supplied; a non-OK status is treated the same as a
+ * thrown network error so transient 5xx and TCP drops both retry. When
+ * all retries are exhausted the last error is re-thrown for the caller
+ * to surface in its own failure UI.
+ */
+async function fetchWithRetries(args: {
+  url: string
+  rangeHeader: string | undefined
+  fetchInit: RequestInit | undefined
+  retries: number
+  delayMs: number
+}): Promise<Response> {
+  let lastErr: unknown = new Error('no attempt made')
+  for (let attempt = 0; attempt <= args.retries; attempt++) {
+    try {
+      const headers = new Headers(args.fetchInit?.headers ?? undefined)
+      if (args.rangeHeader !== undefined) headers.set('Range', args.rangeHeader)
+      const response = await fetch(args.url, {
+        // `same-origin` keeps cookies on the initial Dataverse call
+        // (same-origin in both SPA and JSF embed) but drops them when
+        // the browser follows a redirect to S3-style storage. With
+        // `download-redirect=true` the 302 target is on the bucket's
+        // hostname; sending credentials there would require
+        // `Access-Control-Allow-Credentials: true`, incompatible with
+        // the typical `Allow-Origin: *` rule.
+        credentials: 'same-origin',
+        ...(args.fetchInit ?? {}),
+        headers
+      })
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} ${response.statusText}`)
+      }
+      return response
+    } catch (err) {
+      lastErr = err
+      if (attempt < args.retries) {
+        await new Promise((resolve) => setTimeout(resolve, args.delayMs))
+      }
+    }
+  }
+  /* istanbul ignore next */
+  throw lastErr instanceof Error ? lastErr : new Error(String(lastErr))
+}
+
+/**
+ * Wraps the first-part response and lazily fetches the remaining parts
+ * via Range requests as `client-zip` pulls bytes through the stream.
+ *
+ * If the server returned `200` to the first request (Range was either
+ * not set or not honored), the response is treated as the full file —
+ * no further parts are requested. Otherwise the response's `.url`
+ * (after the 303 to S3) is used for the subsequent part requests so
+ * those bypass Dataverse entirely; that's the path that gives us the
+ * resilience win on flaky cross-region links.
+ */
+function buildChunkedStream(args: {
+  file: FileTreeFile
+  initialResponse: Response
+  originalUrl: string
+  partSize: number
+  partRetries: number
+  partRetryDelayMs: number
+  fetchInit: RequestInit | undefined
   onProgress: (delta: number) => void
-): ReadableStream<Uint8Array> {
-  const transform = new TransformStream<Uint8Array, Uint8Array>({
-    transform(chunk, controller) {
-      onProgress(chunk.byteLength)
-      controller.enqueue(chunk)
+  cancelled: () => boolean
+}): ReadableStream<Uint8Array> {
+  const total = args.file.size
+  const usedRange = args.initialResponse.status === 206
+  const numParts = usedRange ? Math.ceil(total / args.partSize) : 1
+  const subsequentUrl =
+    args.initialResponse.url && args.initialResponse.url !== args.originalUrl
+      ? /* istanbul ignore next */ args.initialResponse.url
+      : args.originalUrl
+
+  // Caller has already null-checked `initialResponse.body` (see the
+  // /* istanbul ignore next */ guard in the engine), so the assertion
+  // here only narrows the type — the runtime check is upstream.
+  const initialBody = args.initialResponse.body as ReadableStream<Uint8Array>
+  let partIndex = 0
+  let currentReader: ReadableStreamDefaultReader<Uint8Array> | null = initialBody.getReader()
+
+  return new ReadableStream<Uint8Array>({
+    async pull(controller) {
+      if (args.cancelled()) {
+        /* istanbul ignore next */
+        controller.close()
+        /* istanbul ignore next */
+        return
+      }
+      // Drain the current part; on exhaustion, advance to the next part
+      // (or close the stream if all parts are done).
+      for (;;) {
+        if (!currentReader) {
+          if (partIndex >= numParts) {
+            controller.close()
+            return
+          }
+          const start = partIndex * args.partSize
+          const end = Math.min(start + args.partSize, total) - 1
+          let response: Response
+          try {
+            response = await fetchWithRetries({
+              url: subsequentUrl,
+              rangeHeader: `bytes=${start}-${end}`,
+              fetchInit: args.fetchInit,
+              retries: args.partRetries,
+              delayMs: args.partRetryDelayMs
+            })
+          } catch (err) {
+            controller.error(err instanceof Error ? err : new Error(String(err)))
+            return
+          }
+          /* istanbul ignore if */
+          if (!response.body) {
+            controller.error(new Error('no body for range part'))
+            return
+          }
+          currentReader = response.body.getReader()
+        }
+        const { value, done } = await currentReader.read()
+        if (done) {
+          currentReader.releaseLock()
+          currentReader = null
+          partIndex += 1
+          continue
+        }
+        if (value && value.byteLength > 0) {
+          args.onProgress(value.byteLength)
+          controller.enqueue(value)
+          return
+        }
+      }
+    },
+    /* istanbul ignore next */
+    async cancel() {
+      if (currentReader) {
+        try {
+          await currentReader.cancel()
+        } catch {
+          // Reader may already be closed; cancellation is best-effort.
+        }
+      }
     }
   })
-  return source.pipeThrough(transform)
 }
 
 function triggerDownload(blob: Blob, name: string): void {
