@@ -517,6 +517,33 @@ describe('Dataset', () => {
 
           cy.findByRole('button', { name: 'File Options' }).should('exist').click()
           cy.wait(2_000)
+          // Diagnostic: when CI keeps failing on "Unable to find Unrestrict",
+          // dump the actual DOM state at the deadline to Node stdout via
+          // cy.task. The browser-side cy.log path doesn't reach the GHA log,
+          // and reading the cypress screenshot is offline-only. This block
+          // is the cheapest way to find out whether (a) the dropdown menu
+          // even opened, (b) it opened but didn't yet render its items,
+          // (c) the items rendered but `Unrestrict` is in a different
+          // subtree than `findByText` walks. Drop the block once the spec
+          // is consistently green.
+          cy.document().then((doc) => {
+            const menus = Array.from(doc.querySelectorAll('.dropdown-menu, [role="menu"]'))
+            const items = menus.flatMap((m) =>
+              Array.from(m.querySelectorAll('button, a, [role="menuitem"]')).map((el) => ({
+                text: (el.textContent ?? '').trim(),
+                visible: el.offsetParent !== null
+              }))
+            )
+            cy.task('diag', {
+              where: 'dataset.spec.before-Unrestrict',
+              menusFound: menus.length,
+              menusVisible: menus.filter((m) => m.offsetParent !== null).length,
+              itemCount: items.length,
+              items,
+              bodyHasUnrestrict: (doc.body.textContent ?? '').includes('Unrestrict'),
+              bodyHasFileOptions: (doc.body.textContent ?? '').includes('File Options')
+            })
+          })
           cy.findByText('Unrestrict', { timeout: 20_000 }).should('exist')
         })
     })
