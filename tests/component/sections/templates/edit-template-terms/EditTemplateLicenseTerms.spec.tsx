@@ -104,4 +104,92 @@ describe('EditTemplateLicenseTerms', () => {
 
     cy.findByRole('button', { name: /Close/i }).should('exist')
   })
+
+  it('calls onCancel when Close is clicked', () => {
+    const onCancel = cy.stub().as('onCancel')
+
+    cy.customMount(
+      <EditTemplateLicenseTerms
+        template={TemplateMother.create({ id: 5, name: 'Tpl' })}
+        templateRepository={templateRepository}
+        licenseRepository={licenseRepository}
+        onSuccess={cy.stub()}
+        onCancel={onCancel}
+      />
+    )
+
+    cy.findByRole('button', { name: /Close/i }).click()
+
+    cy.get('@onCancel').should('have.been.calledOnce')
+  })
+
+  it('renders the custom terms fields when the template uses custom terms', () => {
+    mountEditTemplateLicenseTerms(
+      cy.stub(),
+      TemplateMother.create({
+        id: 5,
+        name: 'Tpl',
+        termsOfUse: {
+          termsOfAccess: { fileAccessRequest: false },
+          customTerms: {
+            termsOfUse: 'Existing custom terms',
+            confidentialityDeclaration: 'Confidentiality',
+            specialPermissions: 'Permissions',
+            restrictions: 'Restrictions',
+            citationRequirements: 'Citations',
+            depositorRequirements: 'Depositor requirements',
+            conditions: 'Conditions',
+            disclaimer: 'Disclaimer'
+          }
+        }
+      })
+    )
+
+    cy.findByTestId('customTerms.termsOfUse').should('have.value', 'Existing custom terms')
+    cy.findByTestId('customTerms.confidentialityDeclaration').should(
+      'have.value',
+      'Confidentiality'
+    )
+  })
+
+  it('submits custom terms when the custom terms option is selected', () => {
+    templateRepository.updateTemplateLicenseTerms = cy.stub().resolves()
+
+    mountEditTemplateLicenseTerms(
+      cy.stub(),
+      TemplateMother.create({
+        id: 5,
+        name: 'Tpl',
+        termsOfUse: {
+          termsOfAccess: { fileAccessRequest: false },
+          customTerms: {
+            termsOfUse: 'Existing custom terms',
+            confidentialityDeclaration: '',
+            specialPermissions: '',
+            restrictions: '',
+            citationRequirements: '',
+            depositorRequirements: '',
+            conditions: '',
+            disclaimer: ''
+          }
+        }
+      })
+    )
+
+    cy.findByTestId('customTerms.termsOfUse').clear().type('Updated custom terms')
+    cy.findByRole('button', { name: 'Save Changes' }).click()
+
+    cy.wrap(templateRepository.updateTemplateLicenseTerms).should('have.been.calledWith', 5, {
+      customTerms: {
+        termsOfUse: 'Updated custom terms',
+        confidentialityDeclaration: '',
+        specialPermissions: '',
+        restrictions: '',
+        citationRequirements: '',
+        depositorRequirements: '',
+        conditions: '',
+        disclaimer: ''
+      }
+    })
+  })
 })

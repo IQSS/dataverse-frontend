@@ -83,6 +83,23 @@ describe('EditTemplateTermsOfAccess', () => {
     cy.findByRole('button', { name: /Close/i }).should('exist')
   })
 
+  it('calls onCancel when Close is clicked', () => {
+    const onCancel = cy.stub().as('onCancel')
+
+    cy.customMount(
+      <EditTemplateTermsOfAccess
+        template={baseTemplate}
+        templateRepository={templateRepository}
+        onSuccess={cy.stub()}
+        onCancel={onCancel}
+      />
+    )
+
+    cy.findByRole('button', { name: /Close/i }).click()
+
+    cy.get('@onCancel').should('have.been.calledOnce')
+  })
+
   it('shows an error message when the update fails', () => {
     templateRepository.updateTemplateTermsOfAccess = cy.stub().rejects(new Error('TOA boom'))
 
@@ -91,5 +108,35 @@ describe('EditTemplateTermsOfAccess', () => {
     cy.findByRole('button', { name: 'Save Changes' }).click()
 
     cy.findByText(/TOA boom/i).should('exist')
+  })
+
+  it('enables Save and submits when request access is off but terms are provided', () => {
+    templateRepository.updateTemplateTermsOfAccess = cy.stub().resolves()
+
+    cy.customMount(
+      <EditTemplateTermsOfAccess
+        template={TemplateMother.create({
+          id: 9,
+          name: 'Tpl',
+          termsOfUse: {
+            termsOfAccess: {
+              fileAccessRequest: false,
+              termsOfAccessForRestrictedFiles: ''
+            }
+          }
+        })}
+        templateRepository={templateRepository}
+        onSuccess={cy.stub()}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+    cy.findByLabelText(/Terms of Access for Restricted Files/i).type('Provide contact details')
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled').click()
+
+    cy.wrap(templateRepository.updateTemplateTermsOfAccess).should('have.been.calledWith', 9, {
+      fileAccessRequest: false,
+      termsOfAccessForRestrictedFiles: 'Provide contact details'
+    })
   })
 })
