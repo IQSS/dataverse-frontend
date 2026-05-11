@@ -473,6 +473,39 @@ describe('Dataset', () => {
         })
     })
 
+    // Hypothesis check (attempt 6): this test was repeatedly failing
+    // with `bodyHasFileOptions: false` and `bodyHasLoading: true` at
+    // click time. Five prior fixes targeted timing — none de-flaked.
+    // Observation: the failure always landed on the first
+    // "logged in as owner" test that ran AFTER a test that called
+    // `TestsUtils.logout()`. Even though `beforeEach` calls
+    // `TestsUtils.login()` again, Keycloak's residual session state
+    // or a stale OIDC token in localStorage could leave the SPA
+    // partially authenticated — enough to load the dataset shell
+    // but not enough for the file table's owner-only refetch to
+    // succeed cleanly.
+    //
+    // Mitigation under test: moved this case BEFORE the first
+    // logout-triggering test in this describe block, so it runs
+    // while the auth state is freshest. If this passes in CI, the
+    // session-pollution hypothesis is confirmed and we can either
+    // keep the order or add an explicit cookie/localStorage reset
+    // between tests. If it fails again, `it.skip` it back and
+    // pursue the `cy.intercept` rewrite post-DCM.
+    it('loads the restricted files when the user is logged in as owner', () => {
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
+          cy.findByText('Files').should('exist')
+          cy.findByText('Restricted with access Icon').should('exist')
+          cy.findByRole('button', { name: 'File Options' }).should('be.visible').click()
+          cy.contains('Unrestrict', { timeout: 10_000 }).should('exist')
+        })
+    })
+
     it('does not load the action buttons when the user is not logged in as owner', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(3)).then((dataset) =>
@@ -492,45 +525,6 @@ describe('Dataset', () => {
           cy.get('#edit-files-menu').should('not.exist')
           cy.findAllByRole('button', { name: 'Access File' }).should('exist')
           cy.findAllByRole('button', { name: 'File Options' }).should('not.exist')
-        })
-    })
-
-    // TODO(post-DCM): CI-only failure on the File-Options → Unrestrict
-    // dropdown assertion. Manual testing in both SPA and JSF confirms
-    // the feature works end-to-end in well under 2 s. Five iterations
-    // of CI-targeted fixes did not de-flake it:
-    //
-    //   1. should('be.visible') instead of should('exist') — passed
-    //      momentarily, dropdown then re-rendered gone.
-    //   2. cy.contains(/loading/i).should('not.exist') wait before
-    //      click — caught the first loading→done transition but the
-    //      page entered a second loading cycle after.
-    //   3. cy.get('.Toastify__toast').should('not.exist') — user
-    //      confirmed toast appears post-render, not the cause.
-    //   4. cy.wait(4_000) + click({ force: true }) — same diag output.
-    //   5. Dropped Access-File click entirely; cy.contains('Unrestrict')
-    //      to handle split text nodes — still "Expected to find content
-    //      'Unrestrict' but never did."
-    //
-    // Diag consistently captured `bodyHasFileOptions: false` at click
-    // time AND no `Unrestrict` in body after. The bytes-in-the-zip
-    // feature works in every manual test; the issue is CI-specific
-    // page-state stability that's resisted every fix attempt.
-    // Skipping until we can either rebuild this against
-    // `cy.intercept` fixtures that decouple from real backend
-    // refetches, or until we identify a deterministic post-grant
-    // sentinel the dataset page exposes.
-    it.skip('loads the restricted files when the user is logged in as owner', () => {
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
-        .its('persistentId')
-        .then((persistentId: string) => {
-          cy.visit(
-            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
-          )
-          cy.findByText('Files').should('exist')
-          cy.findByText('Restricted with access Icon').should('exist')
-          cy.findByRole('button', { name: 'File Options' }).should('be.visible').click()
-          cy.contains('Unrestrict', { timeout: 10_000 }).should('exist')
         })
     })
 

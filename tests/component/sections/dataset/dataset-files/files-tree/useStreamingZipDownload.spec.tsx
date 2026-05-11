@@ -689,6 +689,50 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/failed checksum verification/i).should('not.exist')
   })
 
+  it('verifies a SHA-1 checksum via the buffered subtle.digest path', () => {
+    // Same shape as the SHA-256 test — covers the SHA-1 arm of the
+    // algorithm ternary in `makeDigestAccumulator`. sha1("hello").
+    const sha1OfHello = 'aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d'
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'SHA-1', value: sha1OfHello }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-sha1.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
+  it('verifies a SHA-512 checksum via the buffered subtle.digest path', () => {
+    // Covers the SHA-512 arm of the algorithm ternary. sha512("hello").
+    const sha512OfHello =
+      '9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca72323c3d99ba5c11d7c7acc6e14b8c5da0c4663475c2e5c3adef46f73bcdec043'
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'SHA-512', value: sha512OfHello }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-sha512.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
   it('silently skips verification when the algorithm is unsupported', () => {
     // Tree advertises a checksum with an algorithm we don't know how to
     // compute (e.g. a future hash). `makeDigestAccumulator` returns
