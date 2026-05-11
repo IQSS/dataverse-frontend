@@ -12,6 +12,7 @@ import { GuestbookActionButtons } from './action-buttons/GuestbookActionButtons'
 import { CreateGuestbookButton } from './create-guestbooks/CreateGuestbookButton'
 import { GuestbookSkeleton } from './GuestbookSkeleton'
 import { GuestbooksEmptyState } from './GuestbooksEmptyState'
+import { useGuestbookRepository } from './GuestbookRepositoryContext'
 import { PreviewGuestbookModal } from './preview-modal/PreviewGuestbookModal'
 import { useGetGuestbooksByCollectionId } from './useGetGuestbooksByCollectionId'
 import styles from './Guestbooks.module.scss'
@@ -27,13 +28,14 @@ export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksPro
   const [sortBy, setSortBy] = useState<'name' | 'created' | 'usage' | 'responses' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [guestbookToPreview, setGuestbookToPreview] = useState<Guestbook | undefined>()
+  const guestbookRepository = useGuestbookRepository()
 
   const { collection, isLoading } = useCollection(collectionRepository, collectionId)
   const { guestbooks, isLoadingGuestbooksByCollectionId, errorGetGuestbooksByCollectionId } =
     useGetGuestbooksByCollectionId({
+      guestbookRepository,
       collectionIdOrAlias: collection?.id
     })
-  console.log('Guestbooks', guestbooks)
   const rootCollectionNames = collection?.hierarchy?.toArray().map((node) => node.name) ?? []
 
   const currentDataverseId = Number(collection?.id) || 1

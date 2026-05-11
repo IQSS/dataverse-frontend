@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { type CreateGuestbookDTO } from '@iqss/dataverse-client-javascript'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
-import { useNavigate } from 'react-router-dom'
+import { type NavigateFunction, useNavigate } from 'react-router-dom'
 import { DashLg, PlusLg } from 'react-bootstrap-icons'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { GuestbookQuestionType } from '@/guestbooks/domain/models/Guestbook'
@@ -9,7 +10,9 @@ import { RouteWithParams } from '@/sections/Route.enum'
 import { useCollection } from '@/sections/collection/useCollection'
 import { NotFoundPage } from '@/sections/not-found-page/NotFoundPage'
 import { BreadcrumbsGenerator } from '@/sections/shared/hierarchy/BreadcrumbsGenerator'
-// import { GuestbookSkeleton } from './GuestbookSkeleton'
+import { useGuestbookRepository } from '../GuestbookRepositoryContext'
+import { GuestbookSkeleton } from '../GuestbookSkeleton'
+import { useCreateGuestbook } from './useCreateGuestbook'
 import styles from './CreateGuestbook.module.scss'
 
 interface CreateGuestbookProps {
@@ -27,8 +30,14 @@ interface CustomQuestionDraft {
 
 export const CreateGuestbook = ({ collectionId, collectionRepository }: CreateGuestbookProps) => {
   const { t } = useTranslation('guestbooks')
-  const navigate = useNavigate()
+  const navigate: NavigateFunction = useNavigate()
+  const guestbookRepository = useGuestbookRepository()
   const { collection, isLoading } = useCollection(collectionRepository, collectionId)
+  const [guestbookName, setGuestbookName] = useState('')
+  const [nameRequired, setNameRequired] = useState(false)
+  const [emailRequired, setEmailRequired] = useState(false)
+  const [institutionRequired, setInstitutionRequired] = useState(false)
+  const [positionRequired, setPositionRequired] = useState(false)
   const [customQuestions, setCustomQuestions] = useState<CustomQuestionDraft[]>([
     {
       id: 1,
@@ -40,6 +49,15 @@ export const CreateGuestbook = ({ collectionId, collectionRepository }: CreateGu
   ])
   const guestbooksGuideUrl =
     'https://guides.dataverse.org/en/6.9/user/dataverse-management.html#dataset-guestbooks'
+  const guestbooksRoute = RouteWithParams.GUESTBOOKS(collectionId)
+  const navigateToGuestbooks = () => navigate(guestbooksRoute)
+  const { isCreatingGuestbook, errorCreatingGuestbook, handleCreateGuestbook } = useCreateGuestbook(
+    {
+      guestbookRepository,
+      collectionIdOrAlias: collectionId,
+      onSuccessfulCreate: navigateToGuestbooks
+    }
+  )
 
   const updateQuestion = (
     questionId: number,
@@ -99,17 +117,62 @@ export const CreateGuestbook = ({ collectionId, collectionRepository }: CreateGu
     })
   }
 
+  const buildGuestbookDTO = (): CreateGuestbookDTO => ({
+    name: guestbookName.trim(),
+    enabled: false,
+    nameRequired,
+    emailRequired,
+    institutionRequired,
+    positionRequired,
+    customQuestions: customQuestions
+      .filter((question) => question.questionText.trim().length > 0)
+      .map((question, index) => ({
+        question: question.questionText.trim(),
+        required: question.required,
+        displayOrder: index,
+        type: question.type,
+        hidden: false,
+        optionValues:
+          question.type === 'options'
+            ? question.responseOptions
+                .filter((option) => option.trim().length > 0)
+                .map((option, optionIndex) => ({
+                  value: option.trim(),
+                  displayOrder: optionIndex
+                }))
+            : undefined
+      }))
+  })
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    void handleCreateGuestbook(buildGuestbookDTO())
+  }
+
   if (!isLoading && !collection) {
     return <NotFoundPage dvObjectNotFoundType="collection" />
   }
 
   if (isLoading || !collection) {
-    return <NotFoundPage dvObjectNotFoundType="collection" />
+    return <GuestbookSkeleton />
   }
 
   return (
     <section>
-      <BreadcrumbsGenerator hierarchy={collection.hierarchy}></BreadcrumbsGenerator>
+      <BreadcrumbsGenerator
+        hierarchy={collection.hierarchy}
+        withActionItem
+        actionItemText={t('create.title')}
+        actionItems={[
+          {
+            text: t('title'),
+            url: RouteWithParams.GUESTBOOKS(collectionId)
+          },
+          {
+            text: t('create.title')
+          }
+        ]}
+      />
 
       <Alert variant="info" dismissible={false}>
         <Trans
@@ -121,13 +184,20 @@ export const CreateGuestbook = ({ collectionId, collectionRepository }: CreateGu
         />
       </Alert>
 
-      <form className={styles.form} onSubmit={(event) => event.preventDefault()} noValidate>
+      {errorCreatingGuestbook && <Alert variant="danger">{errorCreatingGuestbook}</Alert>}
+
+      <form className={styles.form} onSubmit={handleSubmit} noValidate>
         <Form.Group as={Row} className={styles['form-row']} controlId="guestbook-name">
           <Form.Group.Label column sm={3} className={styles['row-label']} required>
             {t('create.fields.name.label')}
           </Form.Group.Label>
           <Col sm={6}>
-            <Form.Group.Input type="text" aria-required={true} />
+            <Form.Group.Input
+              type="text"
+              aria-required={true}
+              value={guestbookName}
+              onChange={(event) => setGuestbookName(event.target.value)}
+            />
           </Col>
         </Form.Group>
 
@@ -141,18 +211,26 @@ export const CreateGuestbook = ({ collectionId, collectionRepository }: CreateGu
               <Form.Group.Checkbox
                 id="data-collected-name"
                 label={t('create.fields.dataCollected.options.name')}
+                checked={nameRequired}
+                onChange={() => setNameRequired((current) => !current)}
               />
               <Form.Group.Checkbox
                 id="data-collected-email"
                 label={t('create.fields.dataCollected.options.email')}
+                checked={emailRequired}
+                onChange={() => setEmailRequired((current) => !current)}
               />
               <Form.Group.Checkbox
                 id="data-collected-institution"
                 label={t('create.fields.dataCollected.options.institution')}
+                checked={institutionRequired}
+                onChange={() => setInstitutionRequired((current) => !current)}
               />
               <Form.Group.Checkbox
                 id="data-collected-position"
                 label={t('create.fields.dataCollected.options.position')}
+                checked={positionRequired}
+                onChange={() => setPositionRequired((current) => !current)}
               />
             </div>
           </Col>
@@ -308,11 +386,14 @@ export const CreateGuestbook = ({ collectionId, collectionRepository }: CreateGu
         </Form.Group>
 
         <div className={styles.actions}>
-          <Button type="submit">{t('create.submit')}</Button>
+          <Button type="submit" disabled={isCreatingGuestbook || guestbookName.trim().length === 0}>
+            {t('create.submit')}
+          </Button>
           <Button
             variant="link"
             type="button"
-            onClick={() => navigate(RouteWithParams.GUESTBOOKS(collectionId))}>
+            disabled={isCreatingGuestbook}
+            onClick={navigateToGuestbooks}>
             {t('create.cancel')}
           </Button>
         </div>

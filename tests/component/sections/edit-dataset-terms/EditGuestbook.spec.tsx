@@ -83,6 +83,7 @@ describe('EditGuestbook', () => {
 
   beforeEach(() => {
     guestbookRepository = {
+      createGuestbook: cy.stub(),
       getGuestbook: cy.stub(),
       getGuestbooksByCollectionId: cy.stub().resolves(mockGuestbooks),
       assignDatasetGuestbook: cy.stub().resolves(undefined),

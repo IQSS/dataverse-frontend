@@ -10,6 +10,7 @@ describe('useAssignDatasetGuestbook', () => {
   beforeEach(() => {
     onSuccessfulAssignDatasetGuestbook = cy.stub().as('onSuccessfulAssignDatasetGuestbook')
     guestbookRepository = {
+      createGuestbook: cy.stub(),
       getGuestbook: cy.stub(),
       getGuestbooksByCollectionId: cy.stub(),
       assignDatasetGuestbook: cy.stub(),

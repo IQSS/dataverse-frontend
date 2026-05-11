@@ -57,8 +57,6 @@
       "name": {
         "label": "Guestbook Name"
       },
-  "create": {
-    "fields": {
       "dataCollected": {
         "label": "Data Collected",
         "help": "Dataverse account information that will be collected when a user downloads a file. Check the ones that will be required.",
@@ -89,7 +87,5 @@
     },
     "submit": "Create Dataset Guestbook",
     "cancel": "Cancel"
-      }
-    }
   }
 }

@@ -142,6 +142,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
       Promise.resolve('/api/v1/access/datafiles/10,11?token=test')
 
     guestbookRepository = {
+      createGuestbook: cy.stub(),
       getGuestbook: cy
         .stub()
         .as('getGuestbook')

@@ -25,6 +25,23 @@
           "institution": "Institución",
           "position": "Cargo"
         }
+      },
+      "customQuestions": {
+        "label": "Preguntas personalizadas",
+        "help": "Crea tus propias preguntas para que los usuarios proporcionen más información que la de su cuenta cuando descarguen un fichero. Las preguntas pueden ser obligatorias u opcionales, y las respuestas pueden ser de texto o de opción múltiple.",
+        "typeLabel": "Tipo de pregunta",
+        "questionText": "Texto de la pregunta",
+        "required": "Campo obligatorio",
+        "addQuestion": "Añadir pregunta",
+        "types": {
+          "singleLine": "Una línea",
+          "multipleLine": "Varias líneas",
+          "multipleChoice": "Opción múltiple"
+        },
+        "responseOptions": "Opciones de respuesta",
+        "addOption": "Añadir opción de respuesta",
+        "removeOption": "Eliminar opción de respuesta",
+        "removeQuestion": "Eliminar pregunta"
       }
     }
   }

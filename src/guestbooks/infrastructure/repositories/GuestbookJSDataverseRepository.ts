@@ -1,5 +1,7 @@
 import {
   assignDatasetGuestbook,
+  createGuestbook,
+  type CreateGuestbookDTO,
   getGuestbooksByCollectionId,
   getGuestbook,
   removeDatasetGuestbook
@@ -8,6 +10,13 @@ import { GuestbookRepository } from '../../domain/repositories/GuestbookReposito
 import { Guestbook } from '../../domain/models/Guestbook'
 
 export class GuestbookJSDataverseRepository implements GuestbookRepository {
+  createGuestbook(
+    collectionIdOrAlias: number | string,
+    guestbook: CreateGuestbookDTO
+  ): Promise<number> {
+    return createGuestbook.execute(guestbook, collectionIdOrAlias)
+  }
+
   getGuestbook(guestbookId: number): Promise<Guestbook> {
     return getGuestbook.execute(guestbookId).then((guestbook) => guestbook as Guestbook)
   }
