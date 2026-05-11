@@ -13,7 +13,7 @@ interface UploadLimit {
 
 export function useUploadLimit(
   datasetPersistentId: string,
-  datasetRepository: DatasetRepository,
+  datasetRepository?: DatasetRepository,
   fetchUploadLimits: (
     datasetId: string | number,
     datasetRepository: DatasetRepository
@@ -24,6 +24,13 @@ export function useUploadLimit(
   const [errorUploadLimits, setErrorUploadLimits] = useState<string | null>(null)
 
   const fetchUploadLimitsCallback = useCallback(async () => {
+    if (!datasetRepository) {
+      setUploadLimit({})
+      setIsLoadingUploadLimits(false)
+      setErrorUploadLimits(null)
+      return
+    }
+
     setIsLoadingUploadLimits(true)
     setErrorUploadLimits(null)
 

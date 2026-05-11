@@ -233,12 +233,18 @@ describe('EditDatasetMenu', () => {
     cy.findByRole('button', { name: 'Terms and Guestbook' }).click()
   })
 
-  it('does not render the upload files button if dataset file store does not start with "s3"', () => {
+  it('does not render the upload files button when the dataset storage driver is not S3-compatible', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithAllAllowed(),
       locks: [],
       hasValidTermsOfAccess: true,
-      fileStore: 'non-s3-file-store'
+      storageDriver: {
+        name: 'localfs1',
+        type: 'file',
+        label: 'LocalFilesystem',
+        directUpload: false,
+        directDownload: false
+      }
     })
 
     cy.mountAuthenticated(

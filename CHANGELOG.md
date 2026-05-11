@@ -8,11 +8,30 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- DVWebloader V2: A standalone file uploader build that reuses React file upload components, supporting S3 direct uploads with configurable tagging.
+- Shared file upload hooks (`useFileUploadState`, `useFileUploadOperations`) for better code reuse between the main SPA and standalone uploader.
+- Lazy file tree view on the dataset Files tab (`#6691`). A new `FilesViewToggle` flips between the existing files table and a virtualised, lazily-loaded folder tree. The tree supports tri-state path-keyed selection, full WAI-ARIA tree keyboard navigation (`Up/Down/Left/Right/Home/End/Space/Enter`), and URL bookmarkability via `?view=tree&path=<folder>`.
+- Client-side streaming-zip download of the tree's selection. Multi-file selections are zipped in the browser (single new dependency: [`client-zip`](https://github.com/Touffy/client-zip), ~3 KB gzip); a bottom-sheet tray surfaces inline **Retry / Skip / Skip & retry at end / Skip all** decisions on per-file failures. Single-file downloads bypass the zip wrap and trigger a direct browser download. No server-side ZIP endpoint is involved.
+- Standalone reusable bundle for the lazy tree (`dv-tree-view.js`), built by `vite.config.uploader.ts` alongside `dv-uploader`. Mounted on JSF dataset pages via the new `dataverse.feature.react-tree-view` flag in `IQSS/dataverse`.
+- Domain layer for the new tree (`src/files/domain/{models,repositories,useCases}/`) plus an SDK-backed `FileTreeJSDataverseRepository` (with a `JSFileTreeMapper`) and a previews-derived `FileTreeFromPreviewsRepository` fallback for older Dataverse instances.
+
 ### Changed
+
+- Bumped `@iqss/dataverse-client-javascript` to `2.2.0-pr403.3d6f638` (GitHub Packages prerelease) to consume the new `listDatasetTreeNode` and `iterateDatasetTreeNode` use cases. The pinned hash also carries the `x-amz-tagging` default fix so older Dataverse releases without the matching server PR keep getting `dv-state=temp` from the client.
+- Streaming-zip download fetches now use `credentials: 'same-origin'` (previously `'include'`). Cookies still travel on the same-origin Dataverse hop, but are dropped on the cross-origin redirect to S3 — required for `Allow-Origin: *` buckets to accept the request.
+- Standalone bundles (`dv-tree-view`, `dv-uploader`) now mount inside a Shadow DOM root via `mountInShadowRoot`, isolating both directions from the host page's CSS context.
+- Component CSS that references `var(--bs-*)` Bootstrap-5 tokens carries hardcoded fallback values, so the bundle renders correctly on JSF hosts that don't define those custom properties.
 
 ### Fixed
 
-### Removed
+- Successful Save in the SPA file uploader no longer re-engages the "Discard Uploaded Files?" leave modal. The post-save navigation effect was racing `useBlocker`'s predicate-update effect across a parent/child boundary; the fix colocates the navigate effect with `useBlocker` in the same component so React fires the predicate update before the navigation runs. The standalone uploader (which uses `beforeunload` instead of `useBlocker`) didn't reproduce the original symptom but uses the same colocated shape now.
+- Tree download/upload paths select an S3-compatible storage driver via the typed `storageDriver.type === 's3'` capability and the `directDownload` / `directUpload` flags, instead of the previous `s3*` name-prefix heuristic. Operator-renamed drivers (e.g. `minio1`) are now recognised correctly without depending on the driver id.
+- Tree DOM focus follows the keyboard's roving tabindex when the bundle is mounted inside a Shadow DOM (JSF embed): the focus-grab effect now resolves the active element via `el.getRootNode()` instead of `document.activeElement`, so the `:focus-visible` ring tracks Up/Down arrow keys across the host-page boundary.
+- Tree view now re-mounts cleanly when a JSF partial update re-inserts the host `<div>`. Both standalone bundles install a `MutationObserver` that detects host-element identity changes and re-runs `init()` (the orphaned-Root regression that left the tree empty after toggling Table↔Tree several times).
+- `useFileTree` no longer leaves the loading spinner forever when the host component unmounts mid-fetch; a `mountedRef` guard skips state updates after unmount, and the version-key-change reset path bypasses the stale-closure cache short-circuit so a refetch fires on schedule.
+- `useCheckPublishCompleted` polling no longer races itself: a `cancelled` latch + `inFlight` guard prevents a second `getDatasetLocks` call from firing while the first is still awaiting, fixing the rare double-success case and stopping extra requests after a poll-loop error.
+- Tree-view header now exposes a tristate select-all checkbox in its dedicated select column.
+- Streaming-zip download tray's close button is sized for normal-pointer hit-targets when the bundle renders inside a JSF page (was rendering as a tiny `link` button due to host-page font cascade).
 
 ---
 

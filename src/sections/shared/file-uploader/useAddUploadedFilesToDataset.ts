@@ -2,18 +2,18 @@ import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import { UploadedFileDTO, WriteError } from '@iqss/dataverse-client-javascript'
 import { addUploadedFiles } from '@/files/domain/useCases/addUploadedFiles'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { UploadedFileDTOMapper } from '@/files/infrastructure/mappers/UploadedFileDTOMapper'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { useFileUploaderContext } from './context/FileUploaderContext'
 import { UploadedFile } from './context/fileUploaderReducer'
+import { UploaderFileRepository } from './types'
 
 interface UseAddUploadedFilesToDatasetReturn {
   submitUploadedFilesToDataset: (uploadedFiles: UploadedFile[]) => Promise<void>
 }
 
 export const useAddUploadedFilesToDataset = (
-  fileRepository: FileRepository,
+  fileRepository: UploaderFileRepository,
   datasetPersistentId: string
 ): UseAddUploadedFilesToDatasetReturn => {
   const { setIsSaving, setAddFilesToDatasetOperationInfo, removeAllFiles } =
@@ -42,7 +42,12 @@ export const useAddUploadedFilesToDataset = (
 
       removeAllFiles()
       setAddFilesToDatasetOperationInfo({ success: true })
-    } catch (err: WriteError | unknown) {
+    } catch (err: unknown) {
+      // Only treat as a JSDataverse WriteError when the error actually
+      // is one — falling back to the default toast for any other thrown
+      // value. The previous structural duck-type check (`reason ||
+      // message`) caught plain `Error` instances too and printed their
+      // message instead of the user-friendly default.
       if (err instanceof WriteError) {
         const error = new JSDataverseWriteErrorHandler(err)
         const formattedError =

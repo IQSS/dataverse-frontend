@@ -3,6 +3,7 @@ import {
   Dataset,
   DatasetLock,
   DatasetNonNumericVersion,
+  DatasetStorageDriver,
   TermsOfAccess
 } from '../../domain/models/Dataset'
 import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
@@ -44,7 +45,8 @@ import {
   getDatasetLinkedCollections,
   updateTermsOfAccess,
   updateDatasetLicense,
-  getDatasetUploadLimits
+  getDatasetUploadLimits,
+  getDatasetStorageDriver
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -58,9 +60,7 @@ import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCou
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetLicenseUpdateRequest } from '../../domain/models/DatasetLicenseUpdateRequest'
-import { axiosInstance } from '@/axiosInstance'
 import { requireAppConfig } from '../../../config'
-import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
@@ -79,6 +79,7 @@ interface IDatasetDetails {
   latestPublishedVersionMinorNumber?: number
   datasetVersionDiff?: JSDatasetVersionDiff
   fileStore?: string
+  storageDriver?: DatasetStorageDriver
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
@@ -159,14 +160,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getDatasetCitation.execute(jsDataset.id, version, includeDeaccessioned),
       getDatasetUserPermissions.execute(jsDataset.id),
       getDatasetLocks.execute(jsDataset.id),
-      this.getFileStore(jsDataset.id)
+      this.getStorageDriver(jsDataset.id)
     ]).then(
-      ([summaryFieldsNames, citation, jsDatasetPermissions, jsDatasetLocks, fileStore]: [
+      ([summaryFieldsNames, citation, jsDatasetPermissions, jsDatasetLocks, storageDriver]: [
         string[],
         string,
         JSDatasetPermissions,
         JSDatasetLock[],
-        string | undefined
+        DatasetStorageDriver | undefined
       ]) => {
         return {
           jsDataset,
@@ -176,7 +177,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           jsDatasetLocks,
           jsDatasetFilesTotalOriginalDownloadSize: 0,
           jsDatasetFilesTotalArchivalDownloadSize: 0,
-          fileStore
+          fileStore: storageDriver?.name,
+          storageDriver
         }
       }
     )
@@ -269,7 +271,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           datasetDetails.latestPublishedVersionMajorNumber,
           datasetDetails.latestPublishedVersionMinorNumber,
           datasetDetails.datasetVersionDiff,
-          datasetDetails.fileStore
+          datasetDetails.fileStore,
+          datasetDetails.storageDriver
         )
       })
       .catch((error: ReadError) => {
@@ -431,33 +434,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return getDatasetLinkedCollections.execute(datasetId)
   }
 
-  /*
-    TODO: This is a temporary solution as this use case doesn't exist in js-dataverse yet and the API should also return the file store type rather than name only.
-    After https://github.com/IQSS/dataverse/issues/11695 is implemented, create a js-dataverse use case.
-  */
-  private async getFileStore(datasetId: number): Promise<string | undefined> {
-    return axiosInstance
-      .get(
-        `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/storageDriver`
-      )
-      .then(
-        (
-          res: AxiosResponse<{
-            data: {
-              name: string
-              label: string
-              type: string
-              directDownload: boolean
-              directUpload: boolean
-            }
-          }>
-        ) => {
-          return res.data.data.name
-        }
-      )
-      .catch(() => {
-        return undefined
-      })
+  private async getStorageDriver(datasetId: number): Promise<DatasetStorageDriver | undefined> {
+    return getDatasetStorageDriver.execute(datasetId).catch(() => undefined)
   }
 
   updateDatasetLicense(

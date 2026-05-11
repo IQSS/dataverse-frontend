@@ -1,0 +1,119 @@
+/**
+ * BS5 token re-assertion for Shadow DOM hosts.
+ *
+ * Bootstrap 5 declares its `--bs-*` design tokens on `:root`. When the
+ * compiled CSS is injected into a shadow root via
+ * `vite-plugin-css-injected-by-js`, those `:root` rules do not match —
+ * the shadow root is its own document fragment and its containing
+ * host's `:root` lives outside.
+ *
+ * Result inside the shadow scope: `var(--bs-border-color)`,
+ * `var(--bs-body-font-size)` etc. resolve to nothing, borders
+ * disappear, fonts cascade from the host page (PrimeFaces/BS3) which
+ * ends up smaller than BS5 expects.
+ *
+ * This file republishes the load-bearing tokens on `:host` so they
+ * apply to every element inside the shadow root, regardless of what
+ * the embedding page itself defines.
+ *
+ * IMPORTANT: every length token is declared in absolute pixels rather
+ * than rem. CSS variables are resolved at the use site, so a value of
+ * `1rem` substituted into a rule inside the shadow root still
+ * evaluates against the outer document's <html> font-size. JSF /
+ * PrimeFaces hosts often cascade a smaller html font-size, which is
+ * what made the embedded buttons read as tiny in earlier iterations.
+ *
+ * Values mirror Bootstrap 5.3 defaults (rem * 16px). If a downstream
+ * consumer needs to override (e.g. dark theme), they can do so by
+ * passing CSS variables down via the host element's inline style —
+ * `:host` rules have low specificity so consumer overrides win.
+ */
+
+:host {
+  // Font-family + line-height + base color are inheritable; declaring
+  // them on :host gives non-BS5 descendants a sane default.
+  // Match the design-system's $dv-font-family stack so the bundle
+  // renders the same letterforms as the surrounding JSF chrome.
+  // system-ui first (the previous default) made the same numeric
+  // weight read as visually heavier than the JSF host.
+  font-family: var(--bs-body-font-family, 'Helvetica Neue', helvetica, arial, sans-serif);
+  line-height: 1.5;
+  color: #212529;
+  display: block;
+
+  // Bootstrap typography
+  --bs-body-font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+  --bs-body-font-size: 16px;
+  --bs-body-font-weight: 400;
+  --bs-body-line-height: 1.5;
+  --bs-body-color: #212529;
+  --bs-body-bg: #fff;
+  --bs-font-sans-serif: 'Helvetica Neue', helvetica, arial, sans-serif;
+  --bs-font-monospace: sfmono-regular, menlo, monaco, consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+
+  // Bootstrap colors
+  --bs-primary: #0d6efd;
+  --bs-primary-rgb: 13, 110, 253;
+  --bs-secondary: #6c757d;
+  --bs-secondary-rgb: 108, 117, 125;
+  --bs-secondary-color: #6c757d;
+  --bs-secondary-bg: #e9ecef;
+  --bs-tertiary-color: #adb5bd;
+  --bs-tertiary-bg: #f8f9fa;
+  --bs-success: #198754;
+  --bs-danger: #dc3545;
+  --bs-warning: #ffc107;
+  --bs-info: #0dcaf0;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
+  --bs-white: #fff;
+  --bs-black: #000;
+
+  // Bootstrap surfaces (px-only — see header note about rem leakage)
+  --bs-border-color: #dee2e6;
+  --bs-border-color-translucent: rgb(0 0 0 / 17.5%);
+  --bs-border-width: 1px;
+  --bs-border-radius: 6px;
+  --bs-border-radius-sm: 4px;
+  --bs-border-radius-lg: 8px;
+}
+
+// Component-token overrides. Bootstrap declares local component tokens
+// like `.btn { --bs-btn-font-size: 1rem; font-size: var(--bs-btn-font-size); }`
+// directly on the element. That local declaration wins over any
+// inherited :host value, and `1rem` resolves against the outer document's
+// html element — which JSF/PrimeFaces hosts often cascade to a smaller
+// size, making embedded chrome read as undersized. Re-declaring the same
+// tokens with `:host` specificity beats BS's element-level rule, and
+// pinning the values in absolute px sidesteps the rem-leakage problem.
+// .btn-sm keeps its smaller-by-design scale.
+:host .btn {
+  --bs-btn-font-size: 16px;
+}
+
+:host .btn.btn-sm {
+  --bs-btn-font-size: 14px;
+}
+
+:host .btn.btn-lg {
+  --bs-btn-font-size: 18px;
+}
+
+:host .accordion-button {
+  --bs-accordion-btn-font-size: 16px;
+
+  font-size: var(--bs-accordion-btn-font-size);
+}
+
+// .form-control declares font-size directly (no variable indirection
+// in BS5), so we override the property itself rather than a token.
+:host .form-control,
+:host .form-select {
+  font-size: 16px;
+}
+
+:host .form-control.form-control-sm,
+:host .form-select.form-select-sm {
+  font-size: 14px;
+}

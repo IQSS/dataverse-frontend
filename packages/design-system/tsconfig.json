@@ -15,7 +15,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"   
+    "jsx": "react-jsx"
   },
   "include": ["src", "tests", "vite.config.ts", "cypress.config.ts", ".storybook/test-runner.ts"],
   "exclude": ["tests/**/**.spec.ts", "tests/**/**.spec.tsx"]

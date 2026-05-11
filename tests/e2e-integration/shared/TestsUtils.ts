@@ -74,15 +74,21 @@ export class TestsUtils {
   }
 
   static finishSignUp() {
-    cy.get('body').then(($body) => {
-      const isOnSignUpPage = $body.find('[data-testid="sign-up-page"]').length > 0
-      const hasTermsCheckbox = $body.find('#termsAccepted').length > 0
-
-      if (!isOnSignUpPage || !hasTermsCheckbox) {
-        return
-      }
-
-      cy.get('#termsAccepted').check({ force: true })
+    // The previous version did one synchronous `$body.find()` check and
+    // returned silently if the form wasn't there yet. On a slow CI the
+    // sign-up component's terms-of-use fetch can still be in flight at
+    // that moment — the URL has already advanced to /sign-up but
+    // `#termsAccepted` hasn't rendered. The silent return then leaves
+    // the URL stuck on /sign-up and the next assertion times out.
+    // Diagnostic CI run confirmed exactly this state: URL on /sign-up,
+    // DOM empty of all sign-up markers at the 1500 ms wait moment.
+    //
+    // Fix: branch on the URL (cy.url retries until it resolves) and,
+    // if we're on the sign-up page, wait up to 20 s for the checkbox
+    // to appear before checking it.
+    cy.url().then((currentUrl) => {
+      if (!currentUrl.includes('/sign-up')) return
+      cy.get('#termsAccepted', { timeout: 20_000 }).check({ force: true })
       cy.findByRole('button', { name: 'Create Account' }).click()
     })
   }

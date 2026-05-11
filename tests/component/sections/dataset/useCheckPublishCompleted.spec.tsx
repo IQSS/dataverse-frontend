@@ -78,16 +78,13 @@ describe('useCheckPublishCompleted Hook', () => {
     cy.get('[data-testid="publish-completed"]').should('have.text', 'true')
     cy.get('@setNeedsUpdate').should('have.been.calledOnceWith', true)
   })
-  // TODO: unskip and adjust this test  in a separate PR
-  it.skip('should set publishCompleted to true (and mark needsUpdate) after polling finds no locks', () => {
+  it('sets publishCompleted to true after polling finds no locks', () => {
     const datasetRepository: DatasetMockRepository = new DatasetMockRepository()
     const getLocksStub = cy.stub(datasetRepository, 'getLocks')
 
     // First lock check still sees the publish lock; the next one sees it cleared.
     getLocksStub.onFirstCall().resolves([{ lockId: 'test-lock' }])
-    getLocksStub.onSecondCall().resolves([])
-
-    cy.clock()
+    getLocksStub.resolves([])
 
     cy.customMount(
       <TestComponent
@@ -97,18 +94,39 @@ describe('useCheckPublishCompleted Hook', () => {
       />
     )
 
-    cy.get('[data-testid="publish-completed"]').should('have.text', 'false')
-
-    // Initial lock check waits 2s before calling getLocks.
-    cy.tick(2_000)
     cy.wrap(getLocksStub).should('have.been.calledOnce')
     cy.get('[data-testid="publish-completed"]').should('have.text', 'false')
 
-    // Polling waits 2s to fire, then the follow-up lock check waits another 2s.
-    cy.tick(4_000)
-
-    cy.wrap(getLocksStub).should('have.been.called')
+    cy.wait(2500)
     cy.get('[data-testid="publish-completed"]').should('have.text', 'true')
     cy.get('@setNeedsUpdate').should('have.been.calledWith', true)
+  })
+
+  it('stops polling and stays incomplete on a polling error (cancelled latch)', () => {
+    const datasetRepository: DatasetMockRepository = new DatasetMockRepository()
+    const getLocksStub = cy.stub(datasetRepository, 'getLocks')
+
+    // First call sees a lock → polling kicks in. Subsequent calls
+    // reject. With the cancelled latch in place, the catch fires once
+    // and no more polls run thereafter — call count stays at exactly 2
+    // even after several poll cycles' worth of wall clock have passed.
+    getLocksStub.onFirstCall().resolves([{ lockId: 'test-lock' }])
+    getLocksStub.rejects(new Error('locks api boom'))
+
+    cy.customMount(
+      <TestComponent
+        publishInProgress={true}
+        dataset={DatasetMother.create()}
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.wrap(getLocksStub).should('have.been.calledOnce')
+    cy.get('[data-testid="publish-completed"]').should('have.text', 'false')
+
+    cy.wait(7000)
+    cy.wrap(getLocksStub).should('have.callCount', 2)
+    cy.get('[data-testid="publish-completed"]').should('have.text', 'false')
+    cy.get('@setNeedsUpdate').should('not.have.been.called')
   })
 })

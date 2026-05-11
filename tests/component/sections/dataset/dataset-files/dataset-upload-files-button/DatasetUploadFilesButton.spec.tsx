@@ -47,14 +47,52 @@ describe('DatasetUploadFilesButton', () => {
     cy.findByRole('button', { name: 'Upload Files' }).should('not.exist')
   })
 
-  it('does not render the upload files button if dataset file store does not start with "s3"', () => {
-    const datasetWithNonS3FileStore = DatasetMother.create({
+  it('does not render the upload files button when the dataset storage driver is not S3-compatible', () => {
+    const datasetWithFileStorage = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
-      fileStore: 'non-s3-file-store'
+      storageDriver: {
+        name: 'localfs1',
+        type: 'file',
+        label: 'LocalFilesystem',
+        directUpload: false,
+        directDownload: false
+      }
     })
-    cy.mountAuthenticated(withDataset(<DatasetUploadFilesButton />, datasetWithNonS3FileStore))
+    cy.mountAuthenticated(withDataset(<DatasetUploadFilesButton />, datasetWithFileStorage))
 
     cy.findByRole('button', { name: 'Upload Files' }).should('not.exist')
+  })
+
+  it('does not render the upload files button when the S3 driver lacks direct-upload', () => {
+    const datasetS3WithoutDirectUpload = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
+      storageDriver: {
+        name: 's3',
+        type: 's3',
+        label: 'S3',
+        directUpload: false,
+        directDownload: true
+      }
+    })
+    cy.mountAuthenticated(withDataset(<DatasetUploadFilesButton />, datasetS3WithoutDirectUpload))
+
+    cy.findByRole('button', { name: 'Upload Files' }).should('not.exist')
+  })
+
+  it('renders the upload files button for an S3-compatible driver registered under a non-s3 id', () => {
+    const datasetMinIO = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
+      storageDriver: {
+        name: 'minio1',
+        type: 's3',
+        label: 'MinIO',
+        directUpload: true,
+        directDownload: true
+      }
+    })
+    cy.mountAuthenticated(withDataset(<DatasetUploadFilesButton />, datasetMinIO))
+
+    cy.findByRole('button', { name: 'Upload Files' }).should('exist')
   })
 
   it('renders the button disabled when dataset is locked from edits', () => {

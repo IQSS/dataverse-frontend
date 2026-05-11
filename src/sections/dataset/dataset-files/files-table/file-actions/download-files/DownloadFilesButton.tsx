@@ -92,8 +92,12 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
     return <></>
   }
 
-  // TODO: remove this when we can handle non-S3 files
-  if (!dataset?.fileStore?.startsWith('s3')) {
+  // The download menu's signed-URL flow targets S3-compatible storage.
+  // Decide via the typed driver capabilities, not the operator-chosen
+  // driver id (so any driver with type=s3 + directDownload works,
+  // regardless of whether it's named `s3`, `minio1`, etc.).
+  const driver = dataset?.storageDriver
+  if (!driver || driver.type !== 's3' || !driver.directDownload) {
     return <></>
   }
 

@@ -15,6 +15,16 @@ export default defineConfig({
     supportFile: 'tests/support/e2e.ts',
     setupNodeEvents(on) {
       on('file:preprocessor', vitePreprocessor(path.resolve(__dirname, './vite.config.ts')))
+      on('task', {
+        // Diagnostic printer: cy.task('diag', value) prints to the Cypress
+        // run's stdout, which GitHub Actions captures. cy.log / console.log
+        // from inside cy.then() run browser-side and never reach CI logs.
+        diag(value: unknown) {
+          // eslint-disable-next-line no-console
+          console.log('[diag]', JSON.stringify(value))
+          return null
+        }
+      })
     },
     defaultCommandTimeout: 10_000 // https://docs.cypress.io/guides/references/configuration#Timeouts
   },
