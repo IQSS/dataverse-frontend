@@ -8,6 +8,11 @@ import {
   TermsOfUseMother,
   TermsOfAccessMother
 } from '../../../dataset/domain/models/TermsOfUseMother'
+import { DatasetContext } from '@/sections/dataset/DatasetContext'
+import { Dataset as DatasetModel } from '@/dataset/domain/models/Dataset'
+import { ReactNode } from 'react'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
 
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = DatasetMother.create().version
@@ -47,8 +52,20 @@ const accessNotAllowedTermsOfUse = TermsOfUseMother.create({
 const termsOfUseWithUndefinedValue = TermsOfUseMother.create({
   termsOfAccess: TermsOfAccessMother.create({ dataAccessPlace: undefined })
 })
+const guestbookRepository: GuestbookRepository = {} as GuestbookRepository
 
 describe('DatasetTerms', () => {
+  const withDatasetContext = (component: ReactNode, dataset?: DatasetModel) => (
+    <DatasetContext.Provider value={{ dataset, isLoading: false, refreshDataset: () => {} }}>
+      {component}
+    </DatasetContext.Provider>
+  )
+  const withGuestbookRepository = (component: ReactNode) => (
+    <GuestbookRepositoryProvider repository={guestbookRepository}>
+      {component}
+    </GuestbookRepositoryProvider>
+  )
+
   beforeEach(() => {
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy
       .stub()
@@ -69,6 +86,104 @@ describe('DatasetTerms', () => {
 
     cy.findByText('Dataset Terms').should('exist')
     cy.findByText('Restricted Files + Terms of Access').should('exist')
+  })
+
+  it('shows no guestbook assigned message after expanding the guestbook accordion', () => {
+    cy.customMount(
+      withDatasetContext(
+        <DatasetTerms
+          license={license}
+          termsOfUse={termsOfUse}
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />,
+        DatasetMother.create({ guestbookId: undefined })
+      )
+    )
+
+    cy.findByRole('button', { name: 'Guestbook' }).should('have.attr', 'aria-expanded', 'false')
+    cy.findByRole('button', { name: 'Guestbook' }).click()
+    cy.findByTestId('dataset-guestbook-empty-message').should(
+      'contain.text',
+      'No guestbook is assigned to this dataset so users will not be prompted to provide any information when downloading files. To learn more about guestbooks, visit the Dataset Guestbook section of the User Guide.'
+    )
+  })
+
+  it('shows guestbook details after expanding the guestbook accordion', () => {
+    const guestbookId = 10
+    const guestbookName = 'Guestbook Test'
+    guestbookRepository.getGuestbook = cy.stub().resolves({
+      id: guestbookId,
+      name: guestbookName,
+      enabled: true,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: false,
+      positionRequired: false,
+      customQuestions: [],
+      createTime: '2026-01-01T00:00:00.000Z',
+      dataverseId: 1
+    })
+
+    cy.customMount(
+      withGuestbookRepository(
+        withDatasetContext(
+          <DatasetTerms
+            license={license}
+            termsOfUse={termsOfUse}
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />,
+          DatasetMother.create({ guestbookId })
+        )
+      )
+    )
+
+    cy.findByRole('button', { name: 'Guestbook' }).should('have.attr', 'aria-expanded', 'false')
+    cy.findByRole('button', { name: 'Guestbook' }).click()
+
+    cy.findByTestId('dataset-guestbook-description').should(
+      'contain.text',
+      'The following guestbook will prompt a user to provide additional information when downloading a file.'
+    )
+    cy.findByTestId('dataset-guestbook-name').should('contain.text', guestbookName)
+  })
+
+  it('opens guestbook accordion by default when termsTab=guestbook is present in query params', () => {
+    const guestbookId = 10
+    guestbookRepository.getGuestbook = cy.stub().resolves({
+      id: guestbookId,
+      name: 'Guestbook Test',
+      enabled: true,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: false,
+      positionRequired: false,
+      customQuestions: [],
+      createTime: '2026-01-01T00:00:00.000Z',
+      dataverseId: 1
+    })
+
+    cy.customMount(
+      withGuestbookRepository(
+        withDatasetContext(
+          <DatasetTerms
+            license={license}
+            termsOfUse={termsOfUse}
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />,
+          DatasetMother.create({ guestbookId })
+        )
+      ),
+      ['/datasets?tab=terms&termsTab=guestbook']
+    )
+
+    cy.findByRole('button', { name: 'Guestbook' }).should('have.attr', 'aria-expanded', 'true')
+    cy.findByTestId('dataset-guestbook-name').should('contain.text', 'Guestbook Test')
   })
 
   it('check that the terms of use sections are rendered even without edit permissions', () => {

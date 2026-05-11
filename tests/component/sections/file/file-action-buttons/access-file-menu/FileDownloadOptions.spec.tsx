@@ -10,6 +10,7 @@ describe('FileDownloadOptions', () => {
   it('renders the download options header', () => {
     cy.customMount(
       <FileDownloadOptions
+        fileId={1}
         type={nonTabularType}
         downloadUrls={downloadUrls}
         isTabular={false}
@@ -24,6 +25,7 @@ describe('FileDownloadOptions', () => {
   it('does not render the download options if the user does not have permissions', () => {
     cy.customMount(
       <FileDownloadOptions
+        fileId={1}
         type={nonTabularType}
         downloadUrls={downloadUrls}
         isTabular={false}
@@ -38,6 +40,7 @@ describe('FileDownloadOptions', () => {
   it('renders the download options for a non-tabular file', () => {
     cy.customMount(
       <FileDownloadOptions
+        fileId={1}
         type={nonTabularType}
         downloadUrls={downloadUrls}
         isTabular={false}
@@ -46,13 +49,14 @@ describe('FileDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: 'Plain Text' }).should('exist')
+    cy.findByRole('button', { name: 'Plain Text' }).should('exist')
   })
 
   it('renders the download options for a tabular file', () => {
     const tabularType = FileTypeMother.createTabular()
     cy.customMount(
       <FileDownloadOptions
+        fileId={1}
         type={tabularType}
         downloadUrls={downloadUrls}
         isTabular={true}
@@ -61,6 +65,8 @@ describe('FileDownloadOptions', () => {
       />
     )
 
-    cy.findByRole('link', { name: 'Comma Separated Values (Original File Format)' }).should('exist')
+    cy.findByRole('button', { name: 'Comma Separated Values (Original File Format)' }).should(
+      'exist'
+    )
   })
 })

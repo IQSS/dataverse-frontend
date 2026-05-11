@@ -9,6 +9,7 @@ import { MetadataFieldsHelper, type DatasetMetadataFormValues } from './Metadata
 import { type DatasetMetadataFormMode } from '.'
 import { QueryParamKey, Route } from '../../../Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '../../../../dataset/domain/models/Dataset'
+import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -64,6 +65,7 @@ export function useSubmitDataset(
         .then(({ persistentId }) => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
+          needsUpdateStore.setNeedsUpdate(true)
           toast.success(tDataset('alerts.datasetCreated.alertText'))
           navigate(
             `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`

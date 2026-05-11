@@ -6,7 +6,5 @@ export function updateTermsOfAccess(
   datasetId: string | number,
   termsOfAccess: TermsOfAccess
 ): Promise<void> {
-  return datasetRepository.updateTermsOfAccess(datasetId, termsOfAccess).catch((error: Error) => {
-    throw new Error(error.message)
-  })
+  return datasetRepository.updateTermsOfAccess(datasetId, termsOfAccess)
 }

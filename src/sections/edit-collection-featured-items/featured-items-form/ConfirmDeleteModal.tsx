@@ -14,11 +14,12 @@ export const ConfirmDeleteModal = ({
 }: ConfirmDeleteModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('editFeaturedItems')
+  const modalTitle = t('deleteAll.action')
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={show} onHide={handleClose} centered ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('deleteAll.action')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{t('deleteAll.confirmation')}</Modal.Body>
       <Modal.Footer>

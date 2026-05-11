@@ -80,6 +80,19 @@
       "title": "Opciones de archivo",
       "headers": {
         "editOptions": "Opciones de edición"
+      },
+      "guestbookCollectModal": {
+        "title": "Libro de visitas del dataset",
+        "message": "Hay un libro de visitas asignado a este dataset. Se pedirá a los usuarios que proporcionen información adicional al descargar archivos.",
+        "close": "Cerrar",
+        "additionalQuestions": "Preguntas adicionales",
+        "submitError": "Algo salió mal al enviar las respuestas del libro de visitas. Inténtalo de nuevo más tarde.",
+        "downloadStarted": "Tu descarga ha comenzado.",
+        "downloadError": "Algo salió mal al descargar el archivo. Inténtalo de nuevo más tarde.",
+        "validation": {
+          "required": "Este campo es obligatorio.",
+          "invalidEmail": "Por favor, ingresa un correo electrónico válido."
+        }
       }
     },
     "alreadyDeletedAlert": {

@@ -5,6 +5,9 @@ on:
     branches:
       - develop
 
+env:
+  FRONTEND_BASE_PATH: /modern
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,7 +34,7 @@ jobs:
         run: npm run build
 
       - name: Build with base path
-        run: npm run build -- --base=/spa
+        run: npm run build -- --base=${{ env.FRONTEND_BASE_PATH }}
 
       - name: Override runtime config.js for BETA
         env:
@@ -41,25 +44,7 @@ jobs:
           OIDC_TOKEN_ENDPOINT: ${{ secrets.BETA_OIDC_TOKEN_ENDPOINT }}
           OIDC_LOGOUT_ENDPOINT: ${{ secrets.BETA_OIDC_LOGOUT_ENDPOINT }}
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.BETA_OIDC_STORAGE_KEY_PREFIX }}
-        run: |
-          mkdir -p ./dist
-          cat > ./dist/config.js <<EOF
-          window.__APP_CONFIG__ = {
-            backendUrl: "${DATAVERSE_BACKEND_URL}",
-            oidc: {
-              clientId: "${OIDC_CLIENT_ID}",
-              authorizationEndpoint: "${OIDC_AUTHORIZATION_ENDPOINT}",
-              tokenEndpoint: "${OIDC_TOKEN_ENDPOINT}",
-              logoutEndpoint: "${OIDC_LOGOUT_ENDPOINT}",
-              localStorageKeyPrefix: "${OIDC_STORAGE_KEY_PREFIX}"
-            },
-            languages: [
-              { code: 'en', name: 'English' },
-              { code: 'es', name: 'Español' }
-            ],
-            defaultLanguage: 'en'
-          }
-          EOF
+        run: node ./scripts/write-runtime-config.mjs
         shell: bash
 
       - uses: actions/upload-artifact@v4
@@ -115,4 +100,4 @@ jobs:
             ASADMIN='/usr/local/payara6/bin/asadmin --user admin'
             DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
             $ASADMIN undeploy $DATAVERSE_FRONTEND
-            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /spa $APPLICATION_WAR_PATH
+            $ASADMIN deploy --name $APPLICATION_NAME --contextroot ${{ env.FRONTEND_BASE_PATH }} $APPLICATION_WAR_PATH

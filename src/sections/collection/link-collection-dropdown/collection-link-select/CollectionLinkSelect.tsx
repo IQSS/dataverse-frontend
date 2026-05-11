@@ -6,12 +6,12 @@ import { InfoCircleFill } from 'react-bootstrap-icons'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { getCollectionsForLinking } from '@/collection/domain/useCases/getCollectionsForLinking'
 import { getCollectionsForUnlinking } from '@/collection/domain/useCases/getCollectionsForUnlinking'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { Utils } from '@/shared/helpers/Utils'
 import styles from './CollectionLinkSelect.module.scss'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 /**
  * This component is used to select a collection to link or unlink a dataset or collection to/from.
@@ -20,7 +20,6 @@ import styles from './CollectionLinkSelect.module.scss'
  */
 
 type BaseProps = {
-  collectionRepository: CollectionRepository
   onCollectionSelected: (collectionSelected: CollectionSummary | null) => void
   helpText: string
   mode: 'link' | 'unlink'
@@ -43,12 +42,12 @@ type CollectionLinkSelectProps = BaseProps &
 export const CollectionLinkSelect = ({
   collectionIdOrAlias,
   datasetPersistentId,
-  collectionRepository,
   linkingObjectType,
   onCollectionSelected,
   helpText,
   mode
 }: CollectionLinkSelectProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { t: tShared } = useTranslation('shared')
 
   const [collections, setCollections] = useState<CollectionSummary[]>([])

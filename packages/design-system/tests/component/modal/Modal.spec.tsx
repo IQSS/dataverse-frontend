@@ -3,10 +3,11 @@ import { Modal } from '../../../src/lib/components/modal/Modal'
 describe('Modal', () => {
   it('renders the modal with header, body and footer', () => {
     const onHide = cy.stub()
+    const modalTitle = 'Modal Title'
     cy.mount(
-      <Modal show onHide={onHide}>
+      <Modal show onHide={onHide} ariaLabel={modalTitle}>
         <Modal.Header>
-          <Modal.Title>Modal Title</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>Modal Body</Modal.Body>
         <Modal.Footer>
@@ -25,10 +26,11 @@ describe('Modal', () => {
 
   it('calls onHide when the close button is clicked', () => {
     const onHide = cy.stub().as('onHide')
+    const modalTitle = 'Modal Title'
     cy.mount(
-      <Modal show onHide={onHide}>
+      <Modal show onHide={onHide} ariaLabel={modalTitle}>
         <Modal.Header>
-          <Modal.Title>Modal Title</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>Modal Body</Modal.Body>
       </Modal>
@@ -40,10 +42,11 @@ describe('Modal', () => {
 
   it('renders the modal with a custom size', () => {
     const onHide = cy.stub()
+    const modalTitle = 'Modal Title'
     cy.mount(
-      <Modal show onHide={onHide} size="sm">
+      <Modal show onHide={onHide} size="sm" ariaLabel={modalTitle}>
         <Modal.Header>
-          <Modal.Title>Modal Title</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>Modal Body</Modal.Body>
       </Modal>

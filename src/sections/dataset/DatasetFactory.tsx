@@ -18,6 +18,11 @@ import { searchParamVersionToDomainVersion } from '../../router'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
+import { AccessJSDataverseRepository } from '@/access/infrastructure/repositories/AccessJSDataverseRepository'
+import { AccessRepositoryProvider } from '../access/AccessRepositoryProvider'
+import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
+import { GuestbookRepositoryProvider } from '../guestbooks/GuestbookRepositoryProvider'
+import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
@@ -25,21 +30,27 @@ const fileRepository = new FileJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
 const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
+const accessRepository = new AccessJSDataverseRepository()
+const guestbookRepository = new GuestbookJSDataverseRepository()
 
 export class DatasetFactory {
   static create(): ReactElement {
     return (
-      <MultipleFileDownloadProvider repository={fileRepository}>
-        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-          <NotImplementedModalProvider>
-            <AnonymizedProvider>
-              <AlertProvider>
-                <DatasetWithSearchParams />
-              </AlertProvider>
-            </AnonymizedProvider>
-          </NotImplementedModalProvider>
-        </SettingsProvider>
-      </MultipleFileDownloadProvider>
+      <GuestbookRepositoryProvider repository={guestbookRepository}>
+        <AccessRepositoryProvider repository={accessRepository}>
+          <MultipleFileDownloadProvider repository={fileRepository}>
+            <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+              <NotImplementedModalProvider>
+                <AnonymizedProvider>
+                  <AlertProvider>
+                    <DatasetWithSearchParams />
+                  </AlertProvider>
+                </AnonymizedProvider>
+              </NotImplementedModalProvider>
+            </SettingsProvider>
+          </MultipleFileDownloadProvider>
+        </AccessRepositoryProvider>
+      </GuestbookRepositoryProvider>
     )
   }
 }
@@ -69,40 +80,42 @@ function DatasetWithSearchParams() {
 
   if (privateUrlToken) {
     return (
+      <RepositoriesProvider collectionRepository={collectionRepository}>
+        <DatasetProvider
+          repository={datasetRepository}
+          searchParams={{ privateUrlToken: privateUrlToken }}
+          isPublishing={publishInProgress}>
+          <Dataset
+            datasetRepository={datasetRepository}
+            fileRepository={fileRepository}
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            contactRepository={contactRepository}
+            filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
+            tab={tab}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
+        </DatasetProvider>
+      </RepositoriesProvider>
+    )
+  }
+
+  return (
+    <RepositoriesProvider collectionRepository={collectionRepository}>
       <DatasetProvider
         repository={datasetRepository}
-        searchParams={{ privateUrlToken: privateUrlToken }}
+        searchParams={{ persistentId: persistentId, version: version }}
         isPublishing={publishInProgress}>
         <Dataset
-          collectionRepository={collectionRepository}
           datasetRepository={datasetRepository}
           fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           contactRepository={contactRepository}
+          publishInProgress={publishInProgress}
           filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
           tab={tab}
           dataverseInfoRepository={dataverseInfoRepository}
         />
       </DatasetProvider>
-    )
-  }
-
-  return (
-    <DatasetProvider
-      repository={datasetRepository}
-      searchParams={{ persistentId: persistentId, version: version }}
-      isPublishing={publishInProgress}>
-      <Dataset
-        collectionRepository={collectionRepository}
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        contactRepository={contactRepository}
-        publishInProgress={publishInProgress}
-        filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
-        tab={tab}
-        dataverseInfoRepository={dataverseInfoRepository}
-      />
-    </DatasetProvider>
+    </RepositoriesProvider>
   )
 }

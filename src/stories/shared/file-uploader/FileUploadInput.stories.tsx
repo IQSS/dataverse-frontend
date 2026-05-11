@@ -1,11 +1,12 @@
 import FileUploadInput from '@/sections/shared/file-uploader/file-upload-input/FileUploadInput'
+import { FileUploadStatus } from '@/sections/shared/file-uploader/context/fileUploaderReducer'
+import { OperationType } from '@/sections/shared/file-uploader/FileUploader'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
 import { WithI18next } from '@/stories/WithI18next'
 import { WithToasts } from '@/stories/WithToasts'
 import { Meta, StoryObj } from '@storybook/react'
 import { WithFileUploaderContext } from './WithFileUploaderContext'
-import { FileUploadStatus } from '@/sections/shared/file-uploader/context/fileUploaderReducer'
-import { OperationType } from '@/sections/shared/file-uploader/FileUploader'
 
 const meta: Meta<typeof FileUploadInput> = {
   title: 'Sections/Shared/File Uploader/File Upload Input',
@@ -27,6 +28,7 @@ export const ReplaceMode: Story = {
       <FileUploadInput
         datasetPersistentId="doi:10.5072/FK2/8YOKQI"
         fileRepository={new FileMockRepository()}
+        datasetRepository={new DatasetMockRepository()}
       />
     </WithFileUploaderContext>
   )
@@ -39,6 +41,23 @@ export const AddMode: Story = {
       <FileUploadInput
         datasetPersistentId="doi:10.5072/FK2/8YOKQI"
         fileRepository={new FileMockRepository()}
+        datasetRepository={new DatasetMockRepository()}
+      />
+    </WithFileUploaderContext>
+  )
+}
+
+export const WithUploadLimits: Story = {
+  decorators: [WithToasts],
+  render: () => (
+    <WithFileUploaderContext mode={OperationType.ADD_FILES_TO_DATASET}>
+      <FileUploadInput
+        datasetPersistentId="doi:10.5072/FK2/8YOKQI"
+        fileRepository={new FileMockRepository()}
+        datasetRepository={new DatasetMockRepository()}
+        fetchUploadLimits={() =>
+          Promise.resolve({ numberOfFilesRemaining: 5, storageQuotaRemaining: 1024 * 1024 * 1024 })
+        }
       />
     </WithFileUploaderContext>
   )
@@ -83,6 +102,7 @@ export const WithUploadingFiles: Story = {
       <FileUploadInput
         datasetPersistentId="doi:10.5072/FK2/8YOKQI"
         fileRepository={new FileMockRepository()}
+        datasetRepository={new DatasetMockRepository()}
       />
     </WithFileUploaderContext>
   )
@@ -111,6 +131,7 @@ export const WithFailedFile: Story = {
       <FileUploadInput
         datasetPersistentId="doi:10.5072/FK2/8YOKQI"
         fileRepository={new FileMockRepository()}
+        datasetRepository={new DatasetMockRepository()}
       />
     </WithFileUploaderContext>
   )

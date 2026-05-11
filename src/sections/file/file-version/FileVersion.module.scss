@@ -19,6 +19,13 @@
   }
 }
 
+.file-versions-table-loading {
+  tbody {
+    opacity: 0.55;
+    transition: opacity 120ms ease-in-out;
+  }
+}
+
 .no-summary-text {
   font-style: italic;
   color: $dv-subtext-color;

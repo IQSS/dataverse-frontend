@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useGetCollectionMetadataBlocksInfo } from '@/shared/hooks/useGetCollectionMetadataBlocksInfo'
 import { useGetAllMetadataBlocksInfo } from '@/shared/hooks/useGetAllMetadataBlocksInfo'
@@ -23,6 +22,7 @@ import { EditCreateCollectionFormSkeleton } from './EditCreateCollectionFormSkel
 import { CollectionHelper } from '@/sections/collection/CollectionHelper'
 import { MetadataFieldsHelper } from '../DatasetMetadataForm/MetadataFieldsHelper'
 import { MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
 export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
@@ -36,7 +36,6 @@ type EditCreateCollectionFormProps =
       user: User
       collection?: never // In create mode, collection is undefined, we only have parentCollection
       parentCollection: Collection
-      collectionRepository: CollectionRepository
       metadataBlockInfoRepository: MetadataBlockInfoRepository
     }
   | {
@@ -44,7 +43,6 @@ type EditCreateCollectionFormProps =
       user: User
       collection: Collection
       parentCollection?: ParentCollectionDataInEdition // In edit mode, parentCollection could be undefined in case of root collection
-      collectionRepository: CollectionRepository
       metadataBlockInfoRepository: MetadataBlockInfoRepository
     }
 
@@ -60,9 +58,9 @@ export const EditCreateCollectionForm = ({
   user,
   collection,
   parentCollection,
-  collectionRepository,
   metadataBlockInfoRepository
 }: EditCreateCollectionFormProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { setIsLoading } = useLoading()
 
   const onEditMode = mode === 'edit'
@@ -227,7 +225,6 @@ export const EditCreateCollectionForm = ({
   return (
     <CollectionForm
       mode={mode}
-      collectionRepository={collectionRepository}
       collectionIdOrParentCollectionId={mode === 'create' ? parentCollection.id : collection.id}
       defaultValues={formDefaultValues}
       allMetadataBlocksInfo={allMetadataBlocksInfoNormalized}

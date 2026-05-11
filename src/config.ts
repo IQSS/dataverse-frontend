@@ -10,6 +10,7 @@ let CONFIG: AppConfig | undefined
 
 const AppConfigSchema = z.object({
   backendUrl: z.url(),
+  bannerMessage: z.string().optional(),
   oidc: z.object({
     clientId: z.string(),
     authorizationEndpoint: z.url(),
@@ -23,7 +24,23 @@ const AppConfigSchema = z.object({
       code: z.string(),
       name: z.string()
     })
-  )
+  ),
+  branding: z
+    .object({
+      dataverseName: z.string().optional()
+    })
+    .optional(),
+  homepage: z
+    .object({
+      supportUrl: z.url().optional()
+    })
+    .optional(),
+  footer: z
+    .object({
+      copyrightHolder: z.string().optional(),
+      privacyPolicyUrl: z.url().optional()
+    })
+    .optional()
 })
 
 export type AppConfig = z.infer<typeof AppConfigSchema>

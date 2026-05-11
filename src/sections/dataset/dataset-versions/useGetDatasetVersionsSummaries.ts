@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { getDatasetVersionsSummaries } from '@/dataset/domain/useCases/getDatasetVersionsSummaries'
@@ -8,7 +8,7 @@ interface UseGetDatasetVersionsSummaries {
   datasetVersionSummaries: DatasetVersionSummaryInfo[] | undefined
   error: string | null
   isLoading: boolean
-  fetchSummaries: (paginationInfo?: DatasetVersionPaginationInfo) => Promise<void>
+  fetchSummaries: (paginationInfo?: DatasetVersionPaginationInfo) => Promise<number | undefined>
 }
 
 interface Props {
@@ -25,9 +25,12 @@ export const useGetDatasetVersionsSummaries = ({
   const [summaries, setSummaries] = useState<DatasetVersionSummaryInfo[]>()
   const [isLoading, setIsLoading] = useState<boolean>(autoFetch)
   const [error, setError] = useState<string | null>(null)
+  const latestRequestId = useRef(0)
 
   const fetchSummaries = useCallback(
     async (paginationInfo?: DatasetVersionPaginationInfo) => {
+      const requestId = latestRequestId.current + 1
+      latestRequestId.current = requestId
       setIsLoading(true)
       setError(null)
 
@@ -37,15 +40,25 @@ export const useGetDatasetVersionsSummaries = ({
           persistentId,
           paginationInfo
         )
+        if (requestId !== latestRequestId.current) {
+          return undefined
+        }
         setSummaries(versionSummaries.summaries)
+        return versionSummaries.totalCount
       } catch (err) {
+        if (requestId !== latestRequestId.current) {
+          return undefined
+        }
         const errorMessage =
           err instanceof Error && err.message
             ? err.message
             : 'Something went wrong getting the information from the dataset versions summaries. Try again later.'
         setError(errorMessage)
+        return undefined
       } finally {
-        setIsLoading(false)
+        if (requestId === latestRequestId.current) {
+          setIsLoading(false)
+        }
       }
     },
     [datasetRepository, persistentId]

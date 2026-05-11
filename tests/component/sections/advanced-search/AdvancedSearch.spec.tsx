@@ -4,6 +4,7 @@ import { SearchFields } from '@/search/domain/models/SearchFields'
 import { AdvancedSearchFormData } from '@/sections/advanced-search/advanced-search-form/AdvancedSearchForm'
 import { AdvancedSearch } from '@/sections/advanced-search/AdvancedSearch'
 import { AdvancedSearchHelper } from '@/sections/advanced-search/AdvancedSearchHelper'
+import { WithRepositories } from '@tests/component/WithRepositories'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { MetadataBlockInfoMother } from '@tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
 
@@ -22,11 +23,12 @@ describe('AdvancedSearch', () => {
 
   it('should render Datasets Citation Metadata Block fields correctly', () => {
     cy.customMount(
-      <AdvancedSearch
-        collectionId={testCollection.id}
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <AdvancedSearch
+          collectionId={testCollection.id}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByTestId('advanced-search-metadata-block-citation')
@@ -68,11 +70,12 @@ describe('AdvancedSearch', () => {
     )
 
     cy.customMount(
-      <AdvancedSearch
-        collectionId={testCollection.id}
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <AdvancedSearch
+          collectionId={testCollection.id}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByTestId('advanced-search-collections').within(() => {
@@ -125,11 +128,12 @@ describe('AdvancedSearch', () => {
     collectionRepository.getById = cy.stub().resolves(null)
 
     cy.customMount(
-      <AdvancedSearch
-        collectionId="non-existing-collection"
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <AdvancedSearch
+          collectionId="non-existing-collection"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByTestId('not-found-page').should('be.visible')
@@ -140,11 +144,12 @@ describe('AdvancedSearch', () => {
     metadataBlockInfoRepository.getByCollectionId = cy.stub().rejects(new Error(errorMessage))
 
     cy.customMount(
-      <AdvancedSearch
-        collectionId={testCollection.id}
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <AdvancedSearch
+          collectionId={testCollection.id}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('alert').should('be.visible').and('contain.text', errorMessage)
@@ -152,12 +157,13 @@ describe('AdvancedSearch', () => {
 
   it('should submit the form ', () => {
     cy.customMount(
-      <AdvancedSearch
-        collectionId={testCollection.id}
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        collectionFilterQueries="type:dataset"
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <AdvancedSearch
+          collectionId={testCollection.id}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionFilterQueries="type:dataset"
+        />
+      </WithRepositories>
     )
     cy.findByTestId('advanced-search-metadata-block-citation')
       .should('be.visible')
@@ -198,11 +204,12 @@ describe('AdvancedSearch', () => {
       .resolves([testCitationMetadataBlock, emptyMetadataBlock])
 
     cy.customMount(
-      <AdvancedSearch
-        collectionId={testCollection.id}
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <AdvancedSearch
+          collectionId={testCollection.id}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </WithRepositories>
     )
 
     cy.findByTestId('advanced-search-metadata-block-citation').should('be.visible')

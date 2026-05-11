@@ -22,8 +22,8 @@ import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMothe
 import { DatasetFilesScrollable } from '../../../../../src/sections/dataset/dataset-files/DatasetFilesScrollable'
 import { FilesWithCount } from '../../../../../src/files/domain/models/FilesWithCount'
 import { getCellStyle } from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTableScrollable'
-import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { DatasetMockRepository } from '../../../../../src/stories/dataset/DatasetMockRepository'
+import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
 
 const TOTAL_FILES_COUNT = 200
 const ONLY_4_FILES_COUNT = 4
@@ -65,7 +65,7 @@ const testFilesCountInfo = FilesCountInfoMother.create({
     { tag: new FileTag('code'), count: 10 }
   ]
 })
-const dataverseInfoRepository = {} as DataverseInfoRepository
+const dataverseInfoRepository = new DataverseInfoMockEmptyRepository()
 
 describe('DatasetFilesScrollable', () => {
   beforeEach(() => {

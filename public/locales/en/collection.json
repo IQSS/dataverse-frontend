@@ -53,6 +53,11 @@
     "edit": "Edit",
     "generalInfo": "General Information",
     "datasetGuestbooks": "Dataset Guestbooks",
+    "themeAndWidgets": "Theme + Widgets",
+    "permissions": "Permissions",
+    "groups": "Groups",
+    "datasetTemplates": "Dataset Templates",
+    "featuredDataverses": "Featured Dataverses",
     "deleteCollection": "Delete Collection"
   },
   "featuredItems": {

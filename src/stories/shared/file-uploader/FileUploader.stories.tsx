@@ -1,4 +1,5 @@
 import { FileUploader, OperationType } from '@/sections/shared/file-uploader/FileUploader'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
 import { WithI18next } from '@/stories/WithI18next'
 import { WithToasts } from '@/stories/WithToasts'
@@ -27,6 +28,7 @@ export const ReplaceMode: Story = {
       storageType="S3"
       operationType={OperationType.REPLACE_FILE}
       originalFile={FileMother.createRealistic()}
+      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -39,6 +41,7 @@ export const AddFilesToDataset: Story = {
       datasetPersistentId="doi:10.5072/FK2/8YOKQI"
       storageType="S3"
       operationType={OperationType.ADD_FILES_TO_DATASET}
+      datasetRepository={new DatasetMockRepository()}
     />
   )
 }

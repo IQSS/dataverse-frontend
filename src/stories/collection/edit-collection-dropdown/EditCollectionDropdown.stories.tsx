@@ -3,6 +3,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { CollectionMockRepository } from '../CollectionMockRepository'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { EditCollectionDropdown } from '@/sections/collection/edit-collection-dropdown/EditCollectionDropdown'
+import { WithRepositories } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof EditCollectionDropdown> = {
   title: 'Sections/Collection Page/EditCollectionDropdown',
@@ -18,9 +19,9 @@ export default meta
 type Story = StoryObj<typeof EditCollectionDropdown>
 
 export const Default: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <EditCollectionDropdown
-      collectionRepository={new CollectionMockRepository()}
       collection={CollectionMother.createComplete()}
       canUserDeleteCollection={false}
     />
@@ -28,9 +29,9 @@ export const Default: Story = {
 }
 
 export const WithDeleteCollectionButton: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <EditCollectionDropdown
-      collectionRepository={new CollectionMockRepository()}
       collection={CollectionMother.createSubCollectionWithNoChildObjects()}
       canUserDeleteCollection={true}
     />

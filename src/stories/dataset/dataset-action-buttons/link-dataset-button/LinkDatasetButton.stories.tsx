@@ -13,6 +13,7 @@ import { CollectionMockRepository } from '@/stories/collection/CollectionMockRep
 import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { WithToasts } from '@/stories/WithToasts'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof LinkDatasetButton> = {
   title: 'Sections/Dataset Page/DatasetActionButtons/LinkDatasetButton',
@@ -38,12 +39,13 @@ withNoLinkedCollectionsDatasetRepo.getDatasetLinkedCollections = () => {
 
 export const Default: Story = {
   render: () => (
-    <LinkDatasetButton
-      dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-      datasetRepository={withNoLinkedCollectionsDatasetRepo}
-      collectionRepository={new CollectionMockRepository()}
-      updateParent={() => {}}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <LinkDatasetButton
+        dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
+        datasetRepository={withNoLinkedCollectionsDatasetRepo}
+        updateParent={() => {}}
+      />
+    </RepositoriesStoryProvider>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -55,12 +57,13 @@ export const Default: Story = {
 
 export const WithLinkedCollections: Story = {
   render: () => (
-    <LinkDatasetButton
-      dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-      datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-      updateParent={() => {}}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <LinkDatasetButton
+        dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
+        datasetRepository={new DatasetMockRepository()}
+        updateParent={() => {}}
+      />
+    </RepositoriesStoryProvider>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -87,12 +90,13 @@ withOnlyOneCollectionToLinkRepo.getForLinking = () => {
 
 export const WithOnlyOneCollectionToLink: Story = {
   render: () => (
-    <LinkDatasetButton
-      dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-      datasetRepository={withNoLinkedCollectionsDatasetRepo}
-      collectionRepository={withOnlyOneCollectionToLinkRepo}
-      updateParent={() => {}}
-    />
+    <RepositoriesStoryProvider collectionRepository={withOnlyOneCollectionToLinkRepo}>
+      <LinkDatasetButton
+        dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
+        datasetRepository={withNoLinkedCollectionsDatasetRepo}
+        updateParent={() => {}}
+      />
+    </RepositoriesStoryProvider>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

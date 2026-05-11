@@ -12,4 +12,6 @@ export interface DataverseInfoRepository {
   getHasPublicStore: () => Promise<Setting<boolean>>
   getExternalStatusesAllowed: () => Promise<Setting<string[]>>
   getAvailableDatasetMetadataExportFormats: () => Promise<DatasetMetadataExportFormats>
+  getDatasetPublishPopupCustomText: () => Promise<Setting<string>>
+  getPublishDatasetDisclaimerText: () => Promise<Setting<string>>
 }

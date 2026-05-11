@@ -24,6 +24,18 @@
 .powered-by-container {
   font-size: $dv-font-size-sm;
   text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.branding-row,
+.versions-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .powered-by-text {
@@ -31,8 +43,11 @@
 }
 
 .version {
-  margin-right: 0.3em;
   white-space: nowrap;
   text-align: right;
   vertical-align: bottom;
+}
+
+.separator {
+  margin: 0 0.3em;
 }

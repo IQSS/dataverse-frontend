@@ -4,7 +4,6 @@ import { useSearchParams } from 'react-router-dom'
 import { Tabs } from '@iqss/dataverse-design-system'
 import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { AccountInfoSection } from './account-info-section/AccountInfoSection'
@@ -19,7 +18,6 @@ const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 interface AccountProps {
   defaultActiveTabKey: AccountPanelTabKey
   userRepository: UserJSDataverseRepository
-  collectionRepository: CollectionRepository
   roleRepository: RoleJSDataverseRepository
   notificationRepository: NotificationRepository
 }
@@ -27,7 +25,6 @@ interface AccountProps {
 export const Account = ({
   defaultActiveTabKey,
   userRepository,
-  collectionRepository,
   roleRepository,
   notificationRepository
 }: AccountProps) => {
@@ -54,10 +51,7 @@ export const Account = ({
       <Tabs activeKey={defaultActiveTabKey} onSelect={updateSearchParamTabKeyOnSelect}>
         <Tabs.Tab eventKey={tabsKeys.myData} title={t('tabs.myData')}>
           <div className={styles['tab-container']}>
-            <MyDataItemsPanel
-              roleRepository={roleRepository}
-              collectionRepository={collectionRepository}
-            />
+            <MyDataItemsPanel roleRepository={roleRepository} />
           </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.notifications} title={t('tabs.notifications')}>

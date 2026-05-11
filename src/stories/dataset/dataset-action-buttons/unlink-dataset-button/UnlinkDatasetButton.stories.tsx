@@ -13,6 +13,7 @@ import { CollectionMockRepository } from '@/stories/collection/CollectionMockRep
 import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { WithToasts } from '@/stories/WithToasts'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof UnlinkDatasetButton> = {
   title: 'Sections/Dataset Page/DatasetActionButtons/UnlinkDatasetButton',
@@ -29,12 +30,13 @@ type Story = StoryObj<typeof UnlinkDatasetButton>
 
 export const Default: Story = {
   render: () => (
-    <UnlinkDatasetButton
-      dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-      datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-      updateParent={() => {}}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <UnlinkDatasetButton
+        dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
+        datasetRepository={new DatasetMockRepository()}
+        updateParent={() => {}}
+      />
+    </RepositoriesStoryProvider>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -65,12 +67,13 @@ withOnlyOneCollectionToUnlinkRepo.getForUnlinking = () => {
 
 export const WithOnlyOneCollectionToUnlink: Story = {
   render: () => (
-    <UnlinkDatasetButton
-      dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-      datasetRepository={new DatasetMockRepository()}
-      collectionRepository={withOnlyOneCollectionToUnlinkRepo}
-      updateParent={() => {}}
-    />
+    <RepositoriesStoryProvider collectionRepository={withOnlyOneCollectionToUnlinkRepo}>
+      <UnlinkDatasetButton
+        dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
+        datasetRepository={new DatasetMockRepository()}
+        updateParent={() => {}}
+      />
+    </RepositoriesStoryProvider>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

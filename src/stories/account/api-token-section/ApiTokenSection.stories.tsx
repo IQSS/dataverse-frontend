@@ -10,6 +10,7 @@ import { UserMockErrorRepository } from '../../shared-mock-repositories/user/Use
 import { CollectionMockRepository } from '../../collection/CollectionMockRepository'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
 import { NotificationMockRepository } from '@/stories/account/NotificationMockRepository'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof Account> = {
   title: 'Sections/Account Page/ApiTokenSection',
@@ -26,37 +27,40 @@ type Story = StoryObj<typeof Account>
 
 export const Default: Story = {
   render: () => (
-    <Account
-      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
-      userRepository={new UserMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
-      roleRepository={new RoleMockRepository()}
-      notificationRepository={new NotificationMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Account
+        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
+        userRepository={new UserMockRepository()}
+        roleRepository={new RoleMockRepository()}
+        notificationRepository={new NotificationMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const Loading: Story = {
   render: () => (
-    <Account
-      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
-      userRepository={new UserMockLoadingRepository()}
-      collectionRepository={new CollectionMockRepository()}
-      roleRepository={new RoleMockRepository()}
-      notificationRepository={new NotificationMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Account
+        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
+        userRepository={new UserMockLoadingRepository()}
+        roleRepository={new RoleMockRepository()}
+        notificationRepository={new NotificationMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const Error: Story = {
   render: () => (
-    <Account
-      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
-      userRepository={new UserMockErrorRepository()}
-      collectionRepository={new CollectionMockRepository()}
-      roleRepository={new RoleMockRepository()}
-      notificationRepository={new NotificationMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Account
+        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
+        userRepository={new UserMockErrorRepository()}
+        roleRepository={new RoleMockRepository()}
+        notificationRepository={new NotificationMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
@@ -75,13 +79,14 @@ export const NoToken: Story = {
     }
 
     return (
-      <Account
-        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
-        userRepository={noTokenRepository}
-        collectionRepository={new CollectionMockRepository()}
-        roleRepository={new RoleMockRepository()}
-        notificationRepository={new NotificationMockRepository()}
-      />
+      <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+        <Account
+          defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
+          userRepository={noTokenRepository}
+          roleRepository={new RoleMockRepository()}
+          notificationRepository={new NotificationMockRepository()}
+        />
+      </RepositoriesStoryProvider>
     )
   }
 }

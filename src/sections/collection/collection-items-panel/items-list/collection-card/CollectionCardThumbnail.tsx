@@ -19,9 +19,12 @@ export function CollectionCardThumbnail({ collectionPreview }: CollectionCardCar
         {collectionPreview.thumbnail ? (
           <img src={collectionPreview.thumbnail} alt={collectionPreview.name} />
         ) : (
-          <div className={styles.icon}>
-            <Icon name={IconName.COLLECTION} />
-          </div>
+          <>
+            <span className="visually-hidden">{collectionPreview.name}</span>
+            <div className={styles.icon} aria-hidden="true">
+              <Icon name={IconName.COLLECTION} />
+            </div>
+          </>
         )}
       </LinkToPage>
     </div>

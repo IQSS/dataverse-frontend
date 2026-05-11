@@ -17,9 +17,15 @@ import { WithDeaccessionedDataset } from './WithDeaccessionedDataset'
 import { WithNotImplementedModal } from '../WithNotImplementedModal'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { DatasetMockRepository } from './DatasetMockRepository'
+import { DatasetWithGuestbookMockRepository } from './DatasetWithGuestbookMockRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 import { ContactMockRepository } from '../shared-mock-repositories/contact/ContactMockRepository'
 import { DataverseInfoMockRepository } from '../shared-mock-repositories/info/DataverseInfoMockRepository'
+import { GuestbookMockRepository } from '../shared-mock-repositories/guestbook/GuestbookMockRepository'
+import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -34,129 +40,170 @@ const meta: Meta<typeof Dataset> = {
 export default meta
 type Story = StoryObj<typeof Dataset>
 
+const guestbookRepository: GuestbookRepository = new GuestbookMockRepository()
+
+const WithDatasetGuestbook = (Story: () => JSX.Element) => {
+  const datasetRepository = new DatasetWithGuestbookMockRepository()
+
+  return (
+    <GuestbookRepositoryProvider repository={guestbookRepository}>
+      <DatasetProvider
+        repository={datasetRepository}
+        searchParams={{ persistentId: 'doi:10.5072/FK2/8YOKQI' }}>
+        <Story />
+      </DatasetProvider>
+    </GuestbookRepositoryProvider>
+  )
+}
+
+WithDatasetGuestbook.displayName = 'WithDatasetGuestbook'
+
 export const Default: Story = {
   decorators: [WithLayout, WithDataset, WithNotImplementedModal],
   render: () => (
-    <Dataset
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      filesTabInfiniteScrollEnabled
-      dataverseInfoRepository={new DataverseInfoMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Dataset
+        datasetRepository={new DatasetMockRepository()}
+        fileRepository={new FileMockRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+        filesTabInfiniteScrollEnabled
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 export const WithNormalPagination: Story = {
   decorators: [WithLayout, WithDataset, WithNotImplementedModal],
   render: () => (
-    <Dataset
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      dataverseInfoRepository={new DataverseInfoMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Dataset
+        datasetRepository={new DatasetMockRepository()}
+        fileRepository={new FileMockRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const DraftWithAllDatasetPermissions: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
   render: () => (
-    <Dataset
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      filesTabInfiniteScrollEnabled
-      dataverseInfoRepository={new DataverseInfoMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Dataset
+        datasetRepository={new DatasetMockRepository()}
+        fileRepository={new FileMockRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+        filesTabInfiniteScrollEnabled
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 export const Deaccessioned: Story = {
   decorators: [WithLayout, WithDeaccessionedDataset, WithLoggedInUser],
   render: () => (
-    <Dataset
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      filesTabInfiniteScrollEnabled
-      dataverseInfoRepository={new DataverseInfoMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Dataset
+        datasetRepository={new DatasetMockRepository()}
+        fileRepository={new FileMockRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+        filesTabInfiniteScrollEnabled
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 export const LoggedInAsOwner: Story = {
   decorators: [WithDataset, WithLayout, WithLoggedInUser, WithNotImplementedModal],
   render: () => (
-    <Dataset
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      filesTabInfiniteScrollEnabled
-      dataverseInfoRepository={new DataverseInfoMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Dataset
+        datasetRepository={new DatasetMockRepository()}
+        fileRepository={new FileMockRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+        filesTabInfiniteScrollEnabled
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const Loading: Story = {
   decorators: [WithLayout, WithDatasetLoading],
   render: () => (
-    <Dataset
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      filesTabInfiniteScrollEnabled
-      dataverseInfoRepository={new DataverseInfoMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Dataset
+        datasetRepository={new DatasetMockRepository()}
+        fileRepository={new FileMockRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+        filesTabInfiniteScrollEnabled
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const DatasetNotFound: Story = {
   decorators: [WithLayout, WithDatasetNotFound],
   render: () => (
-    <Dataset
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      filesTabInfiniteScrollEnabled
-      dataverseInfoRepository={new DataverseInfoMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Dataset
+        datasetRepository={new DatasetMockRepository()}
+        fileRepository={new FileMockRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+        filesTabInfiniteScrollEnabled
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const DatasetAnonymizedView: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDatasetPrivateUrl],
   render: () => (
-    <Dataset
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      contactRepository={new ContactMockRepository()}
-      filesTabInfiniteScrollEnabled
-      dataverseInfoRepository={new DataverseInfoMockRepository()}
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Dataset
+        datasetRepository={new DatasetMockRepository()}
+        fileRepository={new FileMockRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+        filesTabInfiniteScrollEnabled
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const DatasetWithNoFiles: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDataset],
   render: () => (
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <Dataset
+        datasetRepository={new DatasetMockRepository()}
+        fileRepository={new FileMockNoDataRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        contactRepository={new ContactMockRepository()}
+        filesTabInfiniteScrollEnabled
+        dataverseInfoRepository={new DataverseInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
+  )
+}
+
+export const DatasetWithGuestbook: Story = {
+  decorators: [WithLayout, WithDatasetGuestbook, WithNotImplementedModal],
+  render: () => (
     <Dataset
-      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockNoDataRepository()}
+      fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       contactRepository={new ContactMockRepository()}
       filesTabInfiniteScrollEnabled

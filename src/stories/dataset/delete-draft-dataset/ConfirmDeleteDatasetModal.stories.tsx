@@ -18,7 +18,8 @@ export const Default: Story = {
       handleClose={() => {}}
       handleDelete={() => {}}
       isDeletingDataset={false}
-      errorDeletingDataset={null}></ConfirmDeleteDraftDatasetModal>
+      errorDeletingDataset={null}
+      hasReleasedVersion={true}></ConfirmDeleteDraftDatasetModal>
   )
 }
 export const DeleteInProgress: Story = {
@@ -28,7 +29,8 @@ export const DeleteInProgress: Story = {
       isDeletingDataset={true}
       handleClose={() => {}}
       handleDelete={() => {}}
-      errorDeletingDataset={null}></ConfirmDeleteDraftDatasetModal>
+      errorDeletingDataset={null}
+      hasReleasedVersion={true}></ConfirmDeleteDraftDatasetModal>
   )
 }
 export const WithError: Story = {
@@ -38,8 +40,7 @@ export const WithError: Story = {
       isDeletingDataset={true}
       handleClose={() => {}}
       handleDelete={() => {}}
-      errorDeletingDataset={
-        Error('Error deleting dataset').message
-      }></ConfirmDeleteDraftDatasetModal>
+      errorDeletingDataset={Error('Error deleting dataset').message}
+      hasReleasedVersion={true}></ConfirmDeleteDraftDatasetModal>
   )
 }

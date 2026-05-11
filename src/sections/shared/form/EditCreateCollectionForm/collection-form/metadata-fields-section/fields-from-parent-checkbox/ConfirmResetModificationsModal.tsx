@@ -13,11 +13,12 @@ export const ConfirmResetModificationsModal = ({
   onCancel
 }: ConfirmResetModificationsModalProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'collectionForm.confirmResetModal' })
+  const modalTitle = t('title')
 
   return (
-    <Modal show={showModal} onHide={onCancel} size="xl">
+    <Modal show={showModal} onHide={onCancel} size="xl" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('title')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Alert variant="warning" dismissible={false}>

@@ -101,7 +101,11 @@ describe('File', () => {
 
   it('renders the FileVersions component', () => {
     const testFile = FileMother.createRealistic()
+    const summaries = FileMother.createFileVersionSummary()
     fileRepository.getById = cy.stub().resolves(testFile)
+    fileRepository.getFileVersionSummaries = cy
+      .stub()
+      .resolves({ summaries, totalCount: summaries.length })
 
     cy.customMount(
       <File

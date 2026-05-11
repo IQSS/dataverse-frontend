@@ -14,17 +14,18 @@ import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmi
 import { QueryParamKey, Route } from '../../Route.enum'
 import { usePublishDataset } from './usePublishDataset'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { UpwardHierarchyNode } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { DatasetLicense } from '@/dataset/domain/models/Dataset'
-import styles from './PublishDatasetModal.module.scss'
 import { PublishLicense } from '@/sections/dataset/publish-dataset/PublishLicense'
 import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
+import { useSettings } from '@/sections/settings/SettingsContext'
+import { SettingName } from '@/settings/domain/models/Setting'
+import styles from './PublishDatasetModal.module.scss'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface PublishDatasetModalProps {
   show: boolean
   repository: DatasetRepository
-  collectionRepository: CollectionRepository
   parentCollection: UpwardHierarchyNode
   persistentId: string
   license: DatasetLicense | undefined
@@ -39,7 +40,6 @@ interface PublishDatasetModalProps {
 export function PublishDatasetModal({
   show,
   repository,
-  collectionRepository,
   parentCollection,
   persistentId,
   license,
@@ -50,9 +50,11 @@ export function PublishDatasetModal({
   nextMinorVersion,
   requiresMajorVersionUpdate
 }: PublishDatasetModalProps) {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()
+  const { getSettingByName } = useSettings()
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
     collectionRepository,
@@ -69,6 +71,19 @@ export function PublishDatasetModal({
   }
   const nextMajorVersionString = nextMajorVersion ? nextMajorVersion : ''
   const nextMinorVersionString = nextMinorVersion ? nextMinorVersion : ''
+
+  const publishDisclaimerText = getSettingByName<string>(
+    SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT
+  )?.value
+
+  const datasetPublishPopupCustomText = getSettingByName<string>(
+    SettingName.DATASET_PUBLISH_POPUP_CUSTOM_TEXT
+  )?.value
+
+  const shouldShowCustomPopupText = Boolean(datasetPublishPopupCustomText?.trim())
+  const shouldShowDisclaimer = Boolean(publishDisclaimerText?.trim())
+  const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false)
+
   function onPublishSucceed() {
     navigate(
       `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
@@ -81,8 +96,13 @@ export function PublishDatasetModal({
   }
   const modalTitle = t('publish.title')
 
+  const handleCloseWithReset = () => {
+    setIsDisclaimerAccepted(false)
+    handleClose()
+  }
+
   return (
-    <Modal show={show} onHide={handleClose} size="xl" ariaLabel={modalTitle}>
+    <Modal show={show} onHide={handleCloseWithReset} size="xl" ariaLabel={modalTitle}>
       <Modal.Header>
         <Modal.Title>{t('publish.title')}</Modal.Title>
       </Modal.Header>
@@ -96,6 +116,12 @@ export function PublishDatasetModal({
             parentCollectionId={parentCollection.id}
             requiresMajorVersionUpdate={requiresMajorVersionUpdate ?? false}
           />
+
+          {shouldShowCustomPopupText && (
+            <div className={styles.customPopupTextBlock}>
+              <p className={styles.customPopupText}>{datasetPublishPopupCustomText}</p>
+            </div>
+          )}
 
           {releasedVersionExists && !requiresMajorVersionUpdate && (
             <>
@@ -139,10 +165,24 @@ export function PublishDatasetModal({
               window.open(newUrl, '_blank')
             }}
           />
+
           <div>
             <CustomTerms customTerms={customTerms} />
           </div>
           <p className={styles.secondaryText}>{t('publish.termsText')}</p>
+
+          {shouldShowDisclaimer && (
+            <Form.Group>
+              <Form.Group.Checkbox
+                className={styles.disclaimerText}
+                id="publish-disclaimer-checkbox"
+                name="publish-disclaimer-checkbox"
+                checked={isDisclaimerAccepted}
+                onChange={(e) => setIsDisclaimerAccepted(e.target.checked)}
+                label={publishDisclaimerText}
+              />
+            </Form.Group>
+          )}
         </Stack>
         <span className={styles.errorText}>
           {submissionStatus === SubmissionStatus.Errored &&
@@ -159,7 +199,10 @@ export function PublishDatasetModal({
             submitPublish(versionUpdateType)
           }}
           type="submit"
-          disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+          disabled={
+            submissionStatus === SubmissionStatus.IsSubmitting ||
+            (shouldShowDisclaimer && !isDisclaimerAccepted)
+          }>
           <Stack direction="horizontal" gap={1}>
             {t('publish.continueButton')}
             {submissionStatus === SubmissionStatus.IsSubmitting && (
@@ -171,7 +214,7 @@ export function PublishDatasetModal({
           withSpacing
           variant="secondary"
           type="button"
-          onClick={handleClose}
+          onClick={handleCloseWithReset}
           disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
           {t('publish.cancelButton')}
         </Button>

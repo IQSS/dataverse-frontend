@@ -14,6 +14,8 @@ import { SpinnerSymbol } from '@/sections/dataset/dataset-files/files-table/spin
 import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import { License } from '@/sections/dataset/dataset-terms/License'
+import { DatasetGuestbook } from '@/sections/dataset/dataset-guestbook/DatasetGuestbook'
+import { useSearchParams } from 'react-router-dom'
 
 interface DatasetTermsProps {
   license: DatasetLicense | undefined
@@ -33,6 +35,7 @@ export function DatasetTerms({
   canUpdateDataset
 }: DatasetTermsProps) {
   const { t } = useTranslation('dataset')
+  const [searchParams] = useSearchParams()
   const { filesCountInfo, isLoading } = useGetFilesCountInfo({
     filesRepository,
     datasetPersistentId,
@@ -46,15 +49,24 @@ export function DatasetTerms({
     (value) => value === undefined || typeof value === 'boolean'
   )
   const displayTermsOfAccess = !termsOfAccessIsEmpty || restrictedFilesCount > 0
+  const shouldOpenGuestbookSection = searchParams.get('termsTab') === 'guestbook'
 
   if (isLoading) {
     return <SpinnerSymbol />
   }
 
+  const defaultActiveKeys = ['0']
+  if (displayTermsOfAccess) {
+    defaultActiveKeys.push('1')
+  }
+  if (shouldOpenGuestbookSection) {
+    defaultActiveKeys.push('2')
+  }
+
   return (
     <>
       <EditDatasetTermsButton />
-      <Accordion defaultActiveKey={['0', '1']} alwaysOpen={true}>
+      <Accordion defaultActiveKey={defaultActiveKeys} alwaysOpen={true}>
         <Accordion.Item eventKey={'0'}>
           <Accordion.Header>{t('termsTab.licenseTitle')}</Accordion.Header>
           <Accordion.Body>
@@ -74,6 +86,14 @@ export function DatasetTerms({
             </Accordion.Body>
           </Accordion.Item>
         )}
+        <Accordion.Item eventKey={'2'} data-testid="dataset-terms-guestbook-accordion-item">
+          <Accordion.Header data-testid="dataset-terms-guestbook-accordion-header">
+            {t('termsTab.guestbookTitle')}
+          </Accordion.Header>
+          <Accordion.Body data-testid="dataset-terms-guestbook-accordion-body">
+            <DatasetGuestbook />
+          </Accordion.Body>
+        </Accordion.Item>
       </Accordion>
     </>
   )

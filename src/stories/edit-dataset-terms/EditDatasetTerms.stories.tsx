@@ -3,11 +3,13 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { WithDataset } from '../dataset/WithDataset'
 import { EditDatasetTerms } from '../../sections/edit-dataset-terms/EditDatasetTerms'
-import { EditDatasetTermsHelper } from '../../sections/edit-dataset-terms/EditDatasetTermsHelper'
+import { EditDatasetTermsHelper } from '@/sections/edit-dataset-terms/EditDatasetTermsHelper'
 import { LicenseMockRepository } from '../shared-mock-repositories/license/LicenseMockRepository'
+import { GuestbookMockRepository } from '../shared-mock-repositories/guestbook/GuestbookMockRepository'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { LicenseRepository } from '@/licenses/domain/repositories/LicenseRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 
 const meta: Meta<typeof EditDatasetTerms> = {
   title: 'Pages/EditDatasetTerms',
@@ -23,6 +25,8 @@ type Story = StoryObj<typeof EditDatasetTerms>
 
 const licenseRepository: LicenseRepository = new LicenseMockRepository() as LicenseRepository
 const datasetRepository: DatasetRepository = new DatasetMockRepository() as DatasetRepository
+const guestbookRepository: GuestbookRepository =
+  new GuestbookMockRepository() as GuestbookRepository
 
 export const EditLicenseAndTermsTab: Story = {
   render: () => (
@@ -30,6 +34,7 @@ export const EditLicenseAndTermsTab: Story = {
       defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.datasetTerms}
       licenseRepository={licenseRepository}
       datasetRepository={datasetRepository}
+      guestbookRepository={guestbookRepository}
     />
   )
 }
@@ -40,16 +45,18 @@ export const EditTermsOfAccessTab: Story = {
       defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.restrictedFilesTerms}
       licenseRepository={licenseRepository}
       datasetRepository={datasetRepository}
+      guestbookRepository={guestbookRepository}
     />
   )
 }
 
-export const EditGuestBookTab: Story = {
+export const EditGuestbookTab: Story = {
   render: () => (
     <EditDatasetTerms
-      defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestBook}
+      defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
       licenseRepository={licenseRepository}
       datasetRepository={datasetRepository}
+      guestbookRepository={guestbookRepository}
     />
   )
 }

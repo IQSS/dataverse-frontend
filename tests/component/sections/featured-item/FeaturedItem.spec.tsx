@@ -2,6 +2,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { FeaturedItem } from '@/sections/featured-item/FeaturedItem'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const collectionRepository = {} as CollectionRepository
 const testCollectionId = 'root'
@@ -29,11 +30,12 @@ describe('FeaturedItem', () => {
     })
 
     cy.customMount(
-      <FeaturedItem
-        collectionRepository={collectionRepository}
-        parentCollectionIdFromParams={testCollectionId}
-        featuredItemId={featuredItemOne.id.toString()}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <FeaturedItem
+          parentCollectionIdFromParams={testCollectionId}
+          featuredItemId={featuredItemOne.id.toString()}
+        />
+      </WithRepositories>
     )
 
     cy.clock()
@@ -49,11 +51,12 @@ describe('FeaturedItem', () => {
 
   it('renders correctly', () => {
     cy.customMount(
-      <FeaturedItem
-        collectionRepository={collectionRepository}
-        parentCollectionIdFromParams={testCollectionId}
-        featuredItemId={featuredItemOne.id.toString()}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <FeaturedItem
+          parentCollectionIdFromParams={testCollectionId}
+          featuredItemId={featuredItemOne.id.toString()}
+        />
+      </WithRepositories>
     )
     // Filters featured item by id
     cy.findByText('Title One').should('exist')
@@ -68,11 +71,12 @@ describe('FeaturedItem', () => {
       .rejects(new Error('An error occurred while loading the featured item'))
 
     cy.customMount(
-      <FeaturedItem
-        collectionRepository={collectionRepository}
-        parentCollectionIdFromParams={testCollectionId}
-        featuredItemId={featuredItemOne.id.toString()}
-      />
+      <WithRepositories collectionRepository={collectionRepository}>
+        <FeaturedItem
+          parentCollectionIdFromParams={testCollectionId}
+          featuredItemId={featuredItemOne.id.toString()}
+        />
+      </WithRepositories>
     )
 
     cy.findByText(/An error occurred while loading the featured item./).should('exist')

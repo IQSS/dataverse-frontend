@@ -13,6 +13,8 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+import './processShim'
+
 import './bootstrapAppConfig' // Initialize test runtime config before any commands/modules
 import './commands'
 import '@cypress/code-coverage/support'

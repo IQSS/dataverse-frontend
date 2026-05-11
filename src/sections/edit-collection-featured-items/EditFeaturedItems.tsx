@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { useGetFeaturedItems } from '../collection/useGetFeaturedItems'
 import { useCollection } from '../collection/useCollection'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
@@ -12,16 +11,14 @@ import { FeaturedItemsForm } from './featured-items-form/FeaturedItemsForm'
 import { FeaturedItemsFormHelper } from './featured-items-form/FeaturedItemsFormHelper'
 import { FeaturedItemsFormData } from './types'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface EditFeaturedItemsProps {
-  collectionRepository: CollectionRepository
   collectionIdFromParams: string | undefined
 }
 
-export const EditFeaturedItems = ({
-  collectionRepository,
-  collectionIdFromParams
-}: EditFeaturedItemsProps) => {
+export const EditFeaturedItems = ({ collectionIdFromParams }: EditFeaturedItemsProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('editFeaturedItems')
   const { setIsLoading } = useLoading()
   const { collection, isLoading } = useCollection(collectionRepository, collectionIdFromParams)
@@ -74,7 +71,6 @@ export const EditFeaturedItems = ({
         collectionId={collection.id}
         defaultValues={formDefaultValues}
         initialExistingFeaturedItems={featuredItems}
-        collectionRepository={collectionRepository}
       />
     </section>
   )

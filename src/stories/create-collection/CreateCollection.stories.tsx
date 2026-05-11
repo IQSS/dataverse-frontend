@@ -11,6 +11,7 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
 import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
+import { WithRepositories } from '../WithRepositories'
 
 import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/ROOT_COLLECTION_ALIAS'
 
@@ -27,18 +28,18 @@ export default meta
 type Story = StoryObj<typeof CreateCollection>
 
 export const Default: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <CreateCollection
-      collectionRepository={new CollectionMockRepository()}
       parentCollectionId={ROOT_COLLECTION_ALIAS}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
     />
   )
 }
 export const Loading: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionLoadingMockRepository() })],
   render: () => (
     <CreateCollection
-      collectionRepository={new CollectionLoadingMockRepository()}
       parentCollectionId={ROOT_COLLECTION_ALIAS}
       metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
     />
@@ -46,9 +47,9 @@ export const Loading: Story = {
 }
 
 export const ParentCollectionNotFound: Story = {
+  decorators: [WithRepositories({ collectionRepository: new NoCollectionMockRepository() })],
   render: () => (
     <CreateCollection
-      collectionRepository={new NoCollectionMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
       parentCollectionId={ROOT_COLLECTION_ALIAS}
     />
@@ -69,9 +70,13 @@ collectionRepositoryWithoutPermissionsToCreateCollection.getUserPermissions = ()
 }
 
 export const NotAllowedToAddCollection: Story = {
+  decorators: [
+    WithRepositories({
+      collectionRepository: collectionRepositoryWithoutPermissionsToCreateCollection
+    })
+  ],
   render: () => (
     <CreateCollection
-      collectionRepository={collectionRepositoryWithoutPermissionsToCreateCollection}
       metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
       parentCollectionId={ROOT_COLLECTION_ALIAS}
     />

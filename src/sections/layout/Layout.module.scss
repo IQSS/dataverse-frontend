@@ -3,3 +3,14 @@
 .body-container {
   min-height: $main-container-available-height;
 }
+
+.banner-message {
+  a {
+    color: #286090;
+  }
+
+  a:hover,
+  a:focus {
+    color: #23527c;
+  }
+}

@@ -1,5 +1,6 @@
 {
-  "copyright": "Copyright © {{year}}, El Presidente y Miembros de la Universidad de Harvard | ",
+  "copyright": "Copyright © {{year}}, {{copyrightHolder}}",
   "privacyPolicy": "Política de privacidad",
-  "poweredBy": "Desarrollado por"
+  "poweredBy": "Desarrollado por",
+  "spaVersion": "versión del frontend: {{version}}"
 }

@@ -10,7 +10,7 @@ describe('NotImplementedModal Component', () => {
     cy.findByText('Not Implemented').should('exist')
 
     // Check if the modal body has specific content
-    cy.findByText('This feature is not implemented yet in SPA.').should('exist')
+    cy.findByText(/This feature is not implemented yet in the Modern version./i).should('exist')
   })
 
   it('closes the modal when the Close button is clicked', () => {

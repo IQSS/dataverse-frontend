@@ -5,7 +5,6 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext } from '@dnd-kit/sortable'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import {
   FeaturedItem,
   CustomFeaturedItem,
@@ -19,20 +18,20 @@ import { useDeleteFeaturedItems } from './useDeleteFeaturedItems'
 import { ActionButtons } from './ActionButtons'
 import { ConfirmDeleteModal } from './ConfirmDeleteModal'
 import styles from './FeaturedItemsForm.module.scss'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface FeaturedItemsFormProps {
   collectionId: string
-  collectionRepository: CollectionRepository
   defaultValues: FeaturedItemsFormData
   initialExistingFeaturedItems: FeaturedItem[]
 }
 
 export const FeaturedItemsForm = ({
   collectionId,
-  collectionRepository,
   defaultValues,
   initialExistingFeaturedItems
 }: FeaturedItemsFormProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const { t } = useTranslation('editFeaturedItems')
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
 
@@ -182,7 +181,6 @@ export const FeaturedItemsForm = ({
                   onAddField={handleOnAddField}
                   onRemoveField={handleOnRemoveField}
                   onSelectType={handleSelectType}
-                  collectionRepository={collectionRepository}
                   initialImageUrl={
                     (initialExistingFeaturedItems as CustomFeaturedItem[]).find(
                       (item) => item.id === field.itemId

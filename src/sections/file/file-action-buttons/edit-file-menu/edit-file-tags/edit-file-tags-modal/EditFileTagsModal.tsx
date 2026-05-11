@@ -59,6 +59,7 @@ export const EditFileTagsModal = ({
 }: EditFileTagsModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('file')
+  const modalTitle = t('editFileTagsModal.title')
   const { refreshFiles } = useFilesContext()
   const [customTag, setCustomTag] = useState('')
   const [hasDuplicateCustomTag, setHasDuplicateCustomTag] = useState(false)
@@ -149,9 +150,9 @@ export const EditFileTagsModal = ({
   ]
 
   return (
-    <Modal show={show} onHide={handleModalClose} centered size="lg">
+    <Modal show={show} onHide={handleModalClose} centered size="lg" ariaLabel={modalTitle}>
       <Modal.Header>
-        <Modal.Title>{t('editFileTagsModal.title')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row style={{ padding: '0px 8px' }}>

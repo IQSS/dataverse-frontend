@@ -6,6 +6,7 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof EditFeaturedItems> = {
   title: 'Pages/Edit Featured Items',
@@ -22,10 +23,9 @@ type Story = StoryObj<typeof EditFeaturedItems>
 
 export const Default: Story = {
   render: () => (
-    <EditFeaturedItems
-      collectionRepository={new CollectionMockRepository()}
-      collectionIdFromParams="root"
-    />
+    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+      <EditFeaturedItems collectionIdFromParams="root" />
+    </RepositoriesStoryProvider>
   )
 }
 
@@ -40,9 +40,8 @@ collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
 
 export const WithInitialFeaturedItems: Story = {
   render: () => (
-    <EditFeaturedItems
-      collectionRepository={collectionRepositoryWithFeaturedItems}
-      collectionIdFromParams="root"
-    />
+    <RepositoriesStoryProvider collectionRepository={collectionRepositoryWithFeaturedItems}>
+      <EditFeaturedItems collectionIdFromParams="root" />
+    </RepositoriesStoryProvider>
   )
 }

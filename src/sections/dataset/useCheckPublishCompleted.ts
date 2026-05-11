@@ -3,6 +3,7 @@ import { getDatasetLocks } from '../../dataset/domain/useCases/getDatasetLocks' 
 import { Dataset } from '../../dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { PUBLISH_DATASET_POLL_INTERVAL } from './config'
+import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 
 const useCheckPublishCompleted = (
   publishInProgress: boolean | undefined,
@@ -11,6 +12,11 @@ const useCheckPublishCompleted = (
 ): boolean => {
   const [publishCompleted, setPublishCompleted] = useState(false)
 
+  const handlePublishCompleted = () => {
+    setPublishCompleted(true)
+    needsUpdateStore.setNeedsUpdate(true)
+  }
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null
 
@@ -18,7 +24,7 @@ const useCheckPublishCompleted = (
       const waitForDatasetLocksReleased = async () => {
         const initialLocks = await getDatasetLocks(datasetRepository, dataset.persistentId)
         if (initialLocks.length === 0) {
-          setPublishCompleted(true)
+          handlePublishCompleted()
         } else {
           intervalId = setInterval(() => {
             const pollLocks = async () => {
@@ -26,7 +32,7 @@ const useCheckPublishCompleted = (
                 const locks = await getDatasetLocks(datasetRepository, dataset.persistentId)
                 if (locks.length === 0) {
                   if (intervalId) clearInterval(intervalId)
-                  setPublishCompleted(true)
+                  handlePublishCompleted()
                 }
               } catch (error) {
                 if (intervalId) clearInterval(intervalId)

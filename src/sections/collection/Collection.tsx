@@ -1,5 +1,4 @@
 import { ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
@@ -23,10 +22,10 @@ import { ContactRepository } from '@/contact/domain/repositories/ContactReposito
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { LinkCollectionDropdown } from './link-collection-dropdown/LinkCollectionDropdown'
 import { useSession } from '../session/SessionContext'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
-  collectionRepository: CollectionRepository
   collectionIdFromParams: string | undefined
   created: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
@@ -37,12 +36,12 @@ interface CollectionProps {
 
 export function Collection({
   collectionIdFromParams,
-  collectionRepository,
   created,
   collectionQueryParams,
   contactRepository,
   accountCreated
 }: CollectionProps) {
+  const { collectionRepository } = useCollectionRepositories()
   useScrollTop()
   const { previousPath } = useHistoryTracker()
   const previousPathIsHomepage = previousPath === Route.HOME
@@ -91,7 +90,6 @@ export function Collection({
               collection.hierarchy
             ) ? /* istanbul ignore next */ null : (
               <FeaturedItems
-                collectionRepository={collectionRepository}
                 collectionId={collection.id}
                 className={styles['featured-items-spacing']}
                 withLoadingSkeleton={false}
@@ -125,7 +123,6 @@ export function Collection({
                         <LinkCollectionDropdown
                           collectionId={collection.id}
                           collectionName={collection.name}
-                          collectionRepository={collectionRepository}
                         />
                       )}
 
@@ -133,7 +130,6 @@ export function Collection({
                       <EditCollectionDropdown
                         collection={collection}
                         canUserDeleteCollection={canUserDeleteCollection}
-                        collectionRepository={collectionRepository}
                       />
                     )}
                   </ButtonGroup>
@@ -144,7 +140,6 @@ export function Collection({
             <CollectionItemsPanel
               key={collection.id}
               collectionId={collection.id}
-              collectionRepository={collectionRepository}
               collectionQueryParams={collectionQueryParams}
               addDataSlot={
                 showAddDataActions ? (

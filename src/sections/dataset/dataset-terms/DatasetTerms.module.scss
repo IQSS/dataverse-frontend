@@ -9,3 +9,12 @@
   margin: 10px 0;
   color: $dv-subtext-color;
 }
+
+.guestbook-selection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+}

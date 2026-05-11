@@ -940,7 +940,7 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "https://localhost/spa/*"
+        "https://localhost/modern/*"
       ],
       "webOrigins": [
         "+"

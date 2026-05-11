@@ -8,14 +8,38 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+---
+
+## [v0.3.1] -- 2026-04-30
+
+- Added pagination to the Versions tabs on Dataset and File pages so version summaries are loaded and displayed one page at a time.
+
+---
+
+## [v0.3.0] -- 2026-04-24
+
+### Added
+
 - Added the value entered by the user in the error messages for metadata field validation errors in EMAIL and URL type fields. For example, instead of showing “Point of Contact E-mail is not a valid email address.“, we now show “Point of Contact E-mail foo is not a valid email address.”
 - Contact Owner button in File Page.
 - Share button in File Page.
 - Link Collection and Link Dataset features.
 - Edit Terms Integration.
+- File upload now shows the remaining storage quota when upload limits are available.
 - With the addition of the new runtime configuration approach, we now support dynamic configuration for languages. If more than one language is configured, the Language Switcher will be shown in the header to allow users to change the language.
 - Added Notifications tab in Account Page
+- Added runtime configuration options for homepage branding and support link.
 - Added an environment variable to docker-compose-dev.yml to hide the OIDC client used in the SPA from the JSF frontend: DATAVERSE_AUTH_OIDC_HIDDEN_JSF: 1
+- Added a message note to the login page
+- Download with terms of use and guestbook.
+- Show terms modal before download when dataset has custom terms, a non-default license (not CC0 1.0), or a guestbook. Draft datasets and dataset editors bypass the modal.
+- Layout: added a configurable homepage banner for announcements and important messages. (#787)
 
 ### Changed
 
@@ -25,6 +49,10 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Changed the way we were handling DATE type metadata field validation to better match the backend validation and give users better error messages. For example, for an input like “foo AD”, we now show “Production Date is not a valid date. The AD year must be numeric.“. For an input like “99999 AD”, we now show “Production Date is not a valid date. The AD year cant be higher than 9999.“. For an input like “[-9999?], we now show “Production Date is not a valid date. The year in brackets cannot be negative.“, etc.
 - The SPA now fetches the runtime configuration from `config.js` on each load, allowing configurations without rebuilding the app. We don't use `.env` variables at build time anymore.
 - Renamed dataset template fetch/create use cases and DTOs to `getTemplatesByCollectionId` and `CreateTemplateDTO` for API alignment, and added new `getTemplate` and `deleteTemplate` use cases for retrieving a single template by ID and deleting templates.
+- Added disclaimer text and custom popup text to Publish Dataset modal for better communication of the implications of publishing a dataset. The text can be configured through the runtime configuration.
+- Dataset page Terms tab title now depends on permissions: users with dataset update permission see `Terms and Guestbook`, and read-only users see `Terms`.
+- Avoided prop-drilling for collection repository, so used context to share epository instances.
+- Added frontend version to the footer of the application, which is retrieved from the `version` field in `package.json` at build time.
 
 ### Fixed
 
@@ -32,6 +60,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Show toast notification when API token is copied to clipboard.
 - Dataset versions: (1) file changes should be `Access: Restricted` instead of `isResticted: true/false`; (2) logic of View Detail button. (#879)
 - File versions: (1) logic of linking to a file version; (2)If file not included, show text information "File not included in this version.". (#879)
+- Dataset page publish flow now avoids rendering duplicate tab sets by making tabs skeleton and tabs content mutually exclusive.
 
 ### Removed
 
@@ -56,6 +85,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Upgrade Keycloak to 26.3.2; updated SPI and test realm JSON.
 - Truncate long collection and dataset descriptions with expandable content. (#789)
 - UI polish: Files Table always shows action buttons. (#800)
+- Removed hard-coded references to /spa path and SPA name, changed to /modern (#945)
 
 ### Fixed
 

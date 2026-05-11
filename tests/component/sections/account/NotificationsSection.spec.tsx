@@ -44,6 +44,17 @@ const mockErrorRepository = {
   getAllNotificationsByUser: () => Promise.reject(new Error('Failed to fetch')),
   getUnreadNotificationsCount: () => Promise.resolve(1)
 }
+
+const emptyNotificationRepository = {
+  getAllNotificationsByUser: () =>
+    Promise.resolve({
+      totalItemCount: 0,
+      items: []
+    }),
+  markNotificationAsRead: (_id: number) => Promise.resolve(),
+  deleteNotification: (_id: number) => Promise.resolve(),
+  getUnreadNotificationsCount: () => Promise.resolve(0)
+}
 describe('multiple page notifications', () => {
   before(() => {
     notificationsRepository.getAllNotificationsByUser = cy
@@ -122,5 +133,14 @@ describe('NotificationsSection', () => {
     cy.tick(2500)
 
     cy.get('@markAsRead').should('have.been.calledOnceWith', Cypress.sinon.match.number)
+  })
+
+  it('does not render notifications display count when there are no notifications', () => {
+    cy.mountAuthenticated(
+      <NotificationsSection notificationRepository={emptyNotificationRepository} />
+    )
+
+    cy.findByText(/Displaying .* Notifications/).should('not.exist')
+    cy.findByText('No notifications available.').should('exist')
   })
 })

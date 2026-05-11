@@ -25,9 +25,9 @@ void i18next
     returnNull: false,
     backend: {
       loadPath:
-        import.meta.env.BASE_URL != '/spa'
+        import.meta.env.BASE_URL != '/modern'
           ? `${import.meta.env.BASE_URL}locales/{{lng}}/{{ns}}.json`
-          : `/spa/locales/{{lng}}/{{ns}}.json`
+          : `/modern/locales/{{lng}}/{{ns}}.json`
     }
   })
 

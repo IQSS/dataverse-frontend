@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { MetadataBlockInfoJSDataverseRepository } from '@/metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { EditCollection } from './EditCollection'
+import { RepositoriesProvider } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
@@ -19,10 +20,11 @@ function EditCollectionWithParams() {
   }
 
   return (
-    <EditCollection
-      collectionId={collectionId}
-      collectionRepository={collectionRepository}
-      metadataBlockInfoRepository={metadataBlockInfoRepository}
-    />
+    <RepositoriesProvider collectionRepository={collectionRepository}>
+      <EditCollection
+        collectionId={collectionId}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    </RepositoriesProvider>
   )
 }

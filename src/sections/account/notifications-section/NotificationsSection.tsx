@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button, CloseButton, Stack } from '@iqss/dataverse-design-system'
 import { getTranslatedNotification } from '@/sections/account/notifications-section/NotificationsHelper'
-import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 import { useNotifications } from '@/notifications/domain/hooks/useNotifications'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { NotificationsPaginationInfo } from '@/notifications/domain/models/NotificationsPaginationInfo'
@@ -39,7 +38,6 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
           await markAsRead(unreadIds)
           setReadIds((prev) => [...prev, ...unreadIds])
           await refetch()
-          needsUpdateStore.setNeedsUpdate(true)
         })()
       }, 2000)
       return () => clearTimeout(timer)
@@ -86,7 +84,9 @@ export const NotificationsSection = ({ notificationRepository }: NotificationsSe
           direction="horizontal"
           gap={2}
           style={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>{t('notifications.displayingNotifications', { start, end, total })}</div>
+          {notifications.length > 0 && (
+            <div>{t('notifications.displayingNotifications', { start, end, total })}</div>
+          )}
 
           {notifications.length > 0 && (
             <Button

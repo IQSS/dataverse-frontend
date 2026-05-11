@@ -8,6 +8,7 @@ import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { CollectionErrorMockRepository } from '../CollectionErrorMockRepository'
 import { WithToasts } from '@/stories/WithToasts'
+import { WithRepositories } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof LinkCollectionDropdown> = {
   title: 'Sections/Collection Page/LinkCollectionDropdown/LinkCollectionModal',
@@ -23,13 +24,8 @@ export default meta
 type Story = StoryObj<typeof LinkCollectionDropdown>
 
 export const Default: Story = {
-  render: () => (
-    <LinkCollectionDropdown
-      collectionId="1"
-      collectionName="Collection Mock"
-      collectionRepository={new CollectionMockRepository()}
-    />
-  ),
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
+  render: () => <LinkCollectionDropdown collectionId="1" collectionName="Collection Mock" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -51,13 +47,10 @@ collectionRepoWithOnlyOneCollectionToLink.getForLinking = () => {
 }
 
 export const WithOnlyOneCollectionToLink: Story = {
-  render: () => (
-    <LinkCollectionDropdown
-      collectionId="1"
-      collectionName="Collection Mock"
-      collectionRepository={collectionRepoWithOnlyOneCollectionToLink}
-    />
-  ),
+  decorators: [
+    WithRepositories({ collectionRepository: collectionRepoWithOnlyOneCollectionToLink })
+  ],
+  render: () => <LinkCollectionDropdown collectionId="1" collectionName="Collection Mock" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -79,13 +72,8 @@ collectionRepoWithNoCollectionsToLink.getForLinking = () => {
 }
 
 export const WithNoCollectionsToLink: Story = {
-  render: () => (
-    <LinkCollectionDropdown
-      collectionId="1"
-      collectionName="Collection Mock"
-      collectionRepository={collectionRepoWithNoCollectionsToLink}
-    />
-  ),
+  decorators: [WithRepositories({ collectionRepository: collectionRepoWithNoCollectionsToLink })],
+  render: () => <LinkCollectionDropdown collectionId="1" collectionName="Collection Mock" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -98,13 +86,8 @@ export const WithNoCollectionsToLink: Story = {
 }
 
 export const WithError: Story = {
-  render: () => (
-    <LinkCollectionDropdown
-      collectionId="1"
-      collectionName="Collection Mock"
-      collectionRepository={new CollectionErrorMockRepository()}
-    />
-  ),
+  decorators: [WithRepositories({ collectionRepository: new CollectionErrorMockRepository() })],
+  render: () => <LinkCollectionDropdown collectionId="1" collectionName="Collection Mock" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 

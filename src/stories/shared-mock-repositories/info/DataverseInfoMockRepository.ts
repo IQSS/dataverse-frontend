@@ -75,4 +75,18 @@ export class DataverseInfoMockRepository implements DataverseInfoRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+  getPublishDatasetDisclaimerText(): Promise<Setting<string>> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(SettingMother.createPublishDatasetDisclaimerText())
+      }, FakerHelper.loadingTimout())
+    })
+  }
+  getDatasetPublishPopupCustomText(): Promise<Setting<string>> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(SettingMother.createDatasetPublishPopupCustomText())
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

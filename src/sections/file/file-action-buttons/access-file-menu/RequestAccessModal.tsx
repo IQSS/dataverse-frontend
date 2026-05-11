@@ -15,6 +15,7 @@ interface RequestAccessButtonProps {
 export function RequestAccessModal({ fileId }: RequestAccessButtonProps) {
   const { t } = useTranslation('files')
   const { user } = useSession()
+  const modalTitle = t('requestAccess.title')
   const [show, setShow] = useState(false)
   const handleClose = () => {
     setShow(false)
@@ -24,9 +25,9 @@ export function RequestAccessModal({ fileId }: RequestAccessButtonProps) {
   return (
     <>
       <DropdownButtonItem onClick={handleShow}>{t('requestAccess.title')}</DropdownButtonItem>
-      <Modal show={show} onHide={handleClose} size="lg">
+      <Modal show={show} onHide={handleClose} size="lg" ariaLabel={modalTitle}>
         <Modal.Header>
-          <Modal.Title>{t('requestAccess.title')}</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         {user ? (
           <RequestAccessForm fileId={fileId} handleClose={handleClose} />

@@ -12,25 +12,23 @@ import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteE
 import { unlinkDataset } from '@/dataset/domain/useCases/unlinkDataset'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { useGetDatasetLinkedCollections } from '@/dataset/domain/hooks/useGetDatasetLinkedCollections'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 
 interface UnlinkDatasetButtonProps {
   dataset: Dataset
   datasetRepository: DatasetRepository
-  collectionRepository: CollectionRepository
   updateParent: () => void
 }
 
 export function UnlinkDatasetButton({
   dataset,
   datasetRepository,
-  collectionRepository,
   updateParent
 }: UnlinkDatasetButtonProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
+  const modalTitle = t('datasetActionButtons.unlinkDataset.title')
   const { user } = useSession()
   const { datasetLinkedCollections } = useGetDatasetLinkedCollections({
     datasetRepository,
@@ -112,16 +110,16 @@ export function UnlinkDatasetButton({
         show={showModal}
         onHide={isUnlinkingDataset ? () => {} : handleClose}
         centered
-        size="lg">
+        size="lg"
+        ariaLabel={modalTitle}>
         <Modal.Header>
-          <Modal.Title>{t('datasetActionButtons.unlinkDataset.title')}</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <CollectionLinkSelect
             mode="unlink"
             linkingObjectType="dataset"
             datasetPersistentId={dataset.persistentId}
-            collectionRepository={collectionRepository}
             onCollectionSelected={handleCollectionSelected}
             helpText={t('datasetActionButtons.unlinkDataset.helper')}
           />

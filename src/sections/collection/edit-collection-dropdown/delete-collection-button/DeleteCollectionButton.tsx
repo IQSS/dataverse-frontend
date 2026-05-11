@@ -3,23 +3,22 @@ import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { ConfirmDeleteCollectionModal } from './confirm-delete-collection-modal/ConfirmDeleteCollectionModal'
 import { useDeleteCollection } from './useDeleteCollection'
 import { UpwardHierarchyNode } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { RouteWithParams } from '@/sections/Route.enum'
+import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface DeleteCollectionButtonProps {
   collectionId: string
   parentCollection: UpwardHierarchyNode | undefined
-  collectionRepository: CollectionRepository
 }
 
 export const DeleteCollectionButton = ({
   collectionId,
-  parentCollection,
-  collectionRepository
+  parentCollection
 }: DeleteCollectionButtonProps) => {
+  const { collectionRepository } = useCollectionRepositories()
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const navigate = useNavigate()
   const { t } = useTranslation('collection')

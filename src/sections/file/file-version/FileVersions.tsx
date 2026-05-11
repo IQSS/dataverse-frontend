@@ -13,8 +13,10 @@ import {
 import { useGetFileVersionsSummaries } from './useGetFileVersionsSummaries'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './FileVersion.module.scss'
+import { FileVersionPaginationInfo } from '@/files/domain/models/FileVersionPaginationInfo'
+import { PaginationControls } from '@/sections/shared/pagination/PaginationControls'
 
 interface FileVersionProps {
   fileId: number
@@ -32,6 +34,9 @@ export function FileVersions({
   isInView
 }: FileVersionProps) {
   const { t } = useTranslation('file')
+  const [paginationInfo, setPaginationInfo] = useState<FileVersionPaginationInfo>(
+    new FileVersionPaginationInfo()
+  )
 
   const { fileVersionSummaries, isLoading, fetchSummaries, error } = useGetFileVersionsSummaries({
     fileRepository,
@@ -40,17 +45,26 @@ export function FileVersions({
   })
 
   useEffect(() => {
-    if (isInView && !fileVersionSummaries) {
-      void fetchSummaries()
-    }
-  }, [isInView, fileVersionSummaries, fetchSummaries])
+    if (isInView) {
+      const paginationInfoToFetch = new FileVersionPaginationInfo(
+        paginationInfo.page,
+        paginationInfo.pageSize
+      )
 
-  if (isLoading || !fileVersionSummaries) {
-    return <FileVersionsLoadingSkeleton />
-  }
+      void fetchSummaries(paginationInfoToFetch).then((totalCount) => {
+        if (typeof totalCount === 'number') {
+          setPaginationInfo((currentPaginationInfo) => currentPaginationInfo.withTotal(totalCount))
+        }
+      })
+    }
+  }, [isInView, fetchSummaries, paginationInfo.page, paginationInfo.pageSize])
 
   if (error) {
     return <Alert variant="danger">{t('fileVersion.error')}</Alert>
+  }
+
+  if (!fileVersionSummaries) {
+    return <FileVersionsLoadingSkeleton />
   }
 
   const datasetVersionDisplayMap: Record<string, string> = {
@@ -62,65 +76,77 @@ export function FileVersions({
       : datasetVersionNumber
 
   return (
-    <div data-testid={`file-file`} className={styles['file-versions-table']}>
-      <Table>
-        <thead>
-          <tr>
-            <th>{t('fileVersion.version')}</th>
-            <th>{t('fileVersion.summary')}</th>
-            <th>{t('fileVersion.contributors')}</th>
-            <th>{t('fileVersion.publishedOn')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {fileVersionSummaries?.map((fileVersion) => {
-            const isCurrentVersion = fileVersion.datasetVersion === displayVersion
-            // Helper functions for readability
-            const hasDataFile = fileVersion.datafileId
-            const isReleased = fileVersion.versionState === DatasetVersionState.RELEASED
-            const isDeaccessionedWithAccess =
-              fileVersion.versionState === DatasetVersionState.DEACCESSIONED && canEditOwnerDataset
-            const isDraftWithAccess =
-              fileVersion.versionState === DatasetVersionState.DRAFT && canEditOwnerDataset
+    <>
+      <div
+        data-testid={`file-file`}
+        className={`${styles['file-versions-table']} ${
+          isLoading ? styles['file-versions-table-loading'] : ''
+        }`}
+        aria-busy={isLoading}>
+        <Table>
+          <thead>
+            <tr>
+              <th>{t('fileVersion.version')}</th>
+              <th>{t('fileVersion.summary')}</th>
+              <th>{t('fileVersion.contributors')}</th>
+              <th>{t('fileVersion.publishedOn')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {fileVersionSummaries?.map((fileVersion) => {
+              const isCurrentVersion = fileVersion.datasetVersion === displayVersion
+              // Helper functions for readability
+              const hasDataFile = fileVersion.datafileId
+              const isReleased = fileVersion.versionState === DatasetVersionState.RELEASED
+              const isDeaccessionedWithAccess =
+                fileVersion.versionState === DatasetVersionState.DEACCESSIONED &&
+                canEditOwnerDataset
+              const isDraftWithAccess =
+                fileVersion.versionState === DatasetVersionState.DRAFT && canEditOwnerDataset
 
-            const isLinkable =
-              hasDataFile && (isReleased || isDeaccessionedWithAccess || isDraftWithAccess)
+              const isLinkable =
+                hasDataFile && (isReleased || isDeaccessionedWithAccess || isDraftWithAccess)
 
-            return (
-              <tr key={fileVersion.datasetVersion}>
-                <td style={{ verticalAlign: 'middle' }}>
-                  {isCurrentVersion ? (
-                    <strong>{fileVersion.datasetVersion}</strong>
-                  ) : isLinkable ? (
-                    <Link
-                      to={`${Route.FILES}?${QueryParamKey.FILE_ID}=${fileId}&${QueryParamKey.DATASET_VERSION}=${fileVersion.datasetVersion}`}
-                      data-testid={`file-version-link-${fileVersion.datasetVersion}`}>
-                      {fileVersion.datasetVersion}
-                    </Link>
+              return (
+                <tr key={fileVersion.datasetVersion}>
+                  <td style={{ verticalAlign: 'middle' }}>
+                    {isCurrentVersion ? (
+                      <strong>{fileVersion.datasetVersion}</strong>
+                    ) : isLinkable ? (
+                      <Link
+                        to={`${Route.FILES}?${QueryParamKey.FILE_ID}=${fileId}&${QueryParamKey.DATASET_VERSION}=${fileVersion.datasetVersion}`}
+                        data-testid={`file-version-link-${fileVersion.datasetVersion}`}>
+                        {fileVersion.datasetVersion}
+                      </Link>
+                    ) : (
+                      <span>{fileVersion.datasetVersion}</span>
+                    )}
+                  </td>
+
+                  <td style={{ textAlign: 'left' }}>
+                    <SummaryDescription
+                      summary={fileVersion.fileDifferenceSummary}
+                      isNoVersions={fileVersion.datafileId === undefined}
+                    />
+                  </td>
+                  <td>{fileVersion.contributors}</td>
+                  {fileVersion.publishedDate &&
+                  fileVersion.datasetVersion !== DatasetVersionState.DRAFT ? (
+                    <td>{DateHelper.toISO8601Format(new Date(fileVersion.publishedDate))}</td>
                   ) : (
-                    <span>{fileVersion.datasetVersion}</span>
+                    <td></td>
                   )}
-                </td>
-
-                <td style={{ textAlign: 'left' }}>
-                  <SummaryDescription
-                    summary={fileVersion.fileDifferenceSummary}
-                    isNoVersions={fileVersion.datafileId === undefined}
-                  />
-                </td>
-                <td>{fileVersion.contributors}</td>
-                {fileVersion.publishedDate &&
-                fileVersion.datasetVersion !== DatasetVersionState.DRAFT ? (
-                  <td>{DateHelper.toISO8601Format(new Date(fileVersion.publishedDate))}</td>
-                ) : (
-                  <td></td>
-                )}
-              </tr>
-            )
-          })}
-        </tbody>
-      </Table>
-    </div>
+                </tr>
+              )
+            })}
+          </tbody>
+        </Table>
+      </div>
+      <PaginationControls
+        initialPaginationInfo={paginationInfo}
+        onPaginationInfoChange={setPaginationInfo}
+      />
+    </>
   )
 }
 

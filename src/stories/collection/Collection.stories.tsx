@@ -9,6 +9,7 @@ import { UnpublishedCollectionMockRepository } from '@/stories/collection/Unpubl
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { ContactMockRepository } from '../shared-mock-repositories/contact/ContactMockRepository'
+import { WithRepositories } from '../WithRepositories'
 
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',
@@ -24,9 +25,9 @@ export default meta
 type Story = StoryObj<typeof Collection>
 
 export const Default: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <Collection
-      collectionRepository={new CollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
       created={false}
@@ -41,10 +42,10 @@ export const Default: Story = {
 }
 
 export const Loading: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionLoadingMockRepository() })],
   render: () => (
     <Collection
       collectionIdFromParams="collection"
-      collectionRepository={new CollectionLoadingMockRepository()}
       contactRepository={new ContactMockRepository()}
       created={false}
       accountCreated={false}
@@ -54,11 +55,13 @@ export const Loading: Story = {
 }
 
 export const LoggedIn: Story = {
-  decorators: [WithLoggedInUser],
+  decorators: [
+    WithLoggedInUser,
+    WithRepositories({ collectionRepository: new CollectionMockRepository() })
+  ],
   render: () => (
     <Collection
       collectionIdFromParams="collection"
-      collectionRepository={new CollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       created={false}
       accountCreated={false}
@@ -67,11 +70,13 @@ export const LoggedIn: Story = {
   )
 }
 export const Unpublished: Story = {
-  decorators: [WithLoggedInUser],
+  decorators: [
+    WithLoggedInUser,
+    WithRepositories({ collectionRepository: new UnpublishedCollectionMockRepository() })
+  ],
   render: () => (
     <Collection
       collectionIdFromParams="collection"
-      collectionRepository={new UnpublishedCollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       created={false}
       accountCreated={false}
@@ -81,10 +86,12 @@ export const Unpublished: Story = {
 }
 
 export const Created: Story = {
-  decorators: [WithLoggedInUser],
+  decorators: [
+    WithLoggedInUser,
+    WithRepositories({ collectionRepository: new CollectionMockRepository() })
+  ],
   render: () => (
     <Collection
-      collectionRepository={new CollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
       created={true}
@@ -95,10 +102,12 @@ export const Created: Story = {
 }
 
 export const AccountCreated: Story = {
-  decorators: [WithLoggedInUser],
+  decorators: [
+    WithLoggedInUser,
+    WithRepositories({ collectionRepository: new CollectionMockRepository() })
+  ],
   render: () => (
     <Collection
-      collectionRepository={new CollectionMockRepository()}
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
       created={false}
@@ -118,10 +127,12 @@ collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
 }
 
 export const WithFeaturedItems: Story = {
-  decorators: [WithLoggedInUser],
+  decorators: [
+    WithLoggedInUser,
+    WithRepositories({ collectionRepository: collectionRepositoryWithFeaturedItems })
+  ],
   render: () => (
     <Collection
-      collectionRepository={collectionRepositoryWithFeaturedItems}
       contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
       created={false}

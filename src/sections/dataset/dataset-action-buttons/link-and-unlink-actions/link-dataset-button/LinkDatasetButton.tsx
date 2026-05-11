@@ -6,7 +6,6 @@ import { WriteError } from '@iqss/dataverse-client-javascript'
 import { Dataset, DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { useSession } from '@/sections/session/SessionContext'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionLinkSelect } from '@/sections/collection/link-collection-dropdown/collection-link-select/CollectionLinkSelect'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
@@ -19,14 +18,12 @@ const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 interface LinkDatasetButtonProps {
   dataset: Dataset
   datasetRepository: DatasetRepository
-  collectionRepository: CollectionRepository
   updateParent: () => void
 }
 
 export function LinkDatasetButton({
   dataset,
   datasetRepository,
-  collectionRepository,
   updateParent
 }: LinkDatasetButtonProps) {
   const { t } = useTranslation('dataset')
@@ -112,7 +109,12 @@ export function LinkDatasetButton({
         {t('datasetActionButtons.linkDataset.title')}
       </Button>
 
-      <Modal show={showModal} onHide={isLinkingDataset ? () => {} : handleClose} centered size="lg">
+      <Modal
+        ariaLabel={'Link Dataset Button'}
+        show={showModal}
+        onHide={isLinkingDataset ? () => {} : handleClose}
+        centered
+        size="lg">
         <Modal.Header>
           <Modal.Title>{t('datasetActionButtons.linkDataset.title')}</Modal.Title>
         </Modal.Header>
@@ -121,7 +123,6 @@ export function LinkDatasetButton({
             mode="link"
             linkingObjectType="dataset"
             datasetPersistentId={dataset.persistentId}
-            collectionRepository={collectionRepository}
             onCollectionSelected={handleCollectionSelected}
             helpText={t('datasetActionButtons.linkDataset.helper')}
           />

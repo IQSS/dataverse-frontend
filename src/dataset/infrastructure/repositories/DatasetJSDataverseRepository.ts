@@ -43,7 +43,8 @@ import {
   unlinkDataset,
   getDatasetLinkedCollections,
   updateTermsOfAccess,
-  updateDatasetLicense
+  updateDatasetLicense,
+  getDatasetUploadLimits
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -62,6 +63,7 @@ import { requireAppConfig } from '../../../config'
 import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
+import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 
 const includeDeaccessioned = true
 
@@ -467,5 +469,9 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   updateTermsOfAccess(datasetId: string | number, termsOfAccess: TermsOfAccess): Promise<void> {
     return updateTermsOfAccess.execute(datasetId, termsOfAccess)
+  }
+
+  getDatasetUploadLimits(datasetId: string | number): Promise<DatasetUploadLimits> {
+    return getDatasetUploadLimits.execute(datasetId)
   }
 }

@@ -4,6 +4,7 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
+import { WithRepositories } from '../WithRepositories'
 
 const meta: Meta<typeof AdvancedSearch> = {
   title: 'Pages/Advanced Search',
@@ -19,9 +20,9 @@ export default meta
 type Story = StoryObj<typeof AdvancedSearch>
 
 export const Default: Story = {
+  decorators: [WithRepositories({ collectionRepository: new CollectionMockRepository() })],
   render: () => (
     <AdvancedSearch
-      collectionRepository={new CollectionMockRepository()}
       collectionId="root"
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
     />

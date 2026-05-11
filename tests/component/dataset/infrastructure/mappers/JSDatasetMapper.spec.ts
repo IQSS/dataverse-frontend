@@ -49,6 +49,7 @@ const jsDataset = {
     deaccessionNote: undefined
   },
   internalVersionNumber: 1,
+  guestbookId: 1001,
   termsOfUse: {
     termsOfAccess: termsOfAccess
   },
@@ -231,6 +232,7 @@ const expectedDataset = {
   internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
+  guestbookId: 1001,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -297,8 +299,8 @@ const expectedDataset = {
     new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
   ],
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -339,6 +341,7 @@ const expectedDatasetWithPublicationDate = {
   internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
+  guestbookId: 1001,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -406,8 +409,8 @@ const expectedDatasetWithPublicationDate = {
     new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
   ],
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -448,6 +451,7 @@ const expectedDatasetWithNextVersionNumbers = {
   internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
+  guestbookId: 1001,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -515,8 +519,8 @@ const expectedDatasetWithNextVersionNumbers = {
     new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
   ],
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -561,6 +565,7 @@ const expectedDatasetAlternateVersion = {
   internalVersionNumber: 1,
   requestedVersion: '4.0',
   publicationDate: undefined,
+  guestbookId: 1001,
   hasValidTermsOfAccess: true,
   hasOneTabularFileAtLeast: true,
   isValid: true,
@@ -638,8 +643,8 @@ const expectedDatasetAlternateVersion = {
   },
   thumbnail: undefined,
   downloadUrls: {
-    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
-    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+    original: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0?format=original`,
+    archival: `/api/access/dataset/doi:10.5072/FK2/B4B2MJ/versions/0.0`
   },
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
@@ -668,6 +673,34 @@ describe('JS Dataset Mapper', () => {
       jsDatasetFilesTotalArchivalDownloadSize
     )
     expect(mapped).to.deep.equal(expectedDataset)
+  })
+
+  it('maps guestbookId when present in jsDataset', () => {
+    const mapped = JSDatasetMapper.toDataset(
+      jsDataset,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
+    )
+
+    expect(mapped.guestbookId).to.equal(1001)
+  })
+
+  it('does not set guestbookId when jsDataset has no guestbook', () => {
+    const mapped = JSDatasetMapper.toDataset(
+      { ...jsDataset, guestbookId: undefined },
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
+    )
+
+    expect(mapped.guestbookId).to.equal(undefined)
   })
 
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {

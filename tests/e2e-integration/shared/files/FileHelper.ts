@@ -1,3 +1,4 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { DataverseApiHelper } from '../DataverseApiHelper'
 import { FileLabel, FileLabelType } from '../../../../src/files/domain/models/FileMetadata'
 import { faker } from '@faker-js/faker'
@@ -96,13 +97,13 @@ export class FileHelper extends DataverseApiHelper {
       .then((binary: string) => Cypress.Blob.binaryStringToBlob(binary, 'image/jpeg'))
   }
 
-  static async download(id: number) {
-    cy.visit(`/file.xhtml?fileId=${id}`)
-      .get('#actionButtonBlock > div:nth-child(1) > div > button')
-      .click()
-      .get('#fileForm\\:j_idt274')
-      .click()
-    return Promise.resolve()
+  static download(id: number): Promise<void> {
+    return new Cypress.Promise((resolve) => {
+      cy.visit(`${FRONTEND_BASE_PATH}/files?id=${id}`)
+      cy.get(`#action-button-access-file-${id}`).click()
+      cy.findByTestId(`download-original-file`).click()
+      cy.then(() => resolve())
+    })
   }
 
   static async addLabel(id: number, labels: FileLabel[]) {

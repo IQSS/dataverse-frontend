@@ -4,6 +4,8 @@ import {
   getMaxEmbargoDurationInMonths,
   getZipDownloadLimit,
   getAvailableDatasetMetadataExportFormats,
+  getPublishDatasetDisclaimerText,
+  getDatasetPublishPopupCustomText,
   ReadError
 } from '@iqss/dataverse-client-javascript'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
@@ -101,5 +103,38 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
 
   getAvailableDatasetMetadataExportFormats(): Promise<DatasetMetadataExportFormats> {
     return getAvailableDatasetMetadataExportFormats.execute()
+  }
+
+  getPublishDatasetDisclaimerText(): Promise<Setting<string>> {
+    return getPublishDatasetDisclaimerText
+      .execute()
+      .then((text) => {
+        return {
+          name: SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT,
+          value: text
+        }
+      })
+      .catch(() => {
+        // In case of error, we default to an empty string which indicates no disclaimer text.
+        return {
+          name: SettingName.PUBLISH_DATASET_DISCLAIMER_TEXT,
+          value: ''
+        }
+      })
+  }
+  getDatasetPublishPopupCustomText(): Promise<Setting<string>> {
+    return getDatasetPublishPopupCustomText
+      .execute()
+      .then((text) => ({
+        name: SettingName.DATASET_PUBLISH_POPUP_CUSTOM_TEXT,
+        value: text
+      }))
+      .catch(() => {
+        // In case of error, we default to an empty string which indicates no custom text.
+        return {
+          name: SettingName.DATASET_PUBLISH_POPUP_CUSTOM_TEXT,
+          value: ''
+        }
+      })
   }
 }

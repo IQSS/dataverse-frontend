@@ -11,31 +11,35 @@ const AppEntrypoint = lazy(() => import('./index.app'))
 const container = document.getElementById('root') as HTMLElement
 const root = createRoot(container)
 
-const appConfigInit = initAppConfig()
-
-if (!appConfigInit.ok) {
-  root.render(
-    <ConfigError message={appConfigInit.message} schemaError={appConfigInit.schemaError} />
-  )
-} else {
-  const appConfig = requireAppConfig()
-
-  ApiConfig.init(
-    `${appConfig.backendUrl}/api/v1`,
-    DataverseApiAuthMechanism.BEARER_TOKEN,
-    undefined,
-    `${appConfig.oidc.localStorageKeyPrefix}token`
-  )
-
+if (window.kcContext) {
   root.render(
     <StrictMode>
-      {window.kcContext ? (
-        <KcPage kcContext={window.kcContext} />
-      ) : (
+      <KcPage kcContext={window.kcContext} />
+    </StrictMode>
+  )
+} else {
+  const appConfigInit = initAppConfig()
+
+  if (!appConfigInit.ok) {
+    root.render(
+      <ConfigError message={appConfigInit.message} schemaError={appConfigInit.schemaError} />
+    )
+  } else {
+    const appConfig = requireAppConfig()
+
+    ApiConfig.init(
+      `${appConfig.backendUrl}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${appConfig.oidc.localStorageKeyPrefix}token`
+    )
+
+    root.render(
+      <StrictMode>
         <Suspense>
           <AppEntrypoint />
         </Suspense>
-      )}
-    </StrictMode>
-  )
+      </StrictMode>
+    )
+  }
 }

@@ -1,5 +1,7 @@
+import { ComponentProps } from 'react'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { FeaturedItems } from '@/sections/collection/featured-items/FeaturedItems'
+import { FeaturedItems as BaseFeaturedItems } from '@/sections/collection/featured-items/FeaturedItems'
+import { WithRepositories } from '@tests/component/WithRepositories'
 import { FeaturedItemMother } from '@tests/component/collection/domain/models/FeaturedItemMother'
 
 const collectionRepository = {} as CollectionRepository
@@ -33,6 +35,17 @@ const tenTestFeaturedItems = Array.from({ length: 10 }, (_, i) =>
     imageFileUrl: undefined
   })
 )
+
+function FeaturedItems({
+  collectionRepository,
+  ...props
+}: ComponentProps<typeof BaseFeaturedItems> & { collectionRepository: CollectionRepository }) {
+  return (
+    <WithRepositories collectionRepository={collectionRepository}>
+      <BaseFeaturedItems {...props} />
+    </WithRepositories>
+  )
+}
 
 describe('FeaturedItems', () => {
   beforeEach(() => {

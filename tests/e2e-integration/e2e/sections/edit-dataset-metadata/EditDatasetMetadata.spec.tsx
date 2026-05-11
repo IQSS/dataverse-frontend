@@ -1,3 +1,4 @@
+import { FRONTEND_BASE_PATH } from '@tests/e2e-integration/shared/basePath'
 import { faker } from '@faker-js/faker'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import {
@@ -22,7 +23,9 @@ describe('Edit Dataset metadata', () => {
       searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
       searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
 
-      const editDatasetMetadataUrl = `/spa${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`
+      const editDatasetMetadataUrl = `${FRONTEND_BASE_PATH}${
+        Route.EDIT_DATASET_METADATA
+      }?${searchParams.toString()}`
 
       cy.visit(editDatasetMetadataUrl)
 
@@ -43,7 +46,9 @@ describe('Edit Dataset metadata', () => {
       searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
       searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
 
-      const editDatasetMetadataUrl = `/spa${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`
+      const editDatasetMetadataUrl = `${FRONTEND_BASE_PATH}${
+        Route.EDIT_DATASET_METADATA
+      }?${searchParams.toString()}`
 
       cy.visit(editDatasetMetadataUrl)
 
@@ -70,7 +75,9 @@ describe('Edit Dataset metadata', () => {
       searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
       searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
 
-      const editDatasetMetadataUrl = `/spa${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`
+      const editDatasetMetadataUrl = `${FRONTEND_BASE_PATH}${
+        Route.EDIT_DATASET_METADATA
+      }?${searchParams.toString()}`
 
       TestsUtils.logout()
 
@@ -89,7 +96,9 @@ describe('Edit Dataset metadata', () => {
       searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
       searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
 
-      const editDatasetMetadataUrl = `/spa${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`
+      const editDatasetMetadataUrl = `${FRONTEND_BASE_PATH}${
+        Route.EDIT_DATASET_METADATA
+      }?${searchParams.toString()}`
 
       TestsUtils.logout()
 

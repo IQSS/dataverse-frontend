@@ -10,8 +10,21 @@ declare global {
 }
 
 function buildTestConfig(): AppConfig {
+  const bannerMessage = Cypress.env('bannerMessage') as AppConfig['bannerMessage']
+  const branding = (Cypress.env('branding') as AppConfig['branding']) ?? {
+    dataverseName: 'Dataverse'
+  }
+  const homepage = (Cypress.env('homepage') as AppConfig['homepage']) ?? {
+    supportUrl: 'https://support.dataverse.harvard.edu/'
+  }
+  const footer = (Cypress.env('footer') as AppConfig['footer']) ?? {
+    copyrightHolder: 'The President & Fellows of Harvard College',
+    privacyPolicyUrl: 'https://support.dataverse.harvard.edu/harvard-dataverse-privacy-policy'
+  }
+
   return {
     backendUrl: Cypress.env('backendUrl') as string,
+    bannerMessage,
     oidc: {
       clientId: Cypress.env('oidcClientId') as string,
       authorizationEndpoint: Cypress.env('oidcAuthorizationEndpoint') as string,
@@ -20,7 +33,10 @@ function buildTestConfig(): AppConfig {
       localStorageKeyPrefix: Cypress.env('oidcLocalStorageKeyPrefix') as string
     },
     languages: Cypress.env('languages') as { code: string; name: string }[],
-    defaultLanguage: Cypress.env('defaultLanguage') as string
+    defaultLanguage: Cypress.env('defaultLanguage') as string,
+    branding,
+    homepage,
+    footer
   }
 }
 

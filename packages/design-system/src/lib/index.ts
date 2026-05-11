@@ -12,6 +12,7 @@ export { NavbarDropdown } from './components/navbar/navbar-dropdown/NavbarDropdo
 export { ThemeProvider, useTheme } from './components/theme/ThemeProvider'
 export { Breadcrumb } from './components/breadcrumb/Breadcrumb'
 export { Alert } from './components/alert/Alert'
+export type { AlertVariant } from './components/alert/AlertVariant'
 export { Tabs } from './components/tabs/Tabs'
 export { Accordion } from './components/accordion/Accordion'
 export { ButtonGroup } from './components/button-group/ButtonGroup'
