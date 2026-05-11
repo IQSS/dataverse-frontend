@@ -87,6 +87,18 @@ describe('EditTemplateMetadata', () => {
     cy.findByText(/Template fetch boom/i).should('exist')
   })
 
+  it('shows the fallback loading-template error when no template is returned', () => {
+    templateRepository.getTemplate = cy.stub().resolves(null)
+
+    mountEditTemplateMetadata()
+
+    cy.findByRole('alert').should(
+      'contain.text',
+      'Something went wrong loading the template. Try again later.'
+    )
+    cy.findByLabelText(/Template Name/).should('not.exist')
+  })
+
   it('calls updateTemplateMetadata with the edited name', () => {
     templateRepository.updateTemplateMetadata = cy.stub().resolves()
 

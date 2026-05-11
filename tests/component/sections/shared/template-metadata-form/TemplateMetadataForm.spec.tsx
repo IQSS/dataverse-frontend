@@ -3,7 +3,9 @@ import { TemplateMetadataForm } from '@/sections/shared/form/TemplateMetadataFor
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { TypeMetadataFieldOptions } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { RouteWithParams, TemplateEditMode } from '@/sections/Route.enum'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { TemplateMother } from '../../templates/TemplateMother'
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 const templateRepository: TemplateRepository = {} as TemplateRepository
 
@@ -12,7 +14,13 @@ const metadataBlocksInfo = MetadataBlockInfoMother.getAllBlocks()
 describe('TemplateMetadataForm', () => {
   const LocationDisplay = () => {
     const location = useLocation()
-    return <div data-testid="location-display">{location.pathname}</div>
+    return (
+      <div hidden>
+        <div data-testid="location-display">{location.pathname}</div>
+        <div data-testid="location-search-display">{location.search}</div>
+        <div data-testid="location-state-display">{JSON.stringify(location.state)}</div>
+      </div>
+    )
   }
 
   beforeEach(() => {
@@ -30,7 +38,23 @@ describe('TemplateMetadataForm', () => {
           templateRepository={templateRepository}
         />
         <LocationDisplay />
-      </>
+      </>,
+      [RouteWithParams.TEMPLATES_CREATE('root')]
+    )
+
+  const mountEditTemplateMetadataForm = (template = TemplateMother.create({ id: 7 })) =>
+    cy.customMount(
+      <>
+        <TemplateMetadataForm
+          mode="edit"
+          collectionId="root"
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          templateRepository={templateRepository}
+          template={template}
+        />
+        <LocationDisplay />
+      </>,
+      [RouteWithParams.TEMPLATES_EDIT('root', template.id, TemplateEditMode.METADATA)]
     )
 
   const fillRequiredTemplateFields = () => {
@@ -284,5 +308,100 @@ describe('TemplateMetadataForm', () => {
 
     cy.findByLabelText(/Template Name/).type('Valid Template Name')
     cy.findByText('Please add in a name for the dataset template.').should('not.exist')
+  })
+
+  it('pre-fills existing custom instructions in edit mode', () => {
+    const template = TemplateMother.create({
+      id: 7,
+      name: 'Existing Template',
+      instructions: [
+        {
+          instructionField: 'title',
+          instructionText: 'Use the official dataset title'
+        },
+        {
+          instructionField: 'author',
+          instructionText: 'List all contributing authors'
+        }
+      ]
+    })
+
+    mountEditTemplateMetadataForm(template)
+
+    cy.findByTestId('custom-instructions-toggle-title')
+      .should('contain.text', 'Use the official dataset title')
+      .click()
+    cy.findByTestId('custom-instructions-input-title').should(
+      'have.value',
+      'Use the official dataset title'
+    )
+
+    cy.findByTestId('custom-instructions-toggle-author')
+      .should('contain.text', 'List all contributing authors')
+      .click()
+    cy.findByTestId('custom-instructions-input-author').should(
+      'have.value',
+      'List all contributing authors'
+    )
+  })
+
+  it('navigates to edit template terms after creating the template', () => {
+    templateRepository.createTemplate = cy.stub().resolves()
+    templateRepository.getTemplatesByCollectionId = cy
+      .stub()
+      .resolves([
+        TemplateMother.create({ id: 99, name: 'Different Template' }),
+        TemplateMother.create({ id: 42, name: '  test template  ' })
+      ])
+
+    mountTemplateMetadataForm()
+
+    cy.findByLabelText(/Template Name/).type('  Test Template  ')
+    cy.findByRole('button', { name: 'Save + Add Terms' }).click()
+
+    cy.findByTestId('location-display').should('have.text', '/templates/edit')
+    cy.findByTestId('location-search-display').should(
+      'have.text',
+      `?id=42&ownerId=root&editMode=${TemplateEditMode.LICENSE}`
+    )
+    cy.findByTestId('location-state-display').should(
+      'have.text',
+      JSON.stringify({ fromCreateTemplate: true })
+    )
+  })
+
+  it('does not navigate to edit terms when the created template cannot be resolved after submit', () => {
+    templateRepository.createTemplate = cy.stub().resolves()
+    templateRepository.getTemplatesByCollectionId = cy
+      .stub()
+      .resolves([TemplateMother.create({ id: 99, name: 'Different Template' })])
+
+    mountTemplateMetadataForm()
+
+    cy.findByLabelText(/Template Name/).type('Test Template')
+    cy.findByRole('button', { name: 'Save + Add Terms' }).click()
+
+    cy.findByTestId('location-display').should(
+      'have.text',
+      RouteWithParams.TEMPLATES_CREATE('root')
+    )
+    cy.findByTestId('location-search-display').should('have.text', '')
+  })
+
+  it('does not refresh templates or navigate when create submit fails', () => {
+    templateRepository.getTemplatesByCollectionId = cy.stub().resolves([])
+    templateRepository.createTemplate = cy.stub().rejects(new Error('Failed to save'))
+
+    mountTemplateMetadataForm()
+
+    cy.findByLabelText(/Template Name/).type('Test Template')
+    cy.findByRole('button', { name: 'Save + Add Terms' }).click()
+
+    cy.wrap(templateRepository.getTemplatesByCollectionId).should('have.been.calledOnce')
+    cy.findByTestId('location-display').should(
+      'have.text',
+      RouteWithParams.TEMPLATES_CREATE('root')
+    )
+    cy.findByRole('alert').should('contain.text', 'Failed to save')
   })
 })

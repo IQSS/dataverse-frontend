@@ -32,6 +32,24 @@ describe('EditTemplateTermsOfAccess', () => {
     cy.findByText(/Terms of Access for Restricted Files/i).should('exist')
   })
 
+  it('falls back to default terms of access when the template has none', () => {
+    cy.customMount(
+      <EditTemplateTermsOfAccess
+        template={TemplateMother.create({
+          id: 9,
+          name: 'Tpl',
+          termsOfUse: {}
+        })}
+        templateRepository={templateRepository}
+        onSuccess={cy.stub()}
+      />
+    )
+
+    cy.findByLabelText(/Enable access request/i).should('not.be.checked')
+    cy.findByLabelText(/Terms of Access for Restricted Files/i).should('have.value', '')
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+  })
+
   it('submits the terms of access', () => {
     templateRepository.updateTemplateTermsOfAccess = cy.stub().resolves()
     const onSuccess = cy.stub()
@@ -67,6 +85,31 @@ describe('EditTemplateTermsOfAccess', () => {
       />
     )
 
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+  })
+
+  it('shows the required message when request-access is off and terms are cleared', () => {
+    cy.customMount(
+      <EditTemplateTermsOfAccess
+        template={TemplateMother.create({
+          id: 9,
+          name: 'Tpl',
+          termsOfUse: {
+            termsOfAccess: {
+              fileAccessRequest: false,
+              termsOfAccessForRestrictedFiles: 'Existing terms'
+            }
+          }
+        })}
+        templateRepository={templateRepository}
+        onSuccess={cy.stub()}
+      />
+    )
+
+    cy.findByLabelText(/Terms of Access for Restricted Files/i).clear().blur()
+    cy.findByText('Terms of access are required when file access request is disabled.').should(
+      'exist'
+    )
     cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
   })
 
@@ -108,6 +151,17 @@ describe('EditTemplateTermsOfAccess', () => {
     cy.findByRole('button', { name: 'Save Changes' }).click()
 
     cy.findByText(/TOA boom/i).should('exist')
+  })
+
+  it('shows the saving label while the update is in flight', () => {
+    templateRepository.updateTemplateTermsOfAccess = cy
+      .stub()
+      .callsFake(() => Cypress.Promise.delay(200))
+
+    mountEditTemplateTermsOfAccess()
+
+    cy.findByRole('button', { name: 'Save Changes' }).click()
+    cy.findByRole('button', { name: 'Saving' }).should('be.disabled')
   })
 
   it('enables Save and submits when request access is off but terms are provided', () => {

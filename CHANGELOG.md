@@ -9,6 +9,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Added
 
 - Edit Dataset Template Integration: "Edit Template" dropdown on the Dataset Templates listing now opens the Metadata or Terms editor and shows a "Template updated" toast on return.
+- External Tools: Added guestbook and terms modal for Dataverse external tools.
 
 ### Changed
 
