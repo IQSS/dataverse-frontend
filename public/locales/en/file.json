@@ -161,6 +161,6 @@
   "previewTab": {
     "openInNewWindow": "Open in New Window",
     "defaultLoadingToolError": "Something went wrong loading the external tool. Try again later.",
-    "termsRequired": "Accept the dataset terms before previewing this file."
+    "termsRequired": "Accept the dataset terms or guestbooks before previewing this file."
   }
 }
