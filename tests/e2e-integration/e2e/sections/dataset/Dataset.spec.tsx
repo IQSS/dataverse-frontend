@@ -817,7 +817,8 @@ describe('Dataset', () => {
     it('downloads the dataset directly for dataset editors even when a guestbook is assigned', () => {
       const guestbookName = `Guestbook ${faker.datatype.uuid()}`
 
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then((dataset) => {
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then(async (dataset) => {
+        await TestsUtils.waitForNoLocks(dataset.persistentId)
         cy.wrap(
           GuestbookHelper.createAndGetByName(guestbookName).then(async (guestbook) => {
             await GuestbookHelper.assignToDataset(Number(dataset.id), guestbook.id)
@@ -848,7 +849,8 @@ describe('Dataset', () => {
     it('opens the guestbook modal for guests when downloading a dataset with an assigned guestbook', () => {
       const guestbookName = `Guestbook ${faker.datatype.uuid()}`
 
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then((dataset) => {
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then(async (dataset) => {
+        await TestsUtils.waitForNoLocks(dataset.persistentId)
         cy.wrap(
           GuestbookHelper.createAndGetByName(guestbookName).then(async (guestbook) => {
             await GuestbookHelper.assignToDataset(Number(dataset.id), guestbook.id)
@@ -878,6 +880,7 @@ describe('Dataset', () => {
     it('opens the custom terms modal for guests when downloading a dataset with custom terms and no guestbook', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then(async (dataset) => {
+          await TestsUtils.waitForNoLocks(dataset.persistentId)
           await DatasetHelper.setCustomTermsOfUse(dataset.id, {
             termsOfUse: 'These are custom terms of use for testing'
           })
@@ -906,6 +909,7 @@ describe('Dataset', () => {
     it('downloads the dataset directly for editors even when custom terms exist without a guestbook', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then(async (dataset) => {
+          await TestsUtils.waitForNoLocks(dataset.persistentId)
           await DatasetHelper.setCustomTermsOfUse(dataset.id, {
             termsOfUse: 'These are custom terms of use for testing'
           })
