@@ -3,21 +3,34 @@ import { Alert } from '@iqss/dataverse-design-system'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { type MetadataField } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
+import { Template } from '@/templates/domain/models/Template'
 import { useGetMetadataBlocksInfo } from '../DatasetMetadataForm/useGetMetadataBlocksInfo'
 import { MetadataFieldsHelper } from '../DatasetMetadataForm/MetadataFieldsHelper'
 import { MetadataFormSkeleton } from '../DatasetMetadataForm/MetadataForm/MetadataFormSkeleton'
 import { TemplateForm } from './TemplateForm'
 
-interface TemplateMetadataFormProps {
-  collectionId: string
-  metadataBlockInfoRepository: MetadataBlockInfoRepository
-  templateRepository: TemplateRepository
-}
+type TemplateMetadataFormProps =
+  | {
+      mode: 'create'
+      collectionId: string
+      metadataBlockInfoRepository: MetadataBlockInfoRepository
+      templateRepository: TemplateRepository
+      template?: never
+    }
+  | {
+      mode: 'edit'
+      collectionId: string
+      metadataBlockInfoRepository: MetadataBlockInfoRepository
+      templateRepository: TemplateRepository
+      template: Template
+    }
 
 export const TemplateMetadataForm = ({
+  mode,
   collectionId,
   metadataBlockInfoRepository,
-  templateRepository
+  templateRepository,
+  template
 }: TemplateMetadataFormProps) => {
   const {
     metadataBlocksInfo: metadataBlocksInfoForDisplay,
@@ -29,13 +42,24 @@ export const TemplateMetadataForm = ({
     metadataBlockInfoRepository
   })
 
-  const metadataBlocksInfo = useMemo(
-    () =>
-      MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(
-        metadataBlocksInfoForDisplay
-      ),
-    [metadataBlocksInfoForDisplay]
-  )
+  const metadataBlocksInfo = useMemo(() => {
+    const normalized = MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(
+      metadataBlocksInfoForDisplay
+    )
+
+    if (mode === 'edit' && template?.datasetMetadataBlocks) {
+      const normalizedTemplateBlocks =
+        MetadataFieldsHelper.replaceDatasetMetadataBlocksDotKeysWithSlash(
+          template.datasetMetadataBlocks
+        )
+      return MetadataFieldsHelper.addFieldValuesToMetadataBlocksInfo(
+        normalized,
+        normalizedTemplateBlocks
+      )
+    }
+
+    return normalized
+  }, [metadataBlocksInfoForDisplay, mode, template])
 
   const metadataFieldsForMapping = useMemo(
     () =>
@@ -55,7 +79,7 @@ export const TemplateMetadataForm = ({
   )
 
   if (isLoading) {
-    return <MetadataFormSkeleton onEditMode={false} />
+    return <MetadataFormSkeleton onEditMode={mode === 'edit'} />
   }
 
   if (error) {
@@ -66,8 +90,23 @@ export const TemplateMetadataForm = ({
     )
   }
 
+  if (mode === 'edit') {
+    return (
+      <TemplateForm
+        mode="edit"
+        collectionId={collectionId}
+        templateRepository={templateRepository}
+        metadataBlocksInfo={metadataBlocksInfo}
+        formDefaultValues={formDefaultValues}
+        metadataFieldsForMapping={metadataFieldsForMapping}
+        template={template}
+      />
+    )
+  }
+
   return (
     <TemplateForm
+      mode="create"
       collectionId={collectionId}
       templateRepository={templateRepository}
       metadataBlocksInfo={metadataBlocksInfo}
