@@ -38,7 +38,9 @@ describe('EditTemplateTermsOfAccess', () => {
         template={TemplateMother.create({
           id: 9,
           name: 'Tpl',
-          termsOfUse: undefined
+          termsOfUse: {
+            termsOfAccess: { fileAccessRequest: false, termsOfAccessForRestrictedFiles: '' }
+          }
         })}
         templateRepository={templateRepository}
         onSuccess={cy.stub()}
