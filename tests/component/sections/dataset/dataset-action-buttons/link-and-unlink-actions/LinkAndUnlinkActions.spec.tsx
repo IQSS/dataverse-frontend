@@ -63,10 +63,7 @@ describe('LinkAndUnlinkActions', () => {
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByRole('textbox', { name: 'Your Collection' }).should(
-          'have.value',
-          'Collection 3'
-        )
+        cy.findByRole('textbox', { name: 'Your Collection' }).should('have.value', 'Collection 3')
       })
 
     cy.findByTestId('confirm-link-dataset-button').click()
@@ -94,10 +91,7 @@ describe('LinkAndUnlinkActions', () => {
     cy.findByRole('dialog')
       .should('be.visible')
       .within(() => {
-        cy.findByRole('textbox', { name: 'Your Collection' }).should(
-          'have.value',
-          'Collection 1'
-        )
+        cy.findByRole('textbox', { name: 'Your Collection' }).should('have.value', 'Collection 1')
       })
 
     cy.findByTestId('confirm-unlink-dataset-button').click()
