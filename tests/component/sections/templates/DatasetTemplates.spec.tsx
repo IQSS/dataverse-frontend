@@ -11,6 +11,7 @@ import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models
 import { CitationMetadataBlockInfoMother } from '../../metadata-block-info/domain/models/CitationMetadataBlockInfoMother'
 import { UpwardHierarchyNodeMother } from '../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { useLocation } from 'react-router-dom'
+import { RouterInitialEntry } from '../../../support/commands'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const templateRepository: TemplateRepository = {} as TemplateRepository
@@ -62,7 +63,7 @@ describe('Dataset Templates', () => {
     templateRepository.getTemplatesByCollectionId = cy.stub().resolves([])
   })
 
-  const mountDatasetTemplates = (initialEntries = ['/root/templates']) =>
+  const mountDatasetTemplates = (initialEntries: RouterInitialEntry[] = ['/root/templates']) =>
     cy.customMount(
       <>
         <NotImplementedModalProvider>
@@ -155,7 +156,7 @@ describe('Dataset Templates', () => {
     mountDatasetTemplates()
 
     cy.findByRole('button', { name: 'Create Dataset Template' }).click()
-    cy.findByTestId('location-display').should('have.text', '/root/templates/create')
+    cy.findByTestId('location-display').should('have.text', '/create')
   })
 
   it('shows Default as disabled and hides Make Default for the default template', () => {

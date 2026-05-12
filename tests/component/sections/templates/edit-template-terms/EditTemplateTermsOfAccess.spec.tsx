@@ -38,7 +38,7 @@ describe('EditTemplateTermsOfAccess', () => {
         template={TemplateMother.create({
           id: 9,
           name: 'Tpl',
-          termsOfUse: {}
+          termsOfUse: { termsOfAccess: { fileAccessRequest: false } }
         })}
         templateRepository={templateRepository}
         onSuccess={cy.stub()}
@@ -106,10 +106,12 @@ describe('EditTemplateTermsOfAccess', () => {
       />
     )
 
-    cy.findByLabelText(/Terms of Access for Restricted Files/i).clear().blur()
-    cy.findByText('Terms of access are required when file access request is disabled.').should(
-      'exist'
-    )
+    cy.findByLabelText(/Terms of Access for Restricted Files/i)
+      .clear()
+      .blur()
+    cy.findByText(
+      'Add information about terms of access for restricted files when request access is disabled.'
+    ).should('exist')
     cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
   })
 
