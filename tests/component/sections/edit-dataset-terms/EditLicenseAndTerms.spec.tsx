@@ -357,11 +357,18 @@ describe('EditLicenseAndTerms', () => {
 
       cy.customMount(
         withProviders(
-          <EditLicenseAndTerms
-            licenseRepository={licenseRepository}
-            datasetRepository={datasetRepository}
-          />,
-          mockDatasetWithLicense
+          <>
+            <EditLicenseAndTerms
+              licenseRepository={licenseRepository}
+              datasetRepository={datasetRepository}
+            />
+            <LocationDisplay />
+          </>,
+          DatasetMother.create({
+            ...mockDatasetWithLicense,
+            persistentId: 'doi:10.5072/FK2/LICENSEPID',
+            version: DatasetVersionMother.createReleased()
+          })
         )
       )
 
@@ -371,6 +378,10 @@ describe('EditLicenseAndTerms', () => {
       cy.findByRole('button', { name: 'Save Changes' }).click()
 
       cy.findByText('The license for this dataset has been updated.').should('exist')
+      cy.findByTestId('location-display').should(
+        'have.text',
+        '/datasets?persistentId=doi%3A10.5072%2FFK2%2FLICENSEPID&version=DRAFT'
+      )
     })
 
     it('displays success toast when custom terms are updated successfully', () => {

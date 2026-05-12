@@ -331,7 +331,7 @@ describe('EditGuestbook', () => {
     )
   })
 
-  it('navigates with numeric version query param after successful submit for non-draft datasets', () => {
+  it('navigates with DRAFT version query param after successful submit for non-draft datasets', () => {
     ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).resolves(
       undefined
     )
@@ -356,7 +356,7 @@ describe('EditGuestbook', () => {
     cy.findByRole('button', { name: 'Save Changes' }).click()
     cy.findByTestId('location-display').should(
       'have.text',
-      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0'
+      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=DRAFT'
     )
   })
 

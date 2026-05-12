@@ -55,7 +55,7 @@ const FileToolOptions = ({ fileId, fileType, kind }: FileToolOptionsProps) => {
         <Icon />
       </DropdownHeader>
 
-      {tools.map((tool) => (
+      {applicableTools.map((tool) => (
         <ToolOption
           key={tool.id}
           toolId={tool.id}

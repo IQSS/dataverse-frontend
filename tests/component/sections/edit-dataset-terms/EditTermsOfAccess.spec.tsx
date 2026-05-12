@@ -274,9 +274,14 @@ describe('EditTermsOfAccess', () => {
 
       cy.customMount(
         withProviders(
-          <EditTermsOfAccess datasetRepository={datasetRepository} />,
+          <>
+            <EditTermsOfAccess datasetRepository={datasetRepository} />
+            <LocationDisplay />
+          </>,
           DatasetMother.create({
             id: 123,
+            persistentId: 'doi:10.5072/FK2/TERMSPID',
+            version: DatasetVersionMother.createReleased(),
             termsOfUse: { termsOfAccess }
           })
         )
@@ -288,6 +293,10 @@ describe('EditTermsOfAccess', () => {
       cy.findByRole('button', { name: 'Save Changes' }).click()
 
       cy.findByText('The terms for this dataset have been updated.').should('exist')
+      cy.findByTestId('location-display').should(
+        'have.text',
+        '/datasets?persistentId=doi%3A10.5072%2FFK2%2FTERMSPID&version=DRAFT'
+      )
     })
 
     it('displays success toast when request access checkbox is toggled', () => {

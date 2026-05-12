@@ -10,11 +10,7 @@ import { useGetLicenses } from './useGetLicenses'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useDataset } from '../../dataset/DatasetContext'
 import { useUpdateDatasetLicense } from './useUpdateDatasetLicense'
-import { Route, QueryParamKey } from '../../Route.enum'
-import {
-  DatasetNonNumericVersionSearchParam,
-  DatasetPublishingStatus
-} from '../../../dataset/domain/models/Dataset'
+import { buildDatasetDraftReturnUrl, buildDatasetTermsReturnUrl } from '../datasetTermsNavigation'
 import styles from './EditLicenseAndTerms.module.scss'
 
 const CUSTOM_LICENSE_VALUE = 'CUSTOM' as const
@@ -50,16 +46,13 @@ export function EditLicenseAndTerms({
   const navigateToDatasetView = useCallback(() => {
     if (!dataset) return
 
-    const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+    navigate(buildDatasetTermsReturnUrl(dataset))
+  }, [dataset, navigate])
 
-    if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-    } else {
-      searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
-    }
+  const navigateToDatasetDraftView = useCallback(() => {
+    if (!dataset) return
 
-    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+    navigate(buildDatasetDraftReturnUrl(dataset))
   }, [dataset, navigate])
 
   const { handleUpdateLicense, isLoading, error } = useUpdateDatasetLicense({
@@ -67,7 +60,7 @@ export function EditLicenseAndTerms({
     onSuccessfulUpdateLicense: () => {
       toast.success(t('alerts.licenseUpdated.alertText'))
       refreshDataset()
-      navigateToDatasetView()
+      navigateToDatasetDraftView()
     }
   })
 

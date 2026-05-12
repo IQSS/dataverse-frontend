@@ -5,6 +5,7 @@ import { ExternalToolsProvider } from '@/shared/contexts/external-tools/External
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { FileMetadataMother } from '@tests/component/files/domain/models/FileMetadataMother'
 import { FilePreviewMother } from '@tests/component/files/domain/models/FilePreviewMother'
+import { ToolScope, ToolType } from '@/externalTools/domain/models/ExternalTool'
 
 const testFilePreview = FilePreviewMother.createDefault() // text/plain file
 const testExternalToolsRepository: ExternalToolsRepository = {} as ExternalToolsRepository
@@ -20,6 +21,15 @@ describe('FileTools', () => {
   })
 
   it('renders external tool buttons when user can download the file and there are applicable tools', () => {
+    testExternalToolsRepository.getExternalTools = cy
+      .stub()
+      .resolves([
+        ExternalToolsMother.createFilePreviewTool(),
+        ExternalToolsMother.createFileQueryTool(),
+        ExternalToolsMother.createFileExploreTool(),
+        ExternalToolsMother.createFileConfigureTool()
+      ])
+
     cy.customMount(
       <ExternalToolsProvider externalToolsRepository={testExternalToolsRepository}>
         <FileTools file={testFilePreview} canDownloadFile={true} />
@@ -45,6 +55,8 @@ describe('FileTools', () => {
       .and('include', `id=${testFilePreview.id}`)
       .and('include', `datasetVersion=${testFilePreview.datasetVersionNumber.toString()}`)
       .and('include', `${QueryParamKey.TOOL_TYPE}=query`)
+
+    cy.findAllByRole('link').should('have.length', 2)
   })
 
   it('does not render external tool buttons when user cannot download the file', () => {
@@ -53,6 +65,9 @@ describe('FileTools', () => {
         <FileTools file={testFilePreview} canDownloadFile={false} />
       </ExternalToolsProvider>
     )
+
+    cy.findByRole('link', { name: `Preview ${testFilePreview.name}` }).should('not.exist')
+    cy.findByRole('link', { name: `Query ${testFilePreview.name}` }).should('not.exist')
   })
 
   it('does not render external tool buttons when there are no applicable tools for the file type', () => {
@@ -67,5 +82,34 @@ describe('FileTools', () => {
         <FileTools file={fileWithoutApplicableTools} canDownloadFile={true} />
       </ExternalToolsProvider>
     )
+
+    cy.findByRole('link', { name: `Preview ${fileWithoutApplicableTools.name}` }).should(
+      'not.exist'
+    )
+    cy.findByRole('link', { name: `Query ${fileWithoutApplicableTools.name}` }).should('not.exist')
+  })
+
+  it('does not render preview or query buttons for tools with unsupported requirements metadata', () => {
+    testExternalToolsRepository.getExternalTools = cy.stub().resolves([
+      {
+        id: 77,
+        displayName: 'Preview Tool With Requirements',
+        description: 'Description for Preview Tool With Requirements',
+        scope: ToolScope.File,
+        types: [ToolType.Preview],
+        contentType: 'text/plain',
+        requirements: {
+          auxFilesExist: [{ formatTag: 'DP', formatVersion: '1.0' }]
+        }
+      }
+    ])
+
+    cy.customMount(
+      <ExternalToolsProvider externalToolsRepository={testExternalToolsRepository}>
+        <FileTools file={testFilePreview} canDownloadFile={true} />
+      </ExternalToolsProvider>
+    )
+
+    cy.findByRole('link', { name: `Preview ${testFilePreview.name}` }).should('not.exist')
   })
 })

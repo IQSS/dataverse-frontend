@@ -1,19 +1,15 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, Controller, FormProvider, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Form, Row, Col, Button, Alert } from '@iqss/dataverse-design-system'
 import styles from '../edit-license-and-terms/EditLicenseAndTerms.module.scss'
-import {
-  DatasetNonNumericVersionSearchParam,
-  DatasetPublishingStatus,
-  TermsOfAccess
-} from '@/dataset/domain/models/Dataset'
+import { TermsOfAccess } from '@/dataset/domain/models/Dataset'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useDataset } from '../../dataset/DatasetContext'
 import { useUpdateTermsOfAccess } from './useUpdateTermsOfAccess'
-import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { useNavigate } from 'react-router-dom'
+import { buildDatasetDraftReturnUrl, buildDatasetTermsReturnUrl } from '../datasetTermsNavigation'
 
 interface EditTermsOfAccessProps {
   datasetRepository: DatasetRepository
@@ -43,12 +39,18 @@ export function EditTermsOfAccess({
   const initialTermsOfAccess =
     (dataset?.termsOfUse.termsOfAccess as TermsOfAccess) ?? defaultTermsOfAccess
   const formContainerRef = useRef<HTMLDivElement>(null)
+  const navigateToDatasetDraftView = useCallback(() => {
+    if (!dataset) return
+
+    navigate(buildDatasetDraftReturnUrl(dataset))
+  }, [dataset, navigate])
 
   const { handleUpdateTermsOfAccess, isLoading, error } = useUpdateTermsOfAccess({
     datasetRepository,
     onSuccessfulUpdateTermsOfAccess: () => {
       toast.success(t('alerts.termsUpdated.alertText'))
       refreshDataset()
+      navigateToDatasetDraftView()
     }
   })
 
@@ -122,16 +124,7 @@ export function EditTermsOfAccess({
   const handleCancel = () => {
     if (!dataset) return
 
-    const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
-
-    if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-    } else {
-      searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
-    }
-
-    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+    navigate(buildDatasetTermsReturnUrl(dataset))
   }
 
   return (

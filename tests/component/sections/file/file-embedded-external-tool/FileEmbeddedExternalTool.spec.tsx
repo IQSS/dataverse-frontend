@@ -5,8 +5,13 @@ import { WriteError } from '@iqss/dataverse-client-javascript'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { FileExternalToolResolvedMother } from '@tests/component/externalTools/domain/models/FileExternalToolResolvedMother'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
+import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
+import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
+import { CustomTermsMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
+import { FilePermissionsMother } from '@tests/component/files/domain/models/FilePermissionsMother'
 
 const externalToolsRepository: ExternalToolsRepository = {} as ExternalToolsRepository // Used for fetching the tool resolved URL
+const accessRepository: AccessRepository = {} as AccessRepository
 
 const testFile = FileMother.createRealistic() // text/plain file
 const filePreviewTool = ExternalToolsMother.createFilePreviewTool() // id: 2
@@ -128,6 +133,56 @@ describe('FileEmbeddedExternalTool', () => {
       />
     )
     cy.findByTestId('external-tool-iframe').should('not.exist')
+  })
+
+  it('requires dataset terms acceptance before loading the external tool', () => {
+    const fileWithCustomTerms = FileMother.createRealistic({
+      permissions: FilePermissionsMother.create({
+        canDownloadFile: true,
+        canEditOwnerDataset: false,
+        canManageFilePermissions: false
+      }),
+      datasetCustomTerms: CustomTermsMother.create({
+        termsOfUse: 'Preview requires accepting these custom terms.'
+      })
+    })
+    externalToolsRepository.getFileExternalToolResolved = cy
+      .stub()
+      .as('getFileExternalToolResolved')
+      .resolves(filePreviewToolResolved)
+    accessRepository.submitGuestbookForDatasetDownload = cy.stub().resolves('signed-url-dataset')
+    accessRepository.submitGuestbookForDatafileDownload = cy
+      .stub()
+      .as('submitGuestbookForDatafileDownload')
+      .resolves('signed-url-datafile')
+    accessRepository.submitGuestbookForDatafilesDownload = cy
+      .stub()
+      .resolves('signed-url-datafiles')
+
+    cy.customMount(
+      <AccessRepositoryProvider repository={accessRepository}>
+        <FileEmbeddedExternalTool
+          file={fileWithCustomTerms}
+          isInView
+          applicableTools={[filePreviewTool]}
+          externalToolsRepository={externalToolsRepository}
+          toolTypeSelectedQueryParam={undefined}
+        />
+      </AccessRepositoryProvider>
+    )
+
+    cy.findByRole('dialog').should('exist')
+    cy.findByText('Preview requires accepting these custom terms.').should('exist')
+    cy.findByTestId('external-tool-iframe').should('not.exist')
+    cy.get('@getFileExternalToolResolved').should('not.have.been.called')
+
+    cy.findByRole('button', { name: 'Accept' }).click()
+
+    cy.get('@submitGuestbookForDatafileDownload').should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByTestId('external-tool-iframe')
+      .should('exist')
+      .should('have.attr', 'src', filePreviewToolResolved.toolUrlResolved)
   })
 
   describe('error handling', () => {
