@@ -21,7 +21,9 @@ describe('ManageGuestbooks', () => {
     positionRequired: false,
     customQuestions: [],
     createTime: '2026-01-01T00:00:00.000Z',
-    dataverseId: 17
+    dataverseId: 17,
+    usageCount: 5,
+    responseCount: 1
   }
   const rootGuestbook: Guestbook = {
     id: 11,
@@ -33,7 +35,9 @@ describe('ManageGuestbooks', () => {
     positionRequired: false,
     customQuestions: [],
     createTime: '2025-01-01T00:00:00.000Z',
-    dataverseId: 1
+    dataverseId: 1,
+    usageCount: 1,
+    responseCount: 2
   }
   const localGuestbookLater: Guestbook = {
     id: 12,
@@ -47,7 +51,9 @@ describe('ManageGuestbooks', () => {
       { question: 'Q1', required: false, displayOrder: 1, type: 'text', hidden: false }
     ],
     createTime: '2027-01-01T00:00:00.000Z',
-    dataverseId: 17
+    dataverseId: 17,
+    usageCount: 3,
+    responseCount: 4
   }
   const localGuestbookMostQuestions: Guestbook = {
     id: 13,
@@ -62,7 +68,9 @@ describe('ManageGuestbooks', () => {
       { question: 'Q2', required: false, displayOrder: 2, type: 'text', hidden: false }
     ],
     createTime: '2024-01-01T00:00:00.000Z',
-    dataverseId: 17
+    dataverseId: 17,
+    usageCount: 8,
+    responseCount: 6
   }
 
   const TranslationPreloader = ({ children }: { children: ReactNode }) => {
@@ -186,10 +194,27 @@ describe('ManageGuestbooks', () => {
     ])
   })
 
-  it('sorts guestbooks by responses using custom question count', () => {
+  it('sorts guestbooks by usage count', () => {
     mountComponent()
 
-    cy.findByRole('button', { name: /Download All Responses/i }).click()
+    cy.get('thead')
+      .findByRole('button', { name: /^Usage$/i })
+      .click()
+
+    getRenderedGuestbookNames().should('deep.equal', [
+      'Alpha Root Guestbook',
+      'zeta local guestbook',
+      'Downloadable Guestbook',
+      'Beta Local Guestbook'
+    ])
+  })
+
+  it('sorts guestbooks by response count', () => {
+    mountComponent()
+
+    cy.get('thead')
+      .findByRole('button', { name: /^Responses$/i })
+      .click()
 
     getRenderedGuestbookNames().should('deep.equal', [
       'Downloadable Guestbook',
@@ -197,6 +222,28 @@ describe('ManageGuestbooks', () => {
       'zeta local guestbook',
       'Beta Local Guestbook'
     ])
+  })
+
+  it('prefills usage and response counts from the guestbooks stats payload', () => {
+    mountComponent()
+
+    cy.get('tbody tr')
+      .eq(0)
+      .within(() => {
+        cy.get('td').eq(2).should('have.text', '5')
+        cy.get('td').eq(3).should('have.text', '1')
+      })
+
+    cy.get('tbody tr')
+      .eq(3)
+      .within(() => {
+        cy.get('td').eq(2).should('have.text', '8')
+        cy.get('td').eq(3).should('have.text', '6')
+      })
+
+    cy.wrap(
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    ).should('have.been.calledOnceWith', '17', true)
   })
 
   it('filters inherited guestbooks when include guestbooks from root is toggled', () => {

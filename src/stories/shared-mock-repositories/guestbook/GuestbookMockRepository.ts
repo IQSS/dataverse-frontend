@@ -23,7 +23,9 @@ export const storybookGuestbook: Guestbook = {
     }
   ],
   createTime: '2026-01-01T00:00:00.000Z',
-  dataverseId: 1
+  dataverseId: 1,
+  usageCount: 7,
+  responseCount: 3
 }
 
 export const storybookClientGuestbooks: JSDataverseGuestbook[] = [
@@ -50,7 +52,10 @@ export class GuestbookMockRepository implements GuestbookRepository {
     return Promise.resolve(storybookGuestbook)
   }
 
-  getGuestbooksByCollectionId(_collectionIdOrAlias: number | string): Promise<Guestbook[]> {
+  getGuestbooksByCollectionId(
+    _collectionIdOrAlias: number | string,
+    _includeStats?: boolean
+  ): Promise<Guestbook[]> {
     return Promise.resolve(storybookClientGuestbooks as Guestbook[])
   }
 

@@ -24,9 +24,12 @@ export class GuestbookJSDataverseRepository implements GuestbookRepository {
     return getGuestbook.execute(guestbookId).then((guestbook) => guestbook as Guestbook)
   }
 
-  getGuestbooksByCollectionId(collectionIdOrAlias: number | string): Promise<Guestbook[]> {
+  getGuestbooksByCollectionId(
+    collectionIdOrAlias: number | string,
+    includeStats = false
+  ): Promise<Guestbook[]> {
     return getGuestbooksByCollectionId
-      .execute(collectionIdOrAlias)
+      .execute(collectionIdOrAlias, includeStats)
       .then((guestbooks) => guestbooks as Guestbook[])
   }
 

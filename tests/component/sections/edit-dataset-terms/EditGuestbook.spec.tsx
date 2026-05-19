@@ -56,6 +56,19 @@ const mockGuestbooks: Guestbook[] = [
   }
 ]
 
+const disabledGuestbook: Guestbook = {
+  id: 3,
+  name: 'Disabled Guestbook',
+  enabled: false,
+  emailRequired: true,
+  nameRequired: false,
+  institutionRequired: false,
+  positionRequired: false,
+  customQuestions: [],
+  createTime: '2026-01-01T00:00:00.000Z',
+  dataverseId: 1
+}
+
 describe('EditGuestbook', () => {
   const withProviders = (component: ReactNode, dataset: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
@@ -161,6 +174,22 @@ describe('EditGuestbook', () => {
     cy.findByLabelText('Secondary Guestbook').should('not.be.checked')
     cy.findByRole('button', { name: 'Clear Selection' }).should('not.exist')
     cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+  })
+
+  it('does not show disabled guestbooks in the list', () => {
+    ;(guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>).resolves([
+      ...mockGuestbooks,
+      disabledGuestbook
+    ])
+    const dataset = DatasetMother.create({ guestbookId: undefined })
+
+    cy.customMount(
+      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
+    )
+
+    cy.findByLabelText('Data Request Guestbook').should('exist')
+    cy.findByLabelText('Secondary Guestbook').should('exist')
+    cy.findByLabelText('Disabled Guestbook').should('not.exist')
   })
 
   it('clears the selected guestbook when clicking Clear Selection', () => {

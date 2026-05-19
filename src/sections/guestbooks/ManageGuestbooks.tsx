@@ -45,7 +45,8 @@ export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksPro
   const { guestbooks, isLoadingGuestbooksByCollectionId, errorGetGuestbooksByCollectionId } =
     useGetGuestbooksByCollectionId({
       guestbookRepository,
-      collectionIdOrAlias: collection?.id
+      collectionIdOrAlias: collection?.id,
+      includeStats: true
     })
   const rootCollectionNames = collection?.hierarchy?.toArray().map((node) => node.name) ?? []
 
@@ -75,8 +76,10 @@ export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksPro
       if (sortBy === 'created') {
         return new Date(first.createTime).getTime() - new Date(second.createTime).getTime()
       }
-      // TODO: Update after api is ready for usage and response
-      return first.customQuestions.length - second.customQuestions.length
+      if (sortBy === 'usage') {
+        return (first.usageCount ?? 0) - (second.usageCount ?? 0)
+      }
+      return (first.responseCount ?? 0) - (second.responseCount ?? 0)
     })
 
     return sortDirection === 'asc' ? sorted : sorted.reverse()
@@ -297,11 +300,8 @@ export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksPro
               <tr key={guestbook.id}>
                 <td>{guestbook.name}</td>
                 <td>{new Date(guestbook.createTime).toLocaleDateString()}</td>
-                {/* TODO: Update after api is ready for usage and response */}
-                {/* <td>{guestbook.usageCount}</td>
-                <td>{getGuestbookResponseCount(guestbook)}</td> */}
-                <td>usage</td>
-                <td>responses</td>
+                <td>{guestbook.usageCount ?? 0}</td>
+                <td>{guestbook.responseCount ?? 0}</td>
                 <td>
                   {guestbook.dataverseId !== currentDataverseId && (
                     <span className={styles['template-origin']}>

@@ -15,7 +15,9 @@ const guestbook: Guestbook = {
   positionRequired: false,
   customQuestions: [],
   createTime: '2026-01-01T00:00:00.000Z',
-  dataverseId: 1
+  dataverseId: 1,
+  usageCount: 2,
+  responseCount: 4
 }
 
 describe('useGetGuestbooksByCollectionId', () => {
@@ -44,7 +46,7 @@ describe('useGetGuestbooksByCollectionId', () => {
       expect(result.current.guestbooks).to.deep.equal([guestbook])
     })
 
-    cy.wrap(getGuestbooksByCollectionIdStub).should('have.been.calledOnceWith', 1)
+    cy.wrap(getGuestbooksByCollectionIdStub).should('have.been.calledOnceWith', 1, false)
   })
 
   it('returns an empty array when request succeeds with a non-array payload', async () => {
@@ -66,7 +68,28 @@ describe('useGetGuestbooksByCollectionId', () => {
       expect(result.current.guestbooks).to.deep.equal([])
     })
 
-    cy.wrap(getGuestbooksByCollectionIdStub).should('have.been.calledOnceWith', 1)
+    cy.wrap(getGuestbooksByCollectionIdStub).should('have.been.calledOnceWith', 1, false)
+  })
+
+  it('passes includeStats=true when explicitly requested', async () => {
+    const getGuestbooksByCollectionIdStub =
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    getGuestbooksByCollectionIdStub.resolves([guestbook])
+
+    const { result } = renderHook(() =>
+      useGetGuestbooksByCollectionId({
+        guestbookRepository,
+        collectionIdOrAlias: 1,
+        includeStats: true
+      })
+    )
+
+    await waitFor(() => {
+      expect(result.current.isLoadingGuestbooksByCollectionId).to.deep.equal(false)
+      expect(result.current.guestbooks).to.deep.equal([guestbook])
+    })
+
+    cy.wrap(getGuestbooksByCollectionIdStub).should('have.been.calledOnceWith', 1, true)
   })
 
   it('does not fetch when collection id is undefined', async () => {
