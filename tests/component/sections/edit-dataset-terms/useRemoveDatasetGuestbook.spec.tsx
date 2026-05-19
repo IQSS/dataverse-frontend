@@ -10,8 +10,12 @@ describe('useRemoveDatasetGuestbook', () => {
   beforeEach(() => {
     onSuccessfulRemoveDatasetGuestbook = cy.stub().as('onSuccessfulRemoveDatasetGuestbook')
     guestbookRepository = {
+      createGuestbook: cy.stub(),
       getGuestbook: cy.stub(),
       getGuestbooksByCollectionId: cy.stub(),
+      setGuestbookEnabled: cy.stub(),
+      downloadGuestbookResponsesByDataverseId: cy.stub(),
+      downloadGuestbookResponsesOfAGuestbook: cy.stub(),
       assignDatasetGuestbook: cy.stub(),
       removeDatasetGuestbook: cy.stub()
     }

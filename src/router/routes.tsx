@@ -113,6 +113,20 @@ const FeaturedItemPage = lazy(() =>
   }))
 )
 
+const GuestbooksPage = lazy(() =>
+  import('../sections/guestbooks/GuestbooksFactory').then(({ GuestbooksFactory }) => ({
+    default: () => GuestbooksFactory.create()
+  }))
+)
+
+const CreateGuestbookPage = lazy(() =>
+  import('../sections/guestbooks/create-guestbooks/CreateGuestbookFactory').then(
+    ({ CreateGuestbookFactory }) => ({
+      default: () => CreateGuestbookFactory.create()
+    })
+  )
+)
+
 const NotFoundPage = lazy(() =>
   import('../sections/not-found-page/NotFoundPageFactory').then(({ NotFoundPageFactory }) => ({
     default: () => NotFoundPageFactory.create()
@@ -288,6 +302,24 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <EditFeaturedItems />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.GUESTBOOKS,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <GuestbooksPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.GUESTBOOKS_CREATE,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <CreateGuestbookPage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

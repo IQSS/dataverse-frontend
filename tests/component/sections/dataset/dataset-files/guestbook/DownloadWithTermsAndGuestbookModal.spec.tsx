@@ -142,6 +142,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
       Promise.resolve('/api/v1/access/datafiles/10,11?token=test')
 
     guestbookRepository = {
+      createGuestbook: cy.stub(),
       getGuestbook: cy
         .stub()
         .as('getGuestbook')
@@ -149,6 +150,9 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
           return getGuestbookImpl(guestbookId)
         }),
       getGuestbooksByCollectionId: cy.stub().resolves([]),
+      setGuestbookEnabled: cy.stub(),
+      downloadGuestbookResponsesByDataverseId: cy.stub(),
+      downloadGuestbookResponsesOfAGuestbook: cy.stub(),
       assignDatasetGuestbook: (_datasetId: number | string, _guestbookId: number) =>
         Promise.resolve(),
       removeDatasetGuestbook: (_datasetId: number | string) => Promise.resolve()

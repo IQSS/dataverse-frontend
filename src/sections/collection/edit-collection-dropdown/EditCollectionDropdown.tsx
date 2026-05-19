@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { type NavigateFunction, Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   DropdownButton,
@@ -27,6 +27,7 @@ export const EditCollectionDropdown = ({
   canUserDeleteCollection
 }: EditCollectionDropdownProps) => {
   const { t } = useTranslation('collection')
+  const navigate: NavigateFunction = useNavigate()
   const [showNotImplementedModal, setShowNotImplementedModal] = useState(false)
 
   const canCollectionBeDeleted =
@@ -38,6 +39,7 @@ export const EditCollectionDropdown = ({
     event.stopPropagation()
     setShowNotImplementedModal(true)
   }
+  const handleDatasetGuestbooksClick = () => navigate(RouteWithParams.GUESTBOOKS(collection.id))
 
   return (
     <>
@@ -78,7 +80,7 @@ export const EditCollectionDropdown = ({
         <DropdownButtonItem onClick={handleNotImplementedClick}>
           {t('editCollection.datasetTemplates')}
         </DropdownButtonItem>
-        <DropdownButtonItem onClick={handleNotImplementedClick}>
+        <DropdownButtonItem onClick={handleDatasetGuestbooksClick}>
           {t('editCollection.datasetGuestbooks')}
         </DropdownButtonItem>
 
