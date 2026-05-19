@@ -28,8 +28,23 @@
   flex: 1;
 }
 
+.table-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .include-templates-filter {
   margin-bottom: 0;
+}
+
+.download-all-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
 }
 
 @media (max-width: 576px) {
@@ -43,7 +58,17 @@
     width: 100%;
   }
 
+  .table-actions-right {
+    width: 100%;
+    justify-content: stretch;
+  }
+
   .create-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .download-all-button {
     width: 100%;
     justify-content: center;
   }

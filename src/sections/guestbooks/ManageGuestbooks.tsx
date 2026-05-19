@@ -1,13 +1,18 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Form, Table, Alert } from '@iqss/dataverse-design-system'
-import { CaretDown, CaretUp, ChevronExpand } from 'react-bootstrap-icons'
+import { CaretDown, CaretUp, ChevronExpand, Download } from 'react-bootstrap-icons'
+import { toast } from 'react-toastify'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { downloadGuestbookResponsesByDataverseId } from '@/guestbooks/domain/useCases/downloadGuestbookResponsesByDataverseId'
+import { downloadGuestbookResponsesOfAGuestbook } from '@/guestbooks/domain/useCases/downloadGuestbookResponsesOfAGuestbook'
+import { setGuestbookEnabled } from '@/guestbooks/domain/useCases/setGuestbookEnabled'
 import { useCollection } from '@/sections/collection/useCollection'
 import { NotFoundPage } from '@/sections/not-found-page/NotFoundPage'
 import { BreadcrumbsGenerator } from '@/sections/shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
+import { downloadFile } from '@/sections/shared/citation/citation-download/useDownloadCitation'
 import { GuestbookActionButtons } from './action-buttons/GuestbookActionButtons'
 import { CreateGuestbookButton } from './create-guestbooks/CreateGuestbookButton'
 import { GuestbookSkeleton } from './GuestbookSkeleton'
@@ -28,6 +33,12 @@ export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksPro
   const [sortBy, setSortBy] = useState<'name' | 'created' | 'usage' | 'responses' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [guestbookToPreview, setGuestbookToPreview] = useState<Guestbook | undefined>()
+  const [displayGuestbooks, setDisplayGuestbooks] = useState<Guestbook[]>([])
+  const [togglingGuestbookId, setTogglingGuestbookId] = useState<number | undefined>()
+  const [toggleGuestbookError, setToggleGuestbookError] = useState<string | null>(null)
+  const [isDownloadingAllResponses, setIsDownloadingAllResponses] = useState(false)
+  const [downloadingGuestbookId, setDownloadingGuestbookId] = useState<number | undefined>()
+  const [downloadResponsesError, setDownloadResponsesError] = useState<string | null>(null)
   const guestbookRepository = useGuestbookRepository()
 
   const { collection, isLoading } = useCollection(collectionRepository, collectionId)
@@ -40,12 +51,16 @@ export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksPro
 
   const currentDataverseId = Number(collection?.id) || 1
 
+  useEffect(() => {
+    setDisplayGuestbooks(guestbooks)
+  }, [guestbooks])
+
   const filteredGuestbooks = useMemo(
     () =>
       includeGuestbooksFromRoot
-        ? guestbooks
-        : guestbooks.filter((guestbook) => guestbook.dataverseId === currentDataverseId),
-    [guestbooks, includeGuestbooksFromRoot, currentDataverseId]
+        ? displayGuestbooks
+        : displayGuestbooks.filter((guestbook) => guestbook.dataverseId === currentDataverseId),
+    [displayGuestbooks, includeGuestbooksFromRoot, currentDataverseId]
   )
   const sortedGuestbooks = useMemo(() => {
     if (!sortBy) {
@@ -92,6 +107,77 @@ export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksPro
   const sortHeaderClass = (column: 'name' | 'created' | 'usage' | 'responses') =>
     sortBy === column ? styles['sort-header-active'] : ''
 
+  const handleToggleEnabled = async (guestbook: Guestbook) => {
+    setToggleGuestbookError(null)
+    setTogglingGuestbookId(guestbook.id)
+
+    try {
+      await setGuestbookEnabled(
+        guestbookRepository,
+        guestbook.dataverseId,
+        guestbook.id,
+        !guestbook.enabled
+      )
+      setDisplayGuestbooks((currentGuestbooks) =>
+        currentGuestbooks.map((currentGuestbook) =>
+          currentGuestbook.id === guestbook.id
+            ? { ...currentGuestbook, enabled: !currentGuestbook.enabled }
+            : currentGuestbook
+        )
+      )
+      toast.success(t('alerts.statusUpdated'))
+    } catch {
+      setToggleGuestbookError(t('errors.toggleEnabled'))
+    } finally {
+      setTogglingGuestbookId(undefined)
+    }
+  }
+
+  const handleDownloadResponses = async (guestbook: Guestbook) => {
+    setDownloadResponsesError(null)
+    setDownloadingGuestbookId(guestbook.id)
+
+    try {
+      const csvContent = await downloadGuestbookResponsesOfAGuestbook(
+        guestbookRepository,
+        guestbook.dataverseId,
+        guestbook.id
+      )
+      downloadFile(csvContent, `${guestbook.name}-responses.csv`, 'text/csv;charset=utf-8')
+      toast.success(t('alerts.downloadStarted'))
+    } catch {
+      setDownloadResponsesError(t('errors.downloadResponses'))
+    } finally {
+      setDownloadingGuestbookId(undefined)
+    }
+  }
+
+  const handleDownloadAllResponses = async () => {
+    if (!collection) {
+      return
+    }
+
+    setDownloadResponsesError(null)
+    setIsDownloadingAllResponses(true)
+
+    try {
+      const csvContent = await downloadGuestbookResponsesByDataverseId(
+        guestbookRepository,
+        collection.id
+      )
+      downloadFile(
+        csvContent,
+        `${collection.name}-all-guestbook-responses.csv`,
+        'text/csv;charset=utf-8'
+      )
+      toast.success(t('alerts.downloadStarted'))
+    } catch {
+      setDownloadResponsesError(t('errors.downloadResponses'))
+    } finally {
+      setIsDownloadingAllResponses(false)
+    }
+  }
+
   if (!isLoading && !collection) {
     return <NotFoundPage dvObjectNotFoundType="collection" />
   }
@@ -137,11 +223,23 @@ export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksPro
             />
           )}
         </div>
-        <CreateGuestbookButton collectionId={collectionId} className={styles['create-button']} />
+        <div className={styles['table-actions-right']}>
+          <CreateGuestbookButton collectionId={collectionId} className={styles['create-button']} />
+          <Button
+            variant="primary"
+            onClick={handleDownloadAllResponses}
+            disabled={isDownloadingAllResponses}
+            className={styles['download-all-button']}>
+            <Download />
+            {t('actions.downloadAllResponses')}
+          </Button>
+        </div>
       </div>
       {errorGetGuestbooksByCollectionId && (
         <Alert variant="danger">{errorGetGuestbooksByCollectionId}</Alert>
       )}
+      {toggleGuestbookError && <Alert variant="danger">{toggleGuestbookError}</Alert>}
+      {downloadResponsesError && <Alert variant="danger">{downloadResponsesError}</Alert>}
 
       {filteredGuestbooks.length === 0 ? (
         <GuestbooksEmptyState collectionId={collectionId} />
@@ -213,6 +311,10 @@ export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksPro
                   <GuestbookActionButtons
                     isEnabled={guestbook.enabled}
                     onView={() => setGuestbookToPreview(guestbook)}
+                    onToggleEnabled={() => handleToggleEnabled(guestbook)}
+                    isTogglingEnabled={togglingGuestbookId === guestbook.id}
+                    onDownloadResponses={() => handleDownloadResponses(guestbook)}
+                    isDownloadingResponses={downloadingGuestbookId === guestbook.id}
                     actionGroupClassName={styles['action-group']}
                     toggleStatusButtonClassName={styles['toggle-status-button']}
                   />

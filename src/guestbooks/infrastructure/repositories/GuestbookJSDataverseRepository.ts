@@ -1,9 +1,12 @@
 import {
   assignDatasetGuestbook,
   createGuestbook,
+  downloadGuestbookResponsesByDataverseId,
+  downloadGuestbookResponsesOfAGuestbook,
   type CreateGuestbookDTO,
   getGuestbooksByCollectionId,
   getGuestbook,
+  setGuestbookEnabled,
   removeDatasetGuestbook
 } from '@iqss/dataverse-client-javascript'
 import { GuestbookRepository } from '../../domain/repositories/GuestbookRepository'
@@ -25,6 +28,25 @@ export class GuestbookJSDataverseRepository implements GuestbookRepository {
     return getGuestbooksByCollectionId
       .execute(collectionIdOrAlias)
       .then((guestbooks) => guestbooks as Guestbook[])
+  }
+
+  setGuestbookEnabled(
+    collectionIdOrAlias: number | string,
+    guestbookId: number,
+    enabled: boolean
+  ): Promise<void> {
+    return setGuestbookEnabled.execute(collectionIdOrAlias, guestbookId, enabled)
+  }
+
+  downloadGuestbookResponsesByDataverseId(dataverseId: number | string): Promise<string> {
+    return downloadGuestbookResponsesByDataverseId.execute(dataverseId)
+  }
+
+  downloadGuestbookResponsesOfAGuestbook(
+    dataverseId: number | string,
+    guestbookId: number
+  ): Promise<string> {
+    return downloadGuestbookResponsesOfAGuestbook.execute(dataverseId, guestbookId)
   }
 
   assignDatasetGuestbook(datasetId: number | string, guestbookId: number): Promise<void> {

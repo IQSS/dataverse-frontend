@@ -54,6 +54,25 @@ export class GuestbookMockRepository implements GuestbookRepository {
     return Promise.resolve(storybookClientGuestbooks as Guestbook[])
   }
 
+  setGuestbookEnabled(
+    _collectionIdOrAlias: number | string,
+    _guestbookId: number,
+    _enabled: boolean
+  ): Promise<void> {
+    return Promise.resolve()
+  }
+
+  downloadGuestbookResponsesByDataverseId(_dataverseId: number | string): Promise<string> {
+    return Promise.resolve('name,email\nJane Doe,jane@example.com')
+  }
+
+  downloadGuestbookResponsesOfAGuestbook(
+    _dataverseId: number | string,
+    _guestbookId: number
+  ): Promise<string> {
+    return Promise.resolve('name,email\nJane Doe,jane@example.com')
+  }
+
   assignDatasetGuestbook(_datasetId: number | string, _guestbookId: number): Promise<void> {
     return Promise.resolve()
   }

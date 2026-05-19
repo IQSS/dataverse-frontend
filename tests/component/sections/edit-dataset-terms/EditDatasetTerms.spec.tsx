@@ -104,6 +104,9 @@ describe('EditDatasetTerms', () => {
       createGuestbook: cy.stub(),
       getGuestbook: cy.stub(),
       getGuestbooksByCollectionId: cy.stub().resolves(mockGuestbooks),
+      setGuestbookEnabled: cy.stub(),
+      downloadGuestbookResponsesByDataverseId: cy.stub(),
+      downloadGuestbookResponsesOfAGuestbook: cy.stub(),
       assignDatasetGuestbook: cy.stub().resolves(undefined),
       removeDatasetGuestbook: cy.stub().resolves(undefined)
     }

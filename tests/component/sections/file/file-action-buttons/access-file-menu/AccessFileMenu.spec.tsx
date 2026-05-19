@@ -200,6 +200,9 @@ describe('AccessFileMenu', () => {
       createGuestbook: cy.stub().resolves(1),
       getGuestbook: cy.stub().as('getGuestbook').resolves(guestbook),
       getGuestbooksByCollectionId: cy.stub().resolves([]),
+      setGuestbookEnabled: cy.stub(),
+      downloadGuestbookResponsesByDataverseId: cy.stub(),
+      downloadGuestbookResponsesOfAGuestbook: cy.stub(),
       assignDatasetGuestbook: cy.stub().resolves(),
       removeDatasetGuestbook: cy.stub().resolves()
     }
@@ -332,6 +335,9 @@ describe('AccessFileMenu', () => {
       createGuestbook: cy.stub().resolves(1),
       getGuestbook: cy.stub().as('getGuestbook').resolves(guestbook),
       getGuestbooksByCollectionId: cy.stub().resolves([]),
+      setGuestbookEnabled: cy.stub(),
+      downloadGuestbookResponsesByDataverseId: cy.stub(),
+      downloadGuestbookResponsesOfAGuestbook: cy.stub(),
       assignDatasetGuestbook: cy.stub().resolves(),
       removeDatasetGuestbook: cy.stub().resolves()
     }
