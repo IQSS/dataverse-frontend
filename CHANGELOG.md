@@ -10,7 +10,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Changed
 
-### Fixed
+- Add multilingual support for the banner message.
 
 ### Removed
 
