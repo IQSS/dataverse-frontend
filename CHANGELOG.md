@@ -12,10 +12,12 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
   - a guestbooks table with sorting, enable/disable actions, preview, and per-guestbook response download
   - Create Guestbook and Download All Responses actions
   - the Create Guestbook page
+- File pages now include a "Cite Data File" dropdown for downloading file citations in EndNote XML, RIS, and BibTeX formats.
 
 ### Changed
 
 - Dataset Terms > Guestbook now hides disabled guestbooks from the selectable list.
+- Dataset and file citation downloads now show a success toast when the download starts.
 
 ### Fixed
 

@@ -25,7 +25,7 @@ describe('CitationDownloadButton', () => {
     cy.findByRole('button', { name: 'Cite Dataset' }).should('exist')
   })
 
-  it('downloads EndNote XML citation', () => {
+  it('downloads EndNote XML citation and shows success toast', () => {
     datasetRepository.getDatasetCitationInOtherFormats = cy.stub().resolves(mockCitation)
 
     cy.customMount(
@@ -50,6 +50,7 @@ describe('CitationDownloadButton', () => {
       expect(win.URL['createObjectURL']).to.have.been.called
       expect(win.URL['revokeObjectURL']).to.have.been.called
     })
+    cy.findByText('Citation downloaded successfully').should('exist')
   })
 
   it('downloads RIS citation and triggers file download', () => {

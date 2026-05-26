@@ -293,6 +293,8 @@
   },
   "downloadCitation": {
     "title": "Descargar cita",
+    "citeDataset": "Citar dataset",
+    "citeDataFile": "Citar archivo de datos",
     "viewStyledCitation": "Ver cita con estilo",
     "downloadEndNoteXML": "Descargar EndNote XML",
     "downloadRIS": "Descargar RIS",
@@ -300,6 +302,7 @@
     "selectCSLStyle": "Seleccionar un estilo CSL",
     "citationInStyle": "Cita en estilo {{styleName}}",
     "downloadError": "Ocurrió un error al descargar la cita",
+    "downloadSuccess": "Cita descargada correctamente",
     "styledCitation": "Cita con estilo"
   },
   "expandableContent": {

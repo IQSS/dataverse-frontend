@@ -135,7 +135,12 @@ export function File({
           <Row>
             <Col sm={9}>
               <span className={styles['citation-title']}>{t('fileCitationTitle')}</span>
-              <FileCitation citation={file.citation} datasetVersion={file.datasetVersion} />
+              <FileCitation
+                citation={file.citation}
+                datasetVersion={file.datasetVersion}
+                fileRepository={repository}
+                fileId={file.id}
+              />
               <span className={styles['citation-title']}>{t('datasetCitationTitle')}</span>
               <DatasetCitation
                 version={file.datasetVersion}
