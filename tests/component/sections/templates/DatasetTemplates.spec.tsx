@@ -579,7 +579,7 @@ describe('Dataset Templates', () => {
 
       mountDatasetTemplates()
 
-      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('button', { name: 'Preview' }).click({ force: true })
       cy.findByRole('dialog').within(() => {
         cy.findByText('Dataset Template Preview').should('exist')
         cy.findByText('No citation metadata is available for this template.').should('exist')
@@ -603,7 +603,7 @@ describe('Dataset Templates', () => {
 
       mountDatasetTemplates()
 
-      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('button', { name: 'Preview' }).click({ force: true })
       cy.findByRole('dialog').within(() => {
         cy.findByText('Test Title').should('exist')
         cy.findByText('No citation metadata is available for this template.').should('not.exist')
@@ -635,7 +635,7 @@ describe('Dataset Templates', () => {
 
       mountDatasetTemplates()
 
-      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('button', { name: 'Preview' }).click({ force: true })
       cy.findByRole('dialog').within(() => {
         cy.findByText('Title')
           .closest('.row')
@@ -662,7 +662,7 @@ describe('Dataset Templates', () => {
 
       mountDatasetTemplates()
 
-      cy.findByRole('button', { name: 'View' }).click()
+      cy.findByRole('button', { name: 'Preview' }).click()
       cy.findByText('Close').click()
       cy.findByRole('dialog').should('not.exist')
     })
@@ -684,7 +684,7 @@ describe('Dataset Templates', () => {
 
       mountDatasetTemplates()
 
-      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('button', { name: 'Preview' }).click({ force: true })
       cy.findByRole('dialog').within(() => {
         cy.findByTestId('preview-modal-skeleton').should('exist')
       })
@@ -699,7 +699,7 @@ describe('Dataset Templates', () => {
 
       mountDatasetTemplates()
 
-      cy.findByRole('button', { name: 'View' }).click({ force: true })
+      cy.findByRole('button', { name: 'Preview' }).click({ force: true })
       cy.findByRole('dialog').within(() => {
         cy.findByText(/Something went wrong getting the template. Try again later./i).should(
           'exist'

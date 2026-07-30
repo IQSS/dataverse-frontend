@@ -147,6 +147,22 @@ const CreateGuestbookPage = lazy(() =>
   )
 )
 
+const EditGuestbookPage = lazy(() =>
+  import('../sections/guestbooks/edit-guestbook/EditGuestbookFactory').then(
+    ({ EditGuestbookFactory }) => ({
+      default: () => EditGuestbookFactory.create()
+    })
+  )
+)
+
+const GuestbookResponsesPage = lazy(() =>
+  import('../sections/guestbooks/view-responses/GuestbookResponsesFactory').then(
+    ({ GuestbookResponsesFactory }) => ({
+      default: () => GuestbookResponsesFactory.create()
+    })
+  )
+)
+
 const NotFoundPage = lazy(() =>
   import('../sections/not-found-page/NotFoundPageFactory').then(({ NotFoundPageFactory }) => ({
     default: () => NotFoundPageFactory.create()
@@ -349,6 +365,24 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<GuestbookSkeleton />}>
                     <CreateGuestbookPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.GUESTBOOKS_EDIT,
+                element: (
+                  <Suspense fallback={<GuestbookSkeleton />}>
+                    <EditGuestbookPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.GUESTBOOKS_RESPONSES,
+                element: (
+                  <Suspense fallback={<GuestbookSkeleton />}>
+                    <GuestbookResponsesPage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

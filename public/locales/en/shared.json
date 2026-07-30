@@ -295,6 +295,8 @@
   },
   "downloadCitation": {
     "title": "Download Citation",
+    "citeDataset": "Cite Dataset",
+    "citeDataFile": "Cite Data File",
     "viewStyledCitation": "View Styled Citation",
     "downloadEndNoteXML": "Download EndNote XML",
     "downloadRIS": "Download RIS",
@@ -302,6 +304,7 @@
     "selectCSLStyle": "Select a CSL Style",
     "citationInStyle": "Citation in {{styleName}} style",
     "downloadError": "An error occurred while downloading the citation",
+    "downloadSuccess": "Citation downloaded successfully",
     "styledCitation": "Styled Citation"
   },
   "expandableContent": {

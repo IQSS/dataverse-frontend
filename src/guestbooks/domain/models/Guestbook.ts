@@ -1,12 +1,13 @@
 export type GuestbookQuestionType = 'text' | 'textarea' | 'options'
 
 export interface GuestbookOption {
+  id?: number
   value: string
   displayOrder: number
 }
 
 export interface GuestbookCustomQuestion {
-  id?: number | string
+  id?: number
   question: string
   required: boolean
   displayOrder: number

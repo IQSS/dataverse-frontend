@@ -31,6 +31,9 @@ const GuestbookActionButtonsTestWrapper = ({
   isTogglingEnabled = false,
   isDownloadingResponses = false,
   onToggleEnabled = () => {},
+  onCopy,
+  onEdit,
+  onViewResponses,
   onDownloadResponses = () => {}
 }: {
   isEnabled?: boolean
@@ -39,6 +42,9 @@ const GuestbookActionButtonsTestWrapper = ({
   isTogglingEnabled?: boolean
   isDownloadingResponses?: boolean
   onToggleEnabled?: () => void
+  onCopy?: () => void
+  onEdit?: () => void
+  onViewResponses?: () => void
   onDownloadResponses?: () => void
 }) => {
   const [showPreview, setShowPreview] = useState(false)
@@ -49,6 +55,9 @@ const GuestbookActionButtonsTestWrapper = ({
         isEnabled={isEnabled}
         onView={() => setShowPreview(true)}
         onToggleEnabled={onToggleEnabled}
+        onCopy={onCopy}
+        onEdit={onEdit}
+        onViewResponses={onViewResponses}
         canToggleEnabled={canToggleEnabled}
         canEdit={canEdit}
         isTogglingEnabled={isTogglingEnabled}
@@ -80,11 +89,33 @@ describe('GuestbookActionButtons', () => {
     cy.findByRole('button', { name: 'Enable' }).should('exist')
   })
 
+  it('shows the delete action only when the guestbook is disabled and places it after download responses', () => {
+    cy.customMount(<GuestbookActionButtonsTestWrapper />)
+
+    cy.findByRole('button', { name: 'Delete' }).should('not.exist')
+
+    cy.customMount(<GuestbookActionButtonsTestWrapper isEnabled={false} />)
+
+    cy.findByRole('button', { name: 'Delete' }).should('exist')
+    cy.findByRole('group', { name: 'Action' })
+      .find('button')
+      .then(($buttons) => {
+        const buttonNames = Array.from($buttons).map(
+          (button) => button.getAttribute('aria-label') ?? button.textContent?.trim()
+        )
+
+        expect(buttonNames.indexOf('Delete')).to.be.greaterThan(
+          buttonNames.indexOf('Download responses')
+        )
+        expect(buttonNames.indexOf('Delete')).to.be.lessThan(buttonNames.indexOf('View Responses'))
+      })
+  })
+
   it('does not render the toggle button when toggling is not allowed', () => {
     cy.customMount(<GuestbookActionButtonsTestWrapper canToggleEnabled={false} />)
 
     cy.findByRole('button', { name: 'Disable' }).should('not.exist')
-    cy.findByRole('button', { name: 'View' }).should('exist')
+    cy.findByRole('button', { name: 'Preview' }).should('exist')
     cy.findByRole('button', { name: 'Copy' }).should('exist')
     cy.findByRole('button', { name: 'Edit' }).should('exist')
     cy.findByRole('button', { name: 'Download responses' }).should('exist')
@@ -94,17 +125,17 @@ describe('GuestbookActionButtons', () => {
   it('does not render the edit button when editing is not allowed', () => {
     cy.customMount(<GuestbookActionButtonsTestWrapper canEdit={false} />)
 
-    cy.findByRole('button', { name: 'View' }).should('exist')
+    cy.findByRole('button', { name: 'Preview' }).should('exist')
     cy.findByRole('button', { name: 'Copy' }).should('exist')
     cy.findByRole('button', { name: 'Edit' }).should('not.exist')
     cy.findByRole('button', { name: 'Download responses' }).should('exist')
     cy.findByRole('button', { name: 'View Responses' }).should('exist')
   })
 
-  it('opens and closes the preview guestbook modal from the view button', () => {
+  it('opens and closes the preview guestbook modal from the preview button', () => {
     cy.customMount(<GuestbookActionButtonsTestWrapper />)
 
-    cy.findByRole('button', { name: 'View' }).click()
+    cy.findByRole('button', { name: 'Preview' }).click()
     cy.findByRole('dialog').should('be.visible')
     cy.findByText('Preview Guestbook').should('exist')
     cy.findByText('Downloadable Guestbook').should('exist')
@@ -120,6 +151,33 @@ describe('GuestbookActionButtons', () => {
 
     cy.findByRole('button', { name: 'Download responses' }).click()
     cy.get('@onDownloadResponses').should('have.been.calledOnce')
+  })
+
+  it('triggers edit handler when supplied', () => {
+    const onEdit = cy.stub().as('onEdit')
+
+    cy.customMount(<GuestbookActionButtonsTestWrapper onEdit={onEdit} />)
+
+    cy.findByRole('button', { name: 'Edit' }).click()
+    cy.get('@onEdit').should('have.been.calledOnce')
+  })
+
+  it('triggers copy handler when supplied', () => {
+    const onCopy = cy.stub().as('onCopy')
+
+    cy.customMount(<GuestbookActionButtonsTestWrapper onCopy={onCopy} />)
+
+    cy.findByRole('button', { name: 'Copy' }).click()
+    cy.get('@onCopy').should('have.been.calledOnce')
+  })
+
+  it('triggers view responses handler when supplied', () => {
+    const onViewResponses = cy.stub().as('onViewResponses')
+
+    cy.customMount(<GuestbookActionButtonsTestWrapper onViewResponses={onViewResponses} />)
+
+    cy.findByRole('button', { name: 'View Responses' }).click()
+    cy.get('@onViewResponses').should('have.been.calledOnce')
   })
 
   it('uses enabled button defaults when optional loading flags are omitted', () => {
@@ -142,22 +200,12 @@ describe('GuestbookActionButtons', () => {
     cy.get('@onDownloadResponses').should('have.been.calledOnce')
   })
 
-  it('opens the not implemented modal from copy, edit, and view responses buttons', () => {
-    cy.customMount(<GuestbookActionButtonsTestWrapper />)
+  it('opens the not implemented modal from the disabled guestbook delete button', () => {
+    cy.customMount(<GuestbookActionButtonsTestWrapper isEnabled={false} />)
 
-    cy.findByRole('button', { name: 'Copy' }).click()
+    cy.findByRole('button', { name: 'Delete' }).click()
     cy.findByText('Not Implemented').should('exist')
     cy.findByText(/This feature is not implemented yet in the Modern version./i).should('exist')
-    cy.findByText('Close').click()
-    cy.findByText('Not Implemented').should('not.exist')
-
-    cy.findByRole('button', { name: 'Edit' }).click()
-    cy.findByText('Not Implemented').should('exist')
-    cy.findByText('Close').click()
-    cy.findByText('Not Implemented').should('not.exist')
-
-    cy.findByRole('button', { name: 'View Responses' }).click()
-    cy.findByText('Not Implemented').should('exist')
   })
 
   it('keeps toggle and download buttons enabled when loading flags are false', () => {

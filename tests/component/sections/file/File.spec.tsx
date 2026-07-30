@@ -37,6 +37,7 @@ describe('File', () => {
     cy.findByText(`This file is part of "${testFile.datasetVersion.title}".`).should('exist')
     cy.findByText('File Citation').should('exist')
     cy.findByText(/fileName/).should('exist')
+    cy.findByText('Cite Data File').should('exist')
     cy.findByText('Dataset Citation').should('exist')
     cy.findByText('Cite Dataset').should('exist')
     cy.findAllByText(/Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title",/).should(

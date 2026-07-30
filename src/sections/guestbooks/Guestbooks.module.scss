@@ -47,6 +47,33 @@
   white-space: nowrap;
 }
 
+.response-details {
+  margin: $spacer 0;
+}
+
+.response-detail-row {
+  display: grid;
+  grid-template-columns: minmax(10rem, 18rem) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.response-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin: $spacer 0;
+}
+
+.no-records-cell {
+  text-align: left;
+}
+
+.custom-questions-cell {
+  white-space: pre-line;
+}
+
 @media (max-width: 576px) {
   .table-actions {
     flex-direction: column;
@@ -71,6 +98,16 @@
   .download-all-button {
     width: 100%;
     justify-content: center;
+  }
+
+  .response-detail-row {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .response-actions {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
 
