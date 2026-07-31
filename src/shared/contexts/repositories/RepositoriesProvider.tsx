@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo } from 'react'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
+import { ExternalVocabularyRepository } from '@/external-vocabularies/domain/repositories/ExternalVocabularyRepository'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
@@ -9,6 +10,7 @@ import { UserRepository } from '@/users/domain/repositories/UserRepository'
 export interface RepositoriesContextValue {
   collectionRepository: CollectionRepository
   datasetRepository: DatasetRepository
+  externalVocabularyRepository: ExternalVocabularyRepository
   externalToolsRepository: ExternalToolsRepository
   fileRepository: FileRepository
   guestbookRepository: GuestbookRepository
@@ -25,6 +27,7 @@ export function RepositoriesProvider({
   children,
   collectionRepository,
   datasetRepository,
+  externalVocabularyRepository,
   externalToolsRepository,
   fileRepository,
   guestbookRepository,
@@ -34,6 +37,7 @@ export function RepositoriesProvider({
     () => ({
       collectionRepository,
       datasetRepository,
+      externalVocabularyRepository,
       externalToolsRepository,
       fileRepository,
       guestbookRepository,
@@ -42,6 +46,7 @@ export function RepositoriesProvider({
     [
       collectionRepository,
       datasetRepository,
+      externalVocabularyRepository,
       externalToolsRepository,
       fileRepository,
       guestbookRepository,
@@ -78,6 +83,12 @@ export function useExternalToolsRepositories() {
   const { externalToolsRepository } = useRepositories()
 
   return { externalToolsRepository }
+}
+
+export function useExternalVocabularyRepositories() {
+  const { externalVocabularyRepository } = useRepositories()
+
+  return { externalVocabularyRepository }
 }
 
 export function useFileRepositories() {

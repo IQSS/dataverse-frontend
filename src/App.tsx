@@ -5,6 +5,7 @@ import { Route } from './sections/Route.enum'
 import { requireAppConfig } from './config'
 import { ExternalToolsProvider } from './shared/contexts/external-tools/ExternalToolsProvider'
 import { ExternalToolsJSDataverseRepository } from './externalTools/infrastructure/repositories/ExternalToolsJSDataverseRepository'
+import { ExternalVocabularyJSDataverseRepository } from './external-vocabularies/infrastructure/repositories/ExternalVocabularyJSDataverseRepository'
 import { RepositoriesProvider } from './shared/contexts/repositories/RepositoriesProvider'
 import { CollectionJSDataverseRepository } from './collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { DatasetJSDataverseRepository } from './dataset/infrastructure/repositories/DatasetJSDataverseRepository'
@@ -17,6 +18,7 @@ import './assets/react-toastify-custom.scss'
 import './assets/swal-custom.scss'
 
 const externalToolsRepository = new ExternalToolsJSDataverseRepository()
+const externalVocabularyRepository = new ExternalVocabularyJSDataverseRepository()
 const collectionRepository = new CollectionJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
@@ -47,6 +49,7 @@ function App() {
         <RepositoriesProvider
           collectionRepository={collectionRepository}
           datasetRepository={datasetRepository}
+          externalVocabularyRepository={externalVocabularyRepository}
           externalToolsRepository={externalToolsRepository}
           fileRepository={fileRepository}
           guestbookRepository={guestbookRepository}

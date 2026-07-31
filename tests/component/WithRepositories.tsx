@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
+import { ExternalVocabularyRepository } from '@/external-vocabularies/domain/repositories/ExternalVocabularyRepository'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
@@ -21,10 +22,30 @@ function failFastRepository<T>(name: string): T {
   }) as T
 }
 
+const defaultExternalVocabularyRepository: ExternalVocabularyRepository = {
+  getConfiguredExternalVocabularies: () => Promise.resolve([]),
+  search: () => {
+    throw new Error(
+      '[ExternalVocabularyRepository] search was called but no repository was provided.'
+    )
+  },
+  resolve: () => {
+    throw new Error(
+      '[ExternalVocabularyRepository] resolve was called but no repository was provided.'
+    )
+  },
+  validate: () => {
+    throw new Error(
+      '[ExternalVocabularyRepository] validate was called but no repository was provided.'
+    )
+  }
+}
+
 interface WithRepositoriesProps {
   children: ReactNode
   collectionRepository?: CollectionRepository
   datasetRepository?: DatasetRepository
+  externalVocabularyRepository?: ExternalVocabularyRepository
   externalToolsRepository?: ExternalToolsRepository
   fileRepository?: FileRepository
   guestbookRepository?: GuestbookRepository
@@ -35,6 +56,7 @@ export function WithRepositories({
   children,
   collectionRepository = failFastRepository<CollectionRepository>('CollectionRepository'),
   datasetRepository = failFastRepository<DatasetRepository>('DatasetRepository'),
+  externalVocabularyRepository = defaultExternalVocabularyRepository,
   externalToolsRepository = failFastRepository<ExternalToolsRepository>('ExternalToolsRepository'),
   fileRepository = failFastRepository<FileRepository>('FileRepository'),
   guestbookRepository = failFastRepository<GuestbookRepository>('GuestbookRepository'),
@@ -44,6 +66,7 @@ export function WithRepositories({
     <RepositoriesProvider
       collectionRepository={collectionRepository}
       datasetRepository={datasetRepository}
+      externalVocabularyRepository={externalVocabularyRepository}
       externalToolsRepository={externalToolsRepository}
       fileRepository={fileRepository}
       guestbookRepository={guestbookRepository}

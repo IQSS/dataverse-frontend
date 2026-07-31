@@ -1,4 +1,5 @@
 import { DatasetMetadataFieldValue } from '../../../dataset/domain/models/Dataset'
+import { ExternalVocabularyConfig } from '@/external-vocabularies/domain/models/ExternalVocabularyConfig'
 
 export interface MetadataBlockInfo {
   id: number
@@ -27,6 +28,7 @@ export interface MetadataField {
   isAdvancedSearchFieldType: boolean
   displayOrder: number
   controlledVocabularyValues?: string[]
+  externalVocabulary?: ExternalVocabularyConfig
   childMetadataFields?: Record<string, MetadataField>
   displayOnCreate: boolean
 }

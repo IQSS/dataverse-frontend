@@ -15,6 +15,7 @@ import {
   MetadataFieldsHelper
 } from '../../../../../src/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 import { defaultLicense } from '../../../../../src/dataset/domain/models/Dataset'
+import { ExternalVocabularyConfig } from '../../../../../src/external-vocabularies/domain/models/ExternalVocabularyConfig'
 
 const metadataBlocksInfo: MetadataBlockInfo[] = [
   {
@@ -1651,6 +1652,79 @@ describe('MetadataFieldsHelper', () => {
           ]
         }
       ])
+    })
+  })
+
+  describe('addExternalVocabularyConfigsToMetadataBlocksInfo', () => {
+    const buildField = (overrides: Partial<MetadataField>): MetadataField => ({
+      name: 'field',
+      displayName: 'Field',
+      title: 'Field',
+      type: 'TEXT',
+      typeClass: 'primitive',
+      watermark: '',
+      description: '',
+      multiple: false,
+      isControlledVocabulary: false,
+      displayFormat: '',
+      isRequired: false,
+      displayOnCreate: true,
+      displayOrder: 0,
+      isAdvancedSearchFieldType: false,
+      ...overrides
+    })
+
+    it('adds external vocabulary config to child fields targeted directly by CVocConf', () => {
+      const rorConfig: ExternalVocabularyConfig = {
+        fieldName: 'authorAffiliation',
+        termUriField: 'authorAffiliation',
+        protocol: 'ror',
+        allowFreeText: true,
+        languages: '',
+        vocabs: {
+          ror: {
+            uriSpace: 'https://ror.org/',
+            vocabularyUri: 'https://ror.org/'
+          }
+        },
+        managedFields: {}
+      }
+
+      const metadataBlocks: MetadataBlockInfo[] = [
+        {
+          id: 1,
+          name: 'citation',
+          displayName: 'Citation Metadata',
+          displayOnCreate: true,
+          metadataFields: {
+            author: buildField({
+              name: 'author',
+              displayName: 'Author',
+              title: 'Author',
+              type: 'NONE',
+              typeClass: 'compound',
+              multiple: true,
+              childMetadataFields: {
+                authorName: buildField({ name: 'authorName', title: 'Name' }),
+                authorAffiliation: buildField({
+                  name: 'authorAffiliation',
+                  title: 'Affiliation'
+                })
+              }
+            })
+          }
+        }
+      ]
+
+      const result = MetadataFieldsHelper.addExternalVocabularyConfigsToMetadataBlocksInfo(
+        metadataBlocks,
+        [rorConfig]
+      )
+
+      expect(
+        result[0].metadataFields.author.childMetadataFields?.authorAffiliation.externalVocabulary
+      ).to.deep.equal(rorConfig)
+      expect(result[0].metadataFields.author.externalVocabulary).to.be.undefined
     })
   })
 

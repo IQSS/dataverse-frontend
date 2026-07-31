@@ -9,6 +9,7 @@ import { MetadataFieldsHelper } from '../DatasetMetadataForm/MetadataFieldsHelpe
 import { MetadataFormSkeleton } from '../DatasetMetadataForm/MetadataForm/MetadataFormSkeleton'
 import { TemplateForm } from './TemplateForm'
 import { useLoading } from '@/shared/contexts/loading/LoadingContext'
+import { useExternalVocabularyRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 type TemplateMetadataFormProps =
   | {
@@ -33,6 +34,8 @@ export const TemplateMetadataForm = ({
   templateRepository,
   template
 }: TemplateMetadataFormProps) => {
+  const { externalVocabularyRepository } = useExternalVocabularyRepositories()
+
   const { setIsLoading } = useLoading()
   const {
     metadataBlocksInfo: metadataBlocksInfoForDisplay,
@@ -41,7 +44,8 @@ export const TemplateMetadataForm = ({
   } = useGetMetadataBlocksInfo({
     mode: 'edit',
     collectionId,
-    metadataBlockInfoRepository
+    metadataBlockInfoRepository,
+    externalVocabularyRepository
   })
 
   useEffect(() => {
