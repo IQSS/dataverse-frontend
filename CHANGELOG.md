@@ -27,6 +27,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Edit Dataset Terms: navigate to the draft version of the dataset after saving changes to the terms, instead of the latest published version.
 - After saving on either Edit Template tab (Metadata or Terms), the user is redirected to the templates listing with a success toast instead of staying on the edit page.
 - Edit Template breadcrumb on the Terms page no longer renders the dataset's "Terms and Guestbook" label (templates have no guestbook).
 

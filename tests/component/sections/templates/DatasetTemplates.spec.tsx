@@ -11,6 +11,7 @@ import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models
 import { CitationMetadataBlockInfoMother } from '../../metadata-block-info/domain/models/CitationMetadataBlockInfoMother'
 import { UpwardHierarchyNodeMother } from '../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { useLocation } from 'react-router-dom'
+import { Template } from '@/templates/domain/models/Template'
 import { RouterInitialEntry } from '../../../support/commands'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
@@ -37,6 +38,7 @@ const template = TemplateMother.create({
   name: 'Template',
   isDefault: false
 })
+
 describe('Dataset Templates', () => {
   const LocationDisplay = () => {
     const location = useLocation()
@@ -508,6 +510,9 @@ describe('Dataset Templates', () => {
 
     cy.findByRole('button', { name: 'Template Name' }).click()
     getTableNames().should('deep.equal', ['Gamma', 'Beta', 'Alpha'])
+
+    cy.findByRole('button', { name: 'Template Name' }).click()
+    getTableNames().should('deep.equal', ['Alpha', 'Beta', 'Gamma'])
   })
 
   it('resets sorting direction when selecting a different column', () => {
@@ -949,6 +954,78 @@ describe('Dataset Templates', () => {
 
       cy.findByText(/Something went wrong copying the template. Try again later./i).should('exist')
       cy.wrap(templateRepository.createTemplate).should('have.been.calledOnce')
+      cy.wrap(templateRepository.getTemplatesByCollectionId).should('have.been.calledOnce')
+    })
+
+    it('copies a template without metadata blocks', () => {
+      const templateWithoutMetadataBlocks = {
+        ...TemplateMother.create({
+          id: 12,
+          name: 'Template Without Metadata Blocks',
+          collectionAlias: 'root',
+          isDefault: false
+        }),
+        datasetMetadataBlocks: undefined
+      } as unknown as Template
+      const copiedTemplate = TemplateMother.create({
+        id: 13,
+        name: 'copy Template Without Metadata Blocks',
+        collectionAlias: 'root'
+      })
+
+      templateRepository.getTemplatesByCollectionId = cy
+        .stub()
+        .onFirstCall()
+        .resolves([templateWithoutMetadataBlocks])
+        .onSecondCall()
+        .resolves([templateWithoutMetadataBlocks, copiedTemplate])
+        .onThirdCall()
+        .resolves([templateWithoutMetadataBlocks, copiedTemplate])
+      templateRepository.getTemplate = cy.stub().resolves(templateWithoutMetadataBlocks)
+      templateRepository.createTemplate = cy.stub().resolves()
+      metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves([
+        {
+          ...CitationMetadataBlockInfoMother.get(),
+          metadataFields: undefined
+        }
+      ])
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'Copy' }).click({ force: true })
+
+      cy.findByText('Template copied.').should('exist')
+      cy.wrap(templateRepository.createTemplate).should(
+        'have.been.calledWith',
+        {
+          name: 'copy Template Without Metadata Blocks',
+          isDefault: false,
+          fields: [],
+          instructions: templateWithoutMetadataBlocks.instructions
+        },
+        'root'
+      )
+    })
+
+    it('shows the generic copy error when copying fails with an unknown error', () => {
+      const templateWithMetadata = TemplateMother.create({
+        id: 13,
+        name: 'Template Copy Unknown Error',
+        collectionAlias: 'root'
+      })
+
+      templateRepository.getTemplatesByCollectionId = cy.stub().resolves([templateWithMetadata])
+      templateRepository.getTemplate = cy.stub().resolves(templateWithMetadata)
+      templateRepository.createTemplate = cy.stub().rejects('unknown failure')
+      metadataBlockInfoRepository.getByCollectionId = cy
+        .stub()
+        .resolves([CitationMetadataBlockInfoMother.get()])
+
+      mountDatasetTemplates()
+
+      cy.findByRole('button', { name: 'Copy' }).click({ force: true })
+
+      cy.findByText(/Something went wrong copying the template. Try again later./i).should('exist')
       cy.wrap(templateRepository.getTemplatesByCollectionId).should('have.been.calledOnce')
     })
   })
