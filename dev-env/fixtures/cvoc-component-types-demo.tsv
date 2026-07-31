@@ -1,0 +1,14 @@
+#metadataBlock	name	dataverseAlias	displayName	blockURI												
+	extVocabComponentDemoMetadata		External Vocabulary Component Types													
+#datasetField	name	title	description	watermark	 fieldType	displayOrder	displayFormat	advancedSearchField	allowControlledVocabulary	allowmultiples	facetable	displayoncreate	required	parent	metadatablock_id	termURI
+	demoPrimitiveSingleTermURI	Primitive Single	External vocabulary attached directly to a single primitive metadata field.	Start typing	url	0	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE		extVocabComponentDemoMetadata	
+	demoPrimitiveMultipleTermURI	Primitive Multiple	External vocabulary attached directly to a repeatable primitive metadata field.	Start typing	url	1	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	TRUE	FALSE	TRUE	FALSE	TRUE	FALSE		extVocabComponentDemoMetadata	
+	demoCompoundSingle	Compound Single	External vocabulary attached to one child inside a single compound field.		none	2		FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		extVocabComponentDemoMetadata	
+	demoCompoundSingleTermURI	Term	Searches an external vocabulary and stores the selected URI.	Start typing	url	3	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	demoCompoundSingle	extVocabComponentDemoMetadata	
+	demoCompoundSingleName	Term Name	Managed field populated from the selected external vocabulary term.		text	4	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	demoCompoundSingle	extVocabComponentDemoMetadata	
+	demoCompoundSingleVocabulary	Vocabulary	Managed field populated from the selected external vocabulary term.		text	5	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	demoCompoundSingle	extVocabComponentDemoMetadata	
+	demoCompoundMultiple	Compound Multiple	External vocabulary attached to one child inside a repeatable compound field.		none	6		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		extVocabComponentDemoMetadata	
+	demoCompoundMultipleTermURI	Term	Searches an external vocabulary and stores the selected URI.	Start typing	url	7	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	demoCompoundMultiple	extVocabComponentDemoMetadata	
+	demoCompoundMultipleName	Term Name	Managed field populated from the selected external vocabulary term.		text	8	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	demoCompoundMultiple	extVocabComponentDemoMetadata	
+	demoCompoundMultipleVocabulary	Vocabulary	Managed field populated from the selected external vocabulary term.		text	9	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	demoCompoundMultiple	extVocabComponentDemoMetadata	
+#controlledVocabulary	DatasetField	Value	identifier	displayOrder												

@@ -1,0 +1,220 @@
+[
+  {
+    "field-name": "demoPrimitiveSingleTermURI",
+    "term-uri-field": "demoPrimitiveSingleTermURI",
+    "cvoc-url": "https://demo.skosmos.org/",
+    "js-url": "https://gdcc.github.io/dataverse-external-vocab-support/scripts/skosmos.js",
+    "protocol": "skosmos",
+    "retrieval-uri": "https://demo.skosmos.org/rest/v1/unesco/data?uri={0}",
+    "term-parent-uri": "",
+    "allow-free-text": false,
+    "languages": "en",
+    "vocabs": {
+      "unesco": {
+        "vocabularyUri": "http://skos.um.es/unescothes/CS000",
+        "uriSpace": "http://skos.um.es/unescothes/"
+      }
+    },
+    "managed-fields": {},
+    "provider": {
+      "type": "http-json",
+      "search-uri": "https://demo.skosmos.org/rest/v1/search?unique=true&vocab=unesco&lang=en&query={encodeUrl:query}*",
+      "results-path": "/results/*",
+      "uri-path": "/uri",
+      "label-path": "/prefLabel",
+      "vocabulary-name": "UNESCO Thesaurus",
+      "vocabulary-uri": "http://skos.um.es/unescothes/CS000",
+      "limit": 10
+    },
+    "retrieval-filtering": {
+      "@context": {
+        "termName": "https://schema.org/name",
+        "vocabularyName": "https://dataverse.org/schema/vocabularyName",
+        "vocabularyUri": "https://dataverse.org/schema/vocabularyUri",
+        "lang": "@language",
+        "value": "@value"
+      },
+      "@id": {
+        "pattern": "{0}",
+        "params": ["@id"]
+      },
+      "termName": {
+        "pattern": "{0}",
+        "params": ["/graph/uri=@id/prefLabel/lang=en/value"]
+      },
+      "vocabularyName": {
+        "pattern": "{0}",
+        "params": ["/graph/type=skos:ConceptScheme/prefLabel/lang=en/value"]
+      },
+      "vocabularyUri": {
+        "pattern": "{0}",
+        "params": ["/graph/type=skos:ConceptScheme/uri"]
+      }
+    }
+  },
+  {
+    "field-name": "demoPrimitiveMultipleTermURI",
+    "term-uri-field": "demoPrimitiveMultipleTermURI",
+    "cvoc-url": "https://demo.skosmos.org/",
+    "js-url": "https://gdcc.github.io/dataverse-external-vocab-support/scripts/skosmos.js",
+    "protocol": "skosmos",
+    "retrieval-uri": "https://demo.skosmos.org/rest/v1/unesco/data?uri={0}",
+    "term-parent-uri": "",
+    "allow-free-text": false,
+    "languages": "en",
+    "vocabs": {
+      "unesco": {
+        "vocabularyUri": "http://skos.um.es/unescothes/CS000",
+        "uriSpace": "http://skos.um.es/unescothes/"
+      }
+    },
+    "managed-fields": {},
+    "provider": {
+      "type": "http-json",
+      "search-uri": "https://demo.skosmos.org/rest/v1/search?unique=true&vocab=unesco&lang=en&query={encodeUrl:query}*",
+      "results-path": "/results/*",
+      "uri-path": "/uri",
+      "label-path": "/prefLabel",
+      "vocabulary-name": "UNESCO Thesaurus",
+      "vocabulary-uri": "http://skos.um.es/unescothes/CS000",
+      "limit": 10
+    },
+    "retrieval-filtering": {
+      "@context": {
+        "termName": "https://schema.org/name",
+        "vocabularyName": "https://dataverse.org/schema/vocabularyName",
+        "vocabularyUri": "https://dataverse.org/schema/vocabularyUri",
+        "lang": "@language",
+        "value": "@value"
+      },
+      "@id": {
+        "pattern": "{0}",
+        "params": ["@id"]
+      },
+      "termName": {
+        "pattern": "{0}",
+        "params": ["/graph/uri=@id/prefLabel/lang=en/value"]
+      },
+      "vocabularyName": {
+        "pattern": "{0}",
+        "params": ["/graph/type=skos:ConceptScheme/prefLabel/lang=en/value"]
+      },
+      "vocabularyUri": {
+        "pattern": "{0}",
+        "params": ["/graph/type=skos:ConceptScheme/uri"]
+      }
+    }
+  },
+  {
+    "field-name": "demoCompoundSingle",
+    "term-uri-field": "demoCompoundSingleTermURI",
+    "cvoc-url": "https://demo.skosmos.org/",
+    "js-url": "https://gdcc.github.io/dataverse-external-vocab-support/scripts/skosmos.js",
+    "protocol": "skosmos",
+    "retrieval-uri": "https://demo.skosmos.org/rest/v1/unesco/data?uri={0}",
+    "term-parent-uri": "",
+    "allow-free-text": false,
+    "languages": "en",
+    "vocabs": {
+      "unesco": {
+        "vocabularyUri": "http://skos.um.es/unescothes/CS000",
+        "uriSpace": "http://skos.um.es/unescothes/"
+      }
+    },
+    "managed-fields": {
+      "termName": "demoCompoundSingleName",
+      "vocabularyName": "demoCompoundSingleVocabulary"
+    },
+    "provider": {
+      "type": "http-json",
+      "search-uri": "https://demo.skosmos.org/rest/v1/search?unique=true&vocab=unesco&lang=en&query={encodeUrl:query}*",
+      "results-path": "/results/*",
+      "uri-path": "/uri",
+      "label-path": "/prefLabel",
+      "vocabulary-name": "UNESCO Thesaurus",
+      "vocabulary-uri": "http://skos.um.es/unescothes/CS000",
+      "limit": 10
+    },
+    "retrieval-filtering": {
+      "@context": {
+        "termName": "https://schema.org/name",
+        "vocabularyName": "https://dataverse.org/schema/vocabularyName",
+        "vocabularyUri": "https://dataverse.org/schema/vocabularyUri",
+        "lang": "@language",
+        "value": "@value"
+      },
+      "@id": {
+        "pattern": "{0}",
+        "params": ["@id"]
+      },
+      "termName": {
+        "pattern": "{0}",
+        "params": ["/graph/uri=@id/prefLabel/lang=en/value"]
+      },
+      "vocabularyName": {
+        "pattern": "{0}",
+        "params": ["/graph/type=skos:ConceptScheme/prefLabel/lang=en/value"]
+      },
+      "vocabularyUri": {
+        "pattern": "{0}",
+        "params": ["/graph/type=skos:ConceptScheme/uri"]
+      }
+    }
+  },
+  {
+    "field-name": "demoCompoundMultiple",
+    "term-uri-field": "demoCompoundMultipleTermURI",
+    "cvoc-url": "https://demo.skosmos.org/",
+    "js-url": "https://gdcc.github.io/dataverse-external-vocab-support/scripts/skosmos.js",
+    "protocol": "skosmos",
+    "retrieval-uri": "https://demo.skosmos.org/rest/v1/unesco/data?uri={0}",
+    "term-parent-uri": "",
+    "allow-free-text": false,
+    "languages": "en",
+    "vocabs": {
+      "unesco": {
+        "vocabularyUri": "http://skos.um.es/unescothes/CS000",
+        "uriSpace": "http://skos.um.es/unescothes/"
+      }
+    },
+    "managed-fields": {
+      "termName": "demoCompoundMultipleName",
+      "vocabularyName": "demoCompoundMultipleVocabulary"
+    },
+    "provider": {
+      "type": "http-json",
+      "search-uri": "https://demo.skosmos.org/rest/v1/search?unique=true&vocab=unesco&lang=en&query={encodeUrl:query}*",
+      "results-path": "/results/*",
+      "uri-path": "/uri",
+      "label-path": "/prefLabel",
+      "vocabulary-name": "UNESCO Thesaurus",
+      "vocabulary-uri": "http://skos.um.es/unescothes/CS000",
+      "limit": 10
+    },
+    "retrieval-filtering": {
+      "@context": {
+        "termName": "https://schema.org/name",
+        "vocabularyName": "https://dataverse.org/schema/vocabularyName",
+        "vocabularyUri": "https://dataverse.org/schema/vocabularyUri",
+        "lang": "@language",
+        "value": "@value"
+      },
+      "@id": {
+        "pattern": "{0}",
+        "params": ["@id"]
+      },
+      "termName": {
+        "pattern": "{0}",
+        "params": ["/graph/uri=@id/prefLabel/lang=en/value"]
+      },
+      "vocabularyName": {
+        "pattern": "{0}",
+        "params": ["/graph/type=skos:ConceptScheme/prefLabel/lang=en/value"]
+      },
+      "vocabularyUri": {
+        "pattern": "{0}",
+        "params": ["/graph/type=skos:ConceptScheme/uri"]
+      }
+    }
+  }
+]
