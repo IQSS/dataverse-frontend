@@ -1,308 +1,401 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Issue #1024 — Edit Metadata Latest Version: Fix Verification Report</title>
-  <style>
-    :root {
-      --bg: #f6f4ef;
-      --ink: #1c1b19;
-      --muted: #5c574e;
-      --card: #fffdf8;
-      --line: #d9d2c4;
-      --bad: #8b1e1e;
-      --bad-bg: #f8e8e6;
-      --good: #1f5c3a;
-      --good-bg: #e6f3eb;
-      --accent: #0b3d5c;
-      --code: #f0ebe1;
-      --warn: #7a5a00;
-      --warn-bg: #fff6d9;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-      color: var(--ink);
-      background:
-        radial-gradient(1200px 500px at 10% -10%, #e8efe8 0%, transparent 55%),
-        radial-gradient(900px 400px at 100% 0%, #e7eef5 0%, transparent 50%),
-        var(--bg);
-      line-height: 1.55;
-    }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 40px 22px 80px; }
-    header {
-      border-bottom: 2px solid var(--ink);
-      padding-bottom: 20px;
-      margin-bottom: 28px;
-    }
-    .eyebrow {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin: 0 0 8px;
-    }
-    h1 {
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
-      line-height: 1.2;
-      margin: 0 0 12px;
-      letter-spacing: -0.02em;
-    }
-    h2 {
-      font-size: 1.25rem;
-      margin: 36px 0 12px;
-      border-left: 4px solid var(--accent);
-      padding-left: 12px;
-    }
-    h3 { font-size: 1.05rem; margin: 22px 0 8px; }
-    p, li { color: var(--ink); }
-    .meta {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .meta div {
-      background: var(--card);
-      border: 1px solid var(--line);
-      padding: 10px 12px;
-      border-radius: 8px;
-    }
-    .meta dt {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .meta dd { margin: 4px 0 0; font-weight: 600; }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 18px 18px 14px;
-      margin: 14px 0;
-      box-shadow: 0 1px 0 rgba(0,0,0,0.03);
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    @media (max-width: 780px) { .row { grid-template-columns: 1fr; } }
-    .badge {
-      display: inline-block;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 999px;
-      margin-bottom: 8px;
-    }
-    .badge.bad { background: var(--bad-bg); color: var(--bad); }
-    .badge.good { background: var(--good-bg); color: var(--good); }
-    .badge.warn { background: var(--warn-bg); color: var(--warn); }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    th, td {
-      border-bottom: 1px solid var(--line);
-      padding: 10px 12px;
-      text-align: left;
-      vertical-align: top;
-    }
-    th { background: #efe9dc; font-size: 0.85rem; }
-    tr:last-child td { border-bottom: 0; }
-    code, .mono {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.86em;
-    }
-    pre {
-      background: var(--code);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 14px;
-      overflow-x: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 12.5px;
-      line-height: 1.45;
-    }
-    .form-mock {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 14px;
-      background: #fff;
-    }
-    .field { margin-bottom: 12px; }
-    .field label {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 4px;
-      font-family: ui-sans-serif, system-ui, sans-serif;
-    }
-    .field .input {
-      border: 1px solid #bbb;
-      border-radius: 6px;
-      padding: 8px 10px;
-      font-family: ui-sans-serif, system-ui, sans-serif;
-      background: #fafafa;
-    }
-    .field .input.empty { color: #999; font-style: italic; }
-    .field .input.filled { background: #eef8f1; border-color: #7aa88c; font-weight: 600; }
-    .arrow {
-      text-align: center;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      color: var(--muted);
-      margin: 8px 0;
-      font-size: 13px;
-    }
-    .checklist li { margin: 8px 0; }
-    .pass { color: var(--good); font-weight: 700; }
-    .fail { color: var(--bad); font-weight: 700; }
-    .pending { color: var(--warn); font-weight: 700; }
-    footer {
-      margin-top: 40px;
-      padding-top: 16px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-    a { color: var(--accent); }
-    .flow {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      font-family: ui-sans-serif, system-ui, sans-serif;
-      font-size: 13px;
-    }
-    .flow span {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 8px 10px;
-    }
-    .flow .x { border: 0; background: transparent; color: var(--muted); padding: 0; }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <p class="eyebrow">IQSS/dataverse-frontend · Issue #1024 · Verification Report</p>
-      <h1>Edit Metadata must always pre-populate the <em>latest</em> metadata</h1>
-      <p>
-        This report shows the original bug (wrong version used to initialize the edit form),
-        the exact code fix, the expected outputs before vs after, and how to verify the fix
-        is complete against the issue statement.
-      </p>
-      <div class="meta">
-        <div><dt>Issue</dt><dd><a href="https://github.com/IQSS/dataverse-frontend/issues/1024">#1024</a></dd></div>
-        <div><dt>Branch</dt><dd class="mono">fix/1024-edit-metadata-latest-version</dd></div>
-        <div><dt>Commit</dt><dd class="mono">f108609</dd></div>
-        <div><dt>Primary file</dt><dd class="mono">EditDatasetMetadataFactory.tsx</dd></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Issue #1024 — Edit Metadata Latest Version: Fix Verification Report</title>
+    <style>
+      :root {
+        --bg: #f6f4ef;
+        --ink: #1c1b19;
+        --muted: #5c574e;
+        --card: #fffdf8;
+        --line: #d9d2c4;
+        --bad: #8b1e1e;
+        --bad-bg: #f8e8e6;
+        --good: #1f5c3a;
+        --good-bg: #e6f3eb;
+        --accent: #0b3d5c;
+        --code: #f0ebe1;
+        --warn: #7a5a00;
+        --warn-bg: #fff6d9;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+        color: var(--ink);
+        background: radial-gradient(1200px 500px at 10% -10%, #e8efe8 0%, transparent 55%),
+          radial-gradient(900px 400px at 100% 0%, #e7eef5 0%, transparent 50%), var(--bg);
+        line-height: 1.55;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 40px 22px 80px;
+      }
+      header {
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 20px;
+        margin-bottom: 28px;
+      }
+      .eyebrow {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 8px;
+      }
+      h1 {
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        line-height: 1.2;
+        margin: 0 0 12px;
+        letter-spacing: -0.02em;
+      }
+      h2 {
+        font-size: 1.25rem;
+        margin: 36px 0 12px;
+        border-left: 4px solid var(--accent);
+        padding-left: 12px;
+      }
+      h3 {
+        font-size: 1.05rem;
+        margin: 22px 0 8px;
+      }
+      p,
+      li {
+        color: var(--ink);
+      }
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .meta div {
+        background: var(--card);
+        border: 1px solid var(--line);
+        padding: 10px 12px;
+        border-radius: 8px;
+      }
+      .meta dt {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .meta dd {
+        margin: 4px 0 0;
+        font-weight: 600;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 18px 18px 14px;
+        margin: 14px 0;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      @media (max-width: 780px) {
+        .row {
+          grid-template-columns: 1fr;
+        }
+      }
+      .badge {
+        display: inline-block;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 999px;
+        margin-bottom: 8px;
+      }
+      .badge.bad {
+        background: var(--bad-bg);
+        color: var(--bad);
+      }
+      .badge.good {
+        background: var(--good-bg);
+        color: var(--good);
+      }
+      .badge.warn {
+        background: var(--warn-bg);
+        color: var(--warn);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 10px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: #efe9dc;
+        font-size: 0.85rem;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      code,
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.86em;
+      }
+      pre {
+        background: var(--code);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px;
+        overflow-x: auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12.5px;
+        line-height: 1.45;
+      }
+      .form-mock {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px;
+        background: #fff;
+      }
+      .field {
+        margin-bottom: 12px;
+      }
+      .field label {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 4px;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      .field .input {
+        border: 1px solid #bbb;
+        border-radius: 6px;
+        padding: 8px 10px;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        background: #fafafa;
+      }
+      .field .input.empty {
+        color: #999;
+        font-style: italic;
+      }
+      .field .input.filled {
+        background: #eef8f1;
+        border-color: #7aa88c;
+        font-weight: 600;
+      }
+      .arrow {
+        text-align: center;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        color: var(--muted);
+        margin: 8px 0;
+        font-size: 13px;
+      }
+      .checklist li {
+        margin: 8px 0;
+      }
+      .pass {
+        color: var(--good);
+        font-weight: 700;
+      }
+      .fail {
+        color: var(--bad);
+        font-weight: 700;
+      }
+      .pending {
+        color: var(--warn);
+        font-weight: 700;
+      }
+      footer {
+        margin-top: 40px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      a {
+        color: var(--accent);
+      }
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 13px;
+      }
+      .flow span {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 10px;
+      }
+      .flow .x {
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <p class="eyebrow">IQSS/dataverse-frontend · Issue #1024 · Verification Report</p>
+        <h1>Edit Metadata must always pre-populate the <em>latest</em> metadata</h1>
+        <p>
+          This report shows the original bug (wrong version used to initialize the edit form), the
+          exact code fix, the expected outputs before vs after, and how to verify the fix is
+          complete against the issue statement.
+        </p>
+        <div class="meta">
+          <div>
+            <dt>Issue</dt>
+            <dd><a href="https://github.com/IQSS/dataverse-frontend/issues/1024">#1024</a></dd>
+          </div>
+          <div>
+            <dt>Branch</dt>
+            <dd class="mono">fix/1024-edit-metadata-latest-version</dd>
+          </div>
+          <div>
+            <dt>Commit</dt>
+            <dd class="mono">f108609</dd>
+          </div>
+          <div>
+            <dt>Primary file</dt>
+            <dd class="mono">EditDatasetMetadataFactory.tsx</dd>
+          </div>
+        </div>
+      </header>
+
+      <h2>1. Original issue (exact requirement)</h2>
+      <div class="card">
+        <p>
+          <strong>Product rule (JSF parity):</strong> No matter which historical dataset version the
+          user is viewing, clicking <strong>Edit Metadata</strong> must pre-fill the form with the
+          <strong>latest</strong> metadata (<code>:latest</code> = draft if present, else latest
+          published).
+        </p>
+        <p>
+          <strong>SPA bug:</strong> The form was pre-filled from the <em>browsed</em> version in the
+          URL (<code>?version=1.0</code>), so older fields appeared and newer values could be
+          overwritten on save.
+        </p>
       </div>
-    </header>
 
-    <h2>1. Original issue (exact requirement)</h2>
-    <div class="card">
-      <p><strong>Product rule (JSF parity):</strong> No matter which historical dataset version the user is viewing, clicking <strong>Edit Metadata</strong> must pre-fill the form with the <strong>latest</strong> metadata (<code>:latest</code> = draft if present, else latest published).</p>
-      <p><strong>SPA bug:</strong> The form was pre-filled from the <em>browsed</em> version in the URL (<code>?version=1.0</code>), so older fields appeared and newer values could be overwritten on save.</p>
-    </div>
+      <h3>Scenario dataset (from the issue)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Version</th>
+            <th>Title</th>
+            <th>Subtitle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>1.0</code></td>
+            <td>Test Dataset</td>
+            <td><em>(empty)</em></td>
+          </tr>
+          <tr>
+            <td><code>2.0</code> (latest published)</td>
+            <td>Test Dataset</td>
+            <td><strong>My Subtitle</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>User action: open Version <code>1.0</code> → <strong>Edit Dataset → Metadata</strong>.</p>
 
-    <h3>Scenario dataset (from the issue)</h3>
-    <table>
-      <thead>
-        <tr><th>Version</th><th>Title</th><th>Subtitle</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>1.0</code></td><td>Test Dataset</td><td><em>(empty)</em></td></tr>
-        <tr><td><code>2.0</code> (latest published)</td><td>Test Dataset</td><td><strong>My Subtitle</strong></td></tr>
-      </tbody>
-    </table>
-    <p>User action: open Version <code>1.0</code> → <strong>Edit Dataset → Metadata</strong>.</p>
-
-    <h2>2. What was parsed / loaded wrongly (BEFORE)</h2>
-    <div class="card">
-      <span class="badge bad">Bug path</span>
-      <div class="flow">
-        <span>Browse <code>?version=1.0</code></span>
-        <span class="x">→</span>
-        <span>Menu writes URL <code>version=1.0</code></span>
-        <span class="x">→</span>
-        <span>Factory reads URL version</span>
-        <span class="x">→</span>
-        <span>Fetch API <code>versions/1.0</code></span>
-        <span class="x">→</span>
-        <span>Form defaults = v1 blocks</span>
+      <h2>2. What was parsed / loaded wrongly (BEFORE)</h2>
+      <div class="card">
+        <span class="badge bad">Bug path</span>
+        <div class="flow">
+          <span>Browse <code>?version=1.0</code></span>
+          <span class="x">→</span>
+          <span>Menu writes URL <code>version=1.0</code></span>
+          <span class="x">→</span>
+          <span>Factory reads URL version</span>
+          <span class="x">→</span>
+          <span>Fetch API <code>versions/1.0</code></span>
+          <span class="x">→</span>
+          <span>Form defaults = v1 blocks</span>
+        </div>
       </div>
-    </div>
 
-    <h3>Wrong Factory logic (before)</h3>
-<pre><code>// EditDatasetMetadataFactory.tsx — BEFORE (bug)
+      <h3>Wrong Factory logic (before)</h3>
+      <pre><code>// EditDatasetMetadataFactory.tsx — BEFORE (bug)
 const searchParamVersion = searchParams.get('version') ?? undefined
 const version = searchParamVersionToDomainVersion(searchParamVersion)
 // If URL is ...&amp;version=1.0  →  version === "1.0"
 // DatasetProvider fetches that historical version</code></pre>
 
-    <div class="row">
-      <div class="card">
-        <span class="badge bad">Before · fetch argument</span>
-        <pre><code>getByPersistentId(
+      <div class="row">
+        <div class="card">
+          <span class="badge bad">Before · fetch argument</span>
+          <pre><code>getByPersistentId(
   "doi:…",
   "1.0",          // ← browsed / wrong
   undefined,
   true
 )</code></pre>
-        <p class="mono">API equivalent: <code>.../versions/1.0</code></p>
-      </div>
-      <div class="card">
-        <span class="badge bad">Before · form output (wrong)</span>
-        <div class="form-mock">
-          <div class="field">
-            <label>Title</label>
-            <div class="input filled">Test Dataset</div>
-          </div>
-          <div class="field">
-            <label>Subtitle</label>
-            <div class="input empty">(empty — Version 1 metadata)</div>
-          </div>
+          <p class="mono">API equivalent: <code>.../versions/1.0</code></p>
         </div>
-        <p class="fail">FAIL vs issue expectation</p>
-        <p>JSF would show Subtitle = <strong>My Subtitle</strong>. SPA showed empty.</p>
+        <div class="card">
+          <span class="badge bad">Before · form output (wrong)</span>
+          <div class="form-mock">
+            <div class="field">
+              <label>Title</label>
+              <div class="input filled">Test Dataset</div>
+            </div>
+            <div class="field">
+              <label>Subtitle</label>
+              <div class="input empty">(empty — Version 1 metadata)</div>
+            </div>
+          </div>
+          <p class="fail">FAIL vs issue expectation</p>
+          <p>JSF would show Subtitle = <strong>My Subtitle</strong>. SPA showed empty.</p>
+        </div>
       </div>
-    </div>
 
-    <h2>3. What was fixed (AFTER)</h2>
-    <div class="card">
-      <span class="badge good">Fixed path</span>
-      <div class="flow">
-        <span>Browse <code>?version=1.0</code></span>
-        <span class="x">→</span>
-        <span>Menu may still pass <code>version=1.0</code> in URL</span>
-        <span class="x">→</span>
-        <span>Factory <strong>ignores</strong> URL version</span>
-        <span class="x">→</span>
-        <span>Fetch <code>:latest</code></span>
-        <span class="x">→</span>
-        <span>Form defaults = latest blocks</span>
+      <h2>3. What was fixed (AFTER)</h2>
+      <div class="card">
+        <span class="badge good">Fixed path</span>
+        <div class="flow">
+          <span>Browse <code>?version=1.0</code></span>
+          <span class="x">→</span>
+          <span>Menu may still pass <code>version=1.0</code> in URL</span>
+          <span class="x">→</span>
+          <span>Factory <strong>ignores</strong> URL version</span>
+          <span class="x">→</span>
+          <span>Fetch <code>:latest</code></span>
+          <span class="x">→</span>
+          <span>Form defaults = latest blocks</span>
+        </div>
+        <p>Same pattern as <code>EditDatasetTermsFactory</code> (already correct in this repo).</p>
       </div>
-      <p>Same pattern as <code>EditDatasetTermsFactory</code> (already correct in this repo).</p>
-    </div>
 
-    <h3>Fixed Factory logic</h3>
-<pre><code>// EditDatasetMetadataFactory.tsx — AFTER (fix)
+      <h3>Fixed Factory logic</h3>
+      <pre><code>// EditDatasetMetadataFactory.tsx — AFTER (fix)
 const persistentId = searchParams.get('persistentId') ?? undefined
 // Always load the latest version (draft if exists, otherwise latest published).
 // Ignore the browsed `version` query param (IQSS/dataverse-frontend#1024).
@@ -316,196 +409,255 @@ return (
   &lt;/DatasetProvider&gt;
 )</code></pre>
 
-    <div class="row">
-      <div class="card">
-        <span class="badge good">After · fetch argument</span>
-        <pre><code>getByPersistentId(
+      <div class="row">
+        <div class="card">
+          <span class="badge good">After · fetch argument</span>
+          <pre><code>getByPersistentId(
   "doi:…",
   ":latest",     // ← DatasetNonNumericVersion.LATEST
   undefined,
   true
 )</code></pre>
-        <p class="mono">API equivalent: <code>.../versions/:latest</code></p>
-        <p><code>:latest</code> = draft if one exists, else latest published (here Version 2.0).</p>
-      </div>
-      <div class="card">
-        <span class="badge good">After · form output (correct)</span>
-        <div class="form-mock">
-          <div class="field">
-            <label>Title</label>
-            <div class="input filled">Test Dataset</div>
-          </div>
-          <div class="field">
-            <label>Subtitle</label>
-            <div class="input filled">My Subtitle</div>
-          </div>
+          <p class="mono">API equivalent: <code>.../versions/:latest</code></p>
+          <p>
+            <code>:latest</code> = draft if one exists, else latest published (here Version 2.0).
+          </p>
         </div>
-        <p class="pass">PASS vs issue expectation</p>
-        <p>Matches JSF: latest metadata pre-populated.</p>
+        <div class="card">
+          <span class="badge good">After · form output (correct)</span>
+          <div class="form-mock">
+            <div class="field">
+              <label>Title</label>
+              <div class="input filled">Test Dataset</div>
+            </div>
+            <div class="field">
+              <label>Subtitle</label>
+              <div class="input filled">My Subtitle</div>
+            </div>
+          </div>
+          <p class="pass">PASS vs issue expectation</p>
+          <p>Matches JSF: latest metadata pre-populated.</p>
+        </div>
       </div>
-    </div>
 
-    <h2>4. Side-by-side comparison</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Checkpoint</th>
-          <th>Before (bug)</th>
-          <th>After (fix)</th>
-          <th>Issue requirement</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>User viewing</td>
-          <td colspan="3"><code>/datasets?persistentId=…&amp;version=1.0</code></td>
-        </tr>
-        <tr>
-          <td>Edit Metadata URL may contain</td>
-          <td><code>version=1.0</code></td>
-          <td><code>version=1.0</code> (ignored)</td>
-          <td>N/A — output must be latest</td>
-        </tr>
-        <tr>
-          <td>Factory version variable</td>
-          <td><code>"1.0"</code> from URL</td>
-          <td><code>":latest"</code> constant</td>
-          <td>Always latest</td>
-        </tr>
-        <tr>
-          <td>Repository call</td>
-          <td><code>getByPersistentId(pid, "1.0", …)</code></td>
-          <td><code>getByPersistentId(pid, ":latest", …)</code></td>
-          <td>Latest metadata source</td>
-        </tr>
-        <tr>
-          <td>Subtitle in form</td>
-          <td class="fail">empty</td>
-          <td class="pass">My Subtitle</td>
-          <td>My Subtitle</td>
-        </tr>
-        <tr>
-          <td>Browse page v1 still historical?</td>
-          <td>yes</td>
-          <td class="pass">yes (unchanged)</td>
-          <td>Must remain historical</td>
-        </tr>
-      </tbody>
-    </table>
+      <h2>4. Side-by-side comparison</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Checkpoint</th>
+            <th>Before (bug)</th>
+            <th>After (fix)</th>
+            <th>Issue requirement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>User viewing</td>
+            <td colspan="3"><code>/datasets?persistentId=…&amp;version=1.0</code></td>
+          </tr>
+          <tr>
+            <td>Edit Metadata URL may contain</td>
+            <td><code>version=1.0</code></td>
+            <td><code>version=1.0</code> (ignored)</td>
+            <td>N/A — output must be latest</td>
+          </tr>
+          <tr>
+            <td>Factory version variable</td>
+            <td><code>"1.0"</code> from URL</td>
+            <td><code>":latest"</code> constant</td>
+            <td>Always latest</td>
+          </tr>
+          <tr>
+            <td>Repository call</td>
+            <td><code>getByPersistentId(pid, "1.0", …)</code></td>
+            <td><code>getByPersistentId(pid, ":latest", …)</code></td>
+            <td>Latest metadata source</td>
+          </tr>
+          <tr>
+            <td>Subtitle in form</td>
+            <td class="fail">empty</td>
+            <td class="pass">My Subtitle</td>
+            <td>My Subtitle</td>
+          </tr>
+          <tr>
+            <td>Browse page v1 still historical?</td>
+            <td>yes</td>
+            <td class="pass">yes (unchanged)</td>
+            <td>Must remain historical</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <h2>5. How to verify the fix is completed</h2>
-    <div class="card">
-      <span class="badge warn">Definition of done</span>
-      <p>The fix is <strong>complete for #1024</strong> only when <strong>all</strong> of the following pass. Code presence alone is not enough without the automated and/or manual checks.</p>
-    </div>
+      <h2>5. How to verify the fix is completed</h2>
+      <div class="card">
+        <span class="badge warn">Definition of done</span>
+        <p>
+          The fix is <strong>complete for #1024</strong> only when <strong>all</strong> of the
+          following pass. Code presence alone is not enough without the automated and/or manual
+          checks.
+        </p>
+      </div>
 
-    <h3>A. Static code verification (already on this branch)</h3>
-    <ul class="checklist">
-      <li><span class="pass">DONE</span> — <code>EditDatasetMetadataFactory.tsx</code> sets <code>version = DatasetNonNumericVersion.LATEST</code></li>
-      <li><span class="pass">DONE</span> — URL <code>version</code> query param is no longer passed into <code>DatasetProvider</code></li>
-      <li><span class="pass">DONE</span> — Regression spec asserts call with <code>:latest</code> and <strong>not</strong> <code>"1.0"</code></li>
-      <li><span class="pass">DONE</span> — Matches Edit Terms factory pattern</li>
-    </ul>
+      <h3>A. Static code verification (already on this branch)</h3>
+      <ul class="checklist">
+        <li>
+          <span class="pass">DONE</span> — <code>EditDatasetMetadataFactory.tsx</code> sets
+          <code>version = DatasetNonNumericVersion.LATEST</code>
+        </li>
+        <li>
+          <span class="pass">DONE</span> — URL <code>version</code> query param is no longer passed
+          into <code>DatasetProvider</code>
+        </li>
+        <li>
+          <span class="pass">DONE</span> — Regression spec asserts call with
+          <code>:latest</code> and <strong>not</strong> <code>"1.0"</code>
+        </li>
+        <li><span class="pass">DONE</span> — Matches Edit Terms factory pattern</li>
+      </ul>
 
-    <h3>B. Automated verification (required)</h3>
-    <p>From repo root (needs working <code>npm</code> auth for <code>@IQSS/dataverse-client-javascript</code>):</p>
-<pre><code>npx cypress run --component --spec \
+      <h3>B. Automated verification (required)</h3>
+      <p>
+        From repo root (needs working <code>npm</code> auth for
+        <code>@IQSS/dataverse-client-javascript</code>):
+      </p>
+      <pre><code>npx cypress run --component --spec \
   tests/component/sections/edit-dataset-metadata/EditDatasetMetadataFactory.spec.tsx
 
 npx cypress run --component --spec \
   tests/component/sections/edit-dataset-metadata/EditDatasetMetadata.spec.tsx</code></pre>
-    <table>
-      <thead><tr><th>Test</th><th>Verified result if green</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><code>always fetches :latest when the URL carries an older published version</code></td>
-          <td>Even with URL <code>version=1.0</code>, <code>getByPersistentId</code> is called with <code>DatasetNonNumericVersion.LATEST</code> (<code>:latest</code>), never <code>"1.0"</code>.</td>
-        </tr>
-        <tr>
-          <td><code>still fetches :latest when the URL has no version param</code></td>
-          <td>Missing version param still loads latest (no accidental <code>undefined</code> / published-only default).</td>
-        </tr>
-        <tr>
-          <td>Existing <code>EditDatasetMetadata.spec.tsx</code></td>
-          <td>No regression on breadcrumbs / host collection / not-found.</td>
-        </tr>
-      </tbody>
-    </table>
-    <p><span class="pending">NOTE:</span> On this machine, <code>npm install</code> failed with GitHub Packages <code>401</code> for <code>@IQSS/dataverse-client-javascript</code>, so Cypress was not executed here. Run the commands above in an authenticated environment and record green results before merging.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Test</th>
+            <th>Verified result if green</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <code>always fetches :latest when the URL carries an older published version</code>
+            </td>
+            <td>
+              Even with URL <code>version=1.0</code>, <code>getByPersistentId</code> is called with
+              <code>DatasetNonNumericVersion.LATEST</code> (<code>:latest</code>), never
+              <code>"1.0"</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><code>still fetches :latest when the URL has no version param</code></td>
+            <td>
+              Missing version param still loads latest (no accidental <code>undefined</code> /
+              published-only default).
+            </td>
+          </tr>
+          <tr>
+            <td>Existing <code>EditDatasetMetadata.spec.tsx</code></td>
+            <td>No regression on breadcrumbs / host collection / not-found.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        <span class="pending">NOTE:</span> On this machine, <code>npm install</code> failed with
+        GitHub Packages <code>401</code> for <code>@IQSS/dataverse-client-javascript</code>, so
+        Cypress was not executed here. Run the commands above in an authenticated environment and
+        record green results before merging.
+      </p>
 
-    <h3>C. Manual product verification (original issue scenario)</h3>
-    <ol class="checklist">
-      <li>Create/publish Version 1.0 without subtitle.</li>
-      <li>Add subtitle <code>My Subtitle</code>, publish Version 2.0.</li>
-      <li>Open SPA: <code>/datasets?persistentId=…&amp;version=1.0</code> — browse still shows empty subtitle.</li>
-      <li>Click <strong>Edit Dataset → Metadata</strong>.</li>
-      <li><span class="pass">PASS</span> if Subtitle input = <code>My Subtitle</code>.</li>
-      <li><span class="fail">FAIL</span> if Subtitle is empty.</li>
-      <li>Optional DevTools check: dataset fetch uses version <code>:latest</code>, not <code>1.0</code>.</li>
-    </ol>
+      <h3>C. Manual product verification (original issue scenario)</h3>
+      <ol class="checklist">
+        <li>Create/publish Version 1.0 without subtitle.</li>
+        <li>Add subtitle <code>My Subtitle</code>, publish Version 2.0.</li>
+        <li>
+          Open SPA: <code>/datasets?persistentId=…&amp;version=1.0</code> — browse still shows empty
+          subtitle.
+        </li>
+        <li>Click <strong>Edit Dataset → Metadata</strong>.</li>
+        <li><span class="pass">PASS</span> if Subtitle input = <code>My Subtitle</code>.</li>
+        <li><span class="fail">FAIL</span> if Subtitle is empty.</li>
+        <li>
+          Optional DevTools check: dataset fetch uses version <code>:latest</code>, not
+          <code>1.0</code>.
+        </li>
+      </ol>
 
-    <h3>D. Negative control (must not break browse)</h3>
-    <p>On <code>?version=1.0</code> <em>without</em> opening Edit Metadata, the dataset page must still show Version 1 content (empty subtitle). If browse also shows latest, the fix was applied too broadly.</p>
+      <h3>D. Negative control (must not break browse)</h3>
+      <p>
+        On <code>?version=1.0</code> <em>without</em> opening Edit Metadata, the dataset page must
+        still show Version 1 content (empty subtitle). If browse also shows latest, the fix was
+        applied too broadly.
+      </p>
 
-    <h2>6. Expected verified result summary</h2>
-    <table>
-      <thead>
-        <tr><th>Layer</th><th>Expected verified result after fix</th><th>Status on branch f108609</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Code</td>
-          <td>Factory hard-codes <code>:latest</code></td>
-          <td class="pass">Verified by source review</td>
-        </tr>
-        <tr>
-          <td>Unit/component</td>
-          <td>Stub shows call args <code>(pid, ":latest", undefined, true)</code></td>
-          <td class="pending">Spec written; run Cypress locally to confirm green</td>
-        </tr>
-        <tr>
-          <td>UI / issue scenario</td>
-          <td>From v1 browse → Edit Metadata → Subtitle = My Subtitle</td>
-          <td class="pending">Manual / e2e after env install</td>
-        </tr>
-        <tr>
-          <td>Parity</td>
-          <td>Same behavior as JSF + Edit Terms</td>
-          <td class="pass">Design parity verified in code</td>
-        </tr>
-      </tbody>
-    </table>
+      <h2>6. Expected verified result summary</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Expected verified result after fix</th>
+            <th>Status on branch f108609</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Code</td>
+            <td>Factory hard-codes <code>:latest</code></td>
+            <td class="pass">Verified by source review</td>
+          </tr>
+          <tr>
+            <td>Unit/component</td>
+            <td>Stub shows call args <code>(pid, ":latest", undefined, true)</code></td>
+            <td class="pending">Spec written; run Cypress locally to confirm green</td>
+          </tr>
+          <tr>
+            <td>UI / issue scenario</td>
+            <td>From v1 browse → Edit Metadata → Subtitle = My Subtitle</td>
+            <td class="pending">Manual / e2e after env install</td>
+          </tr>
+          <tr>
+            <td>Parity</td>
+            <td>Same behavior as JSF + Edit Terms</td>
+            <td class="pass">Design parity verified in code</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <h2>7. Files touched</h2>
-    <table>
-      <thead><tr><th>File</th><th>Role</th></tr></thead>
-      <tbody>
-        <tr>
-          <td class="mono">src/sections/edit-dataset-metadata/EditDatasetMetadataFactory.tsx</td>
-          <td>Production fix</td>
-        </tr>
-        <tr>
-          <td class="mono">tests/component/sections/edit-dataset-metadata/EditDatasetMetadataFactory.spec.tsx</td>
-          <td>Automated regression</td>
-        </tr>
-        <tr>
-          <td class="mono">docs/issues/1024-edit-metadata-latest-version.md</td>
-          <td>Full engineering playbook</td>
-        </tr>
-        <tr>
-          <td class="mono">docs/issues/1024-edit-metadata-latest-version-verification.html</td>
-          <td>This visual verification report</td>
-        </tr>
-      </tbody>
-    </table>
+      <h2>7. Files touched</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>File</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">src/sections/edit-dataset-metadata/EditDatasetMetadataFactory.tsx</td>
+            <td>Production fix</td>
+          </tr>
+          <tr>
+            <td class="mono">
+              tests/component/sections/edit-dataset-metadata/EditDatasetMetadataFactory.spec.tsx
+            </td>
+            <td>Automated regression</td>
+          </tr>
+          <tr>
+            <td class="mono">docs/issues/1024-edit-metadata-latest-version.md</td>
+            <td>Full engineering playbook</td>
+          </tr>
+          <tr>
+            <td class="mono">docs/issues/1024-edit-metadata-latest-version-verification.html</td>
+            <td>This visual verification report</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <footer>
-      Generated for IQSS/dataverse-frontend issue
-      <a href="https://github.com/IQSS/dataverse-frontend/issues/1024">#1024</a>
-      on branch <span class="mono">fix/1024-edit-metadata-latest-version</span>
-      (<span class="mono">f108609</span>).
-      Open this file in a browser to review before/after outputs.
-    </footer>
-  </div>
-</body>
+      <footer>
+        Generated for IQSS/dataverse-frontend issue
+        <a href="https://github.com/IQSS/dataverse-frontend/issues/1024">#1024</a>
+        on branch <span class="mono">fix/1024-edit-metadata-latest-version</span> (<span
+          class="mono"
+          >f108609</span
+        >). Open this file in a browser to review before/after outputs.
+      </footer>
+    </div>
+  </body>
 </html>

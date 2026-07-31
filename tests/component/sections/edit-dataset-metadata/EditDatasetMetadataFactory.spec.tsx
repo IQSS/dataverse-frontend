@@ -15,9 +15,12 @@ const metadataBlocksInfoOnCreateMode =
 
 describe('EditDatasetMetadataFactory', () => {
   const persistentId = 'doi:10.5072/FK2/EDITMETA'
+  let getByPersistentIdStub: ReturnType<typeof cy.stub>
 
   beforeEach(() => {
-    cy.stub(DatasetJSDataverseRepository.prototype, 'getByPersistentId').resolves(dataset)
+    getByPersistentIdStub = cy
+      .stub(DatasetJSDataverseRepository.prototype, 'getByPersistentId')
+      .resolves(dataset)
     cy.stub(DatasetJSDataverseRepository.prototype, 'updateMetadata').resolves(undefined)
     cy.stub(DatasetJSDataverseRepository.prototype, 'getDatasetVersionsSummaries').resolves({
       summaries: [],
@@ -33,22 +36,22 @@ describe('EditDatasetMetadataFactory', () => {
   })
 
   it('always fetches :latest when the URL carries an older published version (issue #1024)', () => {
-    const initialEntry = `${Route.EDIT_DATASET_METADATA}?${QueryParamKey.PERSISTENT_ID}=${encodeURIComponent(
-      persistentId
-    )}&${QueryParamKey.VERSION}=1.0`
+    const initialEntry = `${Route.EDIT_DATASET_METADATA}?${
+      QueryParamKey.PERSISTENT_ID
+    }=${encodeURIComponent(persistentId)}&${QueryParamKey.VERSION}=1.0`
 
     cy.customMount(<LoadingProvider>{EditDatasetMetadataFactory.create()}</LoadingProvider>, [
       initialEntry
     ])
 
-    cy.wrap(DatasetJSDataverseRepository.prototype.getByPersistentId).should(
+    cy.wrap(getByPersistentIdStub).should(
       'have.been.calledWith',
       persistentId,
       DatasetNonNumericVersion.LATEST,
       undefined,
       true
     )
-    cy.wrap(DatasetJSDataverseRepository.prototype.getByPersistentId).should(
+    cy.wrap(getByPersistentIdStub).should(
       'not.have.been.calledWith',
       persistentId,
       '1.0',
@@ -61,15 +64,15 @@ describe('EditDatasetMetadataFactory', () => {
   })
 
   it('still fetches :latest when the URL has no version param', () => {
-    const initialEntry = `${Route.EDIT_DATASET_METADATA}?${QueryParamKey.PERSISTENT_ID}=${encodeURIComponent(
-      persistentId
-    )}`
+    const initialEntry = `${Route.EDIT_DATASET_METADATA}?${
+      QueryParamKey.PERSISTENT_ID
+    }=${encodeURIComponent(persistentId)}`
 
     cy.customMount(<LoadingProvider>{EditDatasetMetadataFactory.create()}</LoadingProvider>, [
       initialEntry
     ])
 
-    cy.wrap(DatasetJSDataverseRepository.prototype.getByPersistentId).should(
+    cy.wrap(getByPersistentIdStub).should(
       'have.been.calledWith',
       persistentId,
       DatasetNonNumericVersion.LATEST,

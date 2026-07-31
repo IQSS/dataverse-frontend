@@ -1,16 +1,16 @@
 # Issue #1024 — Edit Metadata: should always pre-populate the latest metadata
 
-| Field | Value |
-| --- | --- |
-| Status | **Implemented on branch `fix/1024-edit-metadata-latest-version`** — awaiting PR / upstream review |
-| Labels | `bug`, `SPA`, `GREI Re-arch`, `Original size: 3` |
-| Reporter | `ChengShi-1` (description from `@pdurbin`) |
-| Issue URL | https://github.com/IQSS/dataverse-frontend/issues/1024 |
-| Diagnosis baseline commit | `922dcfc` (`develop` tip when diagnosis was written) |
-| Fix branch | `fix/1024-edit-metadata-latest-version` |
-| Local package path | `/Users/shihuayu/Documents/GitHub/dataverse-frontend` |
-| How to implement | Follow §8 Steps 0–7; every fix must pass §10 acceptance criteria |
-| How to verify | Follow §18 (commands + expected outputs). Do not merge without green AC1–AC6 |
+| Field                     | Value                                                                                             |
+| ------------------------- | ------------------------------------------------------------------------------------------------- |
+| Status                    | **Implemented on branch `fix/1024-edit-metadata-latest-version`** — awaiting PR / upstream review |
+| Labels                    | `bug`, `SPA`, `GREI Re-arch`, `Original size: 3`                                                  |
+| Reporter                  | `ChengShi-1` (description from `@pdurbin`)                                                        |
+| Issue URL                 | https://github.com/IQSS/dataverse-frontend/issues/1024                                            |
+| Diagnosis baseline commit | `922dcfc` (`develop` tip when diagnosis was written)                                              |
+| Fix branch                | `fix/1024-edit-metadata-latest-version`                                                           |
+| Local package path        | `/Users/shihuayu/Documents/GitHub/dataverse-frontend`                                             |
+| How to implement          | Follow §8 Steps 0–7; every fix must pass §10 acceptance criteria                                  |
+| How to verify             | Follow §18 (commands + expected outputs). Do not merge without green AC1–AC6                      |
 
 ---
 
@@ -22,10 +22,10 @@ The **SPA** incorrectly pre-fills from the **version currently being browsed**. 
 
 ### Concrete failure (from the issue + Phil’s screenshot narrative)
 
-| Version | Title | Subtitle |
-| --- | --- | --- |
-| 1.0 | Test Dataset | *(empty)* |
-| 2.0 | Test Dataset | My Subtitle |
+| Version | Title        | Subtitle    |
+| ------- | ------------ | ----------- |
+| 1.0     | Test Dataset | _(empty)_   |
+| 2.0     | Test Dataset | My Subtitle |
 
 1. User opens the dataset page for **Version 1.0**.
 2. User clicks **Edit Dataset → Metadata**.
@@ -50,21 +50,21 @@ In `EditDatasetMetadataFactory.tsx`, ignore the browsed `version` search param a
 
 ### 2.1 Product expectation (JSF parity)
 
-| User context | Click “Edit Metadata” | Form must show |
-| --- | --- | --- |
-| Viewing published `1.0` while `2.0` exists | Edit Metadata | Metadata of **latest** (`:latest` → draft if present, else latest published) |
-| Viewing published `2.0` (already latest published) | Edit Metadata | Same latest metadata (no regression) |
-| Viewing / working on `DRAFT` | Edit Metadata | Draft metadata (`:latest` resolves to draft when present) |
+| User context                                       | Click “Edit Metadata” | Form must show                                                               |
+| -------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------- |
+| Viewing published `1.0` while `2.0` exists         | Edit Metadata         | Metadata of **latest** (`:latest` → draft if present, else latest published) |
+| Viewing published `2.0` (already latest published) | Edit Metadata         | Same latest metadata (no regression)                                         |
+| Viewing / working on `DRAFT`                       | Edit Metadata         | Draft metadata (`:latest` resolves to draft when present)                    |
 
 **Important semantic of `:latest` in Dataverse:** draft if a draft exists; otherwise the latest published version. This is exactly what the Edit Terms factory comment documents and what JSF edit-metadata behavior matches.
 
 ### 2.2 SPA actual behavior today
 
-| User context | URL after menu click | Dataset fetch version | Form |
-| --- | --- | --- | --- |
-| Viewing `1.0` | `.../edit-metadata?persistentId=…&version=1.0` | `1.0` | Old metadata |
-| Viewing `2.0` | `...&version=2.0` | `2.0` | Happens to look correct if 2.0 is latest published and no draft |
-| Viewing draft | `...&version=DRAFT` → domain `:draft` | `:draft` | Draft (often OK, but still “browsed version” coupling) |
+| User context  | URL after menu click                           | Dataset fetch version | Form                                                            |
+| ------------- | ---------------------------------------------- | --------------------- | --------------------------------------------------------------- |
+| Viewing `1.0` | `.../edit-metadata?persistentId=…&version=1.0` | `1.0`                 | Old metadata                                                    |
+| Viewing `2.0` | `...&version=2.0`                              | `2.0`                 | Happens to look correct if 2.0 is latest published and no draft |
+| Viewing draft | `...&version=DRAFT` → domain `:draft`          | `:draft`              | Draft (often OK, but still “browsed version” coupling)          |
 
 ---
 
@@ -108,10 +108,10 @@ All line numbers refer to local tree at commit `922dcfc` unless noted.
 
 ### 4.1 Route
 
-| Item | Location |
-| --- | --- |
-| Path enum | `src/sections/Route.enum.ts` — `EDIT_DATASET_METADATA = '/datasets/edit-metadata'` (line 12) |
-| Query keys | `QueryParamKey.VERSION = 'version'`, `PERSISTENT_ID = 'persistentId'` (lines 96–98 area) |
+| Item               | Location                                                                                              |
+| ------------------ | ----------------------------------------------------------------------------------------------------- |
+| Path enum          | `src/sections/Route.enum.ts` — `EDIT_DATASET_METADATA = '/datasets/edit-metadata'` (line 12)          |
+| Query keys         | `QueryParamKey.VERSION = 'version'`, `PERSISTENT_ID = 'persistentId'` (lines 96–98 area)              |
 | Route registration | `src/router/routes.tsx` — lazy `EditDatasetMetadataFactory.create()` on `Route.EDIT_DATASET_METADATA` |
 
 ### 4.2 Navigation (contributes browsed version into the URL)
@@ -168,11 +168,11 @@ function EditDatasetMetadataWithParams() {
 
 ### 4.4 Provider → use case → repository
 
-| Step | File | Behavior |
-| --- | --- | --- |
-| Provider | `src/sections/dataset/DatasetProvider.tsx` ~28–36 | Calls `getDatasetByPersistentId(repository, persistentId, searchParams.version, undefined, true)` |
-| Use case | `src/dataset/domain/useCases/getDatasetByPersistentId.ts` | Delegates to repository |
-| Repository | `src/dataset/infrastructure/repositories/DatasetJSDataverseRepository.ts` ~213–220 | `getDataset.execute(persistentId, version, …)` via JS client |
+| Step       | File                                                                               | Behavior                                                                                          |
+| ---------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Provider   | `src/sections/dataset/DatasetProvider.tsx` ~28–36                                  | Calls `getDatasetByPersistentId(repository, persistentId, searchParams.version, undefined, true)` |
+| Use case   | `src/dataset/domain/useCases/getDatasetByPersistentId.ts`                          | Delegates to repository                                                                           |
+| Repository | `src/dataset/infrastructure/repositories/DatasetJSDataverseRepository.ts` ~213–220 | `getDataset.execute(persistentId, version, …)` via JS client                                      |
 
 Default for `getByPersistentId` when version omitted is `DatasetNonNumericVersion.LATEST_PUBLISHED` (`:latest-published`) — but the factory **does not omit** version; it passes the browsed one explicitly.
 
@@ -208,11 +208,11 @@ export enum DatasetNonNumericVersionSearchParam {
 }
 ```
 
-| Constant | API `versionId` | Meaning |
-| --- | --- | --- |
-| `LATEST` | `:latest` | Draft if exists, else latest published — **use this for Edit Metadata** |
-| `DRAFT` | `:draft` | Draft only |
-| `LATEST_PUBLISHED` | `:latest-published` | Latest published only (skips draft) |
+| Constant           | API `versionId`     | Meaning                                                                 |
+| ------------------ | ------------------- | ----------------------------------------------------------------------- |
+| `LATEST`           | `:latest`           | Draft if exists, else latest published — **use this for Edit Metadata** |
+| `DRAFT`            | `:draft`            | Draft only                                                              |
+| `LATEST_PUBLISHED` | `:latest-published` | Latest published only (skips draft)                                     |
 
 **Do not** use `:latest-published` for Edit Metadata: if a draft already exists with newer edits, editors must see the draft.
 
@@ -302,13 +302,13 @@ If you change the menu, keep Upload Files behavior reviewed separately — it st
 
 ### 7.3 Explicitly out of scope / do not change
 
-| Do not | Why |
-| --- | --- |
-| Change browse-page version loading | Users must still view historical versions |
-| Change `DatasetProvider` to always latest | Shared by browse + edit |
-| Change form defaulting helpers | They are correct given inputs |
-| Use `:latest-published` instead of `:latest` | Misses existing draft content |
-| Redesign Edit Metadata UI | Issue is data-fetching only |
+| Do not                                       | Why                                       |
+| -------------------------------------------- | ----------------------------------------- |
+| Change browse-page version loading           | Users must still view historical versions |
+| Change `DatasetProvider` to always latest    | Shared by browse + edit                   |
+| Change form defaulting helpers               | They are correct given inputs             |
+| Use `:latest-published` instead of `:latest` | Misses existing draft content             |
+| Redesign Edit Metadata UI                    | Issue is data-fetching only               |
 
 ### 7.4 Save / update path (sanity)
 
@@ -334,22 +334,22 @@ Edit `EditDatasetMetadataFactory.tsx` as in §7.1.
 
 ### Step 2 — Manual verify (happy paths)
 
-| Case | Steps | Expected |
-| --- | --- | --- |
-| A | Browse v1 → Edit Metadata | Latest fields (e.g. subtitle from v2 or draft) |
-| B | Browse latest published → Edit Metadata | Same latest fields (no regression) |
-| C | With an existing draft that changed a field → Edit Metadata from any published version | Draft values appear (`:latest`) |
-| D | Direct URL `/edit-metadata?persistentId=…&version=1.0` | Still loads `:latest`, not `1.0` |
+| Case | Steps                                                                                  | Expected                                       |
+| ---- | -------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| A    | Browse v1 → Edit Metadata                                                              | Latest fields (e.g. subtitle from v2 or draft) |
+| B    | Browse latest published → Edit Metadata                                                | Same latest fields (no regression)             |
+| C    | With an existing draft that changed a field → Edit Metadata from any published version | Draft values appear (`:latest`)                |
+| D    | Direct URL `/edit-metadata?persistentId=…&version=1.0`                                 | Still loads `:latest`, not `1.0`               |
 
 ### Step 3 — Automated tests
 
 Existing coverage gaps (verified):
 
-| File | Current focus | Gap |
-| --- | --- | --- |
-| `tests/component/sections/edit-dataset-metadata/EditDatasetMetadata.spec.tsx` | Breadcrumbs / skeleton / not-found; `searchParams = { persistentId }` only | No assertion that fetch uses `:latest` when URL has old version |
-| `tests/e2e-integration/e2e/sections/edit-dataset-metadata/EditDatasetMetadata.spec.tsx` | Visits with `version=DRAFT` only | No multi-version “from old published version” case |
-| `tests/component/.../EditDatasetMenu.spec.tsx` | Menu click | Does not assert fetch version |
+| File                                                                                    | Current focus                                                              | Gap                                                             |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `tests/component/sections/edit-dataset-metadata/EditDatasetMetadata.spec.tsx`           | Breadcrumbs / skeleton / not-found; `searchParams = { persistentId }` only | No assertion that fetch uses `:latest` when URL has old version |
+| `tests/e2e-integration/e2e/sections/edit-dataset-metadata/EditDatasetMetadata.spec.tsx` | Visits with `version=DRAFT` only                                           | No multi-version “from old published version” case              |
+| `tests/component/.../EditDatasetMenu.spec.tsx`                                          | Menu click                                                                 | Does not assert fetch version                                   |
 
 **Add at least one of:**
 
@@ -357,11 +357,12 @@ Existing coverage gaps (verified):
    `?persistentId=…&version=1.0`  
    and assert the repository `getByPersistentId` was called with `DatasetNonNumericVersion.LATEST` (`:latest`), **not** `"1.0"`.
 
-2. **E2E (strongest product proof):**  
-   - Create dataset, publish v1 without subtitle.  
-   - Add subtitle, publish v2.  
-   - Visit dataset with `version=1.0`.  
-   - Open Edit Metadata.  
+2. **E2E (strongest product proof):**
+
+   - Create dataset, publish v1 without subtitle.
+   - Add subtitle, publish v2.
+   - Visit dataset with `version=1.0`.
+   - Open Edit Metadata.
    - Assert subtitle input shows v2 value.
 
 3. **Regression:** From latest version / draft, Edit Metadata still works (existing e2e paths should remain green).
@@ -372,10 +373,10 @@ Run the project’s standard checks for touched files (per `CONTRIBUTING.md` / C
 
 ### Step 5 — PR description checklist
 
-- Link #1024  
-- State: “Always load `:latest` in `EditDatasetMetadataFactory`, matching `EditDatasetTermsFactory` and JSF.”  
-- Note: browse page version selection unchanged  
-- List test cases added  
+- Link #1024
+- State: “Always load `:latest` in `EditDatasetMetadataFactory`, matching `EditDatasetTermsFactory` and JSF.”
+- Note: browse page version selection unchanged
+- List test cases added
 
 ### Step 6 — Definition of done
 
@@ -383,9 +384,9 @@ See §10.
 
 ### Step 7 — Evidence to attach
 
-- Before/after screenshots (v1 browse → Edit Metadata subtitle)  
-- Network panel showing `versions/:latest` (or equivalent JS client version arg)  
-- Test output  
+- Before/after screenshots (v1 browse → Edit Metadata subtitle)
+- Network panel showing `versions/:latest` (or equivalent JS client version arg)
+- Test output
 
 ---
 
@@ -433,14 +434,14 @@ Import path style should match surrounding files (`@/` vs relative) — keep con
 
 ## 10. Acceptance criteria (verifiable)
 
-| # | Criterion | How to verify |
-| --- | --- | --- |
-| AC1 | From an older published version, Edit Metadata shows **latest** field values | Manual case A + e2e |
-| AC2 | Deep link with `version=<old>` still loads latest | Manual case D + unit spy on repository |
-| AC3 | From latest published / draft, Edit Metadata unchanged / correct | Manual B/C + existing e2e |
-| AC4 | Dataset **browse** of historical versions still shows that version’s metadata | Browse v1 page still empty subtitle |
-| AC5 | Implementation aligns with Edit Terms (`DatasetNonNumericVersion.LATEST`) | Code review |
-| AC6 | Automated regression exists for AC1 or AC2 | CI green on new test |
+| #   | Criterion                                                                     | How to verify                          |
+| --- | ----------------------------------------------------------------------------- | -------------------------------------- |
+| AC1 | From an older published version, Edit Metadata shows **latest** field values  | Manual case A + e2e                    |
+| AC2 | Deep link with `version=<old>` still loads latest                             | Manual case D + unit spy on repository |
+| AC3 | From latest published / draft, Edit Metadata unchanged / correct              | Manual B/C + existing e2e              |
+| AC4 | Dataset **browse** of historical versions still shows that version’s metadata | Browse v1 page still empty subtitle    |
+| AC5 | Implementation aligns with Edit Terms (`DatasetNonNumericVersion.LATEST`)     | Code review                            |
+| AC6 | Automated regression exists for AC1 or AC2                                    | CI green on new test                   |
 
 ---
 
@@ -452,11 +453,11 @@ The SPA uses `@iqss/dataverse-client-javascript` `getDataset.execute(persistentI
 GET /api/datasets/:persistentId/versions/:versionId?persistentId=...
 ```
 
-| Scenario | `versionId` today (bug) | `versionId` after fix |
-| --- | --- | --- |
-| Browsing v1, click Edit Metadata | `1.0` | `:latest` |
-| Draft exists | often `:draft` via menu | `:latest` (→ draft) |
-| Latest published, no draft | `N.M` | `:latest` (→ that published) |
+| Scenario                         | `versionId` today (bug) | `versionId` after fix        |
+| -------------------------------- | ----------------------- | ---------------------------- |
+| Browsing v1, click Edit Metadata | `1.0`                   | `:latest`                    |
+| Draft exists                     | often `:draft` via menu | `:latest` (→ draft)          |
+| Latest published, no draft       | `N.M`                   | `:latest` (→ that published) |
 
 When debugging in DevTools, confirm the version segment or client argument — not only the form UI.
 
@@ -464,27 +465,27 @@ When debugging in DevTools, confirm the version segment or client argument — n
 
 ## 12. Test plan matrix
 
-| ID | Type | Setup | Action | Expect |
-| --- | --- | --- | --- | --- |
-| T1 | Manual | v1 no subtitle, v2 has subtitle | Browse v1 → Edit Metadata | Subtitle = v2 value |
-| T2 | Manual | Same | Browse v2 → Edit Metadata | Subtitle = v2 value |
-| T3 | Manual | Draft edits subtitle further | Browse v1 → Edit Metadata | Subtitle = draft value |
-| T4 | Manual | Open `/edit-metadata?persistentId&version=1.0` | Load page | Same as latest, not v1 |
-| T5 | Unit/component | Mock repository | Mount factory with `version=1.0` | `getByPersistentId(..., ':latest')` |
-| T6 | E2E | Publish two versions | Automate T1 | Pass |
-| T7 | Regression | Existing draft edit e2e | Run suite | Still pass |
+| ID  | Type           | Setup                                          | Action                           | Expect                              |
+| --- | -------------- | ---------------------------------------------- | -------------------------------- | ----------------------------------- |
+| T1  | Manual         | v1 no subtitle, v2 has subtitle                | Browse v1 → Edit Metadata        | Subtitle = v2 value                 |
+| T2  | Manual         | Same                                           | Browse v2 → Edit Metadata        | Subtitle = v2 value                 |
+| T3  | Manual         | Draft edits subtitle further                   | Browse v1 → Edit Metadata        | Subtitle = draft value              |
+| T4  | Manual         | Open `/edit-metadata?persistentId&version=1.0` | Load page                        | Same as latest, not v1              |
+| T5  | Unit/component | Mock repository                                | Mount factory with `version=1.0` | `getByPersistentId(..., ':latest')` |
+| T6  | E2E            | Publish two versions                           | Automate T1                      | Pass                                |
+| T7  | Regression     | Existing draft edit e2e                        | Run suite                        | Still pass                          |
 
 ---
 
 ## 13. Risks and edge cases
 
-| Risk | Mitigation |
-| --- | --- |
-| Confusing `:latest` vs `:latest-published` | Use `LATEST` only; document draft preference |
-| Menu still puts old version in URL | Harmless after Factory fix; optional cleanup |
-| Permissions / deaccessioned versions | Existing menu disable / permission checks unchanged; retest if deaccessioned latest |
-| Private URL datasets | Factory path uses `persistentId`; private-URL browse uses different provider entry — confirm Edit Metadata entry points still go through this factory |
-| Concurrent draft from another user | Pre-existing conflict handling via `datasetLastUpdateTime` / API; out of scope for #1024 |
+| Risk                                       | Mitigation                                                                                                                                            |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Confusing `:latest` vs `:latest-published` | Use `LATEST` only; document draft preference                                                                                                          |
+| Menu still puts old version in URL         | Harmless after Factory fix; optional cleanup                                                                                                          |
+| Permissions / deaccessioned versions       | Existing menu disable / permission checks unchanged; retest if deaccessioned latest                                                                   |
+| Private URL datasets                       | Factory path uses `persistentId`; private-URL browse uses different provider entry — confirm Edit Metadata entry points still go through this factory |
+| Concurrent draft from another user         | Pre-existing conflict handling via `datasetLastUpdateTime` / API; out of scope for #1024                                                              |
 
 ---
 
@@ -518,11 +519,11 @@ Label **Original size: 3** fits: one focused factory change (and optional menu c
 
 ## 17. Implementation record (this branch)
 
-| Change | Path | What changed |
-| --- | --- | --- |
-| Factory fix | `src/sections/edit-dataset-metadata/EditDatasetMetadataFactory.tsx` | Ignore URL `version`; always pass `DatasetNonNumericVersion.LATEST` (`:latest`) into `DatasetProvider` |
+| Change           | Path                                                                                 | What changed                                                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| Factory fix      | `src/sections/edit-dataset-metadata/EditDatasetMetadataFactory.tsx`                  | Ignore URL `version`; always pass `DatasetNonNumericVersion.LATEST` (`:latest`) into `DatasetProvider`       |
 | Regression tests | `tests/component/sections/edit-dataset-metadata/EditDatasetMetadataFactory.spec.tsx` | Assert `getByPersistentId` is called with `:latest` when URL has `version=1.0`, and when URL omits `version` |
-| This doc | `docs/issues/1024-edit-metadata-latest-version.md` | Diagnosis + playbook + verification |
+| This doc         | `docs/issues/1024-edit-metadata-latest-version.md`                                   | Diagnosis + playbook + verification                                                                          |
 
 **Not changed (intentionally):**
 
@@ -553,10 +554,10 @@ npx cypress run --component --spec \
 
 **Pass criteria:**
 
-| Spec | Expect |
-| --- | --- |
+| Spec                                  | Expect                                                                                     |
+| ------------------------------------- | ------------------------------------------------------------------------------------------ |
 | `EditDatasetMetadataFactory.spec.tsx` | Both tests green: call uses `:latest` / `DatasetNonNumericVersion.LATEST`, **not** `"1.0"` |
-| `EditDatasetMetadata.spec.tsx` | All existing tests still green |
+| `EditDatasetMetadata.spec.tsx`        | All existing tests still green                                                             |
 
 **Fail if:** `getByPersistentId` is invoked with `"1.0"` for the old-version URL case.
 
@@ -564,19 +565,19 @@ npx cypress run --component --spec \
 
 Prerequisite: dataset with ≥2 published versions where a field differs (e.g. title or subtitle added in v2).
 
-| Step | Action | Expected (pass) | Fail if |
-| --- | --- | --- | --- |
-| M1 | Open SPA dataset with `?version=1.0` | Browse page shows v1 content | — |
-| M2 | Edit Dataset → Metadata | Network/API version is `:latest` (or draft via `:latest`) | Request is for `1.0` |
-| M3 | Inspect form field that differs in v2 | Shows **latest** value | Shows empty / v1 value |
-| M4 | Open Edit Metadata from latest published | Same latest values | Regression / blank form |
-| M5 | If a draft exists with further edits, open Edit Metadata from v1 | Form shows **draft** values (`:latest`) | Shows published-only / v1 |
+| Step | Action                                                           | Expected (pass)                                           | Fail if                   |
+| ---- | ---------------------------------------------------------------- | --------------------------------------------------------- | ------------------------- |
+| M1   | Open SPA dataset with `?version=1.0`                             | Browse page shows v1 content                              | —                         |
+| M2   | Edit Dataset → Metadata                                          | Network/API version is `:latest` (or draft via `:latest`) | Request is for `1.0`      |
+| M3   | Inspect form field that differs in v2                            | Shows **latest** value                                    | Shows empty / v1 value    |
+| M4   | Open Edit Metadata from latest published                         | Same latest values                                        | Regression / blank form   |
+| M5   | If a draft exists with further edits, open Edit Metadata from v1 | Form shows **draft** values (`:latest`)                   | Shows published-only / v1 |
 
 ### 18.3 Negative control (browse must stay historical)
 
-| Step | Action | Expected |
-| --- | --- | --- |
-| N1 | Stay on browse `?version=1.0` (do not edit) | Historical metadata still shown (e.g. missing subtitle) |
+| Step | Action                                      | Expected                                                |
+| ---- | ------------------------------------------- | ------------------------------------------------------- |
+| N1   | Stay on browse `?version=1.0` (do not edit) | Historical metadata still shown (e.g. missing subtitle) |
 
 If N1 fails, the fix was applied too broadly (e.g. Provider always latest) — revert and keep the change only in `EditDatasetMetadataFactory`.
 
@@ -592,7 +593,7 @@ If N1 fails, the fix was applied too broadly (e.g. Provider always latest) — r
 
 ## 19. Document history
 
-| Date | Commit / branch | Notes |
-| --- | --- | --- |
-| 2026-07-31 | `922dcfc` on `develop` | Diagnosis + solution written from source |
+| Date       | Commit / branch                         | Notes                                                       |
+| ---------- | --------------------------------------- | ----------------------------------------------------------- |
+| 2026-07-31 | `922dcfc` on `develop`                  | Diagnosis + solution written from source                    |
 | 2026-07-31 | `fix/1024-edit-metadata-latest-version` | Factory fix + component regression tests + verification §18 |
