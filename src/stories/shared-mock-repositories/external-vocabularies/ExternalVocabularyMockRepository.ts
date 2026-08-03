@@ -40,6 +40,28 @@ const authorAffiliationRuntimeVocabularyConfig: ExternalVocabularyConfig = {
   managedFields: {}
 }
 
+const authorIdentifierOrcidVocabularyConfig: ExternalVocabularyConfig = {
+  fieldName: 'author',
+  termUriField: 'authorIdentifier',
+  protocol: 'orcid-or-ror',
+  allowFreeText: false,
+  languages: 'en',
+  vocabs: {
+    ror: {
+      uriSpace: 'https://ror.org/',
+      vocabularyUri: 'https://ror.org/'
+    },
+    orcid: {
+      uriSpace: 'https://orcid.org/',
+      vocabularyUri: 'https://orcid.org/'
+    }
+  },
+  managedFields: {
+    personName: 'authorName',
+    idType: 'authorIdentifierScheme'
+  }
+}
+
 const primitiveSingleDemoVocabularyConfig: ExternalVocabularyConfig = {
   fieldName: 'demoPrimitiveSingleTermURI',
   termUriField: 'demoPrimitiveSingleTermURI',
@@ -206,9 +228,41 @@ const authorAffiliationTerms: ExternalVocabularyTerm[] = [
   }
 ]
 
+const authorIdentifierTerms: ExternalVocabularyTerm[] = [
+  {
+    uri: 'https://orcid.org/0000-0002-1825-1097',
+    label: 'Jane Doe',
+    vocabularyName: 'ORCID',
+    vocabularyUri: 'https://orcid.org/',
+    source: 'orcid'
+  },
+  {
+    uri: 'https://orcid.org/0000-0003-1415-9265',
+    label: 'John Smith',
+    vocabularyName: 'ORCID',
+    vocabularyUri: 'https://orcid.org/',
+    source: 'orcid'
+  },
+  {
+    uri: 'https://ror.org/03vek6s52',
+    label: 'Harvard University',
+    vocabularyName: 'ROR',
+    vocabularyUri: 'https://ror.org/',
+    source: 'ror'
+  },
+  {
+    uri: 'https://ror.org/05bnh6r87',
+    label: 'University of Oxford',
+    vocabularyName: 'ROR',
+    vocabularyUri: 'https://ror.org/',
+    source: 'ror'
+  }
+]
+
 const termsByFieldName: Record<string, ExternalVocabularyTerm[]> = {
   keywordTermURI: keywordTerms,
   authorAffiliation: authorAffiliationTerms,
+  authorIdentifier: authorIdentifierTerms,
   demoPrimitiveSingleTermURI: topicTerms,
   demoPrimitiveMultipleTermURI: topicTerms,
   demoCompoundSingleTermURI: organizationTerms,
@@ -220,6 +274,7 @@ export class ExternalVocabularyMockRepository implements ExternalVocabularyRepos
     return Promise.resolve([
       keywordVocabularyConfig,
       authorAffiliationRuntimeVocabularyConfig,
+      authorIdentifierOrcidVocabularyConfig,
       primitiveSingleDemoVocabularyConfig,
       primitiveMultipleDemoVocabularyConfig,
       compoundSingleDemoVocabularyConfig,

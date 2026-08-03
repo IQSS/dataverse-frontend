@@ -185,6 +185,79 @@ export const CreateModeWithAllExternalVocabularyComponentTypes: Story = {
   }
 }
 
+export const CreateModeWithExternalVocabularyPresentationPlugins: Story = {
+  render: () => (
+    <RepositoriesStoryProvider
+      datasetRepository={new DatasetMockRepository()}
+      externalVocabularyRepository={new ExternalVocabularyMockRepository()}>
+      <DatasetMetadataForm
+        mode="create"
+        collectionId="root"
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    await typeIntoExternalVocabularyInput(canvasElement, 'keywordTermURI', 'climate')
+    await waitForVisibleText(canvasElement, 'AGROVOC')
+
+    await typeIntoExternalVocabularyInput(canvasElement, 'authorAffiliation', 'harvard')
+    await waitForVisibleText(canvasElement, 'ROR')
+
+    await typeIntoExternalVocabularyInput(canvasElement, 'authorIdentifier', 'jane')
+    await waitForVisibleText(canvasElement, 'ORCID')
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstrates the presentation plugin registry activating protocol-specific search result renderers for Skosmos, ROR, and ORCID external vocabulary configurations.'
+      }
+    }
+  }
+}
+
+export const CreateModeWithJsfPersonOrOrganizationPlugin: Story = {
+  render: () => (
+    <RepositoriesStoryProvider
+      datasetRepository={new DatasetMockRepository()}
+      externalVocabularyRepository={new ExternalVocabularyMockRepository()}>
+      <DatasetMetadataForm
+        mode="create"
+        collectionId="root"
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+      />
+    </RepositoriesStoryProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const authorIdentifierInput = await getExternalVocabularyInput(
+      canvasElement,
+      'authorIdentifier'
+    )
+
+    await waitFor(() => {
+      canvas.getByLabelText('Person')
+      canvas.getByLabelText('Organization')
+    })
+
+    await userEvent.type(authorIdentifierInput, 'jane')
+    await waitForVisibleText(canvasElement, 'ORCID')
+
+    await userEvent.click(canvas.getByLabelText('Organization'))
+    await userEvent.type(authorIdentifierInput, 'harvard')
+    await waitForVisibleText(canvasElement, 'ROR')
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstrates a JSF-style person/organization workflow plugin for mixed ORCID/ROR fields: radio buttons choose the service and the search box mimics the Select2 control used by JSF.'
+      }
+    }
+  }
+}
+
 async function getKeywordExternalVocabularyInput(canvasElement: HTMLElement) {
   return waitFor(() => {
     const input = canvasElement.querySelector<HTMLInputElement>(
@@ -207,6 +280,16 @@ async function typeIntoExternalVocabularyInput(
   const input = await getExternalVocabularyInput(canvasElement, fieldName)
 
   await userEvent.type(input, value)
+}
+
+async function waitForVisibleText(canvasElement: HTMLElement, text: string) {
+  await waitFor(() => {
+    const matches = within(canvasElement).getAllByText(text)
+
+    if (matches.length === 0) {
+      throw new Error(`Expected ${text} to be visible`)
+    }
+  })
 }
 
 async function getExternalVocabularyInput(canvasElement: HTMLElement, fieldName: string) {

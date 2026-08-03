@@ -1,6 +1,15 @@
-import { ForwardedRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  ChangeEvent,
+  ForwardedRef,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { Button, Col, Form, Row } from '@iqss/dataverse-design-system'
+import { Button, Col, Form } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { type CommonFieldProps } from '..'
@@ -9,6 +18,8 @@ import { ExternalVocabularyTerm } from '@/external-vocabularies/domain/models/Ex
 import { ExternalVocabularyConfig } from '@/external-vocabularies/domain/models/ExternalVocabularyConfig'
 import { searchExternalVocabularyTerms } from '@/external-vocabularies/domain/useCases/searchExternalVocabularyTerms'
 import { resolveExternalVocabularyTerm } from '@/external-vocabularies/domain/useCases/resolveExternalVocabularyTerm'
+import { ExternalVocabularyPlugin } from '@/external-vocabularies/presentation/plugins/ExternalVocabularyPlugin'
+import { getExternalVocabularyPlugin } from '@/external-vocabularies/presentation/plugins/externalVocabularyPluginRegistry'
 import { useExternalVocabularyRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from '../index.module.scss'
 
@@ -109,6 +120,87 @@ const ExternalVocabularyFieldControl = ({
   invalid,
   errorMessage
 }: ExternalVocabularyFieldControlProps) => {
+  const plugin = useMemo(
+    () => getExternalVocabularyPlugin(externalVocabulary),
+    [externalVocabulary]
+  )
+
+  if (plugin?.FormField) {
+    const PluginFormField = plugin.FormField
+
+    return (
+      <PluginFormField
+        name={name}
+        title={title}
+        description={description}
+        watermark={watermark}
+        requiredIndicator={requiredIndicator}
+        externalVocabulary={externalVocabulary}
+        builtFieldName={builtFieldName}
+        metadataBlockName={metadataBlockName}
+        compoundParentName={compoundParentName}
+        fieldsArrayIndex={fieldsArrayIndex}
+        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        value={value}
+        onChange={onChange}
+        invalid={invalid}
+        errorMessage={errorMessage}
+      />
+    )
+  }
+
+  return (
+    <GenericExternalVocabularyFieldControl
+      {...{
+        name,
+        title,
+        description,
+        watermark,
+        metadataBlockName,
+        compoundParentName,
+        withinMultipleFieldsGroup,
+        fieldsArrayIndex,
+        fieldInstructions,
+        instructionEditor,
+        requiredIndicator,
+        externalVocabulary,
+        builtFieldName,
+        value,
+        onChange,
+        inputRef,
+        invalid,
+        errorMessage,
+        plugin
+      }}
+    />
+  )
+}
+
+interface GenericExternalVocabularyFieldControlProps extends ExternalVocabularyFieldControlProps {
+  plugin?: ExternalVocabularyPlugin
+}
+
+function GenericExternalVocabularyFieldControl({
+  name,
+  title,
+  description,
+  watermark,
+  metadataBlockName,
+  compoundParentName,
+  withinMultipleFieldsGroup,
+  fieldsArrayIndex,
+  fieldInstructions,
+  instructionEditor,
+  requiredIndicator,
+  externalVocabulary,
+  builtFieldName,
+  value,
+  onChange,
+  inputRef,
+  invalid,
+  errorMessage,
+  plugin
+}: GenericExternalVocabularyFieldControlProps) {
   const { i18n } = useTranslation()
   const { setValue } = useFormContext()
   const { externalVocabularyRepository } = useExternalVocabularyRepositories()
@@ -178,13 +270,7 @@ const ExternalVocabularyFieldControl = ({
     let cancelled = false
     const timeout = window.setTimeout(() => {
       setIsSearching(true)
-      searchExternalVocabularyTerms(
-        externalVocabularyRepository,
-        apiFieldName,
-        searchText,
-        selectedVocabulary,
-        i18n.language
-      )
+      searchTerms(searchText, selectedVocabulary, i18n.language)
         .then((terms) => {
           if (!cancelled) {
             setResults(terms)
@@ -204,7 +290,9 @@ const ExternalVocabularyFieldControl = ({
   }, [
     apiFieldName,
     externalVocabularyRepository,
+    externalVocabulary,
     i18n.language,
+    plugin,
     searchText,
     selectedVocabulary,
     shouldSearch
@@ -227,7 +315,9 @@ const ExternalVocabularyFieldControl = ({
 
   const setManagedFieldsFromTerm = (term: ExternalVocabularyTerm) => {
     Object.entries(externalVocabulary.managedFields).forEach(([managedKey, managedFieldName]) => {
-      const managedValue = getManagedValue(term, managedKey)
+      const managedValue =
+        plugin?.getManagedFieldValue?.(term, managedKey, externalVocabulary) ??
+        getManagedValue(term, managedKey)
       if (managedValue === undefined) {
         return
       }
@@ -245,7 +335,7 @@ const ExternalVocabularyFieldControl = ({
     })
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const nextValue = event.target.value
     setShouldSearch(true)
     updateSearchText(nextValue)
@@ -273,7 +363,39 @@ const ExternalVocabularyFieldControl = ({
     clearManagedFields()
   }
 
+  const handleVocabularyChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedVocabulary(event.target.value)
+    onChange('')
+    setResults([])
+    clearManagedFields()
+  }
+
+  const searchTerms = async (
+    query: string,
+    vocabulary: string,
+    language: string
+  ): Promise<ExternalVocabularyTerm[]> => {
+    const pluginTerms = await plugin?.searchTerms?.(query, vocabulary, language, externalVocabulary)
+
+    if (pluginTerms !== undefined) {
+      return pluginTerms
+    }
+
+    return searchExternalVocabularyTerms(
+      externalVocabularyRepository,
+      apiFieldName,
+      query,
+      vocabulary,
+      language
+    )
+  }
+
   const vocabularyKeys = Object.keys(externalVocabulary.vocabs)
+  const formatTerm = (term: ExternalVocabularyTerm) =>
+    plugin?.formatTerm?.(term, externalVocabulary) ?? {
+      label: term.label,
+      caption: term.uri
+    }
 
   return (
     <Form.Group controlId={builtFieldName} as={withinMultipleFieldsGroup ? Col : undefined}>
@@ -297,22 +419,20 @@ const ExternalVocabularyFieldControl = ({
           fieldInstructions && <Form.Group.Text>{fieldInstructions}</Form.Group.Text>
         )}
 
-        <Row>
+        <div className={styles['external-vocabulary-control-row']}>
           {vocabularyKeys.length > 1 && (
-            <Col sm={3}>
-              <Form.Group.Select
-                value={selectedVocabulary}
-                onChange={(event) => setSelectedVocabulary(event.target.value)}>
+            <div className={styles['external-vocabulary-select-container']}>
+              <Form.Group.Select value={selectedVocabulary} onChange={handleVocabularyChange}>
                 {vocabularyKeys.map((vocabularyKey) => (
                   <option key={vocabularyKey} value={vocabularyKey}>
                     {vocabularyKey}
                   </option>
                 ))}
               </Form.Group.Select>
-            </Col>
+            </div>
           )}
 
-          <Col sm={vocabularyKeys.length > 1 ? 6 : withinMultipleFieldsGroup ? 12 : 9}>
+          <div className={styles['external-vocabulary-search-container']}>
             <Form.Group.Input
               type="text"
               value={searchText}
@@ -328,29 +448,56 @@ const ExternalVocabularyFieldControl = ({
             {results.length > 0 && (
               <div className="list-group mt-1">
                 {results.map((term) => (
-                  <button
-                    className="list-group-item list-group-item-action"
+                  <ExternalVocabularySearchResultButton
                     key={term.uri}
-                    type="button"
-                    onClick={() => handleSelect(term)}>
-                    <span>{term.label}</span>
-                    <small className="d-block text-muted">{term.uri}</small>
-                  </button>
+                    term={term}
+                    formatTerm={formatTerm}
+                    onSelect={handleSelect}
+                  />
                 ))}
               </div>
             )}
 
             {isSearching && <Form.Group.Text>Searching...</Form.Group.Text>}
-          </Col>
+          </div>
 
-          <Col sm="auto">
+          <div className={styles['external-vocabulary-action-container']}>
             <Button type="button" variant="secondary" onClick={handleClear}>
               Clear
             </Button>
-          </Col>
-        </Row>
+          </div>
+        </div>
       </Col>
     </Form.Group>
+  )
+}
+
+interface ExternalVocabularySearchResultButtonProps {
+  term: ExternalVocabularyTerm
+  formatTerm: (term: ExternalVocabularyTerm) => {
+    label: ReactNode
+    caption?: ReactNode
+    badge?: ReactNode
+  }
+  onSelect: (term: ExternalVocabularyTerm) => void
+}
+
+function ExternalVocabularySearchResultButton({
+  term,
+  formatTerm,
+  onSelect
+}: ExternalVocabularySearchResultButtonProps) {
+  const termDisplay = formatTerm(term)
+
+  return (
+    <button
+      className="list-group-item list-group-item-action"
+      type="button"
+      onClick={() => onSelect(term)}>
+      <span>{termDisplay.label}</span>
+      {termDisplay.badge && <small className="ms-2 badge bg-secondary">{termDisplay.badge}</small>}
+      {termDisplay.caption && <small className="d-block text-muted">{termDisplay.caption}</small>}
+    </button>
   )
 }
 

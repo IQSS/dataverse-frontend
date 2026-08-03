@@ -88,7 +88,7 @@ export type MetadataBlockInfoDisplayFormatFields = Record<string, MetadataFieldI
 
 export type MetadataFieldInfo = Pick<
   MetadataField,
-  'displayFormat' | 'title' | 'type' | 'description'
+  'displayFormat' | 'title' | 'type' | 'description' | 'externalVocabulary'
 >
 
 export const METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER = '#VALUE'

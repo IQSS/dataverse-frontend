@@ -2,10 +2,14 @@ import { useEffect, useState } from 'react'
 import { MetadataBlockInfoDisplayFormat } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { getMetadataBlockInfoByName } from '../../metadata-block-info/domain/useCases/getMetadataBlockInfoByName'
+import { ExternalVocabularyRepository } from '@/external-vocabularies/domain/repositories/ExternalVocabularyRepository'
+import { getConfiguredExternalVocabularies } from '@/external-vocabularies/domain/useCases/getConfiguredExternalVocabularies'
+import { MetadataFieldsHelper } from '@/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 
 interface Props {
   metadataBlockName: string
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  externalVocabularyRepository: ExternalVocabularyRepository
 }
 
 interface UseGetMetadataBlocksDisplayFormatInfoReturn {
@@ -16,7 +20,8 @@ interface UseGetMetadataBlocksDisplayFormatInfoReturn {
 
 export const useGetMetadataBlockDisplayFormatInfo = ({
   metadataBlockName,
-  metadataBlockInfoRepository
+  metadataBlockInfoRepository,
+  externalVocabularyRepository
 }: Props): UseGetMetadataBlocksDisplayFormatInfoReturn => {
   const [metadataBlockDisplayFormatInfo, setMetadataBlockDisplayFormatInfo] =
     useState<MetadataBlockInfoDisplayFormat>()
@@ -27,12 +32,17 @@ export const useGetMetadataBlockDisplayFormatInfo = ({
     const handleGetMetadatBlockInfoByName = async () => {
       setIsLoading(true)
       try {
-        const response = await getMetadataBlockInfoByName(
-          metadataBlockInfoRepository,
-          metadataBlockName
-        )
+        const [response, externalVocabularyConfigs] = await Promise.all([
+          getMetadataBlockInfoByName(metadataBlockInfoRepository, metadataBlockName),
+          getConfiguredExternalVocabularies(externalVocabularyRepository)
+        ])
 
-        setMetadataBlockDisplayFormatInfo(response)
+        setMetadataBlockDisplayFormatInfo(
+          MetadataFieldsHelper.addExternalVocabularyConfigsToMetadataBlockDisplayFormatInfo(
+            response,
+            externalVocabularyConfigs
+          )
+        )
       } catch (err) {
         const errorMessage =
           err instanceof Error && err.message
@@ -45,7 +55,7 @@ export const useGetMetadataBlockDisplayFormatInfo = ({
     }
 
     void handleGetMetadatBlockInfoByName()
-  }, [metadataBlockInfoRepository, metadataBlockName])
+  }, [externalVocabularyRepository, metadataBlockInfoRepository, metadataBlockName])
 
   return {
     metadataBlockDisplayFormatInfo,

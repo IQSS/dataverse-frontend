@@ -4,8 +4,12 @@ import {
 } from '@iqss/dataverse-client-javascript'
 import {
   MetadataBlockInfoDisplayFormat,
-  MetadataBlockInfoDisplayFormatFields
+  MetadataBlockInfoDisplayFormatFields,
+  MetadataFieldInfo
 } from '../../domain/models/MetadataBlockInfo'
+
+type JSMetadataFieldInfoWithExternalVocabulary = JSMetadataFieldInfo &
+  Pick<MetadataFieldInfo, 'externalVocabulary'>
 
 export class JSMetadataBlockInfoMapper {
   static toMetadataBlockInfo(
@@ -28,7 +32,8 @@ export class JSMetadataBlockInfoMapper {
         displayFormat: this.toDisplayFormat(value.displayFormat),
         type: value.type,
         title: value.title,
-        description: value.description
+        description: value.description,
+        externalVocabulary: this.toExternalVocabulary(value)
       }
 
       if (value.typeClass === 'compound' && value.childMetadataFields) {
@@ -48,9 +53,14 @@ export class JSMetadataBlockInfoMapper {
         displayFormat: this.toDisplayFormat(value.displayFormat),
         type: value.type,
         title: value.title,
-        description: value.description
+        description: value.description,
+        externalVocabulary: this.toExternalVocabulary(value)
       }
     })
+  }
+
+  static toExternalVocabulary(value: JSMetadataFieldInfo) {
+    return (value as JSMetadataFieldInfoWithExternalVocabulary).externalVocabulary
   }
 
   static toDisplayFormat(jsDisplayFormat: string): string {
