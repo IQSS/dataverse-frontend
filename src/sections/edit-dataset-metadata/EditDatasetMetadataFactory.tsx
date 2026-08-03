@@ -18,9 +18,6 @@ export class EditDatasetMetadataFactory {
 function EditDatasetMetadataWithParams() {
   const [searchParams] = useSearchParams()
   const persistentId = searchParams.get('persistentId') ?? undefined
-  // Always load the latest version (draft if exists, otherwise latest published).
-  // Ignore the browsed `version` query param so Edit Metadata matches JSF / Edit Terms
-  // (IQSS/dataverse-frontend#1024).
   const version = DatasetNonNumericVersion.LATEST
 
   return (

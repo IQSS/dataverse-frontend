@@ -35,7 +35,7 @@ describe('EditDatasetMetadataFactory', () => {
     ).resolves(metadataBlocksInfoOnCreateMode)
   })
 
-  it('always fetches :latest when the URL carries an older published version (issue #1024)', () => {
+  it('always fetches :latest when the URL carries an older published version', () => {
     const initialEntry = `${Route.EDIT_DATASET_METADATA}?${
       QueryParamKey.PERSISTENT_ID
     }=${encodeURIComponent(persistentId)}&${QueryParamKey.VERSION}=1.0`
