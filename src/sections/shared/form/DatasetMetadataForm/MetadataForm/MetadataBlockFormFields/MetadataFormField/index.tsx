@@ -4,6 +4,8 @@ import {
   PrimitiveMultiple,
   Vocabulary,
   VocabularyMultiple,
+  ExternalVocabularyField,
+  ExternalVocabularyMultipleField,
   ComposedField,
   ComposedFieldMultiple
 } from './Fields'
@@ -92,6 +94,7 @@ export const MetadataFormField = ({
     watermark,
     childMetadataFields,
     controlledVocabularyValues,
+    externalVocabulary,
     isRequired
   } = metadataFieldInfo
 
@@ -127,6 +130,9 @@ export const MetadataFormField = ({
     ? { ...rulesToApply, required: undefined }
     : rulesToApply
 
+  const isExternalVocabularyTermField =
+    externalVocabulary !== undefined && name === externalVocabulary.termUriField
+
   const fieldInstructions: string | undefined = datasetTemplateInstructions?.find(
     (i) => i.instructionField === instructionFieldKey
   )?.instructionText
@@ -142,6 +148,50 @@ export const MetadataFormField = ({
       : undefined
 
   if (isSafePrimitive) {
+    if (isExternalVocabularyTermField && multiple) {
+      return (
+        <ExternalVocabularyMultipleField
+          name={name}
+          type={type}
+          title={title}
+          watermark={watermark}
+          displayName={displayName}
+          description={description}
+          rulesToApply={validationRules}
+          requiredIndicator={requiredIndicator}
+          disableRequiredValidation={disableRequiredValidation}
+          metadataBlockName={metadataBlockName}
+          compoundParentName={compoundParentName}
+          fieldInstructions={fieldInstructions}
+          instructionEditor={instructionEditor}
+          externalVocabulary={externalVocabulary}
+        />
+      )
+    }
+
+    if (isExternalVocabularyTermField) {
+      return (
+        <ExternalVocabularyField
+          name={name}
+          type={type}
+          title={title}
+          watermark={watermark}
+          displayName={displayName}
+          description={description}
+          rulesToApply={validationRules}
+          requiredIndicator={requiredIndicator}
+          disableRequiredValidation={disableRequiredValidation}
+          fieldsArrayIndex={fieldsArrayIndex}
+          metadataBlockName={metadataBlockName}
+          compoundParentName={compoundParentName}
+          withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+          fieldInstructions={fieldInstructions}
+          instructionEditor={instructionEditor}
+          externalVocabulary={externalVocabulary}
+        />
+      )
+    }
+
     if (multiple) {
       return (
         <PrimitiveMultiple

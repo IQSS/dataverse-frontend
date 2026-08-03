@@ -10,6 +10,7 @@ import {
   DatasetMetadataSubField
 } from '../../../../dataset/domain/models/Dataset'
 import { ExpandableContent } from '@/sections/shared/expandable-content/ExpandableContent'
+import { getExternalVocabularyPlugin } from '@/external-vocabularies/presentation/plugins/externalVocabularyPluginRegistry'
 
 interface DatasetMetadataFieldValueFormattedProps {
   metadataFieldName: string
@@ -28,6 +29,21 @@ export function DatasetMetadataFieldValueFormatted({
   metadataFieldValue,
   metadataBlockDisplayFormatInfo
 }: DatasetMetadataFieldValueFormattedProps) {
+  const externalVocabulary =
+    metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.externalVocabulary
+  const DisplayValue = getExternalVocabularyPlugin(externalVocabulary)?.DisplayValue
+
+  if (DisplayValue && externalVocabulary) {
+    return (
+      <DisplayValue
+        metadataFieldName={metadataFieldName}
+        metadataFieldValue={metadataFieldValue}
+        metadataBlockDisplayFormatInfo={metadataBlockDisplayFormatInfo}
+        externalVocabulary={externalVocabulary}
+      />
+    )
+  }
+
   const valueFormatted = metadataFieldValueToDisplayFormat(
     metadataFieldValue,
     metadataBlockDisplayFormatInfo,

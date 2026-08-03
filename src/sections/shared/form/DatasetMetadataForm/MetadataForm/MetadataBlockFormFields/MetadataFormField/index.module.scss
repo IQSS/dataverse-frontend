@@ -38,6 +38,26 @@
   height: fit-content;
 }
 
+.external-vocabulary-control-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.external-vocabulary-select-container {
+  flex: 0 0 9rem;
+}
+
+.external-vocabulary-search-container {
+  flex: 1 1 16rem;
+  min-width: 12rem;
+}
+
+.external-vocabulary-action-container {
+  flex: 0 0 auto;
+}
+
 .composed-field-title {
   @media (max-width: 575px) {
     font-size: 18px;

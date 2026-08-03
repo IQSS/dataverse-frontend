@@ -4,6 +4,7 @@ import { DatasetMetadataFields } from '../dataset-metadata-fields/DatasetMetadat
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useGetMetadataBlockDisplayFormatInfo } from '../../useGetMetadataBlockDisplayFormatInfo'
 import { DatasetMetadataBlockSkeleton } from './DatasetMetadataBlockSkeleton'
+import { useExternalVocabularyRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface DatasetMetadataBlockProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -14,13 +15,15 @@ export function DatasetMetadataBlock({
   metadataBlock,
   metadataBlockInfoRepository
 }: DatasetMetadataBlockProps) {
+  const { externalVocabularyRepository } = useExternalVocabularyRepositories()
   const {
     metadataBlockDisplayFormatInfo,
     isLoading: isLoadingMetadataBlockDisplayFormatInfo,
     error: errorLoadingMetadataBlockDisplayFormatInfo
   } = useGetMetadataBlockDisplayFormatInfo({
     metadataBlockName: metadataBlock.name,
-    metadataBlockInfoRepository
+    metadataBlockInfoRepository,
+    externalVocabularyRepository
   })
 
   if (errorLoadingMetadataBlockDisplayFormatInfo) {

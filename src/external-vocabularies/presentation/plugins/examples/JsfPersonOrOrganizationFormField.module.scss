@@ -1,0 +1,66 @@
+.mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  min-height: 1.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.combobox {
+  position: relative;
+  max-width: 36rem;
+}
+
+.combobox-input {
+  padding-right: 5rem;
+}
+
+.clear-button,
+.toggle-button {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-left: 1px solid #b8b8b8;
+  background: linear-gradient(#f7f7f7, #e2e2e2);
+  color: #333;
+  cursor: pointer;
+}
+
+.clear-button {
+  right: 2.25rem;
+  width: 2.25rem;
+  font-weight: 700;
+}
+
+.toggle-button {
+  right: 1px;
+  width: 2.25rem;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.toggle-caret {
+  width: 0;
+  height: 0;
+  border-right: 0.35rem solid transparent;
+  border-left: 0.35rem solid transparent;
+  border-top: 0.45rem solid #888;
+}
+
+.results {
+  max-width: 36rem;
+  margin-top: 0.25rem;
+}
+
+.result-label {
+  display: block;
+}
+
+.result-caption {
+  display: block;
+}

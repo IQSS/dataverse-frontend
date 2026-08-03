@@ -1,5 +1,6 @@
 import {
   MetadataBlockInfo,
+  MetadataBlockInfoDisplayFormat,
   MetadataBlockInfoWithMaybeValues,
   MetadataField,
   MetadataFieldWithMaybeValue
@@ -24,6 +25,7 @@ import {
   TemplateFieldInfo,
   TemplateFieldValue
 } from '../../../../templates/domain/models/TemplateInfo'
+import { ExternalVocabularyConfig } from '@/external-vocabularies/domain/models/ExternalVocabularyConfig'
 
 export type DatasetMetadataFormValues = Record<string, MetadataBlockFormValues>
 
@@ -90,10 +92,105 @@ export class MetadataFieldsHelper {
       if (field.name.includes('.')) {
         field.name = this.replaceDotWithSlash(field.name)
       }
+      if (field.externalVocabulary) {
+        field.externalVocabulary = this.normalizeExternalVocabularyConfigFieldNames(
+          field.externalVocabulary
+        )
+      }
       if (field.childMetadataFields) {
         this.metadataBlocksInfoDotReplacer(field.childMetadataFields)
       }
     }
+  }
+
+  private static normalizeExternalVocabularyConfigFieldNames(
+    config: ExternalVocabularyConfig
+  ): ExternalVocabularyConfig {
+    return {
+      ...config,
+      fieldName: this.replaceDotWithSlash(config.fieldName),
+      termUriField: this.replaceDotWithSlash(config.termUriField),
+      managedFields: Object.entries(config.managedFields).reduce(
+        (normalizedManagedFields, [key, fieldName]) => ({
+          ...normalizedManagedFields,
+          [key]: this.replaceDotWithSlash(fieldName)
+        }),
+        {} as Record<string, string>
+      )
+    }
+  }
+
+  public static addExternalVocabularyConfigsToMetadataBlocksInfo(
+    metadataBlocks: MetadataBlockInfo[],
+    externalVocabularyConfigs: ExternalVocabularyConfig[]
+  ): MetadataBlockInfo[] {
+    if (externalVocabularyConfigs.length === 0) {
+      return metadataBlocks
+    }
+
+    const metadataBlocksCopy: MetadataBlockInfo[] = structuredClone(metadataBlocks)
+
+    externalVocabularyConfigs.forEach((config) => {
+      metadataBlocksCopy.forEach((block) => {
+        this.addExternalVocabularyConfigToMetadataFields(block.metadataFields, config)
+      })
+    })
+
+    return metadataBlocksCopy
+  }
+
+  public static addExternalVocabularyConfigsToMetadataBlockDisplayFormatInfo(
+    metadataBlock: MetadataBlockInfoDisplayFormat | undefined,
+    externalVocabularyConfigs: ExternalVocabularyConfig[]
+  ): MetadataBlockInfoDisplayFormat | undefined {
+    if (!metadataBlock || externalVocabularyConfigs.length === 0) {
+      return metadataBlock
+    }
+
+    const metadataBlockCopy: MetadataBlockInfoDisplayFormat = structuredClone(metadataBlock)
+
+    externalVocabularyConfigs.forEach((config) => {
+      Object.entries(metadataBlockCopy.fields).forEach(([fieldName, fieldInfo]) => {
+        if (this.externalVocabularyConfigMatchesFieldName(config, fieldName)) {
+          fieldInfo.externalVocabulary = config
+        }
+      })
+    })
+
+    return metadataBlockCopy
+  }
+
+  private static addExternalVocabularyConfigToMetadataFields(
+    metadataFields: Record<string, MetadataField>,
+    config: ExternalVocabularyConfig
+  ) {
+    Object.values(metadataFields).forEach((field) => {
+      if (
+        field.name === config.fieldName ||
+        field.name === config.termUriField ||
+        Object.values(config.managedFields).includes(field.name)
+      ) {
+        field.externalVocabulary = config
+      }
+
+      if (field.childMetadataFields) {
+        this.addExternalVocabularyConfigToMetadataFields(field.childMetadataFields, config)
+      }
+    })
+  }
+
+  private static externalVocabularyConfigMatchesFieldName(
+    config: ExternalVocabularyConfig,
+    fieldName: string
+  ): boolean {
+    const normalizedFieldName = this.replaceSlashWithDot(fieldName)
+    const configuredFieldNames = [
+      config.fieldName,
+      config.termUriField,
+      ...Object.values(config.managedFields)
+    ].map(this.replaceSlashWithDot)
+
+    return configuredFieldNames.includes(normalizedFieldName)
   }
 
   public static replaceDatasetMetadataBlocksDotKeysWithSlash(

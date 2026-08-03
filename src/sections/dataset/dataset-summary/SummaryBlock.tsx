@@ -6,6 +6,7 @@ import { DatasetMetadataFields } from '../dataset-metadata/dataset-metadata-fiel
 import { useGetMetadataBlockDisplayFormatInfo } from '../useGetMetadataBlockDisplayFormatInfo'
 import { Col, Row } from '@iqss/dataverse-design-system'
 import { useId } from 'react'
+import { useExternalVocabularyRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface SummaryBlockProps {
   metadataBlockName: string
@@ -17,13 +18,15 @@ export const SummaryBlock = ({
   metadataFields,
   metadataBlockInfoRepository
 }: SummaryBlockProps) => {
+  const { externalVocabularyRepository } = useExternalVocabularyRepositories()
   const {
     metadataBlockDisplayFormatInfo,
     isLoading: isLoadingMetadataBlockDisplayFormatInfo,
     error: errorLoadingMetadataBlockDisplayFormatInfo
   } = useGetMetadataBlockDisplayFormatInfo({
     metadataBlockName,
-    metadataBlockInfoRepository
+    metadataBlockInfoRepository,
+    externalVocabularyRepository
   })
 
   if (errorLoadingMetadataBlockDisplayFormatInfo) {

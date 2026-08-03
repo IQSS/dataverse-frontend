@@ -4,11 +4,15 @@ import { getDisplayedOnCreateMetadataBlockInfoByCollectionId } from '../../../..
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { DatasetMetadataFormMode } from '.'
+import { ExternalVocabularyRepository } from '@/external-vocabularies/domain/repositories/ExternalVocabularyRepository'
+import { getConfiguredExternalVocabularies } from '@/external-vocabularies/domain/useCases/getConfiguredExternalVocabularies'
+import { MetadataFieldsHelper } from './MetadataFieldsHelper'
 
 interface Props {
   mode: DatasetMetadataFormMode
   collectionId: string
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  externalVocabularyRepository: ExternalVocabularyRepository
 }
 
 interface UseGetMetadataBlocksInfoReturn {
@@ -20,7 +24,8 @@ interface UseGetMetadataBlocksInfoReturn {
 export const useGetMetadataBlocksInfo = ({
   mode,
   collectionId,
-  metadataBlockInfoRepository
+  metadataBlockInfoRepository,
+  externalVocabularyRepository
 }: Props): UseGetMetadataBlocksInfoReturn => {
   const [metadataBlocksInfo, setMetadataBlocksInfo] = useState<MetadataBlockInfo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -32,17 +37,20 @@ export const useGetMetadataBlocksInfo = ({
       try {
         let metadataBlocks: MetadataBlockInfo[] = []
 
-        if (mode === 'edit') {
-          metadataBlocks = await getMetadataBlockInfoByCollectionId(
-            metadataBlockInfoRepository,
-            collectionId
-          )
-        } else {
-          metadataBlocks = await getDisplayedOnCreateMetadataBlockInfoByCollectionId(
-            metadataBlockInfoRepository,
-            collectionId
-          )
-        }
+        const [metadataBlocksResponse, externalVocabularyConfigs] = await Promise.all([
+          mode === 'edit'
+            ? getMetadataBlockInfoByCollectionId(metadataBlockInfoRepository, collectionId)
+            : getDisplayedOnCreateMetadataBlockInfoByCollectionId(
+                metadataBlockInfoRepository,
+                collectionId
+              ),
+          getConfiguredExternalVocabularies(externalVocabularyRepository)
+        ])
+
+        metadataBlocks = MetadataFieldsHelper.addExternalVocabularyConfigsToMetadataBlocksInfo(
+          metadataBlocksResponse,
+          externalVocabularyConfigs
+        )
 
         setMetadataBlocksInfo(metadataBlocks)
       } catch (err) {
@@ -57,7 +65,7 @@ export const useGetMetadataBlocksInfo = ({
     }
 
     void handleGetDatasetMetadataBlockFields()
-  }, [collectionId, metadataBlockInfoRepository, mode])
+  }, [collectionId, externalVocabularyRepository, metadataBlockInfoRepository, mode])
 
   return {
     metadataBlocksInfo,

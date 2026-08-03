@@ -12,6 +12,7 @@ import { useGetTemplate } from '@/templates/domain/hooks/useGetTemplate'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { TemplatePreviewModalSkeleton } from './TemplatePreviewModalSkeleton'
+import { useExternalVocabularyRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface TemplatePreviewModalProps {
   show: boolean
@@ -33,6 +34,7 @@ export const TemplatePreviewModal = ({
   const { t } = useTranslation('datasetTemplates')
   const { t: tShared } = useTranslation('shared')
   const { t: tDataset } = useTranslation('dataset')
+  const { externalVocabularyRepository } = useExternalVocabularyRepositories()
 
   const { template, isLoadingTemplate, errorGetTemplate } = useGetTemplate({
     templateRepository,
@@ -54,7 +56,8 @@ export const TemplatePreviewModal = ({
     error: errorBlockInfo
   } = useGetMetadataBlockDisplayFormatInfo({
     metadataBlockName: MetadataBlockName.CITATION,
-    metadataBlockInfoRepository
+    metadataBlockInfoRepository,
+    externalVocabularyRepository
   })
 
   const hasCitationFields = citationBlock && Object.keys(citationBlock.fields ?? {}).length > 0

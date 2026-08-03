@@ -8,6 +8,7 @@ import { MetadataForm } from './MetadataForm'
 import { DatasetMetadataBlocks } from '../../../../dataset/domain/models/Dataset'
 import { Alert } from '@iqss/dataverse-design-system'
 import { Template } from '@/templates/domain/models/Template'
+import { useExternalVocabularyRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 type DatasetMetadataFormProps =
   | {
@@ -41,6 +42,7 @@ export const DatasetMetadataForm = ({
   datasetTemplate
 }: DatasetMetadataFormProps) => {
   const { setIsLoading } = useLoading()
+  const { externalVocabularyRepository } = useExternalVocabularyRepositories()
 
   const {
     metadataBlocksInfo: metadataBlocksInfoForDisplayOnCreate,
@@ -49,7 +51,8 @@ export const DatasetMetadataForm = ({
   } = useGetMetadataBlocksInfo({
     mode: 'create',
     collectionId,
-    metadataBlockInfoRepository
+    metadataBlockInfoRepository,
+    externalVocabularyRepository
   })
 
   const {
@@ -59,7 +62,8 @@ export const DatasetMetadataForm = ({
   } = useGetMetadataBlocksInfo({
     mode: 'edit',
     collectionId,
-    metadataBlockInfoRepository
+    metadataBlockInfoRepository,
+    externalVocabularyRepository
   })
 
   const isLoadingData =

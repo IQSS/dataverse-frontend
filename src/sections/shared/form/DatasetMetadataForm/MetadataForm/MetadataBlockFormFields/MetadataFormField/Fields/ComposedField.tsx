@@ -77,6 +77,10 @@ export const ComposedField = ({
         <Col sm={9} className={styles['composed-fields-grid']}>
           {Object.entries(childMetadataFields).map(
             ([childMetadataFieldKey, childMetadataFieldInfo]) => {
+              if (isManagedExternalVocabularyField(childMetadataFieldInfo)) {
+                return null
+              }
+
               const isFieldThatMayBecomeRequired = notRequiredWithChildFieldsRequired
                 ? childFieldNamesThatMayBecomeRequired.includes(childMetadataFieldKey)
                 : false
@@ -101,5 +105,17 @@ export const ComposedField = ({
         </Col>
       </Row>
     </Form.GroupWithMultipleFields>
+  )
+}
+
+function isManagedExternalVocabularyField(metadataField: MetadataField): boolean {
+  const externalVocabulary = metadataField.externalVocabulary
+  if (!externalVocabulary) {
+    return false
+  }
+
+  return (
+    metadataField.name !== externalVocabulary.termUriField &&
+    Object.values(externalVocabulary.managedFields).includes(metadataField.name)
   )
 }
