@@ -8,6 +8,13 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Edit Dataset Template Integration: "Edit Template" dropdown on the Dataset Templates listing now opens the Metadata or Terms editor and shows a "Template updated" toast on return.
+- External Tools: Added guestbook and terms modal for Dataverse external tools.
+- Manage Guestbooks page integration, including:
+  - a guestbooks table with sorting, enable/disable actions, preview, and per-guestbook response download
+  - Create Guestbook and Download All Responses actions
+  - the Create Guestbook page
+  - a checkbox for including guestbooks from parent collections
 - Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Dataset Page: added a sidebar to show dataset reviews
 - Dataset Page: "Styled Citation" now supports selecting any CSL citation style and renders the citation formatted in that style, using citeproc-js in the browser.
@@ -15,13 +22,20 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Changed
 
+- File pages now include a "Cite Data File" dropdown for downloading file citations in EndNote XML, RIS, and BibTeX formats.
 - Hide "Export Metadata" on dataset and file pages that are not for the latest published dataset version.
 - Show "Export Metadata" on dataset and file pages for draft version.
 - Avoided prop-drilling for file, guestbook, user and external tool repository, so used context to share repository instances.
 
 ### Fixed
 
+- Edit Dataset Terms: navigate to the draft version of the dataset after saving changes to the terms, instead of the latest published version.
+- After saving on either Edit Template tab (Metadata or Terms), the user is redirected to the templates listing with a success toast instead of staying on the edit page.
+- Edit Template breadcrumb on the Terms page no longer renders the dataset's "Terms and Guestbook" label (templates have no guestbook).
+
 ### Removed
+
+- Standalone `EditTemplateMetadataFactory` and `EditTemplateTermsFactory` route factories — replaced by a single `EditTemplateFactory` dispatcher that selects the right page based on `editMode`.
 
 ---
 
@@ -45,6 +59,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added Notifications tab in Account Page
 - Added runtime configuration options for homepage branding and support link.
 - Added an environment variable to docker-compose-dev.yml to hide the OIDC client used in the SPA from the JSF frontend: DATAVERSE_AUTH_OIDC_HIDDEN_JSF: 1
+- Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Added a message note to the login page
 - Download with terms of use and guestbook.
 - Show terms modal before download when dataset has custom terms, a non-default license (not CC0 1.0), or a guestbook. Draft datasets and dataset editors bypass the modal.

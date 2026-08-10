@@ -295,6 +295,8 @@
   },
   "downloadCitation": {
     "title": "Descargar cita",
+    "citeDataset": "Citar dataset",
+    "citeDataFile": "Citar archivo de datos",
     "viewStyledCitation": "Ver cita con estilo",
     "downloadEndNoteXML": "Descargar EndNote XML",
     "downloadRIS": "Descargar RIS",
@@ -304,6 +306,7 @@
     "moreStyles": "Más estilos",
     "citationInStyle": "Cita en estilo {{styleName}}",
     "downloadError": "Ocurrió un error al descargar la cita",
+    "downloadSuccess": "Cita descargada correctamente",
     "styledCitation": "Cita con estilo",
     "styleFormatError": "Ocurrió un error al formatear la cita en el estilo seleccionado. Intente con otro estilo o vuelva a intentarlo más tarde.",
     "copyCitationToClipboard": "Copiar cita al portapapeles"

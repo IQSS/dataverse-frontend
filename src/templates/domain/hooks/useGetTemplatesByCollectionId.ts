@@ -53,10 +53,20 @@ export const useGetTemplatesByCollectionId = ({
     void fetchDatasetTemplates()
   }, [fetchDatasetTemplates])
 
+  const toggleDefaultTemplate = (templateId: number | null) => {
+    setDatasetTemplates((prev) =>
+      prev.map((t) => ({
+        ...t,
+        isDefault: t.id === templateId
+      }))
+    )
+  }
+
   return {
     datasetTemplates,
     isLoadingDatasetTemplates,
     errorGetDatasetTemplates,
-    fetchDatasetTemplates
+    fetchDatasetTemplates,
+    toggleDefaultTemplate
   }
 }

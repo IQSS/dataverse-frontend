@@ -13,6 +13,7 @@ import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 import { RestrictFileDTO } from '../useCases/restrictFileDTO'
 import { FileVersionSummarySubset } from '../models/FileVersionSummaryInfo'
 import { FileVersionPaginationInfo } from '../models/FileVersionPaginationInfo'
+import { FileCitationFormat, FormattedFileCitation } from '../models/FileCitation'
 
 export interface FileRepository {
   getAllByDatasetPersistentId: (
@@ -37,6 +38,10 @@ export interface FileRepository {
     fileId: number | string,
     paginationInfo?: FileVersionPaginationInfo
   ) => Promise<FileVersionSummarySubset>
+  getFileCitationByFormat: (
+    fileId: number | string,
+    format: FileCitationFormat
+  ) => Promise<FormattedFileCitation>
   getById: (id: number, datasetVersionNumber?: string) => Promise<File | undefined>
   getMultipleFileDownloadUrl: (ids: number[], downloadMode: FileDownloadMode) => string
   getFileDownloadUrl: (id: number, downloadMode: FileDownloadMode) => string

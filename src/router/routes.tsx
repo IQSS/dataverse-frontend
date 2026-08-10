@@ -6,6 +6,7 @@ import { ErrorPage } from '@/sections/error-page/ErrorPage'
 import { AppLoader } from '@/sections/shared/layout/app-loader/AppLoader'
 import { AuthCallback } from '@/sections/auth-callback/AuthCallback'
 import { SessionProvider } from '@/sections/session/SessionProvider'
+import { GuestbookSkeleton } from '@/sections/guestbooks/GuestbookSkeleton'
 import { ProtectedRoute } from './ProtectedRoute'
 
 const Homepage = lazy(() =>
@@ -104,10 +105,10 @@ const CreateTemplatePage = lazy(() =>
   )
 )
 
-const EditDatasetTemplateTermsPage = lazy(() =>
-  import('../sections/templates/edit-template-terms/EditTemplateTermsFactory').then(
-    ({ EditTemplateTermsFactory }) => ({
-      default: () => EditTemplateTermsFactory.create()
+const EditDatasetTemplatePage = lazy(() =>
+  import('../sections/templates/edit-template/EditTemplateFactory').then(
+    ({ EditTemplateFactory }) => ({
+      default: () => EditTemplateFactory.create()
     })
   )
 )
@@ -130,6 +131,20 @@ const FeaturedItemPage = lazy(() =>
   import('../sections/featured-item/FeaturedItemFactory').then(({ FeaturedItemFactory }) => ({
     default: () => FeaturedItemFactory.create()
   }))
+)
+
+const GuestbooksPage = lazy(() =>
+  import('../sections/guestbooks/GuestbooksFactory').then(({ GuestbooksFactory }) => ({
+    default: () => GuestbooksFactory.create()
+  }))
+)
+
+const CreateGuestbookPage = lazy(() =>
+  import('../sections/guestbooks/create-guestbooks/CreateGuestbookFactory').then(
+    ({ CreateGuestbookFactory }) => ({
+      default: () => CreateGuestbookFactory.create()
+    })
+  )
 )
 
 const NotFoundPage = lazy(() =>
@@ -312,10 +327,28 @@ export const routes: RouteObject[] = [
                 errorElement: <ErrorPage />
               },
               {
+                path: Route.GUESTBOOKS,
+                element: (
+                  <Suspense fallback={<GuestbookSkeleton />}>
+                    <GuestbooksPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
                 path: Route.COLLECTION_TEMPLATES,
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <DatasetTemplatesPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.GUESTBOOKS_CREATE,
+                element: (
+                  <Suspense fallback={<GuestbookSkeleton />}>
+                    <CreateGuestbookPage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />
@@ -330,10 +363,10 @@ export const routes: RouteObject[] = [
                 errorElement: <ErrorPage />
               },
               {
-                path: Route.TEMPLATES_EDIT_TERMS,
+                path: Route.TEMPLATES_EDIT,
                 element: (
                   <Suspense fallback={<AppLoader />}>
-                    <EditDatasetTemplateTermsPage />
+                    <EditDatasetTemplatePage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

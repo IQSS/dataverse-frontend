@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import cn from 'classnames'
 import { WriteError } from '@iqss/dataverse-client-javascript'
-import { Alert, DropdownButton, DropdownButtonItem, Spinner } from '@iqss/dataverse-design-system'
+import {
+  Alert,
+  Button,
+  DropdownButton,
+  DropdownButtonItem,
+  Spinner
+} from '@iqss/dataverse-design-system'
 import { BoxArrowUpRight } from 'react-bootstrap-icons'
 import { ExternalTool } from '@/externalTools/domain/models/ExternalTool'
 import { FileExternalToolResolved } from '@/externalTools/domain/models/FileExternalToolResolved'
@@ -12,6 +18,8 @@ import { File } from '@/files/domain/models/File'
 import { FilePageHelper } from '../FilePageHelper'
 import { useExternalToolsRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './FileEmbeddedExternalTool.module.scss'
+import { DatasetPublishingStatus, defaultLicense } from '@/dataset/domain/models/Dataset'
+import { DownloadWithTermsAndGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithTermsAndGuestbookModal'
 
 interface FileEmbeddedExternalToolProps {
   file: File
@@ -35,8 +43,20 @@ export const FileEmbeddedExternalTool = ({
   const [errorLoadingTool, setErrorLoadingTool] = useState<string | null>(null)
   const [fileExternalToolResolved, setFileExternalToolResolved] =
     useState<FileExternalToolResolved | null>(null)
+  const [showTermsAndGuestbookModal, setShowTermsAndGuestbookModal] = useState<boolean>(false)
+  const [termsAndGuestbookAccepted, setTermsAndGuestbookAccepted] = useState<boolean>(false)
 
   const moreThanOneTool = applicableTools.length > 1
+  const bypassTermsGuard =
+    file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT ||
+    file.permissions.canEditOwnerDataset
+  const hasGuestbook = file.guestbookId !== undefined
+  const hasCustomTerms = file.datasetCustomTerms !== undefined
+  const hasNonDefaultLicense =
+    file.datasetLicense !== undefined && file.datasetLicense.name !== defaultLicense.name
+  const requiresTermsAndGuestbook =
+    !bypassTermsGuard && (hasGuestbook || hasCustomTerms || hasNonDefaultLicense)
+  const isWaitingForTermsAndGuestbook = requiresTermsAndGuestbook && !termsAndGuestbookAccepted
 
   const handleToolSelect = (eventKey: string | null) => setToolIdSelected(Number(eventKey))
 
@@ -49,6 +69,10 @@ export const FileEmbeddedExternalTool = ({
   // Loads the tool every time the tab is in view or the tool selection changes.
   useEffect(() => {
     if (!isInView) return
+    if (isWaitingForTermsAndGuestbook) {
+      setShowTermsAndGuestbookModal(true)
+      return
+    }
 
     const fetchFileExternalToolResolved = async () => {
       setIframeLoaded(false)
@@ -77,10 +101,30 @@ export const FileEmbeddedExternalTool = ({
     }
 
     void fetchFileExternalToolResolved()
-  }, [isInView, toolIdSelected, externalToolsRepository, file.id, t, i18n.languages])
+  }, [
+    isInView,
+    isWaitingForTermsAndGuestbook,
+    toolIdSelected,
+    externalToolsRepository,
+    file.id,
+    t,
+    i18n.languages
+  ])
 
   return (
     <section>
+      {requiresTermsAndGuestbook && showTermsAndGuestbookModal && (
+        <DownloadWithTermsAndGuestbookModal
+          fileId={file.id}
+          guestbookId={file.guestbookId}
+          datasetPersistentId={file.datasetPersistentId}
+          datasetLicense={file.datasetLicense}
+          datasetCustomTerms={file.datasetCustomTerms}
+          show={showTermsAndGuestbookModal}
+          handleClose={() => setShowTermsAndGuestbookModal(false)}
+          onAccept={() => setTermsAndGuestbookAccepted(true)}
+        />
+      )}
       <header className={styles.header}>
         {moreThanOneTool && (
           <DropdownButton
@@ -132,9 +176,23 @@ export const FileEmbeddedExternalTool = ({
             data-testid="external-tool-iframe"></iframe>
         )}
         {/* Keep overlay on top of the iframe while it loads to mask flickering */}
-        <div aria-hidden={true} className={styles.overlay} data-testid="loading-overlay">
-          <Spinner />
-        </div>
+        {!isWaitingForTermsAndGuestbook && (
+          <div aria-hidden={true} className={styles.overlay} data-testid="loading-overlay">
+            <Spinner />
+          </div>
+        )}
+        {isWaitingForTermsAndGuestbook && !showTermsAndGuestbookModal && (
+          <Alert variant="info" dismissible={false}>
+            <Button
+              variant="link"
+              size="sm"
+              onClick={() => setShowTermsAndGuestbookModal(true)}
+              style={{ padding: 0, verticalAlign: 'baseline' }}>
+              {t('acceptTermsAndGuestbooks')}
+            </Button>
+            <span> {t('termsRequired')}</span>
+          </Alert>
+        )}
         {/* Show error message if fetching the tool URL fails or the iframe somehow fails. */}
         {errorLoadingTool && (
           <Alert variant="danger" dismissible={false}>
