@@ -78,6 +78,7 @@ export const ViewStyledCitationModal = ({
                 </p>
                 <CopyToClipboardButton
                   text={plainTextCitation}
+                  html={citationHtml ?? undefined}
                   showTruncateText={false}
                   tooltipText={t('copyCitationToClipboard')}
                   iconSize={24}
@@ -90,7 +91,7 @@ export const ViewStyledCitationModal = ({
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose} type="button">
-          {tShared('cancel')}
+          {tShared('close')}
         </Button>
       </Modal.Footer>
     </Modal>

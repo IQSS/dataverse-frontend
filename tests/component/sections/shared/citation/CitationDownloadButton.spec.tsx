@@ -309,7 +309,7 @@ describe('CitationDownloadButton', () => {
     cy.findByText('View Styled Citation').click()
 
     cy.findByRole('dialog').should('exist')
-    cy.findByRole('button', { name: 'Cancel' }).click()
+    cy.get('.modal-footer').findByRole('button', { name: /Close/i }).click()
     cy.findByRole('dialog').should('not.exist')
   })
 
@@ -334,7 +334,7 @@ describe('CitationDownloadButton', () => {
     cy.findByText('STYLE-B: Mock Dataset Title').should('exist')
     cy.findByTestId('toggle-inner-content').should('contain.text', 'apa')
 
-    cy.findByRole('button', { name: /close/i }).click()
+    cy.get('.modal-footer').findByRole('button', { name: /Close/i }).click()
     cy.findByRole('dialog').should('not.exist')
 
     cy.findByRole('button', { name: 'Cite Dataset' }).click()

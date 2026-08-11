@@ -6,12 +6,14 @@ import { useTranslation } from 'react-i18next'
 
 export function CopyToClipboardButton({
   text,
+  html,
   showTruncateText = true,
   tooltipText,
   iconSize,
   disabled = false
 }: {
   text: string
+  html?: string
   showTruncateText?: boolean
   tooltipText?: string
   iconSize?: string | number
@@ -21,8 +23,19 @@ export function CopyToClipboardButton({
   const [copied, setCopied] = useState(false)
   const copyToClipboard = () => {
     if (disabled) return
-    navigator.clipboard
-      .writeText(text)
+    const copy =
+      html && typeof ClipboardItem !== 'undefined' && navigator.clipboard.write
+        ? navigator.clipboard
+            .write([
+              new ClipboardItem({
+                'text/html': new Blob([html], { type: 'text/html' }),
+                'text/plain': new Blob([text], { type: 'text/plain' })
+              })
+            ])
+            .catch(() => navigator.clipboard.writeText(text))
+        : navigator.clipboard.writeText(text)
+
+    copy
       .then(() => {
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)

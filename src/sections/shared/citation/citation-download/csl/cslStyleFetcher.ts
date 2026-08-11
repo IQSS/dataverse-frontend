@@ -1,8 +1,7 @@
-// @master is a mutable branch:  Output can change or break without an application release, and a compromised upstream becomes runtime input.
 export const CSL_STYLES_BASE_URL =
-  'https://cdn.jsdelivr.net/gh/citation-style-language/styles@master'
+  'https://cdn.jsdelivr.net/gh/citation-style-language/styles@v0.2.186'
 export const CSL_LOCALES_BASE_URL =
-  'https://cdn.jsdelivr.net/gh/citation-style-language/locales@master'
+  'https://cdn.jsdelivr.net/gh/citation-style-language/locales@v0.0.97'
 export const DEFAULT_CSL_LOCALE = 'en-US'
 
 const styleXmlCache = new Map<string, string>()

@@ -71,7 +71,7 @@ export function CitationDownloadButton({ datasetId, version }: CitationDownloadP
             disabled={isFetchingDefaultStyleCitation || !defaultStyleCitationText}
           />
         </div>
-        <DropdownButton title="Cite Dataset" id="dataset-actions" variant="link">
+        <DropdownButton title={t('citeDataset')} id="dataset-actions" variant="link">
           <DropdownButtonItem
             style={{ textDecoration: 'underline' }}
             onClick={() => handleDownload(CitationFormat.EndNote, `${datasetId}.xml`)}>
