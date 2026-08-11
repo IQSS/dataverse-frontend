@@ -2,8 +2,9 @@
 name: Feature request
 about: Suggest an idea or new feature for the Dataverse software!
 title: 'Feature Request/Idea:'
-labels: 'Type: Feature'
+labels: ''
 assignees: ''
+
 ---
 
 <!--
