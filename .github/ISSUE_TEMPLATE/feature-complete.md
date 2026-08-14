@@ -4,7 +4,6 @@ about: Items detected during the "Feature Complete" project.
 title: Webpage header title - [Feature Complete]
 labels: SPA Feature Complete
 assignees: ''
-
 ---
 
 ## Summary
