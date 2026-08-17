@@ -10,6 +10,7 @@ import {
   DatasetMetadataSubField
 } from '../../../../dataset/domain/models/Dataset'
 import { ExpandableContent } from '@/sections/shared/expandable-content/ExpandableContent'
+import { getControlledVocabularyValueLabel } from '@/metadata-block-info/domain/models/ControlledVocabularyValueLabel'
 
 interface DatasetMetadataFieldValueFormattedProps {
   metadataFieldName: string
@@ -115,6 +116,7 @@ export function joinSubFields(
 
   const subfields = Object.entries(metadataSubField).map(([subFieldName, subFieldValue]) => {
     let formattedSubFieldValue = formatSubFieldValue(
+      subFieldName,
       subFieldValue,
       metadataBlockInfo.fields[subFieldName]?.displayFormat,
       metadataBlockInfo.fields[subFieldName]?.title
@@ -142,6 +144,7 @@ export function joinSubFields(
 }
 
 function formatSubFieldValue(
+  subFieldName: string,
   subFieldValue: string | undefined,
   displayFormat: string | undefined,
   fieldTitle: string | undefined
@@ -150,13 +153,15 @@ function formatSubFieldValue(
     return ''
   }
 
+  const displayValue = getControlledVocabularyValueLabel(subFieldName, subFieldValue)
+
   if (!displayFormat) {
-    return subFieldValue
+    return displayValue
   }
 
   const valueFormatted = displayFormat.replaceAll(
     METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER,
-    subFieldValue
+    displayValue
   )
   const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
     METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,

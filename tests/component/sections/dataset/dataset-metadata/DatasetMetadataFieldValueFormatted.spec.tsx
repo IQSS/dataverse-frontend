@@ -40,6 +40,24 @@ describe('joinSubFields formatting logic', () => {
         type: 'TEXT',
         title: 'Dataset Contact',
         description: 'Dataset contact description'
+      },
+      publication: {
+        displayFormat: '',
+        type: 'NONE',
+        title: 'Related Publication',
+        description: 'Related publication description'
+      },
+      publicationRelationType: {
+        displayFormat: '#VALUE:',
+        type: 'TEXT',
+        title: 'Relation Type',
+        description: 'Publication relation type description'
+      },
+      publicationCitation: {
+        displayFormat: '#VALUE',
+        type: 'TEXTBOX',
+        title: 'Citation',
+        description: 'Publication citation description'
       }
     }
   }
@@ -86,6 +104,17 @@ describe('joinSubFields formatting logic', () => {
     const result = joinSubFields(metadataSubField, mockDisplayFormatInfo, 'otherField')
 
     expect(result).equal('value1\n value2')
+  })
+
+  it('displays the human-readable label for a related publication relation type', () => {
+    const metadataSubField = {
+      publicationRelationType: 'IsSupplementedBy',
+      publicationCitation: 'Example publication'
+    }
+
+    const result = joinSubFields(metadataSubField, mockDisplayFormatInfo, 'publication')
+
+    expect(result).equal('Is Supplemented By: Example publication')
   })
 
   it("hides the 'datasetContactEmail' subfield when present with other subfields", () => {
@@ -367,6 +396,49 @@ describe('DatasetMetadataFieldValueFormatted component', () => {
     // After transformHtmlToMarkdown + ReactMarkdown, <b> becomes <strong>
     cy.get('strong').contains('Hello')
     cy.contains('world')
+  })
+
+  it('renders a human-readable relation type label in the dataset view', () => {
+    const mockDisplayFormatInfo: MetadataBlockInfoDisplayFormat = {
+      name: 'citation',
+      displayName: 'Citation Metadata',
+      fields: {
+        publication: {
+          displayFormat: '',
+          type: 'NONE',
+          title: 'Related Publication',
+          description: 'Related publication description'
+        },
+        publicationRelationType: {
+          displayFormat: '#VALUE:',
+          type: 'TEXT',
+          title: 'Relation Type',
+          description: 'Publication relation type description'
+        },
+        publicationCitation: {
+          displayFormat: '#VALUE',
+          type: 'TEXTBOX',
+          title: 'Citation',
+          description: 'Publication citation description'
+        }
+      }
+    }
+
+    cy.mount(
+      <DatasetMetadataFieldValueFormatted
+        metadataFieldName="publication"
+        metadataFieldValue={[
+          {
+            publicationRelationType: 'IsSupplementedBy',
+            publicationCitation: 'Example publication'
+          }
+        ]}
+        metadataBlockDisplayFormatInfo={mockDisplayFormatInfo}
+      />
+    )
+
+    cy.contains('Is Supplemented By: Example publication').should('exist')
+    cy.contains('IsSupplementedBy').should('not.exist')
   })
 
   it('should just render the value as markdown when field type is neither URL nor TEXTBOX', () => {

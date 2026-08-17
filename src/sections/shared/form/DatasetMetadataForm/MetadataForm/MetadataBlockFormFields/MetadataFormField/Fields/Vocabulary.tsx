@@ -7,6 +7,7 @@ import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { type CommonFieldProps } from '..'
 import { CustomInstructionsEditor } from '../CustomInstructionsEditor'
 import styles from '../index.module.scss'
+import { getControlledVocabularyValueLabel } from '@/metadata-block-info/domain/models/ControlledVocabularyValueLabel'
 
 interface VocabularyProps extends CommonFieldProps {
   options: string[]
@@ -89,6 +90,14 @@ export const Vocabulary = ({
     ? requiredIndicator
     : Boolean(rulesToApply?.required) || requiredIndicator || dynamicRequired
   const showSelectWithSearch = options.length > 10
+  const optionsWithLabels = useMemo(
+    () =>
+      options.map((option) => ({
+        value: option,
+        label: getControlledVocabularyValueLabel(name, option)
+      })),
+    [name, options]
+  )
 
   return (
     <Controller
@@ -123,7 +132,7 @@ export const Vocabulary = ({
                 {showSelectWithSearch ? (
                   <Form.Group.SelectAdvanced
                     defaultValue={value as string}
-                    options={options}
+                    options={optionsWithLabels}
                     onChange={onChange}
                     isInvalid={invalid}
                     ref={ref}
@@ -137,9 +146,9 @@ export const Vocabulary = ({
                     aria-required={labelRequired ? 'true' : 'false'}
                     ref={ref}>
                     <option value="">Select</option>
-                    {options.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
+                    {optionsWithLabels.map(({ value: optionValue, label }) => (
+                      <option key={optionValue} value={optionValue}>
+                        {label}
                       </option>
                     ))}
                   </Form.Group.Select>
