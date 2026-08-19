@@ -18,7 +18,12 @@ import { useIsFirstRender } from './useIsFirstRender'
 export const DEFAULT_LOCALES = { select: 'Select...' }
 export const SELECT_MENU_SEARCH_DEBOUNCE_TIME = 400
 
-export type Option = { value: string; label: string; group?: string }
+export type Option = {
+  value: string
+  label: string
+  description?: string
+  group?: string
+}
 
 export type InputOptions = string[] | Option[]
 

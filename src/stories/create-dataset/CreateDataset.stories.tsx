@@ -12,6 +12,7 @@ import { CollectionMockRepository } from '../collection/CollectionMockRepository
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { CollectionMother } from '../../../tests/component/collection/domain/models/CollectionMother'
 import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
+import { DatasetTypeMother } from '@tests/component/dataset/domain/models/DatasetTypeMother'
 
 const meta: Meta<typeof CreateDataset> = {
   title: 'Pages/Create Dataset',
@@ -24,6 +25,24 @@ const meta: Meta<typeof CreateDataset> = {
 }
 export default meta
 type Story = StoryObj<typeof CreateDataset>
+
+const datasetRepositoryMockWithoutTemplatesAndTypes = new DatasetMockRepository()
+const templateRepositoryMockWithoutTemplates = new TemplateMockRepository()
+
+templateRepositoryMockWithoutTemplates.getTemplatesByCollectionId = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([])
+    }, FakerHelper.loadingTimout())
+  })
+}
+datasetRepositoryMockWithoutTemplatesAndTypes.getAvailableDatasetTypes = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([DatasetTypeMother.creatDefaultDatasetType()])
+    }, FakerHelper.loadingTimout())
+  })
+}
 
 export const Default: Story = {
   parameters: {
@@ -44,17 +63,35 @@ export const Default: Story = {
   )
 }
 
+export const WithTemplatesAndTypes: Story = {
+  render: () => (
+    <NotImplementedModalProvider>
+      <RepositoriesStoryProvider
+        collectionRepository={new CollectionMockRepository()}
+        datasetRepository={new DatasetMockRepository()}>
+        <CreateDataset
+          templateRepository={new TemplateMockRepository()}
+          metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+          collectionId={'collectionId'}
+        />
+      </RepositoriesStoryProvider>
+    </NotImplementedModalProvider>
+  )
+}
+
 export const Loading: Story = {
   render: () => (
-    <RepositoriesStoryProvider
-      collectionRepository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}>
-      <CreateDataset
-        templateRepository={new TemplateMockRepository()}
-        metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
-        collectionId={'collectionId'}
-      />
-    </RepositoriesStoryProvider>
+    <NotImplementedModalProvider>
+      <RepositoriesStoryProvider
+        collectionRepository={new CollectionMockRepository()}
+        datasetRepository={datasetRepositoryMockWithoutTemplatesAndTypes}>
+        <CreateDataset
+          templateRepository={templateRepositoryMockWithoutTemplates}
+          metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
+          collectionId={'collectionId'}
+        />
+      </RepositoriesStoryProvider>
+    </NotImplementedModalProvider>
   )
 }
 

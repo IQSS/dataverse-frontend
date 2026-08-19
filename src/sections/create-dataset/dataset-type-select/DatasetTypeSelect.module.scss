@@ -1,0 +1,110 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.dataset-type-select {
+  position: relative;
+
+  .toggle {
+    position: relative;
+    display: grid;
+    background-color: #fff;
+
+    // Chevron icon
+    &::after {
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      display: inline-block;
+      width: 0.45em;
+      height: 0.45em;
+      border-color: rgb(0 0 0 / 75%);
+      border-style: solid;
+      border-width: 2px 2px 0 0;
+      transform: translateY(-60%) rotate(-225deg);
+      content: '';
+    }
+
+    > input[type='button'] {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      grid-area: 1 / 1;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: var(--toggle-padding);
+      background-color: transparent;
+      border: solid 1px $dv-secondary-color;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+      &::after {
+        display: none;
+      }
+
+      &:focus-within,
+      &:focus {
+        border-color: color.adjust($dv-primary-color, $alpha: -0.4);
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem color.adjust($dv-primary-color, $alpha: -0.7);
+      }
+    }
+
+    > span {
+      position: relative;
+      z-index: 2;
+      grid-area: 1 / 1;
+      padding: var(--toggle-padding);
+      pointer-events: none;
+
+      .single-selected-option {
+        margin: 0;
+      }
+    }
+  }
+
+  .menu {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    z-index: 120;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    background: #fff;
+    max-width: 100%;
+    max-height: 300px;
+    padding: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 5px 10px rgb(0 0 0 / 15%);
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+    pointer-events: none;
+
+    &.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .type-option {
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover,
+      &.selected {
+        background: color.adjust($dv-primary-color, $alpha: -0.9);
+        border: solid 1px $dv-primary-color;
+      }
+
+      &:active {
+        background: color.adjust($dv-primary-color, $alpha: -0.6);
+      }
+    }
+  }
+}

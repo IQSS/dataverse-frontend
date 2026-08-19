@@ -97,6 +97,7 @@ export const SelectAdvancedMenu = (props: SelectAdvancedMenuProps) => {
           className={styles['option-item-not-multiple']}
           onClick={() => handleClickOption('')}
           active={selected === ''}
+          aria-selected={selected === ''}
           key="__placeholder__">
           {selectWord}
         </DropdownBS.Item>
@@ -116,6 +117,12 @@ export const SelectAdvancedMenu = (props: SelectAdvancedMenuProps) => {
             ) : null
 
           if (!isMultiple) {
+            const handleKeyDown = (e: React.KeyboardEvent) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                handleClickOption(opt.value)
+              }
+            }
             return (
               <Fragment key={opt.value}>
                 {groupHeader}
@@ -126,8 +133,15 @@ export const SelectAdvancedMenu = (props: SelectAdvancedMenuProps) => {
                   id={`${optionLabelId}-${opt.value}`}
                   className={styles['option-item-not-multiple']}
                   onClick={() => handleClickOption(opt.value)}
-                  active={selected === opt.value}>
-                  {opt.label}
+                  onKeyDown={handleKeyDown}
+                  active={selected === opt.value}
+                  aria-selected={selected === opt.value}>
+                  <span className={styles['option-content']}>
+                    <span className={styles['option-label']}>{opt.label}</span>
+                    {opt.description && (
+                      <span className={styles['option-description']}>{opt.description}</span>
+                    )}
+                  </span>
                 </DropdownBS.Item>
               </Fragment>
             )
@@ -144,7 +158,14 @@ export const SelectAdvancedMenu = (props: SelectAdvancedMenuProps) => {
                 <FormBS.Check
                   type="checkbox"
                   value={opt.value}
-                  label={opt.label}
+                  label={
+                    <span className={styles['option-content']}>
+                      <span className={styles['option-label']}>{opt.label}</span>
+                      {opt.description && (
+                        <span className={styles['option-description']}>{opt.description}</span>
+                      )}
+                    </span>
+                  }
                   onChange={handleCheck}
                   id={`${optionLabelId}-${opt.value}`}
                   checked={selectedArray.includes(opt.value)}
