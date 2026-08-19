@@ -178,4 +178,20 @@
     cursor: pointer;
     transition: background-color 0.1s ease-in-out;
   }
+
+  .option-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .option-label {
+    font-weight: $dv-font-weight-bold;
+  }
+
+  .option-description {
+    color: $dv-subtext-color;
+    font-size: $dv-font-size-sm;
+    white-space: normal;
+  }
 }

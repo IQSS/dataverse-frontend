@@ -137,6 +137,7 @@ export function Dataset({
               <DatasetSummary
                 summaryFields={dataset.summaryFields}
                 license={dataset.license}
+                datasetType={dataset.datasetType}
                 onCustomTermsClick={handleCustomTermsClick}
                 metadataBlockInfoRepository={metadataBlockInfoRepository}
               />
