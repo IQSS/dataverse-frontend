@@ -1,3 +1,5 @@
+import type { TFunction } from 'i18next'
+
 import { MetadataBlockInfoDisplayFormat } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import {
   joinSubFields,
@@ -5,6 +7,9 @@ import {
 } from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValueFormatted'
 import type { DatasetMetadataSubField } from '@/dataset/domain/models/Dataset'
 import { DatasetMetadataFieldValueFormatted } from '@/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValueFormatted'
+
+const translatedPublicationRelationLabel = 'Translated Publication Relation'
+const t = (() => translatedPublicationRelationLabel) as TFunction
 
 describe('joinSubFields formatting logic', () => {
   const mockDisplayFormatInfo: MetadataBlockInfoDisplayFormat = {
@@ -112,9 +117,9 @@ describe('joinSubFields formatting logic', () => {
       publicationCitation: 'Example publication'
     }
 
-    const result = joinSubFields(metadataSubField, mockDisplayFormatInfo, 'publication')
+    const result = joinSubFields(metadataSubField, mockDisplayFormatInfo, 'publication', t)
 
-    expect(result).equal('Is Supplemented By: Example publication')
+    expect(result).equal(`${translatedPublicationRelationLabel}: Example publication`)
   })
 
   it("hides the 'datasetContactEmail' subfield when present with other subfields", () => {

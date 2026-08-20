@@ -6,8 +6,11 @@ import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { type CommonFieldProps } from '..'
 import { CustomInstructionsEditor } from '../CustomInstructionsEditor'
+import {
+  getPublicationRelationLabel,
+  PUBLICATION_RELATION_TYPE_FIELD_NAME
+} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import styles from '../index.module.scss'
-import { getControlledVocabularyValueLabel } from '@/metadata-block-info/domain/models/ControlledVocabularyValueLabel'
 
 interface VocabularyProps extends CommonFieldProps {
   options: string[]
@@ -36,7 +39,7 @@ export const Vocabulary = ({
   requiredIndicator,
   disableRequiredValidation
 }: VocabularyProps) => {
-  const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
+  const { t } = useTranslation('shared')
 
   const { control } = useFormContext()
 
@@ -72,7 +75,10 @@ export const Vocabulary = ({
       }
       return {
         ...rulesToApply,
-        required: t('field.required', { displayName, interpolation: { escapeValue: false } })
+        required: t('datasetMetadataForm.field.required', {
+          displayName,
+          interpolation: { escapeValue: false }
+        })
       }
     }
     return rulesToApply
@@ -94,9 +100,12 @@ export const Vocabulary = ({
     () =>
       options.map((option) => ({
         value: option,
-        label: getControlledVocabularyValueLabel(name, option)
+        label:
+          name === PUBLICATION_RELATION_TYPE_FIELD_NAME
+            ? getPublicationRelationLabel(option, t)
+            : option
       })),
-    [name, options]
+    [name, options, t]
   )
 
   return (
