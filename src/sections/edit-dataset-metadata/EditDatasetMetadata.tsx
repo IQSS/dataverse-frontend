@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, Tabs } from '@iqss/dataverse-design-system'
+import { Alert, Col, Form, Tabs } from '@iqss/dataverse-design-system'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useDataset } from '../dataset/DatasetContext'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
@@ -54,6 +54,18 @@ export const EditDatasetMetadata = ({ metadataBlockInfoRepository }: EditDataset
         {t('infoAlert.text')}
       </Alert>
       <HostCollection collectionName={datasetParentCollection?.name} />
+      <Form.Group>
+        <Form.Group.Label column sm={3}>
+          {t('datasetType.label')}
+        </Form.Group.Label>
+        <Col sm={9}>
+          <Form.Group.Input
+            readOnly
+            defaultValue={dataset.datasetType}
+            className="text-capitalize"
+          />
+        </Col>
+      </Form.Group>
       <SeparationLine />
       <Tabs defaultActiveKey="metadata">
         <Tabs.Tab eventKey="metadata" title={t('metadata')}>
@@ -65,6 +77,7 @@ export const EditDatasetMetadata = ({ metadataBlockInfoRepository }: EditDataset
               datasetPersistentID={dataset.persistentId}
               datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
               datasetLastUpdateTime={dataset.version.lastUpdateTime}
+              datasetTypeName={dataset.datasetType}
             />
           </div>
         </Tabs.Tab>

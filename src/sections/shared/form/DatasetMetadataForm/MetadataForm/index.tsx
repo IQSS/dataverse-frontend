@@ -15,6 +15,7 @@ import { SeparationLine } from '@/sections/shared/layout/SeparationLine/Separati
 import { usePrefillFieldsWithUserData } from './usePrefillFieldsWithUserData'
 import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 import styles from './index.module.scss'
 
 interface FormProps {
@@ -25,6 +26,7 @@ interface FormProps {
   datasetPersistentID?: string
   datasetLastUpdateTime?: string
   datasetTemplateInstructions?: DatasetTemplateInstruction[]
+  datasetTypeName?: DatasetType['name']
 }
 
 export const MetadataForm = ({
@@ -34,7 +36,8 @@ export const MetadataForm = ({
   metadataBlocksInfo,
   datasetPersistentID,
   datasetLastUpdateTime,
-  datasetTemplateInstructions
+  datasetTemplateInstructions,
+  datasetTypeName
 }: FormProps) => {
   const { datasetRepository } = useDatasetRepositories()
   const { user } = useSession()
@@ -56,7 +59,8 @@ export const MetadataForm = ({
     datasetRepository,
     onSubmitDatasetError,
     datasetPersistentID,
-    datasetLastUpdateTime
+    datasetLastUpdateTime,
+    datasetTypeName
   )
 
   usePrefillFieldsWithUserData({ mode, user, formDefaultValues, setValue })
