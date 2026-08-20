@@ -3,7 +3,7 @@ name: accessibility
 on:
   push:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize]
 
 jobs:
   interaction-and-accessibility:
