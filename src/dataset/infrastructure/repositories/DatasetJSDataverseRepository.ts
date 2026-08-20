@@ -47,6 +47,8 @@ import {
   getDatasetStorageDriver,
   getDatasetUploadLimits,
   getDatasetReviews,
+  DatasetType,
+  getDatasetAvailableDatasetTypes,
   exportDatasetMetadata,
   DatasetNotNumberedVersion
 } from '@iqss/dataverse-client-javascript'
@@ -326,9 +328,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  create(dataset: DatasetDTO, collectionId: string): Promise<{ persistentId: string }> {
+  create(
+    dataset: DatasetDTO,
+    collectionId: string,
+    datasetType?: string
+  ): Promise<{ persistentId: string }> {
     return createDataset
-      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId)
+      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId, datasetType)
       .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({
         persistentId: jsDatasetIdentifiers.persistentId
       }))
@@ -439,6 +445,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return getDatasetLinkedCollections.execute(datasetId)
   }
 
+  getAvailableDatasetTypes: () => Promise<DatasetType[]> = () => {
+    return getDatasetAvailableDatasetTypes.execute()
+  }
+
+  /*
+    TODO: This is a temporary solution as this use case doesn't exist in js-dataverse yet and the API should also return the file store type rather than name only.
+    After https://github.com/IQSS/dataverse/issues/11695 is implemented, create a js-dataverse use case.
+  */
   private async getFileStore(datasetId: number): Promise<string | undefined> {
     return getDatasetStorageDriver
       .execute(datasetId)

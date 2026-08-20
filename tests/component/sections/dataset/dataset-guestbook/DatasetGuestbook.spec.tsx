@@ -84,6 +84,13 @@ describe('DatasetGuestbook', () => {
           displayOrder: 1,
           type: 'text',
           hidden: false
+        },
+        {
+          question: 'Would you like follow-up contact?',
+          required: false,
+          displayOrder: 2,
+          type: 'text',
+          hidden: false
         }
       ]
     })
@@ -94,6 +101,8 @@ describe('DatasetGuestbook', () => {
     cy.findByRole('button', { name: 'Preview Guestbook' }).click()
     cy.findByRole('dialog').should('be.visible')
     cy.findByRole('dialog').within(() => {
+      cy.findByText('How will you use this data? (Required)').should('exist')
+      cy.findByText('Would you like follow-up contact? (Optional)').should('exist')
       cy.findAllByRole('button', { name: 'Close' }).last().click()
     })
     cy.findByRole('dialog').should('not.exist')

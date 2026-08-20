@@ -4,16 +4,12 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
-import {
-  DatasetNonNumericVersionSearchParam,
-  DatasetPublishingStatus
-} from '@/dataset/domain/models/Dataset'
 import { useGetGuestbooksByCollectionId } from '@/sections/guestbooks/useGetGuestbooksByCollectionId'
-import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { useAssignDatasetGuestbook } from './useAssignDatasetGuestbook'
 import { useRemoveDatasetGuestbook } from './useRemoveDatasetGuestbook'
 import { useDataset } from '../../dataset/DatasetContext'
 import { PreviewGuestbookModal } from '@/sections/guestbooks/preview-modal/PreviewGuestbookModal'
+import { buildDatasetDraftReturnUrl, buildDatasetTermsReturnUrl } from '../datasetTermsNavigation'
 import { useGuestbookRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './EditGuestbook.module.scss'
 
@@ -38,16 +34,13 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
   const navigateToDatasetView = useCallback(() => {
     if (!dataset) return
 
-    const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+    navigate(buildDatasetTermsReturnUrl(dataset))
+  }, [dataset, navigate])
 
-    if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-    } else {
-      searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
-    }
+  const navigateToDatasetDraftView = useCallback(() => {
+    if (!dataset) return
 
-    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+    navigate(buildDatasetDraftReturnUrl(dataset))
   }, [dataset, navigate])
 
   const handleCancel = () => {
@@ -73,7 +66,7 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
     onSuccessfulAssignDatasetGuestbook: () => {
       toast.success(t('alerts.termsUpdated.alertText'))
       refreshDataset()
-      navigateToDatasetView()
+      navigateToDatasetDraftView()
     }
   })
   const {
@@ -85,7 +78,7 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
     onSuccessfulRemoveDatasetGuestbook: () => {
       toast.success(t('alerts.termsUpdated.alertText'))
       refreshDataset()
-      navigateToDatasetView()
+      navigateToDatasetDraftView()
     }
   })
 

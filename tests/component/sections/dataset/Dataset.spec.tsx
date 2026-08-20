@@ -389,7 +389,6 @@ describe('Dataset', () => {
       persistentId: 'doi:10.5072/FK2/PUBLISHDONE'
     })
     cy.clock()
-
     mountWithDataset(
       <>
         <Dataset
@@ -769,5 +768,14 @@ describe('Dataset', () => {
     // cy.findByText('Version Note').should('exist')
     cy.findByText('Contributors').should('exist')
     cy.findByText('Published On').should('exist')
+  })
+
+  it('renders the dataset tabs skeleton', () => {
+    cy.customMount(<TabsSkeleton />)
+
+    cy.findByRole('tab', { name: 'Files' }).should('exist')
+    cy.findByRole('tab', { name: 'Metadata' }).should('exist')
+    cy.findByRole('tab', { name: 'Terms' }).should('exist')
+    cy.findByRole('tab', { name: 'Versions' }).should('exist')
   })
 })
