@@ -298,4 +298,36 @@ describe('PublishDatasetModal', () => {
     cy.findByText(popupText).should('exist')
     cy.findByRole('button', { name: 'Continue' }).should('not.be.disabled')
   })
+
+  it('Renders sanitized HTML in the custom popup text', () => {
+    const dataverseInfoRepository = new DataverseInfoMockRepository()
+    const popupText =
+      'Read the <a href="https://guides.dataverse.org">Dataverse guide</a><br>before publishing.'
+
+    dataverseInfoRepository.getZipDownloadLimit = cy
+      .stub()
+      .resolves(SettingMother.createZipDownloadLimit())
+    dataverseInfoRepository.getMaxEmbargoDurationInMonths = cy
+      .stub()
+      .resolves(SettingMother.createMaxEmbargoDurationInMonths())
+    dataverseInfoRepository.getHasPublicStore = cy
+      .stub()
+      .resolves(SettingMother.createHasPublicStore())
+    dataverseInfoRepository.getExternalStatusesAllowed = cy
+      .stub()
+      .resolves(SettingMother.createExternalStatusesAllowed())
+    dataverseInfoRepository.getDatasetPublishPopupCustomText = cy
+      .stub()
+      .resolves(SettingMother.createDatasetPublishPopupCustomText(popupText))
+    dataverseInfoRepository.getPublishDatasetDisclaimerText = cy.stub().resolves('')
+
+    mountPublishDatasetModal({ dataverseInfoRepository })
+
+    cy.findByRole('link', { name: 'Dataverse guide' }).should(
+      'have.attr',
+      'href',
+      'https://guides.dataverse.org'
+    )
+    cy.get('p').contains('before publishing.').find('br').should('exist')
+  })
 })
