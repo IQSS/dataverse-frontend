@@ -1,8 +1,13 @@
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import TurndownService from 'turndown'
+
 import {
+  getPublicationRelationLabel,
   METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
   METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER,
-  MetadataBlockInfoDisplayFormat
+  MetadataBlockInfoDisplayFormat,
+  PUBLICATION_RELATION_TYPE_FIELD_NAME
 } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MarkdownComponent } from '../../markdown/MarkdownComponent'
 import {
@@ -28,10 +33,12 @@ export function DatasetMetadataFieldValueFormatted({
   metadataFieldValue,
   metadataBlockDisplayFormatInfo
 }: DatasetMetadataFieldValueFormattedProps) {
+  const { t } = useTranslation('shared')
   const valueFormatted = metadataFieldValueToDisplayFormat(
     metadataFieldValue,
     metadataBlockDisplayFormatInfo,
-    metadataFieldName
+    metadataFieldName,
+    t
   )
 
   const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
@@ -68,14 +75,15 @@ export function DatasetMetadataFieldValueFormatted({
 export function metadataFieldValueToDisplayFormat(
   metadataFieldValue: DatasetMetadataFieldValueModel,
   metadataBlockInfo: MetadataBlockInfoDisplayFormat,
-  metadataFieldName?: string
+  metadataFieldName?: string,
+  t?: TFunction
 ): string {
   const separator = ';'
 
   if (isArrayOfObjects(metadataFieldValue)) {
     return metadataFieldValue
       .map((metadataSubField) =>
-        joinSubFields(metadataSubField, metadataBlockInfo, metadataFieldName)
+        joinSubFields(metadataSubField, metadataBlockInfo, metadataFieldName, t)
       )
       .join(' \n \n')
   }
@@ -106,7 +114,8 @@ function joinObjectValues(obj: object, separator: string): string {
 export function joinSubFields(
   metadataSubField: DatasetMetadataSubField,
   metadataBlockInfo: MetadataBlockInfoDisplayFormat,
-  parentFieldName?: string
+  parentFieldName?: string,
+  t?: TFunction
 ): string {
   let parentDisplayFormat = ''
   if (parentFieldName) {
@@ -115,9 +124,11 @@ export function joinSubFields(
 
   const subfields = Object.entries(metadataSubField).map(([subFieldName, subFieldValue]) => {
     let formattedSubFieldValue = formatSubFieldValue(
+      subFieldName,
       subFieldValue,
       metadataBlockInfo.fields[subFieldName]?.displayFormat,
-      metadataBlockInfo.fields[subFieldName]?.title
+      metadataBlockInfo.fields[subFieldName]?.title,
+      t
     )
 
     const subFieldType = metadataBlockInfo?.fields[subFieldName]?.type as string
@@ -142,21 +153,28 @@ export function joinSubFields(
 }
 
 function formatSubFieldValue(
+  subFieldName: string,
   subFieldValue: string | undefined,
   displayFormat: string | undefined,
-  fieldTitle: string | undefined
+  fieldTitle: string | undefined,
+  t?: TFunction
 ): string {
   if (subFieldValue === undefined) {
     return ''
   }
 
+  const displayValue =
+    subFieldName === PUBLICATION_RELATION_TYPE_FIELD_NAME && t
+      ? getPublicationRelationLabel(subFieldValue, t)
+      : subFieldValue
+
   if (!displayFormat) {
-    return subFieldValue
+    return displayValue
   }
 
   const valueFormatted = displayFormat.replaceAll(
     METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER,
-    subFieldValue
+    displayValue
   )
   const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
     METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
