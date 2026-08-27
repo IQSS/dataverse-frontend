@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0.1">
+  <info>
+    <title>Test Dependent Style</title>
+    <id>http://www.zotero.org/styles/test-dependent-style</id>
+    <link href="http://www.zotero.org/styles/test-style" rel="independent-parent"/>
+    <updated>2020-01-01T00:00:00+00:00</updated>
+  </info>
+</style>

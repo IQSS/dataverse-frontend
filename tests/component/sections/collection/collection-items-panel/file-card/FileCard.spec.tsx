@@ -7,7 +7,7 @@ import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus
 describe('FileCard', () => {
   it('should render the card', () => {
     const userRoles = ['Admin', 'Contributor']
-    const filePreview = FileItemTypePreviewMother.create({ userRoles: userRoles })
+    const filePreview = FileItemTypePreviewMother.createRealistic({ userRoles: userRoles })
     cy.customMount(<FileCard filePreview={filePreview} />)
 
     filePreview.restricted

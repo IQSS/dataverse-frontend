@@ -138,6 +138,13 @@
     }
   }
 
+  .option-group-header {
+    padding: 0.5rem 1rem 0.25rem;
+    color: $dv-text-color;
+    font-weight: $dv-font-weight-bold;
+    font-size: $dv-font-size;
+  }
+
   .option-item {
     padding-block: 0;
     transition: background-color 0.1s ease-in-out;
