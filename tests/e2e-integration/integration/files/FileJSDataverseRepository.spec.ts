@@ -932,6 +932,7 @@ describe('File JSDataverse Repository', () => {
       })
     })
   })
+
   describe('edit file metadata', () => {
     it('edits file metadata', async () => {
       const datasetResponse = await DatasetHelper.createWithFile(FileHelper.create())
