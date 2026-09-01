@@ -19,6 +19,8 @@ import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { LinkingObjectType } from '@/collection/domain/useCases/getCollectionsForLinking'
 import { CollectionSummaryMother } from '@tests/component/collection/domain/models/CollectionSummaryMother'
 import { CollectionLinks } from '@/collection/domain/models/CollectionLinks'
+import { AllowedStorageDrivers } from '@/collection/domain/models/AllowedStorageDrivers'
+import { StorageDriver } from '@/collection/domain/models/StorageDriver'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id?: string): Promise<Collection> {
@@ -246,6 +248,48 @@ export class CollectionMockRepository implements CollectionRepository {
             { persistentId: 'doi:10.1234/linked2', title: 'Linked Dataset 2' }
           ]
         })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getAllowedStorageDrivers(_collectionIdOrAlias: number | string): Promise<AllowedStorageDrivers> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ S3: 'S3' })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getStorageDriver(
+    _collectionIdOrAlias: number | string,
+    _getEffective?: boolean
+  ): Promise<StorageDriver | undefined> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          name: 's3',
+          type: 's3',
+          label: 'S3',
+          directUpload: true,
+          directDownload: true,
+          uploadOutOfBand: false
+        })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  setStorageDriver(_collectionIdOrAlias: number | string, _driverLabel: string): Promise<string> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('Storage driver updated.')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  deleteStorageDriver(_collectionIdOrAlias: number | string): Promise<string> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('Storage driver deleted.')
       }, FakerHelper.loadingTimout())
     })
   }

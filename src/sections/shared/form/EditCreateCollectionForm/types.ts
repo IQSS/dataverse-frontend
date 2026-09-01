@@ -1,5 +1,4 @@
 import { type FieldNamesMarkedBoolean } from 'react-hook-form'
-import { CollectionStorage } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import {
   MetadataBlockInfo,
   MetadataField
@@ -17,7 +16,7 @@ export type CollectionFormData = {
   name: string
   affiliation: string
   alias: string
-  storage: CollectionStorage
+  storage: string
   type: CollectionType | ''
   description: string
   contacts: { value: string }[]
