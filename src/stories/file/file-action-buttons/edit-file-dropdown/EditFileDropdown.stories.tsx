@@ -9,7 +9,7 @@ import { ExternalToolsProvider } from '@/shared/contexts/external-tools/External
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
-import { WithRepositories } from '@/stories/WithRepositories'
+import { RepositoriesStoryProvider, WithRepositories } from '@/stories/WithRepositories'
 
 const storyFile = FileMother.createRealistic()
 
@@ -56,21 +56,24 @@ externalToolsRepositoryWithFileConfigureTool.getExternalTools = () => {
 
 export const WithConfigureToolOption: Story = {
   render: () => (
-    <ExternalToolsProvider externalToolsRepository={externalToolsRepositoryWithFileConfigureTool}>
-      <EditFileMenu
-        fileId={storyFile.id}
-        fileRepository={new FileMockRepository()}
-        isRestricted={false}
-        datasetInfo={{
-          persistentId: storyFile.datasetPersistentId,
-          releasedVersionExists: false,
-          versionNumber: storyFile.datasetVersion.number.toString(),
-          requestAccess: true
-        }}
-        storageIdentifier="s3://10.5072/FK2/FNJFOR"
-        isTabularFile={true}
-        fileType={storyFile.metadata.type.value}
-      />
-    </ExternalToolsProvider>
+    <RepositoriesStoryProvider
+      externalToolsRepository={externalToolsRepositoryWithFileConfigureTool}>
+      <ExternalToolsProvider>
+        <EditFileMenu
+          fileId={storyFile.id}
+          fileRepository={new FileMockRepository()}
+          isRestricted={false}
+          datasetInfo={{
+            persistentId: storyFile.datasetPersistentId,
+            releasedVersionExists: false,
+            versionNumber: storyFile.datasetVersion.number.toString(),
+            requestAccess: true
+          }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
+          isTabularFile={true}
+          fileType={storyFile.metadata.type.value}
+        />
+      </ExternalToolsProvider>
+    </RepositoriesStoryProvider>
   )
 }

@@ -7,16 +7,14 @@ import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { FileAlreadyDeletedModal } from './FileAlreadyDeletedModal'
 import { useDataset } from '../../../../../../DatasetContext'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { EditFilesMenuDatasetInfo } from '../../../edit-files-menu/EditFilesOptions'
 import { FileConfigureToolsOptions } from '@/sections/file/file-action-buttons/access-file-menu/FileToolOptions'
 
 interface FileOptionsMenuProps {
   file: FilePreview
-  fileRepository: FileRepository
 }
 
-export function FileOptionsMenu({ file, fileRepository }: FileOptionsMenuProps) {
+export function FileOptionsMenu({ file }: FileOptionsMenuProps) {
   const { t } = useTranslation('files')
   const { user } = useSession()
   const { dataset } = useDataset()
@@ -71,12 +69,7 @@ export function FileOptionsMenu({ file, fileRepository }: FileOptionsMenuProps) 
         <DropdownHeader>
           <PencilFill /> {t('actions.optionsMenu.headers.editOptions')}
         </DropdownHeader>
-        <EditFilesOptions
-          file={file}
-          fileRepository={fileRepository}
-          datasetInfo={datasetInfo}
-          isHeader={false}
-        />
+        <EditFilesOptions file={file} datasetInfo={datasetInfo} isHeader={false} />
         <FileConfigureToolsOptions fileId={file.id} fileType={file.metadata.type.value} />
       </DropdownButton>
     </Tooltip>

@@ -7,6 +7,9 @@ import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/reposi
 import { type MetadataField } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { getTemplate } from '@/templates/domain/useCases/getTemplate'
 import { createTemplate } from '@/templates/domain/useCases/createTemplate'
+import { getTemplatesByCollectionId } from '@/templates/domain/useCases/getTemplatesByCollectionId'
+import { updateTemplateLicenseTerms } from '@/templates/domain/useCases/updateTemplateLicenseTerms'
+import { updateTemplateTermsOfAccess } from '@/templates/domain/useCases/updateTemplateTermsOfAccess'
 import { getMetadataBlockInfoByCollectionId } from '@/metadata-block-info/domain/useCases/getMetadataBlockInfoByCollectionId'
 import { MetadataFieldsHelper } from '@/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 import { TemplateInfo } from '@/templates/domain/models/TemplateInfo'
@@ -71,14 +74,43 @@ export const useCopyTemplate = ({
             )
           ) ?? []
 
+        const copyName = t('copyNamePrefix', { name: template.name })
         const templatePayload: TemplateInfo = {
-          name: t('copyNamePrefix', { name: template.name }),
+          name: copyName,
           isDefault: template.isDefault,
           fields: templateFields,
           instructions: template.instructions
         }
 
         await createTemplate(templateRepository, templatePayload, collectionId)
+
+        const templates = await getTemplatesByCollectionId(templateRepository, collectionId)
+        const copiedTemplate = templates
+          .filter((currentTemplate) => currentTemplate.id !== template.id)
+          .filter((currentTemplate) => currentTemplate.name === copyName)
+          .sort((firstTemplate, secondTemplate) => secondTemplate.id - firstTemplate.id)[0]
+
+        if (!copiedTemplate) {
+          throw new Error(t('alerts.copyError'))
+        }
+
+        if (template.termsOfUse.customTerms) {
+          await updateTemplateLicenseTerms(templateRepository, copiedTemplate.id, {
+            customTerms: template.termsOfUse.customTerms
+          })
+        } else if (template.license) {
+          await updateTemplateLicenseTerms(templateRepository, copiedTemplate.id, {
+            name: template.license.name
+          })
+        }
+
+        if (template.termsOfUse.termsOfAccess) {
+          await updateTemplateTermsOfAccess(
+            templateRepository,
+            copiedTemplate.id,
+            template.termsOfUse.termsOfAccess
+          )
+        }
 
         toast.success(t('alerts.copySuccess'))
         return true

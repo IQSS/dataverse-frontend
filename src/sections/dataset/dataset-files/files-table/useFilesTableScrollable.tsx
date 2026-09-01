@@ -4,8 +4,6 @@ import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { createColumnsDefinition } from './FilesTableColumnsDefinition'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 export type RowSelection = {
   [key: string]: boolean
@@ -18,9 +16,7 @@ export type FileSelection = {
 export function useFilesTableScrollable(
   files: FilePreview[],
   paginationInfo: FilePaginationInfo,
-  accumulatedFilesCount: number,
-  fileRepository: FileRepository,
-  datasetRepository: DatasetRepository
+  accumulatedFilesCount: number
 ) {
   const [rowSelection, setRowSelection] = useState<RowSelection>({})
   const [selectedRowsModels, setSelectedRowsModels] = useState<Record<string, Row<FilePreview>>>({})
@@ -46,15 +42,8 @@ export function useFilesTableScrollable(
   // remounts the row cells — closing the just-opened menu before it can show.
   // Memoize so cell identities stay stable across those re-renders.
   const columns = useMemo(
-    () =>
-      createColumnsDefinition(
-        paginationInfo,
-        fileSelection,
-        fileRepository,
-        datasetRepository,
-        accumulatedFilesCount
-      ),
-    [paginationInfo, fileSelection, fileRepository, datasetRepository, accumulatedFilesCount]
+    () => createColumnsDefinition(paginationInfo, fileSelection, accumulatedFilesCount),
+    [paginationInfo, fileSelection, accumulatedFilesCount]
   )
 
   const table = useReactTable({

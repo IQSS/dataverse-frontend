@@ -45,9 +45,13 @@ import {
   getDatasetLinkedCollections,
   updateTermsOfAccess,
   updateDatasetLicense,
-  getDatasetUploadLimits,
   getDatasetStorageDriver,
-  getDatasetReviews
+  getDatasetUploadLimits,
+  getDatasetReviews,
+  DatasetType,
+  getDatasetAvailableDatasetTypes,
+  exportDatasetMetadata,
+  DatasetNotNumberedVersion
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -61,11 +65,11 @@ import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCou
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetLicenseUpdateRequest } from '../../domain/models/DatasetLicenseUpdateRequest'
-import { requireAppConfig } from '../../../config'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 import { DatasetReview } from '@/dataset/domain/models/DatasetReview'
+import { ExportedDatasetMetadata } from '@/dataset/domain/models/ExportedDatasetMetadata'
 
 const includeDeaccessioned = true
 
@@ -85,10 +89,6 @@ interface IDatasetDetails {
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  static get DATAVERSE_BACKEND_URL(): string {
-    return requireAppConfig().backendUrl
-  }
-
   getAllWithCount(
     collectionId: string,
     paginationInfo: DatasetPaginationInfo
@@ -332,9 +332,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  create(dataset: DatasetDTO, collectionId: string): Promise<{ persistentId: string }> {
+  create(
+    dataset: DatasetDTO,
+    collectionId: string,
+    datasetType?: string
+  ): Promise<{ persistentId: string }> {
     return createDataset
-      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId)
+      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId, datasetType)
       .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({
         persistentId: jsDatasetIdentifiers.persistentId
       }))
@@ -420,6 +424,15 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   ): Promise<FormattedCitation> {
     return getDatasetCitationInOtherFormats.execute(datasetId, version, format)
   }
+
+  exportDatasetMetadata(
+    datasetId: string | number,
+    exporter: string,
+    version?: DatasetNotNumberedVersion.LATEST_PUBLISHED | DatasetNotNumberedVersion.DRAFT
+  ): Promise<ExportedDatasetMetadata> {
+    return exportDatasetMetadata.execute(datasetId, exporter, version)
+  }
+
   getAvailableCategories(datasetId: string | number): Promise<string[]> {
     return getDatasetAvailableCategories.execute(datasetId)
   }
@@ -434,6 +447,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   getDatasetLinkedCollections(datasetId: string | number): Promise<CollectionSummary[]> {
     return getDatasetLinkedCollections.execute(datasetId)
+  }
+
+  getAvailableDatasetTypes: () => Promise<DatasetType[]> = () => {
+    return getDatasetAvailableDatasetTypes.execute()
   }
 
   private async getStorageDriver(datasetId: number): Promise<DatasetStorageDriver | undefined> {

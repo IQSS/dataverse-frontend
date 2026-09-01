@@ -15,15 +15,6 @@ const config: StorybookConfig = {
     options: {}
   },
   docs: {},
-  staticDirs: ['../public'],
-  viteFinal: (viteConfig) => ({
-    ...viteConfig,
-    // Storybook already copies staticDirs into storybook-static after the
-    // build; leaving vite's own publicDir copy on makes every public/ file
-    // land twice, and node 22.x's fs.cp on the CI runners intermittently
-    // fails the second pass with EEXIST on the keycloakify resource tree.
-    publicDir: false
-  }),
   typescript: {
     reactDocgen: false
   }

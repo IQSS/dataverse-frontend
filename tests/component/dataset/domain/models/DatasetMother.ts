@@ -368,6 +368,7 @@ export class DatasetMother {
     const dataset = {
       id: faker.datatype.number(),
       persistentId: faker.datatype.uuid(),
+      datasetType: 'dataset',
       version: DatasetVersionMother.create(),
       internalVersionNumber: faker.datatype.number(),
       license: {
@@ -486,6 +487,7 @@ export class DatasetMother {
       dataset.requiresMajorVersionUpdate,
       dataset.fileStore,
       dataset.guestbookId,
+      dataset.datasetType,
       dataset.storageDriver
     ).build()
   }

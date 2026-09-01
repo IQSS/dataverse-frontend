@@ -22,7 +22,7 @@ import { ContactRepository } from '@/contact/domain/repositories/ContactReposito
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { LinkCollectionDropdown } from './link-collection-dropdown/LinkCollectionDropdown'
 import { useSession } from '../session/SessionContext'
-import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { useRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -41,7 +41,7 @@ export function Collection({
   contactRepository,
   accountCreated
 }: CollectionProps) {
-  const { collectionRepository } = useCollectionRepositories()
+  const { collectionRepository } = useRepositories()
   useScrollTop()
   const { previousPath } = useHistoryTracker()
   const previousPathIsHomepage = previousPath === Route.HOME

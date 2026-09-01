@@ -10,9 +10,9 @@ import {
 } from '../../../dataset/domain/models/TermsOfUseMother'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { Dataset as DatasetModel } from '@/dataset/domain/models/Dataset'
-import { ReactNode } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
-import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = DatasetMother.create().version
@@ -54,16 +54,17 @@ const termsOfUseWithUndefinedValue = TermsOfUseMother.create({
 })
 const guestbookRepository: GuestbookRepository = {} as GuestbookRepository
 
+const DatasetTermsWithRepositories = (props: ComponentProps<typeof DatasetTerms>) => (
+  <WithRepositories fileRepository={fileRepository} guestbookRepository={guestbookRepository}>
+    <DatasetTerms {...props} />
+  </WithRepositories>
+)
+
 describe('DatasetTerms', () => {
   const withDatasetContext = (component: ReactNode, dataset?: DatasetModel) => (
     <DatasetContext.Provider value={{ dataset, isLoading: false, refreshDataset: () => {} }}>
       {component}
     </DatasetContext.Provider>
-  )
-  const withGuestbookRepository = (component: ReactNode) => (
-    <GuestbookRepositoryProvider repository={guestbookRepository}>
-      {component}
-    </GuestbookRepositoryProvider>
   )
 
   beforeEach(() => {
@@ -75,10 +76,9 @@ describe('DatasetTerms', () => {
 
   it('renders the license and terms of use sections', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={termsOfUse}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -91,10 +91,9 @@ describe('DatasetTerms', () => {
   it('shows no guestbook assigned message after expanding the guestbook accordion', () => {
     cy.customMount(
       withDatasetContext(
-        <DatasetTerms
+        <DatasetTermsWithRepositories
           license={license}
           termsOfUse={termsOfUse}
-          filesRepository={fileRepository}
           datasetPersistentId={datasetPersistentId}
           datasetVersion={datasetVersion}
         />,
@@ -127,17 +126,14 @@ describe('DatasetTerms', () => {
     })
 
     cy.customMount(
-      withGuestbookRepository(
-        withDatasetContext(
-          <DatasetTerms
-            license={license}
-            termsOfUse={termsOfUse}
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-          />,
-          DatasetMother.create({ guestbookId })
-        )
+      withDatasetContext(
+        <DatasetTermsWithRepositories
+          license={license}
+          termsOfUse={termsOfUse}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />,
+        DatasetMother.create({ guestbookId })
       )
     )
 
@@ -167,17 +163,14 @@ describe('DatasetTerms', () => {
     })
 
     cy.customMount(
-      withGuestbookRepository(
-        withDatasetContext(
-          <DatasetTerms
-            license={license}
-            termsOfUse={termsOfUse}
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-          />,
-          DatasetMother.create({ guestbookId })
-        )
+      withDatasetContext(
+        <DatasetTermsWithRepositories
+          license={license}
+          termsOfUse={termsOfUse}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />,
+        DatasetMother.create({ guestbookId })
       ),
       ['/datasets?tab=terms&termsTab=guestbook']
     )
@@ -188,10 +181,9 @@ describe('DatasetTerms', () => {
 
   it('check that the terms of use sections are rendered even without edit permissions', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={termsOfUse}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
         canUpdateDataset={false}
@@ -211,10 +203,9 @@ describe('DatasetTerms', () => {
 
   it('renders the correct number of restricted files', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={termsOfUse}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -225,10 +216,9 @@ describe('DatasetTerms', () => {
   })
   it('does not render a row if the value is undefined', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={termsOfUseWithUndefinedValue}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -242,10 +232,9 @@ describe('DatasetTerms', () => {
       .stub()
       .resolves(singleRestrictedFilesCountInfo)
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={termsOfUse}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -256,10 +245,9 @@ describe('DatasetTerms', () => {
   })
   it('renders the custom terms', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={undefined}
         termsOfUse={termsOfUse}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -273,10 +261,9 @@ describe('DatasetTerms', () => {
 
   it('renders the request access allowed message', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={accessAllowedTermsOfUse}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -287,10 +274,9 @@ describe('DatasetTerms', () => {
   })
   it('renders the request access not allowed message', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={accessNotAllowedTermsOfUse}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -302,10 +288,9 @@ describe('DatasetTerms', () => {
 
   it('renders the data access place', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={emptyCustomTerms}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -317,10 +302,9 @@ describe('DatasetTerms', () => {
 
   it('renders the original archive information', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={emptyCustomTerms}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -332,10 +316,9 @@ describe('DatasetTerms', () => {
 
   it('renders the availability status', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={emptyCustomTerms}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -347,10 +330,9 @@ describe('DatasetTerms', () => {
 
   it('renders the contact for access information', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={emptyCustomTerms}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -362,10 +344,9 @@ describe('DatasetTerms', () => {
 
   it('renders the size of collection information', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={emptyCustomTerms}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -377,10 +358,9 @@ describe('DatasetTerms', () => {
 
   it('renders the study completion information', () => {
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={emptyCustomTerms}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -394,10 +374,9 @@ describe('DatasetTerms', () => {
       .stub()
       .resolves(noRestrictedFilesCountInfo)
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={emptyTermsOfAccess}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -410,10 +389,9 @@ describe('DatasetTerms', () => {
       .stub()
       .resolves(singleRestrictedFilesCountInfo)
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={emptyTermsOfAccess}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
@@ -426,10 +404,9 @@ describe('DatasetTerms', () => {
       .stub()
       .resolves(noRestrictedFilesCountInfo)
     cy.customMount(
-      <DatasetTerms
+      <DatasetTermsWithRepositories
         license={license}
         termsOfUse={emptyCustomTerms}
-        filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />

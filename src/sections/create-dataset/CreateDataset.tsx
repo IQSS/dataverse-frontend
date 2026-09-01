@@ -18,6 +18,8 @@ import { type Template } from '@/templates/domain/models/Template'
 import { DatasetTemplateSelect } from './dataset-template-select/DatasetTemplateSelect'
 import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
+import { DatasetTypeSelect } from './dataset-type-select/DatasetTypeSelect'
 
 interface CreateDatasetProps {
   templateRepository: TemplateRepository
@@ -35,11 +37,14 @@ export function CreateDataset({
   const { isModalOpen, hideModal } = useNotImplementedModal()
   const { setIsLoading } = useLoading()
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
+  const [selectedType, setSelectedType] = useState<DatasetType | null>(null)
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionId
   )
+
+  const datasetTypes = collection?.allowedDatasetTypes ?? []
 
   const { collectionUserPermissions, isLoading: isLoadingCollectionUserPermissions } =
     useGetCollectionUserPermissions({
@@ -60,12 +65,30 @@ export function CreateDataset({
     setSelectedTemplate(template)
   }
 
+  const handleDatasetTypeChange = (selectedTypeId: string) => {
+    const type: DatasetType | null =
+      datasetTypes.find((type) => type.id === Number(selectedTypeId)) ||
+      /* istanbul ignore next */ null
+
+    setSelectedType(type)
+  }
+
   const isLoadingData =
     isLoadingCollectionUserPermissions || isLoadingCollection || isLoadingDatasetTemplates
 
   useEffect(() => {
     setIsLoading(isLoadingData)
   }, [isLoadingData, setIsLoading])
+
+  // When dataset types are loaded we set the default one to DATASET if available, otherwise use the first one
+  useEffect(() => {
+    if (datasetTypes.length > 0) {
+      const defaultType: DatasetType | null =
+        datasetTypes.find((type) => type.name === 'dataset') || datasetTypes[0]
+
+      setSelectedType(defaultType)
+    }
+  }, [datasetTypes])
 
   // When dataset templates are loaded we set the default one if any
   useEffect(() => {
@@ -84,6 +107,11 @@ export function CreateDataset({
   if (isLoadingData || !collection) {
     return <CreateDatasetSkeleton />
   }
+
+  // We use the template id and dataset type id as key to force remounting the form when the template or type changes
+  const formKey = `${selectedType ? selectedType.id : 'no-type'}--${
+    selectedTemplate ? selectedTemplate.id : 'no-template'
+  }`
 
   if (collectionUserPermissions && !canUserAddDataset) {
     return (
@@ -117,12 +145,41 @@ export function CreateDataset({
           />
         )}
 
+        {datasetTypes.length > 0 && selectedType && (
+          <>
+            {datasetTypes.length === 1 ? (
+              <div className="mb-3">
+                <div className="form-row">
+                  <div className="col-sm-3">
+                    <label className="form-label">{t('datasetType.label')}</label>
+                  </div>
+                  <div className="col-sm-12">
+                    <div className="alert alert-info mb-2">
+                      <div>
+                        <strong>{selectedType.displayName}</strong>
+                      </div>
+                      <div className="small text-muted">{selectedType.description}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <DatasetTypeSelect
+                datasetTypes={datasetTypes}
+                onChange={handleDatasetTypeChange}
+                selectedType={selectedType}
+              />
+            )}
+          </>
+        )}
+
         <DatasetMetadataForm
           mode="create"
           collectionId={collectionId}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetTemplate={selectedTemplate ?? undefined}
-          key={selectedTemplate ? selectedTemplate.id : 'no-template-selected'} // We use the template id as key to force remounting the form when the template changes
+          datasetTypeName={selectedType ? selectedType.name : undefined}
+          key={formKey}
         />
       </section>
     </>

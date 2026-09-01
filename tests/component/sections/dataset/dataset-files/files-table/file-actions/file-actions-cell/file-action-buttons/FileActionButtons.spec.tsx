@@ -16,8 +16,8 @@ const datasetRepository: DatasetRepository = {} as DatasetRepository
 describe('FileActionButtons', () => {
   it('renders the file action buttons', () => {
     cy.customMount(
-      <WithRepositories datasetRepository={datasetRepository}>
-        <FileActionButtons file={file} fileRepository={fileRepository} />
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+        <FileActionButtons file={file} />
       </WithRepositories>
     )
 
@@ -35,11 +35,11 @@ describe('FileActionButtons', () => {
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(datasetWithUpdatePermissions)
 
     cy.mountAuthenticated(
-      <WithRepositories datasetRepository={datasetRepository}>
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
         <DatasetProvider
           repository={datasetRepository}
           searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-          <FileActionButtons file={file} fileRepository={fileRepository} />
+          <FileActionButtons file={file} />
         </DatasetProvider>
       </WithRepositories>
     )

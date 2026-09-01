@@ -3,11 +3,11 @@ import { DatasetGuestbook } from '@/sections/dataset/dataset-guestbook/DatasetGu
 import { WithI18next } from '@/stories/WithI18next'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
-import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
 import {
   GuestbookMockRepository,
   storybookGuestbook
 } from '@/stories/shared-mock-repositories/guestbook/GuestbookMockRepository'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof DatasetGuestbook> = {
   title: 'Sections/Dataset Page/DatasetTerms/DatasetGuestbook',
@@ -22,7 +22,7 @@ const guestbookRepository = new GuestbookMockRepository()
 
 const withDatasetContext = (datasetWithGuestbook: boolean) => {
   const DatasetGuestbookStoryDecorator = (StoryComponent: () => JSX.Element) => (
-    <GuestbookRepositoryProvider repository={guestbookRepository}>
+    <RepositoriesStoryProvider guestbookRepository={guestbookRepository}>
       <DatasetContext.Provider
         value={{
           dataset: DatasetMother.createRealistic({
@@ -33,7 +33,7 @@ const withDatasetContext = (datasetWithGuestbook: boolean) => {
         }}>
         <StoryComponent />
       </DatasetContext.Provider>
-    </GuestbookRepositoryProvider>
+    </RepositoriesStoryProvider>
   )
 
   DatasetGuestbookStoryDecorator.displayName = `DatasetGuestbookStoryDecorator-${String(

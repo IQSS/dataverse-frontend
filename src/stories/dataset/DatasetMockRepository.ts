@@ -21,6 +21,10 @@ import { CollectionSummaryMother } from '@tests/component/collection/domain/mode
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 import { DatasetReview } from '@/dataset/domain/models/DatasetReview'
+import { DatasetTypeMother } from '@tests/component/dataset/domain/models/DatasetTypeMother'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
+import { ExportedDatasetMetadata } from '@/dataset/domain/models/ExportedDatasetMetadata'
+import { DatasetNotNumberedVersion } from '@iqss/dataverse-client-javascript'
 
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
@@ -171,6 +175,21 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
+  exportDatasetMetadata(
+    _datasetId: string | number,
+    _exporter: string,
+    _version?: DatasetNotNumberedVersion.LATEST_PUBLISHED | DatasetNotNumberedVersion.DRAFT
+  ): Promise<ExportedDatasetMetadata> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          content: 'Exported dataset metadata content',
+          contentType: 'text/plain'
+        })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
   updateTermsOfAccess(_datasetId: string | number, _termsOfAccess: TermsOfAccess): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -240,6 +259,14 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([])
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getAvailableDatasetTypes(): Promise<DatasetType[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([DatasetTypeMother.creatDefaultDatasetType(), ...DatasetTypeMother.createMany(2)])
       }, FakerHelper.loadingTimout())
     })
   }

@@ -7,14 +7,10 @@ import { FileActionsCell } from './file-actions/file-actions-cell/FileActionsCel
 import { FileSelection } from './row-selection/useFileSelection'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 import { RowSelectionCheckbox } from '@/sections/shared/form/row-selection-checkbox/RowSelectionCheckbox'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 export const createColumnsDefinition = (
   paginationInfo: FilePaginationInfo,
   fileSelection: FileSelection,
-  fileRepository: FileRepository,
-  datasetRepository: DatasetRepository,
   accumulatedFilesCount?: number
 ): ColumnDef<FilePreview>[] => [
   {
@@ -56,10 +52,9 @@ export const createColumnsDefinition = (
       <FileActionsHeader
         files={table.getRowModel().rows.map((row) => row.original)}
         fileSelection={fileSelection}
-        fileRepository={fileRepository}
       />
     ),
     accessorKey: 'status',
-    cell: (props) => <FileActionsCell file={props.row.original} fileRepository={fileRepository} />
+    cell: (props) => <FileActionsCell file={props.row.original} />
   }
 ]

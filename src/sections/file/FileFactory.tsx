@@ -9,23 +9,18 @@ import { DataverseInfoJSDataverseRepository } from '@/info/infrastructure/reposi
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 import { AccessJSDataverseRepository } from '@/access/infrastructure/repositories/AccessJSDataverseRepository'
 import { AccessRepositoryProvider } from '../access/AccessRepositoryProvider'
-import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
-import { GuestbookRepositoryProvider } from '../guestbooks/GuestbookRepositoryProvider'
 
 const repository = new FileJSDataverseRepository()
 const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
 const accessRepository = new AccessJSDataverseRepository()
-const guestbookRepository = new GuestbookJSDataverseRepository()
 
 export class FileFactory {
   static create(): ReactElement {
     return (
-      <GuestbookRepositoryProvider repository={guestbookRepository}>
-        <AccessRepositoryProvider repository={accessRepository}>
-          <FileWithSearchParams />
-        </AccessRepositoryProvider>
-      </GuestbookRepositoryProvider>
+      <AccessRepositoryProvider repository={accessRepository}>
+        <FileWithSearchParams />
+      </AccessRepositoryProvider>
     )
   }
 }

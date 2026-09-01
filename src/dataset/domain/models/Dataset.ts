@@ -456,6 +456,7 @@ export class Dataset {
     public readonly requiresMajorVersionUpdate?: boolean,
     public readonly fileStore?: string,
     public readonly guestbookId?: number,
+    public readonly datasetType?: string,
     public readonly storageDriver?: DatasetStorageDriver
   ) {}
 
@@ -553,6 +554,7 @@ export class Dataset {
       public readonly requiresMajorVersionUpdate?: boolean,
       public readonly fileStore?: string,
       public readonly guestbookId?: number,
+      public readonly datasetType?: string,
       public readonly storageDriver?: DatasetStorageDriver
     ) {
       this.withAlerts()
@@ -627,6 +629,7 @@ export class Dataset {
         this.requiresMajorVersionUpdate,
         this.fileStore,
         this.guestbookId,
+        this.datasetType,
         this.storageDriver
       )
     }

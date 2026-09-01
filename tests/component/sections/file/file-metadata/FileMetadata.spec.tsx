@@ -1,4 +1,4 @@
-import { FileMetadata } from '../../../../../src/sections/file/file-metadata/FileMetadata'
+import { FileMetadata as FileMetadataComponent } from '../../../../../src/sections/file/file-metadata/FileMetadata'
 import { FileMother } from '../../../files/domain/models/FileMother'
 import { FileSizeUnit } from '../../../../../src/files/domain/models/FileMetadata'
 import {
@@ -11,12 +11,21 @@ import {
 import { FilePermissionsMother } from '../../../files/domain/models/FilePermissionsMother'
 import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockRepository'
 import { requireAppConfig } from '@/config'
+import { WithRepositories } from '@tests/component/WithRepositories'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
+import { type ComponentProps } from 'react'
 
 const appConfig = requireAppConfig()
 
 const file = FileMother.create()
+const FileMetadata = (props: ComponentProps<typeof FileMetadataComponent>) => (
+  <WithRepositories datasetRepository={new DatasetMockRepository()}>
+    <FileMetadataComponent {...props} />
+  </WithRepositories>
+)
+
 describe('FileMetadata', () => {
-  it('renders the File Metadata tab', () => {
+  const mountFileMetadata = (props: Partial<ComponentProps<typeof FileMetadata>> = {}) => {
     cy.customMount(
       <FileMetadata
         name={file.name}
@@ -25,24 +34,18 @@ describe('FileMetadata', () => {
         datasetPersistentId={file.datasetPersistentId}
         datasetVersion={file.datasetVersion}
         dataverseInfoRepository={new DataverseInfoMockRepository()}
+        {...props}
       />
     )
+  }
 
+  it('renders the file metadata', () => {
+    mountFileMetadata()
     cy.findByRole('button', { name: 'File Metadata' }).should('exist')
   })
 
   it('renders the file preview', () => {
-    cy.customMount(
-      <FileMetadata
-        name={file.name}
-        metadata={file.metadata}
-        permissions={file.permissions}
-        datasetPersistentId={file.datasetPersistentId}
-        datasetVersion={file.datasetVersion}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-      />
-    )
-
+    mountFileMetadata()
     cy.findByText('Preview').should('exist')
     cy.findByRole('img').should('exist')
   })
@@ -50,14 +53,16 @@ describe('FileMetadata', () => {
   it('renders the file labels', () => {
     const metadataWithLabels = FileMetadataMother.createWithLabelsRealistic()
     cy.customMount(
-      <FileMetadata
-        name={file.name}
-        metadata={metadataWithLabels}
-        permissions={file.permissions}
-        datasetPersistentId={file.datasetPersistentId}
-        datasetVersion={file.datasetVersion}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <FileMetadata
+          name={file.name}
+          metadata={metadataWithLabels}
+          permissions={file.permissions}
+          datasetPersistentId={file.datasetPersistentId}
+          datasetVersion={file.datasetVersion}
+          dataverseInfoRepository={new DataverseInfoMockRepository()}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('File Tags').should('exist')
@@ -68,14 +73,16 @@ describe('FileMetadata', () => {
   it('does not render the file labels when there are no labels', () => {
     const metadataWithoutLabels = FileMetadataMother.createWithNoLabels()
     cy.customMount(
-      <FileMetadata
-        name={file.name}
-        metadata={metadataWithoutLabels}
-        permissions={file.permissions}
-        datasetPersistentId={file.datasetPersistentId}
-        datasetVersion={file.datasetVersion}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <FileMetadata
+          name={file.name}
+          metadata={metadataWithoutLabels}
+          permissions={file.permissions}
+          datasetPersistentId={file.datasetPersistentId}
+          datasetVersion={file.datasetVersion}
+          dataverseInfoRepository={new DataverseInfoMockRepository()}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('File Tags').should('not.exist')
@@ -86,14 +93,16 @@ describe('FileMetadata', () => {
       persistentId: 'doi:10.5072/FK2/ABC123'
     })
     cy.customMount(
-      <FileMetadata
-        name={file.name}
-        metadata={metadataWithPersistentId}
-        permissions={file.permissions}
-        datasetPersistentId={file.datasetPersistentId}
-        datasetVersion={file.datasetVersion}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <FileMetadata
+          name={file.name}
+          metadata={metadataWithPersistentId}
+          permissions={file.permissions}
+          datasetPersistentId={file.datasetPersistentId}
+          datasetVersion={file.datasetVersion}
+          dataverseInfoRepository={new DataverseInfoMockRepository()}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('File Persistent ID').should('exist')
@@ -103,14 +112,16 @@ describe('FileMetadata', () => {
   it('does not render the file persistent id when there is no persistent id', () => {
     const metadataWithoutPersistentId = FileMetadataMother.createWithNoPersistentId()
     cy.customMount(
-      <FileMetadata
-        name={file.name}
-        metadata={metadataWithoutPersistentId}
-        permissions={file.permissions}
-        datasetPersistentId={file.datasetPersistentId}
-        datasetVersion={file.datasetVersion}
-        dataverseInfoRepository={new DataverseInfoMockRepository()}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <FileMetadata
+          name={file.name}
+          metadata={metadataWithoutPersistentId}
+          permissions={file.permissions}
+          datasetPersistentId={file.datasetPersistentId}
+          datasetVersion={file.datasetVersion}
+          dataverseInfoRepository={new DataverseInfoMockRepository()}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('File Persistent ID').should('not.exist')

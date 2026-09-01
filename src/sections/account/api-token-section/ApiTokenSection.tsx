@@ -7,21 +7,18 @@ import { useRevokeApiToken } from './useRevokeApiToken'
 import { ApiTokenSectionSkeleton } from './ApiTokenSectionSkeleton'
 import { TokenInfo } from '@/users/domain/models/TokenInfo'
 import { DateHelper } from '@/shared/helpers/DateHelper'
-import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { Button } from '@iqss/dataverse-design-system'
 import { Alert } from '@iqss/dataverse-design-system'
+import { useUserRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import accountStyles from '../Account.module.scss'
 import styles from './ApiTokenSection.module.scss'
 
-interface ApiTokenSectionProps {
-  repository: UserRepository
-}
-
-export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
+export const ApiTokenSection = () => {
+  const { userRepository } = useUserRepositories()
   const { t } = useTranslation('account', { keyPrefix: 'apiToken' })
   const [currentApiTokenInfo, setCurrentApiTokenInfo] = useState<TokenInfo>()
 
-  const { error: getError, apiTokenInfo, isLoading } = useGetApiToken(repository)
+  const { error: getError, apiTokenInfo, isLoading } = useGetApiToken(userRepository)
 
   useEffect(() => {
     setCurrentApiTokenInfo(apiTokenInfo)
@@ -32,7 +29,7 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
     isRecreating,
     error: recreatingError,
     apiTokenInfo: updatedTokenInfo
-  } = useRecreateApiToken(repository)
+  } = useRecreateApiToken(userRepository)
 
   useEffect(() => {
     if (updatedTokenInfo) {
@@ -44,7 +41,7 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
     void recreateToken()
   }
 
-  const { revokeToken, isRevoking, error: revokingError } = useRevokeApiToken(repository)
+  const { revokeToken, isRevoking, error: revokingError } = useRevokeApiToken(userRepository)
 
   const handleRevokeToken = async () => {
     await revokeToken()

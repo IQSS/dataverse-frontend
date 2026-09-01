@@ -37,11 +37,16 @@ export function useDownloadCitation({
   /**
    * Downloads a citation file after fetching it.
    */
-  const handleDownloadCitation = async (format: CitationFormat, filename: string) => {
+  const handleDownloadCitation = async (
+    format: CitationFormat,
+    filename: string
+  ): Promise<boolean> => {
     const citation = await handleGetCitation(format)
     if (citation) {
       downloadFile(citation.content, filename, citation.contentType)
+      return true
     }
+    return false
   }
 
   return { isLoading, error, handleGetCitation, handleDownloadCitation }

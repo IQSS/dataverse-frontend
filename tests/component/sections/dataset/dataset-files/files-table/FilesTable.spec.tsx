@@ -25,14 +25,13 @@ const defaultCriteria = new FileCriteria()
 describe('FilesTable', () => {
   it('renders the files table', () => {
     cy.customMount(
-      <WithRepositories datasetRepository={datasetRepository}>
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
         <FilesTable
           files={testFiles}
           paginationInfo={paginationInfo}
           isLoading={false}
           filesTotalDownloadSize={testFilesTotalDownloadSize}
           criteria={defaultCriteria}
-          fileRepository={fileRepository}
         />
       </WithRepositories>
     )
@@ -48,14 +47,13 @@ describe('FilesTable', () => {
 
   it('renders the spinner when the data isLoading', () => {
     cy.customMount(
-      <WithRepositories datasetRepository={datasetRepository}>
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
         <FilesTable
           files={testFiles}
           paginationInfo={paginationInfo}
           isLoading={true}
           filesTotalDownloadSize={testFilesTotalDownloadSize}
           criteria={defaultCriteria}
-          fileRepository={fileRepository}
         />
       </WithRepositories>
     )
@@ -65,14 +63,13 @@ describe('FilesTable', () => {
 
   it('renders the no files message when there are no files', () => {
     cy.customMount(
-      <WithRepositories datasetRepository={datasetRepository}>
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
         <FilesTable
           files={[]}
           paginationInfo={paginationInfo}
           isLoading={false}
           filesTotalDownloadSize={testFilesTotalDownloadSize}
           criteria={defaultCriteria}
-          fileRepository={fileRepository}
         />
       </WithRepositories>
     )
@@ -83,14 +80,13 @@ describe('FilesTable', () => {
   describe('Row selection', () => {
     it('selects all rows in the current page when the header checkbox is clicked', () => {
       cy.customMount(
-        <WithRepositories datasetRepository={datasetRepository}>
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
           <FilesTable
             files={testFiles}
             paginationInfo={paginationInfo}
             isLoading={false}
             filesTotalDownloadSize={testFilesTotalDownloadSize}
             criteria={defaultCriteria}
-            fileRepository={fileRepository}
           />
         </WithRepositories>
       )
@@ -106,14 +102,13 @@ describe('FilesTable', () => {
 
     it('clears row selection for the current page when the header checkbox is clicked', () => {
       cy.customMount(
-        <WithRepositories datasetRepository={datasetRepository}>
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
           <FilesTable
             files={testFiles}
             paginationInfo={paginationInfo}
             isLoading={false}
             filesTotalDownloadSize={testFilesTotalDownloadSize}
             criteria={defaultCriteria}
-            fileRepository={fileRepository}
           />
         </WithRepositories>
       )
@@ -133,14 +128,13 @@ describe('FilesTable', () => {
 
     it("selects all rows when the 'Select all' button is clicked", () => {
       cy.customMount(
-        <WithRepositories datasetRepository={datasetRepository}>
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
           <FilesTable
             files={testFiles}
             paginationInfo={paginationInfo}
             isLoading={false}
             filesTotalDownloadSize={testFilesTotalDownloadSize}
             criteria={defaultCriteria}
-            fileRepository={fileRepository}
           />
         </WithRepositories>
       )
@@ -156,14 +150,13 @@ describe('FilesTable', () => {
 
     it('clears the selection when the clear selection button is clicked', () => {
       cy.customMount(
-        <WithRepositories datasetRepository={datasetRepository}>
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
           <FilesTable
             files={testFiles}
             paginationInfo={paginationInfo}
             isLoading={false}
             filesTotalDownloadSize={testFilesTotalDownloadSize}
             criteria={defaultCriteria}
-            fileRepository={fileRepository}
           />
         </WithRepositories>
       )
@@ -181,14 +174,13 @@ describe('FilesTable', () => {
 
     it('highlights the selected rows', () => {
       cy.customMount(
-        <WithRepositories datasetRepository={datasetRepository}>
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
           <FilesTable
             files={testFiles}
             paginationInfo={paginationInfo}
             isLoading={false}
             filesTotalDownloadSize={testFilesTotalDownloadSize}
             criteria={defaultCriteria}
-            fileRepository={fileRepository}
           />
         </WithRepositories>
       )
@@ -214,7 +206,7 @@ describe('FilesTable', () => {
       .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(500, FileSizeUnit.BYTES)))
 
     cy.customMount(
-      <WithRepositories datasetRepository={datasetRepository}>
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
         <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
           <FilesTable
             files={testFiles}
@@ -222,7 +214,6 @@ describe('FilesTable', () => {
             isLoading={false}
             filesTotalDownloadSize={testFilesTotalDownloadSize}
             criteria={defaultCriteria}
-            fileRepository={fileRepository}
           />
         </SettingsProvider>
       </WithRepositories>
@@ -241,14 +232,13 @@ describe('FilesTable', () => {
 
   it('renders the file actions column', () => {
     cy.customMount(
-      <WithRepositories datasetRepository={datasetRepository}>
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
         <FilesTable
           files={testFiles}
           paginationInfo={paginationInfo}
           isLoading={false}
           filesTotalDownloadSize={testFilesTotalDownloadSize}
           criteria={defaultCriteria}
-          fileRepository={fileRepository}
         />
       </WithRepositories>
     )

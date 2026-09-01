@@ -1,15 +1,13 @@
 import { lazy, Suspense } from 'react'
 import { Navigate, RouteObject } from 'react-router-dom'
-import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
 import { Route } from '@/sections/Route.enum'
 import { Layout } from '@/sections/layout/Layout'
 import { ErrorPage } from '@/sections/error-page/ErrorPage'
 import { AppLoader } from '@/sections/shared/layout/app-loader/AppLoader'
 import { AuthCallback } from '@/sections/auth-callback/AuthCallback'
 import { SessionProvider } from '@/sections/session/SessionProvider'
+import { GuestbookSkeleton } from '@/sections/guestbooks/GuestbookSkeleton'
 import { ProtectedRoute } from './ProtectedRoute'
-
-const userRepository = new UserJSDataverseRepository()
 
 const Homepage = lazy(() =>
   import('../sections/homepage/HomepageFactory').then(({ HomepageFactory }) => ({
@@ -107,10 +105,10 @@ const CreateTemplatePage = lazy(() =>
   )
 )
 
-const EditDatasetTemplateTermsPage = lazy(() =>
-  import('../sections/templates/edit-template-terms/EditTemplateTermsFactory').then(
-    ({ EditTemplateTermsFactory }) => ({
-      default: () => EditTemplateTermsFactory.create()
+const EditDatasetTemplatePage = lazy(() =>
+  import('../sections/templates/edit-template/EditTemplateFactory').then(
+    ({ EditTemplateFactory }) => ({
+      default: () => EditTemplateFactory.create()
     })
   )
 )
@@ -135,6 +133,20 @@ const FeaturedItemPage = lazy(() =>
   }))
 )
 
+const GuestbooksPage = lazy(() =>
+  import('../sections/guestbooks/GuestbooksFactory').then(({ GuestbooksFactory }) => ({
+    default: () => GuestbooksFactory.create()
+  }))
+)
+
+const CreateGuestbookPage = lazy(() =>
+  import('../sections/guestbooks/create-guestbooks/CreateGuestbookFactory').then(
+    ({ CreateGuestbookFactory }) => ({
+      default: () => CreateGuestbookFactory.create()
+    })
+  )
+)
+
 const NotFoundPage = lazy(() =>
   import('../sections/not-found-page/NotFoundPageFactory').then(({ NotFoundPageFactory }) => ({
     default: () => NotFoundPageFactory.create()
@@ -155,7 +167,7 @@ const AdvancedSearchPage = lazy(() =>
 
 export const routes: RouteObject[] = [
   {
-    element: <SessionProvider repository={userRepository} />,
+    element: <SessionProvider />,
     children: [
       {
         path: '/',
@@ -315,10 +327,28 @@ export const routes: RouteObject[] = [
                 errorElement: <ErrorPage />
               },
               {
+                path: Route.GUESTBOOKS,
+                element: (
+                  <Suspense fallback={<GuestbookSkeleton />}>
+                    <GuestbooksPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
                 path: Route.COLLECTION_TEMPLATES,
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <DatasetTemplatesPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.GUESTBOOKS_CREATE,
+                element: (
+                  <Suspense fallback={<GuestbookSkeleton />}>
+                    <CreateGuestbookPage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />
@@ -333,10 +363,10 @@ export const routes: RouteObject[] = [
                 errorElement: <ErrorPage />
               },
               {
-                path: Route.TEMPLATES_EDIT_TERMS,
+                path: Route.TEMPLATES_EDIT,
                 element: (
                   <Suspense fallback={<AppLoader />}>
-                    <EditDatasetTemplateTermsPage />
+                    <EditDatasetTemplatePage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

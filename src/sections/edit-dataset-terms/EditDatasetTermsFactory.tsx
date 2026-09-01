@@ -6,11 +6,9 @@ import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositor
 import { DatasetProvider } from '../dataset/DatasetProvider'
 import { ReactElement } from 'react'
 import { DatasetNonNumericVersion } from '@/dataset/domain/models/Dataset'
-import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
 
 const licenseRepository = new LicenseJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
-const guestbookRepository = new GuestbookJSDataverseRepository()
 
 export class EditDatasetTermsFactory {
   static create(): ReactElement {
@@ -32,7 +30,6 @@ function EditDatasetTermsWithSearchParams() {
       <EditDatasetTerms
         defaultActiveTabKey={defaultActiveTabKey}
         licenseRepository={licenseRepository}
-        guestbookRepository={guestbookRepository}
       />
     </DatasetProvider>
   )

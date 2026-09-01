@@ -3,6 +3,7 @@ import { SignUp } from '@/sections/sign-up/SignUp'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { AuthContextMother } from '@tests/component/auth/AuthContextMother'
 import { AuthContext } from 'react-oauth2-code-pkce'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
 const userRepository: UserRepository = {} as UserRepository
@@ -14,24 +15,25 @@ describe('SignUp', () => {
 
   it('renders the valid token not linked account form and correct alerts when hasValidTokenButNotLinkedAccount prop is true', () => {
     cy.customMount(
-      <AuthContext.Provider
-        value={{
-          token: AuthContextMother.createToken(),
-          idToken: AuthContextMother.createToken(),
-          logIn: () => {},
-          logOut: () => {},
-          loginInProgress: false,
-          tokenData: AuthContextMother.createTokenData(),
-          idTokenData: AuthContextMother.createTokenData(),
-          error: null,
-          login: () => {} // 👈 deprecated
-        }}>
-        <SignUp
-          userRepository={userRepository}
-          dataverseInfoRepository={dataverseInfoRepository}
-          hasValidTokenButNotLinkedAccount={true}
-        />
-      </AuthContext.Provider>
+      <WithRepositories userRepository={userRepository}>
+        <AuthContext.Provider
+          value={{
+            token: AuthContextMother.createToken(),
+            idToken: AuthContextMother.createToken(),
+            logIn: () => {},
+            logOut: () => {},
+            loginInProgress: false,
+            tokenData: AuthContextMother.createTokenData(),
+            idTokenData: AuthContextMother.createTokenData(),
+            error: null,
+            login: () => {} // 👈 deprecated
+          }}>
+          <SignUp
+            dataverseInfoRepository={dataverseInfoRepository}
+            hasValidTokenButNotLinkedAccount={true}
+          />
+        </AuthContext.Provider>
+      </WithRepositories>
     )
 
     cy.findByTestId('valid-token-not-linked-account-alert-text').should('exist')
@@ -44,24 +46,25 @@ describe('SignUp', () => {
   // For now we are only rendering the form for the case when theres is a valid token but is not linked to any account, but we prepare the test for other cases
   it('renders the default create account alert when hasValidTokenButNotLinkedAccount prop is false', () => {
     cy.customMount(
-      <AuthContext.Provider
-        value={{
-          token: AuthContextMother.createToken(),
-          idToken: AuthContextMother.createToken(),
-          logIn: () => {},
-          logOut: () => {},
-          loginInProgress: false,
-          tokenData: AuthContextMother.createTokenData(),
-          idTokenData: AuthContextMother.createTokenData(),
-          error: null,
-          login: () => {} // 👈 deprecated
-        }}>
-        <SignUp
-          userRepository={userRepository}
-          dataverseInfoRepository={dataverseInfoRepository}
-          hasValidTokenButNotLinkedAccount={false}
-        />
-      </AuthContext.Provider>
+      <WithRepositories userRepository={userRepository}>
+        <AuthContext.Provider
+          value={{
+            token: AuthContextMother.createToken(),
+            idToken: AuthContextMother.createToken(),
+            logIn: () => {},
+            logOut: () => {},
+            loginInProgress: false,
+            tokenData: AuthContextMother.createTokenData(),
+            idTokenData: AuthContextMother.createTokenData(),
+            error: null,
+            login: () => {} // 👈 deprecated
+          }}>
+          <SignUp
+            dataverseInfoRepository={dataverseInfoRepository}
+            hasValidTokenButNotLinkedAccount={false}
+          />
+        </AuthContext.Provider>
+      </WithRepositories>
     )
 
     cy.findByTestId('default-create-account-alert-text').should('exist')

@@ -49,7 +49,8 @@ export default defineConfig({
   // chunk trigger a mid-run optimizeDeps re-run; the first cy.visit then
   // races it and gets a torn React module graph (useState becomes null).
   optimizeDeps: {
-    entries: ['index.html', 'src/index.app.tsx']
+    entries: ['index.html', 'src/index.app.tsx'],
+    include: ['react-dom/client']
   },
   resolve: {
     alias: {

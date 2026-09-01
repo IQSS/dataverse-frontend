@@ -19,8 +19,6 @@ import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 import { AccessJSDataverseRepository } from '@/access/infrastructure/repositories/AccessJSDataverseRepository'
 import { AccessRepositoryProvider } from '../access/AccessRepositoryProvider'
-import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
-import { GuestbookRepositoryProvider } from '../guestbooks/GuestbookRepositoryProvider'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
@@ -28,26 +26,23 @@ const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
 const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
 const accessRepository = new AccessJSDataverseRepository()
-const guestbookRepository = new GuestbookJSDataverseRepository()
 
 export class DatasetFactory {
   static create(): ReactElement {
     return (
-      <GuestbookRepositoryProvider repository={guestbookRepository}>
-        <AccessRepositoryProvider repository={accessRepository}>
-          <MultipleFileDownloadProvider repository={fileRepository}>
-            <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-              <NotImplementedModalProvider>
-                <AnonymizedProvider>
-                  <AlertProvider>
-                    <DatasetWithSearchParams />
-                  </AlertProvider>
-                </AnonymizedProvider>
-              </NotImplementedModalProvider>
-            </SettingsProvider>
-          </MultipleFileDownloadProvider>
-        </AccessRepositoryProvider>
-      </GuestbookRepositoryProvider>
+      <AccessRepositoryProvider repository={accessRepository}>
+        <MultipleFileDownloadProvider repository={fileRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+            <NotImplementedModalProvider>
+              <AnonymizedProvider>
+                <AlertProvider>
+                  <DatasetWithSearchParams />
+                </AlertProvider>
+              </AnonymizedProvider>
+            </NotImplementedModalProvider>
+          </SettingsProvider>
+        </MultipleFileDownloadProvider>
+      </AccessRepositoryProvider>
     )
   }
 }
@@ -82,7 +77,6 @@ function DatasetWithSearchParams() {
         searchParams={{ privateUrlToken: privateUrlToken }}
         isPublishing={publishInProgress}>
         <Dataset
-          fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           contactRepository={contactRepository}
           filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
@@ -99,7 +93,6 @@ function DatasetWithSearchParams() {
       searchParams={{ persistentId: persistentId, version: version }}
       isPublishing={publishInProgress}>
       <Dataset
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         publishInProgress={publishInProgress}

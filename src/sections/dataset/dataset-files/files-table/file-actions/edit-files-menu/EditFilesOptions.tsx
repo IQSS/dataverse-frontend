@@ -6,7 +6,6 @@ import { useState } from 'react'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
 import { useNotImplementedModal } from '../../../../../not-implemented/NotImplementedModalContext'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DatasetRestrictFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetRestrictFileButton'
 import { DatasetDeleteFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetDeleteFileButton'
 import { RouteWithParams } from '@/sections/Route.enum'
@@ -21,7 +20,6 @@ type EditFilesOptionsProps =
       files: FilePreview[]
       file?: never
       fileSelection: FileSelection
-      fileRepository: FileRepository
       datasetInfo?: never
       isHeader: true
     }
@@ -29,7 +27,6 @@ type EditFilesOptionsProps =
       files?: never
       file: FilePreview
       fileSelection?: never
-      fileRepository: FileRepository
       datasetInfo: EditFilesMenuDatasetInfo
       isHeader: false
     }
@@ -47,7 +44,6 @@ export function EditFilesOptions({
   file,
   files,
   fileSelection,
-  fileRepository,
   datasetInfo,
   isHeader
 }: EditFilesOptionsProps) {
@@ -78,7 +74,6 @@ export function EditFilesOptions({
         <DatasetRestrictFileButton
           fileId={file.id}
           isRestricted={file.access.restricted}
-          fileRepository={fileRepository}
           datasetInfo={datasetInfo}
         />
         {/* TODO: remove this when we can handle non-S3 files */}
@@ -97,17 +92,12 @@ export function EditFilesOptions({
 
         <DatasetEditFileTagsButton
           fileId={file.id}
-          fileRepository={fileRepository}
           datasetPersistentId={datasetInfo.persistentId}
           existingLabels={file.metadata.labels}
           isTabularFile={file.metadata.isTabular}
         />
 
-        <DatasetDeleteFileButton
-          fileId={file.id}
-          fileRepository={fileRepository}
-          datasetInfo={datasetInfo}
-        />
+        <DatasetDeleteFileButton fileId={file.id} datasetInfo={datasetInfo} />
       </>
     )
   }

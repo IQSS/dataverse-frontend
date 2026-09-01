@@ -8,6 +8,13 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Edit Dataset Template Integration: "Edit Template" dropdown on the Dataset Templates listing now opens the Metadata or Terms editor and shows a "Template updated" toast on return.
+- External Tools: Added guestbook and terms modal for Dataverse external tools.
+- Manage Guestbooks page integration, including:
+  - a guestbooks table with sorting, enable/disable actions, preview, and per-guestbook response download
+  - Create Guestbook and Download All Responses actions
+  - the Create Guestbook page
+  - a checkbox for including guestbooks from parent collections
 - Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Dataset Page: added a sidebar to show dataset reviews
 - DVWebloader V2: A standalone file uploader build that reuses React file upload components, supporting S3 direct uploads with configurable tagging.
@@ -19,7 +26,11 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Changed
 
-- Bumped `@iqss/dataverse-client-javascript` to `2.2.0-pr403.f11ee66` (GitHub Packages prerelease of SDK PR #403 with current `develop` merged in) to consume the new `listDatasetTreeNode` / `iterateDatasetTreeNode` use cases plus the post-2.2.0 develop additions this branch now uses (`getDatasetReviews`, storage drivers, guestbooks). The pinned hash also carries the `x-amz-tagging` default fix so older Dataverse releases without the matching server PR keep getting `dv-state=temp` from the client.
+- File pages now include a "Cite Data File" dropdown for downloading file citations in EndNote XML, RIS, and BibTeX formats.
+- Hide "Export Metadata" on dataset and file pages that are not for the latest published dataset version.
+- Show "Export Metadata" on dataset and file pages for draft version.
+- Avoided prop-drilling for file, guestbook, user and external tool repository, so used context to share repository instances.
+- Bumped `@iqss/dataverse-client-javascript` to `2.2.0-pr403.bef8107d` (GitHub Packages prerelease of SDK PR #403 with current `develop` merged in) to consume the new `listDatasetTreeNode` / `iterateDatasetTreeNode` use cases plus the post-2.2.0 develop additions this branch now uses (`getDatasetReviews`, `exportDatasetMetadata`, dataset types, storage drivers, guestbooks). The pinned hash also carries the `x-amz-tagging` default fix so older Dataverse releases without the matching server PR keep getting `dv-state=temp` from the client.
 - Tree rows surface the server's new `retentionExpired` access state (fourth state after public/restricted/embargoed): translated labels via the new `tree.access.*` i18n keys, a danger-emphasis colour cue whose folder precedence follows the server contract (retention-expired wins), and mutually exclusive folder count buckets. The entire `tree` namespace is now also translated to Spanish.
 - The zip tray's awaiting-retry footer action finalizes the run ("Finish without them"): the first-pass bytes save with the missing files listed in `manifest.txt`. Previously the button closed the tray, which cancelled the run and silently discarded everything already streamed.
 - Streaming-zip download fetches now use `credentials: 'same-origin'` (previously `'include'`). Cookies still travel on the same-origin Dataverse hop, but are dropped on the cross-origin redirect to S3 — required for `Allow-Origin: *` buckets to accept the request.
@@ -45,6 +56,13 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - `useFileTree` no longer leaves the loading spinner forever when the host component unmounts mid-fetch; a `mountedRef` guard skips state updates after unmount, and the version-key-change reset path bypasses the stale-closure cache short-circuit so a refetch fires on schedule.
 - Tree-view header now exposes a tristate select-all checkbox in its dedicated select column.
 - Streaming-zip download tray's close button is sized for normal-pointer hit-targets when the bundle renders inside a JSF page (was rendering as a tiny `link` button due to host-page font cascade).
+- Edit Dataset Terms: navigate to the draft version of the dataset after saving changes to the terms, instead of the latest published version.
+- After saving on either Edit Template tab (Metadata or Terms), the user is redirected to the templates listing with a success toast instead of staying on the edit page.
+- Edit Template breadcrumb on the Terms page no longer renders the dataset's "Terms and Guestbook" label (templates have no guestbook).
+
+### Removed
+
+- Standalone `EditTemplateMetadataFactory` and `EditTemplateTermsFactory` route factories — replaced by a single `EditTemplateFactory` dispatcher that selects the right page based on `editMode`.
 
 ---
 
@@ -68,6 +86,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added Notifications tab in Account Page
 - Added runtime configuration options for homepage branding and support link.
 - Added an environment variable to docker-compose-dev.yml to hide the OIDC client used in the SPA from the JSF frontend: DATAVERSE_AUTH_OIDC_HIDDEN_JSF: 1
+- Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Added a message note to the login page
 - Download with terms of use and guestbook.
 - Show terms modal before download when dataset has custom terms, a non-default license (not CC0 1.0), or a guestbook. Draft datasets and dataset editors bypass the modal.

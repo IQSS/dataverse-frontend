@@ -8,16 +8,12 @@ import { WithSettings } from '../../WithSettings'
 import { FileMockNoFiltersRepository } from '../../file/FileMockNoFiltersRepository'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 import { DatasetMockRepository } from '../../dataset/DatasetMockRepository'
-import { WithRepositories } from '../../WithRepositories'
+import { RepositoriesStoryProvider } from '../../WithRepositories'
 
 const meta: Meta<typeof DatasetFiles> = {
   title: 'Sections/Dataset Page/DatasetFiles',
   component: DatasetFiles,
-  decorators: [
-    WithI18next,
-    WithSettings,
-    WithRepositories({ datasetRepository: new DatasetMockRepository() })
-  ]
+  decorators: [WithI18next, WithSettings]
 }
 
 export default meta
@@ -27,40 +23,52 @@ const testDataset = DatasetMother.createRealistic()
 
 export const Default: Story = {
   render: () => (
-    <DatasetFiles
-      filesRepository={new FileMockRepository()}
-      datasetPersistentId={testDataset.persistentId}
-      datasetVersion={testDataset.version}
-    />
+    <RepositoriesStoryProvider
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}>
+      <DatasetFiles
+        datasetPersistentId={testDataset.persistentId}
+        datasetVersion={testDataset.version}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const Loading: Story = {
   render: () => (
-    <DatasetFiles
-      filesRepository={new FileMockLoadingRepository()}
-      datasetPersistentId={testDataset.persistentId}
-      datasetVersion={testDataset.version}
-    />
+    <RepositoriesStoryProvider
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockLoadingRepository()}>
+      <DatasetFiles
+        datasetPersistentId={testDataset.persistentId}
+        datasetVersion={testDataset.version}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const NoFiles: Story = {
   render: () => (
-    <DatasetFiles
-      filesRepository={new FileMockNoDataRepository()}
-      datasetPersistentId={testDataset.persistentId}
-      datasetVersion={testDataset.version}
-    />
+    <RepositoriesStoryProvider
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockNoDataRepository()}>
+      <DatasetFiles
+        datasetPersistentId={testDataset.persistentId}
+        datasetVersion={testDataset.version}
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const NoFilters: Story = {
   render: () => (
-    <DatasetFiles
-      filesRepository={new FileMockNoFiltersRepository()}
-      datasetPersistentId={testDataset.persistentId}
-      datasetVersion={testDataset.version}
-    />
+    <RepositoriesStoryProvider
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockNoFiltersRepository()}>
+      <DatasetFiles
+        datasetPersistentId={testDataset.persistentId}
+        datasetVersion={testDataset.version}
+      />
+    </RepositoriesStoryProvider>
   )
 }

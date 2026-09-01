@@ -53,6 +53,7 @@ import { requireAppConfig } from '@/config'
 import { ToastContainer } from 'react-toastify'
 import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 // Define your custom mount function
 
@@ -74,9 +75,11 @@ Cypress.Commands.add(
     return cy.mount(
       <ThemeProvider>
         <I18nextProvider i18n={i18next}>
-          <ExternalToolsProvider externalToolsRepository={new ExternalToolsMockRepository()}>
-            <RouterProvider router={memoryRouter} />
-          </ExternalToolsProvider>
+          <WithRepositories externalToolsRepository={new ExternalToolsMockRepository()}>
+            <ExternalToolsProvider>
+              <RouterProvider router={memoryRouter} />
+            </ExternalToolsProvider>
+          </WithRepositories>
         </I18nextProvider>
         <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
       </ThemeProvider>

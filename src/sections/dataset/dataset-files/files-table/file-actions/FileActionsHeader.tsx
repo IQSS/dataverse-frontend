@@ -4,23 +4,17 @@ import styles from './FileActionsHeader.module.scss'
 import { useTranslation } from 'react-i18next'
 import { DownloadFilesButton } from './download-files/DownloadFilesButton'
 import { FileSelection } from '../row-selection/useFileSelection'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
 
 interface FileActionsHeaderProps {
   files: FilePreview[]
   fileSelection: FileSelection
-  fileRepository: FileRepository
 }
 
-export function FileActionsHeader({
-  files,
-  fileSelection,
-  fileRepository
-}: FileActionsHeaderProps) {
+export function FileActionsHeader({ files, fileSelection }: FileActionsHeaderProps) {
   const { t } = useTranslation('files')
   return (
     <div aria-label={t('actions.title')} role="region" className={styles.container}>
-      <EditFilesMenu files={files} fileSelection={fileSelection} fileRepository={fileRepository} />
+      <EditFilesMenu files={files} fileSelection={fileSelection} />
       <DownloadFilesButton files={files} fileSelection={fileSelection} />
     </div>
   )

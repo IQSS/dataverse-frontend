@@ -6,6 +6,23 @@ import { FileHelper } from '../../../shared/files/FileHelper'
 import { GuestbookHelper } from '../../../shared/guestbooks/GuestbookHelper'
 import { faker } from '@faker-js/faker'
 
+const visitFileMetadataTabAndAssertExportMetadata = (
+  fileId: number,
+  shouldExist: boolean,
+  datasetVersion?: string
+) => {
+  const searchParams = new URLSearchParams({
+    id: fileId.toString()
+  })
+
+  if (datasetVersion) {
+    searchParams.set('datasetVersion', datasetVersion)
+  }
+
+  cy.visit(`${FRONTEND_BASE_PATH}/files?${searchParams.toString()}`)
+  cy.findByRole('button', { name: 'Export Metadata' }).should(shouldExist ? 'exist' : 'not.exist')
+}
+
 describe('File', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
@@ -58,6 +75,55 @@ describe('File', () => {
           cy.findByRole('button', { name: 'Access File' }).should('exist')
         }
       )
+    })
+
+    it('shows export metadata on the file page for admin draft, admin latest published, and guest latest published views', () => {
+      cy.wrap(DatasetHelper.createWithFile(FileHelper.create())).then((draftDataset) => {
+        if (!draftDataset.file) {
+          throw new Error('Expected created dataset to include a file')
+        }
+
+        visitFileMetadataTabAndAssertExportMetadata(draftDataset.file.id, true)
+      })
+
+      cy.wrap(DatasetHelper.createWithFileAndPublish(FileHelper.create()), { timeout: 6000 }).then(
+        (publishedDataset) => {
+          if (!publishedDataset.file) {
+            throw new Error('Expected created dataset to include a file')
+          }
+
+          visitFileMetadataTabAndAssertExportMetadata(publishedDataset.file.id, true)
+
+          TestsUtils.logout()
+          visitFileMetadataTabAndAssertExportMetadata(publishedDataset.file.id, true)
+        }
+      )
+    })
+
+    it('hides export metadata on the file page for older published versions', () => {
+      cy.wrap(DatasetHelper.createWithFileAndPublish(FileHelper.create()), { timeout: 6000 })
+        .then((dataset) => {
+          if (!dataset.file) {
+            throw new Error('Expected created dataset to include a file')
+          }
+
+          return cy.wrap(
+            FileHelper.addLabel(dataset.file.id, []).then(async () => {
+              await DatasetHelper.publish(dataset.persistentId)
+              return dataset.file?.id
+            })
+          )
+        })
+        .then((fileId) => {
+          if (!fileId) {
+            throw new Error('Expected created dataset to include a file')
+          }
+
+          visitFileMetadataTabAndAssertExportMetadata(fileId, false, '1.0')
+
+          TestsUtils.logout()
+          visitFileMetadataTabAndAssertExportMetadata(fileId, false, '1.0')
+        })
     })
 
     it('loads version summaries when clicking on the version tab', () => {

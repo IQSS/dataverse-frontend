@@ -12,7 +12,7 @@ import { ExternalToolsProvider } from '@/shared/contexts/external-tools/External
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
-import { WithRepositories } from '@/stories/WithRepositories'
+import { RepositoriesStoryProvider, WithRepositories } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof FileOptionsMenu> = {
   title:
@@ -22,7 +22,10 @@ const meta: Meta<typeof FileOptionsMenu> = {
     WithI18next,
     WithSettings,
     WithLoggedInUser,
-    WithRepositories({ datasetRepository: new DatasetMockRepository() })
+    WithRepositories({
+      datasetRepository: new DatasetMockRepository(),
+      fileRepository: new FileMockRepository()
+    })
   ]
 }
 
@@ -31,42 +34,22 @@ type Story = StoryObj<typeof FileOptionsMenu>
 
 export const DefaultWithLoggedInUser: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
-  render: () => (
-    <FileOptionsMenu
-      file={FilePreviewMother.createDefault()}
-      fileRepository={new FileMockRepository()}
-    />
-  )
+  render: () => <FileOptionsMenu file={FilePreviewMother.createDefault()} />
 }
 
 export const Restricted: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
-  render: () => (
-    <FileOptionsMenu
-      file={FilePreviewMother.createRestricted()}
-      fileRepository={new FileMockRepository()}
-    />
-  )
+  render: () => <FileOptionsMenu file={FilePreviewMother.createRestricted()} />
 }
 
 export const WithDatasetLocked: Story = {
   decorators: [WithDatasetLockedFromEdits],
-  render: () => (
-    <FileOptionsMenu
-      file={FilePreviewMother.createDefault()}
-      fileRepository={new FileMockRepository()}
-    />
-  )
+  render: () => <FileOptionsMenu file={FilePreviewMother.createDefault()} />
 }
 
 export const WithFileAlreadyDeleted: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
-  render: () => (
-    <FileOptionsMenu
-      file={FilePreviewMother.createDeleted()}
-      fileRepository={new FileMockRepository()}
-    />
-  )
+  render: () => <FileOptionsMenu file={FilePreviewMother.createDeleted()} />
 }
 
 const externalToolsRepositoryWithFileConfigureTool = new ExternalToolsMockRepository()
@@ -81,12 +64,12 @@ externalToolsRepositoryWithFileConfigureTool.getExternalTools = () => {
 export const WithConfigureTool: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
   render: () => (
-    <ExternalToolsProvider externalToolsRepository={externalToolsRepositoryWithFileConfigureTool}>
-      <FileOptionsMenu
-        file={FilePreviewMother.createDefault()}
-        fileRepository={new FileMockRepository()}
-      />
-    </ExternalToolsProvider>
+    <RepositoriesStoryProvider
+      externalToolsRepository={externalToolsRepositoryWithFileConfigureTool}>
+      <ExternalToolsProvider>
+        <FileOptionsMenu file={FilePreviewMother.createDefault()} />
+      </ExternalToolsProvider>
+    </RepositoriesStoryProvider>
   )
 }
 

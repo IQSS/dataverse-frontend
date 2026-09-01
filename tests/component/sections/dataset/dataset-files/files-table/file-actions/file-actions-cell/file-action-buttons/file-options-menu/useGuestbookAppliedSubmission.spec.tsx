@@ -2,6 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { FileDownloadMode } from '@/files/domain/models/FileMetadata'
 import { useGuestbookCollectSubmission } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/useGuestbookCollectSubmission'
 
 const accessRepository: AccessRepository = {} as AccessRepository
@@ -69,7 +70,7 @@ describe('useGuestbookCollectSubmission', () => {
     await act(async () => {
       await result.current.handleSubmit({
         hasFormErrors: true,
-        guestbook,
+
         guestbookResponse
       })
     })
@@ -97,7 +98,6 @@ describe('useGuestbookCollectSubmission', () => {
     await act(async () => {
       await result.current.handleSubmit({
         hasFormErrors: false,
-        guestbook,
         guestbookResponse
       })
     })
@@ -128,7 +128,6 @@ describe('useGuestbookCollectSubmission', () => {
     await act(async () => {
       await result.current.handleSubmit({
         hasFormErrors: false,
-        guestbook,
         guestbookResponse
       })
     })
@@ -160,7 +159,6 @@ describe('useGuestbookCollectSubmission', () => {
     await act(async () => {
       await result.current.handleSubmit({
         hasFormErrors: false,
-        guestbook,
         guestbookResponse
       })
     })
@@ -187,7 +185,6 @@ describe('useGuestbookCollectSubmission', () => {
     await act(async () => {
       await result.current.handleSubmit({
         hasFormErrors: false,
-        guestbook,
         guestbookResponse
       })
     })
@@ -213,13 +210,42 @@ describe('useGuestbookCollectSubmission', () => {
     await act(async () => {
       await result.current.handleSubmit({
         hasFormErrors: false,
-        guestbook,
         guestbookResponse
       })
     })
 
     await waitFor(() => {
       expect(result.current.errorDownloadSignedUrlFile).to.deep.equal('Download failed')
+    })
+
+    expect(handleClose).to.not.have.been.called
+    expect(downloadFromSignedUrl).to.have.been.calledOnce
+    expect(result.current.errorSubmitGuestbook).to.deep.equal(null)
+  })
+
+  it('stores fallback download error when downloadFromSignedUrl rejects with a non-error value', async () => {
+    const handleClose = cy.stub().as('handleClose')
+    const downloadFromSignedUrl = cy.stub().rejects('download failed')
+    const { result } = renderHook(() =>
+      useGuestbookCollectSubmission({
+        fileId: 10,
+        handleClose,
+        accessRepository,
+        downloadFromSignedUrl
+      })
+    )
+
+    await act(async () => {
+      await result.current.handleSubmit({
+        hasFormErrors: false,
+        guestbookResponse
+      })
+    })
+
+    await waitFor(() => {
+      expect(result.current.errorDownloadSignedUrlFile).to.deep.equal(
+        'Something went wrong downloading the file. Try again later.'
+      )
     })
 
     expect(handleClose).to.not.have.been.called
@@ -242,7 +268,7 @@ describe('useGuestbookCollectSubmission', () => {
     await act(async () => {
       await result.current.handleSubmit({
         hasFormErrors: false,
-        guestbook,
+
         guestbookResponse
       })
     })
@@ -278,7 +304,7 @@ describe('useGuestbookCollectSubmission', () => {
     await act(async () => {
       await result.current.handleSubmit({
         hasFormErrors: false,
-        guestbook,
+
         guestbookResponse
       })
     })
@@ -286,6 +312,39 @@ describe('useGuestbookCollectSubmission', () => {
     expect(accessRepository.submitGuestbookForDatasetDownload).to.have.been.calledWith(
       999,
       guestbookResponse
+    )
+    expect(accessRepository.submitGuestbookForDatafileDownload).to.not.have.been.called
+    expect(accessRepository.submitGuestbookForDatafilesDownload).to.not.have.been.called
+    expect(handleClose).to.have.been.calledOnce
+    expect(downloadFromSignedUrl).to.have.been.calledOnceWith('signed-url-dataset')
+    expect(result.current.errorSubmitGuestbook).to.deep.equal(null)
+  })
+
+  it('passes archival format when submitting a dataset guestbook download', async () => {
+    const handleClose = cy.stub().as('handleClose')
+    const downloadFromSignedUrl = cy.stub().resolves(undefined)
+    const { result } = renderHook(() =>
+      useGuestbookCollectSubmission({
+        datasetId: 999,
+        format: FileDownloadMode.ARCHIVAL,
+        handleClose,
+        accessRepository,
+        downloadFromSignedUrl
+      })
+    )
+
+    await act(async () => {
+      await result.current.handleSubmit({
+        hasFormErrors: false,
+
+        guestbookResponse
+      })
+    })
+
+    expect(accessRepository.submitGuestbookForDatasetDownload).to.have.been.calledWith(
+      999,
+      guestbookResponse,
+      FileDownloadMode.ARCHIVAL
     )
     expect(accessRepository.submitGuestbookForDatafileDownload).to.not.have.been.called
     expect(accessRepository.submitGuestbookForDatafilesDownload).to.not.have.been.called

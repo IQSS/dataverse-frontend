@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:26.3.2
+FROM quay.io/keycloak/keycloak:26.7.2
 
 # Add the Oracle JDBC jars
 ARG ORACLE_JDBC_VERSION=23.8.0.25.04
@@ -12,6 +12,7 @@ ENV KC_HEALTH_ENABLED=true
 COPY keycloak-dv-builtin-users-authenticator-1.0-SNAPSHOT.jar /opt/keycloak/providers/
 
 # Copy additional configurations
+COPY keycloak.conf /opt/keycloak/conf/
 COPY quarkus.properties /opt/keycloak/conf/
 COPY test-realm.json /opt/keycloak/data/import/
 

@@ -3,7 +3,6 @@ import { useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import useInfiniteScroll, { UseInfiniteScrollHookRefCallback } from 'react-infinite-scroll-hook'
 import { Alert } from '@iqss/dataverse-design-system'
-import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
@@ -26,10 +25,10 @@ import {
   nextSearchParamsForTreePath,
   nextSearchParamsForView
 } from './filesViewSearchParams'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './DatasetFilesScrollable.module.scss'
 
 interface DatasetFilesScrollableProps {
-  filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
   canUpdateDataset?: boolean
@@ -39,12 +38,12 @@ interface DatasetFilesScrollableProps {
 export type SentryRef = UseInfiniteScrollHookRefCallback
 
 export function DatasetFilesScrollable({
-  filesRepository,
   datasetPersistentId,
   datasetVersion,
   canUpdateDataset,
   fileTreeRepository
 }: DatasetFilesScrollableProps) {
+  const { fileRepository } = useDatasetRepositories()
   const [searchParams, setSearchParams] = useSearchParams()
   const view: FilesViewMode = searchParams.get(VIEW_PARAM) === 'tree' ? 'tree' : 'table'
   const treePath = searchParams.get(PATH_PARAM) ?? ''
@@ -56,8 +55,8 @@ export function DatasetFilesScrollable({
   }
 
   const treeRepository = useMemo<FileTreeRepository>(
-    () => fileTreeRepository ?? new FileTreeJSDataverseRepository(filesRepository),
-    [fileTreeRepository, filesRepository]
+    () => fileTreeRepository ?? new FileTreeJSDataverseRepository(fileRepository),
+    [fileTreeRepository, fileRepository]
   )
 
   // Branch on view BEFORE invoking either subview's hooks. The previous
@@ -79,7 +78,6 @@ export function DatasetFilesScrollable({
     />
   ) : (
     <DatasetFilesScrollableTableView
-      filesRepository={filesRepository}
       datasetPersistentId={datasetPersistentId}
       datasetVersion={datasetVersion}
       canUpdateDataset={canUpdateDataset}
@@ -128,7 +126,6 @@ function DatasetFilesScrollableTreeView({
 }
 
 interface DatasetFilesScrollableTableViewProps {
-  filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
   canUpdateDataset?: boolean
@@ -137,13 +134,13 @@ interface DatasetFilesScrollableTableViewProps {
 }
 
 function DatasetFilesScrollableTableView({
-  filesRepository,
   datasetPersistentId,
   datasetVersion,
   canUpdateDataset,
   view,
   onChangeView
 }: DatasetFilesScrollableTableViewProps) {
+  const { fileRepository } = useDatasetRepositories()
   const scrollableContainerRef = useRef<HTMLDivElement | null>(null)
   const criteriaContainerRef = useRef<HTMLDivElement | null>(null)
   const criteriaContainerSize = useObserveElementSize(criteriaContainerRef)
@@ -158,7 +155,7 @@ function DatasetFilesScrollableTableView({
     isLoading: _isLoadingFilesCountInfo,
     error: errorFilesCountInfo
   } = useGetFilesCountInfo({
-    filesRepository,
+    filesRepository: fileRepository,
     datasetPersistentId,
     datasetVersion,
     criteria,
@@ -170,7 +167,7 @@ function DatasetFilesScrollableTableView({
     isLoading: _isLoadingFilesTotalDownloadSize,
     error: errorFilesTotalDownloadSize
   } = useGetFilesTotalDownloadSize({
-    filesRepository,
+    filesRepository: fileRepository,
     datasetPersistentId,
     datasetVersion,
     criteria,
@@ -189,7 +186,7 @@ function DatasetFilesScrollableTableView({
     isEmptyFiles,
     refreshFiles
   } = useGetAccumulatedFiles({
-    filesRepository,
+    filesRepository: fileRepository,
     datasetPersistentId,
     datasetVersion
   })
@@ -308,7 +305,6 @@ function DatasetFilesScrollableTableView({
             showSentryRef={showSentryRef}
             isEmptyFiles={isEmptyFiles}
             accumulatedCount={accumulatedCount}
-            fileRepository={filesRepository}
           />
         </FilesContext.Provider>
       </div>

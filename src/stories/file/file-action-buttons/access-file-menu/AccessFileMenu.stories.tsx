@@ -6,6 +6,7 @@ import { FileAccessMother } from '../../../../../tests/component/files/domain/mo
 import { FileMetadataMother } from '../../../../../tests/component/files/domain/models/FileMetadataMother'
 import { ExternalToolsProvider } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof AccessFileMenu> = {
   title: 'Sections/File Page/Action Buttons/AccessFileMenu',
@@ -162,15 +163,17 @@ export const WithEmbargoAndRestrictedWithAccessGranted: Story = {
 
 export const WithExploreAndQueryOptionsTools: Story = {
   render: () => (
-    <ExternalToolsProvider externalToolsRepository={new ExternalToolsMockRepository()}>
-      <AccessFileMenu
-        id={1}
-        access={FileAccessMother.createPublic()}
-        metadata={FileMetadataMother.createDefault()}
-        userHasDownloadPermission
-        isDeaccessioned={false}
-        ingestInProgress={false}
-      />
-    </ExternalToolsProvider>
+    <RepositoriesStoryProvider externalToolsRepository={new ExternalToolsMockRepository()}>
+      <ExternalToolsProvider>
+        <AccessFileMenu
+          id={1}
+          access={FileAccessMother.createPublic()}
+          metadata={FileMetadataMother.createDefault()}
+          userHasDownloadPermission
+          isDeaccessioned={false}
+          ingestInProgress={false}
+        />
+      </ExternalToolsProvider>
+    </RepositoriesStoryProvider>
   )
 }

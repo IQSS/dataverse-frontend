@@ -12,7 +12,6 @@ import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInf
 import { ExportMetadataDropdown } from '@/sections/dataset/dataset-metadata/export-metadata-dropdown/ExportMetadataDropdown'
 import { File } from '@/files/domain/models/File'
 import styles from './FileMetadata.module.scss'
-import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 
 interface FileMetadataProps {
   name: string
@@ -41,18 +40,16 @@ export function FileMetadata({
 
   return (
     <>
-      <div className="d-flex justify-content-end mb-3">
-        <ExportMetadataDropdown
-          datasetPersistentId={datasetPersistentId}
-          anonymizedView={false}
-          datasetIsReleased={datasetVersion.someDatasetVersionHasBeenReleased}
-          datasetIsDeaccessioned={
-            datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
-          }
-          canUpdateDataset={permissions.canEditOwnerDataset}
-          dataverseInfoRepository={dataverseInfoRepository}
-        />
-      </div>
+      {datasetVersion.isLatest && (
+        <div className="d-flex justify-content-end mb-3">
+          <ExportMetadataDropdown
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+            anonymizedView={false}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
+        </div>
+      )}
       <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">
           <Accordion.Header>{t('metadata.title')}</Accordion.Header>

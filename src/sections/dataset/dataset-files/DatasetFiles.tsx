@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { FilesTable } from './files-table/FilesTable'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
@@ -8,6 +7,7 @@ import { useFiles } from './useFiles'
 import { PaginationControls } from '../../shared/pagination/PaginationControls'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import { FilesTree } from './files-tree/FilesTree'
 import { FilesViewToggle, FilesViewMode } from './files-view-toggle/FilesViewToggle'
 import { FileTreeRepository } from '@/files/domain/repositories/FileTreeRepository'
@@ -23,18 +23,17 @@ import {
 import styles from './DatasetFiles.module.scss'
 
 interface DatasetFilesProps {
-  filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
   fileTreeRepository?: FileTreeRepository
 }
 
 export function DatasetFiles({
-  filesRepository,
   datasetPersistentId,
   datasetVersion,
   fileTreeRepository
 }: DatasetFilesProps) {
+  const { fileRepository } = useDatasetRepositories()
   const [searchParams, setSearchParams] = useSearchParams()
   const view: FilesViewMode = searchParams.get(VIEW_PARAM) === 'tree' ? 'tree' : 'table'
   const treePath = searchParams.get(PATH_PARAM) ?? ''
@@ -46,8 +45,8 @@ export function DatasetFiles({
   }
 
   const treeRepository = useMemo<FileTreeRepository>(
-    () => fileTreeRepository ?? new FileTreeJSDataverseRepository(filesRepository),
-    [fileTreeRepository, filesRepository]
+    () => fileTreeRepository ?? new FileTreeJSDataverseRepository(fileRepository),
+    [fileTreeRepository, fileRepository]
   )
 
   return view === 'tree' ? (
@@ -62,7 +61,6 @@ export function DatasetFiles({
     />
   ) : (
     <DatasetFilesTableView
-      filesRepository={filesRepository}
       datasetPersistentId={datasetPersistentId}
       datasetVersion={datasetVersion}
       onChangeView={setView}
@@ -72,7 +70,6 @@ export function DatasetFiles({
 }
 
 interface DatasetFilesTableViewProps {
-  filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
   onChangeView: (view: FilesViewMode) => void
@@ -80,16 +77,16 @@ interface DatasetFilesTableViewProps {
 }
 
 function DatasetFilesTableView({
-  filesRepository,
   datasetPersistentId,
   datasetVersion,
   onChangeView,
   view
 }: DatasetFilesTableViewProps) {
+  const { fileRepository } = useDatasetRepositories()
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(new FilePaginationInfo())
   const [criteria, setCriteria] = useState<FileCriteria>(new FileCriteria())
   const { files, isLoading, filesCountInfo, filesTotalDownloadSize } = useFiles(
-    filesRepository,
+    fileRepository,
     datasetPersistentId,
     datasetVersion,
     setPaginationInfo,
@@ -109,7 +106,6 @@ function DatasetFilesTableView({
       />
       <FilesTable
         files={files}
-        fileRepository={filesRepository}
         isLoading={isLoading}
         paginationInfo={paginationInfo}
         filesTotalDownloadSize={filesTotalDownloadSize}
