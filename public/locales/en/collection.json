@@ -81,5 +81,11 @@
     "helper": "Choose which of your collections you would like to link this collection to.",
     "save": "Save Linked Collection",
     "success": "<wrapper>{{linkedCollectionName}} has been successfully linked to <a>{{linkingCollectionName}}</a></wrapper>"
+  },
+  "map": {
+    "showMore": "Load more",
+    "errorLabel": "Error:",
+    "failedToLoad": "Failed to load map data",
+    "resultDisplayExplanation": "The map shows only search results that have geospatial information, most relevant first."
   }
 }

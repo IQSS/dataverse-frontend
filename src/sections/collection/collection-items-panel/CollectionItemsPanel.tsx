@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import { CollectionMap } from '../collection-map/CollectionMap'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import {
   CollectionSearchCriteria,
@@ -27,6 +28,8 @@ import { ItemTypeChange } from '@/sections/collection/collection-items-panel/fil
 import { SelectedFacets } from '@/sections/collection/collection-items-panel/selected-facets/SelectedFacets'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import listIcon from './assets/list.svg'
+import mapIcon from './assets/map.svg'
 import styles from './CollectionItemsPanel.module.scss'
 
 interface CollectionItemsPanelProps {
@@ -60,6 +63,18 @@ export const CollectionItemsPanel = ({
   const { setIsLoading } = useLoading()
   const [_, setSearchParams] = useSearchParams()
   const { t } = useTranslation('collection')
+  const [activeView, setActiveView] = useState<'list' | 'map'>(
+    () => (sessionStorage.getItem('collectionActiveTab') as 'list' | 'map' | null) ?? 'list'
+  )
+  const [mapInitialized, setMapInitialized] = useState(
+    () => sessionStorage.getItem('collectionActiveTab') === 'map'
+  )
+
+  const handleTabChange = (view: 'list' | 'map') => {
+    if (view === 'map') setMapInitialized(true)
+    sessionStorage.setItem('collectionActiveTab', view)
+    setActiveView(view)
+  }
   useLoadMoreOnPopStateEvent(loadItemsOnBackAndForwardNavigation)
 
   // This object will update every time we update a query param in the URL with the setSearchParams setter
@@ -378,31 +393,56 @@ export const CollectionItemsPanel = ({
               isLoadingCollectionItems={isLoadingItems}
             />
           )}
-
-          <ItemsList
-            parentCollectionAlias={collectionId}
-            items={accumulatedItems}
-            itemsListType={ItemsListType.COLLECTION_LIST}
-            error={error}
-            accumulatedCount={accumulatedCount}
-            isLoadingItems={isLoadingItems}
-            areItemsAvailable={areItemsAvailable}
-            hasNextPage={hasNextPage}
-            isEmptyItems={isEmptyItems}
-            hasSearchValue={currentSearchCriteria.hasSearchText()}
-            itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
-            hasFilterQueries={
-              currentSearchCriteria.filterQueries
-                ? currentSearchCriteria.filterQueries.length > 0
-                : false
-            }
-            sortSelected={currentSearchCriteria.sort}
-            orderSelected={currentSearchCriteria.order}
-            paginationInfo={paginationInfo}
-            onBottomReach={handleLoadMoreOnBottomReach}
-            onSortChange={handleSortChange}
-            ref={itemsListContainerRef}
-          />
+          <div className={styles['view-tabs']}>
+            <button
+              className={activeView === 'list' ? styles['tab-active'] : styles.tab}
+              onClick={() => handleTabChange('list')}>
+              <img src={listIcon} alt="" aria-hidden="true" /> List
+            </button>
+            <button
+              className={activeView === 'map' ? styles['tab-active'] : styles.tab}
+              onClick={() => handleTabChange('map')}>
+              <img src={mapIcon} alt="" aria-hidden="true" /> Map
+            </button>
+          </div>
+          {activeView === 'list' && (
+            <ItemsList
+              parentCollectionAlias={collectionId}
+              items={accumulatedItems}
+              itemsListType={ItemsListType.COLLECTION_LIST}
+              error={error}
+              accumulatedCount={accumulatedCount}
+              isLoadingItems={isLoadingItems}
+              areItemsAvailable={areItemsAvailable}
+              hasNextPage={hasNextPage}
+              isEmptyItems={isEmptyItems}
+              hasSearchValue={currentSearchCriteria.hasSearchText()}
+              itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
+              hasFilterQueries={
+                currentSearchCriteria.filterQueries
+                  ? currentSearchCriteria.filterQueries.length > 0
+                  : false
+              }
+              sortSelected={currentSearchCriteria.sort}
+              orderSelected={currentSearchCriteria.order}
+              paginationInfo={paginationInfo}
+              onBottomReach={handleLoadMoreOnBottomReach}
+              onSortChange={handleSortChange}
+              ref={itemsListContainerRef}
+            />
+          )}
+          {/* To prevent problems when leaflet renders a 0px map, the initial render is delayed until the map becomes visible. */}
+          {mapInitialized && (
+            // To prevent re-initializations, the map is hidden via CSS when its tab is closed.
+            <div className={activeView === 'map' ? undefined : styles.hidden}>
+              <CollectionMap
+                collectionId={collectionId}
+                searchText={currentSearchCriteria.searchText}
+                filterQueries={currentSearchCriteria.filterQueries}
+                isVisible={activeView === 'map'}
+              />
+            </div>
+          )}
         </Stack>
       </div>
     </section>

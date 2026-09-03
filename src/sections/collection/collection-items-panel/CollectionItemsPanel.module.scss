@@ -1,6 +1,39 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 @import 'src/assets/mixins';
 
+.view-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tab,
+.tab-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #dee2e6;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #0d6efd;
+  margin-bottom: -2px;
+}
+
+.tab-active {
+  color: #000;
+  background: #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
+  font-weight: 500;
+}
+
+.hidden {
+  display: none;
+}
+
 .items-panel {
   display: flex;
   flex-direction: column;
