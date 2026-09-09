@@ -71,6 +71,14 @@
       "observations": "Observaciones",
       "directory": "Ruta del archivo",
       "description": "Descripción"
+    },
+    "fileTypes": {
+      "tabDelimited": "Valores separados por tabuladores"
+    },
+    "systemFileCategories": {
+      "documentation": "Documentación",
+      "data": "Datos",
+      "code": "Código"
     }
   },
   "actionButtons": {

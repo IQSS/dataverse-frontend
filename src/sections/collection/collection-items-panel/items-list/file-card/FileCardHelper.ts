@@ -16,8 +16,8 @@ export class FileCardHelper {
     return params
   }
 
-  static formatBytesToCompactNumber(bytes: number): string {
-    const byteValueNumberFormatter = Intl.NumberFormat(undefined, {
+  static formatBytesToCompactNumber(bytes: number, locale?: string): string {
+    const byteValueNumberFormatter = Intl.NumberFormat(locale, {
       notation: 'compact',
       style: 'unit',
       unit: 'byte',
