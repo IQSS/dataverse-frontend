@@ -21,7 +21,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && npm run build:global-css",
+    "build:global-css": "sass --load-path=../../node_modules src/lib/assets/styles/bootstrap-global.scss dist/bootstrap-global.css --style=compressed --no-source-map",
     "prepublishOnly": "npm run build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -82,7 +83,8 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/index.umd.js"
       }
-    }
+    },
+    "./bootstrap-global.css": "./dist/bootstrap-global.css"
   },
   "publishConfig": {
     "access": "public"
