@@ -23,9 +23,10 @@ export class FileSize {
     ;[this.value, this.unit] = FileSize.convertToLargestUnit(value, unit)
   }
 
-  toString(): string {
-    const formattedValue =
-      this.value % 1 === 0 ? this.value.toFixed(0) : (Math.round(this.value * 10) / 10).toString()
+  toString(locale?: string): string {
+    const formattedValue = new Intl.NumberFormat(locale, {
+      maximumFractionDigits: 1
+    }).format(this.value)
     return `${formattedValue} ${this.unit}`
   }
 

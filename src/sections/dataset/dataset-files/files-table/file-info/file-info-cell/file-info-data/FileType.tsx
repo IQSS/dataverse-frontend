@@ -10,14 +10,14 @@ interface FileTypeProps {
 }
 
 export function FileType({ type, size }: FileTypeProps) {
-  const { t } = useTranslation('files')
+  const { t, i18n } = useTranslation('files')
   return (
     <div>
       <span>
         {type.value === 'text/tab-separated-values'
           ? t('table.tabularData.name')
           : type.toDisplayFormat()}{' '}
-        - {size.toString()}
+        - {size.toString(i18n.resolvedLanguage || i18n.language)}
       </span>
     </div>
   )

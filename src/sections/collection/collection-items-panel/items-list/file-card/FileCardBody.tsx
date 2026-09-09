@@ -10,15 +10,20 @@ import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNo
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 import { CopyToClipboardButton } from '@/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/copy-to-clipboard-button/CopyToClipboardButton'
 import { FileLabels } from '@/sections/file/file-labels/FileLabels'
+import { FileTypeLabel } from '@/sections/file/file-type-label/FileTypeLabel'
+import { useTranslation } from 'react-i18next'
 
 interface FileCardBodyProps {
   filePreview: FileItemTypePreview
 }
 
 export const FileCardBody = ({ filePreview }: FileCardBodyProps) => {
-  const bytesFormatted = FileCardHelper.formatBytesToCompactNumber(filePreview.sizeInBytes)
-  const variables = filePreview.variables || 0
-  const observations = filePreview.observations || 0
+  const { t, i18n } = useTranslation('collection')
+  const locale = i18n.resolvedLanguage || i18n.language
+  const bytesFormatted = FileCardHelper.formatBytesToCompactNumber(filePreview.sizeInBytes, locale)
+  const variables = filePreview.variables ?? 0
+  const observations = filePreview.observations ?? 0
+  const numberFormatter = new Intl.NumberFormat(locale)
 
   return (
     <Stack direction="vertical" gap={2} className={styles['card-body-container']}>
@@ -45,10 +50,26 @@ export const FileCardBody = ({ filePreview }: FileCardBodyProps) => {
             </span>
           </Stack>
           <div className={styles.info}>
-            <span>{filePreview.fileType}</span>
+            <span>
+              <FileTypeLabel
+                mimeType={filePreview.fileContentType}
+                fallback={filePreview.fileType}
+              />
+            </span>
             <span>{`- ${bytesFormatted}`}</span>
-            {filePreview.fileType === 'Tab-Delimited' && (
-              <span>{`- ${variables} variables, ${observations} observations`}</span>
+            {filePreview.fileContentType === 'text/tab-separated-values' && (
+              <span>
+                {'- '}
+                {t('fileCard.variables', {
+                  count: variables,
+                  formattedCount: numberFormatter.format(variables)
+                })}
+                {', '}
+                {t('fileCard.observations', {
+                  count: observations,
+                  formattedCount: numberFormatter.format(observations)
+                })}
+              </span>
             )}
             {filePreview.checksum && (
               <Stack direction="horizontal" gap={0}>
