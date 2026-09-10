@@ -61,8 +61,10 @@ export interface DvTreeViewConfig {
   /** Locale code for translations. Default: 'en' */
   locale?: string
   /**
-   * URL template for translation files.
-   * Default: `{siteUrl}/reusable-components/locales/{{lng}}/{{ns}}.json`
+   * URL template for translation files. Defaults to `locales/{{lng}}/{{ns}}.json`
+   * resolved against this bundle's own URL, which is correct wherever the
+   * bundle is deployed. Set it only when the translations are served from
+   * somewhere other than next to the bundle.
    */
   localesPath?: string
   /** ID of the DOM element to mount into. Default: 'dv-tree-view' */

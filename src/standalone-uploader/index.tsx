@@ -157,8 +157,14 @@ async function init(opts: { fromObserver?: boolean } = {}) {
     getBearerToken: config.getBearerToken
   })
 
+  // Translations live next to this bundle, wherever an operator deployed it —
+  // behind their web server or in a WAR. Deriving the path from the bundle's
+  // own URL keeps it correct for any base URL without the host page having to
+  // know or pass one. `import.meta.url` must be read here, in the entry
+  // module: from a shared chunk it would resolve to `chunks/` instead.
   const localesPath =
-    config.localesPath ?? `${config.siteUrl}/reusable-components/locales/{{lng}}/{{ns}}.json`
+    config.localesPath ??
+    `${new URL(/* @vite-ignore */ './locales/', import.meta.url).href}{{lng}}/{{ns}}.json`
 
   if (!i18nReady) {
     i18nReady = i18next

@@ -248,7 +248,7 @@ Start by re-using an existing SPA section:
 1. **Identify the smallest props-driven sub-tree.** Pull it out as `<Component>Core` if it isn't already. The core must not call `useNavigate`, `useSearchParams`, or any SPA-only hook. Move that to the wrapper.
 2. **Externalise the repository.** Replace any `useRepository()` / shared-context hook with explicit props or a repository adapter.
 3. **Replace router-driven side effects with callbacks — but keep `navigate()` colocated with its gate.** `onSubmit` / `onCancel` / `onDownload` come from the standalone wrapper's `config`; the SPA wrapper provides router-driven defaults. **Do not** put `navigate()` (or `window.location.href`) inside a callback that the shared core invokes from a `useEffect` if the wrapper owns a blocking gate like `useBlocker` or a `beforeunload` listener. React fires child effects _before_ parent effects, so the navigate would consult the router/window with the parent's _previous_ gate state. Instead, have each wrapper observe the same context state (e.g. an `addFilesToDatasetOperationInfo.success` flag) and trigger its own navigation effect, registered after the gate setup, in the same component as the gate. The shared core should only emit transient feedback (toasts, status updates) — not navigation. We hit exactly this race when first splitting the file uploader for the standalone bundle; the writeup is in `CHANGELOG.md` under "Successful Save in the SPA file uploader…".
-4. **Keep i18n.** Shared core uses `react-i18next` exactly as in the SPA; the standalone bundle initialises i18n from `config.locale`/`config.localesPath` (default `${siteUrl}/reusable-components/locales/{{lng}}/{{ns}}.json`).
+4. **Keep i18n.** Shared core uses `react-i18next` exactly as in the SPA; the standalone bundle initialises i18n from `config.locale`/`config.localesPath` (default: `locales/{{lng}}/{{ns}}.json` resolved against the bundle's own `import.meta.url`, so it follows the bundle wherever it is deployed).
 5. **Wire it.** Follow steps 4-7 of [Adding a new reusable component](#adding-a-new-reusable-component).
 
 A useful diff to study: `src/standalone-uploader/` next to `src/sections/shared/file-uploader/FileUploaderPanelCore.tsx`. The SPA `FileUploaderPanel` and the standalone `StandaloneFileUploaderPanel` both render `FileUploaderPanelCore`.
@@ -266,7 +266,7 @@ interface DvUploaderConfig {
   siteUrl: string // required
   datasetPid: string // required
   locale?: string // default 'en'
-  localesPath?: string // default `${siteUrl}/reusable-components/locales/{{lng}}/{{ns}}.json`
+  localesPath?: string // default: `locales/{{lng}}/{{ns}}.json` relative to the bundle URL
   rootElementId?: string // default 'dv-uploader'
   disableMD5Checksum?: boolean
 }
