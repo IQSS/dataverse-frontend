@@ -113,7 +113,13 @@ export function useFileTreeDownload({
       }
     }
 
-    const merged = mergeFiles(explicit, enumerated, selection.deselectedFilePaths)
+    const merged = mergeFiles(
+      explicit,
+      enumerated,
+      selection.deselectedFilePaths,
+      selection.deselectedFolderPaths,
+      selection.selectedFilePaths
+    )
     await dispatchFiles(merged)
   }, [
     collectExplicitFiles,
@@ -122,6 +128,8 @@ export function useFileTreeDownload({
     dispatchFiles,
     onError,
     selection.deselectedFilePaths,
+    selection.deselectedFolderPaths,
+    selection.selectedFilePaths,
     selection.selectedFolderPaths,
     treeRepository
   ])
@@ -158,21 +166,32 @@ export function useFileTreeDownload({
 function mergeFiles(
   explicit: FileTreeFile[],
   enumerated: FileTreeFile[],
-  deselected: ReadonlySet<string>
+  deselected: ReadonlySet<string>,
+  deselectedFolders: ReadonlySet<string>,
+  selected: ReadonlySet<string>
 ): FileTreeFile[] {
+  // A folder excluded from a selected branch is recorded by path, so the
+  // enumeration of its ancestor still returns everything underneath it. Drop
+  // those here, unless the file was checked again individually — the same
+  // closest-match rule the checkboxes display.
+  const isExcluded = (path: string): boolean => {
+    if (deselected.has(path)) {
+      return true
+    }
+    if (selected.has(path)) {
+      return false
+    }
+    for (const folder of deselectedFolders) {
+      if (path.startsWith(`${folder}/`)) {
+        return true
+      }
+    }
+    return false
+  }
   const seen = new Set<number>()
   const out: FileTreeFile[] = []
-  for (const file of explicit) {
-    if (deselected.has(file.path)) {
-      continue
-    }
-    if (!seen.has(file.id)) {
-      seen.add(file.id)
-      out.push(file)
-    }
-  }
-  for (const file of enumerated) {
-    if (deselected.has(file.path)) {
+  for (const file of [...explicit, ...enumerated]) {
+    if (isExcluded(file.path)) {
       continue
     }
     if (!seen.has(file.id)) {

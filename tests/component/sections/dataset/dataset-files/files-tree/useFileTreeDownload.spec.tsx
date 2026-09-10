@@ -33,7 +33,8 @@ class FakeRepo implements FileTreeRepository {
 /**
  * Build a FileTreeSelection literal for the hook's input. The hook only
  * reads `selectedFilePaths`, `selectedFolderPaths`, `deselectedFilePaths`,
- * and `filesByPath` from selection, so the rest can be no-ops.
+ * `deselectedFolderPaths`, and `filesByPath` from selection, so the rest can
+ * be no-ops.
  */
 function selectionFixture(
   files: FileTreeFile[],
@@ -41,6 +42,7 @@ function selectionFixture(
     selectedFilePaths?: string[]
     selectedFolderPaths?: string[]
     deselectedFilePaths?: string[]
+    deselectedFolderPaths?: string[]
   } = {}
 ): FileTreeSelection {
   const filesByPath = new Map(files.map((f) => [f.path, f]))
@@ -53,6 +55,7 @@ function selectionFixture(
     selectedFilePaths: new Set(args.selectedFilePaths ?? []),
     selectedFolderPaths: new Set(args.selectedFolderPaths ?? []),
     deselectedFilePaths: new Set(args.deselectedFilePaths ?? []),
+    deselectedFolderPaths: new Set(args.deselectedFolderPaths ?? []),
     totals,
     fileState: () => 'none',
     folderState: () => 'none',
@@ -392,6 +395,43 @@ describe('useFileTreeDownload', () => {
     })
 
     expect(onDownloadFiles.callCount, 'no dispatch when enumeration is empty').to.equal(0)
+  })
+
+  it('drops enumerated files under an excluded folder unless re-selected', async () => {
+    // Enumeration walks the selected ancestor and returns the unchecked
+    // subtree too, so the filtering has to happen here or the zip disagrees
+    // with the checkboxes.
+    const keep = FileTreeFileMother.create({ id: 1, name: 'k.txt', path: 'data/k.txt' })
+    const dropped = FileTreeFileMother.create({ id: 2, name: 'd.txt', path: 'data/sub/d.txt' })
+    const rescued = FileTreeFileMother.create({ id: 3, name: 'r.txt', path: 'data/sub/r.txt' })
+
+    const repo = new FakeRepo({
+      data: FileTreePageMother.create({ path: 'data', items: [keep, dropped, rescued] })
+    })
+    const onDownloadFiles = cy.stub().resolves()
+
+    const { result } = renderHook(() =>
+      useFileTreeDownload({
+        treeRepository: repo,
+        datasetPersistentId: 'doi:test/AAA',
+        datasetVersion,
+        selection: selectionFixture([keep, dropped, rescued], {
+          selectedFolderPaths: ['data'],
+          deselectedFolderPaths: ['data/sub'],
+          selectedFilePaths: ['data/sub/r.txt']
+        }),
+        onDownloadFiles
+      })
+    )
+
+    await act(async () => {
+      await result.current.downloadSelection()
+    })
+
+    const dispatched = onDownloadFiles.firstCall.args[0] as FileTreeFile[]
+    // 'data/sub/d.txt' is excluded by the folder; 'data/sub/r.txt' survives
+    // because an explicit file selection is more specific than the folder.
+    expect(dispatched.map((f) => f.id).sort()).to.deep.equal([1, 3])
   })
 
   it('skips selectedFilePaths that are not present in filesByPath', async () => {

@@ -25,6 +25,14 @@ export interface FileTreeSelectionTotals {
  *   is selected.
  * - `deselectedFilePaths` — individual files unchecked within a folder that
  *   is in `selectedFolderPaths` (or under a selected ancestor).
+ * - `deselectedFolderPaths` — folders unchecked within a selected branch.
+ *   Recorded by path so a folder can be excluded without expanding it; the
+ *   tree usually has no idea what is inside.
+ *
+ * Selection is resolved by the closest ancestor: for any path, the deepest
+ * folder in either folder set decides, and an entry in one of the file sets
+ * beats both. That keeps "select the parent, drop one subfolder, keep one
+ * file inside it" expressible without enumerating anything.
  *
  * The component never enumerates an unvisited subtree; the download flow
  * walks the tree API to expand selected folders into concrete file IDs.
@@ -33,6 +41,7 @@ export interface FileTreeSelection {
   selectedFilePaths: ReadonlySet<string>
   selectedFolderPaths: ReadonlySet<string>
   deselectedFilePaths: ReadonlySet<string>
+  deselectedFolderPaths: ReadonlySet<string>
   totals: FileTreeSelectionTotals
   fileState: (file: FileTreeFile) => SelectionState
   folderState: (folder: FileTreeFolder, knownChildren: FileTreeItem[]) => SelectionState
@@ -59,19 +68,47 @@ export interface FileTreeSelection {
 
 const isStrictlyUnder = (path: string, ancestor: string): boolean => path.startsWith(`${ancestor}/`)
 
-const hasSelectedAncestor = (path: string, selectedFolders: ReadonlySet<string>): boolean => {
+/**
+ * Verdict of the closest enclosing folder: `true` when the deepest ancestor
+ * is selected, `false` when it is excluded, `undefined` when no ancestor in
+ * either set covers the path. Depth beats order, so a subfolder exclusion
+ * inside a selected parent wins for everything beneath it.
+ */
+const closestFolderVerdict = (
+  path: string,
+  selectedFolders: ReadonlySet<string>,
+  deselectedFolders: ReadonlySet<string>
+): boolean | undefined => {
+  let deepest = -1
+  let verdict: boolean | undefined
   for (const folder of selectedFolders) {
-    if (isStrictlyUnder(path, folder)) {
-      return true
+    if (isStrictlyUnder(path, folder) && folder.length > deepest) {
+      deepest = folder.length
+      verdict = true
     }
   }
-  return false
+  for (const folder of deselectedFolders) {
+    if (isStrictlyUnder(path, folder) && folder.length > deepest) {
+      deepest = folder.length
+      verdict = false
+    }
+  }
+  return verdict
+}
+
+const removeUnder = (paths: Set<string>, ancestor: string): void => {
+  for (const path of Array.from(paths)) {
+    if (isStrictlyUnder(path, ancestor)) {
+      paths.delete(path)
+    }
+  }
 }
 
 export function useFileTreeSelection(): FileTreeSelection {
   const [selectedFilePaths, setSelectedFilePaths] = useState<Set<string>>(() => new Set())
   const [selectedFolderPaths, setSelectedFolderPaths] = useState<Set<string>>(() => new Set())
   const [deselectedFilePaths, setDeselectedFilePaths] = useState<Set<string>>(() => new Set())
+  const [deselectedFolderPaths, setDeselectedFolderPaths] = useState<Set<string>>(() => new Set())
   const [filesByPath] = useState<Map<string, FileTreeFile>>(() => new Map())
 
   const registerFile = useCallback(
@@ -83,15 +120,30 @@ export function useFileTreeSelection(): FileTreeSelection {
 
   const isFileLogicallySelected = useCallback(
     (path: string): boolean => {
+      // The file's own entry is the most specific statement about it.
       if (deselectedFilePaths.has(path)) {
         return false
       }
       if (selectedFilePaths.has(path)) {
         return true
       }
-      return hasSelectedAncestor(path, selectedFolderPaths)
+      return closestFolderVerdict(path, selectedFolderPaths, deselectedFolderPaths) ?? false
     },
-    [deselectedFilePaths, selectedFilePaths, selectedFolderPaths]
+    [deselectedFilePaths, deselectedFolderPaths, selectedFilePaths, selectedFolderPaths]
+  )
+
+  /** Same resolution for a folder row, including the folder's own entries. */
+  const isFolderLogicallySelected = useCallback(
+    (path: string): boolean => {
+      if (deselectedFolderPaths.has(path)) {
+        return false
+      }
+      if (selectedFolderPaths.has(path)) {
+        return true
+      }
+      return closestFolderVerdict(path, selectedFolderPaths, deselectedFolderPaths) ?? false
+    },
+    [deselectedFolderPaths, selectedFolderPaths]
   )
 
   const fileState = useCallback(
@@ -101,9 +153,7 @@ export function useFileTreeSelection(): FileTreeSelection {
 
   const folderState = useCallback(
     (folder: FileTreeFolder, knownChildren: FileTreeItem[]): SelectionState => {
-      const explicitlySelected = selectedFolderPaths.has(folder.path)
-      const ancestorSelected = hasSelectedAncestor(folder.path, selectedFolderPaths)
-      const logicallySelected = explicitlySelected || ancestorSelected
+      const logicallySelected = isFolderLogicallySelected(folder.path)
 
       const knownFilesUnder = knownChildren.filter(
         (child): child is FileTreeFile =>
@@ -111,8 +161,13 @@ export function useFileTreeSelection(): FileTreeSelection {
       )
 
       if (logicallySelected) {
-        const someDeselected = knownFilesUnder.some((file) => deselectedFilePaths.has(file.path))
-        return someDeselected ? 'partial' : 'all'
+        const someDeselected = knownFilesUnder.some((file) => !isFileLogicallySelected(file.path))
+        // An excluded subfolder makes the parent partial even when the tree
+        // has never listed anything inside it.
+        const someSubfolderExcluded = Array.from(deselectedFolderPaths).some((path) =>
+          isStrictlyUnder(path, folder.path)
+        )
+        return someDeselected || someSubfolderExcluded ? 'partial' : 'all'
       }
 
       if (knownChildren.length === 0) {
@@ -136,39 +191,64 @@ export function useFileTreeSelection(): FileTreeSelection {
       // folder selection covers unvisited paths we cannot vouch for.
       return allFilesSelected && !nestedFolderSelected ? 'all' : 'partial'
     },
-    [deselectedFilePaths, isFileLogicallySelected, selectedFolderPaths]
+    [deselectedFolderPaths, isFileLogicallySelected, isFolderLogicallySelected, selectedFolderPaths]
   )
 
   const toggleFile = useCallback(
     (file: FileTreeFile) => {
       filesByPath.set(file.path, file)
-      const ancestorSelected = hasSelectedAncestor(file.path, selectedFolderPaths)
-      if (ancestorSelected) {
-        const next = new Set(deselectedFilePaths)
-        if (next.has(file.path)) {
-          next.delete(file.path)
-        } else {
-          next.add(file.path)
+      // Flip whatever the file resolves to now, then record the flip in the
+      // set that can express it: an override when a folder already covers the
+      // file, an outright selection when nothing does.
+      const coveredBySelectedFolder =
+        closestFolderVerdict(file.path, selectedFolderPaths, deselectedFolderPaths) === true
+      const nextSelected = new Set(selectedFilePaths)
+      const nextDeselected = new Set(deselectedFilePaths)
+      if (isFileLogicallySelected(file.path)) {
+        nextSelected.delete(file.path)
+        if (coveredBySelectedFolder) {
+          nextDeselected.add(file.path)
         }
-        setDeselectedFilePaths(next)
-        return
-      }
-      const next = new Set(selectedFilePaths)
-      if (next.has(file.path)) {
-        next.delete(file.path)
       } else {
-        next.add(file.path)
+        nextDeselected.delete(file.path)
+        if (!coveredBySelectedFolder) {
+          nextSelected.add(file.path)
+        }
       }
-      setSelectedFilePaths(next)
+      setSelectedFilePaths(nextSelected)
+      setDeselectedFilePaths(nextDeselected)
     },
-    [deselectedFilePaths, filesByPath, selectedFilePaths, selectedFolderPaths]
+    [
+      deselectedFilePaths,
+      deselectedFolderPaths,
+      filesByPath,
+      isFileLogicallySelected,
+      selectedFilePaths,
+      selectedFolderPaths
+    ]
   )
 
   const toggleFolder = useCallback(
     (folder: FileTreeFolder, knownChildren: FileTreeItem[]) => {
       const explicitlySelected = selectedFolderPaths.has(folder.path)
-      const ancestorSelected = hasSelectedAncestor(folder.path, selectedFolderPaths)
+      const ancestorSelected =
+        closestFolderVerdict(folder.path, selectedFolderPaths, deselectedFolderPaths) === true
       const state = folderState(folder, knownChildren)
+
+      // Re-checking a folder that was excluded from a selected branch: drop
+      // the exclusion and any stale overrides beneath it, and the ancestor's
+      // selection covers the subtree again.
+      if (deselectedFolderPaths.has(folder.path)) {
+        const nextDeselectedFolders = new Set(deselectedFolderPaths)
+        nextDeselectedFolders.delete(folder.path)
+        removeUnder(nextDeselectedFolders, folder.path)
+        const nextDeselectedFiles = new Set(deselectedFilePaths)
+        nextDeselectedFiles.delete(folder.path)
+        removeUnder(nextDeselectedFiles, folder.path)
+        setDeselectedFolderPaths(nextDeselectedFolders)
+        setDeselectedFilePaths(nextDeselectedFiles)
+        return
+      }
 
       if (state === 'all' && explicitlySelected) {
         // Deselect this folder and any nested artifacts under it.
@@ -198,28 +278,31 @@ export function useFileTreeSelection(): FileTreeSelection {
             nextDeselected.delete(path)
           }
         }
+        const nextDeselectedFolders = new Set(deselectedFolderPaths)
+        removeUnder(nextDeselectedFolders, folder.path)
         setSelectedFolderPaths(nextFolders)
         setSelectedFilePaths(nextFiles)
         setDeselectedFilePaths(nextDeselected)
+        setDeselectedFolderPaths(nextDeselectedFolders)
         return
       }
 
       if (ancestorSelected) {
-        // We're inside an already-logically-selected branch; flip the
-        // deselect overrides for every known descendant file under this
-        // folder.
-        const nextDeselected = new Set(deselectedFilePaths)
-        const knownFiles = collectKnownFilesUnder(folder, knownChildren)
-        const allDeselected =
-          knownFiles.length > 0 && knownFiles.every((f) => nextDeselected.has(f.path))
-        for (const file of knownFiles) {
-          if (allDeselected) {
-            nextDeselected.delete(file.path)
-          } else {
-            nextDeselected.add(file.path)
-          }
-        }
-        setDeselectedFilePaths(nextDeselected)
+        // Inside an already-selected branch: exclude this folder by path.
+        // Enumerating known children instead would silently do nothing for a
+        // folder the user never expanded, which is the common case — the
+        // checkbox would flip while the files stayed in the selection.
+        const nextDeselectedFolders = new Set(deselectedFolderPaths)
+        nextDeselectedFolders.add(folder.path)
+        // Entries beneath it are now redundant: the prefix covers them.
+        removeUnder(nextDeselectedFolders, folder.path)
+        const nextDeselectedFiles = new Set(deselectedFilePaths)
+        removeUnder(nextDeselectedFiles, folder.path)
+        const nextSelectedFiles = new Set(selectedFilePaths)
+        removeUnder(nextSelectedFiles, folder.path)
+        setDeselectedFolderPaths(nextDeselectedFolders)
+        setDeselectedFilePaths(nextDeselectedFiles)
+        setSelectedFilePaths(nextSelectedFiles)
         return
       }
 
@@ -244,17 +327,27 @@ export function useFileTreeSelection(): FileTreeSelection {
           nextDeselected.delete(path)
         }
       }
+      const nextDeselectedFolders = new Set(deselectedFolderPaths)
+      removeUnder(nextDeselectedFolders, folder.path)
       setSelectedFolderPaths(nextFolders)
       setSelectedFilePaths(nextFiles)
       setDeselectedFilePaths(nextDeselected)
+      setDeselectedFolderPaths(nextDeselectedFolders)
     },
-    [deselectedFilePaths, folderState, selectedFilePaths, selectedFolderPaths]
+    [
+      deselectedFilePaths,
+      deselectedFolderPaths,
+      folderState,
+      selectedFilePaths,
+      selectedFolderPaths
+    ]
   )
 
   const clear = useCallback(() => {
     setSelectedFilePaths(new Set())
     setSelectedFolderPaths(new Set())
     setDeselectedFilePaths(new Set())
+    setDeselectedFolderPaths(new Set())
   }, [])
 
   const toggleAll = useCallback(
@@ -264,6 +357,7 @@ export function useFileTreeSelection(): FileTreeSelection {
         setSelectedFilePaths(new Set())
         setSelectedFolderPaths(new Set())
         setDeselectedFilePaths(new Set())
+        setDeselectedFolderPaths(new Set())
         return
       }
       const nextFiles = new Set<string>()
@@ -279,6 +373,7 @@ export function useFileTreeSelection(): FileTreeSelection {
       setSelectedFilePaths(nextFiles)
       setSelectedFolderPaths(nextFolders)
       setDeselectedFilePaths(new Set())
+      setDeselectedFolderPaths(new Set())
     },
     [filesByPath, selectedFilePaths, selectedFolderPaths]
   )
@@ -304,6 +399,7 @@ export function useFileTreeSelection(): FileTreeSelection {
     selectedFilePaths,
     selectedFolderPaths,
     deselectedFilePaths,
+    deselectedFolderPaths,
     totals,
     fileState,
     folderState,
@@ -314,17 +410,4 @@ export function useFileTreeSelection(): FileTreeSelection {
     filesByPath,
     registerFile
   }
-}
-
-function collectKnownFilesUnder(
-  folder: FileTreeFolder,
-  knownChildren: FileTreeItem[]
-): FileTreeFile[] {
-  const out: FileTreeFile[] = []
-  for (const child of knownChildren) {
-    if (isFileTreeFile(child) && isStrictlyUnder(child.path, folder.path)) {
-      out.push(child)
-    }
-  }
-  return out
 }

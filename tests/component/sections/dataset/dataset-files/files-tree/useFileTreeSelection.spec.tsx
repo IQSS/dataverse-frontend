@@ -97,7 +97,7 @@ describe('useFileTreeSelection', () => {
     expect(result.current.fileState(fileA)).to.equal('all')
   })
 
-  it('toggleFolder on a folder whose ancestor is logically selected flips deselect overrides for known children', () => {
+  it('toggleFolder on a folder whose ancestor is logically selected excludes the whole subtree', () => {
     const root = FileTreeFolderMother.create({ name: 'root', path: 'root' })
     const subFolder = FileTreeFolderMother.create({ name: 'sub', path: 'root/sub' })
     const child1 = FileTreeFileMother.create({ id: 10, name: 'c1.txt', path: 'root/sub/c1.txt' })
@@ -108,15 +108,75 @@ describe('useFileTreeSelection', () => {
     act(() => result.current.toggleFolder(root, [subFolder]))
     expect(result.current.folderState(subFolder, [child1, child2])).to.equal('all')
 
-    // Now toggle the descendant folder — children should flip to deselected.
+    // Toggling the descendant folder records one exclusion by path rather
+    // than an override per known child, so unvisited files are covered too.
     act(() => result.current.toggleFolder(subFolder, [child1, child2]))
-    expect(result.current.deselectedFilePaths.has('root/sub/c1.txt')).to.equal(true)
-    expect(result.current.deselectedFilePaths.has('root/sub/c2.txt')).to.equal(true)
+    expect(result.current.deselectedFolderPaths.has('root/sub')).to.equal(true)
+    expect(result.current.fileState(child1)).to.equal('none')
+    expect(result.current.fileState(child2)).to.equal('none')
 
-    // Toggle again — overrides should clear (allDeselected → unset).
+    // Toggle again — the exclusion clears and the ancestor covers them again.
     act(() => result.current.toggleFolder(subFolder, [child1, child2]))
-    expect(result.current.deselectedFilePaths.has('root/sub/c1.txt')).to.equal(false)
-    expect(result.current.deselectedFilePaths.has('root/sub/c2.txt')).to.equal(false)
+    expect(result.current.deselectedFolderPaths.has('root/sub')).to.equal(false)
+    expect(result.current.fileState(child1)).to.equal('all')
+    expect(result.current.fileState(child2)).to.equal('all')
+  })
+
+  it('excludes an unexpanded subfolder from a selected parent', () => {
+    // Cheng's case on #898: select everything at the parent level, then
+    // uncheck a nested folder that was never expanded. The tree knows none
+    // of its children, so an implementation that only walks knownChildren
+    // silently keeps those files selected.
+    const root = FileTreeFolderMother.create({ name: 'root', path: 'root' })
+    const subFolder = FileTreeFolderMother.create({ name: 'sub', path: 'root/sub' })
+    const unseenChild = FileTreeFileMother.create({
+      id: 20,
+      name: 'hidden.txt',
+      path: 'root/sub/hidden.txt'
+    })
+
+    const { result } = renderHook(() => useFileTreeSelection())
+    act(() => result.current.toggleFolder(root, [subFolder]))
+    expect(result.current.fileState(unseenChild)).to.equal('all')
+
+    // Uncheck the subfolder while it is still collapsed: knownChildren is [].
+    act(() => result.current.toggleFolder(subFolder, []))
+    expect(result.current.folderState(subFolder, [])).to.equal('none')
+    expect(result.current.fileState(unseenChild)).to.equal('none')
+    expect(result.current.folderState(root, [subFolder])).to.equal('partial')
+
+    // And checking it again brings the whole subtree back.
+    act(() => result.current.toggleFolder(subFolder, []))
+    expect(result.current.folderState(subFolder, [])).to.equal('all')
+    expect(result.current.fileState(unseenChild)).to.equal('all')
+    expect(result.current.folderState(root, [subFolder])).to.equal('all')
+  })
+
+  it('lets a file be re-selected inside an excluded subfolder', () => {
+    const root = FileTreeFolderMother.create({ name: 'root', path: 'root' })
+    const subFolder = FileTreeFolderMother.create({ name: 'sub', path: 'root/sub' })
+    const child = FileTreeFileMother.create({ id: 21, name: 'c.txt', path: 'root/sub/c.txt' })
+
+    const { result } = renderHook(() => useFileTreeSelection())
+    act(() => result.current.toggleFolder(root, [subFolder]))
+    act(() => result.current.toggleFolder(subFolder, []))
+    expect(result.current.fileState(child)).to.equal('none')
+
+    // An explicit file check is more specific than the folder exclusion.
+    act(() => result.current.toggleFile(child))
+    expect(result.current.fileState(child)).to.equal('all')
+  })
+
+  it('clears folder exclusions along with everything else', () => {
+    const root = FileTreeFolderMother.create({ name: 'root', path: 'root' })
+    const subFolder = FileTreeFolderMother.create({ name: 'sub', path: 'root/sub' })
+
+    const { result } = renderHook(() => useFileTreeSelection())
+    act(() => result.current.toggleFolder(root, [subFolder]))
+    act(() => result.current.toggleFolder(subFolder, []))
+    expect(result.current.deselectedFolderPaths.has('root/sub')).to.equal(true)
+    act(() => result.current.clear())
+    expect(result.current.deselectedFolderPaths.size).to.equal(0)
   })
 
   it('explicitly selecting a parent folds nested already-selected subfolders into it', () => {
