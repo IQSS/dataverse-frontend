@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+﻿import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
@@ -371,6 +371,7 @@ export const CollectionItemsPanel = ({
         <Stack direction="vertical" gap={2}>
           {showSelectedFacets && facets.length > 0 && (
             <SelectedFacets
+              facets={facets}
               onRemoveFacet={(filterQuery: FilterQuery) =>
                 handleFacetChange(filterQuery, RemoveAddFacetFilter.REMOVE)
               }
@@ -408,3 +409,4 @@ export const CollectionItemsPanel = ({
     </section>
   )
 }
+
