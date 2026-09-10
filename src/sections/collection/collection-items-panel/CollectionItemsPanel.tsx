@@ -409,4 +409,3 @@ export const CollectionItemsPanel = ({
     </section>
   )
 }
-
