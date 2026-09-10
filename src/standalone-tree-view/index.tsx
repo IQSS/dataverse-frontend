@@ -6,6 +6,7 @@ import I18NextHttpBackend from 'i18next-http-backend'
 import { ToastContainer } from 'react-toastify'
 import { FilesTree } from '@/sections/dataset/dataset-files/files-tree/FilesTree'
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
+import { FileJSDataverseRepository } from '@/files/infrastructure/FileJSDataverseRepository'
 import { DatasetVersion, DatasetVersionNumber } from '@/dataset/domain/models/Dataset'
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
 import { mountInShadowRoot } from '../standalone-shared/shadow-mount'
@@ -228,7 +229,12 @@ async function init(opts: { fromObserver?: boolean } = {}) {
     fileMetadataVersionId: jsfVersionId(config.datasetVersionId),
     fileMetadataPath: config.fileMetadataPath ?? '/file.xhtml'
   }
-  const treeRepository = new FileTreeJSDataverseRepository()
+  // Passing a FileRepository is what enables the fallback inside
+  // FileTreeJSDataverseRepository: on an instance whose backend predates the
+  // /tree endpoint it rebuilds the tree from file previews instead of failing.
+  // The bundle is deployed and versioned separately from the backend, so it
+  // will routinely meet servers older than itself.
+  const treeRepository = new FileTreeJSDataverseRepository(new FileJSDataverseRepository())
   const datasetVersion = syntheticVersion(mountConfig.datasetVersionId)
   const buildFileMetadataUrl = buildFileMetadataUrlFactory(mountConfig)
   // The zip engine fetches downloadUrl outside the SDK, so a
