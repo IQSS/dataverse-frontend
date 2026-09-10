@@ -139,6 +139,18 @@ async function init(opts: { fromObserver?: boolean } = {}) {
   mountedHostElement = hostElement
   mountedReactRoot = root
 
+  // These two config errors stay in English on purpose, and render before
+  // i18n is initialised.
+  //
+  // They report that the embedding page is misconfigured, so the reader is
+  // whoever wrote that page, not the end user. Translating them would also
+  // mean initialising i18n first, which we cannot do here: the locale files
+  // are fetched relative to this bundle, and a deployment broken enough to
+  // pass a bad config is exactly the one where that fetch 404s. We would
+  // trade a readable English sentence for a hang or a raw i18n key.
+  //
+  // Validating `siteUrl` before it reaches the SDK is the other reason for
+  // the ordering: i18n init must not run against an unvalidated origin.
   const missingFields: string[] = []
   if (!config) missingFields.push('siteUrl', 'datasetPid')
   else {

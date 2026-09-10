@@ -1,9 +1,9 @@
+import { listDatasetTreeNode } from '@iqss/dataverse-client-javascript'
 import {
   FileTreeRepository,
   GetFileTreeNodeParams
 } from '../../domain/repositories/FileTreeRepository'
 import { FileTreePage } from '../../domain/models/FileTreePage'
-import { listDatasetTreeNode } from '@iqss/dataverse-client-javascript'
 import { FileTreeFromPreviewsRepository } from './FileTreeFromPreviewsRepository'
 import { FileRepository } from '../../domain/repositories/FileRepository'
 import { JSFileTreeMapper } from '../mappers/JSFileTreeMapper'

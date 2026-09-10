@@ -34,12 +34,16 @@
     -->
     <link rel="stylesheet" href="standalone-page.css" />
     <script>
+      // Query-param names match the config keys, and the defaults match
+      // dvTreeView.html: same contract, same harness behaviour. `??` rather
+      // than `||` because URLSearchParams returns null for an absent param,
+      // which is the case we want a default for.
       const params = new URLSearchParams(window.location.search)
-      const bearerToken = params.get('bearerToken') || undefined
+      const bearerToken = params.get('bearerToken') ?? undefined
       window.dvUploaderConfig = {
-        siteUrl: params.get('siteUrl') || 'http://localhost:8080',
-        datasetPid: params.get('datasetPid') || '',
-        locale: params.get('dvLocale') || 'en',
+        siteUrl: params.get('siteUrl') ?? 'http://localhost:8000',
+        datasetPid: params.get('datasetPid') ?? '',
+        locale: params.get('locale') ?? 'en',
         ...(bearerToken !== undefined && { bearerToken })
       }
     </script>

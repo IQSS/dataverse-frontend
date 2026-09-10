@@ -10,6 +10,7 @@
  */
 
 @use '../standalone-shared/shadow-tokens';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 
 // Wrapper applied to the React render root. Used as a future hook for
 // CSS scoping (e.g. PostCSS prefix or Shadow DOM) to limit Bootstrap 5
@@ -35,7 +36,7 @@
   h1 {
     color: #dc3545;
     margin-bottom: 1rem;
-    font-size: 1.5rem;
+    font-size: $dv-brand-font-size;
   }
 
   p {
@@ -51,7 +52,7 @@
     font-family: monospace;
     text-align: left;
     overflow-x: auto;
-    font-size: 0.85rem;
+    font-size: 14px;
     word-break: break-all;
   }
 }
