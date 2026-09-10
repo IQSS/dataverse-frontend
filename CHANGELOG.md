@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to **Dataverse Frontend** are documented here. We also maintain a separate [Design System Changelog](./packages/design-system/CHANGELOG.md) for component-specific changes.
 

@@ -1,4 +1,4 @@
-﻿import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@iqss/dataverse-design-system'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'

@@ -1,4 +1,4 @@
-﻿import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
+import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
 import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { SelectedFacets } from '@/sections/collection/collection-items-panel/selected-facets/SelectedFacets'
 
