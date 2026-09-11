@@ -62,6 +62,11 @@ function scopeFor(options: ServiceWorkerSinkOptions): string {
   return new URL('./', new URL(options.url, window.location.href)).pathname
 }
 
+export function transferableChunk(view: Uint8Array): ArrayBuffer {
+  const exact = view.byteOffset === 0 && view.byteLength === view.buffer.byteLength
+  return (exact ? view : view.slice()).buffer as ArrayBuffer
+}
+
 export function scopeCoversPage(scope: string, pathname: string): boolean {
   const normalised = scope.endsWith('/') ? scope : `${scope}/`
   return pathname === normalised || pathname.startsWith(normalised)
@@ -129,7 +134,7 @@ function handOver(
             channel.port1.postMessage({ type: 'close' })
             return
           }
-          const buffer = value.buffer as ArrayBuffer
+          const buffer = transferableChunk(value)
           channel.port1.postMessage({ type: 'chunk', chunk: buffer }, [buffer])
         },
         (error: unknown) => {

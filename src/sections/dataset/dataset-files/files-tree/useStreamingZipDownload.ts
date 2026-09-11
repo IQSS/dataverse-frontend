@@ -230,13 +230,26 @@ export function useStreamingZipDownload(): StreamingZipApi {
 
             let response: Response
             try {
-              response = await fetchWithRetries({
-                url,
-                rangeHeader: firstPartRange,
-                fetchInit: getFetchInit,
-                retries: partRetries,
-                delayMs: partRetryDelayMs
-              })
+              try {
+                response = await fetchWithRetries({
+                  url,
+                  rangeHeader: firstPartRange,
+                  fetchInit: getFetchInit,
+                  retries: partRetries,
+                  delayMs: partRetryDelayMs
+                })
+              } catch (rangeErr) {
+                if (firstPartRange === undefined || !isRangeRefusal(rangeErr)) {
+                  throw rangeErr
+                }
+                response = await fetchWithRetries({
+                  url,
+                  rangeHeader: undefined,
+                  fetchInit: getFetchInit,
+                  retries: partRetries,
+                  delayMs: partRetryDelayMs
+                })
+              }
             } catch (err) {
               const failure: StreamingZipFailure = {
                 path: file.path,
@@ -492,6 +505,10 @@ class HttpError extends Error {
     super(`HTTP ${status} ${statusText}`)
     this.name = 'HttpError'
   }
+}
+
+function isRangeRefusal(err: unknown): boolean {
+  return err instanceof HttpError && (err.status === 404 || err.status === 416)
 }
 
 function isTransientHttpStatus(status: number): boolean {

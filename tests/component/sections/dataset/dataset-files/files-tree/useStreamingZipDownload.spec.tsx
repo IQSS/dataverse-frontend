@@ -1728,6 +1728,45 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/Download complete — 2 skipped/i).should('exist')
   })
 
+  it('drops the Range header and streams the whole file when the server refuses ranges', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="norange.zip" partSize={4} partRetries={0} />
+    )
+    captureObjectUrls()
+
+    const ranges: (string | null)[] = []
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range')
+      ranges.push(range)
+      if (range) {
+        return Promise.resolve(
+          new Response('Range headers are not supported on dynamically-generated content', {
+            status: 404,
+            statusText: 'Not Found'
+          })
+        )
+      }
+      return Promise.resolve(
+        new Response(new TextEncoder().encode(source), {
+          status: 200,
+          headers: { 'content-type': 'application/octet-stream' }
+        })
+      )
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(ranges).to.deep.equal(['bytes=0-3', null])
+    })
+    cy.then(async () => {
+      const zip = new Uint8Array(await capturedZip().arrayBuffer())
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+    })
+  })
+
   it('refuses a selection over the cap before fetching anything', () => {
     const threeGb = 3 * 1024 * 1024 * 1024
     const files: FileTreeFile[] = [

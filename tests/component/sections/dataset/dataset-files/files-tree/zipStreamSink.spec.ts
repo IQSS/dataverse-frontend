@@ -2,6 +2,7 @@ import {
   createBlobSink,
   resolveZipSink,
   scopeCoversPage,
+  transferableChunk,
   workerUrlForBase
 } from '../../../../../../src/sections/dataset/dataset-files/files-tree/zipStreamSink'
 
@@ -93,5 +94,29 @@ describe('workerUrlForBase', () => {
 
   it('handles a renamed base', () => {
     expect(workerUrlForBase('/spa')).to.equal('/spa/zip-download-sw.js')
+  })
+})
+
+describe('transferableChunk', () => {
+  it('passes an exact-fit chunk through without copying', () => {
+    const chunk = new Uint8Array([1, 2, 3, 4])
+    const out = transferableChunk(chunk)
+    expect(out).to.equal(chunk.buffer)
+    expect(Array.from(new Uint8Array(out))).to.deep.equal([1, 2, 3, 4])
+  })
+
+  it('sends only the view when the chunk is a window onto a larger buffer', () => {
+    const backing = new Uint8Array([9, 9, 1, 2, 3, 9, 9])
+    const view = backing.subarray(2, 5)
+    const out = transferableChunk(view)
+    expect(Array.from(new Uint8Array(out))).to.deep.equal([1, 2, 3])
+  })
+
+  it('sends only the view when the chunk stops short of the buffer end', () => {
+    const backing = new Uint8Array([1, 2, 3, 7, 7, 7])
+    const view = backing.subarray(0, 3)
+    const out = transferableChunk(view)
+    expect(new Uint8Array(out).byteLength).to.equal(3)
+    expect(Array.from(new Uint8Array(out))).to.deep.equal([1, 2, 3])
   })
 })
