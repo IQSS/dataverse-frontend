@@ -17,9 +17,9 @@ against. Anything that stops holding is a bug, not a preference.
    browser. A short or corrupt archive must never look like a success.
 5. **Every deployment, not just S3.** See the matrix below.
 6. **Every mount, not just the SPA.** See the matrix below.
-7. **Honest limits.** A browser that cannot stream gets a hard cap and a plain
-   message before anything is fetched, never an error at the end. Mobile is
-   always capped.
+7. **Honest limits, by capability.** A browser that cannot stream gets a hard cap
+   and a plain message before anything is fetched, never an error at the end. The
+   cap follows what the browser can do, never what kind of device it runs on.
 8. **Verified bytes.** Checksums are computed as the bytes pass, never by
    buffering the file.
 
@@ -78,17 +78,20 @@ The engine must fail loudly rather than hang or truncate.
 
 ## Caps
 
-Named in `zipDownloadLimits.ts` and checked before the first byte is requested.
+The cap follows capability, not device class. There is no user-agent sniffing
+and no per-platform rule.
 
-| Platform                          | Cap                                          |
-| --------------------------------- | -------------------------------------------- |
-| Desktop, streaming sink available | none                                         |
-| Desktop, buffered fallback        | 2 GB                                         |
-| iOS                               | 1 GB, whatever the browser reports it can do |
-| Android                           | 2 GB, whatever the browser reports it can do |
+| Sink                                       | Cap                           |
+| ------------------------------------------ | ----------------------------- |
+| Streams to disk through the service worker | none                          |
+| Has to buffer the archive in memory        | 2 GB, `BUFFERED_ZIP_SIZE_CAP` |
 
-Mobile is a product decision rather than a capability one, which is why the cap
-holds even where the service worker works.
+A phone whose browser can stream is not capped. A desktop browser that cannot is.
+If a device gains the capability, it starts working without a code change, which
+is the point.
+
+The selection is checked against the cap before the first byte is requested, so
+an over-cap selection is refused up front rather than failing at the end.
 
 The over-cap message distinguishes a browser that cannot stream at all, which is
 told which browsers can, from a browser that could but is on a page without a

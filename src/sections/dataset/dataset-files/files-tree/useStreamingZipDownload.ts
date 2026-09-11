@@ -7,7 +7,7 @@ import { bytesToHex } from '@noble/hashes/utils.js'
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
 import { useBeforeUnloadGuard } from '@/shared/hooks/useBeforeUnloadGuard'
 import { ZipSink, resolveZipSink } from './zipStreamSink'
-import { checkZipSelectionSize, detectPlatform } from './zipDownloadLimits'
+import { checkZipSelectionSize } from './zipDownloadLimits'
 
 export type StreamingZipStrategy = 'pause' | 'skip' | 'twopass'
 
@@ -458,7 +458,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
           if (stale()) return
           const withinCap = checkZipSelectionSize({
             bytes: files.reduce((sum, file) => sum + file.size, 0),
-            platform: detectPlatform(),
             streaming: sink.streaming,
             browserCanStream: sink.browserCanStream
           })

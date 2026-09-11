@@ -145,7 +145,7 @@ export function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Pr
 }
 
 export function transferableChunk(view: Uint8Array): ArrayBuffer {
-  return view.slice().buffer as ArrayBuffer
+  return view.slice().buffer
 }
 
 async function takeControl(options: ServiceWorkerSinkOptions): Promise<ServiceWorker | null> {
