@@ -27,14 +27,7 @@ export class DatasetLabel {
   ) {}
 }
 
-/**
- * The dataset's effective storage driver, surfaced to the SPA so feature
- * gates can ask the right question — "is this driver capable of
- * browser-direct upload to S3-compatible storage?" — instead of pattern-
- * matching on the driver id (which is just an operator-chosen label).
- *
- * Mirrors the shape of `GET /api/datasets/{id}/storageDriver`.
- */
+/** Mirrors `GET /api/datasets/{id}/storageDriver`; gates direct upload/download by capability, not driver id. */
 export interface DatasetStorageDriver {
   name: string
   type: string

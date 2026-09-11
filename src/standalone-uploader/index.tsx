@@ -16,12 +16,8 @@ import { mountInShadowRoot } from '../standalone-shared/shadow-mount'
 import { configureSdkAuth } from '../standalone-shared/auth'
 
 import '../../packages/design-system/dist/style.css'
-// Bootstrap 5 base CSS is intentionally NOT imported here. The standalone
-// bundle is mounted into pages whose own CSS context (e.g. JSF Bootstrap 3,
-// or an external host's stylesheet) we must not perturb. Component styles
-// are CSS-Modules with hashed class names. The standalone *demo* HTML page
-// (`dvUploader.html`) imports Bootstrap directly via a <link> tag for
-// its own page chrome.
+// No Bootstrap base CSS: the host page owns the global cascade. Component
+// styles are CSS Modules with inline fallbacks for every `var(--bs-*)`.
 import 'react-toastify/dist/ReactToastify.css'
 import './standalone.scss'
 
@@ -64,10 +60,8 @@ function UploaderWrapper({
   )
 }
 
-// Module-scope state mirrors the tree-view bundle: needed so
-// PrimeFaces partial updates that re-insert the uploader host div are
-// detected and remounted (otherwise the orphaned root sits attached to
-// a div that's no longer in the document, and the user sees nothing).
+// Re-mount bookkeeping for PrimeFaces partial updates; same scheme as the
+// tree-view bundle, explained there.
 let mountedHostElement: HTMLElement | null = null
 let mountedReactRoot: Root | null = null
 let i18nReady: Promise<void> | null = null
@@ -107,18 +101,8 @@ async function init(opts: { fromObserver?: boolean } = {}) {
   mountedHostElement = hostElement
   mountedReactRoot = root
 
-  // These two config errors stay in English on purpose, and render before
-  // i18n is initialised.
-  //
-  // They report that the embedding page is misconfigured, so the reader is
-  // whoever wrote that page, not the end user. Translating them would also
-  // mean initialising i18n first, which we cannot do here: the locale files
-  // are fetched relative to this bundle, and a deployment broken enough to
-  // pass a bad config is exactly the one where that fetch 404s. We would
-  // trade a readable English sentence for a hang or a raw i18n key.
-  //
-  // Validating `siteUrl` before it reaches the SDK is the other reason for
-  // the ordering: i18n init must not run against an unvalidated origin.
+  // The two config errors below are deliberately untranslated and render
+  // before i18n init; see the tree-view entry for why.
   const missingFields: string[] = []
   if (!config) missingFields.push('siteUrl', 'datasetPid')
   else {

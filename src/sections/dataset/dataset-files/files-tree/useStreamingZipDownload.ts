@@ -4,18 +4,9 @@ import { md5 } from 'js-md5'
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
 
 /**
- * Strategy for handling per-file fetch failures during a streaming-zip
- * download.
- *
- * - `pause`: stop the engine on the first failure and surface a
- *   retry / skip / skip-all decision to the caller. Default — matches
- *   the behaviour the design bundle prescribes.
- * - `skip`: best-effort. Failed files are dropped, listed in a
- *   `manifest.txt` entry inside the resulting zip, and the engine
- *   keeps going.
- * - `twopass`: failed files are deferred. After the first pass the
- *   engine waits for the caller to call `retryFailed()`; at that
- *   point it re-queues all recoverable failures as a second pass.
+ * On a per-file failure: `pause` stops and asks the caller (default),
+ * `skip` drops the file and lists it in `manifest.txt`, `twopass` defers it
+ * until the caller invokes `retryFailed()`.
  */
 export type StreamingZipStrategy = 'pause' | 'skip' | 'twopass'
 
@@ -160,19 +151,10 @@ function deferred<T>(): ResolveBag<T> {
 }
 
 /**
- * Streaming-zip download driver.
- *
- * Builds a zip in the browser by piping per-file response bodies
- * through `client-zip`. The result is a single `Response` whose body is
- * a `ReadableStream`; we materialise it to a `Blob` and trigger a
- * save via an anchor click. For very large datasets this still buffers
- * the zip in memory; future work can swap the blob save for the
- * File System Access API or a Service Worker stream-saver.
- *
- * Per-file progress is tracked inside the custom `ReadableStream` that
- * `buildChunkedStream` returns: it tallies bytes as `client-zip` pulls
- * them, and lazily fetches additional Range parts when the file is
- * larger than `partSize`.
+ * Builds the zip in the browser: per-file bodies are piped through
+ * `client-zip`, materialised to a Blob, and saved via an anchor click.
+ * Progress and Range-part fetching live in the stream `buildChunkedStream`
+ * returns. The zip is buffered in memory until saved.
  */
 export function useStreamingZipDownload(): StreamingZipApi {
   const [state, setState] = useState<StreamingZipState>(initialState)
@@ -656,21 +638,6 @@ function appendQueryParam(url: string, key: string, value: string): string {
 }
 
 /**
- * Range fetch with re-presign-on-403 fallback. When the cached
- * `subsequentUrl` returns 403 (presigned URL has expired since the
- * file's first chunk was retrieved), this helper transparently
- * re-fetches the Dataverse access endpoint with `gbrecs=true` (so the
- * download isn't double-counted in the guestbook), captures the new
- * S3 redirect target, and returns the bytes for the requested range.
- * Callers update their cached URL from the returned `refreshedUrl` so
- * subsequent parts use the fresh presigning until *that* one expires.
- *
- * Anything other than 403 (network errors, 5xx, retried-out transient
- * failures) propagates from the inner `fetchWithRetries` and aborts
- * the chunked stream — re-presign helps for "URL expired", not for
- * "access genuinely denied" or "S3 melted".
- */
-/**
  * Supplies fetch options fresh for each request, so a long-running download
  * always sends the current credentials rather than the ones it started with.
  */
@@ -706,6 +673,12 @@ export function initForUrl(
   return { ...init, headers }
 }
 
+/**
+ * Range fetch that re-presigns on 403. An expired presigned URL is refetched
+ * from the Dataverse access endpoint with `gbrecs=true` (no double guestbook
+ * count) and the new redirect target returned as `refreshedUrl` for the
+ * caller to cache. Any other failure propagates and aborts the stream.
+ */
 async function fetchPartWithRefresh(args: {
   cachedUrl: string
   originalUrl: string
@@ -751,20 +724,11 @@ async function fetchPartWithRefresh(args: {
 }
 
 /**
- * Streaming digest accumulator. Two branches matching what
- * `FileUploaderHelper` already does for upload:
- *   - MD5 (Dataverse default): `js-md5`'s `create()/update()/hex()` —
- *     true streaming, no buffer of the file's bytes.
- *   - SHA-1 / SHA-256 / SHA-512: `crypto.subtle.digest` is one-shot,
- *     so we accumulate chunks (1 MiB max per slice) and digest the
- *     concatenation when the file closes. Memory cost is the file
- *     size for SHA — fine for typical research-data sizes, the same
- *     trade-off the upload helper accepts. A streaming-SHA WASM
- *     library would close the gap if it ever bites; not in scope.
- *
- * `null` for unsupported / unknown algorithm names — caller treats it
- * as "skip verification for this file" rather than erroring out, so a
- * file whose `checksum.type` is something exotic doesn't kill the zip.
+ * Streaming digest, mirroring `FileUploaderHelper`: MD5 streams via
+ * `js-md5`; the SHA family buffers chunks for one-shot `crypto.subtle.digest`
+ * (memory cost is the file size, the same trade-off upload accepts).
+ * Returns `null` for unknown algorithms so verification is skipped rather
+ * than failing the file.
  */
 function makeDigestAccumulator(
   algorithm: string
@@ -815,21 +779,12 @@ function makeDigestAccumulator(
 }
 
 /**
- * Wraps the first-part response and lazily fetches the remaining parts
- * via Range requests as `client-zip` pulls bytes through the stream.
- *
- * If the server returned `200` to the first request (Range was either
- * not set or not honored), the response is treated as the full file —
- * no further parts are requested. Otherwise the response's `.url`
- * (after the 303 to S3) is used for the subsequent part requests so
- * those bypass Dataverse entirely; that's the path that gives us the
- * resilience win on flaky cross-region links.
- *
- * When the file's tree row carries a `checksum`, the bytes are also
- * fed into a streaming digest accumulator and compared at end-of-stream
- * — a mismatch is reported via `onVerificationFailure` but does NOT
- * fail the file (its bytes are already in the zip; the user is told
- * which files need re-downloading).
+ * Wraps the first-part response and fetches the remaining Range parts as
+ * `client-zip` pulls. A `200` first response means Range was not honoured
+ * and is treated as the whole file. Later parts go to the post-redirect S3
+ * URL, bypassing Dataverse. A checksum mismatch at end-of-stream is reported
+ * via `onVerificationFailure` but does not fail the file: its bytes are
+ * already in the zip.
  */
 function buildChunkedStream(args: {
   file: FileTreeFile

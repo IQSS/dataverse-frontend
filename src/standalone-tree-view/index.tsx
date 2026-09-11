@@ -13,13 +13,8 @@ import { mountInShadowRoot } from '../standalone-shared/shadow-mount'
 import { configureSdkAuth } from '../standalone-shared/auth'
 
 import '../../packages/design-system/dist/style.css'
-// Bootstrap 5 base CSS is intentionally NOT imported here. The standalone
-// bundle is mounted into pages whose own CSS context (e.g. JSF Bootstrap 3,
-// or an external host's stylesheet) we must not perturb. The component's own
-// styles are CSS-Modules (hashed class names, no global selectors) and the
-// `var(--bs-*)` references in those modules carry inline fallbacks. The
-// standalone *demo* HTML page (`dvTreeView.html`) imports Bootstrap directly
-// via a <link> tag for its own page chrome.
+// No Bootstrap base CSS: the host page owns the global cascade. Component
+// styles are CSS Modules with inline fallbacks for every `var(--bs-*)`.
 import 'react-toastify/dist/ReactToastify.css'
 import './standalone.scss'
 
@@ -28,23 +23,14 @@ interface MountConfig {
   /** API-normalised form (`:draft`, `:latest`, `1.2`) for SDK requests. */
   datasetVersionId: string
   /**
-   * The version value for `file.xhtml` links, kept in the JSF-friendly
-   * form the host page provided (`DRAFT`, `1.2`). JSF's version lookup
-   * does not understand the API's `:draft`/`:latest` tokens — a `:draft`
-   * link on a published dataset silently opens the released version.
-   * `undefined` means "omit &version=" and let file.xhtml pick its
-   * default (latest released).
+   * JSF form for `file.xhtml` links (`DRAFT`, `1.2`); `undefined` omits
+   * `&version=`. See `jsfVersionId`.
    */
   fileMetadataVersionId: string | undefined
   fileMetadataPath: string
 }
 
-/**
- * Builds a synthetic DatasetVersion that carries just enough information
- * for FilesTree (the dataset persistent id stays in props; the version
- * is only used to thread a number into requests). The bundle itself
- * does not need the rich SPA Dataset object.
- */
+/** Just enough DatasetVersion for FilesTree to thread a version number into requests. */
 function syntheticVersion(versionId: string): DatasetVersion {
   // FilesTree uses datasetVersion.number.toString() and
   // .toSearchParam(). Both work on DatasetVersionNumber.
@@ -73,13 +59,10 @@ function buildFileMetadataUrlFactory(config: MountConfig) {
         )}`
 }
 
-// Module-scope state lets us survive PrimeFaces partial updates that
-// re-insert the host `<div id="...">`. The browser does not re-execute
-// the already-loaded module script when JSF refreshes the fragment, so
-// the FIRST mount goes stale (orphaned root attached to a removed div)
-// and subsequent toggles produce an empty tree. We track the last host
-// element + Root we mounted, and a MutationObserver re-mounts whenever
-// the target id appears as a NEW element in the DOM.
+// PrimeFaces partial updates re-insert the host `<div>` without re-running
+// this module, which orphans the first React root. We remember what we
+// mounted, and the MutationObserver at the bottom re-runs init() whenever
+// the host element's identity changes. init() is idempotent per element.
 let mountedHostElement: HTMLElement | null = null
 let mountedReactRoot: Root | null = null
 let i18nReady: Promise<void> | null = null
@@ -100,17 +83,10 @@ async function init(opts: { fromObserver?: boolean } = {}) {
     return
   }
 
-  // Config-not-yet-available short-circuit. When init() runs from the
-  // MutationObserver after a JSF partial update inserts a fresh host
-  // div, the inline `<script>` that assigns `window.dvTreeViewConfig`
-  // may not have executed YET in the same observer callback —
-  // PrimeFaces fires DOM mutations and inline-script execution in
-  // separate phases. Without this guard we'd render the "missing
-  // config" error UI into the host div, then the next observer tick
-  // would no-op because the host element identity is unchanged.
-  // Returning silently lets the next mutation (e.g. when the JSF
-  // partial-update fragment finishes inserting itself) re-trigger
-  // init() with the config now populated.
+  // From the observer, the fresh host div can land before the inline
+  // config script has run. Bail silently and let the next mutation retry;
+  // rendering the "missing config" error here would pin it, because the
+  // element identity would then be unchanged.
   if (opts.fromObserver && !config) {
     return
   }
@@ -175,13 +151,7 @@ async function init(opts: { fromObserver?: boolean } = {}) {
     return
   }
 
-  // Validate `siteUrl` before threading it into the SDK. The host JSF
-  // page sets this from a server-side EL expression, but defending
-  // against a typo'd or attacker-controlled config is cheap: insist on
-  // an http(s) absolute URL. Anything else (`javascript:`, file paths,
-  // mismatched origins) gets rejected with a visible error rather than
-  // silently misdirecting every API call (with the user's session
-  // cookie in tow).
+  // See isValidSiteUrl for why this is rejected loudly rather than passed on.
   if (!isValidSiteUrl(config.siteUrl)) {
     root.render(
       <StrictMode>
@@ -285,11 +255,9 @@ async function init(opts: { fromObserver?: boolean } = {}) {
 }
 
 /**
- * Reject anything that is not a syntactically-valid absolute http(s)
- * URL. The host page is normally trusted (server-rendered config), but
- * a typo or an attacker-controlled config field would otherwise route
- * every SDK call to whatever the misconfigured value points to —
- * carrying the user's session cookie. Cheap defence-in-depth.
+ * Only an absolute http(s) URL may reach the SDK: a typo'd or injected
+ * `siteUrl` would otherwise route every API call, session cookie included,
+ * wherever it points.
  */
 function isValidSiteUrl(raw: string | undefined): boolean {
   if (!raw) return false
@@ -302,23 +270,9 @@ function isValidSiteUrl(raw: string | undefined): boolean {
 }
 
 /**
- * Translate the friendly version id JSF passes (`DRAFT`, `1.0`, …) into
- * the wire form the API expects (`:draft`, `:latest`, `1.0`, …).
- *
- * `DatasetPage.workingVersion.friendlyVersionNumber` returns the literal
- * string `"DRAFT"` for unpublished versions. The API uses the
- * colon-prefixed token `:draft` instead — passing `DRAFT` raw produces
- * `[400] Illegal version identifier 'DRAFT'`. We normalise here so JSF
- * doesn't have to translate before populating `window.dvTreeViewConfig`.
- */
-/**
- * The JSF-friendly counterpart of `normaliseVersionId`: the host may
- * legitimately pass API tokens (`:draft`, `:latest`, …) per the config
- * docs, but `file.xhtml` only understands `DRAFT` or a numeric version
- * — an unrecognised value silently resolves to the first released
- * version. Draft tokens map to `DRAFT`; latest tokens map to
- * `undefined` so the link omits `&version=` and file.xhtml applies its
- * own latest-released default; numeric versions pass through.
+ * Inverse of `normaliseVersionId` for `file.xhtml` links, which understand
+ * `DRAFT` or a number but not API tokens: draft tokens become `DRAFT`,
+ * latest tokens become `undefined` (omit `&version=`), numbers pass through.
  */
 function jsfVersionId(raw: string | undefined): string | undefined {
   if (!raw) return undefined
@@ -335,6 +289,10 @@ function jsfVersionId(raw: string | undefined): string | undefined {
   return raw
 }
 
+/**
+ * JSF passes `friendlyVersionNumber` (`DRAFT`, `1.0`); the API wants
+ * `:draft`/`:latest`/`1.0`. Raw `DRAFT` is a 400.
+ */
 function normaliseVersionId(raw: string | undefined): string {
   if (!raw) return ':latest'
   const lower = raw.toLowerCase()
@@ -348,19 +306,7 @@ init().catch((error) => {
   console.error('[dvTreeView] init failed:', error)
 })
 
-/**
- * PrimeFaces partial updates can replace the host fragment in the DOM
- * without re-executing this module script. When that happens our
- * already-mounted Root is orphaned (attached to a div that is no
- * longer in the document) and the freshly inserted div sits empty.
- *
- * Observe the document for child-list changes; whenever the
- * configured root element appears (or, more precisely, whenever the
- * element returned by getElementById changes identity) re-run init().
- * The init() guard is itself idempotent for the same host element, so
- * extra observer firings during unrelated DOM updates are cheap
- * no-ops.
- */
+// Re-mount after PrimeFaces partial updates; see the module-scope state above.
 if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
   const observer = new MutationObserver(() => {
     const config = window.dvTreeViewConfig

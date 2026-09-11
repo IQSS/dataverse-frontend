@@ -52,32 +52,18 @@ interface FilesTreeProps {
    * linking. Empty string means only the root is expanded.
    */
   onCurrentPathChange?: (path: string) => void
-  /**
-   * Optional URL builder for the filename → file metadata link.
-   * Forwarded to FilesTreeRow. When provided, the row uses a plain
-   * anchor (suitable for JSF embeds without React Router); when
-   * omitted, the row falls back to the SPA `<Link>`.
-   */
+  /** Filename link builder; a plain anchor when set (JSF embeds), the SPA `<Link>` when omitted. */
   buildFileMetadataUrl?: (file: FileTreeFile) => string
   /**
-   * When `true`, every download action in the tree (per-row download
-   * icon, toolbar download button) is disabled. The host should set
-   * this on datasets where a guestbook, custom terms, or non-default
-   * license requires user acknowledgement before downloading — the
-   * acknowledgement modal lives on the table-view side and is not
-   * yet wired into the tree. See the SPA caller in `DatasetFiles.tsx`.
-   * Standalone JSF mounts default to `false`; the JSF page is
-   * responsible for its own gating in that flow.
+   * Disables every download action. The SPA sets it when a guestbook or
+   * terms acknowledgement is required, since that modal is not wired into
+   * the tree yet; JSF mounts gate on their own side.
    */
   downloadsDisabled?: boolean
   /**
-   * Extra `fetch` options for the raw per-file download requests made
-   * by the streaming-zip engine. The SDK's listing calls carry their
-   * own auth (session cookie or bearer token via `ApiConfig`), but the
-   * zip engine fetches `downloadUrl` directly — a bearer-token embed
-   * must pass its `Authorization` header here or restricted/draft file
-   * downloads 401 while the listing works. A getter (not a value) so a
-   * rotating token is read fresh at the start of each download run.
+   * Fetch options for the zip engine's direct `downloadUrl` requests, which
+   * bypass the SDK's auth. Bearer-token embeds must supply their header
+   * here. A getter so it is re-read per request, not once per run.
    */
   downloadFetchInit?: () => RequestInit | undefined
 }
@@ -138,14 +124,8 @@ export function FilesTree({
       if (files.length === 0) {
         return
       }
-      // Single source of truth: every download — one file or many — is
-      // assembled into a zip via the chunked streaming engine. Means a
-      // single big file gets the per-part Range / retry resilience, the
-      // tray gives consistent progress UX, and the button label
-      // ("Download zip") never lies about what the user is going to
-      // get. The historical "anchor-click for one file" bypass was
-      // removed because it lost the per-part resume on large files and
-      // forked the UX.
+      // Every download, even a single file, goes through the zip engine so it
+      // gets the same Range/retry resilience and progress UX.
       const zipName = `${datasetPersistentId.replace(/[^a-zA-Z0-9._-]+/g, '_')}-files.zip`
       // Hand over the factory, not its result: the engine re-reads it per
       // request so a token that expires mid-zip is picked up on the next part.
@@ -218,16 +198,11 @@ export function FilesTree({
     setScrollTop(event.currentTarget.scrollTop)
   }
 
-  // Auto-load: whenever a "load-more" row enters the rendered slice and the
-  // corresponding folder is not already loading, trigger loadMore. The
-  // explicit button stays as a fallback (and a focus target) but the
-  // common case is now infinite-scroll-style. A folder in the error state
-  // is excluded: its cursor survives the failure, so without the guard the
-  // error write itself re-triggers this effect and the fetch loops with no
-  // backoff — after a failure, loading more is the retry button's job.
-  // A "loading" row for a node that has no entry yet is a folder the
-  // filter query force-opened without the user ever expanding it — nothing
-  // else fetches those, so service them here.
+  // Infinite scroll: a visible "load-more" row triggers loadMore. Folders in
+  // the error state are skipped or the error write would re-trigger this
+  // effect and loop; retrying is the button's job. A "loading" row with no
+  // node entry is a folder the filter force-opened, which nothing else
+  // fetches, so it is serviced here too.
   useEffect(() => {
     for (const row of slice) {
       if (row.kind === 'load-more') {
@@ -313,21 +288,10 @@ export function FilesTree({
     }
   }, [focusedRowIndex, rowHeight])
 
-  // Move DOM focus to follow the roving tabindex. The state-only update
-  // above shifts which row carries `tabIndex=0`, but the browser's focus
-  // does not move on its own — without this, the user sees the
-  // `:focus-visible` ring stay on whichever row Tab originally landed
-  // on, even after pressing ArrowDown / ArrowUp. Only follow focus
-  // when the tree already owns it; otherwise we'd grab focus on
-  // initial mount and steal it from the rest of the page.
-  //
-  // We resolve the active element via `getRootNode()` rather than
-  // `document.activeElement` so the check works inside a Shadow DOM
-  // mount (the JSF standalone bundle): `document.activeElement` from
-  // outside the shadow returns the shadow host, not the focused
-  // descendant inside it, so a host-page-level check would always
-  // report the tree as not-owning-focus and the ring would never
-  // follow arrow keys in JSF.
+  // Move DOM focus with the roving tabindex, but only when the tree already
+  // owns focus, so mounting never steals it. The active element is read via
+  // `getRootNode()` because inside a Shadow DOM mount `document.activeElement`
+  // is the shadow host, which would make the tree look unfocused forever.
   useEffect(() => {
     if (focusedRowIndex < 0) return
     const el = containerRef.current
