@@ -52,6 +52,7 @@ yarn-error.log*
 
 #deployment
 /deployment/payara/target
+/deployment/reusable-components/target
 
 #dev environment
 /dev-env/docker-dev-volumes

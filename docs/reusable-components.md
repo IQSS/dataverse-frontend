@@ -53,7 +53,7 @@ The host page, in turn, **MUST**:
 
 ## Build pipeline
 
-Reusable components are built by `vite.config.reusable-components.ts`. The output goes to `dist-reusable-components/reusable-components/` — the inner `reusable-components/` mirrors the JSF deploy path (`webapp/reusable-components/`) so the copy step is a straight tree copy:
+Reusable components are built by `vite.config.reusable-components.ts`. The output goes to `dist-reusable-components/reusable-components/`. The inner directory is the unit of deployment: copied into a web server's docroot it is served at `/reusable-components/`, and `deployment/reusable-components/pom.xml` wraps the same directory as `reusable-components.war` for Payara. The bundles are not shipped in the Dataverse WAR; see the Installation Guide's "Reusable Frontend Components" page for the operator side.
 
 ```
 dist-reusable-components/
@@ -85,6 +85,8 @@ Build with:
 ```bash
 npm run build-reusable-components
 ```
+
+The `generate-reusable-components-war` workflow runs the same build, packages the WAR, and attaches it to the GitHub release when triggered by one. Unlike the SPA's `generate-war`, the output is not tied to an environment: the components take all configuration from the host page at runtime, so one WAR serves every installation.
 
 ## Authentication
 
@@ -227,6 +229,8 @@ The MutationObserver fires whenever the document tree changes; the cheap identit
 The component's `fetch` calls are subject to browser CORS rules. Two pitfalls worth knowing:
 
 - **`credentials: 'include'` and S3 redirects.** Dataverse's download API often returns a 302 to a presigned S3 URL when storage has `download-redirect=true`. Browsers carry the credentials mode through the redirect, and an S3 response with `Allow-Origin: *` plus a request that says "include credentials" is rejected by the browser. Use `credentials: 'same-origin'` so cookies travel only on same-origin Dataverse calls and are dropped on the cross-origin S3 hop.
+- **No `Authorization` header on presigned URLs.** A bearer-token embed sends `Authorization: Bearer …` to the Dataverse access endpoint, but the chunked zip download fetches Range parts 2..N from the presigned S3 URL that the first response redirected to. S3 rejects a request that carries both query-string signing and an `Authorization` header, and the header would also force a CORS preflight the bucket may not answer. `initForUrl` in `useStreamingZipDownload.ts` strips the header whenever the target origin differs from the original Dataverse URL; the tests around it exist to keep that behaviour from being "simplified" away.
+- **Re-presign on 403.** Presigned URLs expire, and a large file can outlive the one its first chunk was fetched with. When a later Range part gets a 403, the engine refetches the Dataverse access endpoint with `gbrecs=true` (so the download is not counted in the guestbook a second time), follows the new redirect, and continues from the fresh URL. Any other status propagates and pauses the zip through the normal retry/skip flow.
 - **Presigned-URL host signing.** S3 enforces that the request `Host` header matches what was signed. In docker-compose dev, Dataverse signs URLs against the docker-internal hostname (`localstack:4566`); the browser must reach the same hostname for the signature to verify. The standard fix is to add `127.0.0.1 localstack` to the developer's `/etc/hosts`. This is a property of presigned-URL networking, not a Dataverse bug.
 
 ## Adding a new reusable component
