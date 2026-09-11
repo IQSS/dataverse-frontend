@@ -745,24 +745,24 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
         })
     )
 
-    const fireBeforeUnload = (win: Window): boolean => {
-      const event = new win.Event('beforeunload', { cancelable: true })
-      win.dispatchEvent(event)
+    const fireBeforeUnload = (): boolean => {
+      const event = new Event('beforeunload', { cancelable: true })
+      window.dispatchEvent(event)
       return event.defaultPrevented
     }
 
-    cy.window().then((win) => {
-      expect(fireBeforeUnload(win), 'idle: no guard').to.equal(false)
+    cy.then(() => {
+      expect(fireBeforeUnload(), 'idle: no guard').to.equal(false)
     })
     cy.findByTestId('harness-start').click()
     cy.findByTestId('files-tree-download-tray').should('be.visible')
-    cy.window().then((win) => {
-      expect(fireBeforeUnload(win), 'running: guarded').to.equal(true)
+    cy.then(() => {
+      expect(fireBeforeUnload(), 'running: guarded').to.equal(true)
       release?.()
     })
     cy.contains(/download complete/i).should('exist')
-    cy.window().then((win) => {
-      expect(fireBeforeUnload(win), 'done: released').to.equal(false)
+    cy.then(() => {
+      expect(fireBeforeUnload(), 'done: released').to.equal(false)
     })
   })
 
