@@ -15,10 +15,9 @@ export const FilesContext = createContext<FilesContextProps>({
 
 export const useFilesContext = () => {
   const context = useContext(FilesContext)
+  /* istanbul ignore if */
   if (!context) {
-    /* istanbul ignore next */ throw new Error(
-      'useFilesContext must be used within a FilesContext Provider'
-    )
+    throw new Error('useFilesContext must be used within a FilesContext Provider')
   }
   return context
 }

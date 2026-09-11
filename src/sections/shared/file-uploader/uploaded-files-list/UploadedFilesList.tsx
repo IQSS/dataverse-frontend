@@ -1,6 +1,5 @@
 import { KeyboardEvent, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 import { useDeepCompareEffect } from 'use-deep-compare'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import {
@@ -17,9 +16,9 @@ import { useReplaceFile } from '../useReplaceFile'
 import { useAddUploadedFilesToDataset } from '../useAddUploadedFilesToDataset'
 import { UploadedFileRow } from './uploaded-file-row/UploadedFileRow'
 import { useFileUploaderContext } from '../context/FileUploaderContext'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { FileUploadStatus, UploadedFile } from '../context/fileUploaderReducer'
 import { OperationType } from '../FileUploader'
+import { UploaderFileRepository } from '../types'
 import styles from './UploadedFilesList.module.scss'
 
 export interface FilesListFormData {
@@ -27,16 +26,17 @@ export interface FilesListFormData {
 }
 
 interface UploadedFilesListProps {
-  fileRepository: FileRepository
+  fileRepository: UploaderFileRepository
   datasetPersistentId: string
+  onCancel: () => void
 }
 
 export const UploadedFilesList = ({
   fileRepository,
-  datasetPersistentId
+  datasetPersistentId,
+  onCancel
 }: UploadedFilesListProps) => {
   const { t } = useTranslation('shared')
-  const navigate = useNavigate()
 
   const {
     fileUploaderState: {
@@ -130,7 +130,7 @@ export const UploadedFilesList = ({
     })
   }
 
-  const handleCancel = () => navigate(-1)
+  const handleCancel = () => onCancel()
 
   const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
     if (e.key !== 'Enter') return

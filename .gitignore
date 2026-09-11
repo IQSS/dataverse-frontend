@@ -21,6 +21,18 @@
 
 # production
 /dist
+# Reusable-components build output. `npm run build-reusable-components`
+# writes the `dv-tree-view` / `dv-uploader` JS+CSS here; the files are
+# then copied into `dataverse/.../webapp/reusable-components/` for the
+# WAR bake. Tracking the build folder makes manual post-build cleanup
+# brittle: `git checkout .` to clean stray edits also reverts the
+# generated build files (or vice-versa, source-file edits get swept up
+# alongside build-artefact resets). Ignore it instead.
+/dist-reusable-components
+
+# Scratch dir of dataverse-context/scripts/fe-test-parallel.sh (worker
+# logs + exit files); regenerated on every parallel test run.
+/.test-parallel
 
 # storybook
 /storybook-static
@@ -40,6 +52,7 @@ yarn-error.log*
 
 #deployment
 /deployment/payara/target
+/deployment/reusable-components/target
 
 #dev environment
 /dev-env/docker-dev-volumes

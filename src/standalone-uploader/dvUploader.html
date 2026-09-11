@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dataverse Uploader — Standalone Demo</title>
+    <!--
+      Direct-embed usage in any HTML page:
+
+        <div id="dv-uploader"></div>
+        <script>
+          window.dvUploaderConfig = {
+            siteUrl:     'https://your-dataverse.edu',
+            datasetPid:  'doi:10.5072/FK2/XXXXX',
+            bearerToken: '...',   // optional — pass when the host
+                                  // can produce a token (any non-JSF
+                                  // host, cross-origin embed, …)
+            locale:      'en'
+          }
+        </script>
+        <script type="module" src=".../reusable-components/dv-uploader.js"></script>
+
+      The host page is responsible for its own page-level styling. The bundle
+      below only ships component styles scoped to `.dv-uploader-root`. The
+      page styles loaded here (`standalone-page.css`) are for this demo only
+      and are NOT part of the embedded bundle.
+
+      Authentication:
+        * Pass `bearerToken` (or `getBearerToken`) and the bundle uses
+          `Authorization: Bearer <token>` on every request.
+        * Omit both and the bundle falls back to the browser's
+          JSESSIONID session cookie. That works for same-origin JSF
+          embeddings; `DATAVERSE_FEATURE_API_SESSION_AUTH` must be on.
+    -->
+    <link rel="stylesheet" href="standalone-page.css" />
+    <script>
+      // Query-param names match the config keys, and the defaults match
+      // dvTreeView.html: same contract, same harness behaviour. `??` rather
+      // than `||` because URLSearchParams returns null for an absent param,
+      // which is the case we want a default for.
+      const params = new URLSearchParams(window.location.search)
+      const bearerToken = params.get('bearerToken') ?? undefined
+      window.dvUploaderConfig = {
+        siteUrl: params.get('siteUrl') ?? 'http://localhost:8000',
+        datasetPid: params.get('datasetPid') ?? '',
+        locale: params.get('locale') ?? 'en',
+        ...(bearerToken !== undefined && { bearerToken })
+      }
+    </script>
+    <script type="module" src="reusable-components/dv-uploader.js"></script>
+  </head>
+  <body>
+    <div class="standalone-uploader-page">
+      <div id="dv-uploader"></div>
+    </div>
+  </body>
+</html>

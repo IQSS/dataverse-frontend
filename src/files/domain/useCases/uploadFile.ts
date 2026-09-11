@@ -1,7 +1,9 @@
 import { FileRepository } from '../repositories/FileRepository'
 
+type UploadFileRepository = Pick<FileRepository, 'uploadFile'>
+
 export function uploadFile(
-  fileRepository: FileRepository,
+  fileRepository: UploadFileRepository,
   datasetId: number | string,
   file: File,
   done: () => void,

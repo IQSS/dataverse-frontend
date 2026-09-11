@@ -27,6 +27,14 @@ export class DatasetLabel {
   ) {}
 }
 
+export interface DatasetStorageDriver {
+  name: string
+  type: string
+  label: string
+  directUpload: boolean
+  directDownload: boolean
+}
+
 // Only for testing purposes and checking the existence of the citation block in some parts of the code
 export enum MetadataBlockName {
   CITATION = 'citation',
@@ -440,7 +448,8 @@ export class Dataset {
     public readonly requiresMajorVersionUpdate?: boolean,
     public readonly fileStore?: string,
     public readonly guestbookId?: number,
-    public readonly datasetType?: string
+    public readonly datasetType?: string,
+    public readonly storageDriver?: DatasetStorageDriver
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
@@ -537,7 +546,8 @@ export class Dataset {
       public readonly requiresMajorVersionUpdate?: boolean,
       public readonly fileStore?: string,
       public readonly guestbookId?: number,
-      public readonly datasetType?: string
+      public readonly datasetType?: string,
+      public readonly storageDriver?: DatasetStorageDriver
     ) {
       this.withAlerts()
     }
@@ -611,7 +621,8 @@ export class Dataset {
         this.requiresMajorVersionUpdate,
         this.fileStore,
         this.guestbookId,
-        this.datasetType
+        this.datasetType,
+        this.storageDriver
       )
     }
   }

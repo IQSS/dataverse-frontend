@@ -12,6 +12,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize
   variant?: ButtonVariant
   disabled?: boolean
+  active?: boolean
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void
   icon?: IconName | ReactNode
   withSpacing?: boolean
@@ -23,6 +24,7 @@ export function Button({
   size,
   variant = 'primary',
   disabled = false,
+  active,
   onClick,
   icon,
   withSpacing,
@@ -35,6 +37,7 @@ export function Button({
       size={size}
       className={withSpacing ? styles.spacing : ''}
       variant={variant}
+      active={active}
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       aria-disabled={disabled}

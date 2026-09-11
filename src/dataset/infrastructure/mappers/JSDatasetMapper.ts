@@ -19,6 +19,7 @@ import {
   DatasetMetadataBlocks,
   DatasetMetadataFields,
   DatasetPermissions,
+  DatasetStorageDriver,
   DatasetVersion,
   MetadataBlockName,
   PrivateUrl
@@ -49,7 +50,8 @@ export class JSDatasetMapper {
     latestPublishedVersionMajorNumber?: number,
     latestPublishedVersionMinorNumber?: number,
     datasetVersionDiff?: JSDatasetVersionDiff,
-    fileStore?: string
+    fileStore?: string,
+    storageDriver?: DatasetStorageDriver
   ): Dataset {
     const version = JSDatasetVersionMapper.toVersion(
       jsDataset.versionId,
@@ -102,7 +104,8 @@ export class JSDatasetMapper {
       JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff),
       fileStore,
       jsDataset.guestbookId as number,
-      (jsDataset as { datasetType?: string }).datasetType
+      (jsDataset as { datasetType?: string }).datasetType,
+      storageDriver
     ).build()
   }
 

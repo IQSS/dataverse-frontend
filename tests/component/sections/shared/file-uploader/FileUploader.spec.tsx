@@ -191,7 +191,11 @@ describe('FileUploader', () => {
       )
 
       cy.findByText('Select file to add').should('exist').click()
-      cy.get('input[type=file]').selectFile(
+      // Two `input[type=file]` elements live in the drop zone now —
+      // the regular file input and the folder input
+      // (`webkitdirectory`). Target only the file input so cy.selectFile
+      // doesn't fail with "subject contained 2 elements".
+      cy.get('input[type=file]:not([webkitdirectory])').selectFile(
         {
           fileName: 'users1.json',
           contents: [{ name: 'John Doe the 1st' }]
@@ -386,6 +390,29 @@ describe('FileUploader', () => {
       cy.findByText('Select files to add').should('exist')
       cy.findByText('Drag and drop file here.').should('not.exist')
       cy.findByText('Drag and drop files and/or directories here.').should('exist')
+    })
+
+    it('uploads files picked via the folder input (webkitdirectory)', () => {
+      cy.customMount(
+        <TestFileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.ADD_FILES_TO_DATASET}
+        />
+      )
+
+      // The hidden directory-picker input has its own change handler —
+      // drive it directly, the way the browser does after a folder pick.
+      cy.get('input[type=file][webkitdirectory]').selectFile(
+        {
+          fileName: 'nested.json',
+          contents: [{ name: 'From Folder' }]
+        },
+        { force: true }
+      )
+      cy.findByText('nested.json').should('exist')
+      cy.findByText('1 File uploaded').should('exist')
     })
 
     it('renders the files being uploaded', () => {
