@@ -473,9 +473,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
           if (stale()) return
           runUpdate((prev) => ({ ...prev, status: 'done', current: undefined }))
         } catch (err) {
-          /* istanbul ignore next */
           if (stale()) return
-          /* istanbul ignore next */
           runUpdate((prev) => ({
             ...prev,
             status: 'error',

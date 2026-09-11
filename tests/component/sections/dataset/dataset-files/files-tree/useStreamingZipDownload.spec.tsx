@@ -1006,9 +1006,7 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     })
 
     cy.findByTestId('harness-start').click()
-    // The 'error' tray label is /* istanbul ignore next */, so we
-    // assert on the absence of "complete" — the engine reaches the
-    // error state, not the done state.
+    cy.findByTestId('files-tree-download-tray-failure').should('contain.text', 'HTTP 403')
     cy.contains(/download complete/i, { timeout: 5_000 }).should('not.exist')
   })
 
@@ -1437,17 +1435,11 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
           })
         )
       }
-      // Subsequent parts fail consistently — the body is already
-      // streaming into client-zip, so the engine cannot offer a retry
-      // dialog; the stream errors out and the IIFE catch surfaces it as
-      // a hard failure.
       return Promise.reject(new Error('mid-stream drop'))
     })
 
     cy.findByTestId('harness-start').click()
-    // The error UI label is /* istanbul ignore next */, so we assert on
-    // the absence of the "complete" label instead — confirming the
-    // engine reached `status: 'error'` rather than `status: 'done'`.
+    cy.findByTestId('files-tree-download-tray-failure').should('contain.text', 'mid-stream drop')
     cy.contains(/download complete/i, { timeout: 5_000 }).should('not.exist')
   })
 
