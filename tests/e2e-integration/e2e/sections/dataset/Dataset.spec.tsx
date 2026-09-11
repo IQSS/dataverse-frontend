@@ -591,47 +591,6 @@ describe('Dataset', () => {
         })
     })
 
-    // The flat files endpoint is intercepted to force every file restricted
-    // (and drop any embargo) so the row is guaranteed restricted regardless of
-    // the backend's restrict-at-upload timing. The owner therefore sees the
-    // "Restricted with access" icon and, in the per-row File Options menu, the
-    // "Unrestrict" action.
-    it('loads the restricted files when the user is logged in as owner', () => {
-      cy.intercept(/\/api\/v1\/datasets\/[^/]+\/versions\/[^/]+\/files(?:\?|$)/, (req) => {
-        req.continue((res) => {
-          const data = (res.body as { data?: unknown })?.data
-          if (Array.isArray(data)) {
-            for (const file of data) {
-              if (file && typeof file === 'object') {
-                ;(file as { restricted?: boolean }).restricted = true
-                delete (file as { embargo?: unknown }).embargo
-              }
-            }
-          }
-        })
-      }).as('filesList')
-
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
-        .its('persistentId')
-        .then((persistentId: string) => {
-          cy.visit(
-            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
-          )
-
-          cy.findByText('Files').should('exist')
-          cy.wait('@filesList', { timeout: 30_000 })
-
-          cy.findByText('Restricted with access Icon').should('exist')
-
-          // File Options is a react-bootstrap dropdown that mounts its items
-          // when opened. Open it once and let Cypress retry the assertion until
-          // the menu has rendered; re-clicking the toggle would only close an
-          // already-open menu.
-          cy.findByRole('button', { name: 'File Options' }).click()
-          cy.findByRole('button', { name: 'Unrestrict' }).should('exist')
-        })
-    })
-
     it('does not load the action buttons when the user is not logged in as owner', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(3)).then((dataset) =>
@@ -651,6 +610,31 @@ describe('Dataset', () => {
           cy.get('#edit-files-menu').should('not.exist')
           cy.findAllByRole('button', { name: 'Access File' }).should('exist')
           cy.findAllByRole('button', { name: 'File Options' }).should('not.exist')
+        })
+    })
+
+    it('loads the restricted files when the user is logged in as owner', () => {
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(
+            `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+          )
+
+          cy.findByText('Files').should('exist')
+
+          cy.findByText('Restricted File Icon').should('not.exist')
+          cy.findByText('Restricted with access Icon').should('exist')
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('be.visible')
+          // TODO: replace the hard-coded wait with the pipe() method?
+          // see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
+          cy.wait(500) // wait for the event handler to attach to the button
+          cy.get('@accessButton').click()
+          cy.findByText('Restricted with Access Granted').should('exist')
+
+          cy.findByRole('button', { name: 'File Options' }).should('exist').click()
+          cy.findByText('Unrestrict').should('exist')
         })
     })
 
