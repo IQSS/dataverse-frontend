@@ -17,12 +17,14 @@ function StreamingZipHarness({
   zipName,
   strategy,
   partSize,
-  partRetries = 0
+  partRetries = 0,
+  fetchInit
 }: {
   files: FileTreeFile[]
   zipName?: string
   strategy?: 'pause' | 'skip' | 'twopass'
   partSize?: number
+  fetchInit?: RequestInit | (() => RequestInit | undefined)
   /**
    * Defaults to 0 so the existing pause-on-fail tests still see a
    * single attempt per file. Tests that exercise the auto-retry path
@@ -44,6 +46,7 @@ function StreamingZipHarness({
             strategy,
             partSize,
             partRetries,
+            fetchInit,
             // 0ms backoff keeps the retry-exhaustion paths snappy.
             partRetryDelayMs: 0
           })
@@ -673,6 +676,51 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
     cy.then(() => {
       expect(attempts).to.equal(2)
+    })
+  })
+
+  it('re-reads fetchInit on every attempt so an expired token is replaced', () => {
+    // A large zip can outlive the token it started with. The engine must ask
+    // for credentials per request, not reuse the ones captured at start.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'long.txt',
+        path: 'long.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      })
+    ]
+
+    let issued = 0
+    const fetchInit = () => {
+      issued += 1
+      return { headers: { Authorization: `Bearer token-${issued}` } }
+    }
+
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        zipName="refresh.zip"
+        partRetries={3}
+        fetchInit={fetchInit}
+      />
+    )
+
+    const seen: (string | null)[] = []
+    let attempts = 0
+    installFetchHandler((_input, init) => {
+      seen.push(new Headers(init?.headers ?? undefined).get('Authorization'))
+      attempts += 1
+      // First attempt fails the way an expired token would.
+      if (attempts === 1) return Promise.reject(new Error('token expired'))
+      return Promise.resolve(fakeResponseBody('AAA'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(seen).to.deep.equal(['Bearer token-1', 'Bearer token-2'])
     })
   })
 

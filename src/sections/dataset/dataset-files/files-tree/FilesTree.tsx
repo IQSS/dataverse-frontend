@@ -147,7 +147,9 @@ export function FilesTree({
       // removed because it lost the per-part resume on large files and
       // forked the UX.
       const zipName = `${datasetPersistentId.replace(/[^a-zA-Z0-9._-]+/g, '_')}-files.zip`
-      streamingZip.start({ files, zipName, fetchInit: downloadFetchInit?.() })
+      // Hand over the factory, not its result: the engine re-reads it per
+      // request so a token that expires mid-zip is picked up on the next part.
+      streamingZip.start({ files, zipName, fetchInit: downloadFetchInit })
       setTrayOpen(true)
     },
     [datasetPersistentId, streamingZip, downloadFetchInit]

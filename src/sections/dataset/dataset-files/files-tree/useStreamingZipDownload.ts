@@ -83,8 +83,13 @@ export interface StartStreamingZipArgs {
    * `Access-Control-Allow-Origin: *`, and browsers refuse `*` + credentials.
    * `same-origin` carries the Dataverse session cookie on the Dataverse
    * hop and drops it on the cross-origin S3 hop, which is what we want.
+   *
+   * Pass a function to have it re-evaluated before every request (including
+   * each retry and each `Range` part). A multi-gigabyte zip can outlive the
+   * bearer token it started with; a static object would carry the expired
+   * header to the end of the run and fail every remaining part.
    */
-  fetchInit?: RequestInit
+  fetchInit?: RequestInit | FetchInitProvider
   /**
    * Files larger than this are fetched as a sequence of HTTP `Range`
    * requests instead of one full GET. Each part is retried on its own
@@ -258,6 +263,10 @@ export function useStreamingZipDownload(): StreamingZipApi {
 
       cancelledRef.current = false
       decisionRef.current = null
+      // One provider for the whole run: callers may pass a plain object, but
+      // everything downstream asks for the options per request.
+      const getFetchInit: FetchInitProvider =
+        typeof fetchInit === 'function' ? fetchInit : () => fetchInit
       const totalBytes = files.reduce((s, f) => s + f.size, 0)
       update(() => ({
         ...initialState,
@@ -306,7 +315,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
               response = await fetchWithRetries({
                 url,
                 rangeHeader: firstPartRange,
-                fetchInit,
+                fetchInit: getFetchInit,
                 retries: partRetries,
                 delayMs: partRetryDelayMs
               })
@@ -400,7 +409,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
               partSize,
               partRetries,
               partRetryDelayMs,
-              fetchInit,
+              fetchInit: getFetchInit,
               onProgress: (delta) =>
                 update((prev) => ({ ...prev, bytesDone: prev.bytesDone + delta })),
               onVerificationFailure: (failure) =>
@@ -592,14 +601,17 @@ function isTransientHttpStatus(status: number): boolean {
 async function fetchWithRetries(args: {
   url: string
   rangeHeader: string | undefined
-  fetchInit: RequestInit | undefined
+  fetchInit: FetchInitProvider
   retries: number
   delayMs: number
 }): Promise<Response> {
   let lastErr: unknown = new Error('no attempt made')
   for (let attempt = 0; attempt <= args.retries; attempt++) {
     try {
-      const headers = new Headers(args.fetchInit?.headers ?? undefined)
+      // Re-read on every attempt: a refreshed token has to reach the retry
+      // that follows an expiry, not just the first request of the run.
+      const attemptInit = args.fetchInit()
+      const headers = new Headers(attemptInit?.headers ?? undefined)
       if (args.rangeHeader !== undefined) headers.set('Range', args.rangeHeader)
       const response = await fetch(args.url, {
         // `same-origin` keeps cookies on the initial Dataverse call
@@ -610,7 +622,7 @@ async function fetchWithRetries(args: {
         // `Access-Control-Allow-Credentials: true`, incompatible with
         // the typical `Allow-Origin: *` rule.
         credentials: 'same-origin',
-        ...(args.fetchInit ?? {}),
+        ...(attemptInit ?? {}),
         headers
       })
       if (!response.ok) {
@@ -659,6 +671,12 @@ function appendQueryParam(url: string, key: string, value: string): string {
  * "access genuinely denied" or "S3 melted".
  */
 /**
+ * Supplies fetch options fresh for each request, so a long-running download
+ * always sends the current credentials rather than the ones it started with.
+ */
+export type FetchInitProvider = () => RequestInit | undefined
+
+/**
  * Strips the `Authorization` header from `init` when `url` lives on a
  * different origin than `originalUrl`. Bearer-token embeds put the
  * header in `fetchInit` for the Dataverse access endpoint, but chunked
@@ -692,7 +710,7 @@ async function fetchPartWithRefresh(args: {
   cachedUrl: string
   originalUrl: string
   rangeHeader: string
-  fetchInit: RequestInit | undefined
+  fetchInit: FetchInitProvider
   retries: number
   delayMs: number
 }): Promise<{ response: Response; refreshedUrl: string | null }> {
@@ -702,7 +720,7 @@ async function fetchPartWithRefresh(args: {
       rangeHeader: args.rangeHeader,
       // cachedUrl is typically the post-redirect presigned S3 URL —
       // never send the Dataverse bearer header cross-origin.
-      fetchInit: initForUrl(args.cachedUrl, args.originalUrl, args.fetchInit),
+      fetchInit: () => initForUrl(args.cachedUrl, args.originalUrl, args.fetchInit()),
       retries: args.retries,
       delayMs: args.delayMs
     })
@@ -820,7 +838,7 @@ function buildChunkedStream(args: {
   partSize: number
   partRetries: number
   partRetryDelayMs: number
-  fetchInit: RequestInit | undefined
+  fetchInit: FetchInitProvider
   onProgress: (delta: number) => void
   onVerificationFailure: (failure: StreamingZipVerificationFailure) => void
   cancelled: () => boolean
