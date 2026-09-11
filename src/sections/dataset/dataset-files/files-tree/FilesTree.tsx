@@ -48,6 +48,7 @@ interface FilesTreeProps {
   downloadFetchInit?: () => RequestInit | undefined
   buildDownloadUrl?: (file: FileTreeFile) => string
   zipServiceWorkerUrl?: string
+  zipServiceWorkerScope?: string
 }
 
 const DEFAULT_ROW_HEIGHT = 32
@@ -69,7 +70,8 @@ export function FilesTree({
   downloadsDisabled = false,
   downloadFetchInit,
   buildDownloadUrl,
-  zipServiceWorkerUrl
+  zipServiceWorkerUrl,
+  zipServiceWorkerScope
 }: FilesTreeProps) {
   const { t } = useTranslation('files')
   const tree = useFileTree({
@@ -112,11 +114,19 @@ export function FilesTree({
         zipName,
         fetchInit: downloadFetchInit,
         buildFetchUrl: buildDownloadUrl,
-        serviceWorkerUrl: zipServiceWorkerUrl
+        serviceWorkerUrl: zipServiceWorkerUrl,
+        serviceWorkerScope: zipServiceWorkerScope
       })
       setTrayOpen(true)
     },
-    [datasetPersistentId, streamingZip, downloadFetchInit, buildDownloadUrl, zipServiceWorkerUrl]
+    [
+      datasetPersistentId,
+      streamingZip,
+      downloadFetchInit,
+      buildDownloadUrl,
+      zipServiceWorkerUrl,
+      zipServiceWorkerScope
+    ]
   )
 
   const download = useFileTreeDownload({

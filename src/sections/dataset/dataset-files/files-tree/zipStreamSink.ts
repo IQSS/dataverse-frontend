@@ -15,7 +15,11 @@ export interface ServiceWorkerSinkOptions {
   keepaliveMs?: number
 }
 
-export const DEFAULT_ZIP_SERVICE_WORKER_URL = '/zip-download-sw.js'
+export function workerUrlForBase(base: string): string {
+  return `${base.endsWith('/') ? base : `${base}/`}zip-download-sw.js`
+}
+
+export const DEFAULT_ZIP_SERVICE_WORKER_URL = workerUrlForBase(import.meta.env.BASE_URL)
 
 const KEEPALIVE_MS = 4_000
 const CONTROL_TIMEOUT_MS = 10_000
@@ -56,6 +60,11 @@ export function createBlobSink(): ZipSink {
 function scopeFor(options: ServiceWorkerSinkOptions): string {
   if (options.scope) return options.scope.endsWith('/') ? options.scope : `${options.scope}/`
   return new URL('./', new URL(options.url, window.location.href)).pathname
+}
+
+export function scopeCoversPage(scope: string, pathname: string): boolean {
+  const normalised = scope.endsWith('/') ? scope : `${scope}/`
+  return pathname === normalised || pathname.startsWith(normalised)
 }
 
 async function takeControl(options: ServiceWorkerSinkOptions): Promise<ServiceWorker | null> {
@@ -142,6 +151,7 @@ export async function createServiceWorkerSink(
 ): Promise<ZipSink | null> {
   if (!('serviceWorker' in navigator) || !window.isSecureContext) return null
   const scope = scopeFor(options)
+  if (!scopeCoversPage(scope, window.location.pathname)) return null
   let controller: ServiceWorker | null = null
   try {
     controller = await takeControl(options)

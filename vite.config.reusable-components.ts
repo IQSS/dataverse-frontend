@@ -10,6 +10,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import * as path from 'path'
+import { readFileSync } from 'fs'
 
 export default defineConfig({
   plugins: [
@@ -35,7 +36,20 @@ export default defineConfig({
       // injection; loading the other entry alone would leave its
       // shadow root unstyled.
       jsAssetsFilterFunction: (chunk) => chunk.isEntry === true
-    })
+    }),
+    {
+      // The download service worker is a classic worker, not a bundle entry.
+      // It has to sit next to the components so a JSF deployment can serve it
+      // from the same base URL.
+      name: 'emit-zip-download-service-worker',
+      generateBundle() {
+        this.emitFile({
+          type: 'asset',
+          fileName: 'reusable-components/zip-download-sw.js',
+          source: readFileSync(path.resolve(__dirname, 'public/zip-download-sw.js'), 'utf-8')
+        })
+      }
+    }
   ],
   // Don't copy public folder contents
   publicDir: false,
