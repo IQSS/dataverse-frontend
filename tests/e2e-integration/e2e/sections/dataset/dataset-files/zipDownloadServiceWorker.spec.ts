@@ -185,9 +185,51 @@ describe('zip download service worker', () => {
       frame.src = `${SCOPE}zipdl/${id}/${encodeURIComponent(name)}`
       win.document.body.appendChild(frame)
     })
+    cy.readFile(`cypress/downloads/${name}`, { timeout: 20000 }).should('equal', 'on disk for real')
+  })
+
+  it('serves a download for a page that the worker does not control', () => {
+    const narrow = '/modern/deep-scope/'
+    const name = `out-of-scope-${Date.now()}.zip`
+    cy.window({ timeout: 30000 }).then(async (win) => {
+      const registration = await win.navigator.serviceWorker.register(WORKER_URL, {
+        scope: narrow
+      })
+      let worker = registration.active
+      if (!worker) {
+        const pending = registration.installing ?? registration.waiting
+        await new Promise<void>((resolve) => {
+          pending?.addEventListener('statechange', () => {
+            if (pending.state === 'activated') resolve()
+          })
+        })
+        worker = registration.active
+      }
+      expect(registration.scope).to.contain(narrow)
+      expect(win.location.pathname.startsWith(narrow), 'the page sits outside that scope').to.equal(
+        false
+      )
+
+      const id = nextId()
+      const stream = streamOf(win, ['uncontrolled ', 'page'])
+      const ack = new win.MessageChannel()
+      const acked = new Promise((resolve) => {
+        ack.port1.onmessage = (event: MessageEvent) => resolve(event.data)
+      })
+      worker?.postMessage({ type: 'zipdl-register', id, name, stream, ack: ack.port2 }, [
+        stream as unknown as Transferable,
+        ack.port2
+      ])
+      await acked
+
+      const frame = win.document.createElement('iframe')
+      frame.style.display = 'none'
+      frame.src = `${narrow}zipdl/${id}/${encodeURIComponent(name)}`
+      win.document.body.appendChild(frame)
+    })
     cy.readFile(`cypress/downloads/${name}`, { timeout: 20000 }).should(
       'equal',
-      'on disk for real'
+      'uncontrolled page'
     )
   })
 

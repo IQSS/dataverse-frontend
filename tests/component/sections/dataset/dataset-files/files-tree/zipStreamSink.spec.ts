@@ -3,7 +3,6 @@ import {
   createServiceWorkerSink,
   pullDrivenStream,
   resolveZipSink,
-  scopeCoversPage,
   transferableChunk,
   withTimeout,
   workerUrlForBase
@@ -57,32 +56,6 @@ describe('createBlobSink', () => {
       expect(names).to.deep.equal(['tree.zip'])
       expect(document.querySelectorAll('a[download]').length).to.equal(0)
     })
-  })
-})
-
-describe('scopeCoversPage', () => {
-  it('accepts a page inside the worker scope', () => {
-    expect(scopeCoversPage('/modern/', '/modern/datasets/123')).to.equal(true)
-  })
-
-  it('accepts the scope root itself', () => {
-    expect(scopeCoversPage('/modern/', '/modern/')).to.equal(true)
-  })
-
-  it('accepts everything when the worker is at the site root', () => {
-    expect(scopeCoversPage('/', '/dataset.xhtml')).to.equal(true)
-  })
-
-  it('rejects a JSF page outside the components scope', () => {
-    expect(scopeCoversPage('/reusable-components/', '/dataset.xhtml')).to.equal(false)
-  })
-
-  it('accepts the scope root served without its trailing slash', () => {
-    expect(scopeCoversPage('/modern/', '/modern')).to.equal(true)
-  })
-
-  it('does not treat a shared prefix as containment', () => {
-    expect(scopeCoversPage('/modern/', '/modern-ui/page')).to.equal(false)
   })
 })
 

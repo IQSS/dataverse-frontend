@@ -148,27 +148,18 @@ export function transferableChunk(view: Uint8Array): ArrayBuffer {
   return view.slice().buffer as ArrayBuffer
 }
 
-export function scopeCoversPage(scope: string, pathname: string): boolean {
-  const normalised = scope.endsWith('/') ? scope : `${scope}/`
-  return pathname.startsWith(normalised) || `${pathname}/` === normalised
-}
-
 async function takeControl(options: ServiceWorkerSinkOptions): Promise<ServiceWorker | null> {
-  const scope = scopeFor(options)
-  await navigator.serviceWorker.register(options.url, { scope })
-  await navigator.serviceWorker.ready
-  if (navigator.serviceWorker.controller) return navigator.serviceWorker.controller
+  const registration = await navigator.serviceWorker.register(options.url, {
+    scope: scopeFor(options)
+  })
+  if (registration.active) return registration.active
+  const pending = registration.installing ?? registration.waiting
+  if (!pending) return null
   return new Promise<ServiceWorker | null>((resolve) => {
-    const timer = setTimeout(() => {
-      navigator.serviceWorker.removeEventListener('controllerchange', onChange)
-      resolve(null)
-    }, CONTROL_TIMEOUT_MS)
-    const onChange = () => {
-      clearTimeout(timer)
-      navigator.serviceWorker.removeEventListener('controllerchange', onChange)
-      resolve(navigator.serviceWorker.controller)
-    }
-    navigator.serviceWorker.addEventListener('controllerchange', onChange)
+    pending.addEventListener('statechange', () => {
+      if (pending.state === 'activated') resolve(registration.active)
+      else if (pending.state === 'redundant') resolve(null)
+    })
   })
 }
 
@@ -246,7 +237,6 @@ export async function createServiceWorkerSink(
 ): Promise<ZipSink | null> {
   if (!browserCanStreamToDisk()) return null
   const scope = scopeFor(options)
-  if (!scopeCoversPage(scope, window.location.pathname)) return null
   const connect = options.connect ?? (() => takeControl(options))
   const probe =
     options.probe ?? (async (url: string) => (await fetch(url, { cache: 'no-store' })).ok)

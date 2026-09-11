@@ -37,35 +37,28 @@ only larger files exercise the ranged paths.
 
 ## Mount matrix
 
-The service worker only answers a fake same-origin URL, `<scope>zipdl/<id>/<name>`.
+The service worker answers a fake same-origin URL, `<scope>zipdl/<id>/<name>`.
 Nothing serves that path; the worker intercepts it and replies with the zip
-stream and a `Content-Disposition` attachment header. A service worker can only
-intercept URLs inside its own scope, and its scope defaults to the directory the
-worker script is served from, so where the script sits decides whether the
-feature works at all.
+stream and a `Content-Disposition` attachment header.
 
-| Mount                       | Worker served at                          | Page URL         | Result                                                           |
-| --------------------------- | ----------------------------------------- | ---------------- | ---------------------------------------------------------------- |
-| SPA, `base: '/modern'`      | `/modern/zip-download-sw.js`              | `/modern/...`    | Works as built. A renamed base moves both together.              |
-| SPA behind a different base | `<base>/zip-download-sw.js`               | `<base>/...`     | Works as built.                                                  |
-| Reusable components in JSF  | `/reusable-components/zip-download-sw.js` | `/dataset.xhtml` | **Needs configuration.** The page is outside the worker's scope. |
+The page does not have to be inside the worker's scope. Scope decides which
+pages a worker _controls_, but a navigation is matched to a worker by its target
+URL, and the download URL is built from the worker's own scope, so it is always
+inside it. The stream is handed over with `registration.active.postMessage`,
+which needs no control either. That is why a JSF page at `/dataset.xhtml` works
+with a worker served from `/reusable-components/`.
 
-For the JSF mount, serve the worker script with a `Service-Worker-Allowed: /`
-response header and set `zipServiceWorkerScope: '/'` in `window.dvTreeViewConfig`.
-With nginx:
+| Mount                       | Worker served at                          | Page URL         | Result                                                                      |
+| --------------------------- | ----------------------------------------- | ---------------- | --------------------------------------------------------------------------- |
+| SPA, `base: '/modern'`      | `/modern/zip-download-sw.js`              | `/modern/...`    | works as built                                                              |
+| SPA behind a different base | `<base>/zip-download-sw.js`               | `<base>/...`     | works as built, the base moves both together                                |
+| Reusable components in JSF  | `/reusable-components/zip-download-sw.js` | `/dataset.xhtml` | works as built, page is outside the scope and does not need to be inside it |
 
-```nginx
-location = /reusable-components/zip-download-sw.js {
-    add_header Service-Worker-Allowed /;
-}
-```
-
-Without that header the engine detects up front that the scope cannot cover the
-page, skips the worker without waiting, and falls back to the buffered path with
-its 2 GB cap. The download still works; it just stops streaming.
-
-`zipServiceWorkerUrl` overrides where the script is fetched from, for
-deployments that serve it somewhere else again.
+`zipServiceWorkerUrl` overrides where the script is fetched from, and
+`zipServiceWorkerScope` the scope it claims. Neither is needed for the mounts
+above. A worker may only claim a scope _above_ its own directory if the server
+sends a `Service-Worker-Allowed` header for it, which is why the defaults keep
+the scope at the directory the script is served from.
 
 ## Failure handling
 
