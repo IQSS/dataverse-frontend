@@ -167,6 +167,24 @@ describe('useFileTreeSelection', () => {
     expect(result.current.fileState(child)).to.equal('all')
   })
 
+  it('re-selects a subfolder inside an excluded folder', () => {
+    const root = FileTreeFolderMother.create({ name: 'root', path: 'root' })
+    const sub = FileTreeFolderMother.create({ name: 'sub', path: 'root/sub' })
+    const deep = FileTreeFolderMother.create({ name: 'deep', path: 'root/sub/deep' })
+    const inDeep = FileTreeFileMother.create({ id: 30, name: 'x.txt', path: 'root/sub/deep/x.txt' })
+    const inSub = FileTreeFileMother.create({ id: 31, name: 'y.txt', path: 'root/sub/y.txt' })
+
+    const { result } = renderHook(() => useFileTreeSelection())
+    act(() => result.current.toggleFolder(root, [sub]))
+    act(() => result.current.toggleFolder(sub, [deep]))
+    act(() => result.current.toggleFolder(deep, []))
+
+    expect(result.current.fileState(inDeep)).to.equal('all')
+    expect(result.current.fileState(inSub)).to.equal('none')
+    expect(result.current.folderState(deep, [])).to.equal('all')
+    expect(result.current.folderState(sub, [deep])).to.equal('partial')
+  })
+
   it('clears folder exclusions along with everything else', () => {
     const root = FileTreeFolderMother.create({ name: 'root', path: 'root' })
     const subFolder = FileTreeFolderMother.create({ name: 'sub', path: 'root/sub' })

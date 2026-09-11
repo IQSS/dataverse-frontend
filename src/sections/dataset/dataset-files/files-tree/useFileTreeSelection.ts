@@ -54,6 +54,22 @@ const closestFolderVerdict = (
   return verdict
 }
 
+export function isPathSelected(
+  path: string,
+  selectedFiles: ReadonlySet<string>,
+  deselectedFiles: ReadonlySet<string>,
+  selectedFolders: ReadonlySet<string>,
+  deselectedFolders: ReadonlySet<string>
+): boolean {
+  if (deselectedFiles.has(path)) {
+    return false
+  }
+  if (selectedFiles.has(path)) {
+    return true
+  }
+  return closestFolderVerdict(path, selectedFolders, deselectedFolders) ?? false
+}
+
 const removeUnder = (paths: Set<string>, ancestor: string): void => {
   for (const path of Array.from(paths)) {
     if (isStrictlyUnder(path, ancestor)) {
@@ -77,15 +93,14 @@ export function useFileTreeSelection(): FileTreeSelection {
   )
 
   const isFileLogicallySelected = useCallback(
-    (path: string): boolean => {
-      if (deselectedFilePaths.has(path)) {
-        return false
-      }
-      if (selectedFilePaths.has(path)) {
-        return true
-      }
-      return closestFolderVerdict(path, selectedFolderPaths, deselectedFolderPaths) ?? false
-    },
+    (path: string): boolean =>
+      isPathSelected(
+        path,
+        selectedFilePaths,
+        deselectedFilePaths,
+        selectedFolderPaths,
+        deselectedFolderPaths
+      ),
     [deselectedFilePaths, deselectedFolderPaths, selectedFilePaths, selectedFolderPaths]
   )
 

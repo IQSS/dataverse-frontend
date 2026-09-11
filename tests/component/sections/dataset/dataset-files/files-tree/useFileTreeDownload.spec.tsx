@@ -434,6 +434,37 @@ describe('useFileTreeDownload', () => {
     expect(dispatched.map((f) => f.id).sort()).to.deep.equal([1, 3])
   })
 
+  it('keeps a subfolder re-selected inside an excluded folder', async () => {
+    const dropped = FileTreeFileMother.create({ id: 1, name: 'd.txt', path: 'data/sub/d.txt' })
+    const kept = FileTreeFileMother.create({ id: 2, name: 'k.txt', path: 'data/sub/deep/k.txt' })
+
+    const repo = new FakeRepo({
+      data: FileTreePageMother.create({ path: 'data', items: [dropped, kept] }),
+      'data/sub/deep': FileTreePageMother.create({ path: 'data/sub/deep', items: [kept] })
+    })
+    const onDownloadFiles = cy.stub().resolves()
+
+    const { result } = renderHook(() =>
+      useFileTreeDownload({
+        treeRepository: repo,
+        datasetPersistentId: 'doi:test/AAA',
+        datasetVersion,
+        selection: selectionFixture([dropped, kept], {
+          selectedFolderPaths: ['data', 'data/sub/deep'],
+          deselectedFolderPaths: ['data/sub']
+        }),
+        onDownloadFiles
+      })
+    )
+
+    await act(async () => {
+      await result.current.downloadSelection()
+    })
+
+    const dispatched = onDownloadFiles.firstCall.args[0] as FileTreeFile[]
+    expect(dispatched.map((f) => f.id)).to.deep.equal([2])
+  })
+
   it('skips selectedFilePaths that are not present in filesByPath', async () => {
     const known = FileTreeFileMother.create({ id: 1, name: 'a.txt', path: 'a.txt' })
     const onDownloadFiles = cy.stub().resolves()

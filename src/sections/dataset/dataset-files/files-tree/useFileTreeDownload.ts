@@ -3,7 +3,7 @@ import { FileTreeRepository } from '@/files/domain/repositories/FileTreeReposito
 import { FileTreeFile, FileTreeFolder, isFileTreeFile } from '@/files/domain/models/FileTreeItem'
 import { enumerateFileTreeFiles } from '@/files/domain/useCases/enumerateFileTreeFiles'
 import { DatasetVersion } from '@/dataset/domain/models/Dataset'
-import { FileTreeSelection } from './useFileTreeSelection'
+import { FileTreeSelection, isPathSelected } from './useFileTreeSelection'
 
 export interface DownloadProgress {
   status: 'idle' | 'enumerating' | 'requesting' | 'success' | 'error'
@@ -104,13 +104,7 @@ export function useFileTreeDownload({
       }
     }
 
-    const merged = mergeFiles(
-      explicit,
-      enumerated,
-      selection.deselectedFilePaths,
-      selection.deselectedFolderPaths,
-      selection.selectedFilePaths
-    )
+    const merged = mergeFiles(explicit, enumerated, selection)
     await dispatchFiles(merged)
   }, [
     collectExplicitFiles,
@@ -118,10 +112,7 @@ export function useFileTreeDownload({
     datasetVersion,
     dispatchFiles,
     onError,
-    selection.deselectedFilePaths,
-    selection.deselectedFolderPaths,
-    selection.selectedFilePaths,
-    selection.selectedFolderPaths,
+    selection,
     treeRepository
   ])
 
@@ -157,34 +148,23 @@ export function useFileTreeDownload({
 function mergeFiles(
   explicit: FileTreeFile[],
   enumerated: FileTreeFile[],
-  deselected: ReadonlySet<string>,
-  deselectedFolders: ReadonlySet<string>,
-  selected: ReadonlySet<string>
+  selection: FileTreeSelection
 ): FileTreeFile[] {
-  const isExcluded = (path: string): boolean => {
-    if (deselected.has(path)) {
-      return true
-    }
-    if (selected.has(path)) {
-      return false
-    }
-    for (const folder of deselectedFolders) {
-      if (path.startsWith(`${folder}/`)) {
-        return true
-      }
-    }
-    return false
-  }
   const seen = new Set<number>()
   const out: FileTreeFile[] = []
   for (const file of [...explicit, ...enumerated]) {
-    if (isExcluded(file.path)) {
+    const included = isPathSelected(
+      file.path,
+      selection.selectedFilePaths,
+      selection.deselectedFilePaths,
+      selection.selectedFolderPaths,
+      selection.deselectedFolderPaths
+    )
+    if (!included || seen.has(file.id)) {
       continue
     }
-    if (!seen.has(file.id)) {
-      seen.add(file.id)
-      out.push(file)
-    }
+    seen.add(file.id)
+    out.push(file)
   }
   return out
 }
