@@ -3,6 +3,7 @@ import {
   resolveZipSink,
   scopeCoversPage,
   transferableChunk,
+  withTimeout,
   workerUrlForBase
 } from '../../../../../../src/sections/dataset/dataset-files/files-tree/zipStreamSink'
 
@@ -118,5 +119,32 @@ describe('transferableChunk', () => {
     const out = transferableChunk(view)
     expect(new Uint8Array(out).byteLength).to.equal(3)
     expect(Array.from(new Uint8Array(out))).to.deep.equal([1, 2, 3])
+  })
+})
+
+describe('withTimeout', () => {
+  it('passes a value through when it settles in time', () => {
+    cy.then(async () => {
+      expect(await withTimeout(Promise.resolve('done'), 1000, 'late')).to.equal('done')
+    })
+  })
+
+  it('gives up with the fallback instead of hanging', () => {
+    cy.then(async () => {
+      const started = performance.now()
+      const result = await withTimeout(new Promise(() => undefined), 50, 'late')
+      expect(result).to.equal('late')
+      expect(performance.now() - started).to.be.lessThan(2000)
+    })
+  })
+
+  it('does not swallow a rejection', () => {
+    cy.then(async () => {
+      let caught: unknown = null
+      await withTimeout(Promise.reject(new Error('boom')), 1000, 'late').catch((e) => {
+        caught = e
+      })
+      expect((caught as Error)?.message).to.equal('boom')
+    })
   })
 })

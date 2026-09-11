@@ -23,6 +23,7 @@ export const DEFAULT_ZIP_SERVICE_WORKER_URL = workerUrlForBase(import.meta.env.B
 
 const KEEPALIVE_MS = 4_000
 const CONTROL_TIMEOUT_MS = 10_000
+const HANDOVER_TIMEOUT_MS = 10_000
 
 export function transferableStreamsSupported(): boolean {
   try {
@@ -60,6 +61,22 @@ export function createBlobSink(): ZipSink {
 function scopeFor(options: ServiceWorkerSinkOptions): string {
   if (options.scope) return options.scope.endsWith('/') ? options.scope : `${options.scope}/`
   return new URL('./', new URL(options.url, window.location.href)).pathname
+}
+
+export function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => resolve(fallback), ms)
+    promise.then(
+      (value) => {
+        clearTimeout(timer)
+        resolve(value)
+      },
+      (error: unknown) => {
+        clearTimeout(timer)
+        reject(error instanceof Error ? error : new Error(String(error)))
+      }
+    )
+  })
 }
 
 export function transferableChunk(view: Uint8Array): ArrayBuffer {
@@ -159,7 +176,7 @@ export async function createServiceWorkerSink(
   if (!scopeCoversPage(scope, window.location.pathname)) return null
   let controller: ServiceWorker | null = null
   try {
-    controller = await takeControl(options)
+    controller = await withTimeout(takeControl(options), CONTROL_TIMEOUT_MS, null)
     if (!controller) return null
     const probe = await fetch(`${scope}zipdl/ping`, { cache: 'no-store' })
     if (!probe.ok) return null
@@ -177,7 +194,14 @@ export async function createServiceWorkerSink(
       const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
       const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
       const done = body.pipeTo(writable)
-      await handOver(worker, id, name, readable)
+      const handedOver = await withTimeout(
+        handOver(worker, id, name, readable).then(() => true),
+        HANDOVER_TIMEOUT_MS,
+        false
+      )
+      if (!handedOver) {
+        throw new Error('the download service worker did not accept the zip stream')
+      }
       const removeFrame = navigateHiddenFrame(`${scope}zipdl/${id}/${encodeURIComponent(name)}`)
       const keepalive = setInterval(() => {
         void fetch(`${scope}zipdl/${id}/keepalive`, { cache: 'no-store' }).catch(() => undefined)

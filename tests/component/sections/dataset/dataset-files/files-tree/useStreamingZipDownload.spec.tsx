@@ -24,7 +24,8 @@ function StreamingZipHarness({
   partSize,
   partRetries = 0,
   fetchInit,
-  sink
+  sink,
+  onApi
 }: {
   files: FileTreeFile[]
   zipName?: string
@@ -36,6 +37,7 @@ function StreamingZipHarness({
    * anchor. Tests for the streaming path inject their own.
    */
   sink?: ZipSink
+  onApi?: (api: ReturnType<typeof useStreamingZipDownload>) => void
   /**
    * Defaults to 0 so the existing pause-on-fail tests still see a
    * single attempt per file. Tests that exercise the auto-retry path
@@ -45,6 +47,7 @@ function StreamingZipHarness({
 }) {
   const api = useStreamingZipDownload()
   const [open, setOpen] = useState(false)
+  onApi?.(api)
   return (
     <>
       <button
@@ -1791,6 +1794,59 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.get('@anchorClick').should('not.have.been.called')
     cy.then(() => {
       expect(fetches, 'no bytes were requested').to.equal(0)
+    })
+  })
+
+  it('errors the stream on cancel so the browser cannot finalise a partial zip', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    let cancelRun: () => void = () => undefined
+    let outcome = 'never finished'
+    const streamingSink = {
+      streaming: true,
+      save: async ({ body }: { name: string; body: ReadableStream<Uint8Array> }) => {
+        const reader = body.getReader()
+        let first = true
+        try {
+          for (;;) {
+            const { done } = await reader.read()
+            if (done) {
+              outcome = 'closed cleanly'
+              return
+            }
+            if (first) {
+              first = false
+              cancelRun()
+            }
+          }
+        } catch {
+          outcome = 'errored'
+        }
+      }
+    }
+
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        zipName="cancelled.zip"
+        partSize={4}
+        partRetries={0}
+        sink={streamingSink}
+        onApi={(api) => {
+          cancelRun = api.cancel
+        }}
+      />
+    )
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download cancelled/i).should('exist')
+    cy.then(() => {
+      expect(outcome).to.equal('errored')
     })
   })
 

@@ -64,6 +64,8 @@ export interface StartStreamingZipArgs {
   sink?: ZipSink
 }
 
+const CANCELLED_ERROR = 'download cancelled'
+
 const DEFAULT_PART_SIZE_BYTES = 10 * 1024 * 1024
 const DEFAULT_PART_RETRIES = 3
 const DEFAULT_PART_RETRY_DELAY_MS = 500
@@ -213,8 +215,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
       async function* iterableForZip() {
         const processQueue = async function* () {
           while (queue.length > 0) {
-            /* istanbul ignore next */
-            if (stale()) return
+            if (stale()) throw new Error(CANCELLED_ERROR)
             const file = queue.shift() as FileTreeFile
             runUpdate((prev) => ({
               ...prev,
@@ -741,9 +742,7 @@ function buildChunkedStream(args: {
   return new ReadableStream<Uint8Array>({
     async pull(controller) {
       if (args.cancelled()) {
-        /* istanbul ignore next */
-        controller.close()
-        /* istanbul ignore next */
+        controller.error(new Error(CANCELLED_ERROR))
         return
       }
       for (;;) {
