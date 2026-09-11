@@ -1,5 +1,7 @@
-const PATH = '/zipdl/'
+const PATH = 'zipdl/'
 const streams = new Map()
+const SCOPE = new URL('./', self.registration ? self.registration.scope : self.location.href)
+  .pathname
 
 self.addEventListener('install', () => self.skipWaiting())
 self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()))
@@ -55,9 +57,11 @@ function contentDisposition(name) {
 }
 
 self.addEventListener('fetch', (event) => {
-  const marker = new URL(event.request.url).pathname.indexOf(PATH)
-  if (marker === -1) return
-  const rest = new URL(event.request.url).pathname.slice(marker + PATH.length).split('/')
+  const url = new URL(event.request.url)
+  if (url.origin !== self.location.origin) return
+  const prefix = SCOPE + PATH
+  if (!url.pathname.startsWith(prefix)) return
+  const rest = url.pathname.slice(prefix.length).split('/')
   const id = rest[0]
   if (id === 'ping' || rest[1] === 'keepalive') {
     event.respondWith(new Response('ok', { headers: { 'Cache-Control': 'no-store' } }))

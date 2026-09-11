@@ -118,11 +118,28 @@ describe('checkZipSelectionSize', () => {
     expect(out.message).to.not.contain('Chrome')
   })
 
-  it('refuses an over-cap selection on a buffering desktop browser and names the alternatives', () => {
-    const out = checkZipSelectionSize({ bytes: 4 * GB, platform: 'desktop', streaming: false })
+  it('refuses an over-cap selection on a browser that cannot stream and names the alternatives', () => {
+    const out = checkZipSelectionSize({
+      bytes: 4 * GB,
+      platform: 'desktop',
+      streaming: false,
+      browserCanStream: false
+    })
     expect(out.allowed).to.equal(false)
     expect(out.capBytes).to.equal(2 * GB)
     expect(out.message).to.contain('too large for this browser')
     expect(out.message).to.contain('Chrome, Edge, Firefox or Opera')
+  })
+
+  it('does not tell a capable browser to switch browsers when the page cannot stream', () => {
+    const out = checkZipSelectionSize({
+      bytes: 4 * GB,
+      platform: 'desktop',
+      streaming: false,
+      browserCanStream: true
+    })
+    expect(out.allowed).to.equal(false)
+    expect(out.message).to.not.contain('Chrome, Edge, Firefox or Opera')
+    expect(out.message).to.contain('this page')
   })
 })

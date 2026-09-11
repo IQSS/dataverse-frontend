@@ -459,7 +459,8 @@ export function useStreamingZipDownload(): StreamingZipApi {
           const withinCap = checkZipSelectionSize({
             bytes: files.reduce((sum, file) => sum + file.size, 0),
             platform: detectPlatform(),
-            streaming: sink.streaming
+            streaming: sink.streaming,
+            browserCanStream: sink.browserCanStream
           })
           if (!withinCap.allowed) {
             runUpdate((prev) => ({ ...prev, status: 'error', message: withinCap.message }))

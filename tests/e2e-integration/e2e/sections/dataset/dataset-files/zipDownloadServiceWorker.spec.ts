@@ -167,6 +167,30 @@ describe('zip download service worker', () => {
     })
   })
 
+  it('lands a real file on disk when the page navigates a hidden frame at it', () => {
+    const name = `streamed-${Date.now()}.zip`
+    cy.window({ timeout: 30000 }).then(async (win) => {
+      const worker = await controllingWorker(win)
+      const id = nextId()
+      const stream = streamOf(win, ['on ', 'disk ', 'for ', 'real'])
+      const ack = registered(win, id)
+      worker.postMessage({ type: 'zipdl-register', id, name, stream }, [
+        stream as unknown as Transferable
+      ])
+      await ack
+
+      const frame = win.document.createElement('iframe')
+      frame.hidden = true
+      frame.style.display = 'none'
+      frame.src = `${SCOPE}zipdl/${id}/${encodeURIComponent(name)}`
+      win.document.body.appendChild(frame)
+    })
+    cy.readFile(`cypress/downloads/${name}`, { timeout: 20000 }).should(
+      'equal',
+      'on disk for real'
+    )
+  })
+
   it('encodes a non-ascii file name for both old and new clients', () => {
     cy.window({ timeout: 30000 }).then(async (win) => {
       const worker = await controllingWorker(win)

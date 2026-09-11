@@ -6,6 +6,7 @@ export interface ZipSaveRequest {
 
 export interface ZipSink {
   streaming: boolean
+  browserCanStream: boolean
   save(args: ZipSaveRequest): Promise<void>
 }
 
@@ -13,6 +14,7 @@ export interface ServiceWorkerSinkOptions {
   url: string
   scope?: string
   keepaliveMs?: number
+  firstByteMs?: number
 }
 
 export function workerUrlForBase(base: string): string {
@@ -24,6 +26,7 @@ export const DEFAULT_ZIP_SERVICE_WORKER_URL = workerUrlForBase(import.meta.env.B
 const KEEPALIVE_MS = 4_000
 const CONTROL_TIMEOUT_MS = 10_000
 const HANDOVER_TIMEOUT_MS = 10_000
+const FIRST_BYTE_TIMEOUT_MS = 60_000
 
 export function transferableStreamsSupported(): boolean {
   try {
@@ -38,9 +41,14 @@ export function transferableStreamsSupported(): boolean {
   }
 }
 
+export function browserCanStreamToDisk(): boolean {
+  return 'serviceWorker' in navigator && window.isSecureContext
+}
+
 export function createBlobSink(): ZipSink {
   return {
     streaming: false,
+    browserCanStream: browserCanStreamToDisk(),
     save: async ({ name, body, shouldSave }) => {
       const blob = await new Response(body).blob()
       if (shouldSave && !shouldSave()) return
@@ -80,13 +88,12 @@ export function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Pr
 }
 
 export function transferableChunk(view: Uint8Array): ArrayBuffer {
-  const exact = view.byteOffset === 0 && view.byteLength === view.buffer.byteLength
-  return (exact ? view : view.slice()).buffer as ArrayBuffer
+  return view.slice().buffer as ArrayBuffer
 }
 
 export function scopeCoversPage(scope: string, pathname: string): boolean {
   const normalised = scope.endsWith('/') ? scope : `${scope}/`
-  return pathname === normalised || pathname.startsWith(normalised)
+  return pathname.startsWith(normalised) || `${pathname}/` === normalised
 }
 
 async function takeControl(options: ServiceWorkerSinkOptions): Promise<ServiceWorker | null> {
@@ -171,7 +178,7 @@ function handOver(
 export async function createServiceWorkerSink(
   options: ServiceWorkerSinkOptions
 ): Promise<ZipSink | null> {
-  if (!('serviceWorker' in navigator) || !window.isSecureContext) return null
+  if (!browserCanStreamToDisk()) return null
   const scope = scopeFor(options)
   if (!scopeCoversPage(scope, window.location.pathname)) return null
   let controller: ServiceWorker | null = null
@@ -186,27 +193,47 @@ export async function createServiceWorkerSink(
   const worker = controller
   return {
     streaming: true,
+    browserCanStream: true,
     save: async ({ name, body, shouldSave }) => {
       if (shouldSave && !shouldSave()) {
         await body.cancel()
         return
       }
       const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
-      const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
+      let pulled = false
+      const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>({
+        transform(chunk, controller) {
+          pulled = true
+          controller.enqueue(chunk)
+        }
+      })
       const done = body.pipeTo(writable)
+      const abandon = async (reason: Error) => {
+        worker.postMessage({ type: 'zipdl-unregister', id })
+        await writable.abort(reason).catch(() => undefined)
+        await done.catch(() => undefined)
+        throw reason
+      }
       const handedOver = await withTimeout(
         handOver(worker, id, name, readable).then(() => true),
         HANDOVER_TIMEOUT_MS,
         false
       )
       if (!handedOver) {
-        throw new Error('the download service worker did not accept the zip stream')
+        await abandon(new Error('the download service worker did not accept the zip stream'))
       }
       const removeFrame = navigateHiddenFrame(`${scope}zipdl/${id}/${encodeURIComponent(name)}`)
       const keepalive = setInterval(() => {
         void fetch(`${scope}zipdl/${id}/keepalive`, { cache: 'no-store' }).catch(() => undefined)
       }, options.keepaliveMs ?? KEEPALIVE_MS)
+      const started = new Promise<boolean>((resolve) => {
+        setTimeout(() => resolve(pulled), options.firstByteMs ?? FIRST_BYTE_TIMEOUT_MS)
+      })
       try {
+        const outcome = await Promise.race([done.then(() => 'done' as const), started])
+        if (outcome === false) {
+          await abandon(new Error('the browser never started reading the download'))
+        }
         await done
       } finally {
         clearInterval(keepalive)

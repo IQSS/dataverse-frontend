@@ -75,6 +75,10 @@ describe('scopeCoversPage', () => {
     expect(scopeCoversPage('/reusable-components/', '/dataset.xhtml')).to.equal(false)
   })
 
+  it('accepts the scope root served without its trailing slash', () => {
+    expect(scopeCoversPage('/modern/', '/modern')).to.equal(true)
+  })
+
   it('does not treat a shared prefix as containment', () => {
     expect(scopeCoversPage('/modern/', '/modern-ui/page')).to.equal(false)
   })
@@ -99,11 +103,13 @@ describe('workerUrlForBase', () => {
 })
 
 describe('transferableChunk', () => {
-  it('passes an exact-fit chunk through without copying', () => {
+  it('never hands over the caller buffer, which the zip writer still reads from', () => {
     const chunk = new Uint8Array([1, 2, 3, 4])
     const out = transferableChunk(chunk)
-    expect(out).to.equal(chunk.buffer)
+    expect(out).to.not.equal(chunk.buffer)
     expect(Array.from(new Uint8Array(out))).to.deep.equal([1, 2, 3, 4])
+    structuredClone(out, { transfer: [out] })
+    expect(chunk.length, 'the original survives the transfer').to.equal(4)
   })
 
   it('sends only the view when the chunk is a window onto a larger buffer', () => {

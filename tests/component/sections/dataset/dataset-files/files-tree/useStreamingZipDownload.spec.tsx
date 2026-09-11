@@ -8,7 +8,8 @@ import { FilesTreeDownloadTray } from '../../../../../../src/sections/dataset/da
 import { FileTreeFile } from '../../../../../../src/files/domain/models/FileTreeItem'
 import {
   ZipSink,
-  createBlobSink
+  createBlobSink,
+  transferableChunk
 } from '../../../../../../src/sections/dataset/dataset-files/files-tree/zipStreamSink'
 import { FileTreeFileMother } from '../../../../files/domain/models/FileTreeItemMother'
 
@@ -1786,10 +1787,67 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     })
 
     cy.findByTestId('harness-start').click()
-    cy.contains(/too large for this browser/i).should('exist')
+    cy.contains(/too large for this page/i).should('exist')
     cy.get('@anchorClick').should('not.have.been.called')
     cy.then(() => {
       expect(fetches, 'no bytes were requested').to.equal(0)
+    })
+  })
+
+  function centralDirectorySize(zip: Uint8Array): number {
+    const view = new DataView(zip.buffer, zip.byteOffset, zip.byteLength)
+    for (let at = zip.length - 22; at >= 0; at--) {
+      if (view.getUint32(at, true) === 0x06054b50) return view.getUint32(at + 12, true)
+    }
+    return -1
+  }
+
+  it('survives a sink that transfers every chunk, as the MessageChannel path does', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    const received: Uint8Array[] = []
+    const transferringSink = {
+      streaming: true,
+      save: async ({ body }: { name: string; body: ReadableStream<Uint8Array> }) => {
+        const reader = body.getReader()
+        for (;;) {
+          const { value, done } = await reader.read()
+          if (done) break
+          if (!value) continue
+          const buffer = transferableChunk(value)
+          const delivered = structuredClone(buffer, { transfer: [buffer] })
+          received.push(new Uint8Array(delivered))
+        }
+      }
+    }
+
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        zipName="transferred.zip"
+        partSize={4}
+        partRetries={0}
+        sink={transferringSink}
+      />
+    )
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      const total = received.reduce((n, c) => n + c.byteLength, 0)
+      const zip = new Uint8Array(total)
+      let at = 0
+      for (const chunk of received) {
+        zip.set(chunk, at)
+        at += chunk.byteLength
+      }
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+      expect(centralDirectorySize(zip), 'end of central directory is intact').to.be.greaterThan(0)
     })
   })
 

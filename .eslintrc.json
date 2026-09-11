@@ -5,7 +5,12 @@
     },
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
       }
     }
   },
@@ -37,7 +42,12 @@
       "./packages/design-system/tests/tsconfig.json"
     ]
   },
-  "plugins": ["react", "simple-import-sort", "import", "unused-imports"],
+  "plugins": [
+    "react",
+    "simple-import-sort",
+    "import",
+    "unused-imports"
+  ],
   "rules": {
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
@@ -53,7 +63,9 @@
     "@typescript-eslint/no-empty-function": [
       "error",
       {
-        "allow": ["arrowFunctions"]
+        "allow": [
+          "arrowFunctions"
+        ]
       }
     ],
     "react/react-in-jsx-scope": "off",
@@ -85,14 +97,40 @@
   },
   "overrides": [
     {
-      "files": ["**/e2e/**/*.spec.ts", "**/component/**/*.spec.tsx"],
+      "files": [
+        "**/e2e/**/*.spec.ts",
+        "**/component/**/*.spec.tsx"
+      ],
       "rules": {
         "testing-library/await-async-query": 0,
         "@typescript-eslint/no-unsafe-member-access": 0,
         "@typescript-eslint/no-unsafe-call": 0,
         "testing-library/prefer-screen-queries": 0
       }
+    },
+    {
+      "files": [
+        "public/*.js"
+      ],
+      "parserOptions": {
+        "project": null
+      },
+      "env": {
+        "serviceworker": true,
+        "browser": true
+      },
+      "rules": {
+        "@typescript-eslint/no-unsafe-argument": 0,
+        "@typescript-eslint/no-unsafe-assignment": 0,
+        "@typescript-eslint/no-unsafe-call": 0,
+        "@typescript-eslint/no-unsafe-member-access": 0,
+        "@typescript-eslint/no-unsafe-return": 0
+      }
     }
   ],
-  "ignorePatterns": ["packages/design-system/dist/**", "dev-env/**", "public/keycloakify-dev-resources"]
+  "ignorePatterns": [
+    "packages/design-system/dist/**",
+    "dev-env/**",
+    "public/keycloakify-dev-resources"
+  ]
 }
