@@ -67,6 +67,22 @@ its 2 GB cap. The download still works; it just stops streaming.
 `zipServiceWorkerUrl` overrides where the script is fetched from, for
 deployments that serve it somewhere else again.
 
+## Failure handling
+
+The engine must fail loudly rather than hang or truncate.
+
+- The zip stream is **errored**, never closed, when a run is cancelled or
+  superseded. A cleanly closed stream would be finalised by the browser as a
+  complete download of a partial archive.
+- The worker handshake times out after 10 s, and a download the browser never
+  starts reading is abandoned after 60 s. Both unregister the pending stream in
+  the worker and cancel the source, so nothing is left half-open.
+- Chunks handed to the worker over the MessageChannel are **copied before being
+  transferred**. client-zip accumulates the size of each central-directory
+  record after yielding it, so transferring the caller's buffer detaches it, the
+  record counts as zero bytes, and the end-of-central-directory record is
+  written wrong. The archive then opens as empty.
+
 ## Caps
 
 Named in `zipDownloadLimits.ts` and checked before the first byte is requested.
@@ -80,3 +96,7 @@ Named in `zipDownloadLimits.ts` and checked before the first byte is requested.
 
 Mobile is a product decision rather than a capability one, which is why the cap
 holds even where the service worker works.
+
+The over-cap message distinguishes a browser that cannot stream at all, which is
+told which browsers can, from a browser that could but is on a page without a
+usable worker, which is not told to switch to the browser it is already using.
