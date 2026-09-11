@@ -316,6 +316,24 @@ The tree view ships:
 - **Storybook** stories may be added for components that benefit from visual review. Not required.
 - **Coverage threshold** is 95% on `src/sections/**/*.{ts,tsx}` (`.nycrc.json`). Reusable components count.
 
+### Testing the JSF embed locally
+
+The dev environment can serve the built components next to the JSF pages, the same way a production proxy would. It needs a Dataverse image that has the tree endpoint and the feature flags; the backend PR publishes one with the `/push-image` comment, as `ghcr.io/gdcc/dataverse:<branch>`.
+
+```bash
+npm run build-reusable-components
+cd dev-env
+REGISTRY=ghcr.io DATAVERSE_IMAGE_TAG=6691-reusable-components \
+  docker compose -f docker-compose-dev.yml -f reusable-components/docker-compose.override.yml up -d --build
+```
+
+The override turns on `api-session-auth`, `react-tree-view` and `react-uploader`, points `dataverse.reusable-components.base-url` at `/reusable-components`, sets the site URL to the nginx origin so the components call the API same-origin, and mounts `dist-reusable-components/reusable-components` into nginx at that path. Then:
+
+- `http://localhost:8000/dataset.xhtml?persistentId=…` — JSF dataset page with the React tree on the Files tab, and the React uploader under Edit → Files.
+- `http://localhost:8000/modern` — the SPA, same origin.
+
+Rebuild the components with `npm run build-reusable-components` and reload; nginx serves the new files directly. A locally built backend works too: `mvn -Pct clean package docker:build` in the dataverse checkout produces `gdcc/dataverse:unstable`, which the default `REGISTRY=docker.io` and `DATAVERSE_IMAGE_TAG=unstable` pick up without a pull.
+
 When in doubt about a test, look at:
 
 - `tests/component/sections/shared/file-uploader/FileUploaderPanelCore.spec.tsx`
