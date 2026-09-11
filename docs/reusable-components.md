@@ -318,7 +318,7 @@ The tree view ships:
 
 ### Testing the JSF embed locally
 
-The dev environment can serve the built components next to the JSF pages, the same way a production proxy would. It needs a Dataverse image that has the tree endpoint and the feature flags; the backend PR publishes one with the `/push-image` comment, as `ghcr.io/gdcc/dataverse:<branch>`.
+The dev environment can serve the built components next to the JSF pages, the same way a production proxy would. It needs a valid `.npmrc` (see the Developer Guide; the SPA container runs `npm install` against GitHub Packages) and a Dataverse image that has the tree endpoint and the feature flags. Every push to the backend PR publishes one as `ghcr.io/gdcc/dataverse:<branch>`.
 
 ```bash
 npm run build-reusable-components
