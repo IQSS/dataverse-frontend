@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {
   initForUrl,
+  makeDigestAccumulator,
   useStreamingZipDownload
 } from '../../../../../../src/sections/dataset/dataset-files/files-tree/useStreamingZipDownload'
 import { FilesTreeDownloadTray } from '../../../../../../src/sections/dataset/dataset-files/files-tree/FilesTreeDownloadTray'
@@ -1743,5 +1744,49 @@ describe('initForUrl', () => {
       credentials: 'same-origin'
     })
     expect(out).to.deep.equal({ credentials: 'same-origin' })
+  })
+})
+
+describe('makeDigestAccumulator', () => {
+  const source = new Uint8Array(96 * 1024)
+  for (let i = 0; i < source.length; i++) source[i] = (i * 31 + (i >> 8)) & 255
+
+  const hex = (buf: ArrayBuffer) =>
+    Array.from(new Uint8Array(buf))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('')
+
+  const feedInChunks = async (algorithm: string, chunk: number) => {
+    const acc = makeDigestAccumulator(algorithm)
+    expect(acc, 'accumulator for ' + algorithm).to.not.equal(null)
+    for (let at = 0; at < source.length; at += chunk) {
+      acc?.update(source.subarray(at, Math.min(at + chunk, source.length)))
+    }
+    return acc?.finalize()
+  }
+
+  const algorithms = ['SHA-1', 'SHA-256', 'SHA-512']
+
+  algorithms.forEach((algorithm) => {
+    it('matches subtle.digest for ' + algorithm + ' when fed in many chunks', () => {
+      cy.then(async () => {
+        const expected = hex(await window.crypto.subtle.digest(algorithm, source))
+        expect(await feedInChunks(algorithm, 7)).to.equal(expected)
+      })
+    })
+  })
+
+  it('gives the same digest whatever the chunk boundaries are', () => {
+    cy.then(async () => {
+      const one = await feedInChunks('SHA-256', source.length)
+      const many = await feedInChunks('SHA-256', 1024)
+      const odd = await feedInChunks('SHA-256', 13)
+      expect(many).to.equal(one)
+      expect(odd).to.equal(one)
+    })
+  })
+
+  it('returns null for an algorithm it cannot compute', () => {
+    expect(makeDigestAccumulator('CRC32')).to.equal(null)
   })
 })

@@ -21,6 +21,7 @@
     "@iqss/dataverse-client-javascript": "2.2.0-pr403.1f6dba6",
     "@iqss/dataverse-design-system": "*",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
+    "@noble/hashes": "^2.4.0",
     "@tanstack/react-table": "8.9.2",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.4.0",

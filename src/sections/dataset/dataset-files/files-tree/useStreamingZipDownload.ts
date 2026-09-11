@@ -1,6 +1,9 @@
 import { useCallback, useRef, useState } from 'react'
 import { downloadZip } from 'client-zip'
 import { md5 } from 'js-md5'
+import { sha1 } from '@noble/hashes/legacy.js'
+import { sha256, sha512 } from '@noble/hashes/sha2.js'
+import { bytesToHex } from '@noble/hashes/utils.js'
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
 import { useBeforeUnloadGuard } from '@/shared/hooks/useBeforeUnloadGuard'
 
@@ -590,7 +593,7 @@ async function fetchPartWithRefresh(args: {
   }
 }
 
-function makeDigestAccumulator(
+export function makeDigestAccumulator(
   algorithm: string
 ): { update: (bytes: Uint8Array) => void; finalize: () => Promise<string> } | null {
   const upper = algorithm.toUpperCase()
@@ -601,34 +604,21 @@ function makeDigestAccumulator(
       finalize: () => Promise.resolve(hash.hex())
     }
   }
-  const subtleAlgo =
+  const sha =
     upper === 'SHA-1' || upper === 'SHA1'
-      ? 'SHA-1'
+      ? sha1
       : upper === 'SHA-256' || upper === 'SHA256'
-      ? 'SHA-256'
+      ? sha256
       : upper === 'SHA-512' || upper === 'SHA512'
-      ? 'SHA-512'
+      ? sha512
       : null
-  if (!subtleAlgo) return null
-  const chunks: Uint8Array[] = []
+  if (!sha) return null
+  const hash = sha.create()
   return {
     update: (bytes) => {
-      chunks.push(new Uint8Array(bytes))
+      hash.update(bytes)
     },
-    finalize: async () => {
-      const total = chunks.reduce((s, c) => s + c.length, 0)
-      const buf = new Uint8Array(total)
-      let off = 0
-      for (const c of chunks) {
-        buf.set(c, off)
-        off += c.length
-      }
-      const digest = await window.crypto.subtle.digest(subtleAlgo, buf as BufferSource)
-      const out = new Uint8Array(digest)
-      let hex = ''
-      for (const b of out) hex += b.toString(16).padStart(2, '0')
-      return hex
-    }
+    finalize: () => Promise.resolve(bytesToHex(hash.digest()))
   }
 }
 
