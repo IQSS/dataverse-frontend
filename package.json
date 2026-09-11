@@ -65,7 +65,7 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "build-reusable-components": "vite build --config vite.config.reusable-components.ts && cp -r public/locales dist-reusable-components/reusable-components/ && cp src/standalone-uploader/dvUploader.html dist-reusable-components/ && cp src/standalone-tree-view/dvTreeView.html dist-reusable-components/ && sass --no-source-map src/standalone-uploader/standalone-page.scss dist-reusable-components/standalone-page.css",
+    "build-reusable-components": "vite build --config vite.config.reusable-components.ts && cp -r public/locales dist-reusable-components/reusable-components/ && cp src/standalone-uploader/dvUploader.html dist-reusable-components/ && cp src/standalone-tree-view/dvTreeView.html dist-reusable-components/ && sass --no-source-map src/standalone-uploader/standalone-page.scss dist-reusable-components/standalone-page.css && node scripts/check-reusable-components.mjs",
     "build-keycloak-theme": "npm run build && keycloakify build",
     "preview": "vite preview",
     "lint": "npm run typecheck && npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",
