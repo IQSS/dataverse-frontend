@@ -74,7 +74,7 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
     : isCancelled
     ? t('tree.download.tray.now.cancelled', 'Cancelled')
     : state.current
-    ? `▸ ${state.current.path}`
+    ? state.current.path
     : '…'
 
   return (
@@ -225,7 +225,10 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
 
         <div className={styles['tray-foot']}>
           <div className={styles['tray-hint']}>
-            {t('tree.download.tray.hint', 'Streamed locally into one zip — no server-side ZIP.')}
+            {t(
+              'tree.download.tray.hint',
+              'The zip is created in your browser — please keep this tab open until the download finishes.'
+            )}
           </div>
           {!isDone && !isAwaitingRetry && !isError && !isCancelled && (
             <Button variant="danger" size="sm" onClick={api.cancel}>

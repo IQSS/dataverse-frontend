@@ -10,6 +10,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { UploaderFileRepository } from '@/sections/shared/file-uploader/types'
 import { useFileUploaderContext } from '@/sections/shared/file-uploader/context/FileUploaderContext'
 import { FileUploaderPanelCore } from '@/sections/shared/file-uploader/FileUploaderPanelCore'
+import { useBeforeUnloadGuard } from '@/shared/hooks/useBeforeUnloadGuard'
 import styles from './StandaloneFileUploaderPanel.module.scss'
 
 interface StandaloneFileUploaderPanelProps {
@@ -28,22 +29,7 @@ export const StandaloneFileUploaderPanel = ({
     fileUploaderState: { files, isSaving, uploadingToCancelMap, addFilesToDatasetOperationInfo }
   } = useFileUploaderContext()
 
-  // Warn before leaving page if there are unsaved changes
-  useEffect(() => {
-    const hasUnsavedChanges =
-      Object.keys(files).length > 0 || isSaving || uploadingToCancelMap.size > 0
-
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChanges) {
-        e.preventDefault()
-        e.returnValue = ''
-        return ''
-      }
-    }
-
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [files, isSaving, uploadingToCancelMap.size])
+  useBeforeUnloadGuard(Object.keys(files).length > 0 || isSaving || uploadingToCancelMap.size > 0)
 
   // Build the dataset page URL (JSF page)
   const getDatasetUrl = useCallback(() => {

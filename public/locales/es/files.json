@@ -245,7 +245,7 @@
         "skipped_one": "{{count}} archivo omitido",
         "skipped_other": "{{count}} archivos omitidos",
         "skippedManifest": "Se añadió un manifest.txt con los archivos omitidos en la raíz del zip.",
-        "hint": "Se genera localmente en un único zip — sin ZIP en el servidor.",
+        "hint": "El zip se crea en tu navegador — mantén esta pestaña abierta hasta que termine la descarga.",
         "cancel": "Cancelar",
         "close": "Cerrar"
       }

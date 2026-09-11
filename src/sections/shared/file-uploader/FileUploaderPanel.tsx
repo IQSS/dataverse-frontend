@@ -2,6 +2,7 @@ import { useMemo, useCallback } from 'react'
 import { useDeepCompareEffect } from 'use-deep-compare'
 import { Trans, useTranslation } from 'react-i18next'
 import { useBlocker, useNavigate } from 'react-router-dom'
+import { useBeforeUnloadGuard } from '@/shared/hooks/useBeforeUnloadGuard'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
@@ -48,6 +49,7 @@ const FileUploaderPanel = ({
   }, [files, isSaving, uploadingToCancelMap.size])
 
   const navigationBlocker = useBlocker(shouldBlockAwayNavigation)
+  useBeforeUnloadGuard(shouldBlockAwayNavigation)
 
   const handleConfirmLeavePage = () => {
     if (navigationBlocker.state === 'blocked') {

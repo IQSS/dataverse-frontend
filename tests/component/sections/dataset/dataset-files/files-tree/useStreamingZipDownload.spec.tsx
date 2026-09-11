@@ -724,6 +724,48 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     })
   })
 
+  it('guards against closing the tab while the zip is in progress, and stands down when done', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'slow.txt',
+        path: 'slow.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="guard.zip" />)
+
+    let release: (() => void) | undefined
+    installFetchHandler(
+      () =>
+        new Promise<Response>((resolve) => {
+          release = () => resolve(fakeResponseBody('AAA'))
+        })
+    )
+
+    const fireBeforeUnload = (win: Window): boolean => {
+      const event = new win.Event('beforeunload', { cancelable: true })
+      win.dispatchEvent(event)
+      return event.defaultPrevented
+    }
+
+    cy.window().then((win) => {
+      expect(fireBeforeUnload(win), 'idle: no guard').to.equal(false)
+    })
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray').should('be.visible')
+    cy.window().then((win) => {
+      expect(fireBeforeUnload(win), 'running: guarded').to.equal(true)
+      release?.()
+    })
+    cy.contains(/download complete/i).should('exist')
+    cy.window().then((win) => {
+      expect(fireBeforeUnload(win), 'done: released').to.equal(false)
+    })
+  })
+
   it('does not burn retry budget on a terminal 4xx (e.g. 403)', () => {
     const files: FileTreeFile[] = [
       FileTreeFileMother.create({

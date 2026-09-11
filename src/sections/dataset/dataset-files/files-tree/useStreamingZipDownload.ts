@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import { downloadZip } from 'client-zip'
 import { md5 } from 'js-md5'
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
+import { useBeforeUnloadGuard } from '@/shared/hooks/useBeforeUnloadGuard'
 
 /**
  * On a per-file failure: `pause` stops and asks the caller (default),
@@ -160,6 +161,13 @@ export function useStreamingZipDownload(): StreamingZipApi {
   const [state, setState] = useState<StreamingZipState>(initialState)
   const stateRef = useRef<StreamingZipState>(initialState)
   stateRef.current = state
+
+  useBeforeUnloadGuard(
+    state.status === 'preparing' ||
+      state.status === 'running' ||
+      state.status === 'paused' ||
+      state.status === 'awaiting-retry'
+  )
 
   // Engine control: a single "decision" promise that the iterator
   // awaits when paused. The UI calls retryCurrent/skipCurrent/etc.
