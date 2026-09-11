@@ -6,7 +6,7 @@ import I18NextHttpBackend from 'i18next-http-backend'
 import { ToastContainer } from 'react-toastify'
 import { FilesTree } from '@/sections/dataset/dataset-files/files-tree/FilesTree'
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
-import { StandaloneFilePreviewSource } from './StandaloneFilePreviewSource'
+import { SdkFilePreviewSource } from '@/files/infrastructure/repositories/SdkFilePreviewSource'
 import { DatasetVersion, DatasetVersionNumber } from '@/dataset/domain/models/Dataset'
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
 import { mountInShadowRoot, unmountQuietly } from '../standalone-shared/shadow-mount'
@@ -156,9 +156,9 @@ async function init(opts: { fromObserver?: boolean } = {}) {
     datasetPid: config.datasetPid,
     datasetVersionId: normaliseVersionId(config.datasetVersionId),
     fileMetadataVersionId: jsfVersionId(config.datasetVersionId),
-    fileMetadataPath: config.fileMetadataPath ?? '/file.xhtml'
+    fileMetadataPath: new URL(config.fileMetadataPath ?? '/file.xhtml', config.siteUrl).href
   }
-  const treeRepository = new FileTreeJSDataverseRepository(new StandaloneFilePreviewSource())
+  const treeRepository = new FileTreeJSDataverseRepository(new SdkFilePreviewSource())
   const datasetVersion = syntheticVersion(mountConfig.datasetVersionId)
   const buildFileMetadataUrl = buildFileMetadataUrlFactory(mountConfig)
   const downloadFetchInit =
@@ -179,6 +179,7 @@ async function init(opts: { fromObserver?: boolean } = {}) {
           datasetVersion={datasetVersion}
           buildFileMetadataUrl={buildFileMetadataUrl}
           downloadFetchInit={downloadFetchInit}
+          buildDownloadUrl={(file) => new URL(file.downloadUrl, config.siteUrl).href}
         />
       </div>
     </StrictMode>

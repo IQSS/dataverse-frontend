@@ -6,7 +6,7 @@ import { FilePermissions } from '@/files/domain/models/FilePermissions'
 import { FilesWithCount } from '@/files/domain/models/FilesWithCount'
 import { DomainFileMapper } from '@/files/infrastructure/mappers/DomainFileMapper'
 import { JSFileMapper } from '@/files/infrastructure/mappers/JSFileMapper'
-import { FilePreviewSource } from '@/files/infrastructure/repositories/FileTreeFromPreviewsRepository'
+import { FilePreviewSource } from './FileTreeFromPreviewsRepository'
 
 const noPermissions: FilePermissions = {
   canDownloadFile: false,
@@ -14,7 +14,7 @@ const noPermissions: FilePermissions = {
   canEditOwnerDataset: false
 }
 
-export class StandaloneFilePreviewSource implements FilePreviewSource {
+export class SdkFilePreviewSource implements FilePreviewSource {
   async getAllByDatasetPersistentIdWithCount(
     datasetPersistentId: string,
     datasetVersion: DatasetVersion,

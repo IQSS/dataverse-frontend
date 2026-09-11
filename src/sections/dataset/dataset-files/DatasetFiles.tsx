@@ -12,6 +12,7 @@ import { FilesTree } from './files-tree/FilesTree'
 import { bearerDownloadFetchInit } from './bearerDownloadFetchInit'
 import { FilesViewToggle, FilesViewMode } from './files-view-toggle/FilesViewToggle'
 import { FileTreeRepository } from '@/files/domain/repositories/FileTreeRepository'
+import { SdkFilePreviewSource } from '@/files/infrastructure/repositories/SdkFilePreviewSource'
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
 import { useDataset } from '../DatasetContext'
 import { treeDownloadsRequireTermsGate } from './treeDownloadsRequireTermsGate'
@@ -46,8 +47,8 @@ export function DatasetFiles({
   }
 
   const treeRepository = useMemo<FileTreeRepository>(
-    () => fileTreeRepository ?? new FileTreeJSDataverseRepository(fileRepository),
-    [fileTreeRepository, fileRepository]
+    () => fileTreeRepository ?? new FileTreeJSDataverseRepository(new SdkFilePreviewSource()),
+    [fileTreeRepository]
   )
 
   return view === 'tree' ? (

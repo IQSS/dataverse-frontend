@@ -46,6 +46,7 @@ interface FilesTreeProps {
   buildFileMetadataUrl?: (file: FileTreeFile) => string
   downloadsDisabled?: boolean
   downloadFetchInit?: () => RequestInit | undefined
+  buildDownloadUrl?: (file: FileTreeFile) => string
 }
 
 const DEFAULT_ROW_HEIGHT = 32
@@ -65,7 +66,8 @@ export function FilesTree({
   onCurrentPathChange,
   buildFileMetadataUrl,
   downloadsDisabled = false,
-  downloadFetchInit
+  downloadFetchInit,
+  buildDownloadUrl
 }: FilesTreeProps) {
   const { t } = useTranslation('files')
   const tree = useFileTree({
@@ -103,10 +105,15 @@ export function FilesTree({
         return
       }
       const zipName = `${datasetPersistentId.replace(/[^a-zA-Z0-9._-]+/g, '_')}-files.zip`
-      streamingZip.start({ files, zipName, fetchInit: downloadFetchInit })
+      streamingZip.start({
+        files,
+        zipName,
+        fetchInit: downloadFetchInit,
+        buildFetchUrl: buildDownloadUrl
+      })
       setTrayOpen(true)
     },
-    [datasetPersistentId, streamingZip, downloadFetchInit]
+    [datasetPersistentId, streamingZip, downloadFetchInit, buildDownloadUrl]
   )
 
   const download = useFileTreeDownload({
