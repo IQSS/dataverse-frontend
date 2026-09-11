@@ -14,6 +14,7 @@ import { FilesTableScrollable } from './files-table/FilesTableScrollable'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FilesContext } from '@/sections/file/FilesContext'
 import { FilesTree } from './files-tree/FilesTree'
+import { bearerDownloadFetchInit } from './bearerDownloadFetchInit'
 import { FilesViewToggle, FilesViewMode } from './files-view-toggle/FilesViewToggle'
 import { FileTreeRepository } from '@/files/domain/repositories/FileTreeRepository'
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
@@ -113,6 +114,7 @@ function DatasetFilesScrollableTreeView({
         initialPath={initialPath}
         onCurrentPathChange={onCurrentPathChange}
         downloadsDisabled={downloadsDisabled}
+        downloadFetchInit={bearerDownloadFetchInit}
       />
     </section>
   )

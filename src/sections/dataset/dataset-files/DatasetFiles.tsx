@@ -9,6 +9,7 @@ import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import { FilesTree } from './files-tree/FilesTree'
+import { bearerDownloadFetchInit } from './bearerDownloadFetchInit'
 import { FilesViewToggle, FilesViewMode } from './files-view-toggle/FilesViewToggle'
 import { FileTreeRepository } from '@/files/domain/repositories/FileTreeRepository'
 import { FileTreeJSDataverseRepository } from '@/files/infrastructure/repositories/FileTreeJSDataverseRepository'
@@ -152,6 +153,7 @@ function DatasetFilesTreeView({
         initialPath={initialPath}
         onCurrentPathChange={onCurrentPathChange}
         downloadsDisabled={downloadsDisabled}
+        downloadFetchInit={bearerDownloadFetchInit}
       />
     </>
   )
