@@ -197,7 +197,6 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
             </div>
           )}
 
-          {/* istanbul ignore next */}
           {isError && state.message && (
             <div className={styles['tray-fail']}>
               <div className={styles['tray-fail-heading']}>

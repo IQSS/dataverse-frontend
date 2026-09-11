@@ -15,6 +15,8 @@ export interface ServiceWorkerSinkOptions {
   keepaliveMs?: number
 }
 
+export const DEFAULT_ZIP_SERVICE_WORKER_URL = '/zip-download-sw.js'
+
 const KEEPALIVE_MS = 4_000
 const CONTROL_TIMEOUT_MS = 10_000
 
@@ -179,10 +181,9 @@ export async function resolveZipSink(options?: {
   serviceWorkerUrl?: string
   serviceWorkerScope?: string
 }): Promise<ZipSink> {
-  if (!options?.serviceWorkerUrl) return createBlobSink()
   const streaming = await createServiceWorkerSink({
-    url: options.serviceWorkerUrl,
-    scope: options.serviceWorkerScope
+    url: options?.serviceWorkerUrl ?? DEFAULT_ZIP_SERVICE_WORKER_URL,
+    scope: options?.serviceWorkerScope
   })
   return streaming ?? createBlobSink()
 }

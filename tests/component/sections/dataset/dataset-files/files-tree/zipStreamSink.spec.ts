@@ -12,13 +12,6 @@ const streamOf = (text: string) =>
   })
 
 describe('resolveZipSink', () => {
-  it('uses the buffered sink when no service worker is configured', () => {
-    cy.then(async () => {
-      const sink = await resolveZipSink()
-      expect(sink.streaming).to.equal(false)
-    })
-  })
-
   it('falls back to the buffered sink when the service worker cannot be registered', () => {
     cy.then(async () => {
       const sink = await resolveZipSink({ serviceWorkerUrl: '/no-such-worker-here.js' })

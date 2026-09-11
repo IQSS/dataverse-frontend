@@ -180,6 +180,7 @@ async function init(opts: { fromObserver?: boolean } = {}) {
           buildFileMetadataUrl={buildFileMetadataUrl}
           downloadFetchInit={downloadFetchInit}
           buildDownloadUrl={(file) => new URL(file.downloadUrl, config.siteUrl).href}
+          zipServiceWorkerUrl={config.zipServiceWorkerUrl}
         />
       </div>
     </StrictMode>

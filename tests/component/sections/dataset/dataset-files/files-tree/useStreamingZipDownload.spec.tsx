@@ -6,6 +6,10 @@ import {
 } from '../../../../../../src/sections/dataset/dataset-files/files-tree/useStreamingZipDownload'
 import { FilesTreeDownloadTray } from '../../../../../../src/sections/dataset/dataset-files/files-tree/FilesTreeDownloadTray'
 import { FileTreeFile } from '../../../../../../src/files/domain/models/FileTreeItem'
+import {
+  ZipSink,
+  createBlobSink
+} from '../../../../../../src/sections/dataset/dataset-files/files-tree/zipStreamSink'
 import { FileTreeFileMother } from '../../../../files/domain/models/FileTreeItemMother'
 
 /**
@@ -19,13 +23,19 @@ function StreamingZipHarness({
   strategy,
   partSize,
   partRetries = 0,
-  fetchInit
+  fetchInit,
+  sink
 }: {
   files: FileTreeFile[]
   zipName?: string
   strategy?: 'pause' | 'skip' | 'twopass'
   partSize?: number
   fetchInit?: RequestInit | (() => RequestInit | undefined)
+  /**
+   * Defaults to the buffered sink so the specs assert on the download
+   * anchor. Tests for the streaming path inject their own.
+   */
+  sink?: ZipSink
   /**
    * Defaults to 0 so the existing pause-on-fail tests still see a
    * single attempt per file. Tests that exercise the auto-retry path
@@ -48,6 +58,7 @@ function StreamingZipHarness({
             partSize,
             partRetries,
             fetchInit,
+            sink: sink ?? createBlobSink(),
             // 0ms backoff keeps the retry-exhaustion paths snappy.
             partRetryDelayMs: 0
           })
@@ -1715,6 +1726,84 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/Skip all remaining failures/i).click()
     // Both broken-* files end up skipped → manifest line in the title.
     cy.contains(/Download complete — 2 skipped/i).should('exist')
+  })
+
+  it('refuses a selection over the cap before fetching anything', () => {
+    const threeGb = 3 * 1024 * 1024 * 1024
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'huge.bin',
+        path: 'huge.bin',
+        size: threeGb,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="huge.zip" partRetries={0} />)
+
+    let fetches = 0
+    installFetchHandler(() => {
+      fetches += 1
+      return Promise.reject(new Error('should not have fetched'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/too large for this browser/i).should('exist')
+    cy.get('@anchorClick').should('not.have.been.called')
+    cy.then(() => {
+      expect(fetches, 'no bytes were requested').to.equal(0)
+    })
+  })
+
+  it('pipes the zip into a streaming sink without ever materialising a blob', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    const received: Uint8Array[] = []
+    let sawStream = false
+    const streamingSink = {
+      streaming: true,
+      save: async ({ body }: { name: string; body: ReadableStream<Uint8Array> }) => {
+        sawStream = body instanceof ReadableStream
+        const reader = body.getReader()
+        for (;;) {
+          const { value, done } = await reader.read()
+          if (done) break
+          if (value) received.push(value)
+        }
+      }
+    }
+
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        zipName="streamed.zip"
+        partSize={4}
+        partRetries={0}
+        sink={streamingSink}
+      />
+    )
+    captureObjectUrls()
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.get('@anchorClick').should('not.have.been.called')
+    cy.then(() => {
+      expect(sawStream, 'sink was handed a ReadableStream').to.equal(true)
+      expect(received.length, 'zip arrived in more than one chunk').to.be.greaterThan(1)
+      const total = received.reduce((n, c) => n + c.byteLength, 0)
+      const zip = new Uint8Array(total)
+      let at = 0
+      for (const chunk of received) {
+        zip.set(chunk, at)
+        at += chunk.byteLength
+      }
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+    })
   })
 })
 
