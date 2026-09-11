@@ -537,6 +537,9 @@ export function initForUrl(
   return { ...init, headers }
 }
 
+const UNREADABLE_STORAGE_ERROR =
+  'storage did not return a readable response, even with a fresh link'
+
 async function fetchPartWithRefresh(args: {
   cachedUrl: string
   originalUrl: string
@@ -544,20 +547,9 @@ async function fetchPartWithRefresh(args: {
   fetchInit: FetchInitProvider
   retries: number
   delayMs: number
+  forceRefresh: boolean
 }): Promise<{ response: Response; refreshedUrl: string | null }> {
-  try {
-    const response = await fetchWithRetries({
-      url: args.cachedUrl,
-      rangeHeader: args.rangeHeader,
-      fetchInit: () => initForUrl(args.cachedUrl, args.originalUrl, args.fetchInit()),
-      retries: args.retries,
-      delayMs: args.delayMs
-    })
-    return { response, refreshedUrl: null }
-  } catch (err) {
-    if (!(err instanceof HttpError) || err.status !== 403) {
-      throw err
-    }
+  const refresh = async (): Promise<{ response: Response; refreshedUrl: string }> => {
     const refreshUrl = appendQueryParam(args.originalUrl, 'gbrecs', 'true')
     const refreshed = await fetchWithRetries({
       url: refreshUrl,
@@ -571,6 +563,30 @@ async function fetchPartWithRefresh(args: {
         ? /* istanbul ignore next */ refreshed.url
         : refreshUrl
     return { response: refreshed, refreshedUrl: newUrl }
+  }
+
+  if (args.forceRefresh) {
+    try {
+      return await refresh()
+    } catch (err) {
+      throw err instanceof HttpError ? err : new Error(UNREADABLE_STORAGE_ERROR)
+    }
+  }
+
+  try {
+    const response = await fetchWithRetries({
+      url: args.cachedUrl,
+      rangeHeader: args.rangeHeader,
+      fetchInit: () => initForUrl(args.cachedUrl, args.originalUrl, args.fetchInit()),
+      retries: args.retries,
+      delayMs: args.delayMs
+    })
+    return { response, refreshedUrl: null }
+  } catch (err) {
+    if (!(err instanceof HttpError) || err.status !== 403) {
+      throw err
+    }
+    return refresh()
   }
 }
 
@@ -639,6 +655,7 @@ function buildChunkedStream(args: {
   let currentReader: ReadableStreamDefaultReader<Uint8Array> | null = initialBody.getReader()
   let delivered = 0
   let fetchedUpTo = usedRange ? Math.min(args.partSize, total) : total
+  let staleUrl = false
 
   const expectedChecksum = args.file.checksum
   const digest = expectedChecksum ? makeDigestAccumulator(expectedChecksum.type) : null
@@ -663,8 +680,10 @@ function buildChunkedStream(args: {
       rangeHeader: `bytes=${delivered}-${end}`,
       fetchInit: args.fetchInit,
       retries: args.partRetries,
-      delayMs: args.partRetryDelayMs
+      delayMs: args.partRetryDelayMs,
+      forceRefresh: staleUrl
     })
+    staleUrl = false
     if (result.refreshedUrl) {
       subsequentUrl = result.refreshedUrl
     }
@@ -681,6 +700,9 @@ function buildChunkedStream(args: {
     const message = err instanceof Error ? err.message : String(err)
     if (!usedRange && delivered > 0) {
       return false
+    }
+    if (!(err instanceof HttpError)) {
+      staleUrl = true
     }
     const decision = await args.onEntryFailure(message)
     return decision === 'retry'

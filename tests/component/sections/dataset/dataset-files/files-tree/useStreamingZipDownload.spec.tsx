@@ -1000,6 +1000,135 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/download complete/i, { timeout: 5_000 }).should('not.exist')
   })
 
+  it('re-presigns on retry when a part fails without a readable status', () => {
+    const total = 12
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'opaque.bin',
+        path: 'opaque.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="opaque.zip" partSize={4} partRetries={0} />
+    )
+
+    let refreshHits = 0
+    installFetchHandler((input, init) => {
+      const url = String(input)
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const slice = (start: number, end: number) =>
+        new Response(new TextEncoder().encode('ABCDEFGHIJKL'.slice(start, end + 1)), {
+          status: 206,
+          statusText: 'Partial Content',
+          headers: {
+            'content-type': 'application/octet-stream',
+            'content-range': `bytes ${start}-${end}/${total}`
+          }
+        })
+
+      if (url.includes('gbrecs=true')) {
+        refreshHits += 1
+        const parsed = /^bytes=(\d+)-(\d+)$/.exec(range) as RegExpExecArray
+        return Promise.resolve(slice(Number(parsed[1]), Number(parsed[2])))
+      }
+      if (range === 'bytes=0-3') {
+        return Promise.resolve(slice(0, 3))
+      }
+      return Promise.reject(new TypeError('Failed to fetch'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /retry this file/i }).click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(refreshHits).to.equal(2)
+    })
+  })
+
+  it('reports an unreadable storage response when the fresh link also fails', () => {
+    const total = 8
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'blocked.bin',
+        path: 'blocked.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="blocked.zip" partSize={4} partRetries={0} />
+    )
+
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      if (range === 'bytes=0-3') {
+        return Promise.resolve(
+          new Response(new TextEncoder().encode('ABCD'), {
+            status: 206,
+            statusText: 'Partial Content',
+            headers: {
+              'content-type': 'application/octet-stream',
+              'content-range': `bytes 0-3/${total}`
+            }
+          })
+        )
+      }
+      return Promise.reject(new TypeError('Failed to fetch'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /retry this file/i }).click()
+    cy.findByTestId('files-tree-download-tray-failure').should('contain.text', 'fresh link')
+  })
+
+  it('keeps the HTTP status when the fresh link is genuinely denied', () => {
+    const total = 8
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'denied.bin',
+        path: 'denied.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="denied.zip" partSize={4} partRetries={0} />
+    )
+
+    installFetchHandler((input, init) => {
+      const url = String(input)
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      if (url.includes('gbrecs=true')) {
+        return Promise.resolve(new Response('denied', { status: 403, statusText: 'Forbidden' }))
+      }
+      if (range === 'bytes=0-3') {
+        return Promise.resolve(
+          new Response(new TextEncoder().encode('ABCD'), {
+            status: 206,
+            statusText: 'Partial Content',
+            headers: {
+              'content-type': 'application/octet-stream',
+              'content-range': `bytes 0-3/${total}`
+            }
+          })
+        )
+      }
+      return Promise.reject(new TypeError('Failed to fetch'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /retry this file/i }).click()
+    cy.findByTestId('files-tree-download-tray-failure').should('contain.text', 'HTTP 403')
+  })
+
   it('verifies the MD5 checksum and finishes silently when it matches', () => {
     // Bytes "hello" have a well-known MD5 digest; we make the tree row
     // advertise that digest. After download the engine should have
