@@ -3,7 +3,7 @@ import { Semaphore } from 'async-mutex'
 import { uploadFile } from '@/files/domain/useCases/uploadFile'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 import { FileUploaderHelper } from './FileUploaderHelper'
-import { FileUploadStatus } from './useFileUploadState'
+import { FileUploadStatus } from './context/fileUploaderReducer'
 import { UploaderFileRepository } from './types'
 
 export const CONCURRENT_UPLOADS_LIMIT = 6
@@ -66,12 +66,8 @@ export function useFileUploadOperations(config: FileUploadOperationsConfig): Fil
       const fileKey = FileUploaderHelper.getFileKey(file)
 
       try {
-        if (checksumAlgorithm === FixityAlgorithm.NONE) {
-          updateFile(fileKey, { checksumValue: '' })
-        } else {
-          const checksumValue = await FileUploaderHelper.getChecksum(file, checksumAlgorithm)
-          updateFile(fileKey, { checksumValue })
-        }
+        const checksumValue = await FileUploaderHelper.getChecksum(file, checksumAlgorithm)
+        updateFile(fileKey, { checksumValue })
       } finally {
         removeUploadingToCancel(fileKey)
         semaphoreRef.current.release(1)

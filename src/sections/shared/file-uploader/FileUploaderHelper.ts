@@ -46,9 +46,7 @@ export class FileUploaderHelper {
   }
 
   public static async getChecksum(blob: Blob, algorithm: FixityAlgorithm): Promise<string> {
-    if (algorithm === FixityAlgorithm.NONE) {
-      return ''
-    } else if (algorithm === FixityAlgorithm.MD5) {
+    if (algorithm === FixityAlgorithm.MD5) {
       return await this.getMD5Checksum(blob)
     } else {
       return await this.getSubtleDigestChecksum(blob, algorithm)

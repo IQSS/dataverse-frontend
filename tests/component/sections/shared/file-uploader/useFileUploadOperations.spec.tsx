@@ -4,7 +4,7 @@ import {
   FileUploadOperationsConfig,
   CONCURRENT_UPLOADS_LIMIT
 } from '@/sections/shared/file-uploader/useFileUploadOperations'
-import { FileUploadStatus } from '@/sections/shared/file-uploader/useFileUploadState'
+import { FileUploadStatus } from '@/sections/shared/file-uploader/context/fileUploaderReducer'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
@@ -131,40 +131,6 @@ describe('useFileUploadOperations', () => {
       const [key, cancelFn] = addUploadingToCancel.firstCall.args as [string, () => void]
       expect(key).to.be.a('string')
       expect(cancelFn).to.be.a('function')
-    })
-
-    it('should set an empty checksum when checksum calculation is disabled', async () => {
-      const updateFile = cy.stub()
-      const fileRepository = {
-        uploadFile: cy
-          .stub()
-          .callsFake(
-            (
-              _datasetId: string,
-              _fileHolder: { file: File },
-              _progress: (now: number) => void,
-              _abortController: AbortController,
-              getStorageId: (storageId: string) => void
-            ) => {
-              getStorageId('storage-1')
-              return Promise.resolve()
-            }
-          )
-      } as unknown as FileRepository
-      const config = createConfig({
-        fileRepository,
-        checksumAlgorithm: FixityAlgorithm.NONE,
-        updateFile
-      })
-
-      const { result } = renderHook(() => useFileUploadOperations(config))
-
-      await act(async () => {
-        await result.current.uploadOneFile(createMockFile('test.txt'))
-        await new Promise((resolve) => setTimeout(resolve, 0))
-      })
-
-      expect(updateFile).to.have.been.calledWith('test.txt', { checksumValue: '' })
     })
 
     it('should run validateBeforeUpload if provided', async () => {

@@ -6,7 +6,6 @@ export interface DvUploaderConfig {
   locale?: string
   localesPath?: string
   rootElementId?: string
-  disableMD5Checksum?: boolean
 }
 
 declare global {

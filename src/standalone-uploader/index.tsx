@@ -11,7 +11,6 @@ import { FileUploaderGlobalConfig } from '@/sections/shared/file-uploader/contex
 import { OperationType, StorageType } from '@/sections/shared/file-uploader/FileUploader'
 import { LoadingConfigSpinner } from '@/sections/shared/file-uploader/loading-config-spinner/LoadingConfigSpinner'
 import { useGetFixityAlgorithm } from '@/sections/shared/file-uploader/useGetFixityAlgorithm'
-import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 import { mountInShadowRoot, unmountQuietly } from '../standalone-shared/shadow-mount'
 import { configureSdkAuth } from '../standalone-shared/auth'
 
@@ -23,19 +22,10 @@ interface WrapperProps {
   fileRepository: StandaloneFileRepository
   datasetPersistentId: string
   siteUrl: string
-  disableMD5Checksum?: boolean
 }
 
-function UploaderWrapper({
-  fileRepository,
-  datasetPersistentId,
-  siteUrl,
-  disableMD5Checksum
-}: WrapperProps) {
-  const { fixityAlgorithm: fetchedAlgorithm, isLoadingFixityAlgorithm } =
-    useGetFixityAlgorithm(fileRepository)
-
-  const fixityAlgorithm = disableMD5Checksum ? FixityAlgorithm.NONE : fetchedAlgorithm
+function UploaderWrapper({ fileRepository, datasetPersistentId, siteUrl }: WrapperProps) {
+  const { fixityAlgorithm, isLoadingFixityAlgorithm } = useGetFixityAlgorithm(fileRepository)
 
   if (isLoadingFixityAlgorithm) {
     return <LoadingConfigSpinner />
@@ -167,7 +157,6 @@ async function init(opts: { fromObserver?: boolean } = {}) {
           fileRepository={fileRepository}
           datasetPersistentId={config.datasetPid}
           siteUrl={config.siteUrl}
-          disableMD5Checksum={config.disableMD5Checksum}
         />
       </div>
     </StrictMode>

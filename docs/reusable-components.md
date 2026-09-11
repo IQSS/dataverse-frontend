@@ -272,7 +272,6 @@ interface DvUploaderConfig {
   locale?: string // default 'en'
   localesPath?: string // default: `locales/{{lng}}/{{ns}}.json` relative to the bundle URL
   rootElementId?: string // default 'dv-uploader'
-  disableMD5Checksum?: boolean
 }
 ```
 
@@ -305,7 +304,7 @@ The tree view ships:
 - Visible-row virtualisation; no `react-virtual` / `react-window` dep.
 - Full WAI-ARIA tree keyboard navigation (`ArrowUp/Down/Left/Right`, `Home/End`, `Space`, `Enter`).
 - URL bookmarkability: `?view=tree&path=<folder>` round-trips and pre-fetches every ancestor on mount.
-- **Client-side streaming-zip download.** Multi-file selections are zipped in the browser via [`client-zip`](https://github.com/Touffy/client-zip) (~3 KB gzip, the only new dep introduced by the tree). A bottom-sheet tray (`FilesTreeDownloadTray`) shows progress, the file currently being added, and surfaces an inline **Retry / Skip / Skip & retry at end / Skip all** decision row when a fetch fails. _Skip & retry at end_ converts the run into a two-pass flow mid-flight (failures accumulate as recoverable, then the tray prompts to retry them at the end). _Skip all_ switches to skip-with-manifest and writes a `manifest.txt` listing the failures into the root of the zip. Single-file downloads bypass the zip wrap and anchor-click `file.downloadUrl` directly. **No server contract changes.** Per-file fetches use `credentials: 'same-origin'` (not `'include'`) so the browser drops cookies on the cross-origin S3 hop after a `download-redirect=true` 302 — including credentials there would force `Access-Control-Allow-Credentials: true` on every S3 response and break against `Allow-Origin: *` rules.
+- **Client-side streaming-zip download.** Multi-file selections are zipped in the browser via [`client-zip`](https://github.com/Touffy/client-zip) (~3 KB gzip, the only new dep introduced by the tree). A centred tray (`FilesTreeDownloadTray`) shows progress, the file currently being added, and surfaces an inline **Retry / Skip / Skip & retry at end / Skip all** decision row when a fetch fails. _Skip & retry at end_ converts the run into a two-pass flow mid-flight (failures accumulate as recoverable, then the tray prompts to retry them at the end). _Skip all_ switches to skip-with-manifest and writes a `manifest.txt` listing the failures into the root of the zip. Every download from the tree, a single file included, goes through the engine so it gets the same Range-part resilience and progress. **No server contract changes.** Per-file fetches use `credentials: 'same-origin'` (not `'include'`) so the browser drops cookies on the cross-origin S3 hop after a `download-redirect=true` 302 — including credentials there would force `Access-Control-Allow-Credentials: true` on every S3 response and break against `Allow-Origin: *` rules.
 - **Header select-all checkbox.** Tristate (none / partial / all). Selects every top-level item when nothing is selected, clears everything otherwise.
 
 ## Testing reusable components

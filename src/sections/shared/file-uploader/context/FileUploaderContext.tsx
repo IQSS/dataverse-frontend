@@ -9,7 +9,6 @@ import {
   ReplaceOperationInfo,
   AddFilesToDatasetOperationInfo
 } from './fileUploaderReducer'
-import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 
 export interface FileUploaderContextValue {
   fileUploaderState: FileUploaderState
@@ -91,7 +90,7 @@ export const FileUploaderProvider = ({ children, initialConfig }: FileUploaderPr
         (file): file is FileUploadState & { storageId: string; checksumValue: string } =>
           file.status === FileUploadStatus.DONE &&
           !!file.storageId &&
-          (file.checksumAlgorithm === FixityAlgorithm.NONE || file.checksumValue !== undefined)
+          file.checksumValue !== undefined
       ),
     [fileUploaderState.files]
   )
