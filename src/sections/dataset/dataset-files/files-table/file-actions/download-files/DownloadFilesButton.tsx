@@ -93,7 +93,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   }
 
   const driver = dataset?.storageDriver
-  if (!driver || driver.type !== 's3' || !driver.directDownload) {
+  if (driver?.type !== 's3') {
     return <></>
   }
 

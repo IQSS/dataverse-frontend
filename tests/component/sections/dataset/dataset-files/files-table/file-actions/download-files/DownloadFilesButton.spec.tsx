@@ -766,6 +766,27 @@ describe('DownloadFilesButton', () => {
     cy.get('#download-files').should('not.exist')
   })
 
+  it('renders for an S3 store without download redirect, since the zip is served by the access API', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      storageDriver: {
+        name: 'minio1',
+        type: 's3',
+        label: 'MinIO',
+        directUpload: false,
+        directDownload: false
+      }
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
+    })
+    cy.mountAuthenticated(
+      withDataset(<DownloadFilesButton files={files} fileSelection={{}} />, dataset)
+    )
+
+    cy.get('#download-files').should('exist')
+  })
+
   it('does not render the AccessDatasetMenu if the dataset is in draft status', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
