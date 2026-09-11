@@ -10,6 +10,8 @@ import {
   GetFileTreeNodeParams
 } from '../../domain/repositories/FileTreeRepository'
 import { FileRepository } from '../../domain/repositories/FileRepository'
+
+export type FilePreviewSource = Pick<FileRepository, 'getAllByDatasetPersistentIdWithCount'>
 import { FilePreview } from '../../domain/models/FilePreview'
 import { FilePaginationInfo } from '../../domain/models/FilePaginationInfo'
 import { FileCriteria } from '../../domain/models/FileCriteria'
@@ -21,7 +23,7 @@ export class FileTreeFromPreviewsRepository implements FileTreeRepository {
   private cache = new Map<string, FilePreview[]>()
 
   constructor(
-    private readonly fileRepository: FileRepository,
+    private readonly fileRepository: FilePreviewSource,
     private readonly accessApiBase: string = '/api/access/datafile'
   ) {}
 

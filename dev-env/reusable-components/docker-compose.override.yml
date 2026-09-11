@@ -10,4 +10,4 @@ services:
   dev_nginx:
     volumes:
       - ./reusable-components/nginx.conf:/etc/nginx/nginx.conf
-      - ../dist-reusable-components/reusable-components:/usr/share/nginx/html/reusable-components:ro
+      - ../dist-reusable-components:/usr/share/nginx/html/dist:ro

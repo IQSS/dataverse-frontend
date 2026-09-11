@@ -4,15 +4,14 @@ import {
   GetFileTreeNodeParams
 } from '../../domain/repositories/FileTreeRepository'
 import { FileTreePage } from '../../domain/models/FileTreePage'
-import { FileTreeFromPreviewsRepository } from './FileTreeFromPreviewsRepository'
-import { FileRepository } from '../../domain/repositories/FileRepository'
+import { FilePreviewSource, FileTreeFromPreviewsRepository } from './FileTreeFromPreviewsRepository'
 import { JSFileTreeMapper } from '../mappers/JSFileTreeMapper'
 
 export class FileTreeJSDataverseRepository implements FileTreeRepository {
   private fallback?: FileTreeFromPreviewsRepository
   private endpointUnavailable = false
 
-  constructor(private readonly fileRepository?: FileRepository) {}
+  constructor(private readonly fileRepository?: FilePreviewSource) {}
 
   async getNode(params: GetFileTreeNodeParams): Promise<FileTreePage> {
     if (this.endpointUnavailable && this.fallback) {
