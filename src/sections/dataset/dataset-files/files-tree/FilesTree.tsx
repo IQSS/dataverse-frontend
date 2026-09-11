@@ -41,30 +41,10 @@ interface FilesTreeProps {
   order?: FileTreeOrder
   rowHeight?: number
   fallbackHeight?: number
-  /**
-   * Folder path to expand on mount (e.g. read from a `?path=` URL query
-   * param). All ancestors along the path are expanded.
-   */
   initialPath?: string
-  /**
-   * Called with the deepest currently-expanded folder path whenever the
-   * expansion changes. The host can sync this to the URL for deep
-   * linking. Empty string means only the root is expanded.
-   */
   onCurrentPathChange?: (path: string) => void
-  /** Filename link builder; a plain anchor when set (JSF embeds), the SPA `<Link>` when omitted. */
   buildFileMetadataUrl?: (file: FileTreeFile) => string
-  /**
-   * Disables every download action. The SPA sets it when a guestbook or
-   * terms acknowledgement is required, since that modal is not wired into
-   * the tree yet; JSF mounts gate on their own side.
-   */
   downloadsDisabled?: boolean
-  /**
-   * Fetch options for the zip engine's direct `downloadUrl` requests, which
-   * bypass the SDK's auth. Bearer-token embeds must supply their header
-   * here. A getter so it is re-read per request, not once per run.
-   */
   downloadFetchInit?: () => RequestInit | undefined
 }
 
@@ -110,8 +90,6 @@ export function FilesTree({
   const streamingZip = useStreamingZipDownload()
   const [trayOpen, setTrayOpen] = useState(false)
 
-  // Auto-close the tray when the engine returns to idle (after the user
-  // dismisses a finished/cancelled run via the close button).
   useEffect(() => {
     if (streamingZip.state.status === 'idle') {
       setTrayOpen(false)
@@ -124,11 +102,7 @@ export function FilesTree({
       if (files.length === 0) {
         return
       }
-      // Every download, even a single file, goes through the zip engine so it
-      // gets the same Range/retry resilience and progress UX.
       const zipName = `${datasetPersistentId.replace(/[^a-zA-Z0-9._-]+/g, '_')}-files.zip`
-      // Hand over the factory, not its result: the engine re-reads it per
-      // request so a token that expires mid-zip is picked up on the next part.
       streamingZip.start({ files, zipName, fetchInit: downloadFetchInit })
       setTrayOpen(true)
     },
@@ -198,11 +172,6 @@ export function FilesTree({
     setScrollTop(event.currentTarget.scrollTop)
   }
 
-  // Infinite scroll: a visible "load-more" row triggers loadMore. Folders in
-  // the error state are skipped or the error write would re-trigger this
-  // effect and loop; retrying is the button's job. A "loading" row with no
-  // node entry is a folder the filter force-opened, which nothing else
-  // fetches, so it is serviced here too.
   useEffect(() => {
     for (const row of slice) {
       if (row.kind === 'load-more') {
@@ -214,9 +183,6 @@ export function FilesTree({
         void tree.ensureLoaded(row.path)
       }
     }
-    // Depending on `slice` alone is deliberate: tree.nodes/loadMore get new
-    // identities on every page write, and re-running on those would fire
-    // duplicate loadMore calls for rows the guard has already dispatched.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slice])
 
@@ -249,7 +215,6 @@ export function FilesTree({
     [selection]
   )
 
-  // ---------- Keyboard navigation (WAI-ARIA tree pattern) ----------
   const itemRowIndices = useMemo(() => {
     const out: number[] = []
     for (let i = 0; i < visibleRows.length; i++) {
@@ -260,8 +225,6 @@ export function FilesTree({
 
   const [focusedRowIndex, setFocusedRowIndex] = useState<number>(-1)
 
-  // Reset / clamp focus when the visible rows change so we never point at a
-  // removed row. Default focus is the first item row.
   useEffect(() => {
     if (itemRowIndices.length === 0) {
       setFocusedRowIndex(-1)
@@ -272,7 +235,6 @@ export function FilesTree({
     }
   }, [itemRowIndices, focusedRowIndex])
 
-  // Auto-scroll the focused row into view after focus changes.
   useEffect(() => {
     if (focusedRowIndex < 0) return
     const el = containerRef.current
@@ -288,10 +250,6 @@ export function FilesTree({
     }
   }, [focusedRowIndex, rowHeight])
 
-  // Move DOM focus with the roving tabindex, but only when the tree already
-  // owns focus, so mounting never steals it. The active element is read via
-  // `getRootNode()` because inside a Shadow DOM mount `document.activeElement`
-  // is the shadow host, which would make the tree look unfocused forever.
   useEffect(() => {
     if (focusedRowIndex < 0) return
     const el = containerRef.current
@@ -399,8 +357,6 @@ export function FilesTree({
             event.preventDefault()
             void handleToggleExpansion(item)
           }
-          // For files, let the default Enter behavior activate the
-          // filename anchor inside the row (browser handles it).
           return
         default:
           return
@@ -418,10 +374,6 @@ export function FilesTree({
     ]
   )
 
-  // Header select-all state: a plain per-render computation (cheap, no
-  // hook), so it is safe above the early returns without affecting the
-  // hook count when the component swaps between loading / error /
-  // empty / loaded states.
   const headerSelectAllState: SelectionState = (() => {
     const totalCount = selection.totals.count
     const hasFolders = selection.totals.hasLogicalFolders
@@ -619,10 +571,6 @@ export function FilesTree({
                   }
                 }}
                 onDownload={
-                  // Also gated on an active zip run: the engine is a
-                  // single instance, and a second start() would race
-                  // the first (shared cancelledRef/decisionRef, two
-                  // anchor clicks) — same condition the toolbar uses.
                   downloadsDisabled ||
                   streamingZipActive ||
                   download.progress.status === 'enumerating' ||
@@ -745,9 +693,6 @@ interface RowMessageProps {
 }
 
 function RowMessage({ top, height, depth, className, children }: RowMessageProps) {
-  // 14 row padding + 28 select column + 8 column gap + depth indent +
-  // 22 (twisty 18 + 4 gap) so the message text aligns with where a
-  // row's label would start.
   const indent: CSSProperties = {
     paddingLeft: 14 + 28 + 8 + depth * 18 + 22,
     top,

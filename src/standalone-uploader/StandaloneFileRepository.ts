@@ -46,7 +46,6 @@ export class StandaloneFileRepository implements UploaderFileRepository {
       const data = (await response.json()) as { data?: { message?: string } }
       const algorithm: string = data?.data?.message || 'MD5'
 
-      // Map the string to FixityAlgorithm enum
       switch (algorithm.toUpperCase()) {
         case 'MD5':
           return FixityAlgorithm.MD5

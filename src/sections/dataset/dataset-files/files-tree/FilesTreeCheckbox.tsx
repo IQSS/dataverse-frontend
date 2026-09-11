@@ -22,11 +22,6 @@ export function FilesTreeCheckbox({ state, onToggle, label, testId }: FilesTreeC
       onToggle()
     }
   }
-  // Inside a tree row we follow the WAI-ARIA tree pattern: only the
-  // focused row participates in the page tab order (roving tabindex on
-  // the row itself), and Space on that row toggles selection. The
-  // checkbox handles mouse / keyboard activation when focused but is
-  // skipped on Tab so the user doesn't have to tab through every row.
   return (
     <span
       role="checkbox"

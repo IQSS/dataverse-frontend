@@ -12,7 +12,6 @@ import { FileUploader, OperationType } from '../shared/file-uploader/FileUploade
 import { ReplaceFileReferrer } from './ReplaceFileReferrer'
 import styles from './ReplaceFile.module.scss'
 
-// Re-export for backwards compatibility
 export { ReplaceFileReferrer } from './ReplaceFileReferrer'
 
 interface ReplaceFileProps {

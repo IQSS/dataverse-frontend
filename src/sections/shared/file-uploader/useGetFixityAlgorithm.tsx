@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 
-/** Minimal interface for fixity algorithm fetching */
 type FixityAlgorithmProvider = Pick<FileRepository, 'getFixityAlgorithm'>
 
 export const useGetFixityAlgorithm = (fileRepository: FixityAlgorithmProvider) => {

@@ -27,7 +27,6 @@ export class DatasetLabel {
   ) {}
 }
 
-/** Mirrors `GET /api/datasets/{id}/storageDriver`; gates direct upload/download by capability, not driver id. */
 export interface DatasetStorageDriver {
   name: string
   type: string

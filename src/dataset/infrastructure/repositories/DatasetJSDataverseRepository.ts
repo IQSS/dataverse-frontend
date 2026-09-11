@@ -459,10 +459,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .then((driver) =>
         driver
           ? {
-              // The SDK model leaves these optional; the SPA's
-              // DatasetStorageDriver keeps them required so capability
-              // checks stay simple — default the blanks here, at the
-              // boundary.
               name: driver.name ?? '',
               type: driver.type ?? '',
               label: driver.label ?? '',

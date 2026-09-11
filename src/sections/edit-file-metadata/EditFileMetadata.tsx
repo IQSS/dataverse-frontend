@@ -15,7 +15,6 @@ import { useFile } from '@/sections/file/useFile'
 import { EditFileMetadataReferrer } from './EditFileMetadataReferrer'
 import styles from './EditFileMetadata.module.scss'
 
-// Re-export for backwards compatibility
 export { EditFileMetadataReferrer } from './EditFileMetadataReferrer'
 
 interface EditFileMetadataProps {

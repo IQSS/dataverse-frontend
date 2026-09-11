@@ -120,10 +120,6 @@ $indent-step: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  // The dedicated column gives the checkbox visual weight and signals
-  // that selection is a first-class action. The narrow width keeps the
-  // name column long; padding-right balances the gap with the twisty.
 }
 
 .row:hover {
@@ -132,9 +128,6 @@ $indent-step: 18px;
 
 .row:focus-visible {
   outline: none;
-
-  // Inset ring works around the absolute-positioned row clipping a
-  // standard outline against neighbouring rows.
   box-shadow: inset 0 0 0 2px var(--bs-primary, #0d6efd);
   background-color: rgb(13 110 253 / 4%);
   z-index: 1;
@@ -305,13 +298,6 @@ $indent-step: 18px;
 .checkbox {
   width: 16px;
   height: 16px;
-
-  // Hardcoded fallbacks because the standalone bundle is rendered into
-  // a Shadow DOM hosted by JSF pages that don't always define the full
-  // Bootstrap-5 --bs-* custom property set. Without fallbacks the
-  // border resolves to `1px solid` (invalid → invisible) and the
-  // checked-state background falls back to transparent — the user sees
-  // a white-on-white checkbox with no border.
   border: 1px solid var(--bs-border-color, #c4c8cc);
   border-radius: 2px;
   background-color: var(--bs-white, #fff);

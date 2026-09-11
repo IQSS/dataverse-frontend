@@ -98,13 +98,6 @@ export function useGuestbookRepositories() {
   return { guestbookRepository }
 }
 
-/**
- * Non-throwing variant for dual-mode components that render both inside
- * the SPA (provider present) and inside the standalone JSF bundles
- * (no provider). Returns undefined when no provider is mounted, which
- * consumers treat as "capability unavailable" (e.g. upload limits are
- * simply not fetched).
- */
 export function useOptionalDatasetRepository(): DatasetRepository | undefined {
   return useContext(RepositoriesContext)?.datasetRepository
 }

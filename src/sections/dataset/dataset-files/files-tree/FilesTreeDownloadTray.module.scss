@@ -63,12 +63,6 @@
   margin-top: 2px;
 }
 
-// Dedicated close button. Sized larger than Bootstrap's default
-// `Button size="sm"` so the × is comfortably clickable in the
-// JSF-embedded tray (where the host page's font-size cascade does
-// not reach into the shadow DOM and the link-variant button would
-// otherwise read as a tiny x). Square hit-target with a clear hover
-// state.
 .close-btn {
   flex: 0 0 auto;
   width: 32px;

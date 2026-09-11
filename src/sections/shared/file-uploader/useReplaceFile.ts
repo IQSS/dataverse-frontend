@@ -12,7 +12,6 @@ interface UseReplaceFileReturn {
   submitReplaceFile: (originalFileID: number, file: UploadedFile) => Promise<void>
 }
 
-/** Type guard to check if repository supports replace */
 function hasReplaceMethod(repo: UploaderFileRepository): repo is FullUploaderFileRepository {
   return 'replace' in repo && typeof repo.replace === 'function'
 }
@@ -22,7 +21,6 @@ export const useReplaceFile = (fileRepository: UploaderFileRepository): UseRepla
   const { t } = useTranslation('shared')
 
   const submitReplaceFile = async (originalFileID: number, newFileInfo: UploadedFile) => {
-    // Check if replace is supported
     if (!hasReplaceMethod(fileRepository)) {
       toast.error('File replacement is not supported in standalone mode')
       return
@@ -49,11 +47,6 @@ export const useReplaceFile = (fileRepository: UploaderFileRepository): UseRepla
       removeAllFiles()
       setReplaceOperationInfo({ success: true, newFileIdentifier })
     } catch (err: unknown) {
-      // Only treat as a JSDataverse WriteError when the error actually
-      // is one — falling back to the default toast for any other thrown
-      // value. The previous structural duck-type check (`reason ||
-      // message`) caught plain `Error` instances too and printed their
-      // message instead of the user-friendly default.
       if (err instanceof WriteError) {
         const error = new JSDataverseWriteErrorHandler(err)
         const formattedError =

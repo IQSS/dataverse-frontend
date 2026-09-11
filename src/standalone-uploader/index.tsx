@@ -12,12 +12,10 @@ import { OperationType, StorageType } from '@/sections/shared/file-uploader/File
 import { LoadingConfigSpinner } from '@/sections/shared/file-uploader/loading-config-spinner/LoadingConfigSpinner'
 import { useGetFixityAlgorithm } from '@/sections/shared/file-uploader/useGetFixityAlgorithm'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
-import { mountInShadowRoot } from '../standalone-shared/shadow-mount'
+import { mountInShadowRoot, unmountQuietly } from '../standalone-shared/shadow-mount'
 import { configureSdkAuth } from '../standalone-shared/auth'
 
 import '../../packages/design-system/dist/style.css'
-// No Bootstrap base CSS: the host page owns the global cascade. Component
-// styles are CSS Modules with inline fallbacks for every `var(--bs-*)`.
 import 'react-toastify/dist/ReactToastify.css'
 import './standalone.scss'
 
@@ -60,8 +58,6 @@ function UploaderWrapper({
   )
 }
 
-// Re-mount bookkeeping for PrimeFaces partial updates; same scheme as the
-// tree-view bundle, explained there.
 let mountedHostElement: HTMLElement | null = null
 let mountedReactRoot: Root | null = null
 let i18nReady: Promise<void> | null = null
@@ -73,19 +69,9 @@ async function init(opts: { fromObserver?: boolean } = {}) {
   const hostElement = document.getElementById(rootElementId)
   if (!hostElement) return
   if (hostElement === mountedHostElement && mountedReactRoot) return
-  // Same race guard as the tree-view bundle: when init() runs from a
-  // MutationObserver tick the inline config <script> in the same JSF
-  // partial-update batch may not have executed yet. Returning silently
-  // lets the next mutation re-run init() with config populated, instead
-  // of rendering a misleading "missing config" error UI.
   if (opts.fromObserver && !config) return
   if (mountedReactRoot) {
-    try {
-      mountedReactRoot.unmount()
-    } catch {
-      // Previous host already detached; React's commit-phase teardown
-      // throws but we're discarding the reference anyway.
-    }
+    unmountQuietly(mountedReactRoot)
     mountedReactRoot = null
   }
 
@@ -101,8 +87,6 @@ async function init(opts: { fromObserver?: boolean } = {}) {
   mountedHostElement = hostElement
   mountedReactRoot = root
 
-  // The two config errors below are deliberately untranslated and render
-  // before i18n init; see the tree-view entry for why.
   const missingFields: string[] = []
   if (!config) missingFields.push('siteUrl', 'datasetPid')
   else {
@@ -128,8 +112,6 @@ async function init(opts: { fromObserver?: boolean } = {}) {
     return
   }
 
-  // See `standalone-tree-view/index.tsx` for the rationale on why we
-  // reject non-http(s) `siteUrl`s before threading it into the SDK.
   if (!isValidSiteUrl(config.siteUrl)) {
     root.render(
       <StrictMode>
@@ -153,11 +135,6 @@ async function init(opts: { fromObserver?: boolean } = {}) {
     getBearerToken: config.getBearerToken
   })
 
-  // Translations live next to this bundle, wherever an operator deployed it —
-  // behind their web server or in a WAR. Deriving the path from the bundle's
-  // own URL keeps it correct for any base URL without the host page having to
-  // know or pass one. `import.meta.url` must be read here, in the entry
-  // module: from a shared chunk it would resolve to `chunks/` instead.
   const localesPath =
     config.localesPath ??
     `${new URL(/* @vite-ignore */ './locales/', import.meta.url).href}{{lng}}/{{ns}}.json`
@@ -185,11 +162,6 @@ async function init(opts: { fromObserver?: boolean } = {}) {
   root.render(
     <StrictMode>
       <div className="dv-uploader-root">
-        {/*
-          See `standalone-tree-view/index.tsx` — same offset to clear
-          the JSF header that would otherwise cover the top of the
-          toast container.
-        */}
         <ToastContainer position="top-right" autoClose={5000} style={{ top: '80px' }} />
         <UploaderWrapper
           fileRepository={fileRepository}

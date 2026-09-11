@@ -84,8 +84,6 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
       asButtonGroup
       variant="secondary"
       disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
-      {/* SPA upload flow needs an S3-compatible direct-upload driver;
-          decide via the typed driver capabilities, not the driver id name. */}
       {dataset?.storageDriver?.type === 's3' && dataset.storageDriver.directUpload && (
         <DropdownButtonItem
           eventKey={EditDatasetMenuItems.FILES_UPLOAD}

@@ -1,8 +1,3 @@
-// Shared type scale for the file tree and its download tray.
-// The two sheets had drifted into five ad-hoc sizes (11, 11.5, 12, 12.5, 13)
-// that no longer meant anything distinct. Everything carrying primary content
-// now uses the design-system small size; secondary metadata (counts, sizes,
-// hints) uses the one variable below.
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 
 $tree-metadata-font-size: 11.5px;

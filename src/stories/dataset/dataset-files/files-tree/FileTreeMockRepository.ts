@@ -66,12 +66,6 @@ const TREE: Record<string, FileTreeItem[]> = {
   ]
 }
 
-/**
- * Tiny in-memory repository for Storybook / Chromatic snapshots of the
- * lazy file tree. The tree shape exercises folders, sub-folders, mixed
- * file types, and the "Load more" path is intentionally not triggered
- * (page size larger than the largest mock folder).
- */
 export class FileTreeMockRepository implements FileTreeRepository {
   getNode(params: GetFileTreeNodeParams): Promise<FileTreePage> {
     const path = params.path ?? ''

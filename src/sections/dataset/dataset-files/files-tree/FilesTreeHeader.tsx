@@ -4,19 +4,10 @@ import { SelectionState } from './useFileTreeSelection'
 import styles from './FilesTree.module.scss'
 
 interface FilesTreeHeaderProps {
-  /** Aggregate selection state for the visible tree, controls the
-   *  header's select-all checkbox visual. Omit to hide the checkbox. */
   selectAllState?: SelectionState
   onToggleSelectAll?: () => void
 }
 
-/**
- * Visual sticky-labels strip above the tree viewport. The accessible
- * tree pattern lives on the rows themselves (`role="tree"` /
- * `role="treeitem"` further down). The header itself is decorative
- * (`aria-hidden`); the only interactive element is the optional
- * select-all checkbox in the dedicated select column.
- */
 export function FilesTreeHeader({ selectAllState, onToggleSelectAll }: FilesTreeHeaderProps) {
   const { t } = useTranslation('files')
   return (

@@ -1,15 +1,3 @@
-/**
- * Standalone Uploader Page Styles (demo HTML only)
- *
- * These styles are page-level: they reset html/body and give the demo a
- * centered, capped layout with a light background. They are NOT bundled
- * into the JS module mounted by JSF — see `standalone.scss` for embedded
- * styles.
- *
- * Loaded by `dvUploader.html` via a separate <link rel="stylesheet">
- * (copied to the dist directory by the `build-reusable-components` script).
- */
-
 html,
 body {
   margin: 0;

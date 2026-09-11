@@ -59,13 +59,6 @@ export function DatasetFilesScrollable({
     [fileTreeRepository, fileRepository]
   )
 
-  // Branch on view BEFORE invoking either subview's hooks. The previous
-  // single-component layout fired the table-only data hooks
-  // (`useGetFilesCountInfo`, `useGetFilesTotalDownloadSize`,
-  // `useGetAccumulatedFiles`) on every render — including tree mode —
-  // and a transient error in any of them aborted the render with a
-  // top-level <Alert>, replacing a perfectly healthy tree response with
-  // an unrelated error banner.
   return view === 'tree' ? (
     <DatasetFilesScrollableTreeView
       treeRepository={treeRepository}
@@ -250,10 +243,6 @@ function DatasetFilesScrollableTableView({
   if (errors.some(Boolean)) {
     return (
       <>
-        {/* Keep the view toggle reachable: these errors come from the
-            table-only data hooks, and the tree view (different endpoint)
-            may well still work — without the toggle the user's only way
-            out is hand-editing the URL. */}
         <div className={styles['view-toggle-row']}>
           <FilesViewToggle view={view} onChange={onChangeView} />
         </div>

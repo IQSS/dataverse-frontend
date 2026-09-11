@@ -8,15 +8,6 @@ import { FileTreeFromPreviewsRepository } from './FileTreeFromPreviewsRepository
 import { FileRepository } from '../../domain/repositories/FileRepository'
 import { JSFileTreeMapper } from '../mappers/JSFileTreeMapper'
 
-/**
- * Calls the dedicated tree endpoint via the SDK helper
- * `listDatasetTreeNode`, which wraps
- * `GET /api/datasets/{id}/versions/{versionId}/tree`.
- *
- * When the endpoint is not available on the target instance the
- * repository falls back to the in-memory `FileTreeFromPreviewsRepository`
- * so the SPA stays usable in mixed-version deployments.
- */
 export class FileTreeJSDataverseRepository implements FileTreeRepository {
   private fallback?: FileTreeFromPreviewsRepository
   private endpointUnavailable = false

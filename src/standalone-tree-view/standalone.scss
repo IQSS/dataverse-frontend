@@ -1,11 +1,3 @@
-/**
- * Standalone Tree View Embedded Styles
- *
- * These styles are bundled into the JS module loaded by JSF (and the
- * demo page). They MUST be safe to inject into a host page — no
- * html/body/#root rules.
- */
-
 @use '../standalone-shared/shadow-tokens';
 
 .dv-tree-view-root {

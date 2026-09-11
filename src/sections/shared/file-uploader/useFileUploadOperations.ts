@@ -12,7 +12,6 @@ export interface FileUploadOperationsConfig {
   fileRepository: UploaderFileRepository
   datasetPersistentId: string
   checksumAlgorithm: FixityAlgorithm
-  // Callbacks for state updates - compatible with both context and hook-based state
   addFile: (file: File) => void
   updateFile: (
     key: string,
@@ -31,15 +30,10 @@ export interface FileUploadOperationsConfig {
 }
 
 export interface FileUploadOperations {
-  /** Upload a single file */
   uploadOneFile: (file: File) => Promise<void>
-  /** Recursively upload files from a directory */
   addFromDir: (dir: FileSystemDirectoryEntry) => void
-  /** Handle dropped items (files or directories), with optional fallback FileList */
   handleDroppedItems: (items: DataTransferItemList, fallbackFiles?: FileList) => void
-  /** Retry a failed upload */
   retryUpload: (file: File) => Promise<void>
-  /** The semaphore used to limit concurrent uploads */
   semaphore: Semaphore
 }
 

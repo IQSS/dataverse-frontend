@@ -28,11 +28,6 @@ export interface FilesListFormData {
 interface UploadedFilesListProps {
   fileRepository: UploaderFileRepository
   datasetPersistentId: string
-  /**
-   * Cancel handler. Required - typically navigates back.
-   * In SPA mode: use `() => navigate(-1)` from React Router's useNavigate
-   * In standalone mode: use `() => window.history.back()` or redirect to dataset
-   */
   onCancel: () => void
 }
 

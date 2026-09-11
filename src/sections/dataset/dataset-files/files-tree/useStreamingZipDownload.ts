@@ -4,11 +4,6 @@ import { md5 } from 'js-md5'
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
 import { useBeforeUnloadGuard } from '@/shared/hooks/useBeforeUnloadGuard'
 
-/**
- * On a per-file failure: `pause` stops and asks the caller (default),
- * `skip` drops the file and lists it in `manifest.txt`, `twopass` defers it
- * until the caller invokes `retryFailed()`.
- */
 export type StreamingZipStrategy = 'pause' | 'skip' | 'twopass'
 
 export interface StreamingZipFailure {
@@ -19,13 +14,6 @@ export interface StreamingZipFailure {
   recoverable: boolean
 }
 
-/**
- * Per-file checksum-verification miss. The file's bytes ARE in the zip
- * (you can't unwrite a stream after client-zip has consumed it), but
- * its computed digest doesn't match what the tree response advertised.
- * Surfaced in the tray so users know which files to re-download and
- * appended to `manifest.txt` for the `skip` strategy.
- */
 export interface StreamingZipVerificationFailure {
   path: string
   name: string
@@ -51,12 +39,6 @@ export interface StreamingZipState {
   bytesDone: number
   current?: { name: string; path: string; size: number }
   failedSoFar: StreamingZipFailure[]
-  /**
-   * Files whose bytes flowed into the zip successfully but whose
-   * computed digest didn't match the tree response's advertised
-   * `checksum`. Empty when no verification was attempted (older server)
-   * or all files verified clean.
-   */
   verificationFailures: StreamingZipVerificationFailure[]
   pass: 1 | 2
   message?: string
@@ -66,32 +48,10 @@ export interface StartStreamingZipArgs {
   files: FileTreeFile[]
   zipName?: string
   strategy?: StreamingZipStrategy
-  /** Allows a custom URL builder (e.g. JSF integration); defaults to `file.downloadUrl`. */
   buildFetchUrl?: (file: FileTreeFile) => string
-  /**
-   * Extra options forwarded to `fetch()`. Defaults to
-   * `credentials: 'same-origin'` because the file-download URL typically
-   * 302s to S3 (or an S3-compatible store) which returns
-   * `Access-Control-Allow-Origin: *`, and browsers refuse `*` + credentials.
-   * `same-origin` carries the Dataverse session cookie on the Dataverse
-   * hop and drops it on the cross-origin S3 hop, which is what we want.
-   *
-   * Pass a function to have it re-evaluated before every request (including
-   * each retry and each `Range` part). A multi-gigabyte zip can outlive the
-   * bearer token it started with; a static object would carry the expired
-   * header to the end of the run and fail every remaining part.
-   */
   fetchInit?: RequestInit | FetchInitProvider
-  /**
-   * Files larger than this are fetched as a sequence of HTTP `Range`
-   * requests instead of one full GET. Each part is retried on its own
-   * (`partRetries`), so a transient TCP drop mid-file no longer aborts
-   * the whole download. Default `10 * 1024 * 1024` (10 MiB).
-   */
   partSize?: number
-  /** Per-part retry budget for chunked fetches. Default `3`. */
   partRetries?: number
-  /** Backoff between part retries, in ms. Default `500`. */
   partRetryDelayMs?: number
 }
 
@@ -105,23 +65,8 @@ export interface StreamingZipApi {
   retryCurrent: () => void
   skipCurrent: () => void
   skipAllFailures: () => void
-  /**
-   * Convert the current pause-on-fail dialog into a two-pass run:
-   * the failure stays in `failedSoFar` as recoverable, the strategy
-   * switches to `twopass`, and the engine keeps going without pausing
-   * on subsequent failures. After the first pass finishes the engine
-   * pauses with `status: 'awaiting-retry'` so the host can call
-   * `retryFailed`.
-   */
   deferCurrentToEnd: () => void
   retryFailed: () => void
-  /**
-   * At the `awaiting-retry` gate: finish the zip WITHOUT a second pass.
-   * The recoverable failures are demoted to skipped, listed in
-   * manifest.txt, and the first-pass bytes are saved — the affirmative
-   * counterpart to `retryFailed`, so "Done" never silently discards a
-   * fully-streamed first pass.
-   */
   finalizeRun: () => void
   cancel: () => void
   close: () => void
@@ -151,12 +96,6 @@ function deferred<T>(): ResolveBag<T> {
   return { promise, resolve }
 }
 
-/**
- * Builds the zip in the browser: per-file bodies are piped through
- * `client-zip`, materialised to a Blob, and saved via an anchor click.
- * Progress and Range-part fetching live in the stream `buildChunkedStream`
- * returns. The zip is buffered in memory until saved.
- */
 export function useStreamingZipDownload(): StreamingZipApi {
   const [state, setState] = useState<StreamingZipState>(initialState)
   const stateRef = useRef<StreamingZipState>(initialState)
@@ -169,9 +108,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
       state.status === 'awaiting-retry'
   )
 
-  // Engine control: a single "decision" promise that the iterator
-  // awaits when paused. The UI calls retryCurrent/skipCurrent/etc.
-  // which resolve this promise with the requested action.
   type Decision =
     | 'retry'
     | 'skip'
@@ -199,16 +135,9 @@ export function useStreamingZipDownload(): StreamingZipApi {
       status === 'paused' ||
       status === 'awaiting-retry'
     ) {
-      // Closing the tray mid-run means cancel: stop the engine and
-      // unblock any pending pause/awaiting-retry decision so the
-      // suspended generator can wind down instead of leaking.
       cancelledRef.current = true
       decisionRef.current?.resolve('cancel')
     }
-    // Deliberately NOT resetting cancelledRef here — the pending
-    // blob promise of a cancelled run may still settle after close,
-    // and the pre-save guard must keep seeing the cancellation.
-    // start() resets the flag for the next run.
     decisionRef.current = null
     setState(initialState)
     stateRef.current = initialState
@@ -253,8 +182,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
 
       cancelledRef.current = false
       decisionRef.current = null
-      // One provider for the whole run: callers may pass a plain object, but
-      // everything downstream asks for the options per request.
       const getFetchInit: FetchInitProvider =
         typeof fetchInit === 'function' ? fetchInit : () => fetchInit
       const totalBytes = files.reduce((s, f) => s + f.size, 0)
@@ -271,13 +198,8 @@ export function useStreamingZipDownload(): StreamingZipApi {
       let strategy = initialStrategy
 
       async function* iterableForZip() {
-        // ----- helper: process a queue ----------------------------------
         const processQueue = async function* () {
           while (queue.length > 0) {
-            // Loop-top cancel guard. The pause-decision path also
-            // resolves with 'cancel' and aborts, which the spec covers;
-            // this is the additional check for cancellation that lands
-            // *between* files in a fast-scrolling run.
             /* istanbul ignore next */
             if (cancelledRef.current) return
             const file = queue.shift() as FileTreeFile
@@ -288,13 +210,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
             }))
 
             const url = buildFetchUrl(file)
-            // Files larger than `partSize` are fetched as a sequence of
-            // Range requests so a transient drop mid-file only invalidates
-            // the active part instead of the whole file. The first part
-            // still goes through the existing retry/skip/defer dialog on
-            // hard failure (the body hasn't started streaming into the
-            // zip yet); subsequent parts can only retry inline because
-            // client-zip is already consuming the stream.
             const useRange = file.size > partSize
             const firstPartRange = useRange
               ? `bytes=0-${Math.min(partSize, file.size) - 1}`
@@ -327,7 +242,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
                 const decision = await waitForDecision()
                 if (decision === 'cancel') return
                 if (decision === 'retry') {
-                  // pop the failure record we just added and re-queue this file
                   update((prev) => ({
                     ...prev,
                     failedSoFar: prev.failedSoFar.slice(0, -1),
@@ -337,19 +251,11 @@ export function useStreamingZipDownload(): StreamingZipApi {
                   continue
                 }
                 if (decision === 'defer-to-end') {
-                  // Switch to twopass: the failure stays recoverable in
-                  // failedSoFar, the engine stops pausing, and a second
-                  // pass will pick up all recoverable failures at the end.
                   strategy = 'twopass'
                   update((prev) => ({ ...prev, status: 'running' }))
                   continue
                 }
                 if (decision === 'skip' || decision === 'skip-all') {
-                  // Both skip variants demote the just-added failure to
-                  // non-recoverable. Without this, a later 'defer-to-end'
-                  // decision on a different file would re-queue the
-                  // already-skipped file in its second pass (see the
-                  // recoverable filter in the awaiting-retry path).
                   if (decision === 'skip-all') {
                     strategy = 'skip'
                   }
@@ -367,7 +273,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
                     }
                   })
                 }
-                // 'skip' or 'skip-all' fall through
                 skippedManifest.push({ ...failure, recoverable: false })
                 continue
               }
@@ -375,14 +280,9 @@ export function useStreamingZipDownload(): StreamingZipApi {
                 skippedManifest.push({ ...failure, recoverable: false })
                 continue
               }
-              // 'twopass': defer; second pass will pick recoverable ones up
               continue
             }
 
-            // `response.body` is null only for `Response.error()` and a
-            // handful of legacy fetch implementations; modern browsers
-            // always populate it on a successful HTTP response. Kept as
-            // a safety net; not exercised by the test harness.
             /* istanbul ignore next */
             if (!response.body) {
               update((prev) => ({
@@ -418,22 +318,15 @@ export function useStreamingZipDownload(): StreamingZipApi {
           }
         }
 
-        // ----- first pass --------------------------------------------------
         yield* processQueue()
-        // Cancel-after-first-pass guard. processQueue's own cancel
-        // checks short-circuit before reaching here in the cancel path.
         /* istanbul ignore next */
         if (cancelledRef.current) return
 
-        // ----- two-pass: pause for user decision then re-queue failures ----
         if (strategy === 'twopass' && stateRef.current.failedSoFar.length > 0) {
           update((prev) => ({ ...prev, status: 'awaiting-retry' }))
           const decision = await waitForDecision()
           if (decision === 'cancel') return
           if (decision === 'finalize') {
-            // Finish without a second pass: the recoverable failures
-            // become skips so manifest.txt keeps its contract of
-            // listing every omission, and the first-pass bytes save.
             for (const f of stateRef.current.failedSoFar.filter((x) => x.recoverable)) {
               skippedManifest.push({ ...f, recoverable: false })
             }
@@ -446,7 +339,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
             }))
           } else if (decision === 'retry-failed') {
             const recoverable = stateRef.current.failedSoFar.filter((f) => f.recoverable)
-            // Reconstruct the file objects from the tail of `files`:
             const fileByPath = new Map(files.map((f) => [f.path, f]))
             for (const f of recoverable) {
               const file = fileByPath.get(f.path)
@@ -459,11 +351,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
               status: 'running'
             }))
             yield* processQueue()
-            // Files that failed AGAIN in the second pass would otherwise
-            // vanish: this gate is not re-entered, so without demotion
-            // the run ends 'done' with the file absent from both the zip
-            // and manifest.txt. Demote the survivors to skipped so the
-            // manifest keeps its contract of listing every omission.
             const survivors = stateRef.current.failedSoFar.filter((f) => f.recoverable)
             if (survivors.length > 0) {
               for (const f of survivors) skippedManifest.push({ ...f, recoverable: false })
@@ -477,12 +364,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
           }
         }
 
-        // ----- manifest.txt: list any skipped or verification-failed files ----
-        // Both populate the manifest; the zip is closing and this is the
-        // last yield, so we collect from `stateRef` (which has any
-        // mid-stream verification failures the per-file pull pushed
-        // through the update callback) plus `skippedManifest` (the
-        // fetch-level failures from the per-file loop).
         const verifyFails = stateRef.current.verificationFailures
         if (skippedManifest.length > 0 || verifyFails.length > 0) {
           const lines: string[] = []
@@ -522,10 +403,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
           triggerDownload(blob, zipName)
           update((prev) => ({ ...prev, status: 'done', current: undefined }))
         } catch (err) {
-          // Defensive catch for unexpected failures inside `client-zip`
-          // or the anchor-click. The per-file fetch failures are
-          // handled inline above; reaching here means something
-          // happened that the per-file flow can't classify.
           /* istanbul ignore next */
           if (cancelledRef.current) return
           /* istanbul ignore next */
@@ -554,11 +431,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
   }
 }
 
-/**
- * Thrown by `fetchWithRetries` when the server returns a non-OK status.
- * Carries the status code so callers can distinguish transient failures
- * (worth retrying) from terminal ones (worth surfacing immediately).
- */
 class HttpError extends Error {
   constructor(public readonly status: number, statusText: string) {
     super(`HTTP ${status} ${statusText}`)
@@ -566,28 +438,11 @@ class HttpError extends Error {
   }
 }
 
-/**
- * `true` for HTTP statuses that have any reasonable chance of succeeding
- * on a re-attempt: 5xx server errors, plus the few 4xx codes that the
- * spec defines as transient (408 Request Timeout, 425 Too Early, 429
- * Too Many Requests). Other 4xx codes (401, 403, 404, …) are user-
- * facing terminal errors — retrying just wastes the budget while the
- * user waits to see the failure tray.
- */
 function isTransientHttpStatus(status: number): boolean {
   if (status >= 500) return true
   return status === 408 || status === 425 || status === 429
 }
 
-/**
- * One fetch with up to `retries` extra attempts. A `Range` header is
- * forwarded when supplied; a non-OK status is converted to an
- * {@link HttpError} so the caller can react. Retry budget is skipped on
- * terminal 4xx (no amount of retrying turns a 403 into a 200) — those
- * errors propagate on the first attempt. Network errors and transient
- * statuses retry normally. When all retries are exhausted the last
- * error is re-thrown for the caller to surface in its own failure UI.
- */
 async function fetchWithRetries(args: {
   url: string
   rangeHeader: string | undefined
@@ -598,19 +453,10 @@ async function fetchWithRetries(args: {
   let lastErr: unknown = new Error('no attempt made')
   for (let attempt = 0; attempt <= args.retries; attempt++) {
     try {
-      // Re-read on every attempt: a refreshed token has to reach the retry
-      // that follows an expiry, not just the first request of the run.
       const attemptInit = args.fetchInit()
       const headers = new Headers(attemptInit?.headers ?? undefined)
       if (args.rangeHeader !== undefined) headers.set('Range', args.rangeHeader)
       const response = await fetch(args.url, {
-        // `same-origin` keeps cookies on the initial Dataverse call
-        // (same-origin in both SPA and JSF embed) but drops them when
-        // the browser follows a redirect to S3-style storage. With
-        // `download-redirect=true` the 302 target is on the bucket's
-        // hostname; sending credentials there would require
-        // `Access-Control-Allow-Credentials: true`, incompatible with
-        // the typical `Allow-Origin: *` rule.
         credentials: 'same-origin',
         ...(attemptInit ?? {}),
         headers
@@ -621,7 +467,6 @@ async function fetchWithRetries(args: {
       return response
     } catch (err) {
       lastErr = err
-      // Terminal 4xx: bail before burning the rest of the budget.
       if (err instanceof HttpError && !isTransientHttpStatus(err.status)) {
         throw err
       }
@@ -634,32 +479,13 @@ async function fetchWithRetries(args: {
   throw lastErr instanceof Error ? lastErr : new Error(String(lastErr))
 }
 
-/**
- * Append a query parameter to a URL string without dragging in a URL
- * parser. Inputs are well-formed URLs from the SDK / our own builders,
- * so the simple "find a `?` or add one" rule is sufficient — no need
- * to handle weird relative-with-fragment cases.
- */
 function appendQueryParam(url: string, key: string, value: string): string {
   const sep = url.includes('?') ? '&' : '?'
   return `${url}${sep}${encodeURIComponent(key)}=${encodeURIComponent(value)}`
 }
 
-/**
- * Supplies fetch options fresh for each request, so a long-running download
- * always sends the current credentials rather than the ones it started with.
- */
 export type FetchInitProvider = () => RequestInit | undefined
 
-/**
- * Strips the `Authorization` header from `init` when `url` lives on a
- * different origin than `originalUrl`. Bearer-token embeds put the
- * header in `fetchInit` for the Dataverse access endpoint, but chunked
- * Range parts 2..N hit the cached POST-REDIRECT presigned S3 URL —
- * and S3 rejects a request that carries both query-string signing and
- * an Authorization header (and the header would force a CORS
- * preflight the bucket may not answer).
- */
 export function initForUrl(
   url: string,
   originalUrl: string,
@@ -681,12 +507,6 @@ export function initForUrl(
   return { ...init, headers }
 }
 
-/**
- * Range fetch that re-presigns on 403. An expired presigned URL is refetched
- * from the Dataverse access endpoint with `gbrecs=true` (no double guestbook
- * count) and the new redirect target returned as `refreshedUrl` for the
- * caller to cache. Any other failure propagates and aborts the stream.
- */
 async function fetchPartWithRefresh(args: {
   cachedUrl: string
   originalUrl: string
@@ -699,8 +519,6 @@ async function fetchPartWithRefresh(args: {
     const response = await fetchWithRetries({
       url: args.cachedUrl,
       rangeHeader: args.rangeHeader,
-      // cachedUrl is typically the post-redirect presigned S3 URL —
-      // never send the Dataverse bearer header cross-origin.
       fetchInit: () => initForUrl(args.cachedUrl, args.originalUrl, args.fetchInit()),
       retries: args.retries,
       delayMs: args.delayMs
@@ -718,11 +536,6 @@ async function fetchPartWithRefresh(args: {
       retries: args.retries,
       delayMs: args.delayMs
     })
-    // Prefer the post-redirect URL when fetch followed the 303 to S3
-    // (`response.url` differs from the request URL); fall back to the
-    // refresh URL itself when no redirect happened (test env, or a
-    // non-redirected storage driver). Either keeps subsequent parts
-    // off the guestbook path.
     const newUrl =
       refreshed.url && refreshed.url !== refreshUrl
         ? /* istanbul ignore next */ refreshed.url
@@ -731,13 +544,6 @@ async function fetchPartWithRefresh(args: {
   }
 }
 
-/**
- * Streaming digest, mirroring `FileUploaderHelper`: MD5 streams via
- * `js-md5`; the SHA family buffers chunks for one-shot `crypto.subtle.digest`
- * (memory cost is the file size, the same trade-off upload accepts).
- * Returns `null` for unknown algorithms so verification is skipped rather
- * than failing the file.
- */
 function makeDigestAccumulator(
   algorithm: string
 ): { update: (bytes: Uint8Array) => void; finalize: () => Promise<string> } | null {
@@ -746,13 +552,9 @@ function makeDigestAccumulator(
     const hash = md5.create()
     return {
       update: (bytes) => hash.update(bytes),
-      // Wrapped in Promise.resolve to unify the return type with the
-      // SHA path's `subtle.digest` Promise — caller awaits in both
-      // cases, MD5 just resolves synchronously.
       finalize: () => Promise.resolve(hash.hex())
     }
   }
-  // Map Dataverse's stored algorithm name to the Web Crypto identifier.
   const subtleAlgo =
     upper === 'SHA-1' || upper === 'SHA1'
       ? 'SHA-1'
@@ -765,8 +567,6 @@ function makeDigestAccumulator(
   const chunks: Uint8Array[] = []
   return {
     update: (bytes) => {
-      // Copy the slice — the source buffer may be reused by the
-      // fetch reader between ticks.
       chunks.push(new Uint8Array(bytes))
     },
     finalize: async () => {
@@ -786,14 +586,6 @@ function makeDigestAccumulator(
   }
 }
 
-/**
- * Wraps the first-part response and fetches the remaining Range parts as
- * `client-zip` pulls. A `200` first response means Range was not honoured
- * and is treated as the whole file. Later parts go to the post-redirect S3
- * URL, bypassing Dataverse. A checksum mismatch at end-of-stream is reported
- * via `onVerificationFailure` but does not fail the file: its bytes are
- * already in the zip.
- */
 function buildChunkedStream(args: {
   file: FileTreeFile
   initialResponse: Response
@@ -809,27 +601,16 @@ function buildChunkedStream(args: {
   const total = args.file.size
   const usedRange = args.initialResponse.status === 206
   const numParts = usedRange ? Math.ceil(total / args.partSize) : 1
-  // `subsequentUrl` is the URL chunks 1..N-1 hit. Mutable because a 403
-  // mid-download (presigned URL expired) triggers a re-presign that
-  // returns a fresh URL we cache here for the rest of the file. Same
-  // pattern repeats every time the new URL itself expires.
   let subsequentUrl =
     args.initialResponse.url && args.initialResponse.url !== args.originalUrl
       ? /* istanbul ignore next */ args.initialResponse.url
       : args.originalUrl
 
-  // Caller has already null-checked `initialResponse.body` (see the
   // /* istanbul ignore next */ guard in the engine), so the assertion
-  // here only narrows the type — the runtime check is upstream.
   const initialBody = args.initialResponse.body as ReadableStream<Uint8Array>
   let partIndex = 0
   let currentReader: ReadableStreamDefaultReader<Uint8Array> | null = initialBody.getReader()
 
-  // Digest accumulator: present only when the tree response gave us a
-  // checksum AND the algorithm is one we can compute. Files where the
-  // tree omitted `checksum` (e.g. ingested-tabular default form) get
-  // no accumulator — skipped silently. Files with an exotic algorithm
-  // also fall through to skip rather than error.
   const expectedChecksum = args.file.checksum
   const digest = expectedChecksum ? makeDigestAccumulator(expectedChecksum.type) : null
 
@@ -841,15 +622,9 @@ function buildChunkedStream(args: {
         /* istanbul ignore next */
         return
       }
-      // Drain the current part; on exhaustion, advance to the next part
-      // (or close the stream if all parts are done).
       for (;;) {
         if (!currentReader) {
           if (partIndex >= numParts) {
-            // Stream is closing — if we have a digest, finalize and
-            // compare against the expected value. Mismatch is reported
-            // via the callback (the bytes are already in the zip; the
-            // user is told which files to re-download).
             if (digest && expectedChecksum) {
               const actual = await digest.finalize()
               if (actual.toLowerCase() !== expectedChecksum.value.toLowerCase()) {
@@ -914,7 +689,7 @@ function buildChunkedStream(args: {
         try {
           await currentReader.cancel()
         } catch {
-          // Reader may already be closed; cancellation is best-effort.
+          return
         }
       }
     }
@@ -931,6 +706,5 @@ function triggerDownload(blob: Blob, name: string): void {
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
-  // Defer revoke so the browser actually starts the download.
   setTimeout(() => URL.revokeObjectURL(url), 4_000)
 }

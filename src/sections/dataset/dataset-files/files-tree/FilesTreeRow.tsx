@@ -33,32 +33,12 @@ interface FilesTreeRowProps {
   expanded?: boolean
   onToggleSelection: () => void
   onToggleExpansion?: () => void
-  /**
-   * Per-row download trigger. When omitted, the download icon is
-   * hidden — used by hosts that need to gate downloads behind a
-   * terms-of-use modal that the row itself cannot open.
-   */
   onDownload?: () => void
   datasetVersionNumber: DatasetVersionNumber
-  /**
-   * Optional URL builder for the filename → file metadata link. When
-   * provided, the row renders a plain `<a href>` (works in JSF
-   * standalone embeds where there is no React Router). When omitted,
-   * the row falls back to a SPA `<Link>` pointing at the SPA file
-   * page.
-   */
   buildFileMetadataUrl?: (file: FileTreeFile) => string
-  /**
-   * Whether this row is the focused row in the roving-tabindex
-   * keyboard model. Only one row at a time has tabIndex=0; the rest
-   * are tabIndex=-1.
-   */
   focused?: boolean
-  /** Called when this row receives focus (e.g. via Tab into the tree). */
   onFocus?: () => void
-  /** Forwarded to the row's underlying div so the parent can scroll it into view. */
   rowRef?: RefObject<HTMLDivElement>
-  /** Keyboard handler shared by all rows; lives on the parent for navigation logic. */
   onRowKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void
 }
 
@@ -71,9 +51,6 @@ const ACCESS_VARIANT_CLASS: Record<AccessVariant, string> = {
   retentionExpired: 'row-access-retention-expired'
 }
 
-// Inline i18n defaults, following the `t(key, default)` pattern the
-// header cells use, so the cell renders sensibly even before the
-// locale bundle loads.
 const FILE_ACCESS_LABEL_DEFAULTS = {
   public: 'Public',
   restricted: 'Restricted',

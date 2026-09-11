@@ -15,8 +15,6 @@ export const FilesContext = createContext<FilesContextProps>({
 
 export const useFilesContext = () => {
   const context = useContext(FilesContext)
-  // Unreachable while createContext is given a real default; kept as a guard
-  // for a future refactor that changes the default to null.
   /* istanbul ignore if */
   if (!context) {
     throw new Error('useFilesContext must be used within a FilesContext Provider')

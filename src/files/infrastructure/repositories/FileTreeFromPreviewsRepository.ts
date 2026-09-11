@@ -17,20 +17,6 @@ import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 
 const PAGE_SIZE = 1000
 
-/**
- * Tree-shaped view of an existing dataset file listing.
- *
- * This adapter is used while the dedicated paginated tree endpoint
- * (`GET /api/datasets/{id}/versions/{versionId}/tree`) is not deployed yet
- * on the target Dataverse instance. It pulls the dataset file previews via
- * the existing `FileRepository` (paginating internally), groups them by
- * `directoryLabel`, and exposes the same `FileTreeRepository` contract that
- * the new endpoint will satisfy.
- *
- * Once the endpoint and SDK helper land, the SPA can swap this for a thin
- * `FileTreeJSDataverseRepository` that calls the SDK directly. The UI does
- * not need to change.
- */
 export class FileTreeFromPreviewsRepository implements FileTreeRepository {
   private cache = new Map<string, FilePreview[]>()
 
@@ -177,7 +163,6 @@ function collectImmediateChildren(
     entry.fileCount += 1
     entry.bytes += preview.metadata.size?.toBytes() ?? 0
     if (directory !== folderPath) {
-      // Track distinct subfolder names (the next path segment after this folder).
       const sub = directory.slice(folderPath.length + 1).split('/')[0]
       if (sub) {
         entry.subfolderNames.add(sub)

@@ -11,16 +11,6 @@ export interface FileTreeFolder {
   type: FileTreeItemType.FOLDER
   name: string
   path: string
-  /**
-   * Recursive aggregates over the folder's subtree. `bytes`, `restricted`,
-   * `embargoed`, and `retentionExpired` are individually optional so the
-   * SPA keeps rendering against an older SDK (or a server that hasn't yet
-   * rolled out a given aggregate) without a type-cast workaround. The
-   * previews-based fallback also leaves them off — its counts are
-   * best-effort. The three access buckets are mutually exclusive,
-   * mirroring the per-file resolution: retention-expired wins, then
-   * restricted, then embargoed.
-   */
   counts?: {
     files: number
     folders: number
@@ -39,16 +29,6 @@ export interface FileTreeFile {
   size: number
   contentType?: string
   access?: FileAccess
-  /**
-   * Access marker mirroring the per-file `access` string the SDK
-   * exposes on the tree response: `'public' | 'restricted' |
-   * 'embargoed' | 'retentionExpired'` (resolved by the server in
-   * reverse order — retention-expired wins, then restricted, then
-   * embargoed). Kept separate from `access` (the boolean-ish
-   * `FileAccess` object used elsewhere in the SPA) because that shape
-   * collapses the non-public states into the same `restricted: true`
-   * flag — fine for permission gating, lossy for tree display.
-   */
   accessStatus?: FileAccessStatus
   checksum?: { type: string; value: string }
   downloadUrl: string

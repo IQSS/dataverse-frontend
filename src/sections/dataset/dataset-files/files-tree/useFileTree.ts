@@ -23,12 +23,6 @@ export interface UseFileTreeArgs {
   pageSize?: number
   order?: FileTreeOrder
   include?: FileTreeInclude
-  /**
-   * Path to expand on mount — typically read from a `?path=` URL query
-   * param so a deep link opens the tree at the bookmarked folder. The
-   * hook expands every ancestor along the way (e.g. `data/raw/2024`
-   * causes `data`, `data/raw`, and `data/raw/2024` all to be expanded).
-   */
   initialPath?: string
 }
 
@@ -36,34 +30,18 @@ export interface UseFileTreeApi {
   rootNode: FolderNode
   nodes: ReadonlyMap<string, FolderNode>
   expanded: ReadonlySet<string>
-  /**
-   * The deepest folder currently in the expanded set. Empty string means
-   * only the root is expanded. Useful for surfacing a single canonical
-   * path to a URL bookmark.
-   */
   currentPath: string
   toggleExpanded: (path: string) => Promise<void>
   expand: (path: string) => Promise<void>
   collapse: (path: string) => void
   loadMore: (path: string) => Promise<void>
   refresh: (path?: string) => Promise<void>
-  /**
-   * Fetch a folder's first page if it has never loaded (or errored),
-   * deduplicating concurrent calls. Exposed so the host can service
-   * folders that became visible without an explicit expand — e.g. a
-   * filter query force-opening a never-fetched folder.
-   */
   ensureLoaded: (path: string) => Promise<void>
   visibleKnownChildren: (path: string) => FileTreeItem[]
 }
 
 const ROOT = ''
 
-/**
- * Returns the chain of ancestor paths for a folder, including the folder
- * itself but excluding the empty root. For `data/raw/2024` →
- * `['data', 'data/raw', 'data/raw/2024']`.
- */
 function ancestorChain(path: string): string[] {
   if (!path) {
     return []
@@ -78,11 +56,6 @@ function ancestorChain(path: string): string[] {
   return out
 }
 
-/**
- * Picks the deepest folder from a set of expanded paths — used to derive
- * `currentPath` for URL bookmarking. Returns `''` if no non-root folder
- * is expanded.
- */
 function deepestExpanded(set: ReadonlySet<string>): string {
   let deepest = ''
   let depth = 0
@@ -118,20 +91,7 @@ export function useFileTree({
   const inFlight = useRef<Map<string, Promise<void>>>(new Map())
   const versionKey = `${datasetPersistentId}::${datasetVersion.number.toString()}::${order}::${include}`
   const previousKey = useRef<string>(versionKey)
-  // True only while the hook's host component is mounted. Set to false
-  // by the cleanup effect below so any fetch promise that resolves AFTER
-  // unmount becomes a no-op instead of pushing state into a defunct
-  // hook instance. Without this guard, switching rapidly between the
-  // tree view and the table view occasionally left the next mount
-  // showing the "loading" spinner forever, because a slow getNode that
-  // started under the previous mount completed against the wrong
-  // setState closure.
   const mountedRef = useRef(true)
-  // Incremented on every versionKey reset. A fetch captures the value at
-  // start and discards its response if the tree was reset while it was in
-  // flight — without this, a slow response from the PREVIOUS version /
-  // order / include lands in the fresh map with `loaded: true`, and
-  // ensureLoaded then pins the stale items until a manual refresh.
   const generationRef = useRef(0)
 
   const setNode = useCallback((path: string, updater: (prev: FolderNode) => FolderNode) => {
@@ -216,11 +176,6 @@ export function useFileTree({
       }
       setExpanded(reset)
       inFlight.current.clear()
-      // Reset path: bypass ensureLoaded's cache check (which closes
-      // over the pre-reset `nodes` map and would short-circuit because
-      // the old root was `loaded: true`). fetchPage runs unconditionally
-      // and uses the latest fetchPage closure (which is keyed off the
-      // new versionKey via its useCallback deps).
       void fetchPage(ROOT)
       for (const ancestor of ancestorChain(initialPath)) {
         void fetchPage(ancestor)
@@ -228,16 +183,9 @@ export function useFileTree({
       return
     }
     void ensureLoaded(ROOT)
-    // Pre-fetch every initial-path ancestor so the tree opens to the
-    // bookmarked depth on mount without the user clicking through.
     for (const ancestor of ancestorChain(initialPath)) {
       void ensureLoaded(ancestor)
     }
-    // Deliberately keyed on versionKey ALONE: fetchPage/ensureLoaded get
-    // new identities on every nodes write, and re-running this effect on
-    // those would refetch the root after every page load. initialPath is
-    // mount-stable (read once from the URL). The reset branch above
-    // handles every input that genuinely changes the tree's identity.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [versionKey])
 
@@ -270,11 +218,6 @@ export function useFileTree({
       }
       const next = new Set(prev)
       next.delete(path)
-      // Also drop every descendant from the expanded set. Without this,
-      // collapsing `data` after the user opened `data/sub` leaves
-      // `data/sub` in the set; `currentPath` (deepest expanded) still
-      // reports `data/sub`, so the URL bookmark and a subsequent reload
-      // re-open the very branch the user just collapsed.
       const prefix = path === '' ? '' : `${path}/`
       for (const p of Array.from(next)) {
         if (p !== path && (path === '' ? p !== '' : p.startsWith(prefix))) {

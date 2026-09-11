@@ -17,11 +17,6 @@ export interface UseFileTreeDownloadArgs {
   datasetVersion: DatasetVersion
   selection: FileTreeSelection
   onError?: (error: unknown) => void
-  /**
-   * Caller decides how to actually trigger the download for a list of
-   * files (e.g. direct anchor click for one file, streaming zip for
-   * many). The hook only owns the enumeration step.
-   */
   onDownloadFiles: (files: FileTreeFile[]) => Promise<void> | void
 }
 
@@ -52,10 +47,6 @@ export function useFileTreeDownload({
   const dispatchFiles = useCallback(
     async (files: FileTreeFile[]) => {
       if (files.length === 0) {
-        // No files to dispatch (empty folder, or every selected file
-        // got filtered out by the deselect overrides). Reset progress
-        // back to idle so the toolbar doesn't get stuck showing
-        // `enumerating` / `requesting` indefinitely.
         setProgress({ status: 'idle', enumeratedCount: 0 })
         return
       }
@@ -170,10 +161,6 @@ function mergeFiles(
   deselectedFolders: ReadonlySet<string>,
   selected: ReadonlySet<string>
 ): FileTreeFile[] {
-  // A folder excluded from a selected branch is recorded by path, so the
-  // enumeration of its ancestor still returns everything underneath it. Drop
-  // those here, unless the file was checked again individually — the same
-  // closest-match rule the checkboxes display.
   const isExcluded = (path: string): boolean => {
     if (deselected.has(path)) {
       return true

@@ -1,10 +1,3 @@
-/**
- * Inline SVG glyphs used by the tree view rows and toolbar.
- *
- * Kept inline (rather than pulling another icon set) because the row icons
- * are rendered in volume during virtualization and we want to avoid a font
- * round-trip or a heavier icon component for each row.
- */
 export function FolderIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>

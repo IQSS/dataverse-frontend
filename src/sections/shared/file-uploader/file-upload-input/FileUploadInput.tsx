@@ -34,9 +34,6 @@ const FileUploadInput = ({
   datasetPersistentId,
   fetchUploadLimits
 }: FileUploadInputProps) => {
-  // Optional on purpose: the standalone JSF bundle mounts this component
-  // without a RepositoriesProvider; no repository simply means upload
-  // limits are not fetched (the JSF page has no limits API context).
   const datasetRepository = useOptionalDatasetRepository()
   const {
     fileUploaderState,

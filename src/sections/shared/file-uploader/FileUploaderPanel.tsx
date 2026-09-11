@@ -71,10 +71,6 @@ const FileUploaderPanel = ({
 
   const datasetPageUrl = `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
 
-  // Navigate after a successful save/replace. This effect is registered after
-  // useBlocker, so React fires useBlocker's predicate-update effect first —
-  // by the time navigate() runs, the router's blocker fn already returns false
-  // and the leave modal stays hidden.
   useDeepCompareEffect(() => {
     if (replaceOperationInfo.success && replaceOperationInfo.newFileIdentifier) {
       if (referrer === ReplaceFileReferrer.DATASET) {

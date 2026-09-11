@@ -1,26 +1,9 @@
-/**
- * Standalone Uploader Embedded Styles
- *
- * These styles are bundled into the JS module loaded by JSF (and the demo page).
- * They MUST be safe to inject into a host page — no html/body/#root rules,
- * no resets that would override the host page chrome.
- *
- * Page-level styles (background, font, viewport-fill) belong in
- * `standalone-page.scss`, which is only loaded by the standalone demo HTML.
- */
-
 @use '../standalone-shared/shadow-tokens';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 
-// Wrapper applied to the React render root. Used as a future hook for
-// CSS scoping (e.g. PostCSS prefix or Shadow DOM) to limit Bootstrap 5
-// reset rules to within the embedded component.
 .dv-uploader-root {
-  // Reset margin/padding so the host container controls layout.
   margin: 0;
   padding: 0;
-
-  // Let React content size naturally inside whatever JSF panel hosts it.
   width: 100%;
 }
 

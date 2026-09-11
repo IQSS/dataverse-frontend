@@ -43,11 +43,6 @@ export const useAddUploadedFilesToDataset = (
       removeAllFiles()
       setAddFilesToDatasetOperationInfo({ success: true })
     } catch (err: unknown) {
-      // Only treat as a JSDataverse WriteError when the error actually
-      // is one — falling back to the default toast for any other thrown
-      // value. The previous structural duck-type check (`reason ||
-      // message`) caught plain `Error` instances too and printed their
-      // message instead of the user-friendly default.
       if (err instanceof WriteError) {
         const error = new JSDataverseWriteErrorHandler(err)
         const formattedError =

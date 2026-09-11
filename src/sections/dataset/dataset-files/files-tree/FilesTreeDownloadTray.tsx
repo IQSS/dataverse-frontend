@@ -12,12 +12,6 @@ interface FilesTreeDownloadTrayProps {
   onClose: () => void
 }
 
-/**
- * Bottom-sheet status panel for the streaming-zip download. Shows
- * overall progress, the file currently being added, and surfaces the
- * pause-on-fail / two-pass decisions as inline buttons. Stays out of
- * the user's way while they continue browsing.
- */
 export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadTrayProps) {
   const { t } = useTranslation('files')
   const { state } = api
@@ -45,20 +39,13 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
       defaultValue: 'Download complete — {{count}} skipped',
       count: state.failedSoFar.length
     })
-  // The verification-failure title takes precedence over the
-  // skipped-files variant when both happen in the same run — the
-  // verification miss is the surprising, actionable signal (user
-  // should re-download the bad file), the skips already had their
-  // own dialog earlier. Both still appear in `manifest.txt`.
   else if (isDone && state.verificationFailures.length > 0)
     title = t('tree.download.tray.completeWithVerificationFailures', {
       defaultValue_one: 'Download complete — {{count}} file failed checksum verification',
       defaultValue_other: 'Download complete — {{count}} files failed checksum verification',
       count: state.verificationFailures.length
     })
-  // The 'error' status is reached only from the IIFE catch in the
   // engine — itself a defensive path covered by /* istanbul ignore */
-  // — so the matching branch here is unreachable from the spec.
   /* istanbul ignore next */ else if (isError)
     title = t('tree.download.tray.error', 'Download failed')
   else if (isCancelled) title = t('tree.download.tray.cancelled', 'Download cancelled')
@@ -175,19 +162,10 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
                   {t('tree.download.tray.retryFailed', {
                     defaultValue_one: 'Download {{count}} missing file',
                     defaultValue_other: 'Download {{count}} missing files',
-                    // Only the recoverable failures get a second pass —
-                    // explicitly skipped files are already in the
-                    // manifest and must not inflate this count.
                     count: state.failedSoFar.filter((f) => f.recoverable).length
                   })}
                 </Button>
                 <Button variant="link" size="sm" onClick={api.finalizeRun}>
-                  {/* Finalize, NOT close: the first pass is fully
-                      streamed, so this saves the zip with the missing
-                      files listed in manifest.txt. Routing this to
-                      onClose/cancel would silently discard everything
-                      streamed so far — the header × remains the
-                      explicit cancel. */}
                   {t('tree.download.tray.finishWithout', 'Finish without them')}
                 </Button>
               </div>

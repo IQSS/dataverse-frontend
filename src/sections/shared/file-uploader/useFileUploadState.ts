@@ -25,22 +25,12 @@ export interface FileUploadState {
 
 export type UploadedFile = FileUploadState & { storageId: string; checksumValue: string }
 
-/**
- * Interface for the file upload state and actions.
- * This is what the useFileUploadState hook returns.
- */
 export interface FileUploadStateActions {
-  /** All files keyed by their unique file key */
   files: Record<string, FileUploadState>
-  /** Files that have completed upload and have both storageId and checksumValue */
   uploadedFiles: UploadedFile[]
-  /** Files that are still uploading or have failed */
   uploadingFilesInProgress: FileUploadState[]
-  /** True if any file is currently uploading */
   anyFileUploading: boolean
-  /** Map of file keys to cancel functions for in-progress uploads */
   uploadingToCancelMap: Map<string, () => void>
-  /** True while saving files to the dataset */
   isSaving: boolean
   setIsSaving: (isSaving: boolean) => void
   addFile: (
@@ -54,7 +44,6 @@ export interface FileUploadStateActions {
   getFileByKey: (key: string) => FileUploadState | undefined
   addUploadingToCancel: (key: string, cancel: () => void) => void
   removeUploadingToCancel: (key: string) => void
-  /** Reset all state to initial values */
   reset: () => void
 }
 
@@ -66,10 +55,6 @@ export function formatFileSize(bytes: number): string {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
 }
 
-/**
- * Hook that manages file upload state.
- * Can be used standalone or integrated with React Context.
- */
 export function useFileUploadState(): FileUploadStateActions {
   const [files, setFiles] = useState<Record<string, FileUploadState>>({})
   const [uploadingToCancelMap, setUploadingToCancelMap] = useState<Map<string, () => void>>(
@@ -77,7 +62,6 @@ export function useFileUploadState(): FileUploadStateActions {
   )
   const [isSaving, setIsSaving] = useState(false)
 
-  // Computed values
   const uploadedFiles = useMemo(() => {
     return Object.values(files).filter(
       (f): f is UploadedFile =>
@@ -95,7 +79,6 @@ export function useFileUploadState(): FileUploadStateActions {
     return Object.values(files).some((file) => file.status === FileUploadStatus.UPLOADING)
   }, [files])
 
-  // Actions
   const addFile = useCallback(
     (file: File, checksumAlgorithm: FixityAlgorithm, defaults?: Partial<FileUploadState>) => {
       const fileKey = FileUploaderHelper.getFileKey(file)
@@ -104,7 +87,7 @@ export function useFileUploadState(): FileUploadStateActions {
         : ''
 
       setFiles((prev) => {
-        if (prev[fileKey]) return prev // Already exists
+        if (prev[fileKey]) return prev
 
         return {
           ...prev,
@@ -166,7 +149,6 @@ export function useFileUploadState(): FileUploadStateActions {
   }, [])
 
   const reset = useCallback(() => {
-    // Cancel all in-progress uploads before resetting
     uploadingToCancelMap.forEach((cancel) => cancel())
     setFiles({})
     setUploadingToCancelMap(new Map())
