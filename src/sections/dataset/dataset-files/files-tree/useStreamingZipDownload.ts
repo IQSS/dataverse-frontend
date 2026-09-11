@@ -1,11 +1,12 @@
 import { useCallback, useRef, useState } from 'react'
-import { downloadZip } from 'client-zip'
+import { makeZip } from 'client-zip'
 import { md5 } from 'js-md5'
 import { sha1 } from '@noble/hashes/legacy.js'
 import { sha256, sha512 } from '@noble/hashes/sha2.js'
 import { bytesToHex } from '@noble/hashes/utils.js'
 import { FileTreeFile } from '@/files/domain/models/FileTreeItem'
 import { useBeforeUnloadGuard } from '@/shared/hooks/useBeforeUnloadGuard'
+import { ZipSink, resolveZipSink } from './zipStreamSink'
 
 export type StreamingZipStrategy = 'pause' | 'skip' | 'twopass'
 
@@ -57,6 +58,9 @@ export interface StartStreamingZipArgs {
   partSize?: number
   partRetries?: number
   partRetryDelayMs?: number
+  serviceWorkerUrl?: string
+  serviceWorkerScope?: string
+  sink?: ZipSink
 }
 
 const DEFAULT_PART_SIZE_BYTES = 10 * 1024 * 1024
@@ -430,10 +434,19 @@ export function useStreamingZipDownload(): StreamingZipApi {
 
       void (async () => {
         try {
-          const response = downloadZip(iterableForZip())
-          const blob = await response.blob()
+          const sink =
+            args.sink ??
+            (await resolveZipSink({
+              serviceWorkerUrl: args.serviceWorkerUrl,
+              serviceWorkerScope: args.serviceWorkerScope
+            }))
           if (stale()) return
-          triggerDownload(blob, zipName)
+          await sink.save({
+            name: zipName,
+            body: makeZip(iterableForZip()),
+            shouldSave: () => !stale()
+          })
+          if (stale()) return
           runUpdate((prev) => ({ ...prev, status: 'done', current: undefined }))
         } catch (err) {
           /* istanbul ignore next */
@@ -769,17 +782,4 @@ function buildChunkedStream(args: {
       await dropReader()
     }
   })
-}
-
-function triggerDownload(blob: Blob, name: string): void {
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = name
-  a.rel = 'noopener noreferrer'
-  a.style.display = 'none'
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-  setTimeout(() => URL.revokeObjectURL(url), 4_000)
 }
