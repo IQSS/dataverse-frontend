@@ -45,7 +45,6 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
       defaultValue_other: 'Download complete — {{count}} files failed checksum verification',
       count: state.verificationFailures.length
     })
-  // engine — itself a defensive path covered by /* istanbul ignore */
   /* istanbul ignore next */ else if (isError)
     title = t('tree.download.tray.error', 'Download failed')
   else if (isCancelled) title = t('tree.download.tray.cancelled', 'Download cancelled')

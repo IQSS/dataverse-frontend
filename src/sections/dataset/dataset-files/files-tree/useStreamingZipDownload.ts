@@ -118,13 +118,12 @@ export function useStreamingZipDownload(): StreamingZipApi {
     | 'cancel'
   const decisionRef = useRef<ResolveBag<Decision> | null>(null)
   const cancelledRef = useRef(false)
+  const runIdRef = useRef(0)
 
   const update = useCallback((fn: (prev: StreamingZipState) => StreamingZipState) => {
-    setState((prev) => {
-      const next = fn(prev)
-      stateRef.current = next
-      return next
-    })
+    const next = fn(stateRef.current)
+    stateRef.current = next
+    setState(next)
   }, [])
 
   const close = useCallback(() => {
@@ -182,10 +181,15 @@ export function useStreamingZipDownload(): StreamingZipApi {
 
       cancelledRef.current = false
       decisionRef.current = null
+      const runId = ++runIdRef.current
+      const stale = () => cancelledRef.current || runIdRef.current !== runId
+      const runUpdate = (fn: (prev: StreamingZipState) => StreamingZipState) => {
+        if (!stale()) update(fn)
+      }
       const getFetchInit: FetchInitProvider =
         typeof fetchInit === 'function' ? fetchInit : () => fetchInit
       const totalBytes = files.reduce((s, f) => s + f.size, 0)
-      update(() => ({
+      runUpdate(() => ({
         ...initialState,
         status: 'preparing',
         totalFiles: files.length,
@@ -201,9 +205,9 @@ export function useStreamingZipDownload(): StreamingZipApi {
         const processQueue = async function* () {
           while (queue.length > 0) {
             /* istanbul ignore next */
-            if (cancelledRef.current) return
+            if (stale()) return
             const file = queue.shift() as FileTreeFile
-            update((prev) => ({
+            runUpdate((prev) => ({
               ...prev,
               status: 'running',
               current: { name: file.name, path: file.path, size: file.size }
@@ -233,16 +237,16 @@ export function useStreamingZipDownload(): StreamingZipApi {
                 error: err instanceof Error ? err.message : String(err),
                 recoverable: strategy !== 'skip'
               }
-              update((prev) => ({
+              runUpdate((prev) => ({
                 ...prev,
                 failedSoFar: [...prev.failedSoFar, failure]
               }))
               if (strategy === 'pause') {
-                update((prev) => ({ ...prev, status: 'paused' }))
+                runUpdate((prev) => ({ ...prev, status: 'paused' }))
                 const decision = await waitForDecision()
                 if (decision === 'cancel') return
                 if (decision === 'retry') {
-                  update((prev) => ({
+                  runUpdate((prev) => ({
                     ...prev,
                     failedSoFar: prev.failedSoFar.slice(0, -1),
                     status: 'running'
@@ -252,14 +256,14 @@ export function useStreamingZipDownload(): StreamingZipApi {
                 }
                 if (decision === 'defer-to-end') {
                   strategy = 'twopass'
-                  update((prev) => ({ ...prev, status: 'running' }))
+                  runUpdate((prev) => ({ ...prev, status: 'running' }))
                   continue
                 }
                 if (decision === 'skip' || decision === 'skip-all') {
                   if (decision === 'skip-all') {
                     strategy = 'skip'
                   }
-                  update((prev) => {
+                  runUpdate((prev) => {
                     const last = prev.failedSoFar[prev.failedSoFar.length - 1]
                     /* istanbul ignore if */
                     if (!last) return { ...prev, status: 'running' }
@@ -285,7 +289,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
 
             /* istanbul ignore next */
             if (!response.body) {
-              update((prev) => ({
+              runUpdate((prev) => ({
                 ...prev,
                 filesDone: prev.filesDone + 1,
                 bytesDone: prev.bytesDone + file.size
@@ -301,36 +305,36 @@ export function useStreamingZipDownload(): StreamingZipApi {
               partRetryDelayMs,
               fetchInit: getFetchInit,
               onProgress: (delta) =>
-                update((prev) => ({ ...prev, bytesDone: prev.bytesDone + delta })),
+                runUpdate((prev) => ({ ...prev, bytesDone: prev.bytesDone + delta })),
               onVerificationFailure: (failure) =>
-                update((prev) => ({
+                runUpdate((prev) => ({
                   ...prev,
                   verificationFailures: [...prev.verificationFailures, failure]
                 })),
-              cancelled: () => cancelledRef.current
+              cancelled: stale
             })
             yield {
               name: file.path,
               input: stream,
               lastModified: new Date()
             }
-            update((prev) => ({ ...prev, filesDone: prev.filesDone + 1 }))
+            runUpdate((prev) => ({ ...prev, filesDone: prev.filesDone + 1 }))
           }
         }
 
         yield* processQueue()
         /* istanbul ignore next */
-        if (cancelledRef.current) return
+        if (stale()) return
 
         if (strategy === 'twopass' && stateRef.current.failedSoFar.length > 0) {
-          update((prev) => ({ ...prev, status: 'awaiting-retry' }))
+          runUpdate((prev) => ({ ...prev, status: 'awaiting-retry' }))
           const decision = await waitForDecision()
           if (decision === 'cancel') return
           if (decision === 'finalize') {
             for (const f of stateRef.current.failedSoFar.filter((x) => x.recoverable)) {
               skippedManifest.push({ ...f, recoverable: false })
             }
-            update((prev) => ({
+            runUpdate((prev) => ({
               ...prev,
               failedSoFar: prev.failedSoFar.map((f) =>
                 f.recoverable ? { ...f, recoverable: false } : f
@@ -344,7 +348,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
               const file = fileByPath.get(f.path)
               if (file) queue.push(file)
             }
-            update((prev) => ({
+            runUpdate((prev) => ({
               ...prev,
               failedSoFar: prev.failedSoFar.filter((f) => !f.recoverable),
               pass: 2,
@@ -354,7 +358,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
             const survivors = stateRef.current.failedSoFar.filter((f) => f.recoverable)
             if (survivors.length > 0) {
               for (const f of survivors) skippedManifest.push({ ...f, recoverable: false })
-              update((prev) => ({
+              runUpdate((prev) => ({
                 ...prev,
                 failedSoFar: prev.failedSoFar.map((f) =>
                   f.recoverable ? { ...f, recoverable: false } : f
@@ -399,14 +403,14 @@ export function useStreamingZipDownload(): StreamingZipApi {
         try {
           const response = downloadZip(iterableForZip())
           const blob = await response.blob()
-          if (cancelledRef.current) return
+          if (stale()) return
           triggerDownload(blob, zipName)
-          update((prev) => ({ ...prev, status: 'done', current: undefined }))
+          runUpdate((prev) => ({ ...prev, status: 'done', current: undefined }))
         } catch (err) {
           /* istanbul ignore next */
-          if (cancelledRef.current) return
+          if (stale()) return
           /* istanbul ignore next */
-          update((prev) => ({
+          runUpdate((prev) => ({
             ...prev,
             status: 'error',
             message: err instanceof Error ? err.message : String(err)
@@ -605,8 +609,6 @@ function buildChunkedStream(args: {
     args.initialResponse.url && args.initialResponse.url !== args.originalUrl
       ? /* istanbul ignore next */ args.initialResponse.url
       : args.originalUrl
-
-  // /* istanbul ignore next */ guard in the engine), so the assertion
   const initialBody = args.initialResponse.body as ReadableStream<Uint8Array>
   let partIndex = 0
   let currentReader: ReadableStreamDefaultReader<Uint8Array> | null = initialBody.getReader()

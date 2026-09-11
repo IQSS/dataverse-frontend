@@ -766,6 +766,45 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     })
   })
 
+  it('ignores a cancelled run that finishes after a new run started', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="stale.zip" />)
+
+    let releaseFirst: (() => void) | undefined
+    let calls = 0
+    installFetchHandler(() => {
+      calls += 1
+      if (calls === 1) {
+        return new Promise<Response>((resolve) => {
+          releaseFirst = () => resolve(fakeResponseBody('AAA'))
+        })
+      }
+      return Promise.resolve(fakeResponseBody('AAA'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray').should('be.visible')
+    cy.findByRole('button', { name: /cancel/i }).click()
+    cy.contains(/download cancelled/i).should('exist')
+    cy.findAllByRole('button', { name: /close/i }).first().click()
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      releaseFirst?.()
+    })
+    cy.wait(200)
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.contains(/download complete/i).should('exist')
+  })
+
   it('does not burn retry budget on a terminal 4xx (e.g. 403)', () => {
     const files: FileTreeFile[] = [
       FileTreeFileMother.create({
