@@ -235,6 +235,7 @@
         "skip": "Omitir",
         "deferToEnd": "Omitir y reintentar al final",
         "skipAll": "Omitir todos los fallos restantes",
+        "abort": "Cancelar la descarga",
         "notIncluded_one": "{{count}} archivo no se incluyó en el zip",
         "notIncluded_other": "{{count}} archivos no se incluyeron en el zip",
         "twopassHint": "Primera pasada terminada. El zip se finalizará tras reintentar los fallos en una segunda pasada.",

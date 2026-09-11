@@ -69,6 +69,7 @@
         "skip": "Skip",
         "deferToEnd": "Skip & retry at end",
         "skipAll": "Skip all remaining failures",
+        "abort": "Abort download",
         "notIncluded_one": "{{count}} file was not included in the zip",
         "notIncluded_other": "{{count}} files were not included in the zip",
         "twopassHint": "First pass finished. The zip will be finalised after a second-pass retry of the failures.",

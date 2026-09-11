@@ -1310,6 +1310,210 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/download complete/i, { timeout: 5_000 }).should('not.exist')
   })
 
+  function partResponse(body: string, start: number, total: number): Response {
+    const stream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode(body))
+        controller.close()
+      }
+    })
+    return new Response(stream, {
+      status: 206,
+      statusText: 'Partial Content',
+      headers: {
+        'content-type': 'application/octet-stream',
+        'content-range': `bytes ${start}-${start + body.length - 1}/${total}`
+      }
+    })
+  }
+
+  // The zip is stored, so the entry's bytes follow its local header verbatim.
+  function storedEntryBytes(zip: Uint8Array, name: string, length: number): string {
+    const nameBytes = new TextEncoder().encode(name)
+    for (let i = 0; i + 30 + nameBytes.length <= zip.length; i++) {
+      if (zip[i] !== 0x50 || zip[i + 1] !== 0x4b || zip[i + 2] !== 0x03 || zip[i + 3] !== 0x04)
+        continue
+      const nameLen = zip[i + 26] | (zip[i + 27] << 8)
+      const extraLen = zip[i + 28] | (zip[i + 29] << 8)
+      const nameStart = i + 30
+      const found = new TextDecoder().decode(zip.slice(nameStart, nameStart + nameLen))
+      if (found !== name) continue
+      const dataStart = nameStart + nameLen + extraLen
+      return new TextDecoder().decode(zip.slice(dataStart, dataStart + length))
+    }
+    throw new Error(`entry ${name} not found`)
+  }
+
+  let lastObjectUrlBlob: Blob | null = null
+  function captureObjectUrls() {
+    lastObjectUrlBlob = null
+    cy.window().then((win) => {
+      cy.stub(win.URL, 'createObjectURL').callsFake((blob: Blob) => {
+        lastObjectUrlBlob = blob
+        return 'blob:captured'
+      })
+      cy.stub(win.URL, 'revokeObjectURL').callsFake(() => undefined)
+    })
+  }
+  function capturedZip(): Blob {
+    if (!lastObjectUrlBlob) throw new Error('no blob was handed to createObjectURL')
+    return lastObjectUrlBlob
+  }
+
+  function chunkedFile(total: number) {
+    return [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'big.bin',
+        path: 'big.bin',
+        size: total,
+        downloadUrl: '/access/1',
+        checksum: { type: 'MD5', value: 'e1b6b2b3211076a71632bbf2ad0edc05' }
+      })
+    ]
+  }
+
+  it('resumes a failed non-first part from its own offset after Retry and the entry is byte-identical', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="resume.zip" partSize={4} partRetries={0} />
+    )
+    captureObjectUrls()
+
+    const ranges: string[] = []
+    let secondPartAttempts = 0
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      ranges.push(range)
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      if (start === 4 && secondPartAttempts++ === 0) {
+        return Promise.reject(new Error('mid-stream drop'))
+      }
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /abort download/i }).should('exist')
+    cy.findByRole('button', { name: /^skip$/i }).should('not.exist')
+    cy.findByRole('button', { name: /skip & retry at end/i }).should('not.exist')
+    cy.findByRole('button', { name: /retry this file/i }).click()
+
+    cy.contains(/download complete/i).should('exist')
+    cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.then(() => {
+      expect(ranges).to.deep.equal(['bytes=0-3', 'bytes=4-7', 'bytes=4-7', 'bytes=8-11'])
+    })
+    cy.then(async () => {
+      const zip = new Uint8Array(await capturedZip().arrayBuffer())
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+    })
+    cy.contains(/checksum/i).should('not.exist')
+  })
+
+  it('resumes from the exact byte when a part body drops halfway', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="drop.zip" partSize={4} partRetries={0} />
+    )
+    captureObjectUrls()
+
+    const ranges: string[] = []
+    let dropped = false
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      ranges.push(range)
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      if (start === 4 && !dropped) {
+        dropped = true
+        let pulls = 0
+        const stream = new ReadableStream<Uint8Array>({
+          pull(controller) {
+            if (pulls++ === 0) controller.enqueue(new TextEncoder().encode('BB'))
+            else controller.error(new Error('connection reset'))
+          }
+        })
+        return Promise.resolve(
+          new Response(stream, {
+            status: 206,
+            headers: {
+              'content-type': 'application/octet-stream',
+              'content-range': `bytes 4-7/${source.length}`
+            }
+          })
+        )
+      }
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /retry this file/i }).click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(ranges).to.deep.equal(['bytes=0-3', 'bytes=4-7', 'bytes=6-9', 'bytes=10-11'])
+    })
+    cy.then(async () => {
+      const zip = new Uint8Array(await capturedZip().arrayBuffer())
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+    })
+    cy.contains(/checksum/i).should('not.exist')
+  })
+
+  it('aborts the download when Abort is chosen mid-entry', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="abort.zip" partSize={4} partRetries={0} />
+    )
+
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      if (start === 4) return Promise.reject(new Error('mid-stream drop'))
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /abort download/i }).click()
+    cy.contains(/download cancelled/i).should('exist')
+    cy.wait(300)
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
+  it('cannot resume when the server ignored Range, so a mid-body drop aborts the run', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="norange-drop.zip" partSize={4} partRetries={0} />
+    )
+
+    installFetchHandler(() => {
+      let pulls = 0
+      const stream = new ReadableStream<Uint8Array>({
+        pull(controller) {
+          if (pulls++ === 0) controller.enqueue(new TextEncoder().encode('AAAA'))
+          else controller.error(new Error('connection reset'))
+        }
+      })
+      return Promise.resolve(
+        new Response(stream, {
+          status: 200,
+          headers: { 'content-type': 'application/octet-stream' }
+        })
+      )
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download failed/i).should('exist')
+    cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
   it('falls back to a single stream when the server returns 200 to a Range request', () => {
     const total = 12 // larger than partSize, but server ignores Range
     const files: FileTreeFile[] = [

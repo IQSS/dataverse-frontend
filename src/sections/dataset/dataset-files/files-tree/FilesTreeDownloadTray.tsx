@@ -128,15 +128,23 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
                 <Button variant="primary" size="sm" onClick={api.retryCurrent}>
                   {t('tree.download.tray.retry', 'Retry this file')}
                 </Button>
-                <Button variant="secondary" size="sm" onClick={api.skipCurrent}>
-                  {t('tree.download.tray.skip', 'Skip')}
-                </Button>
-                <Button variant="secondary" size="sm" onClick={api.deferCurrentToEnd}>
-                  {t('tree.download.tray.deferToEnd', 'Skip & retry at end')}
-                </Button>
-                <Button variant="link" size="sm" onClick={api.skipAllFailures}>
-                  {t('tree.download.tray.skipAll', 'Skip all remaining failures')}
-                </Button>
+                {lastRecoverableFailure.midEntry ? (
+                  <Button variant="danger" size="sm" onClick={api.cancel}>
+                    {t('tree.download.tray.abort', 'Abort download')}
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="secondary" size="sm" onClick={api.skipCurrent}>
+                      {t('tree.download.tray.skip', 'Skip')}
+                    </Button>
+                    <Button variant="secondary" size="sm" onClick={api.deferCurrentToEnd}>
+                      {t('tree.download.tray.deferToEnd', 'Skip & retry at end')}
+                    </Button>
+                    <Button variant="link" size="sm" onClick={api.skipAllFailures}>
+                      {t('tree.download.tray.skipAll', 'Skip all remaining failures')}
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           )}

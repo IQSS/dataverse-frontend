@@ -12,6 +12,7 @@ export interface StreamingZipFailure {
   size: number
   error: string
   recoverable: boolean
+  midEntry?: boolean
 }
 
 export interface StreamingZipVerificationFailure {
@@ -311,6 +312,31 @@ export function useStreamingZipDownload(): StreamingZipApi {
                   ...prev,
                   verificationFailures: [...prev.verificationFailures, failure]
                 })),
+              onEntryFailure: async (error) => {
+                const failure: StreamingZipFailure = {
+                  path: file.path,
+                  name: file.name,
+                  size: file.size,
+                  error,
+                  recoverable: true,
+                  midEntry: true
+                }
+                runUpdate((prev) => ({
+                  ...prev,
+                  status: 'paused',
+                  failedSoFar: [...prev.failedSoFar, failure]
+                }))
+                const decision = await waitForDecision()
+                if (decision === 'retry') {
+                  runUpdate((prev) => ({
+                    ...prev,
+                    status: 'running',
+                    failedSoFar: prev.failedSoFar.slice(0, -1)
+                  }))
+                  return 'retry'
+                }
+                return 'abort'
+              },
               cancelled: stale
             })
             yield {
@@ -600,21 +626,65 @@ function buildChunkedStream(args: {
   fetchInit: FetchInitProvider
   onProgress: (delta: number) => void
   onVerificationFailure: (failure: StreamingZipVerificationFailure) => void
+  onEntryFailure: (error: string) => Promise<'retry' | 'abort'>
   cancelled: () => boolean
 }): ReadableStream<Uint8Array> {
   const total = args.file.size
   const usedRange = args.initialResponse.status === 206
-  const numParts = usedRange ? Math.ceil(total / args.partSize) : 1
   let subsequentUrl =
     args.initialResponse.url && args.initialResponse.url !== args.originalUrl
       ? /* istanbul ignore next */ args.initialResponse.url
       : args.originalUrl
   const initialBody = args.initialResponse.body as ReadableStream<Uint8Array>
-  let partIndex = 0
   let currentReader: ReadableStreamDefaultReader<Uint8Array> | null = initialBody.getReader()
+  let delivered = 0
+  let fetchedUpTo = usedRange ? Math.min(args.partSize, total) : total
 
   const expectedChecksum = args.file.checksum
   const digest = expectedChecksum ? makeDigestAccumulator(expectedChecksum.type) : null
+
+  const dropReader = async () => {
+    if (currentReader) {
+      const reader = currentReader
+      currentReader = null
+      try {
+        await reader.cancel()
+      } catch {
+        return
+      }
+    }
+  }
+
+  const resumeFromDelivered = async (): Promise<ReadableStreamDefaultReader<Uint8Array>> => {
+    const end = Math.min(delivered + args.partSize, total) - 1
+    const result = await fetchPartWithRefresh({
+      cachedUrl: subsequentUrl,
+      originalUrl: args.originalUrl,
+      rangeHeader: `bytes=${delivered}-${end}`,
+      fetchInit: args.fetchInit,
+      retries: args.partRetries,
+      delayMs: args.partRetryDelayMs
+    })
+    if (result.refreshedUrl) {
+      subsequentUrl = result.refreshedUrl
+    }
+    /* istanbul ignore if */
+    if (!result.response.body) {
+      throw new Error('no body for range part')
+    }
+    fetchedUpTo = end + 1
+    return result.response.body.getReader()
+  }
+
+  const recover = async (err: unknown): Promise<boolean> => {
+    await dropReader()
+    const message = err instanceof Error ? err.message : String(err)
+    if (!usedRange && delivered > 0) {
+      return false
+    }
+    const decision = await args.onEntryFailure(message)
+    return decision === 'retry'
+  }
 
   return new ReadableStream<Uint8Array>({
     async pull(controller) {
@@ -625,8 +695,9 @@ function buildChunkedStream(args: {
         return
       }
       for (;;) {
-        if (!currentReader) {
-          if (partIndex >= numParts) {
+        let reader = currentReader
+        if (!reader) {
+          if (delivered >= total) {
             if (digest && expectedChecksum) {
               const actual = await digest.finalize()
               if (actual.toLowerCase() !== expectedChecksum.value.toLowerCase()) {
@@ -643,42 +714,38 @@ function buildChunkedStream(args: {
             controller.close()
             return
           }
-          const start = partIndex * args.partSize
-          const end = Math.min(start + args.partSize, total) - 1
-          let response: Response
           try {
-            const result = await fetchPartWithRefresh({
-              cachedUrl: subsequentUrl,
-              originalUrl: args.originalUrl,
-              rangeHeader: `bytes=${start}-${end}`,
-              fetchInit: args.fetchInit,
-              retries: args.partRetries,
-              delayMs: args.partRetryDelayMs
-            })
-            response = result.response
-            if (result.refreshedUrl) {
-              subsequentUrl = result.refreshedUrl
-            }
+            reader = await resumeFromDelivered()
+            currentReader = reader
           } catch (err) {
+            if (await recover(err)) continue
             controller.error(err instanceof Error ? err : new Error(String(err)))
             return
           }
-          /* istanbul ignore if */
-          if (!response.body) {
-            controller.error(new Error('no body for range part'))
+        }
+        let chunk: ReadableStreamReadResult<Uint8Array>
+        try {
+          chunk = await reader.read()
+        } catch (err) {
+          if (await recover(err)) continue
+          controller.error(err instanceof Error ? err : new Error(String(err)))
+          return
+        }
+        const { value, done } = chunk
+        if (done) {
+          reader.releaseLock()
+          currentReader = null
+          if (delivered < fetchedUpTo) {
+            const short = new Error(`connection closed at byte ${delivered} of ${fetchedUpTo}`)
+            if (await recover(short)) continue
+            controller.error(short)
             return
           }
-          currentReader = response.body.getReader()
-        }
-        const { value, done } = await currentReader.read()
-        if (done) {
-          currentReader.releaseLock()
-          currentReader = null
-          partIndex += 1
           continue
         }
         if (value && value.byteLength > 0) {
           if (digest) digest.update(value)
+          delivered += value.byteLength
           args.onProgress(value.byteLength)
           controller.enqueue(value)
           return
@@ -687,13 +754,7 @@ function buildChunkedStream(args: {
     },
     /* istanbul ignore next */
     async cancel() {
-      if (currentReader) {
-        try {
-          await currentReader.cancel()
-        } catch {
-          return
-        }
-      }
+      await dropReader()
     }
   })
 }
