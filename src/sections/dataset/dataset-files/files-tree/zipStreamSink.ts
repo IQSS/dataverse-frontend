@@ -71,6 +71,56 @@ function scopeFor(options: ServiceWorkerSinkOptions): string {
   return new URL('./', new URL(options.url, window.location.href)).pathname
 }
 
+export interface PulledStream {
+  readable: ReadableStream<Uint8Array>
+  done: Promise<void>
+  hasPulled: () => boolean
+  abandon: (reason: Error) => Promise<void>
+}
+
+export function pullDrivenStream(body: ReadableStream<Uint8Array>): PulledStream {
+  const reader = body.getReader()
+  let pulled = false
+  let settle: () => void = () => undefined
+  let reject: (reason: Error) => void = () => undefined
+  const done = new Promise<void>((resolve, fail) => {
+    settle = resolve
+    reject = fail
+  })
+  done.catch(() => undefined)
+  const readable = new ReadableStream<Uint8Array>({
+    async pull(controller) {
+      pulled = true
+      try {
+        const { value, done: finished } = await reader.read()
+        if (finished) {
+          controller.close()
+          settle()
+          return
+        }
+        controller.enqueue(value)
+      } catch (error) {
+        const failure = error instanceof Error ? error : new Error(String(error))
+        controller.error(failure)
+        reject(failure)
+      }
+    },
+    cancel(reason) {
+      void reader.cancel(reason)
+      reject(new Error('the browser stopped reading the download'))
+    }
+  })
+  return {
+    readable,
+    done,
+    hasPulled: () => pulled,
+    abandon: async (reason: Error) => {
+      await reader.cancel(reason).catch(() => undefined)
+      reject(reason)
+    }
+  }
+}
+
 export function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     const timer = setTimeout(() => resolve(fallback), ms)
@@ -128,7 +178,8 @@ function handOver(
   controller: ServiceWorker,
   id: string,
   name: string,
-  readable: ReadableStream<Uint8Array>
+  readable: ReadableStream<Uint8Array>,
+  signal: AbortSignal
 ): Promise<void> {
   return new Promise<void>((resolve) => {
     const onMessage = (event: MessageEvent) => {
@@ -137,7 +188,7 @@ function handOver(
       navigator.serviceWorker.removeEventListener('message', onMessage)
       resolve()
     }
-    navigator.serviceWorker.addEventListener('message', onMessage)
+    navigator.serviceWorker.addEventListener('message', onMessage, { signal })
     if (transferableStreamsSupported()) {
       controller.postMessage({ type: 'zipdl-register', id, name, stream: readable }, [
         readable as unknown as Transferable
@@ -146,6 +197,9 @@ function handOver(
     }
     const channel = new MessageChannel()
     const reader = readable.getReader()
+    signal.addEventListener('abort', () => {
+      channel.port1.close()
+    })
     channel.port1.onmessage = (event: MessageEvent) => {
       const type = (event.data as { type?: string } | null)?.type
       if (type === 'cancel') {
@@ -200,22 +254,17 @@ export async function createServiceWorkerSink(
         return
       }
       const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
-      let pulled = false
-      const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>({
-        transform(chunk, controller) {
-          pulled = true
-          controller.enqueue(chunk)
-        }
-      })
-      const done = body.pipeTo(writable)
+      const cleanup = new AbortController()
+      const pipe = pullDrivenStream(body)
+      const done = pipe.done
       const abandon = async (reason: Error) => {
         worker.postMessage({ type: 'zipdl-unregister', id })
-        await writable.abort(reason).catch(() => undefined)
-        await done.catch(() => undefined)
+        cleanup.abort()
+        await pipe.abandon(reason)
         throw reason
       }
       const handedOver = await withTimeout(
-        handOver(worker, id, name, readable).then(() => true),
+        handOver(worker, id, name, pipe.readable, cleanup.signal).then(() => true),
         HANDOVER_TIMEOUT_MS,
         false
       )
@@ -226,13 +275,15 @@ export async function createServiceWorkerSink(
       const keepalive = setInterval(() => {
         void fetch(`${scope}zipdl/${id}/keepalive`, { cache: 'no-store' }).catch(() => undefined)
       }, options.keepaliveMs ?? KEEPALIVE_MS)
-      const started = new Promise<boolean>((resolve) => {
-        setTimeout(() => resolve(pulled), options.firstByteMs ?? FIRST_BYTE_TIMEOUT_MS)
+      const started = new Promise<'never read'>((resolve) => {
+        setTimeout(() => {
+          if (!pipe.hasPulled()) resolve('never read')
+        }, options.firstByteMs ?? FIRST_BYTE_TIMEOUT_MS)
       })
       try {
         const outcome = await Promise.race([done.then(() => 'done' as const), started])
-        if (outcome === false) {
-          await abandon(new Error('the browser never started reading the download'))
+        if (outcome === 'never read') {
+          await abandon(new Error('the browser never started the download'))
         }
         await done
       } finally {

@@ -1,5 +1,6 @@
 import {
   createBlobSink,
+  pullDrivenStream,
   resolveZipSink,
   scopeCoversPage,
   transferableChunk,
@@ -151,6 +152,91 @@ describe('withTimeout', () => {
         caught = e
       })
       expect((caught as Error)?.message).to.equal('boom')
+    })
+  })
+})
+
+describe('pullDrivenStream', () => {
+  const source = (chunks: string[]) =>
+    new ReadableStream<Uint8Array>({
+      start(controller) {
+        for (const chunk of chunks) controller.enqueue(new TextEncoder().encode(chunk))
+        controller.close()
+      }
+    })
+
+  it('does not touch the source until the consumer reads', () => {
+    cy.then(async () => {
+      let started = false
+      const body = new ReadableStream<Uint8Array>({
+        pull(controller) {
+          started = true
+          controller.close()
+        }
+      })
+      const wrapped = pullDrivenStream(body)
+      expect(wrapped.hasPulled()).to.equal(false)
+      expect(started).to.equal(false)
+      await wrapped.readable.getReader().read()
+      expect(wrapped.hasPulled()).to.equal(true)
+    })
+  })
+
+  it('forwards every chunk and settles when the source ends', () => {
+    cy.then(async () => {
+      const wrapped = pullDrivenStream(source(['a', 'b', 'c']))
+      const text = await new Response(wrapped.readable).text()
+      expect(text).to.equal('abc')
+      await wrapped.done
+    })
+  })
+
+  it('rejects when the source errors instead of ending quietly', () => {
+    cy.then(async () => {
+      let sent = false
+      const body = new ReadableStream<Uint8Array>({
+        pull(controller) {
+          if (!sent) {
+            sent = true
+            controller.enqueue(new TextEncoder().encode('half'))
+            return
+          }
+          controller.error(new Error('source died'))
+        }
+      })
+      const wrapped = pullDrivenStream(body)
+      let message = ''
+      wrapped.done.catch((error: Error) => {
+        message = error.message
+      })
+      await new Response(wrapped.readable).text().catch(() => undefined)
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(message).to.equal('source died')
+    })
+  })
+
+  it('cancels the source and rejects when the consumer walks away', () => {
+    cy.then(async () => {
+      let cancelled = false
+      const body = new ReadableStream<Uint8Array>({
+        pull(controller) {
+          controller.enqueue(new TextEncoder().encode('x'))
+        },
+        cancel() {
+          cancelled = true
+        }
+      })
+      const wrapped = pullDrivenStream(body)
+      let rejected = false
+      wrapped.done.catch(() => {
+        rejected = true
+      })
+      const consumer = wrapped.readable.getReader()
+      await consumer.read()
+      await consumer.cancel('done with it')
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(cancelled, 'the source was cancelled').to.equal(true)
+      expect(rejected, 'the run was reported as failed').to.equal(true)
     })
   })
 })
