@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createKnownChildrenCache } from './knownChildren'
 import {
   FileTreeRepository,
   GetFileTreeNodeParams
@@ -263,15 +264,16 @@ export function useFileTree({
     [fetchPage]
   )
 
+  const knownChildrenCache = useRef(createKnownChildrenCache())
   const visibleKnownChildren = useCallback(
     (path: string): FileTreeItem[] => {
-      const out: FileTreeItem[] = []
+      const deps: FileTreeItem[][] = []
       for (const node of nodes.values()) {
         if (path === '' || node.path === path || node.path.startsWith(`${path}/`)) {
-          out.push(...node.items)
+          deps.push(node.items)
         }
       }
-      return out
+      return knownChildrenCache.current(path, deps)
     },
     [nodes]
   )

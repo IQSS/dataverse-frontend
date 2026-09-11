@@ -381,6 +381,18 @@ export function FilesTree({
     ]
   )
 
+  const folderStates = useMemo(() => {
+    const states = new Map<string, SelectionState>()
+    for (const node of tree.nodes.values()) {
+      for (const item of node.items) {
+        if (isFileTreeFolder(item)) {
+          states.set(item.path, selection.folderState(item, tree.visibleKnownChildren(item.path)))
+        }
+      }
+    }
+    return states
+  }, [tree.nodes, tree.visibleKnownChildren, selection.folderState])
+
   const headerSelectAllState: SelectionState = (() => {
     const totalCount = selection.totals.count
     const hasFolders = selection.totals.hasLogicalFolders
@@ -394,7 +406,7 @@ export function FilesTree({
     const everyTopSelected = topLevel.every((item) =>
       isFileTreeFile(item)
         ? selection.fileState(item) === 'all'
-        : selection.folderState(item, tree.visibleKnownChildren(item.path)) === 'all'
+        : folderStates.get(item.path) === 'all'
     )
     return everyTopSelected ? 'all' : 'partial'
   })()
@@ -553,10 +565,9 @@ export function FilesTree({
               )
             }
             const item = row.node
-            const knownChildren = isFileTreeFolder(item) ? tree.visibleKnownChildren(item.path) : []
             const selectionState = isFileTreeFile(item)
               ? selection.fileState(item)
-              : selection.folderState(item, knownChildren)
+              : folderStates.get(item.path) ?? 'none'
             const expanded = isFileTreeFolder(item) ? tree.expanded.has(item.path) : undefined
             return (
               <FilesTreeRow
