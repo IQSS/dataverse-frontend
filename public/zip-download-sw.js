@@ -1,7 +1,3 @@
-// Answers a same-origin download URL with a stream the page hands over, so a
-// multi-gigabyte zip reaches disk without ever being held in tab memory.
-// All fetching, retrying and zipping stays in the page; this only pipes bytes.
-
 const PATH = '/zipdl/'
 const streams = new Map()
 

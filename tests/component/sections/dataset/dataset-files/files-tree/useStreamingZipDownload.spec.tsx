@@ -32,10 +32,6 @@ function StreamingZipHarness({
   strategy?: 'pause' | 'skip' | 'twopass'
   partSize?: number
   fetchInit?: RequestInit | (() => RequestInit | undefined)
-  /**
-   * Defaults to the buffered sink so the specs assert on the download
-   * anchor. Tests for the streaming path inject their own.
-   */
   sink?: ZipSink
   onApi?: (api: ReturnType<typeof useStreamingZipDownload>) => void
   /**

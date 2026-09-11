@@ -38,9 +38,6 @@ export default defineConfig({
       jsAssetsFilterFunction: (chunk) => chunk.isEntry === true
     }),
     {
-      // The download service worker is a classic worker, not a bundle entry.
-      // It has to sit next to the components so a JSF deployment can serve it
-      // from the same base URL.
       name: 'emit-zip-download-service-worker',
       generateBundle() {
         this.emitFile({
