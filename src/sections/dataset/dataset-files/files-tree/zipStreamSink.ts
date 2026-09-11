@@ -15,6 +15,10 @@ export interface ServiceWorkerSinkOptions {
   scope?: string
   keepaliveMs?: number
   firstByteMs?: number
+  handoverMs?: number
+  connect?: () => Promise<ServiceWorker | null>
+  probe?: (url: string) => Promise<boolean>
+  navigate?: (url: string) => () => void
 }
 
 export function workerUrlForBase(base: string): string {
@@ -88,28 +92,31 @@ export function pullDrivenStream(body: ReadableStream<Uint8Array>): PulledStream
     reject = fail
   })
   done.catch(() => undefined)
-  const readable = new ReadableStream<Uint8Array>({
-    async pull(controller) {
-      pulled = true
-      try {
-        const { value, done: finished } = await reader.read()
-        if (finished) {
-          controller.close()
-          settle()
-          return
+  const readable = new ReadableStream<Uint8Array>(
+    {
+      async pull(controller) {
+        pulled = true
+        try {
+          const { value, done: finished } = await reader.read()
+          if (finished) {
+            controller.close()
+            settle()
+            return
+          }
+          controller.enqueue(value)
+        } catch (error) {
+          const failure = error instanceof Error ? error : new Error(String(error))
+          controller.error(failure)
+          reject(failure)
         }
-        controller.enqueue(value)
-      } catch (error) {
-        const failure = error instanceof Error ? error : new Error(String(error))
-        controller.error(failure)
-        reject(failure)
+      },
+      cancel(reason) {
+        void reader.cancel(reason)
+        reject(new Error('the browser stopped reading the download'))
       }
     },
-    cancel(reason) {
-      void reader.cancel(reason)
-      reject(new Error('the browser stopped reading the download'))
-    }
-  })
+    new CountQueuingStrategy({ highWaterMark: 0 })
+  )
   return {
     readable,
     done,
@@ -182,17 +189,21 @@ function handOver(
   signal: AbortSignal
 ): Promise<void> {
   return new Promise<void>((resolve) => {
-    const onMessage = (event: MessageEvent) => {
+    const ack = new MessageChannel()
+    ack.port1.onmessage = (event: MessageEvent) => {
       const data = event.data as { type?: string; id?: string } | null
       if (data?.type !== 'zipdl-registered' || data.id !== id) return
-      navigator.serviceWorker.removeEventListener('message', onMessage)
+      ack.port1.close()
       resolve()
     }
-    navigator.serviceWorker.addEventListener('message', onMessage, { signal })
+    signal.addEventListener('abort', () => {
+      ack.port1.close()
+    })
     if (transferableStreamsSupported()) {
-      controller.postMessage({ type: 'zipdl-register', id, name, stream: readable }, [
-        readable as unknown as Transferable
-      ])
+      controller.postMessage(
+        { type: 'zipdl-register', id, name, stream: readable, ack: ack.port2 },
+        [readable as unknown as Transferable, ack.port2]
+      )
       return
     }
     const channel = new MessageChannel()
@@ -223,9 +234,10 @@ function handOver(
         }
       )
     }
-    controller.postMessage({ type: 'zipdl-register', id, name, port: channel.port2 }, [
-      channel.port2
-    ])
+    controller.postMessage(
+      { type: 'zipdl-register', id, name, port: channel.port2, ack: ack.port2 },
+      [channel.port2, ack.port2]
+    )
   })
 }
 
@@ -235,12 +247,15 @@ export async function createServiceWorkerSink(
   if (!browserCanStreamToDisk()) return null
   const scope = scopeFor(options)
   if (!scopeCoversPage(scope, window.location.pathname)) return null
+  const connect = options.connect ?? (() => takeControl(options))
+  const probe =
+    options.probe ?? (async (url: string) => (await fetch(url, { cache: 'no-store' })).ok)
+  const navigate = options.navigate ?? navigateHiddenFrame
   let controller: ServiceWorker | null = null
   try {
-    controller = await withTimeout(takeControl(options), CONTROL_TIMEOUT_MS, null)
+    controller = await withTimeout(connect(), CONTROL_TIMEOUT_MS, null)
     if (!controller) return null
-    const probe = await fetch(`${scope}zipdl/ping`, { cache: 'no-store' })
-    if (!probe.ok) return null
+    if (!(await probe(`${scope}zipdl/ping`))) return null
   } catch {
     return null
   }
@@ -265,13 +280,13 @@ export async function createServiceWorkerSink(
       }
       const handedOver = await withTimeout(
         handOver(worker, id, name, pipe.readable, cleanup.signal).then(() => true),
-        HANDOVER_TIMEOUT_MS,
+        options.handoverMs ?? HANDOVER_TIMEOUT_MS,
         false
       )
       if (!handedOver) {
         await abandon(new Error('the download service worker did not accept the zip stream'))
       }
-      const removeFrame = navigateHiddenFrame(`${scope}zipdl/${id}/${encodeURIComponent(name)}`)
+      const removeFrame = navigate(`${scope}zipdl/${id}/${encodeURIComponent(name)}`)
       const keepalive = setInterval(() => {
         void fetch(`${scope}zipdl/${id}/keepalive`, { cache: 'no-store' }).catch(() => undefined)
       }, options.keepaliveMs ?? KEEPALIVE_MS)

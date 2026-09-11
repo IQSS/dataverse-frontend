@@ -11,7 +11,7 @@ self.addEventListener('message', (event) => {
   if (data.type === 'zipdl-register') {
     streams.set(data.id, { name: data.name, stream: data.stream || null, port: data.port || null })
     const reply = { type: 'zipdl-registered', id: data.id }
-    if (event.ports && event.ports[0] && !data.port) event.ports[0].postMessage(reply)
+    if (data.ack) data.ack.postMessage(reply)
     else if (event.source) event.source.postMessage(reply)
   } else if (data.type === 'zipdl-unregister') {
     streams.delete(data.id)

@@ -1,5 +1,6 @@
 import {
   createBlobSink,
+  createServiceWorkerSink,
   pullDrivenStream,
   resolveZipSink,
   scopeCoversPage,
@@ -237,6 +238,144 @@ describe('pullDrivenStream', () => {
       await new Promise((resolve) => setTimeout(resolve, 10))
       expect(cancelled, 'the source was cancelled').to.equal(true)
       expect(rejected, 'the run was reported as failed').to.equal(true)
+    })
+  })
+})
+
+describe('createServiceWorkerSink', () => {
+  interface Sent {
+    type?: string
+    id?: string
+    name?: string
+    stream?: ReadableStream<Uint8Array>
+    port?: MessagePort
+    ack?: MessagePort
+  }
+
+  const fakeWorker = (onMessage: (message: Sent) => void) =>
+    ({
+      postMessage: (message: Sent) => {
+        onMessage(message)
+      }
+    } as unknown as ServiceWorker)
+
+  const streamOf = (chunks: string[]) =>
+    new ReadableStream<Uint8Array>({
+      start(controller) {
+        for (const chunk of chunks) controller.enqueue(new TextEncoder().encode(chunk))
+        controller.close()
+      }
+    })
+
+  const build = (overrides: Partial<Parameters<typeof createServiceWorkerSink>[0]> = {}) => {
+    const sent: Sent[] = []
+    const navigated: string[] = []
+    const worker = fakeWorker((message) => {
+      sent.push(message)
+      message.ack?.postMessage({ type: 'zipdl-registered', id: message.id })
+    })
+    return {
+      sent,
+      navigated,
+      options: {
+        url: '/zip-download-sw.js',
+        scope: '/',
+        keepaliveMs: 20,
+        firstByteMs: 200,
+        connect: () => Promise.resolve(worker),
+        probe: () => Promise.resolve(true),
+        navigate: (url: string) => {
+          navigated.push(url)
+          return () => undefined
+        },
+        ...overrides
+      }
+    }
+  }
+
+  it('reports itself unavailable when the worker never answers the ping', () => {
+    cy.then(async () => {
+      const { options } = build({ probe: () => Promise.resolve(false) })
+      expect(await createServiceWorkerSink(options)).to.equal(null)
+    })
+  })
+
+  it('reports itself unavailable when no worker takes control', () => {
+    cy.then(async () => {
+      const { options } = build({ connect: () => Promise.resolve(null) })
+      expect(await createServiceWorkerSink(options)).to.equal(null)
+    })
+  })
+
+  it('reports itself unavailable when connecting throws', () => {
+    cy.then(async () => {
+      const { options } = build({ connect: () => Promise.reject(new Error('nope')) })
+      expect(await createServiceWorkerSink(options)).to.equal(null)
+    })
+  })
+
+  it('hands the stream over and navigates at the download url', () => {
+    cy.then(async () => {
+      const { sent, navigated, options } = build()
+      const sink = await createServiceWorkerSink(options)
+      expect(sink?.streaming).to.equal(true)
+      const drained: string[] = []
+      const saving = sink?.save({ name: 'tree files.zip', body: streamOf(['one', 'two']) })
+      const handed = sent[0].stream as ReadableStream<Uint8Array>
+      const reader = handed.getReader()
+      for (;;) {
+        const { value, done } = await reader.read()
+        if (done) break
+        if (value) drained.push(new TextDecoder().decode(value))
+      }
+      await saving
+      expect(drained.join('')).to.equal('onetwo')
+      expect(sent).to.have.length(1)
+      expect(sent[0].type).to.equal('zipdl-register')
+      expect(sent[0].name).to.equal('tree files.zip')
+      expect(navigated).to.have.length(1)
+      expect(navigated[0]).to.contain('/zipdl/')
+      expect(navigated[0]).to.contain(encodeURIComponent('tree files.zip'))
+    })
+  })
+
+  it('does not start a run the caller has already abandoned', () => {
+    cy.then(async () => {
+      const { sent, navigated, options } = build()
+      const sink = await createServiceWorkerSink(options)
+      await sink?.save({
+        name: 'stale.zip',
+        body: streamOf(['bytes']),
+        shouldSave: () => false
+      })
+      expect(sent).to.have.length(0)
+      expect(navigated).to.have.length(0)
+    })
+  })
+
+  it('gives up when the worker never acknowledges the handover', () => {
+    cy.then(async () => {
+      const silent = { postMessage: () => undefined } as unknown as ServiceWorker
+      const { options, navigated } = build({ connect: () => Promise.resolve(silent) })
+      const sink = await createServiceWorkerSink({ ...options, handoverMs: 50 })
+      let message = ''
+      await sink?.save({ name: 'silent.zip', body: streamOf(['bytes']) }).catch((error: Error) => {
+        message = error.message
+      })
+      expect(message).to.contain('did not accept')
+      expect(navigated, 'no download was started').to.have.length(0)
+    })
+  })
+
+  it('abandons a download the browser never starts reading', () => {
+    cy.then(async () => {
+      const { options } = build()
+      const sink = await createServiceWorkerSink(options)
+      let message = ''
+      await sink?.save({ name: 'unread.zip', body: streamOf(['bytes']) }).catch((error: Error) => {
+        message = error.message
+      })
+      expect(message).to.contain('never started')
     })
   })
 })
