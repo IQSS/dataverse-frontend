@@ -12,10 +12,10 @@ export interface ZipSink {
 
 export interface ServiceWorkerSinkOptions {
   url: string
-  scope?: string
   keepaliveMs?: number
   firstByteMs?: number
   handoverMs?: number
+  transferStreams?: boolean
   connect?: () => Promise<ServiceWorker | null>
   probe?: (url: string) => Promise<boolean>
   navigate?: (url: string) => () => void
@@ -71,7 +71,6 @@ export function createBlobSink(): ZipSink {
 }
 
 function scopeFor(options: ServiceWorkerSinkOptions): string {
-  if (options.scope) return options.scope.endsWith('/') ? options.scope : `${options.scope}/`
   return new URL('./', new URL(options.url, window.location.href)).pathname
 }
 
@@ -177,7 +176,8 @@ function handOver(
   id: string,
   name: string,
   readable: ReadableStream<Uint8Array>,
-  signal: AbortSignal
+  signal: AbortSignal,
+  transferStreams: boolean
 ): Promise<void> {
   return new Promise<void>((resolve) => {
     const ack = new MessageChannel()
@@ -190,7 +190,7 @@ function handOver(
     signal.addEventListener('abort', () => {
       ack.port1.close()
     })
-    if (transferableStreamsSupported()) {
+    if (transferStreams) {
       controller.postMessage(
         { type: 'zipdl-register', id, name, stream: readable, ack: ack.port2 },
         [readable as unknown as Transferable, ack.port2]
@@ -269,7 +269,14 @@ export async function createServiceWorkerSink(
         throw reason
       }
       const handedOver = await withTimeout(
-        handOver(worker, id, name, pipe.readable, cleanup.signal).then(() => true),
+        handOver(
+          worker,
+          id,
+          name,
+          pipe.readable,
+          cleanup.signal,
+          options.transferStreams ?? transferableStreamsSupported()
+        ).then(() => true),
         options.handoverMs ?? HANDOVER_TIMEOUT_MS,
         false
       )
@@ -299,13 +306,9 @@ export async function createServiceWorkerSink(
   }
 }
 
-export async function resolveZipSink(options?: {
-  serviceWorkerUrl?: string
-  serviceWorkerScope?: string
-}): Promise<ZipSink> {
+export async function resolveZipSink(options?: { serviceWorkerUrl?: string }): Promise<ZipSink> {
   const streaming = await createServiceWorkerSink({
-    url: options?.serviceWorkerUrl ?? DEFAULT_ZIP_SERVICE_WORKER_URL,
-    scope: options?.serviceWorkerScope
+    url: options?.serviceWorkerUrl ?? DEFAULT_ZIP_SERVICE_WORKER_URL
   })
   return streaming ?? createBlobSink()
 }

@@ -8,8 +8,6 @@ export interface DvTreeViewConfig {
   localesPath?: string
   rootElementId?: string
   fileMetadataPath?: string
-  zipServiceWorkerUrl?: string
-  zipServiceWorkerScope?: string
 }
 
 declare global {

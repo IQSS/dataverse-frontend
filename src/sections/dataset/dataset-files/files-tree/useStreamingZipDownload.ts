@@ -60,7 +60,6 @@ export interface StartStreamingZipArgs {
   partRetries?: number
   partRetryDelayMs?: number
   serviceWorkerUrl?: string
-  serviceWorkerScope?: string
   sink?: ZipSink
 }
 
@@ -450,11 +449,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
       void (async () => {
         try {
           const sink =
-            args.sink ??
-            (await resolveZipSink({
-              serviceWorkerUrl: args.serviceWorkerUrl,
-              serviceWorkerScope: args.serviceWorkerScope
-            }))
+            args.sink ?? (await resolveZipSink({ serviceWorkerUrl: args.serviceWorkerUrl }))
           if (stale()) return
           const withinCap = checkZipSelectionSize({
             bytes: files.reduce((sum, file) => sum + file.size, 0),
