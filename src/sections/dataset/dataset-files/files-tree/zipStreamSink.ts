@@ -17,7 +17,7 @@ export interface ServiceWorkerSinkOptions {
   handoverMs?: number
   transferStreams?: boolean
   connect?: () => Promise<ServiceWorker | null>
-  probe?: (url: string) => Promise<boolean>
+  probe?: (worker: ServiceWorker) => Promise<boolean>
   navigate?: (url: string) => () => void
 }
 
@@ -30,6 +30,7 @@ export const DEFAULT_ZIP_SERVICE_WORKER_URL = workerUrlForBase(import.meta.env.B
 const KEEPALIVE_MS = 4_000
 const CONTROL_TIMEOUT_MS = 10_000
 const HANDOVER_TIMEOUT_MS = 10_000
+const PING_TIMEOUT_MS = 5_000
 const FIRST_BYTE_TIMEOUT_MS = 60_000
 
 export function transferableStreamsSupported(): boolean {
@@ -147,6 +148,17 @@ export function transferableChunk(view: Uint8Array): ArrayBuffer {
   return view.slice().buffer
 }
 
+function pingWorker(worker: ServiceWorker): Promise<boolean> {
+  const ack = new MessageChannel()
+  const answered = new Promise<boolean>((resolve) => {
+    ack.port1.onmessage = (event: MessageEvent) => {
+      resolve((event.data as { type?: string } | null)?.type === 'zipdl-pong')
+    }
+  })
+  worker.postMessage({ type: 'zipdl-ping', ack: ack.port2 }, [ack.port2])
+  return withTimeout(answered, PING_TIMEOUT_MS, false).finally(() => ack.port1.close())
+}
+
 async function takeControl(options: ServiceWorkerSinkOptions): Promise<ServiceWorker | null> {
   const registration = await navigator.serviceWorker.register(options.url, {
     scope: scopeFor(options)
@@ -238,14 +250,13 @@ export async function createServiceWorkerSink(
   if (!browserCanStreamToDisk()) return null
   const scope = scopeFor(options)
   const connect = options.connect ?? (() => takeControl(options))
-  const probe =
-    options.probe ?? (async (url: string) => (await fetch(url, { cache: 'no-store' })).ok)
+  const probe = options.probe ?? pingWorker
   const navigate = options.navigate ?? navigateHiddenFrame
   let controller: ServiceWorker | null = null
   try {
     controller = await withTimeout(connect(), CONTROL_TIMEOUT_MS, null)
     if (!controller) return null
-    if (!(await probe(`${scope}zipdl/ping`))) return null
+    if (!(await probe(controller))) return null
   } catch {
     return null
   }
@@ -285,7 +296,7 @@ export async function createServiceWorkerSink(
       }
       const removeFrame = navigate(`${scope}zipdl/${id}/${encodeURIComponent(name)}`)
       const keepalive = setInterval(() => {
-        void fetch(`${scope}zipdl/${id}/keepalive`, { cache: 'no-store' }).catch(() => undefined)
+        worker.postMessage({ type: 'zipdl-keepalive', id })
       }, options.keepaliveMs ?? KEEPALIVE_MS)
       const started = new Promise<'never read'>((resolve) => {
         setTimeout(() => {

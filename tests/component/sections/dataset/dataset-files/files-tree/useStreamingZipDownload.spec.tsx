@@ -1720,6 +1720,31 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/Download complete — 2 skipped/i).should('exist')
   })
 
+  it('refuses to resume when the server answers a ranged retry with the whole file', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="whole.zip" partSize={4} partRetries={0} />
+    )
+    captureObjectUrls()
+
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      if (start === 0) return Promise.resolve(partResponse(source.slice(0, 4), 0, source.length))
+      return Promise.resolve(
+        new Response(new TextEncoder().encode(source), {
+          status: 200,
+          headers: { 'content-type': 'application/octet-stream' }
+        })
+      )
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('contain.text', 'whole file')
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
   it('drops the Range header and streams the whole file when the server refuses ranges', () => {
     const source = 'AAAABBBBCCCC'
     const files = chunkedFile(source.length)
@@ -1840,6 +1865,78 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
       }
       expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
       expect(centralDirectorySize(zip), 'end of central directory is intact').to.be.greaterThan(0)
+    })
+  })
+
+  it('errors the stream when cancelled while paused before an entry starts', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'b.txt',
+        path: 'b.txt',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+    let cancelRun: () => void = () => undefined
+    let outcome = 'never finished'
+    const streamingSink = {
+      streaming: true,
+      save: async ({ body }: { name: string; body: ReadableStream<Uint8Array> }) => {
+        const reader = body.getReader()
+        try {
+          for (;;) {
+            const { done } = await reader.read()
+            if (done) {
+              outcome = 'closed cleanly'
+              return
+            }
+          }
+        } catch {
+          outcome = 'errored'
+        }
+      }
+    }
+
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        zipName="paused-cancel.zip"
+        partRetries={0}
+        sink={streamingSink}
+        onApi={(api) => {
+          cancelRun = api.cancel
+        }}
+      />
+    )
+    installFetchHandler((input) => {
+      if (String(input).endsWith('/access/1')) {
+        return Promise.resolve(
+          new Response(new TextEncoder().encode('AAA'), {
+            status: 200,
+            headers: { 'content-type': 'application/octet-stream' }
+          })
+        )
+      }
+      return Promise.reject(new Error('b.txt is unavailable'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /^skip$/i }).should('exist')
+    cy.then(() => {
+      cancelRun()
+    })
+    cy.contains(/download cancelled/i).should('exist')
+    cy.then(() => {
+      expect(outcome).to.equal('errored')
     })
   })
 

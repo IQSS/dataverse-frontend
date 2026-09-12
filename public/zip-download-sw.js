@@ -15,6 +15,9 @@ self.addEventListener('message', (event) => {
     else if (event.source) event.source.postMessage(reply)
   } else if (data.type === 'zipdl-unregister') {
     streams.delete(data.id)
+  } else if (data.type === 'zipdl-ping') {
+    if (data.ack) data.ack.postMessage({ type: 'zipdl-pong' })
+    else if (event.source) event.source.postMessage({ type: 'zipdl-pong' })
   }
 })
 

@@ -266,7 +266,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
               if (strategy === 'pause') {
                 runUpdate((prev) => ({ ...prev, status: 'paused' }))
                 const decision = await waitForDecision()
-                if (decision === 'cancel') return
+                if (decision === 'cancel') throw new Error(CANCELLED_ERROR)
                 if (decision === 'retry') {
                   runUpdate((prev) => ({
                     ...prev,
@@ -376,7 +376,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
         if (strategy === 'twopass' && stateRef.current.failedSoFar.length > 0) {
           runUpdate((prev) => ({ ...prev, status: 'awaiting-retry' }))
           const decision = await waitForDecision()
-          if (decision === 'cancel') return
+          if (decision === 'cancel') throw new Error(CANCELLED_ERROR)
           if (decision === 'finalize') {
             for (const f of stateRef.current.failedSoFar.filter((x) => x.recoverable)) {
               skippedManifest.push({ ...f, recoverable: false })
@@ -714,6 +714,9 @@ function buildChunkedStream(args: {
     /* istanbul ignore if */
     if (!result.response.body) {
       throw new Error('no body for range part')
+    }
+    if (result.response.status !== 206) {
+      throw new Error('the server answered the resumed range with the whole file')
     }
     fetchedUpTo = end + 1
     return result.response.body.getReader()

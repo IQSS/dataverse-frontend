@@ -54,22 +54,27 @@ with a worker served from `/reusable-components/`.
 | SPA behind a different base | `<base>/zip-download-sw.js`               | `<base>/...`     | works as built, the base moves both together                                |
 | Reusable components in JSF  | `/reusable-components/zip-download-sw.js` | `/dataset.xhtml` | works as built, page is outside the scope and does not need to be inside it |
 
-`zipServiceWorkerUrl` overrides where the script is fetched from, and
-`zipServiceWorkerScope` the scope it claims. Neither is needed for the mounts
-above. A worker may only claim a scope _above_ its own directory if the server
-sends a `Service-Worker-Allowed` header for it, which is why the defaults keep
-the scope at the directory the script is served from.
+The page talks to the worker by message, never by `fetch`. A `fetch` from an
+uncontrolled page goes straight to the network and never reaches the worker, so
+the capability probe and the keepalive are both `postMessage` round trips.
+
+`zipServiceWorkerUrl` overrides where the script is fetched from; the scope is
+always the directory the script is served from, which is all the download URL
+needs.
 
 ## Failure handling
 
 The engine must fail loudly rather than hang or truncate.
 
 - The zip stream is **errored**, never closed, when a run is cancelled or
-  superseded. A cleanly closed stream would be finalised by the browser as a
+  superseded, including a cancel taken from the paused dialog before an entry
+  has started. A cleanly closed stream would be finalised by the browser as a
   complete download of a partial archive.
 - The worker handshake times out after 10 s, and a download the browser never
   starts reading is abandoned after 60 s. Both unregister the pending stream in
-  the worker and cancel the source, so nothing is left half-open.
+  the worker and cancel the source, so nothing is left half-open. There is
+  deliberately no timeout once bytes are flowing: a slow server is legitimate,
+  and aborting a running download would be worse than waiting.
 - Chunks handed to the worker over the MessageChannel are **copied before being
   transferred**. client-zip accumulates the size of each central-directory
   record after yielding it, so transferring the caller's buffer detaches it, the
