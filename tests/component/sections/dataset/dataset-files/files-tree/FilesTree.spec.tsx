@@ -1,3 +1,8 @@
+import { useState } from 'react'
+import {
+  DatasetPublishingStatus,
+  DatasetVersionNumber
+} from '../../../../../../src/dataset/domain/models/Dataset'
 import { FilesTree } from '../../../../../../src/sections/dataset/dataset-files/files-tree/FilesTree'
 import { FileTreeRepository } from '../../../../../../src/files/domain/repositories/FileTreeRepository'
 import type { FileTreePage } from '../../../../../../src/files/domain/models/FileTreePage'
@@ -12,15 +17,23 @@ const datasetVersion = DatasetVersionMother.create()
 
 class FakeTreeRepository implements FileTreeRepository {
   private pages: Map<string, FileTreePage>
-  public calls: { path: string; cursor?: string }[] = []
+  public calls: { path: string; cursor?: string; includeDeaccessioned?: boolean }[] = []
 
   constructor(pages: Record<string, FileTreePage>) {
     this.pages = new Map(Object.entries(pages))
   }
 
-  getNode(params: { path?: string; cursor?: string }): Promise<FileTreePage> {
+  getNode(params: {
+    path?: string
+    cursor?: string
+    includeDeaccessioned?: boolean
+  }): Promise<FileTreePage> {
     const path = params.path ?? ''
-    this.calls.push({ path, cursor: params.cursor })
+    this.calls.push({
+      path,
+      cursor: params.cursor,
+      includeDeaccessioned: params.includeDeaccessioned
+    })
     const page = this.pages.get(path)
     if (!page) {
       return Promise.reject(new Error(`No mock page for path "${path}"`))
@@ -30,6 +43,68 @@ class FakeTreeRepository implements FileTreeRepository {
 }
 
 describe('FilesTree', () => {
+  it('includes the selected deaccessioned version when listing and enumerating folders', () => {
+    const repo = new FakeTreeRepository({
+      '': FileTreePageMother.create({
+        items: [FileTreeFolderMother.create({ name: 'data', path: 'data' })]
+      }),
+      data: FileTreePageMother.create({ path: 'data', items: [] })
+    })
+    cy.customMount(
+      <FilesTree
+        treeRepository={repo}
+        datasetPersistentId="doi:test/AAA"
+        datasetVersion={DatasetVersionMother.create({
+          publishingStatus: DatasetPublishingStatus.DEACCESSIONED
+        })}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Download folder data' }).click()
+    cy.then(() => {
+      expect(repo.calls.map(({ path }) => path)).to.deep.equal(['', 'data'])
+      expect(repo.calls.every(({ includeDeaccessioned }) => includeDeaccessioned)).to.equal(true)
+    })
+  })
+
+  it('clears selected files and folders when the dataset or version changes', () => {
+    const folder = FileTreeFolderMother.create({ path: 'data', name: 'data' })
+    const file = FileTreeFileMother.create({ path: 'a.txt', name: 'a.txt' })
+    const repo = new FakeTreeRepository({
+      '': FileTreePageMother.create({ items: [folder, file] })
+    })
+    const versions = [1, 2].map((major) =>
+      DatasetVersionMother.create({ number: new DatasetVersionNumber(major, 0) })
+    )
+
+    function Harness() {
+      const [version, setVersion] = useState(0)
+      const [persistentId, setPersistentId] = useState('doi:test/AAA')
+      return (
+        <>
+          <button onClick={() => setVersion(1)}>Switch version</button>
+          <button onClick={() => setPersistentId('doi:test/BBB')}>Switch dataset</button>
+          <FilesTree
+            treeRepository={repo}
+            datasetPersistentId={persistentId}
+            datasetVersion={versions[version]}
+          />
+        </>
+      )
+    }
+
+    cy.customMount(<Harness />)
+    for (const button of ['Switch version', 'Switch dataset']) {
+      cy.findByTestId('files-tree-checkbox-a.txt').click()
+      cy.findByTestId('files-tree-checkbox-data').click()
+      cy.findByTestId('files-tree-download-button').should('not.be.disabled')
+      cy.findByRole('button', { name: button }).click()
+      cy.findByTestId('files-tree-checkbox-a.txt').should('have.attr', 'aria-checked', 'false')
+      cy.findByTestId('files-tree-checkbox-data').should('have.attr', 'aria-checked', 'false')
+      cy.findByTestId('files-tree-download-button').should('be.disabled')
+    }
+  })
+
   it('renders a loading state and then the root items', () => {
     const root = FileTreePageMother.create({
       path: '',
@@ -411,6 +486,35 @@ describe('FilesTree', () => {
     cy.findByText('a.txt').should('exist')
     cy.get('[role="treeitem"]').first().focus().trigger('keydown', { key: ' ' })
     cy.findByTestId('files-tree-selection-summary').should('contain.text', '1')
+  })
+
+  it('preserves focus and native keyboard actions on row buttons', () => {
+    const folder = FileTreeFolderMother.create({ name: 'data', path: 'data' })
+    const file = FileTreeFileMother.create({ name: 'a.txt', path: 'a.txt' })
+    const repo = new FakeTreeRepository({
+      '': FileTreePageMother.create({ items: [file, folder] }),
+      data: FileTreePageMother.create({ path: 'data', items: [] })
+    })
+    cy.customMount(
+      <FilesTree
+        treeRepository={repo}
+        datasetPersistentId="doi:test/AAA"
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Download folder data' })
+      .focus()
+      .should('be.focused')
+      .then(($button) => {
+        for (const key of [' ', 'Enter']) {
+          const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+          $button[0].dispatchEvent(event)
+          expect(event.defaultPrevented).to.equal(false)
+        }
+      })
+    cy.findByTestId('files-tree-checkbox-data').should('have.attr', 'aria-checked', 'false')
+    cy.findByTestId('files-tree-row-data').should('have.attr', 'aria-expanded', 'false')
   })
 
   it('Enter on a folder row toggles expansion', () => {

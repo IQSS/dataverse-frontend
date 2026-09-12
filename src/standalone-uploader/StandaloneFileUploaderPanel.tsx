@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { Button } from '@iqss/dataverse-design-system'
 import { UploaderFileRepository } from '@/sections/shared/file-uploader/types'
 import { useFileUploaderContext } from '@/sections/shared/file-uploader/context/FileUploaderContext'
 import { FileUploaderPanelCore } from '@/sections/shared/file-uploader/FileUploaderPanelCore'
@@ -19,7 +20,8 @@ export const StandaloneFileUploaderPanel = ({
 }: StandaloneFileUploaderPanelProps) => {
   const { t } = useTranslation('shared')
   const {
-    fileUploaderState: { files, isSaving, uploadingToCancelMap, addFilesToDatasetOperationInfo }
+    fileUploaderState: { files, isSaving, uploadingToCancelMap, addFilesToDatasetOperationInfo },
+    uploadedFiles
   } = useFileUploaderContext()
 
   useBeforeUnloadGuard(Object.keys(files).length > 0 || isSaving || uploadingToCancelMap.size > 0)
@@ -64,6 +66,11 @@ export const StandaloneFileUploaderPanel = ({
         datasetPersistentId={datasetPersistentId}
         onCancel={handleCancel}
       />
+      {uploadedFiles.length === 0 && (
+        <Button variant="secondary" onClick={handleCancel} disabled={isSaving}>
+          {t('cancel')}
+        </Button>
+      )}
     </>
   )
 }

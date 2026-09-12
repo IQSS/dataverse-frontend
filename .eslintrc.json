@@ -95,7 +95,6 @@
     },
     {
       "files": ["public/*.js"],
-      "parserOptions": { "project": null },
       "env": { "serviceworker": true, "browser": true },
       "rules": {
         "@typescript-eslint/no-unsafe-argument": 0,

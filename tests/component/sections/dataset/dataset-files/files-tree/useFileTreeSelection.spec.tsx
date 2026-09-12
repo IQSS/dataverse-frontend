@@ -197,6 +197,29 @@ describe('useFileTreeSelection', () => {
     expect(result.current.deselectedFolderPaths.size).to.equal(0)
   })
 
+  it('excludes nested selections when a restored subfolder is unchecked again', () => {
+    const sub = FileTreeFolderMother.create({ name: 'sub', path: 'data/sub' })
+    const deep = FileTreeFolderMother.create({ name: 'deep', path: 'data/sub/deep' })
+    const leaf = FileTreeFileMother.create({ path: 'data/sub/deep/leaf.txt' })
+    const { result } = renderHook(() => useFileTreeSelection())
+
+    act(() => result.current.toggleFolder(folderData, [sub]))
+    act(() => result.current.toggleFolder(sub, [deep]))
+    act(() => result.current.toggleFolder(deep, []))
+    act(() => result.current.toggleFolder(sub, [deep]))
+    expect(result.current.fileState(leaf)).to.equal('all')
+
+    act(() => result.current.toggleFolder(deep, []))
+    expect(result.current.fileState(leaf)).to.equal('none')
+    act(() => result.current.toggleFolder(deep, []))
+    expect(result.current.fileState(leaf)).to.equal('all')
+
+    act(() => result.current.toggleFolder(sub, [deep]))
+    expect(result.current.folderState(sub, [deep])).to.equal('none')
+    expect(result.current.fileState(leaf)).to.equal('none')
+    expect(result.current.fileState(fileA)).to.equal('all')
+  })
+
   it('explicitly selecting a parent folds nested already-selected subfolders into it', () => {
     const root = FileTreeFolderMother.create({ name: 'root', path: 'root' })
     const subFolder = FileTreeFolderMother.create({ name: 'sub', path: 'root/sub' })

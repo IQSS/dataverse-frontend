@@ -24,6 +24,7 @@ export interface UseFileTreeArgs {
   pageSize?: number
   order?: FileTreeOrder
   include?: FileTreeInclude
+  includeDeaccessioned?: boolean
   initialPath?: string
 }
 
@@ -78,6 +79,7 @@ export function useFileTree({
   pageSize = 200,
   order = FileTreeOrder.NAME_AZ,
   include = FileTreeInclude.ALL,
+  includeDeaccessioned,
   initialPath = ''
 }: UseFileTreeArgs): UseFileTreeApi {
   const [nodes, setNodes] = useState<Map<string, FolderNode>>(() => new Map())
@@ -90,7 +92,9 @@ export function useFileTree({
   })()
   const [expanded, setExpanded] = useState<Set<string>>(() => initialExpanded)
   const inFlight = useRef<Map<string, Promise<void>>>(new Map())
-  const versionKey = `${datasetPersistentId}::${datasetVersion.number.toString()}::${order}::${include}`
+  const versionKey = `${datasetPersistentId}::${datasetVersion.number.toString()}::${order}::${include}::${
+    includeDeaccessioned ? 1 : 0
+  }`
   const previousKey = useRef<string>(versionKey)
   const mountedRef = useRef(true)
   const generationRef = useRef(0)
@@ -120,7 +124,8 @@ export function useFileTree({
         limit: pageSize,
         cursor,
         order,
-        include
+        include,
+        includeDeaccessioned
       }
       const generation = generationRef.current
       setNode(path, (prev) => ({ ...prev, loading: true, error: undefined }))
@@ -144,7 +149,16 @@ export function useFileTree({
         }))
       }
     },
-    [datasetPersistentId, datasetVersion, include, order, pageSize, repository, setNode]
+    [
+      datasetPersistentId,
+      datasetVersion,
+      include,
+      includeDeaccessioned,
+      order,
+      pageSize,
+      repository,
+      setNode
+    ]
   )
 
   const ensureLoaded = useCallback(

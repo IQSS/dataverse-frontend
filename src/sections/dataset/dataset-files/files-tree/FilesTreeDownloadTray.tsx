@@ -191,7 +191,7 @@ export function FilesTreeDownloadTray({ api, open, onClose }: FilesTreeDownloadT
               <div className={styles['tray-fail-err']}>
                 {t(
                   'tree.download.tray.skippedManifest',
-                  'A manifest.txt listing skipped files has been added to the root of the zip.'
+                  'A manifest listing skipped files has been added to the root of the zip.'
                 )}
               </div>
             </div>

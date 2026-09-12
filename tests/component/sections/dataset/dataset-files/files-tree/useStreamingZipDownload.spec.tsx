@@ -152,6 +152,23 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/download complete/i).should('exist')
   })
 
+  it('reports a response without a body as a failed file', () => {
+    cy.customMount(
+      <StreamingZipHarness
+        files={[FileTreeFileMother.create({ id: 1, name: 'a.txt', path: 'a.txt', size: 3 })]}
+      />
+    )
+    installFetchHandler(() => Promise.resolve(new Response(null, { status: 204 })))
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should(
+      'contain.text',
+      'the server returned no file content'
+    )
+    cy.findByTestId('files-tree-download-tray-meta').should('contain.text', '0 / 1')
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
   it('pauses on first failure and resumes on retry', () => {
     const files: FileTreeFile[] = [
       FileTreeFileMother.create({
@@ -1506,6 +1523,29 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     ]
   }
 
+  it('keeps the error manifest separate from existing files and folders', () => {
+    const paths = ['MANIFEST.txt', 'manifest-1.txt/a.txt', 'missing.txt']
+    const files = paths.map((path, id) =>
+      FileTreeFileMother.create({ id, name: path.split('/').pop() as string, path, size: 3 })
+    )
+    cy.customMount(<StreamingZipHarness files={files} strategy="skip" />)
+    captureObjectUrls()
+    installFetchHandler((input) =>
+      String(input).endsWith('/2')
+        ? Promise.reject(new Error('unavailable'))
+        : Promise.resolve(fakeResponseBody('abc'))
+    )
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(async () => {
+      const zip = new Uint8Array(await capturedZip().arrayBuffer())
+      expect(storedEntryBytes(zip, 'MANIFEST.txt', 3)).to.equal('abc')
+      expect(storedEntryBytes(zip, 'manifest-1.txt/a.txt', 3)).to.equal('abc')
+      expect(storedEntryBytes(zip, 'manifest-2.txt', 100)).to.contain('missing.txt — unavailable')
+    })
+  })
+
   it('resumes a failed non-first part from its own offset after Retry and the entry is byte-identical', () => {
     const source = 'AAAABBBBCCCC'
     const files = chunkedFile(source.length)
@@ -1867,6 +1907,54 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
       expect(centralDirectorySize(zip), 'end of central directory is intact').to.be.greaterThan(0)
     })
   })
+
+  for (const action of ['cancel', 'close', 'restart', 'unmount'] as const) {
+    it(`aborts a pending fetch on ${action} and errors the abandoned zip`, () => {
+      let api: ReturnType<typeof useStreamingZipDownload>
+      let signal: AbortSignal | null | undefined
+      let attempts = 0
+      const outcomes: string[] = []
+      const sink: ZipSink = {
+        streaming: true,
+        browserCanStream: true,
+        save: async ({ body }) => {
+          await new Response(body).arrayBuffer().then(
+            () => outcomes.push('done'),
+            () => outcomes.push('errored')
+          )
+        }
+      }
+      cy.customMount(
+        <StreamingZipHarness
+          files={[FileTreeFileMother.create({ id: 1, name: 'a.txt', path: 'a.txt', size: 3 })]}
+          sink={sink}
+          partRetries={3}
+          onApi={(current) => {
+            api = current
+          }}
+        />
+      )
+      installFetchHandler((_input, init) => {
+        if (attempts++ > 0) return Promise.resolve(fakeResponseBody('abc'))
+        signal = init?.signal
+        return new Promise((_resolve, reject) => {
+          signal?.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')))
+        })
+      })
+
+      cy.findByTestId('harness-start').click()
+      cy.wrap(null).should(() => expect(attempts).to.equal(1))
+      if (action === 'restart') cy.findByTestId('harness-start').click({ force: true })
+      else if (action === 'unmount') cy.customMount(<div />)
+      else cy.then(() => api[action]())
+      cy.wrap(null).should(() => {
+        expect(signal?.aborted).to.equal(true)
+        expect(outcomes).to.include('errored')
+        expect(attempts).to.equal(action === 'restart' ? 2 : 1)
+      })
+      if (action === 'restart') cy.contains(/download complete/i).should('exist')
+    })
+  }
 
   it('errors the stream when cancelled while paused before an entry starts', () => {
     const files: FileTreeFile[] = [

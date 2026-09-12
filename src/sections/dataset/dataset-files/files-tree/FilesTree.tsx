@@ -19,7 +19,7 @@ import {
   isFileTreeFile,
   isFileTreeFolder
 } from '@/files/domain/models/FileTreeItem'
-import { DatasetVersion } from '@/dataset/domain/models/Dataset'
+import { DatasetPublishingStatus, DatasetVersion } from '@/dataset/domain/models/Dataset'
 import { useFileTree } from './useFileTree'
 import { SelectionState, useFileTreeSelection } from './useFileTreeSelection'
 import { useFileTreeFlatten } from './useFileTreeFlatten'
@@ -45,6 +45,7 @@ interface FilesTreeProps {
   onCurrentPathChange?: (path: string) => void
   buildFileMetadataUrl?: (file: FileTreeFile) => string
   downloadsDisabled?: boolean
+  includeDeaccessioned?: boolean
   downloadFetchInit?: () => RequestInit | undefined
   buildDownloadUrl?: (file: FileTreeFile) => string
   zipServiceWorkerUrl?: string
@@ -67,6 +68,7 @@ export function FilesTree({
   onCurrentPathChange,
   buildFileMetadataUrl,
   downloadsDisabled = false,
+  includeDeaccessioned = datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED,
   downloadFetchInit,
   buildDownloadUrl,
   zipServiceWorkerUrl
@@ -79,6 +81,7 @@ export function FilesTree({
     pageSize,
     order,
     include: FileTreeInclude.ALL,
+    includeDeaccessioned,
     initialPath
   })
 
@@ -91,6 +94,11 @@ export function FilesTree({
     }
   }, [tree.currentPath, onCurrentPathChange])
   const selection = useFileTreeSelection()
+  const clearSelection = selection.clear
+  const datasetVersionNumber = datasetVersion.number.toString()
+  useEffect(() => {
+    clearSelection()
+  }, [clearSelection, datasetPersistentId, datasetVersionNumber])
   const streamingZip = useStreamingZipDownload()
   const [trayOpen, setTrayOpen] = useState(false)
 
@@ -124,6 +132,7 @@ export function FilesTree({
     datasetPersistentId,
     datasetVersion,
     selection,
+    includeDeaccessioned,
     onDownloadFiles,
     onError: () => toast.error(t('actions.optionsMenu.guestbookCollectModal.downloadError'))
   })
@@ -312,6 +321,7 @@ export function FilesTree({
 
   const onRowKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.target !== event.currentTarget) return
       /* istanbul ignore if */
       if (focusedRowIndex < 0) return
       const focusedRow = visibleRows[focusedRowIndex]
@@ -384,17 +394,19 @@ export function FilesTree({
     ]
   )
 
+  const { nodes, visibleKnownChildren } = tree
+  const { folderState } = selection
   const folderStates = useMemo(() => {
     const states = new Map<string, SelectionState>()
-    for (const node of tree.nodes.values()) {
+    for (const node of nodes.values()) {
       for (const item of node.items) {
         if (isFileTreeFolder(item)) {
-          states.set(item.path, selection.folderState(item, tree.visibleKnownChildren(item.path)))
+          states.set(item.path, folderState(item, visibleKnownChildren(item.path)))
         }
       }
     }
     return states
-  }, [tree.nodes, tree.visibleKnownChildren, selection.folderState])
+  }, [nodes, visibleKnownChildren, folderState])
 
   const headerSelectAllState: SelectionState = (() => {
     const totalCount = selection.totals.count

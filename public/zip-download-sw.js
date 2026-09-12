@@ -55,7 +55,9 @@ function streamFromPort(port) {
 }
 
 function contentDisposition(name) {
-  const ascii = name.replace(/[^\x20-\x7e]/g, '_').replace(/["\\]/g, '_')
+  const ascii = String(name)
+    .replace(/[^\x20-\x7e]/g, '_')
+    .replace(/["\\]/g, '_')
   return `attachment; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(name)}`
 }
 

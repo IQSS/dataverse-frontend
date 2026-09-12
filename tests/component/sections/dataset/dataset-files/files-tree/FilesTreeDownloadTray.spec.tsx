@@ -78,7 +78,7 @@ describe('FilesTreeDownloadTray', () => {
       />
     )
     cy.findByText(/Download complete — 2 skipped/i).should('exist')
-    cy.findByText(/manifest\.txt/i).should('exist')
+    cy.findByText(/manifest listing skipped files/i).should('exist')
   })
 
   it('shows the paused dialog with Retry / Skip / Skip & retry / Skip all buttons', () => {

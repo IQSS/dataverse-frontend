@@ -79,7 +79,7 @@
         "done": "Done",
         "skipped_one": "{{count}} file skipped",
         "skipped_other": "{{count}} files skipped",
-        "skippedManifest": "A manifest.txt listing skipped files has been added to the root of the zip.",
+        "skippedManifest": "A manifest listing skipped files has been added to the root of the zip.",
         "hint": "The zip is created in your browser — please keep this tab open until the download finishes.",
         "cancel": "Cancel",
         "close": "Close"

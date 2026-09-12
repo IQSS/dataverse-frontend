@@ -68,6 +68,59 @@ function selectionFixture(
 }
 
 describe('useFileTreeDownload', () => {
+  for (const method of ['downloadSelection', 'downloadNode'] as const) {
+    for (const action of ['dataset', 'version', 'reset', 'unmount'] as const) {
+      it(`abandons pending ${method} enumeration on ${action} changes`, async () => {
+        const file = FileTreeFileMother.create({ id: 1, name: 'a.txt', path: 'data/a.txt' })
+        const folder = FileTreeFolderMother.create({ name: 'data', path: 'data' })
+        let resolvePage: (page: FileTreePage) => void = () => undefined
+        const page = new Promise<FileTreePage>((resolve) => {
+          resolvePage = resolve
+        })
+        const getNode = cy.stub().returns(page)
+        const onDownloadFiles = cy.stub().resolves()
+        const onError = cy.stub()
+        const { result, rerender, unmount } = renderHook(
+          ({ id, version }) =>
+            useFileTreeDownload({
+              treeRepository: { getNode },
+              datasetPersistentId: id,
+              datasetVersion: version,
+              includeDeaccessioned: true,
+              selection: selectionFixture([], { selectedFolderPaths: ['data'] }),
+              onDownloadFiles,
+              onError
+            }),
+          { initialProps: { id: 'doi:test/AAA', version: datasetVersion } }
+        )
+        let pending = Promise.resolve()
+        act(() => {
+          pending =
+            method === 'downloadNode'
+              ? result.current.downloadNode(folder)
+              : result.current.downloadSelection()
+        })
+        expect(result.current.progress.status).to.equal('enumerating')
+
+        if (action === 'dataset') rerender({ id: 'doi:test/BBB', version: datasetVersion })
+        else if (action === 'version')
+          rerender({ id: 'doi:test/AAA', version: DatasetVersionMother.createDraft() })
+        else if (action === 'reset') act(() => result.current.reset())
+        else unmount()
+        await act(async () => {
+          resolvePage(FileTreePageMother.create({ items: [file], nextCursor: 'next' }))
+          await pending
+        })
+
+        expect(getNode).to.have.been.calledOnce
+        expect(getNode).to.have.been.calledWithMatch({ includeDeaccessioned: true })
+        expect(onDownloadFiles).not.to.have.been.called
+        expect(onError).not.to.have.been.called
+        if (action !== 'unmount') expect(result.current.progress.status).to.equal('idle')
+      })
+    }
+  }
+
   it('downloads a single file via downloadNode and reports success', async () => {
     const file = FileTreeFileMother.create({ id: 1, name: 'a.txt', path: 'a.txt' })
     const onDownloadFiles = cy.stub().resolves()

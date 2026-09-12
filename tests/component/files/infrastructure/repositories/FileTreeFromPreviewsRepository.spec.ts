@@ -227,6 +227,22 @@ describe('FileTreeFromPreviewsRepository', () => {
     await repo.getNode({ datasetPersistentId: 'doi:10.5072/FK2/AAA', datasetVersion, path: '' })
     expect(fileRepo.callCount).to.equal(1)
   })
+
+  it('forwards deaccessioned inclusion and keeps its cached previews separate', async () => {
+    const fileRepo = new FakeFileRepository([])
+    const getFiles = cy.stub(fileRepo, 'getAllByDatasetPersistentIdWithCount').resolves({
+      files: [],
+      totalFilesCount: 0
+    })
+    const repo = new FileTreeFromPreviewsRepository(fileRepo)
+    const params = { datasetPersistentId: 'doi:test/AAA', datasetVersion }
+
+    await repo.getNode({ ...params, includeDeaccessioned: true })
+    await repo.getNode({ ...params, includeDeaccessioned: false })
+    expect(getFiles).to.have.been.calledTwice
+    expect(getFiles.firstCall.args[4]).to.equal(true)
+    expect(getFiles.secondCall.args[4]).to.equal(false)
+  })
 })
 
 describe('normalizePath', () => {

@@ -177,6 +177,8 @@ async function init(opts: { fromObserver?: boolean } = {}) {
           treeRepository={treeRepository}
           datasetPersistentId={mountConfig.datasetPid}
           datasetVersion={datasetVersion}
+          includeDeaccessioned={config.includeDeaccessioned}
+          downloadsDisabled={config.downloadsDisabled}
           buildFileMetadataUrl={buildFileMetadataUrl}
           downloadFetchInit={downloadFetchInit}
           buildDownloadUrl={(file) => new URL(file.downloadUrl, config.siteUrl).href}

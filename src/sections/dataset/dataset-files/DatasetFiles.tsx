@@ -35,7 +35,6 @@ export function DatasetFiles({
   datasetVersion,
   fileTreeRepository
 }: DatasetFilesProps) {
-  const { fileRepository } = useDatasetRepositories()
   const [searchParams, setSearchParams] = useSearchParams()
   const view: FilesViewMode = searchParams.get(VIEW_PARAM) === 'tree' ? 'tree' : 'table'
   const treePath = searchParams.get(PATH_PARAM) ?? ''

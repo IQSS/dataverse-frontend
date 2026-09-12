@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { makeZip } from 'client-zip'
 import { md5 } from 'js-md5'
 import { sha1 } from '@noble/hashes/legacy.js'
@@ -129,6 +129,16 @@ export function useStreamingZipDownload(): StreamingZipApi {
   const decisionRef = useRef<ResolveBag<Decision> | null>(null)
   const cancelledRef = useRef(false)
   const runIdRef = useRef(0)
+  const abortRef = useRef<AbortController | null>(null)
+
+  useEffect(
+    () => () => {
+      cancelledRef.current = true
+      abortRef.current?.abort()
+      decisionRef.current?.resolve('cancel')
+    },
+    []
+  )
 
   const update = useCallback((fn: (prev: StreamingZipState) => StreamingZipState) => {
     const next = fn(stateRef.current)
@@ -145,6 +155,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
       status === 'awaiting-retry'
     ) {
       cancelledRef.current = true
+      abortRef.current?.abort()
       decisionRef.current?.resolve('cancel')
     }
     decisionRef.current = null
@@ -154,6 +165,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
 
   const cancel = useCallback(() => {
     cancelledRef.current = true
+    abortRef.current?.abort()
     decisionRef.current?.resolve('cancel')
     decisionRef.current = null
     update((prev) => ({ ...prev, status: 'cancelled' }))
@@ -189,15 +201,27 @@ export function useStreamingZipDownload(): StreamingZipApi {
       /* istanbul ignore if */
       if (files.length === 0) return
 
+      abortRef.current?.abort()
+      decisionRef.current?.resolve('cancel')
+      const abortController = new AbortController()
+      abortRef.current = abortController
       cancelledRef.current = false
       decisionRef.current = null
       const runId = ++runIdRef.current
-      const stale = () => cancelledRef.current || runIdRef.current !== runId
+      const stale = () =>
+        cancelledRef.current || abortController.signal.aborted || runIdRef.current !== runId
       const runUpdate = (fn: (prev: StreamingZipState) => StreamingZipState) => {
         if (!stale()) update(fn)
       }
-      const getFetchInit: FetchInitProvider =
-        typeof fetchInit === 'function' ? fetchInit : () => fetchInit
+      const getFetchInit: FetchInitProvider = () => {
+        const init = typeof fetchInit === 'function' ? fetchInit() : fetchInit
+        return {
+          ...init,
+          signal: init?.signal
+            ? AbortSignal.any([abortController.signal, init.signal])
+            : abortController.signal
+        }
+      }
       const totalBytes = files.reduce((s, f) => s + f.size, 0)
       runUpdate(() => ({
         ...initialState,
@@ -250,7 +274,9 @@ export function useStreamingZipDownload(): StreamingZipApi {
                   delayMs: partRetryDelayMs
                 })
               }
+              if (!response.body) throw new Error('the server returned no file content')
             } catch (err) {
+              if (stale()) throw new Error(CANCELLED_ERROR)
               const failure: StreamingZipFailure = {
                 path: file.path,
                 name: file.name,
@@ -309,15 +335,6 @@ export function useStreamingZipDownload(): StreamingZipApi {
               continue
             }
 
-            /* istanbul ignore next */
-            if (!response.body) {
-              runUpdate((prev) => ({
-                ...prev,
-                filesDone: prev.filesDone + 1,
-                bytesDone: prev.bytesDone + file.size
-              }))
-              continue
-            }
             const stream = buildChunkedStream({
               file,
               initialResponse: response,
@@ -371,7 +388,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
 
         yield* processQueue()
         /* istanbul ignore next */
-        if (stale()) return
+        if (stale()) throw new Error(CANCELLED_ERROR)
 
         if (strategy === 'twopass' && stateRef.current.failedSoFar.length > 0) {
           runUpdate((prev) => ({ ...prev, status: 'awaiting-retry' }))
@@ -432,8 +449,13 @@ export function useStreamingZipDownload(): StreamingZipApi {
               lines.push(`${v.path} — ${v.algorithm}: expected ${v.expected}, got ${v.actual}`)
             }
           }
+          const roots = new Set(files.map((file) => file.path.split('/')[0].toLowerCase()))
+          let manifestName = 'manifest.txt'
+          for (let index = 1; roots.has(manifestName); index++) {
+            manifestName = `manifest-${index}.txt`
+          }
           yield {
-            name: 'manifest.txt',
+            name: manifestName,
             input: new Blob([lines.join('\n')], { type: 'text/plain' }),
             lastModified: new Date()
           }
@@ -441,6 +463,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
       }
 
       async function waitForDecision(): Promise<Decision> {
+        if (stale()) return 'cancel'
         const bag = deferred<Decision>()
         decisionRef.current = bag
         return bag.promise
@@ -474,6 +497,12 @@ export function useStreamingZipDownload(): StreamingZipApi {
             status: 'error',
             message: err instanceof Error ? err.message : String(err)
           }))
+        } finally {
+          abortController.abort()
+          if (runIdRef.current === runId) {
+            decisionRef.current?.resolve('cancel')
+            decisionRef.current = null
+          }
         }
       })()
     },
@@ -519,8 +548,9 @@ async function fetchWithRetries(args: {
 }): Promise<Response> {
   let lastErr: unknown = new Error('no attempt made')
   for (let attempt = 0; attempt <= args.retries; attempt++) {
+    const attemptInit = args.fetchInit()
+    attemptInit?.signal?.throwIfAborted()
     try {
-      const attemptInit = args.fetchInit()
       const headers = new Headers(attemptInit?.headers ?? undefined)
       if (args.rangeHeader !== undefined) headers.set('Range', args.rangeHeader)
       const response = await fetch(args.url, {
@@ -533,6 +563,7 @@ async function fetchWithRetries(args: {
       }
       return response
     } catch (err) {
+      attemptInit?.signal?.throwIfAborted()
       lastErr = err
       if (err instanceof HttpError && !isTransientHttpStatus(err.status)) {
         throw err

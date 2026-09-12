@@ -7,6 +7,7 @@ export interface EnumerateFileTreeFilesParams {
   datasetVersion: DatasetVersion
   paths: string[]
   limit?: number
+  includeDeaccessioned?: boolean
   signal?: AbortSignal
 }
 
@@ -14,7 +15,14 @@ export async function enumerateFileTreeFiles(
   repository: FileTreeRepository,
   params: EnumerateFileTreeFilesParams
 ): Promise<FileTreeFile[]> {
-  const { datasetPersistentId, datasetVersion, paths, limit = 500, signal } = params
+  const {
+    datasetPersistentId,
+    datasetVersion,
+    paths,
+    limit = 500,
+    includeDeaccessioned,
+    signal
+  } = params
   const collected: FileTreeFile[] = []
   const seen = new Set<number>()
   const queue = [...paths]
@@ -31,8 +39,12 @@ export async function enumerateFileTreeFiles(
         datasetVersion,
         path,
         limit,
-        cursor
+        cursor,
+        includeDeaccessioned
       })
+      if (signal?.aborted) {
+        throw new Error('Enumeration aborted')
+      }
       for (const item of page.items) {
         if (isFileTreeFile(item)) {
           if (!seen.has(item.id)) {

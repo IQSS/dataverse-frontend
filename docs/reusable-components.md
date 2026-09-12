@@ -296,6 +296,8 @@ Feature flag (server-side): `dataverse.feature.react-uploader`.
 
 Built on the same pattern. The SPA section lives at `src/sections/dataset/dataset-files/files-tree/`; the standalone wrapper is in `src/standalone-tree-view/` and is the second entry point in `vite.config.reusable-components.ts` (`dv-tree-view`). The bundle config interface is `window.dvTreeViewConfig` (see [`src/standalone-tree-view/config.ts`](../src/standalone-tree-view/config.ts)).
 
+Set `downloadsDisabled` when downloads require terms acceptance or a guestbook; users can follow file links to the existing download flow. Set `includeDeaccessioned` when displaying a deaccessioned version. JSF supplies both flags.
+
 Feature flag (server-side): `dataverse.feature.react-tree-view`.
 
 The tree view ships:

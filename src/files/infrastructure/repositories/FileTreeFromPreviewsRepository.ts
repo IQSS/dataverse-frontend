@@ -32,7 +32,11 @@ export class FileTreeFromPreviewsRepository implements FileTreeRepository {
     const order = params.order ?? FileTreeOrder.NAME_AZ
     const include = params.include ?? FileTreeInclude.ALL
     const limit = clampLimit(params.limit)
-    const previews = await this.loadAllPreviews(params.datasetPersistentId, params.datasetVersion)
+    const previews = await this.loadAllPreviews(
+      params.datasetPersistentId,
+      params.datasetVersion,
+      params.includeDeaccessioned
+    )
     const items = collectImmediateChildren(previews, path, order, include, this.accessApiBase)
     const offset = parseCursor(params.cursor)
     const slice = items.slice(offset, offset + limit)
@@ -50,9 +54,12 @@ export class FileTreeFromPreviewsRepository implements FileTreeRepository {
 
   private async loadAllPreviews(
     persistentId: string,
-    datasetVersion: DatasetVersion
+    datasetVersion: DatasetVersion,
+    includeDeaccessioned?: boolean
   ): Promise<FilePreview[]> {
-    const key = `${persistentId}::${datasetVersion.number.toString()}`
+    const key = `${persistentId}::${datasetVersion.number.toString()}::${
+      includeDeaccessioned ? 1 : 0
+    }`
     const cached = this.cache.get(key)
     if (cached) {
       return cached
@@ -67,7 +74,8 @@ export class FileTreeFromPreviewsRepository implements FileTreeRepository {
         persistentId,
         datasetVersion,
         pageInfo,
-        criteria
+        criteria,
+        includeDeaccessioned
       )
       total = result.totalFilesCount
       all.push(...result.files)

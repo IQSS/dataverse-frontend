@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { FileTreeRepository } from '@/files/domain/repositories/FileTreeRepository'
 import { FileTreeFile, FileTreeFolder, isFileTreeFile } from '@/files/domain/models/FileTreeItem'
 import { enumerateFileTreeFiles } from '@/files/domain/useCases/enumerateFileTreeFiles'
@@ -15,6 +15,7 @@ export interface UseFileTreeDownloadArgs {
   treeRepository: FileTreeRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
+  includeDeaccessioned?: boolean
   selection: FileTreeSelection
   onError?: (error: unknown) => void
   onDownloadFiles: (files: FileTreeFile[]) => Promise<void> | void
@@ -31,6 +32,7 @@ export function useFileTreeDownload({
   treeRepository,
   datasetPersistentId,
   datasetVersion,
+  includeDeaccessioned,
   selection,
   onError,
   onDownloadFiles
@@ -39,13 +41,29 @@ export function useFileTreeDownload({
     status: 'idle',
     enumeratedCount: 0
   })
+  const abortRef = useRef<AbortController | null>(null)
+  const versionKey = datasetVersion.number.toString()
 
   const reset = useCallback(() => {
+    abortRef.current?.abort()
     setProgress({ status: 'idle', enumeratedCount: 0 })
   }, [])
 
+  useEffect(() => {
+    reset()
+    return () => abortRef.current?.abort()
+  }, [datasetPersistentId, versionKey, includeDeaccessioned, reset])
+
+  const beginRun = useCallback(() => {
+    abortRef.current?.abort()
+    const controller = new AbortController()
+    abortRef.current = controller
+    return controller.signal
+  }, [])
+
   const dispatchFiles = useCallback(
-    async (files: FileTreeFile[]) => {
+    async (files: FileTreeFile[], signal: AbortSignal) => {
+      if (signal.aborted) return
       if (files.length === 0) {
         setProgress({ status: 'idle', enumeratedCount: 0 })
         return
@@ -53,8 +71,10 @@ export function useFileTreeDownload({
       setProgress({ status: 'requesting', enumeratedCount: files.length })
       try {
         await onDownloadFiles(files)
+        if (signal.aborted) return
         setProgress({ status: 'success', enumeratedCount: files.length })
       } catch (error) {
+        if (signal.aborted) return
         setProgress({
           status: 'error',
           enumeratedCount: files.length,
@@ -84,6 +104,7 @@ export function useFileTreeDownload({
       return
     }
 
+    const signal = beginRun()
     let enumerated: FileTreeFile[] = []
     if (folderPaths.length > 0) {
       setProgress({ status: 'enumerating', enumeratedCount: 0 })
@@ -91,9 +112,12 @@ export function useFileTreeDownload({
         enumerated = await enumerateFileTreeFiles(treeRepository, {
           datasetPersistentId,
           datasetVersion,
-          paths: folderPaths
+          includeDeaccessioned,
+          paths: folderPaths,
+          signal
         })
       } catch (error) {
+        if (signal.aborted) return
         setProgress({
           status: 'error',
           enumeratedCount: 0,
@@ -105,12 +129,14 @@ export function useFileTreeDownload({
     }
 
     const merged = mergeFiles(explicit, enumerated, selection)
-    await dispatchFiles(merged)
+    await dispatchFiles(merged, signal)
   }, [
+    beginRun,
     collectExplicitFiles,
     datasetPersistentId,
     datasetVersion,
     dispatchFiles,
+    includeDeaccessioned,
     onError,
     selection,
     treeRepository
@@ -118,8 +144,9 @@ export function useFileTreeDownload({
 
   const downloadNode = useCallback(
     async (node: FileTreeFile | FileTreeFolder) => {
+      const signal = beginRun()
       if (isFileTreeFile(node)) {
-        await dispatchFiles([node])
+        await dispatchFiles([node], signal)
         return
       }
       setProgress({ status: 'enumerating', enumeratedCount: 0 })
@@ -127,10 +154,13 @@ export function useFileTreeDownload({
         const files = await enumerateFileTreeFiles(treeRepository, {
           datasetPersistentId,
           datasetVersion,
-          paths: [node.path]
+          includeDeaccessioned,
+          paths: [node.path],
+          signal
         })
-        await dispatchFiles(files)
+        await dispatchFiles(files, signal)
       } catch (error) {
+        if (signal.aborted) return
         setProgress({
           status: 'error',
           enumeratedCount: 0,
@@ -139,7 +169,15 @@ export function useFileTreeDownload({
         onError?.(error)
       }
     },
-    [datasetPersistentId, datasetVersion, dispatchFiles, onError, treeRepository]
+    [
+      beginRun,
+      datasetPersistentId,
+      datasetVersion,
+      dispatchFiles,
+      includeDeaccessioned,
+      onError,
+      treeRepository
+    ]
   )
 
   return { progress, downloadSelection, downloadNode, reset }

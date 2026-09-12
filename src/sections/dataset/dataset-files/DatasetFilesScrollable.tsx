@@ -45,7 +45,6 @@ export function DatasetFilesScrollable({
   canUpdateDataset,
   fileTreeRepository
 }: DatasetFilesScrollableProps) {
-  const { fileRepository } = useDatasetRepositories()
   const [searchParams, setSearchParams] = useSearchParams()
   const view: FilesViewMode = searchParams.get(VIEW_PARAM) === 'tree' ? 'tree' : 'table'
   const treePath = searchParams.get(PATH_PARAM) ?? ''

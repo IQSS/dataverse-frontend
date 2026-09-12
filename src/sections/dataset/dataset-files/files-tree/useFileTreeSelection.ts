@@ -200,12 +200,18 @@ export function useFileTreeSelection(): FileTreeSelection {
       const state = folderState(folder, knownChildren)
 
       if (deselectedFolderPaths.has(folder.path)) {
+        const nextSelectedFolders = new Set(selectedFolderPaths)
+        removeUnder(nextSelectedFolders, folder.path)
+        const nextSelectedFiles = new Set(selectedFilePaths)
+        removeUnder(nextSelectedFiles, folder.path)
         const nextDeselectedFolders = new Set(deselectedFolderPaths)
         nextDeselectedFolders.delete(folder.path)
         removeUnder(nextDeselectedFolders, folder.path)
         const nextDeselectedFiles = new Set(deselectedFilePaths)
         nextDeselectedFiles.delete(folder.path)
         removeUnder(nextDeselectedFiles, folder.path)
+        setSelectedFolderPaths(nextSelectedFolders)
+        setSelectedFilePaths(nextSelectedFiles)
         setDeselectedFolderPaths(nextDeselectedFolders)
         setDeselectedFilePaths(nextDeselectedFiles)
         return
