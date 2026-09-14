@@ -43,6 +43,28 @@ describe('DatasetProvider', () => {
     cy.findByText('Loading...').should('not.exist')
   })
 
+  it('gets the draft dataset by persistentId when no version param is provided', () => {
+    const draftDataset = DatasetMother.createDraft()
+    datasetRepository.getByPersistentId = cy
+      .stub()
+      .resolves(Cypress.Promise.resolve(draftDataset).delay(1000))
+
+    cy.mount(
+      <LoadingProvider>
+        <DatasetProvider
+          repository={datasetRepository}
+          searchParams={{ persistentId: draftDataset.persistentId }}>
+          <TestComponent />
+        </DatasetProvider>
+      </LoadingProvider>
+    )
+
+    cy.findByText('Loading...').should('exist')
+    cy.wrap(datasetRepository.getByPersistentId).should('be.calledOnceWith', draftDataset.persistentId)
+    cy.findByText(draftDataset.version.title).should('exist')
+    cy.findByText('Loading...').should('not.exist')
+  })
+
   it('gets the dataset by persistentId and version', () => {
     cy.mount(
       <LoadingProvider>
