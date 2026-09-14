@@ -928,82 +928,89 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.then(() => api.cancel())
   })
 
-  it('re-presigns the URL when a non-first chunk gets 403, then resumes', () => {
-    // Simulates the long-running download case: the first chunk got a
-    // 60-minute presigned URL, the user is on a slow link, the 50th
-    // chunk arrives after the URL has expired and S3 returns 403.
-    // The engine refreshes the presigning by hitting Dataverse's
-    // access endpoint with `gbrecs=true` (so it doesn't double-count
-    // in the guestbook) and resumes from the failed offset. Without
-    // the refresh, the whole zip would die and any large file > the
-    // configured `url-expiration-minutes` would be undownloadable.
-    const total = 12 // 3 chunks at partSize=4
-    const files: FileTreeFile[] = [
-      FileTreeFileMother.create({
-        id: 1,
-        name: 'long.bin',
-        path: 'long.bin',
-        size: total,
-        downloadUrl: '/access/1'
-      })
-    ]
-    cy.customMount(
-      <StreamingZipHarness files={files} zipName="repesign.zip" partSize={4} partRetries={0} />
-    )
-
-    let chunk1AttemptsOnOriginal = 0
-    let refreshHits = 0
-    installFetchHandler((input, init) => {
-      const url = String(input)
-      const headers = new Headers(init?.headers ?? undefined)
-      const range = headers.get('Range') ?? ''
-      const slice = (start: number, end: number) =>
-        new Response(new TextEncoder().encode('ABCDEFGHIJKL'.slice(start, end + 1)), {
-          status: 206,
-          statusText: 'Partial Content',
-          headers: {
-            'content-type': 'application/octet-stream',
-            'content-range': `bytes ${start}-${end}/${total}`
-          }
+  for (const downloadUrl of ['/access/1', '/access/1?format=original']) {
+    it(`re-presigns ${downloadUrl} when a non-first chunk gets 403, then resumes`, () => {
+      // Simulates the long-running download case: the first chunk got a
+      // 60-minute presigned URL, the user is on a slow link, the 50th
+      // chunk arrives after the URL has expired and S3 returns 403.
+      // The engine refreshes the presigning by hitting Dataverse's
+      // access endpoint with `gbrecs=true` (so it doesn't double-count
+      // in the guestbook) and resumes from the failed offset. Without
+      // the refresh, the whole zip would die and any large file > the
+      // configured `url-expiration-minutes` would be undownloadable.
+      const total = 12 // 3 chunks at partSize=4
+      const files: FileTreeFile[] = [
+        FileTreeFileMother.create({
+          id: 1,
+          name: 'long.bin',
+          path: 'long.bin',
+          size: total,
+          downloadUrl
         })
+      ]
+      cy.customMount(
+        <StreamingZipHarness files={files} zipName="repesign.zip" partSize={4} partRetries={0} />
+      )
 
-      // The re-presign path appends `gbrecs=true` to the original URL.
-      // Treat any URL with that flag as the "fresh" URL — return the
-      // requested range bytes from it.
-      if (url.includes('gbrecs=true')) {
-        refreshHits += 1
-        const m = /^bytes=(\d+)-(\d+)$/.exec(range) as RegExpExecArray
-        return Promise.resolve(slice(Number(m[1]), Number(m[2])))
-      }
+      let chunk1AttemptsOnOriginal = 0
+      let refreshHits = 0
+      installFetchHandler((input, init) => {
+        const url = String(input)
+        const headers = new Headers(init?.headers ?? undefined)
+        const range = headers.get('Range') ?? ''
+        const slice = (start: number, end: number) =>
+          new Response(new TextEncoder().encode('ABCDEFGHIJKL'.slice(start, end + 1)), {
+            status: 206,
+            statusText: 'Partial Content',
+            headers: {
+              'content-type': 'application/octet-stream',
+              'content-range': `bytes ${start}-${end}/${total}`
+            }
+          })
 
-      // Chunk 0 (bytes=0-3) succeeds normally on the original URL.
-      if (range === 'bytes=0-3') {
-        return Promise.resolve(slice(0, 3))
-      }
+        // The re-presign path appends `gbrecs=true` to the original URL.
+        // Treat any URL with that flag as the "fresh" URL — return the
+        // requested range bytes from it.
+        if (url.includes('gbrecs=true')) {
+          const refreshedUrl = new URL(url, window.location.origin)
+          expect(refreshedUrl.searchParams.get('gbrecs')).to.equal('true')
+          expect(refreshedUrl.searchParams.get('format')).to.equal(
+            downloadUrl.includes('?') ? 'original' : null
+          )
+          refreshHits += 1
+          const m = /^bytes=(\d+)-(\d+)$/.exec(range) as RegExpExecArray
+          return Promise.resolve(slice(Number(m[1]), Number(m[2])))
+        }
 
-      // Chunk 1 (bytes=4-7) on the original URL returns 403 ONCE — the
-      // expired-URL signal. After re-presign it goes through the
-      // gbrecs=true branch above. Subsequent parts use the cached new
-      // URL and never hit this branch again.
-      if (range === 'bytes=4-7') {
-        chunk1AttemptsOnOriginal += 1
-        return Promise.resolve(new Response('expired', { status: 403, statusText: 'Forbidden' }))
-      }
+        // Chunk 0 (bytes=0-3) succeeds normally on the original URL.
+        if (range === 'bytes=0-3') {
+          return Promise.resolve(slice(0, 3))
+        }
 
-      return Promise.reject(new Error(`unexpected fetch: ${url} ${range}`))
+        // Chunk 1 (bytes=4-7) on the original URL returns 403 ONCE — the
+        // expired-URL signal. After re-presign it goes through the
+        // gbrecs=true branch above. Subsequent parts use the cached new
+        // URL and never hit this branch again.
+        if (range === 'bytes=4-7') {
+          chunk1AttemptsOnOriginal += 1
+          return Promise.resolve(new Response('expired', { status: 403, statusText: 'Forbidden' }))
+        }
+
+        return Promise.reject(new Error(`unexpected fetch: ${url} ${range}`))
+      })
+
+      cy.findByTestId('harness-start').click()
+      cy.contains(/download complete/i).should('exist')
+      cy.then(() => {
+        // Chunk 1 hit the original URL exactly once (the 403); the
+        // refresh path picked up chunks 1 AND 2 from there on. So:
+        //   - 1 hit on the original URL with bytes=4-7 (the 403)
+        //   - 2 refresh hits (bytes=4-7 retried + bytes=8-11 fresh)
+        expect(chunk1AttemptsOnOriginal).to.equal(1)
+        expect(refreshHits).to.equal(2)
+      })
     })
-
-    cy.findByTestId('harness-start').click()
-    cy.contains(/download complete/i).should('exist')
-    cy.then(() => {
-      // Chunk 1 hit the original URL exactly once (the 403); the
-      // refresh path picked up chunks 1 AND 2 from there on. So:
-      //   - 1 hit on the original URL with bytes=4-7 (the 403)
-      //   - 2 refresh hits (bytes=4-7 retried + bytes=8-11 fresh)
-      expect(chunk1AttemptsOnOriginal).to.equal(1)
-      expect(refreshHits).to.equal(2)
-    })
-  })
+  }
 
   it('errors out when the re-presign request itself returns 403 (real access denial)', () => {
     // Same shape as above, but the re-presign also fails — so the user
@@ -1832,34 +1839,41 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.get('@anchorClick').should('not.have.been.called')
   })
 
-  it('cannot resume when the server ignored Range, so a mid-body drop aborts the run', () => {
-    const source = 'AAAABBBBCCCC'
-    const files = chunkedFile(source.length)
-    cy.customMount(
-      <StreamingZipHarness files={files} zipName="norange-drop.zip" partSize={4} partRetries={0} />
-    )
-
-    installFetchHandler(() => {
-      let pulls = 0
-      const stream = new ReadableStream<Uint8Array>({
-        pull(controller) {
-          if (pulls++ === 0) controller.enqueue(new TextEncoder().encode('AAAA'))
-          else controller.error(new Error('connection reset'))
-        }
-      })
-      return Promise.resolve(
-        new Response(stream, {
-          status: 200,
-          headers: { 'content-type': 'application/octet-stream' }
-        })
+  for (const error of [new Error('connection reset'), 'connection reset']) {
+    it(`aborts an unranged body failure thrown as ${typeof error} without saving a partial ZIP`, () => {
+      const source = 'AAAABBBBCCCC'
+      const files = chunkedFile(source.length)
+      cy.customMount(
+        <StreamingZipHarness
+          files={files}
+          zipName="norange-drop.zip"
+          partSize={4}
+          partRetries={0}
+        />
       )
-    })
 
-    cy.findByTestId('harness-start').click()
-    cy.contains(/download failed/i).should('exist')
-    cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
-    cy.get('@anchorClick').should('not.have.been.called')
-  })
+      installFetchHandler(() => {
+        let pulls = 0
+        const stream = new ReadableStream<Uint8Array>({
+          pull(controller) {
+            if (pulls++ === 0) controller.enqueue(new TextEncoder().encode('AAAA'))
+            else controller.error(error)
+          }
+        })
+        return Promise.resolve(
+          new Response(stream, {
+            status: 200,
+            headers: { 'content-type': 'application/octet-stream' }
+          })
+        )
+      })
+
+      cy.findByTestId('harness-start').click()
+      cy.contains(/download failed/i).should('exist')
+      cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+      cy.get('@anchorClick').should('not.have.been.called')
+    })
+  }
 
   it('falls back to a single stream when the server returns 200 to a Range request', () => {
     const total = 12 // larger than partSize, but server ignores Range
@@ -1959,44 +1973,46 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.get('@anchorClick').should('not.have.been.called')
   })
 
-  it('drops the Range header and streams the whole file when the server refuses ranges', () => {
-    const source = 'AAAABBBBCCCC'
-    const files = chunkedFile(source.length)
-    cy.customMount(
-      <StreamingZipHarness files={files} zipName="norange.zip" partSize={4} partRetries={0} />
-    )
-    captureObjectUrls()
+  for (const status of [404, 416]) {
+    it(`streams the whole file when the server refuses ranges with HTTP ${status}`, () => {
+      const source = 'AAAABBBBCCCC'
+      const files = chunkedFile(source.length)
+      cy.customMount(
+        <StreamingZipHarness files={files} zipName="norange.zip" partSize={4} partRetries={0} />
+      )
+      captureObjectUrls()
 
-    const ranges: (string | null)[] = []
-    installFetchHandler((_input, init) => {
-      const range = new Headers(init?.headers ?? undefined).get('Range')
-      ranges.push(range)
-      if (range) {
+      const ranges: (string | null)[] = []
+      installFetchHandler((_input, init) => {
+        const range = new Headers(init?.headers ?? undefined).get('Range')
+        ranges.push(range)
+        if (range) {
+          return Promise.resolve(
+            new Response('Range headers are not supported on dynamically-generated content', {
+              status,
+              statusText: 'Range refused'
+            })
+          )
+        }
         return Promise.resolve(
-          new Response('Range headers are not supported on dynamically-generated content', {
-            status: 404,
-            statusText: 'Not Found'
+          new Response(new TextEncoder().encode(source), {
+            status: 200,
+            headers: { 'content-type': 'application/octet-stream' }
           })
         )
-      }
-      return Promise.resolve(
-        new Response(new TextEncoder().encode(source), {
-          status: 200,
-          headers: { 'content-type': 'application/octet-stream' }
-        })
-      )
-    })
+      })
 
-    cy.findByTestId('harness-start').click()
-    cy.contains(/download complete/i).should('exist')
-    cy.then(() => {
-      expect(ranges).to.deep.equal(['bytes=0-3', null])
+      cy.findByTestId('harness-start').click()
+      cy.contains(/download complete/i).should('exist')
+      cy.then(() => {
+        expect(ranges).to.deep.equal(['bytes=0-3', null])
+      })
+      cy.then(async () => {
+        const zip = new Uint8Array(await capturedZip().arrayBuffer())
+        expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+      })
     })
-    cy.then(async () => {
-      const zip = new Uint8Array(await capturedZip().arrayBuffer())
-      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
-    })
-  })
+  }
 
   it('refuses a selection over the cap before fetching anything', () => {
     const threeGb = 3 * 1024 * 1024 * 1024

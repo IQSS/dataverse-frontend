@@ -26,6 +26,22 @@ describe('resolveZipSink', () => {
 })
 
 describe('createBlobSink', () => {
+  it('discards a completed blob when the caller has abandoned the download', () => {
+    cy.window().then((win) => {
+      cy.stub(win.URL, 'createObjectURL').as('createObjectURL')
+      cy.stub(win.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+    })
+    cy.then(async () => {
+      await createBlobSink().save({
+        name: 'abandoned.zip',
+        body: streamOf('zip bytes'),
+        shouldSave: () => false
+      })
+    })
+    cy.get('@createObjectURL').should('not.have.been.called')
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
   it('saves the stream through a download anchor', () => {
     cy.window().then((win) => {
       cy.stub(win.HTMLAnchorElement.prototype, 'click')
@@ -128,6 +144,16 @@ describe('withTimeout', () => {
       expect((caught as Error)?.message).to.equal('boom')
     })
   })
+
+  it('preserves the reason when a promise rejects with a plain value', () => {
+    cy.then(async () => {
+      const failure = await withTimeout(Promise.reject('worker unavailable'), 1000, 'late').catch(
+        (error: unknown) => error
+      )
+      expect(failure).to.be.instanceOf(Error)
+      expect((failure as Error).message).to.equal('worker unavailable')
+    })
+  })
 })
 
 describe('pullDrivenStream', () => {
@@ -165,29 +191,31 @@ describe('pullDrivenStream', () => {
     })
   })
 
-  it('rejects when the source errors instead of ending quietly', () => {
-    cy.then(async () => {
-      let sent = false
-      const body = new ReadableStream<Uint8Array>({
-        pull(controller) {
-          if (!sent) {
-            sent = true
-            controller.enqueue(new TextEncoder().encode('half'))
-            return
+  for (const error of [new Error('source died'), 'source died']) {
+    it(`rejects when the source throws ${typeof error} instead of ending quietly`, () => {
+      cy.then(async () => {
+        let sent = false
+        const body = new ReadableStream<Uint8Array>({
+          pull(controller) {
+            if (!sent) {
+              sent = true
+              controller.enqueue(new TextEncoder().encode('half'))
+              return
+            }
+            controller.error(error)
           }
-          controller.error(new Error('source died'))
-        }
+        })
+        const wrapped = pullDrivenStream(body)
+        let message = ''
+        wrapped.done.catch((error: Error) => {
+          message = error.message
+        })
+        await new Response(wrapped.readable).text().catch(() => undefined)
+        await new Promise((resolve) => setTimeout(resolve, 10))
+        expect(message).to.equal('source died')
       })
-      const wrapped = pullDrivenStream(body)
-      let message = ''
-      wrapped.done.catch((error: Error) => {
-        message = error.message
-      })
-      await new Response(wrapped.readable).text().catch(() => undefined)
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(message).to.equal('source died')
     })
-  })
+  }
 
   it('cancels the source and rejects when the consumer walks away', () => {
     cy.then(async () => {
