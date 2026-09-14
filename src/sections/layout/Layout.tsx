@@ -2,13 +2,13 @@ import DOMPurify from 'dompurify'
 import { Outlet } from 'react-router-dom'
 import { Container } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import styles from './Layout.module.scss'
 import { FooterFactory } from './footer/FooterFactory'
 import TopBarProgressIndicator from './topbar-progress-indicator/TopbarProgressIndicator'
 import { HeaderFactory } from './header/HeaderFactory'
 import { HistoryTrackerProvider } from '@/router/HistoryTrackerProvider'
 import { requireAppConfig } from '@/config'
 import type { AppConfig } from '@/config'
+import styles from './Layout.module.scss'
 
 export function Layout() {
   const { i18n } = useTranslation()
