@@ -111,7 +111,7 @@ export function pullDrivenStream(body: ReadableStream<Uint8Array>): PulledStream
         }
       },
       cancel(reason) {
-        void reader.cancel(reason)
+        void reader.cancel(reason).catch(() => undefined)
         reject(new Error('the browser stopped reading the download'))
       }
     },
@@ -217,7 +217,7 @@ function handOver(
     channel.port1.onmessage = (event: MessageEvent) => {
       const type = (event.data as { type?: string } | null)?.type
       if (type === 'cancel') {
-        void reader.cancel('cancelled by the download')
+        void reader.cancel('cancelled by the download').catch(() => undefined)
         return
       }
       reader.read().then(

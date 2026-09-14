@@ -213,6 +213,32 @@ describe('pullDrivenStream', () => {
       expect(rejected, 'the run was reported as failed').to.equal(true)
     })
   })
+
+  it('reports browser cancellation even when source cancellation rejects', () => {
+    cy.then(async () => {
+      const unhandled: unknown[] = []
+      const onRejection = (event: PromiseRejectionEvent) => unhandled.push(event.reason)
+      window.addEventListener('unhandledrejection', onRejection)
+      try {
+        let cancellationReason: unknown
+        const body = new ReadableStream<Uint8Array>({
+          cancel(reason) {
+            cancellationReason = reason
+            return Promise.reject(new Error('source cancellation failed'))
+          }
+        })
+        const wrapped = pullDrivenStream(body)
+        const outcome = wrapped.done.catch((error: Error) => error.message)
+        await wrapped.readable.cancel('browser cancelled')
+        expect(await outcome).to.equal('the browser stopped reading the download')
+        expect(cancellationReason).to.equal('browser cancelled')
+        await new Promise((resolve) => setTimeout(resolve, 20))
+        expect(unhandled, 'source cancellation rejection was handled').to.deep.equal([])
+      } finally {
+        window.removeEventListener('unhandledrejection', onRejection)
+      }
+    })
+  })
 })
 
 describe('createServiceWorkerSink', () => {
