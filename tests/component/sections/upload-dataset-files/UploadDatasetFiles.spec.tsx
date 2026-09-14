@@ -7,6 +7,7 @@ import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvide
 import { UploadDatasetFiles } from '../../../../src/sections/upload-dataset-files/UploadDatasetFiles'
 import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 import { FileMockRepository } from '../../../../src/stories/file/FileMockRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -26,11 +27,13 @@ describe('UploadDatasetFiles', () => {
     })
 
     cy.customMount(
-      <LoadingProvider>
-        <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
-          {component}
-        </DatasetProvider>
-      </LoadingProvider>
+      <WithRepositories datasetRepository={datasetRepository}>
+        <LoadingProvider>
+          <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
+            {component}
+          </DatasetProvider>
+        </LoadingProvider>
+      </WithRepositories>
     )
   }
 

@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@iqss/dataverse-design-system'
+import { Link } from 'react-router-dom'
 import {
   DvObjectType,
   UpwardHierarchyNode
@@ -7,24 +8,33 @@ import { LinkToPage } from '../link-to-page/LinkToPage'
 import { Route } from '../../Route.enum'
 import styles from './BreadcrumbsGenerator.module.scss'
 
+interface ActionItem {
+  text: string
+  url?: string
+}
+
 type BreadcrumbGeneratorProps =
   | {
       hierarchy: UpwardHierarchyNode
       withActionItem?: false
       actionItemText?: never
+      actionItems?: never
     }
   | {
       hierarchy: UpwardHierarchyNode
       withActionItem: true
       actionItemText: string
+      actionItems?: ActionItem[]
     }
 
 export function BreadcrumbsGenerator({
   hierarchy,
   withActionItem,
-  actionItemText
+  actionItemText,
+  actionItems
 }: BreadcrumbGeneratorProps) {
   const hierarchyArray = hierarchy.toArray()
+  const resolvedActionItems = withActionItem ? actionItems ?? [{ text: actionItemText }] : []
 
   return (
     <Breadcrumb className={styles['breadcrumb-generator']}>
@@ -69,7 +79,29 @@ export function BreadcrumbsGenerator({
           </Breadcrumb.Item>
         )
       })}
-      {withActionItem && <Breadcrumb.Item active>{actionItemText}</Breadcrumb.Item>}
+      {withActionItem &&
+        resolvedActionItems.map((item, index) => {
+          const isLast = index === resolvedActionItems.length - 1
+
+          if (isLast || !item.url) {
+            return (
+              <Breadcrumb.Item key={item.text} active>
+                {item.text}
+              </Breadcrumb.Item>
+            )
+          }
+
+          return (
+            <Breadcrumb.Item
+              key={item.text}
+              linkAs={Link}
+              linkProps={{
+                to: item.url
+              }}>
+              {item.text}
+            </Breadcrumb.Item>
+          )
+        })}
     </Breadcrumb>
   )
 }

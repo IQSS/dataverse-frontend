@@ -6,6 +6,7 @@ import { WithDataset } from '../dataset/WithDataset'
 import { ReplaceFile } from '@/sections/replace-file/ReplaceFile'
 import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { WithToasts } from '../WithToasts'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof ReplaceFile> = {
   title: 'Pages/Replace File',
@@ -23,12 +24,13 @@ type Story = StoryObj<typeof ReplaceFile>
 export const Default: Story = {
   decorators: [WithLayout, WithDataset, WithToasts],
   render: () => (
-    <ReplaceFile
-      fileRepository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      fileIdFromParams={1}
-      datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
-      datasetVersionFromParams=":draft"
-    />
+    <RepositoriesStoryProvider datasetRepository={new DatasetMockRepository()}>
+      <ReplaceFile
+        fileRepository={new FileMockRepository()}
+        fileIdFromParams={1}
+        datasetPidFromParams="doi:10.5072/FK2/8YOKQI"
+        datasetVersionFromParams=":draft"
+      />
+    </RepositoriesStoryProvider>
   )
 }

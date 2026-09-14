@@ -5,11 +5,12 @@ import {
   DatasetVersionsLoadingSkeleton
 } from '../../../sections/dataset/dataset-versions/DatasetVersions'
 import { DatasetMockRepository } from '../../dataset/DatasetMockRepository'
+import { WithRepositories } from '../../WithRepositories'
 
 const meta: Meta<typeof DatasetVersions> = {
   title: 'Sections/Dataset Page/DatasetVersions',
   component: DatasetVersions,
-  decorators: [WithI18next]
+  decorators: [WithI18next, WithRepositories({ datasetRepository: new DatasetMockRepository() })]
 }
 
 export default meta
@@ -18,7 +19,6 @@ type Story = StoryObj<typeof DatasetVersions>
 export const Default: Story = {
   render: () => (
     <DatasetVersions
-      datasetRepository={new DatasetMockRepository()}
       currentVersionNumber={'1.0'}
       canUpdateDataset={true}
       datasetId="test-dataset-id"

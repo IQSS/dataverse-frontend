@@ -7,11 +7,18 @@ import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositor
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { EditDatasetMetadata } from '../../sections/edit-dataset-metadata/EditDatasetMetadata'
 import { WithDataset } from '../dataset/WithDataset'
+import { WithRepositories } from '../WithRepositories'
 
 const meta: Meta<typeof EditDatasetMetadata> = {
   title: 'Pages/Edit Dataset Metadata',
   component: EditDatasetMetadata,
-  decorators: [WithI18next, WithLayout, WithDataset, WithLoggedInUser],
+  decorators: [
+    WithI18next,
+    WithLayout,
+    WithDataset,
+    WithLoggedInUser,
+    WithRepositories({ datasetRepository: new DatasetMockRepository() })
+  ],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -22,17 +29,13 @@ type Story = StoryObj<typeof EditDatasetMetadata>
 
 export const Default: Story = {
   render: () => (
-    <EditDatasetMetadata
-      datasetRepository={new DatasetMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-    />
+    <EditDatasetMetadata metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()} />
   )
 }
 
 export const Loading: Story = {
   render: () => (
     <EditDatasetMetadata
-      datasetRepository={new DatasetMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
     />
   )

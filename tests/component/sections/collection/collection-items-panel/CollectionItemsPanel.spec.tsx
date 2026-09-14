@@ -1,10 +1,18 @@
 import { ComponentProps } from 'react'
+import { useLocation } from 'react-router-dom'
 import { CollectionItemsPanel as BaseCollectionItemsPanel } from '@/sections/collection/collection-items-panel/CollectionItemsPanel'
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
+import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import {
+  CollectionSearchCriteria,
+  FilterQuery,
+  OrderType,
+  SortType
+} from '@/collection/domain/models/CollectionSearchCriteria'
 
 const ROOT_COLLECTION_ALIAS = 'root'
 const collectionRepository: CollectionRepository = {} as CollectionRepository
@@ -39,11 +47,30 @@ function CollectionItemsPanel({
   )
 }
 
+function LocationSearchProbe() {
+  const location = useLocation()
+
+  return <span data-testid="location-search">{location.search}</span>
+}
+
+type GetItemsStub = sinon.SinonStub<
+  [
+    collectionId: string,
+    paginationInfo: CollectionItemsPaginationInfo,
+    searchCriteria?: CollectionSearchCriteria,
+    searchService?: string
+  ],
+  Promise<CollectionItemSubset>
+>
+
 describe('CollectionItemsPanel', () => {
+  let getItems: GetItemsStub
+
   beforeEach(() => {
     cy.viewport(1280, 720)
 
-    collectionRepository.getItems = cy.stub().resolves(itemsWithCount)
+    getItems = cy.stub().resolves(itemsWithCount) as GetItemsStub
+    collectionRepository.getItems = getItems
   })
 
   it('renders skeleton while loading', () => {
@@ -414,6 +441,53 @@ describe('CollectionItemsPanel', () => {
       cy.findByRole('button', { name: /Search submit/ }).click()
     })
 
+    it('clears existing sort, order and facet query params when submitting a new search', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
+            filtersQuery: ['dvCategory:Department'],
+            sortQuery: SortType.DATE,
+            orderQuery: OrderType.ASC
+          }}
+          addDataSlot={<LocationSearchProbe />}
+        />,
+        ['/?sort=date&order=asc&fqs=dvCategory%3ADepartment']
+      )
+
+      cy.findByPlaceholderText('Search this collection...').type('Some search')
+      cy.findByRole('button', { name: /Search submit/ }).click()
+
+      cy.findByTestId('location-search').should(($locationSearch) => {
+        const params = new URLSearchParams($locationSearch.text().replace(/^\?/, ''))
+
+        expect(params.get('q')).to.equal('Some search')
+        expect(params.get('types')).to.equal('collection,dataset,file')
+        expect(params.get('sort')).to.equal(null)
+        expect(params.get('order')).to.equal(null)
+        expect(params.get('fqs')).to.equal(null)
+      })
+
+      cy.wrap(null).should(() => {
+        expect(getItems).to.have.been.calledTwice
+
+        const searchCriteria = getItems.getCall(1).args[2] as CollectionSearchCriteria
+        expect(searchCriteria.searchText).to.equal('Some search')
+        expect(searchCriteria.itemTypes).to.deep.equal([
+          CollectionItemType.COLLECTION,
+          CollectionItemType.DATASET,
+          CollectionItemType.FILE
+        ])
+        expect(searchCriteria.sort).to.equal(SortType.SCORE)
+        expect(searchCriteria.order).to.equal(OrderType.DESC)
+        expect(searchCriteria.filterQueries).to.equal(undefined)
+      })
+    })
+
     it('changes the types correctly without an existing search value', () => {
       cy.customMount(
         <CollectionItemsPanel
@@ -492,6 +566,168 @@ describe('CollectionItemsPanel', () => {
       cy.findAllByRole('button', { name: /Admin, Dataverse/ })
         .first()
         .click()
+    })
+
+    it('adds a facet filter to the URL', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: undefined
+          }}
+          addDataSlot={<LocationSearchProbe />}
+        />
+      )
+
+      cy.findByRole('button', { name: /Add Department facet filter/ }).click()
+
+      cy.findByTestId('location-search').should(($locationSearch) => {
+        const params = new URLSearchParams($locationSearch.text().replace(/^\?/, ''))
+
+        expect(params.get('fqs')).to.equal('dvCategory:Department')
+      })
+    })
+
+    it('removes the last selected facet from the URL', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: ['dvCategory:Department']
+          }}
+          addDataSlot={<LocationSearchProbe />}
+        />,
+        ['/collections/root?fqs=dvCategory%3ADepartment']
+      )
+
+      cy.findAllByRole('button', { name: /Remove Department facet filter/ })
+        .first()
+        .click()
+
+      cy.findByTestId('location-search').should(($locationSearch) => {
+        const params = new URLSearchParams($locationSearch.text().replace(/^\?/, ''))
+
+        expect(params.has('fqs')).to.be.false
+      })
+    })
+
+    it('ignores invalid filter queries when building advanced search links', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: ['invalid-filter-query' as FilterQuery, 'dvCategory:Department']
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByRole('link', { name: 'Advanced Search' })
+        .should('have.attr', 'href')
+        .and('include', '/collections/root/search?fqs=dvCategory%3ADepartment')
+        .and('not.include', 'invalid-filter-query')
+    })
+
+    it('removes invalid selected facets without keeping empty filter query params', () => {
+      cy.customMount(
+        <>
+          <CollectionItemsPanel
+            collectionId={ROOT_COLLECTION_ALIAS}
+            collectionRepository={collectionRepository}
+            collectionQueryParams={{
+              pageQuery: 1,
+              searchQuery: undefined,
+              typesQuery: undefined,
+              filtersQuery: ['invalid-filter-query' as FilterQuery]
+            }}
+            addDataSlot={null}
+          />
+          <LocationSearchProbe />
+        </>
+      )
+
+      cy.findByRole('button', { name: /Remove Unknown facet filter/ }).click()
+
+      cy.findByTestId('location-search').should(($locationSearch) => {
+        const params = new URLSearchParams($locationSearch.text().replace(/^\?/, ''))
+
+        expect(params.has('fqs')).to.be.false
+      })
+    })
+
+    it('adds a facet filter from the filter panel when there are no current filter queries', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: undefined
+          }}
+          addDataSlot={<LocationSearchProbe />}
+        />
+      )
+
+      cy.findByRole('button', { name: 'Add Department facet filter' }).click()
+
+      cy.findByTestId('location-search').should(($locationSearch) => {
+        const params = new URLSearchParams($locationSearch.text().replace(/^\?/, ''))
+
+        expect(params.get('fqs')).to.equal('dvCategory:Department')
+      })
+
+      cy.wrap(null).should(() => {
+        expect(getItems).to.have.been.calledTwice
+
+        const searchCriteria = getItems.getCall(1).args[2] as CollectionSearchCriteria
+        expect(searchCriteria.filterQueries).to.deep.equal(['dvCategory:Department'])
+      })
+    })
+
+    it('removes a selected facet filter through SelectedFacets', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: ['dvCategory:Department', 'authorName_ss:Admin, Dataverse']
+          }}
+          addDataSlot={<LocationSearchProbe />}
+        />,
+        ['/?fqs=dvCategory%3ADepartment,authorName_ss%3AAdmin%252C%2520Dataverse']
+      )
+
+      cy.findAllByRole('button', { name: 'Remove Department facet filter' }).first().click()
+
+      cy.findByTestId('location-search').should(($locationSearch) => {
+        const params = new URLSearchParams($locationSearch.text().replace(/^\?/, ''))
+
+        expect(params.get('fqs')).to.equal('authorName_ss:Admin%2C%20Dataverse')
+      })
+
+      cy.wrap(null).should(() => {
+        expect(getItems).to.have.been.calledTwice
+
+        const searchCriteria = getItems.getCall(1).args[2] as CollectionSearchCriteria
+        expect(searchCriteria.filterQueries).to.deep.equal(['authorName_ss:Admin, Dataverse'])
+      })
     })
 
     it('it calls the loadItemsOnBackAndForwardNavigation on pop state event when navigating back and forward', () => {

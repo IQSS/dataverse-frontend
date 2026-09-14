@@ -44,7 +44,13 @@ import {
   getDatasetLinkedCollections,
   updateTermsOfAccess,
   updateDatasetLicense,
-  getDatasetUploadLimits
+  getDatasetStorageDriver,
+  getDatasetUploadLimits,
+  getDatasetReviews,
+  DatasetType,
+  getDatasetAvailableDatasetTypes,
+  exportDatasetMetadata,
+  DatasetNotNumberedVersion
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -58,12 +64,11 @@ import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCou
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetLicenseUpdateRequest } from '../../domain/models/DatasetLicenseUpdateRequest'
-import { axiosInstance } from '@/axiosInstance'
-import { requireAppConfig } from '../../../config'
-import { AxiosResponse } from 'axios'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
+import { DatasetReview } from '@/dataset/domain/models/DatasetReview'
+import { ExportedDatasetMetadata } from '@/dataset/domain/models/ExportedDatasetMetadata'
 
 const includeDeaccessioned = true
 
@@ -82,10 +87,6 @@ interface IDatasetDetails {
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  static get DATAVERSE_BACKEND_URL(): string {
-    return requireAppConfig().backendUrl
-  }
-
   getAllWithCount(
     collectionId: string,
     paginationInfo: DatasetPaginationInfo
@@ -327,9 +328,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  create(dataset: DatasetDTO, collectionId: string): Promise<{ persistentId: string }> {
+  create(
+    dataset: DatasetDTO,
+    collectionId: string,
+    datasetType?: string
+  ): Promise<{ persistentId: string }> {
     return createDataset
-      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId)
+      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId, datasetType)
       .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({
         persistentId: jsDatasetIdentifiers.persistentId
       }))
@@ -415,6 +420,15 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   ): Promise<FormattedCitation> {
     return getDatasetCitationInOtherFormats.execute(datasetId, version, format)
   }
+
+  exportDatasetMetadata(
+    datasetId: string | number,
+    exporter: string,
+    version?: DatasetNotNumberedVersion.LATEST_PUBLISHED | DatasetNotNumberedVersion.DRAFT
+  ): Promise<ExportedDatasetMetadata> {
+    return exportDatasetMetadata.execute(datasetId, exporter, version)
+  }
+
   getAvailableCategories(datasetId: string | number): Promise<string[]> {
     return getDatasetAvailableCategories.execute(datasetId)
   }
@@ -431,30 +445,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return getDatasetLinkedCollections.execute(datasetId)
   }
 
+  getAvailableDatasetTypes: () => Promise<DatasetType[]> = () => {
+    return getDatasetAvailableDatasetTypes.execute()
+  }
+
   /*
     TODO: This is a temporary solution as this use case doesn't exist in js-dataverse yet and the API should also return the file store type rather than name only.
     After https://github.com/IQSS/dataverse/issues/11695 is implemented, create a js-dataverse use case.
   */
   private async getFileStore(datasetId: number): Promise<string | undefined> {
-    return axiosInstance
-      .get(
-        `${DatasetJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/datasets/${datasetId}/storageDriver`
-      )
-      .then(
-        (
-          res: AxiosResponse<{
-            data: {
-              name: string
-              label: string
-              type: string
-              directDownload: boolean
-              directUpload: boolean
-            }
-          }>
-        ) => {
-          return res.data.data.name
-        }
-      )
+    return getDatasetStorageDriver
+      .execute(datasetId)
+      .then((storageDriver) => storageDriver.name)
       .catch(() => {
         return undefined
       })
@@ -473,5 +475,9 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   getDatasetUploadLimits(datasetId: string | number): Promise<DatasetUploadLimits> {
     return getDatasetUploadLimits.execute(datasetId)
+  }
+
+  getDatasetReviews(datasetId: string | number): Promise<DatasetReview[]> {
+    return getDatasetReviews.execute(datasetId)
   }
 }

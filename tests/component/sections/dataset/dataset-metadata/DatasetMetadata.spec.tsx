@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { DatasetMetadata } from '../../../../../src/sections/dataset/dataset-metadata/DatasetMetadata'
 import {
@@ -9,6 +10,8 @@ import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-i
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { DatasetMetadataExportFormatsMother } from '@tests/component/info/domain/models/DatasetMetadataExportFormatsMother'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
+import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 
 const mockDataset = DatasetMother.create({
   metadataBlocks: [
@@ -209,29 +212,29 @@ describe('DatasetMetadata', () => {
       .resolves(mockDatasetMetadataExportFormats)
   })
 
-  it('renders the metadata blocks sections titles correctly', () => {
+  const mountDatasetMetadata = (props: Partial<ComponentProps<typeof DatasetMetadata>> = {}) => {
     cy.customMount(
-      <DatasetMetadata
-        dataset={mockDataset}
-        anonymizedView={false}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        dataverseInfoRepository={dataverseInfoRepository}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <DatasetMetadata
+          dataset={mockDataset}
+          anonymizedView={false}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+          {...props}
+        />
+      </WithRepositories>
     )
+  }
+
+  it('renders the metadata blocks sections titles correctly', () => {
+    mountDatasetMetadata()
 
     cy.findByRole('button', { name: 'Citation Metadata' }).should('exist')
     cy.findByRole('button', { name: 'Geospatial Metadata' }).should('exist')
   })
 
   it('renders the metadata blocks fields correctly', () => {
-    cy.customMount(
-      <DatasetMetadata
-        dataset={mockDataset}
-        anonymizedView={false}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        dataverseInfoRepository={dataverseInfoRepository}
-      />
-    )
+    mountDatasetMetadata()
 
     cy.get('.accordion > :nth-child(1)').within(() => {
       cy.findByText(/Citation Metadata/i).should('exist')
@@ -255,14 +258,7 @@ describe('DatasetMetadata', () => {
   })
 
   it('renders the metadata blocks fields values correctly', () => {
-    cy.customMount(
-      <DatasetMetadata
-        dataset={mockDataset}
-        anonymizedView={false}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        dataverseInfoRepository={dataverseInfoRepository}
-      />
-    )
+    mountDatasetMetadata()
 
     cy.get('.accordion > :nth-child(1)').within(() => {
       cy.findByText(/Citation Metadata/i).should('exist')
@@ -333,28 +329,23 @@ describe('DatasetMetadata', () => {
     metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
 
     cy.customMount(
-      <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
-        <DatasetMetadata
-          dataset={mockDataset}
-          anonymizedView={false}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-          dataverseInfoRepository={dataverseInfoRepository}
-        />
-      </AnonymizedContext.Provider>
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
+          <DatasetMetadata
+            dataset={mockDataset}
+            anonymizedView
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
+        </AnonymizedContext.Provider>
+      </WithRepositories>
     )
 
     cy.findAllByText(ANONYMIZED_FIELD_VALUE).should('exist')
   })
 
   it('shows a tip for dataset contact field', () => {
-    cy.customMount(
-      <DatasetMetadata
-        dataset={mockDataset}
-        anonymizedView={false}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        dataverseInfoRepository={dataverseInfoRepository}
-      />
-    )
+    mountDatasetMetadata()
 
     cy.findByText('Use email button above to contact.').should('exist')
   })
@@ -364,14 +355,7 @@ describe('DatasetMetadata', () => {
       .stub()
       .rejects(new Error('Error getting metadata block display info'))
 
-    cy.customMount(
-      <DatasetMetadata
-        dataset={mockDataset}
-        anonymizedView={false}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        dataverseInfoRepository={dataverseInfoRepository}
-      />
-    )
+    mountDatasetMetadata()
 
     cy.findAllByTestId('ds-metadata-block-display-format-error').should('exist')
     cy.contains('Error getting metadata block display info').should('not.exist')
@@ -415,14 +399,7 @@ describe('DatasetMetadata', () => {
         }
       ]
     })
-    cy.customMount(
-      <DatasetMetadata
-        dataset={mockDataset}
-        anonymizedView={false}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        dataverseInfoRepository={dataverseInfoRepository}
-      />
-    )
+    mountDatasetMetadata({ dataset: mockDataset })
 
     cy.findByRole('button', { name: 'Citation Metadata' }).should('exist')
     cy.findByRole('button', { name: 'Geospatial Metadata' }).should('not.exist')
@@ -475,14 +452,7 @@ describe('DatasetMetadata', () => {
       ]
     })
 
-    cy.customMount(
-      <DatasetMetadata
-        dataset={mockDatasetWithExtraFields}
-        anonymizedView={false}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        dataverseInfoRepository={dataverseInfoRepository}
-      />
-    )
+    mountDatasetMetadata({ dataset: mockDatasetWithExtraFields })
 
     cy.get('.accordion > :nth-child(1)').within(() => {
       cy.findByText(/Citation Metadata/i).should('exist')

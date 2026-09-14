@@ -44,7 +44,12 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
       <div className={styles['top-right-icon']}>
         <Icon name={IconName.COLLECTION} />
         {collectionPreview.isLinked && (
-          <Link45deg size={26} title="linked" data-testid="linked-collection-icon" />
+          <Link45deg
+            size={26}
+            role="img"
+            aria-label="Linked collection"
+            data-testid="linked-collection-icon"
+          />
         )}
       </div>
     </header>

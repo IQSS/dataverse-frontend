@@ -1,25 +1,21 @@
 import { useTranslation } from 'react-i18next'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { ViewStyledCitationModal } from './ViewStyledCitationModal'
-import { useState } from 'react'
+import { startTransition, useEffect, useState } from 'react'
 import { CitationFormat } from '@/dataset/domain/models/DatasetCitation'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useDownloadCitation } from './useDownloadCitation'
 import { FormattedCitation } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/FormattedCitation'
 import { toast } from 'react-toastify'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from '../Citation.module.scss'
 
 interface CitationDownloadProps {
-  datasetRepository: DatasetRepository
   datasetId: string
   version: string
 }
 
-export function CitationDownloadButton({
-  datasetRepository,
-  datasetId,
-  version
-}: CitationDownloadProps) {
+export function CitationDownloadButton({ datasetId, version }: CitationDownloadProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const { t } = useTranslation('shared', { keyPrefix: 'downloadCitation' })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [styledCitation, setStyledCitation] = useState<FormattedCitation | null>(null)
@@ -30,32 +26,43 @@ export function CitationDownloadButton({
     version
   })
 
-  if (error) {
-    toast.error(t('downloadError'))
-  }
+  useEffect(() => {
+    if (error) {
+      toast.error(t('downloadError'))
+    }
+  }, [error, t])
 
   const handleCloseModal = () => setIsModalOpen(false)
   const handleOpenModal = async () => {
-    setIsModalOpen(true)
+    startTransition(() => setIsModalOpen(true))
     const result = await handleGetCitation(CitationFormat.Internal)
     setStyledCitation(result)
   }
+
+  const handleDownload = (format: CitationFormat, filename: string) => {
+    void handleDownloadCitation(format, filename).then((downloaded) => {
+      if (downloaded) {
+        toast.success(t('downloadSuccess'))
+      }
+    })
+  }
+
   return (
     <>
-      <DropdownButton title="Cite Dataset" id="dataset-actions" variant="link">
+      <DropdownButton title={t('citeDataset')} id="dataset-actions" variant="link">
         <DropdownButtonItem
           style={{ textDecoration: 'underline' }}
-          onClick={() => handleDownloadCitation(CitationFormat.EndNote, `${datasetId}.xml`)}>
+          onClick={() => handleDownload(CitationFormat.EndNote, `${datasetId}.xml`)}>
           {t('downloadEndNoteXML')}
         </DropdownButtonItem>
         <DropdownButtonItem
           style={{ textDecoration: 'underline' }}
-          onClick={() => handleDownloadCitation(CitationFormat.RIS, `${datasetId}.ris`)}>
+          onClick={() => handleDownload(CitationFormat.RIS, `${datasetId}.ris`)}>
           {t('downloadRIS')}
         </DropdownButtonItem>
         <DropdownButtonItem
           style={{ textDecoration: 'underline' }}
-          onClick={() => handleDownloadCitation(CitationFormat.BibTeX, `${datasetId}.bib`)}>
+          onClick={() => handleDownload(CitationFormat.BibTeX, `${datasetId}.bib`)}>
           {t('downloadBibTeX')}
         </DropdownButtonItem>
         <DropdownButtonItem onClick={handleOpenModal} className={styles['styledCitationButton']}>

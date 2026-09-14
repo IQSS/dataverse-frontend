@@ -5,18 +5,15 @@ import { ReadError } from '@iqss/dataverse-client-javascript'
 import { User } from '../../users/domain/models/User'
 import { SessionContext, SessionError } from './SessionContext'
 import { getUser } from '../../users/domain/useCases/getUser'
-import { UserRepository } from '../../users/domain/repositories/UserRepository'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { QueryParamKey, Route } from '../Route.enum'
+import { useUserRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 export const BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE =
   'Bearer token is validated, but there is no linked user account.'
 
-interface SessionProviderProps {
-  repository: UserRepository
-}
-
-export function SessionProvider({ repository }: SessionProviderProps) {
+export function SessionProvider() {
+  const { userRepository } = useUserRepositories()
   const navigate = useNavigate()
   const { token, loginInProgress } = useContext(AuthContext)
   const [user, setUser] = useState<User | null>(null)
@@ -63,14 +60,14 @@ export function SessionProvider({ repository }: SessionProviderProps) {
     setIsLoadingUser(true)
 
     try {
-      const user = await getUser(repository)
+      const user = await getUser(userRepository)
       setUser(user)
     } catch (err) {
       handleFetchError(err)
     } finally {
       setIsLoadingUser(false)
     }
-  }, [repository, handleFetchError])
+  }, [userRepository, handleFetchError])
 
   const refetchUserSession = async () => {
     await fetchUser()

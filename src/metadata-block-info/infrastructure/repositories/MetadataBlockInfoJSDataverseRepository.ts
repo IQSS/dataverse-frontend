@@ -37,9 +37,13 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
       })
   }
 
-  getByCollectionId(collectionIdOrAlias: number | string): Promise<MetadataBlockInfo[]> {
+  getByCollectionId(
+    collectionIdOrAlias: number | string,
+    onlyDisplayedOnCreate?: boolean,
+    datasetType?: string
+  ): Promise<MetadataBlockInfo[]> {
     return getCollectionMetadataBlocks
-      .execute(collectionIdOrAlias)
+      .execute(collectionIdOrAlias, onlyDisplayedOnCreate, datasetType)
       .then((metadataBlocks: MetadataBlockInfo[]) => {
         return metadataBlocks
       })
@@ -49,12 +53,23 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
   }
 
   getDisplayedOnCreateByCollectionId(
-    collectionIdOrAlias: number | string
+    collectionIdOrAlias: number | string,
+    datasetType?: string
   ): Promise<MetadataBlockInfo[]> {
     return getCollectionMetadataBlocks
-      .execute(collectionIdOrAlias, true)
+      .execute(collectionIdOrAlias, true, datasetType)
       .then((metadataBlocks: MetadataBlockInfo[]) => {
-        return metadataBlocks
+        const metadataBlocksWithFields: MetadataBlockInfo[] = []
+        metadataBlocks.forEach((block) => {
+          const numFields = Object.keys(block.metadataFields).length
+          // numFields can be zero if you pass a datasetType that's linked to
+          // a metadata block that doesn't have any fields set to displayOnCreate.
+          // See https://github.com/IQSS/dataverse/blob/v6.7.1/src/test/java/edu/harvard/iq/dataverse/api/DatasetTypesIT.java#L512
+          if (numFields > 0) {
+            metadataBlocksWithFields.push(block)
+          }
+        })
+        return metadataBlocksWithFields
       })
       .catch((error: ReadError) => {
         throw new Error(error.message)

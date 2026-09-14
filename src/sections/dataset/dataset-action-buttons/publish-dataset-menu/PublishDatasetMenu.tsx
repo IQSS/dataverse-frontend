@@ -2,17 +2,17 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useSession } from '../../../session/SessionContext'
-import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
 import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
 import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
 import { PublishDatasetModal } from '../../publish-dataset/PublishDatasetModal'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface PublishDatasetMenuProps {
   dataset: Dataset
-  datasetRepository: DatasetRepository
 }
 
-export function PublishDatasetMenu({ dataset, datasetRepository }: PublishDatasetMenuProps) {
+export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const { user } = useSession()
   const { t } = useTranslation('dataset')
   const [showModal, setShowModal] = useState(false)

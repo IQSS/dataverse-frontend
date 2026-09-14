@@ -1,6 +1,5 @@
 import { Account } from '../../../../src/sections/account/Account'
 import { AccountHelper } from '../../../../src/sections/account/AccountHelper'
-import { UserJSDataverseRepository } from '../../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
 import { NotificationType } from '@/notifications/domain/models/Notification'
@@ -55,7 +54,6 @@ describe('Account', () => {
       <WithRepositories collectionRepository={new CollectionMockRepository()}>
         <Account
           defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
-          userRepository={new UserJSDataverseRepository()}
           roleRepository={new RoleMockRepository()}
           notificationRepository={mockRepository}
         />
@@ -74,7 +72,6 @@ describe('Account', () => {
       <WithRepositories collectionRepository={new CollectionMockRepository()}>
         <Account
           defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
-          userRepository={new UserJSDataverseRepository()}
           roleRepository={new RoleMockRepository()}
           notificationRepository={mockRepository}
         />

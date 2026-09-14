@@ -8,6 +8,7 @@ import { CollectionRepository } from '../../../../src/collection/domain/reposito
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 import { TemplateMother } from '@tests/component/sections/templates/TemplateMother'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { DatasetTypeMother } from '@tests/component/dataset/domain/models/DatasetTypeMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const templateRepository: TemplateRepository = {} as TemplateRepository
@@ -27,7 +28,11 @@ const collection = CollectionMother.create({ name: COLLECTION_NAME, id: 'test-al
 
 const mountCreateDataset = (component: JSX.Element): void => {
   cy.customMount(
-    <WithRepositories collectionRepository={collectionRepository}>{component}</WithRepositories>
+    <WithRepositories
+      collectionRepository={collectionRepository}
+      datasetRepository={datasetRepository}>
+      {component}
+    </WithRepositories>
   )
 }
 
@@ -49,7 +54,6 @@ describe('Create Dataset', () => {
     collectionRepository.getById = cy.stub().resolves(null)
     mountCreateDataset(
       <CreateDataset
-        datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionId={'non-existing-collection'}
@@ -66,7 +70,6 @@ describe('Create Dataset', () => {
 
     mountCreateDataset(
       <CreateDataset
-        datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionId={'test-collectionId'}
@@ -82,7 +85,6 @@ describe('Create Dataset', () => {
   it('should render the correct breadcrumbs', () => {
     mountCreateDataset(
       <CreateDataset
-        datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionId={'test-collectionId'}
@@ -101,7 +103,6 @@ describe('Create Dataset', () => {
     mountCreateDataset(
       <NotImplementedModalProvider>
         <CreateDataset
-          datasetRepository={datasetRepository}
           collectionId={'test-collectionId'}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
@@ -127,7 +128,6 @@ describe('Create Dataset', () => {
 
     mountCreateDataset(
       <CreateDataset
-        datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionId={'test-collectionId'}
@@ -139,7 +139,6 @@ describe('Create Dataset', () => {
   it('should not show alert error message when user is allowed to create a dataset within the collection', () => {
     mountCreateDataset(
       <CreateDataset
-        datasetRepository={datasetRepository}
         templateRepository={templateRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionId={'test-collectionId'}
@@ -152,7 +151,6 @@ describe('Create Dataset', () => {
     it('should not show template select when there are no templates', () => {
       mountCreateDataset(
         <CreateDataset
-          datasetRepository={datasetRepository}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           collectionId={'test-collectionId'}
@@ -170,7 +168,6 @@ describe('Create Dataset', () => {
 
       mountCreateDataset(
         <CreateDataset
-          datasetRepository={datasetRepository}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           collectionId={'test-collectionId'}
@@ -196,7 +193,6 @@ describe('Create Dataset', () => {
 
       mountCreateDataset(
         <CreateDataset
-          datasetRepository={datasetRepository}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           collectionId={'test-collectionId'}
@@ -222,7 +218,6 @@ describe('Create Dataset', () => {
 
       mountCreateDataset(
         <CreateDataset
-          datasetRepository={datasetRepository}
           templateRepository={templateRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           collectionId={'test-collectionId'}
@@ -237,6 +232,230 @@ describe('Create Dataset', () => {
       })
 
       cy.findAllByText('Template 2').should('exist').should('have.length', 2) // Template 2 is selected, we see two
+    })
+  })
+
+  describe('dataset types functionality', () => {
+    it('should not show dataset types select when allowedDatasetTypes is not configured', () => {
+      collectionRepository.getById = cy
+        .stub()
+        .resolves(CollectionMother.create({ name: COLLECTION_NAME, id: 'test-alias' }))
+
+      mountCreateDataset(
+        <CreateDataset
+          templateRepository={templateRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('not.exist')
+    })
+
+    it('should show dataset type info when there is only one allowed dataset type', () => {
+      const singleDatasetType = DatasetTypeMother.creatDefaultDatasetType()
+
+      collectionRepository.getById = cy.stub().resolves(
+        CollectionMother.create({
+          name: COLLECTION_NAME,
+          id: 'test-alias',
+          allowedDatasetTypes: [singleDatasetType]
+        })
+      )
+
+      mountCreateDataset(
+        <CreateDataset
+          templateRepository={templateRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('not.exist')
+      cy.findByText('dataset').should('exist')
+    })
+
+    it('should show dataset type select when there is more than one allowed dataset type', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo',
+          displayName: 'foo'
+        })
+      ]
+
+      collectionRepository.getById = cy.stub().resolves(
+        CollectionMother.create({
+          name: COLLECTION_NAME,
+          id: 'test-alias',
+          allowedDatasetTypes: datasetTypesMock
+        })
+      )
+
+      mountCreateDataset(
+        <CreateDataset
+          templateRepository={templateRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist')
+    })
+
+    it('should set dataset type with name "dataset" as the default one', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo',
+          displayName: 'foo'
+        })
+      ]
+
+      collectionRepository.getById = cy.stub().resolves(
+        CollectionMother.create({
+          name: COLLECTION_NAME,
+          id: 'test-alias',
+          allowedDatasetTypes: datasetTypesMock
+        })
+      )
+
+      mountCreateDataset(
+        <CreateDataset
+          templateRepository={templateRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist')
+      cy.findByTestId('selected-type').should('have.text', 'dataset')
+    })
+
+    it('should set first dataset type as default when none has name "dataset"', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.create({ id: 5, name: 'software', displayName: 'Software' }),
+        DatasetTypeMother.create({ id: 6, name: 'workflow', displayName: 'Workflow' })
+      ]
+
+      collectionRepository.getById = cy.stub().resolves(
+        CollectionMother.create({
+          name: COLLECTION_NAME,
+          id: 'test-alias',
+          allowedDatasetTypes: datasetTypesMock
+        })
+      )
+
+      mountCreateDataset(
+        <CreateDataset
+          templateRepository={templateRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist')
+      cy.findByTestId('selected-type').should('have.text', 'Software')
+    })
+
+    it('should change dataset type when user selects another one', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo',
+          displayName: 'foo'
+        })
+      ]
+
+      collectionRepository.getById = cy.stub().resolves(
+        CollectionMother.create({
+          name: COLLECTION_NAME,
+          id: 'test-alias',
+          allowedDatasetTypes: datasetTypesMock
+        })
+      )
+
+      mountCreateDataset(
+        <CreateDataset
+          templateRepository={templateRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist').as('datasetTypeSelect')
+      cy.findByTestId('selected-type').should('have.text', 'dataset')
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.findByText(/foo/).click()
+      })
+
+      cy.findByTestId('selected-type').should('have.text', 'foo')
+    })
+
+    // This tests are to validate that the dataset type select dropdown is closed when clicking outside, focusing outside or pressing escape
+    it('should close dataset type select when clicking and focusing outside and pressing escape', () => {
+      const datasetTypesMock = [
+        DatasetTypeMother.creatDefaultDatasetType(),
+        DatasetTypeMother.create({
+          id: 5,
+          name: 'foo',
+          displayName: 'foo'
+        })
+      ]
+
+      collectionRepository.getById = cy.stub().resolves(
+        CollectionMother.create({
+          name: COLLECTION_NAME,
+          id: 'test-alias',
+          allowedDatasetTypes: datasetTypesMock
+        })
+      )
+
+      mountCreateDataset(
+        <CreateDataset
+          templateRepository={templateRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+      cy.findByTestId('dataset-type-select').should('exist').as('datasetTypeSelect')
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.get('[role="menu"]').should('be.visible')
+      })
+
+      // Click outside test
+      cy.get('body').click(0, 0)
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.get('[role="menu"]').should('not.be.visible')
+      })
+
+      // Open again
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.get('[role="menu"]').should('be.visible')
+      })
+
+      // Focus outside test
+      cy.findByLabelText(/Title/).focus()
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.get('[role="menu"]').should('not.be.visible')
+      })
+
+      // Open again
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.findByLabelText('Toggle dataset types options menu').click()
+        cy.get('[role="menu"]').should('be.visible')
+      })
+
+      // Press escape test
+      cy.get('body').trigger('keydown', { key: 'Escape', force: true })
+
+      cy.get('@datasetTypeSelect').within(() => {
+        cy.get('[role="menu"]').should('not.be.visible')
+      })
     })
   })
 })

@@ -7,6 +7,7 @@ import { DeaccessionDatasetButton } from '../../../../../../src/sections/dataset
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetVersionSummaryInfoMother } from '@tests/component/dataset/domain/models/DatasetVersionSummaryInfoMother'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 describe('DeaccessionDatasetButton', () => {
   const repository: DatasetRepository = {} as DatasetRepository
@@ -45,7 +46,11 @@ describe('DeaccessionDatasetButton', () => {
       version: DatasetVersionMother.createReleased()
     })
 
-    cy.customMount(<DeaccessionDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(
+      <WithRepositories datasetRepository={repository}>
+        <DeaccessionDatasetButton dataset={dataset} />
+      </WithRepositories>
+    )
 
     cy.findByRole('separator').should('exist')
     cy.findByRole('button', { name: 'Deaccession Dataset' }).should('exist')
@@ -57,7 +62,11 @@ describe('DeaccessionDatasetButton', () => {
       version: DatasetVersionMother.createReleased()
     })
 
-    cy.customMount(<DeaccessionDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(
+      <WithRepositories datasetRepository={repository}>
+        <DeaccessionDatasetButton dataset={dataset} />
+      </WithRepositories>
+    )
 
     cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
   })
@@ -68,7 +77,11 @@ describe('DeaccessionDatasetButton', () => {
       version: DatasetVersionMother.createNotReleased()
     })
 
-    cy.customMount(<DeaccessionDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(
+      <WithRepositories datasetRepository={repository}>
+        <DeaccessionDatasetButton dataset={dataset} />
+      </WithRepositories>
+    )
 
     cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
   })
@@ -79,7 +92,11 @@ describe('DeaccessionDatasetButton', () => {
       version: DatasetVersionMother.createNotReleased()
     })
 
-    cy.customMount(<DeaccessionDatasetButton datasetRepository={repository} dataset={dataset} />)
+    cy.customMount(
+      <WithRepositories datasetRepository={repository}>
+        <DeaccessionDatasetButton dataset={dataset} />
+      </WithRepositories>
+    )
 
     cy.findByRole('separator').should('not.exist')
     cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
@@ -92,7 +109,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).should('exist')
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
@@ -112,9 +133,11 @@ describe('DeaccessionDatasetButton', () => {
       const parentClick = cy.stub().as('parentClick')
 
       cy.customMount(
-        <div onClick={parentClick}>
-          <DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />
-        </div>
+        <WithRepositories datasetRepository={repository}>
+          <div onClick={parentClick}>
+            <DeaccessionDatasetButton dataset={dataset} />
+          </div>
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
@@ -128,7 +151,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.findByRole('dialog').should('exist')
@@ -142,7 +169,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.get('select').select('IRB request.')
@@ -175,7 +206,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.get('form').should('exist')
@@ -215,7 +250,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.get('form').should('exist')
@@ -230,7 +269,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.get('form').should('exist')
@@ -250,7 +293,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.get('input[type="checkbox"]').first().check()
@@ -278,7 +325,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.get('input[type="checkbox"]').first().check()
@@ -311,7 +362,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.get('input[type="checkbox"]').first().check()
@@ -361,7 +416,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.get('form').should('exist')
@@ -403,7 +462,11 @@ describe('DeaccessionDatasetButton', () => {
         version: DatasetVersionMother.createReleased()
       })
 
-      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.customMount(
+        <WithRepositories datasetRepository={repository}>
+          <DeaccessionDatasetButton dataset={dataset} />
+        </WithRepositories>
+      )
 
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.get('form').should('exist')

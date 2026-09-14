@@ -3,6 +3,9 @@ import { WithI18next } from '../../WithI18next'
 import { FileCitation } from '../../../sections/file/file-citation/FileCitation'
 import { FileCitationMother } from '../../../../tests/component/files/domain/models/FileMother'
 import { DatasetVersionMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import { FileMockRepository } from '../FileMockRepository'
+
+const fileRepository = new FileMockRepository()
 
 const meta: Meta<typeof FileCitation> = {
   title: 'Sections/File Page/FileCitation',
@@ -21,6 +24,8 @@ export const Default: Story = {
       <FileCitation
         citation={FileCitationMother.create('File Title')}
         datasetVersion={DatasetVersionMother.createReleased()}
+        fileRepository={fileRepository}
+        fileId={1}
       />
     </>
   )
@@ -34,6 +39,8 @@ export const Draft: Story = {
       <FileCitation
         citation={FileCitationMother.createDraft('File Title')}
         datasetVersion={DatasetVersionMother.createDraft()}
+        fileRepository={fileRepository}
+        fileId={1}
       />
     </>
   )
@@ -49,6 +56,8 @@ export const Deaccessioned: Story = {
       <FileCitation
         citation={FileCitationMother.createDeaccessioned('File Title')}
         datasetVersion={DatasetVersionMother.createDeaccessioned()}
+        fileRepository={fileRepository}
+        fileId={1}
       />
     </>
   )

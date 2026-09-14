@@ -30,13 +30,20 @@ export async function runAxeAndAssert(page: unknown, { ignoreRuleIds = [] as str
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const mod: unknown = require('axe-playwright')
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let analyzeFn: ((p: unknown) => Promise<AxeResult>) | undefined
 
   if (hasAnalyze(mod)) {
     analyzeFn = mod.analyze
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  } else if (typeof mod === 'object' && mod !== null && hasAnalyze((mod as any).default)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } else if (
+    typeof mod === 'object' &&
+    mod !== null &&
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-member-access
+    hasAnalyze((mod as any).default)
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-explicit-any
     analyzeFn = (mod as any).default.analyze
   }
 

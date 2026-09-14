@@ -5,12 +5,47 @@ import {
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
 import { FileSizeUnit } from '../../../../../../src/files/domain/models/FileMetadata'
-import { getGuestbook, submitGuestbookForDatasetDownload } from '@iqss/dataverse-client-javascript'
+import { submitGuestbookForDatasetDownload } from '@iqss/dataverse-client-javascript'
 import { ReactNode, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
 import { DatasetPermissions } from '@/dataset/domain/models/Dataset'
 import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
+import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
+
+const guestbook: Guestbook = {
+  id: 10,
+  name: 'Guestbook Test',
+  enabled: true,
+  nameRequired: true,
+  emailRequired: true,
+  institutionRequired: false,
+  positionRequired: false,
+  customQuestions: [],
+  createTime: '2026-01-01T00:00:00.000Z',
+  dataverseId: 1
+}
+
+function createGuestbookRepository(
+  repositoryOverrides: Partial<GuestbookRepository> = {}
+): GuestbookRepository {
+  return {
+    getGuestbook: cy.stub().resolves(guestbook),
+    getGuestbooksByCollectionId: cy.stub().resolves([]),
+    assignDatasetGuestbook: cy.stub().resolves(),
+    removeDatasetGuestbook: cy.stub().resolves(),
+    ...repositoryOverrides
+  }
+}
+
+function withGuestbookRepository(
+  component: React.ReactNode,
+  guestbookRepository: GuestbookRepository
+) {
+  return <WithRepositories guestbookRepository={guestbookRepository}>{component}</WithRepositories>
+}
 
 function TranslationPreloader({ children }: { children: ReactNode }) {
   useTranslation('dataset')
@@ -295,18 +330,7 @@ describe('AccessDatasetMenu', () => {
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
-    cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
     const submitGuestbookForDatasetDownloadExecute = cy
       .stub(submitGuestbookForDatasetDownload, 'execute')
       .resolves('/api/v1/access/dataset/test-token')
@@ -315,20 +339,23 @@ describe('AccessDatasetMenu', () => {
     })
 
     cy.customMount(
-      <Suspense fallback="loading">
-        <TranslationPreloader>
-          <AccessDatasetMenu
-            datasetNumericId={2}
-            fileDownloadSizes={fileDownloadSizes}
-            hasOneTabularFileAtLeast={false}
-            version={version}
-            permissions={permissions}
-            fileStore="s3"
-            persistentId="doi:10.5072/FK2/ABCDEFGH"
-            guestbookId={10}
-          />
-        </TranslationPreloader>
-      </Suspense>
+      withGuestbookRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              datasetNumericId={2}
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={false}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              guestbookId={10}
+            />
+          </TranslationPreloader>
+        </Suspense>,
+        guestbookRepository
+      )
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
@@ -351,42 +378,34 @@ describe('AccessDatasetMenu', () => {
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
-    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
 
     cy.customMount(
-      <Suspense fallback="loading">
-        <TranslationPreloader>
-          <AccessDatasetMenu
-            datasetNumericId={2}
-            fileDownloadSizes={fileDownloadSizes}
-            hasOneTabularFileAtLeast={false}
-            version={version}
-            permissions={permissions}
-            fileStore="s3"
-            persistentId="doi:10.5072/FK2/ABCDEFGH"
-            guestbookId={10}
-          />
-        </TranslationPreloader>
-      </Suspense>
+      withGuestbookRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              datasetNumericId={2}
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={false}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              guestbookId={10}
+            />
+          </TranslationPreloader>
+        </Suspense>,
+        guestbookRepository
+      )
     )
 
-    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.wrap(guestbookRepository.getGuestbook).should('not.have.been.called')
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
     cy.findByRole('button', { name: /Download ZIP/ }).click()
 
-    cy.wrap(getGuestbookExecute).should('have.been.calledOnceWith', 10)
+    cy.wrap(guestbookRepository.getGuestbook).should('have.been.calledOnceWith', 10)
   })
 
   it('renders download option as a button and opens guestbook modal when guestbook exists', () => {
@@ -397,34 +416,25 @@ describe('AccessDatasetMenu', () => {
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
-
-    cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
 
     cy.customMount(
-      <Suspense fallback="loading">
-        <TranslationPreloader>
-          <AccessDatasetMenu
-            fileDownloadSizes={fileDownloadSizes}
-            hasOneTabularFileAtLeast={false}
-            version={version}
-            permissions={permissions}
-            fileStore="s3"
-            persistentId="doi:10.5072/FK2/ABCDEFGH"
-            guestbookId={10}
-          />
-        </TranslationPreloader>
-      </Suspense>
+      withGuestbookRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={false}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              guestbookId={10}
+            />
+          </TranslationPreloader>
+        </Suspense>,
+        guestbookRepository
+      )
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
@@ -441,34 +451,25 @@ describe('AccessDatasetMenu', () => {
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
-
-    cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
 
     cy.customMount(
-      <Suspense fallback="loading">
-        <TranslationPreloader>
-          <AccessDatasetMenu
-            fileDownloadSizes={fileDownloadSizes}
-            hasOneTabularFileAtLeast={false}
-            version={version}
-            permissions={permissions}
-            fileStore="s3"
-            persistentId="doi:10.5072/FK2/ABCDEFGH"
-            guestbookId={10}
-          />
-        </TranslationPreloader>
-      </Suspense>
+      withGuestbookRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={false}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              guestbookId={10}
+            />
+          </TranslationPreloader>
+        </Suspense>,
+        guestbookRepository
+      )
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
@@ -486,34 +487,25 @@ describe('AccessDatasetMenu', () => {
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES }),
       DatasetFileDownloadSizeMother.createArchival({ value: 4000, unit: FileSizeUnit.BYTES })
     ]
-
-    cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
 
     cy.customMount(
-      <Suspense fallback="loading">
-        <TranslationPreloader>
-          <AccessDatasetMenu
-            fileDownloadSizes={fileDownloadSizes}
-            hasOneTabularFileAtLeast={true}
-            version={version}
-            permissions={permissions}
-            fileStore="s3"
-            persistentId="doi:10.5072/FK2/ABCDEFGH"
-            guestbookId={10}
-          />
-        </TranslationPreloader>
-      </Suspense>
+      withGuestbookRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              fileDownloadSizes={fileDownloadSizes}
+              hasOneTabularFileAtLeast={true}
+              version={version}
+              permissions={permissions}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+              guestbookId={10}
+            />
+          </TranslationPreloader>
+        </Suspense>,
+        guestbookRepository
+      )
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
@@ -583,46 +575,38 @@ describe('AccessDatasetMenu', () => {
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
-    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
 
     cy.window().then((window) => {
       cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
     })
 
     cy.customMount(
-      withAccessRepository(
-        <Suspense fallback="loading">
-          <TranslationPreloader>
-            <AccessDatasetMenu
-              datasetNumericId={2}
-              fileDownloadSizes={fileDownloadSizes}
-              hasOneTabularFileAtLeast={false}
-              version={version}
-              permissions={permissions}
-              fileStore="s3"
-              persistentId="doi:10.5072/FK2/ABCDEFGH"
-              guestbookId={10}
-            />
-          </TranslationPreloader>
-        </Suspense>
+      withGuestbookRepository(
+        withAccessRepository(
+          <Suspense fallback="loading">
+            <TranslationPreloader>
+              <AccessDatasetMenu
+                datasetNumericId={2}
+                fileDownloadSizes={fileDownloadSizes}
+                hasOneTabularFileAtLeast={false}
+                version={version}
+                permissions={permissions}
+                fileStore="s3"
+                persistentId="doi:10.5072/FK2/ABCDEFGH"
+                guestbookId={10}
+              />
+            </TranslationPreloader>
+          </Suspense>
+        ),
+        guestbookRepository
       )
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
     cy.findByRole('button', { name: /Download ZIP/ }).click()
 
-    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.wrap(guestbookRepository.getGuestbook).should('not.have.been.called')
     cy.get('@anchorClick').should('have.been.calledOnce')
     cy.findByRole('dialog').should('not.exist')
     cy.findByText('Your download has started.').should('exist')
@@ -637,46 +621,38 @@ describe('AccessDatasetMenu', () => {
     const fileDownloadSizes = [
       DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
     ]
-    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
 
     cy.window().then((window) => {
       cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
     })
 
     cy.customMount(
-      withAccessRepository(
-        <Suspense fallback="loading">
-          <TranslationPreloader>
-            <AccessDatasetMenu
-              datasetNumericId={2}
-              fileDownloadSizes={fileDownloadSizes}
-              hasOneTabularFileAtLeast={false}
-              version={version}
-              permissions={permissions}
-              fileStore="s3"
-              persistentId="doi:10.5072/FK2/ABCDEFGH"
-              guestbookId={10}
-            />
-          </TranslationPreloader>
-        </Suspense>
+      withGuestbookRepository(
+        withAccessRepository(
+          <Suspense fallback="loading">
+            <TranslationPreloader>
+              <AccessDatasetMenu
+                datasetNumericId={2}
+                fileDownloadSizes={fileDownloadSizes}
+                hasOneTabularFileAtLeast={false}
+                version={version}
+                permissions={permissions}
+                fileStore="s3"
+                persistentId="doi:10.5072/FK2/ABCDEFGH"
+                guestbookId={10}
+              />
+            </TranslationPreloader>
+          </Suspense>
+        ),
+        guestbookRepository
       )
     )
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
     cy.findByRole('button', { name: /Download ZIP/ }).click()
 
-    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.wrap(guestbookRepository.getGuestbook).should('not.have.been.called')
     cy.get('@anchorClick').should('have.been.calledOnce')
     cy.findByRole('dialog').should('not.exist')
     cy.findByText('Your download has started.').should('exist')

@@ -7,11 +7,12 @@ import {
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 import { FakerHelper } from '../../../../tests/component/shared/FakerHelper'
 import { DatasetMockRepository } from '../DatasetMockRepository'
+import { WithRepositories } from '../../WithRepositories'
 
 const meta: Meta<typeof DatasetCitation> = {
   title: 'Sections/Dataset Page/DatasetCitation',
   component: DatasetCitation,
-  decorators: [WithI18next]
+  decorators: [WithI18next, WithRepositories({ datasetRepository: new DatasetMockRepository() })]
 }
 
 export default meta
@@ -24,11 +25,7 @@ export const Default: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          version={version}
-          datasetId="1"
-          datasetRepository={new DatasetMockRepository()}
-        />
+        <DatasetCitation version={version} datasetId="1" />
       </div>
     )
   }
@@ -41,12 +38,7 @@ export const WithThumbnailImage: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          thumbnail={dataset.thumbnail}
-          version={dataset.version}
-          datasetId="1"
-          datasetRepository={new DatasetMockRepository()}
-        />
+        <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} datasetId="1" />
       </div>
     )
   }
@@ -62,11 +54,7 @@ export const DraftVersion: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          version={version}
-          datasetId="1"
-          datasetRepository={new DatasetMockRepository()}
-        />
+        <DatasetCitation version={version} datasetId="1" />
       </div>
     )
   }
@@ -83,11 +71,7 @@ export const Deaccessioned: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          version={version}
-          datasetId="1"
-          datasetRepository={new DatasetMockRepository()}
-        />
+        <DatasetCitation version={version} datasetId="1" />
       </div>
     )
   }
@@ -104,11 +88,7 @@ export const Anonymized: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          version={dataset.version}
-          datasetId="1"
-          datasetRepository={new DatasetMockRepository()}
-        />
+        <DatasetCitation version={dataset.version} datasetId="1" />
       </div>
     )
   }
@@ -117,13 +97,6 @@ export const Anonymized: Story = {
 export const WithoutThumbnail: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic()
-    return (
-      <DatasetCitation
-        withoutThumbnail
-        version={dataset.version}
-        datasetId="1"
-        datasetRepository={new DatasetMockRepository()}
-      />
-    )
+    return <DatasetCitation withoutThumbnail version={dataset.version} datasetId="1" />
   }
 }

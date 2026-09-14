@@ -9,9 +9,9 @@ import {
 import { DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { getFileExternalToolResolved } from '@/externalTools/domain/useCases/GetFileExternalToolResolved'
-import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 import { FilePageHelper } from '../../FilePageHelper'
 import { ExternalTool } from '@/externalTools/domain/models/ExternalTool'
+import { useExternalToolsRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 type ToolKind = 'explore' | 'query' | 'configure'
 
@@ -23,8 +23,7 @@ interface FileToolOptionsProps {
 
 const FileToolOptions = ({ fileId, fileType, kind }: FileToolOptionsProps) => {
   const { t } = useTranslation('shared')
-  const { fileExploreTools, fileQueryTools, fileConfigureTools, externalToolsRepository } =
-    useExternalTools()
+  const { fileExploreTools, fileQueryTools, fileConfigureTools } = useExternalTools()
 
   /** Per-kind config (single source of truth) */
   const configByKind: Record<
@@ -55,13 +54,12 @@ const FileToolOptions = ({ fileId, fileType, kind }: FileToolOptionsProps) => {
         <Icon />
       </DropdownHeader>
 
-      {tools.map((tool) => (
+      {applicableTools.map((tool) => (
         <ToolOption
           key={tool.id}
           toolId={tool.id}
           toolDisplayName={tool.displayName}
           fileId={fileId}
-          externalToolsRepository={externalToolsRepository}
         />
       ))}
     </>
@@ -72,15 +70,10 @@ interface ToolOptionProps {
   toolId: number
   toolDisplayName: string
   fileId: number
-  externalToolsRepository: ExternalToolsRepository
 }
 
-const ToolOption = ({
-  toolId,
-  toolDisplayName,
-  fileId,
-  externalToolsRepository
-}: ToolOptionProps) => {
+const ToolOption = ({ toolId, toolDisplayName, fileId }: ToolOptionProps) => {
+  const { externalToolsRepository } = useExternalToolsRepositories()
   const [isOpening, setIsOpening] = useState(false)
   const { t, i18n } = useTranslation('shared')
   const openingRef = useRef(false)

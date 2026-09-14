@@ -7,7 +7,6 @@ import {
 import { EditDatasetTermsButton } from '@/sections/dataset/dataset-terms/EditDatasetTermsButton'
 import { useTranslation } from 'react-i18next'
 import { useGetFilesCountInfo } from '@/sections/dataset/dataset-files/useGetFilesCountInfo'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { FileAccessCount } from '@/files/domain/models/FilesCountInfo'
 import { FileAccessOption } from '@/files/domain/models/FileCriteria'
 import { SpinnerSymbol } from '@/sections/dataset/dataset-files/files-table/spinner-symbol/SpinnerSymbol'
@@ -16,11 +15,11 @@ import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import { License } from '@/sections/dataset/dataset-terms/License'
 import { DatasetGuestbook } from '@/sections/dataset/dataset-guestbook/DatasetGuestbook'
 import { useSearchParams } from 'react-router-dom'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface DatasetTermsProps {
   license: DatasetLicense | undefined
   termsOfUse: DatasetTermsOfUse
-  filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
   canUpdateDataset?: boolean
@@ -29,15 +28,15 @@ interface DatasetTermsProps {
 export function DatasetTerms({
   license,
   termsOfUse,
-  filesRepository,
   datasetPersistentId,
   datasetVersion,
   canUpdateDataset
 }: DatasetTermsProps) {
+  const { fileRepository } = useDatasetRepositories()
   const { t } = useTranslation('dataset')
   const [searchParams] = useSearchParams()
   const { filesCountInfo, isLoading } = useGetFilesCountInfo({
-    filesRepository,
+    filesRepository: fileRepository,
     datasetPersistentId,
     datasetVersion,
     includeDeaccessioned: canUpdateDataset

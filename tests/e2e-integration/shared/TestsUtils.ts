@@ -3,6 +3,7 @@ import { DataverseApiHelper } from './DataverseApiHelper'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 import { DatasetHelper } from './datasets/DatasetHelper'
 import { requireAppConfig } from '@/config'
+import { FRONTEND_BASE_PATH } from './basePath'
 
 export class TestsUtils {
   static get DATAVERSE_BACKEND_URL(): string {
@@ -74,16 +75,29 @@ export class TestsUtils {
   }
 
   static finishSignUp() {
-    cy.get('body').then(($body) => {
-      const isOnSignUpPage = $body.find('[data-testid="sign-up-page"]').length > 0
-      const hasTermsCheckbox = $body.find('#termsAccepted').length > 0
+    cy.location({ timeout: 30_000 })
+      .should((location) => {
+        const isOnSignUpPage =
+          location.pathname === `${FRONTEND_BASE_PATH}/sign-up` &&
+          location.search.includes('validTokenButNotLinkedAccount=true')
+        const isAlreadySignedIn = [
+          `${FRONTEND_BASE_PATH}`,
+          `${FRONTEND_BASE_PATH}/collections`
+        ].includes(location.pathname)
 
-      if (!isOnSignUpPage || !hasTermsCheckbox) {
-        return
-      }
+        expect(isOnSignUpPage || isAlreadySignedIn, `current location ${location.href}`).to.equal(
+          true
+        )
+      })
+      .then((location) => {
+        if (location.pathname !== `${FRONTEND_BASE_PATH}/sign-up`) {
+          return
+        }
 
-      cy.get('#termsAccepted').check({ force: true })
-      cy.findByRole('button', { name: 'Create Account' }).click()
-    })
+        cy.findByTestId('sign-up-page').should('be.visible')
+        cy.findByTestId('valid-token-not-linked-account-form').should('exist')
+        cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
+        cy.findByRole('button', { name: 'Create Account' }).should('be.enabled').click()
+      })
   }
 }

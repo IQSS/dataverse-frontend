@@ -5,11 +5,12 @@ import { UploadDatasetFiles } from '../../sections/upload-dataset-files/UploadDa
 import { FileMockRepository } from '../file/FileMockRepository'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { WithDataset } from '../dataset/WithDataset'
+import { WithRepositories } from '../WithRepositories'
 
 const meta: Meta<typeof UploadDatasetFiles> = {
   title: 'Pages/Upload Dataset Files',
   component: UploadDatasetFiles,
-  decorators: [WithI18next],
+  decorators: [WithI18next, WithRepositories({ datasetRepository: new DatasetMockRepository() })],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -21,10 +22,5 @@ type Story = StoryObj<typeof UploadDatasetFiles>
 
 export const Default: Story = {
   decorators: [WithLayout, WithDataset],
-  render: () => (
-    <UploadDatasetFiles
-      fileRepository={new FileMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-    />
-  )
+  render: () => <UploadDatasetFiles fileRepository={new FileMockRepository()} />
 }

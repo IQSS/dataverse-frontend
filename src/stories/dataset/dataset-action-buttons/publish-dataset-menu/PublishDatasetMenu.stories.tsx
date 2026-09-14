@@ -27,7 +27,9 @@ type Story = StoryObj<typeof PublishDatasetMenu>
 
 export const PublishingAllowed: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <PublishDatasetMenu
         dataset={DatasetMother.create({
           version: DatasetVersionMother.createDraftAsLatestVersion(),
@@ -36,7 +38,6 @@ export const PublishingAllowed: Story = {
           hasValidTermsOfAccess: true,
           isValid: true
         })}
-        datasetRepository={new DatasetMockRepository()}
       />
     </RepositoriesStoryProvider>
   )
@@ -44,7 +45,9 @@ export const PublishingAllowed: Story = {
 
 export const NoValidTermsOfAccess: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <PublishDatasetMenu
         dataset={DatasetMother.create({
           version: DatasetVersionMother.createDraftAsLatestVersion(),
@@ -53,7 +56,6 @@ export const NoValidTermsOfAccess: Story = {
           hasValidTermsOfAccess: false,
           isValid: true
         })}
-        datasetRepository={new DatasetMockRepository()}
       />
     </RepositoriesStoryProvider>
   )
@@ -61,7 +63,9 @@ export const NoValidTermsOfAccess: Story = {
 
 export const DatasetInReview: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <PublishDatasetMenu
         dataset={DatasetMother.create({
           version: DatasetVersionMother.createDraftAsLatestVersionInReview(),
@@ -70,7 +74,6 @@ export const DatasetInReview: Story = {
           hasValidTermsOfAccess: true,
           isValid: true
         })}
-        datasetRepository={new DatasetMockRepository()}
       />
     </RepositoriesStoryProvider>
   )

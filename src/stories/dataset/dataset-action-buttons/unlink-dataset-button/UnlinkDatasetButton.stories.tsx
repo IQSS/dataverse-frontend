@@ -30,10 +30,11 @@ type Story = StoryObj<typeof UnlinkDatasetButton>
 
 export const Default: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <UnlinkDatasetButton
         dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-        datasetRepository={new DatasetMockRepository()}
         updateParent={() => {}}
       />
     </RepositoriesStoryProvider>
@@ -67,10 +68,11 @@ withOnlyOneCollectionToUnlinkRepo.getForUnlinking = () => {
 
 export const WithOnlyOneCollectionToUnlink: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={withOnlyOneCollectionToUnlinkRepo}>
+    <RepositoriesStoryProvider
+      collectionRepository={withOnlyOneCollectionToUnlinkRepo}
+      datasetRepository={new DatasetMockRepository()}>
       <UnlinkDatasetButton
         dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-        datasetRepository={new DatasetMockRepository()}
         updateParent={() => {}}
       />
     </RepositoriesStoryProvider>

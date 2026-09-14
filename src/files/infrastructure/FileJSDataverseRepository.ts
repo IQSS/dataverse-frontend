@@ -12,6 +12,8 @@ import {
   getDatasetFilesTotalDownloadSize,
   getFileAndDataset,
   getFileCitation,
+  getFileCitationByFormat as jsGetFileCitationByFormat,
+  FileCitationFormat as JSFileCitationFormat,
   getFileDataTables,
   getFileDownloadCount,
   getFileUserPermissions,
@@ -47,12 +49,19 @@ import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { FileVersionSummarySubset } from '../domain/models/FileVersionSummaryInfo'
 import { FileVersionPaginationInfo } from '../domain/models/FileVersionPaginationInfo'
+import { FileCitationFormat, FormattedFileCitation } from '../domain/models/FileCitation'
 
 const includeDeaccessioned = true
 
 export class FileJSDataverseRepository implements FileRepository {
   static get DATAVERSE_BACKEND_URL(): string {
     return requireAppConfig().backendUrl
+  }
+
+  private static readonly guestFilePermissions: FilePermissions = {
+    canDownloadFile: false,
+    canManageFilePermissions: false,
+    canEditOwnerDataset: false
   }
 
   getAllByDatasetPersistentId(
@@ -177,7 +186,11 @@ export class FileJSDataverseRepository implements FileRepository {
     )
   }
   private static getAllWithPermissions(files: JSFile[]): Promise<FilePermissions[]> {
-    return Promise.all(files.map((jsFile) => this.getPermissionsById(jsFile.id)))
+    return Promise.all(
+      files.map((jsFile) =>
+        this.getPermissionsByIdOrGuest(jsFile.id, jsFile).then(({ permissions }) => permissions)
+      )
+    )
   }
 
   private static getPermissionsById(id: number): Promise<FilePermissions> {
@@ -259,14 +272,33 @@ export class FileJSDataverseRepository implements FileRepository {
     return getFileVersionSummaries.execute(fileId, paginationInfo?.pageSize, paginationInfo?.offset)
   }
 
+  getFileCitationByFormat(
+    fileId: number | string,
+    format: FileCitationFormat
+  ): Promise<FormattedFileCitation> {
+    return jsGetFileCitationByFormat
+      .execute(fileId, FileJSDataverseRepository.toJSFileCitationFormat(format))
+      .then((content) => ({
+        content,
+        contentType: FileJSDataverseRepository.getCitationContentType(format)
+      }))
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })
+  }
+
   getById(id: number, datasetVersionNumber?: string): Promise<File> {
-    return FileJSDataverseRepository.getPermissionsById(id)
-      .then((permissions) => {
+    return FileJSDataverseRepository.getPermissionsByIdOrGuest(id)
+      .then(({ permissions, isGuestFallback }) => {
         const includeDeaccessioned = permissions?.canEditOwnerDataset
 
         return getFileAndDataset
           .execute(id, datasetVersionNumber, includeDeaccessioned)
           .then(([jsFile, jsDataset]) => {
+            const resolvedPermissions = isGuestFallback
+              ? FileJSDataverseRepository.getGuestPermissionsForFile(jsFile)
+              : permissions
+
             return Promise.all([
               jsFile,
               jsDataset,
@@ -277,7 +309,7 @@ export class FileJSDataverseRepository implements FileRepository {
                 includeDeaccessioned
               ),
               FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
-              Promise.resolve(permissions),
+              Promise.resolve(resolvedPermissions),
               FileJSDataverseRepository.getThumbnailById(jsFile.id),
               FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
             ])
@@ -310,6 +342,41 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
+  private static getPermissionsByIdOrGuest(
+    id: number,
+    jsFile?: JSFile
+  ): Promise<{
+    permissions: FilePermissions
+    isGuestFallback: boolean
+  }> {
+    return FileJSDataverseRepository.getPermissionsById(id)
+      .then((permissions) => ({ permissions, isGuestFallback: false }))
+      .catch((error: ReadError) => {
+        if (error instanceof ReadError) {
+          const errorHandler = new JSDataverseReadErrorHandler(error)
+
+          if (errorHandler.getStatusCode() === 401) {
+            return {
+              permissions:
+                jsFile !== undefined
+                  ? FileJSDataverseRepository.getGuestPermissionsForFile(jsFile)
+                  : FileJSDataverseRepository.guestFilePermissions,
+              isGuestFallback: true
+            }
+          }
+        }
+
+        throw error
+      })
+  }
+
+  private static getGuestPermissionsForFile(jsFile: JSFile): FilePermissions {
+    return {
+      ...FileJSDataverseRepository.guestFilePermissions,
+      canDownloadFile: !jsFile.restricted && jsFile.embargo === undefined
+    }
+  }
+
   private static getCitationById(
     id: number,
     datasetVersionNumber?: string,
@@ -320,6 +387,38 @@ export class FileJSDataverseRepository implements FileRepository {
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
+  }
+
+  private static getCitationContentType(format: FileCitationFormat): string {
+    switch (format) {
+      case FileCitationFormat.EndNote:
+        return 'application/xml'
+      case FileCitationFormat.RIS:
+        return 'application/x-research-info-systems'
+      case FileCitationFormat.BibTeX:
+        return 'application/x-bibtex'
+      case FileCitationFormat.CSLJson:
+        return 'application/vnd.citationstyles.csl+json'
+      case FileCitationFormat.Internal:
+      default:
+        return 'text/html'
+    }
+  }
+
+  private static toJSFileCitationFormat(format: FileCitationFormat): JSFileCitationFormat {
+    switch (format) {
+      case FileCitationFormat.EndNote:
+        return JSFileCitationFormat.ENDNOTE
+      case FileCitationFormat.RIS:
+        return JSFileCitationFormat.RIS
+      case FileCitationFormat.BibTeX:
+        return JSFileCitationFormat.BIBTEX
+      case FileCitationFormat.CSLJson:
+        return JSFileCitationFormat.CSL
+      case FileCitationFormat.Internal:
+      default:
+        return JSFileCitationFormat.INTERNAL
+    }
   }
 
   getMultipleFileDownloadUrl(ids: number[], downloadMode: FileDownloadMode): string {

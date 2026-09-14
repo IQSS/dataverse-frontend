@@ -17,12 +17,22 @@ export interface DatasetFileResponse {
   id: number
 }
 
+function createDatasetPayload(title?: string): typeof newDatasetData {
+  const datasetPayload = structuredClone(newDatasetData)
+
+  if (title !== undefined) {
+    datasetPayload.datasetVersion.metadataBlocks.citation.fields[0].value = title
+  }
+
+  return datasetPayload
+}
+
 export class DatasetHelper extends DataverseApiHelper {
   static async create(collectionId = ROOT_COLLECTION_ALIAS): Promise<DatasetResponse> {
     return this.request<DatasetResponse>(
       `/dataverses/${collectionId}/datasets`,
       'POST',
-      newDatasetData
+      createDatasetPayload()
     )
   }
 
@@ -30,11 +40,10 @@ export class DatasetHelper extends DataverseApiHelper {
     title: string,
     collectionId = ROOT_COLLECTION_ALIAS
   ): Promise<DatasetResponse> {
-    newDatasetData.datasetVersion.metadataBlocks.citation.fields[0].value = title
     return this.request<DatasetResponse>(
       `/dataverses/${collectionId}/datasets`,
       'POST',
-      newDatasetData
+      createDatasetPayload(title)
     )
   }
 
@@ -296,6 +305,17 @@ export class DatasetHelper extends DataverseApiHelper {
       `/dataverses/${collectionIdOrAlias}/templates`,
       'GET'
     )
+  }
+
+  static async setTemplateAsDefault(
+    templateId: number,
+    collectionAlias = ROOT_COLLECTION_ALIAS
+  ): Promise<void> {
+    return this.request(`/dataverses/${collectionAlias}/defaultTemplate/${templateId}`, 'PUT')
+  }
+
+  static async unsetTemplateAsDefault(collectionAlias = ROOT_COLLECTION_ALIAS): Promise<void> {
+    return this.request(`/dataverses/${collectionAlias}/defaultTemplate`, 'DELETE')
   }
 
   static async deleteDatasetTemplate(templateId: number): Promise<void> {

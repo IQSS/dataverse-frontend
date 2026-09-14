@@ -6,26 +6,25 @@ import { toast } from 'react-toastify'
 import { Alert, Button, Col, Form, Modal, Stack } from '@iqss/dataverse-design-system'
 import { useDataset } from '../DatasetContext'
 import { Deaccessioned } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { Validator } from '@/shared/helpers/Validator'
 import { useGetDatasetVersionsSummaries } from '../dataset-versions/useGetDatasetVersionsSummaries'
 import { DeaccessionFormData } from './DeaccessionFormData'
 import { ConfirmationModal } from './ConfirmationModal'
 import { useDeaccessionDataset } from './useDeaccessionDataset'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface DeaccessionDatasetModalProps {
-  datasetRepository: DatasetRepository
   datasetPersistentId: string
   show: boolean
   handleCloseDeaccessionModal: () => void
 }
 
 export function DeaccessionDatasetModal({
-  datasetRepository,
   datasetPersistentId,
   show,
   handleCloseDeaccessionModal
 }: DeaccessionDatasetModalProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const { t } = useTranslation(['dataset', 'shared'])
   const modalTitle = 'Deaccession Dataset'
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)

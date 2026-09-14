@@ -11,14 +11,12 @@ import { DatasetMetadata } from './dataset-metadata/DatasetMetadata'
 import { DatasetSummary } from './dataset-summary/DatasetSummary'
 import { DatasetCitation } from './dataset-citation/DatasetCitation'
 import { DatasetFiles } from './dataset-files/DatasetFiles'
-import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
 import { useDataset } from './DatasetContext'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
-import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
 import useCheckPublishCompleted from './useCheckPublishCompleted'
@@ -32,10 +30,10 @@ import { DatasetMetrics } from './dataset-metrics/DatasetMetrics'
 import { DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { useAnonymized } from './anonymized/AnonymizedContext'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { DatasetReviews } from './dataset-reviews/DatasetReviews'
 
 interface DatasetProps {
-  datasetRepository: DatasetRepository
-  fileRepository: FileRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   contactRepository: ContactRepository
   dataverseInfoRepository: DataverseInfoRepository
@@ -45,8 +43,6 @@ interface DatasetProps {
 }
 
 export function Dataset({
-  datasetRepository,
-  fileRepository,
   metadataBlockInfoRepository,
   contactRepository,
   dataverseInfoRepository,
@@ -54,6 +50,7 @@ export function Dataset({
   publishInProgress,
   tab = 'files'
 }: DatasetProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const { setIsLoading } = useLoading()
   const { dataset, isLoading: isDatasetLoading } = useDataset()
   const { t } = useTranslation('dataset')
@@ -136,28 +133,21 @@ export function Dataset({
                 thumbnail={dataset.thumbnail}
                 version={dataset.version}
                 datasetId={dataset.persistentId}
-                datasetRepository={datasetRepository}
               />
               <DatasetSummary
                 summaryFields={dataset.summaryFields}
                 license={dataset.license}
+                datasetType={dataset.datasetType}
                 onCustomTermsClick={handleCustomTermsClick}
                 metadataBlockInfoRepository={metadataBlockInfoRepository}
               />
             </Col>
             <Col lg={3}>
-              <DatasetActionButtons
-                datasetRepository={datasetRepository}
-                dataset={dataset}
-                contactRepository={contactRepository}
-              />
+              <DatasetActionButtons dataset={dataset} contactRepository={contactRepository} />
               {(!isCurrentVersionDeaccessioned || canUpdateDataset) && (
-                <DatasetMetrics
-                  data-testid="dataset-metrics"
-                  datasetRepository={datasetRepository}
-                  datasetId={dataset.persistentId}
-                />
+                <DatasetMetrics data-testid="dataset-metrics" datasetId={dataset.persistentId} />
               )}
+              <DatasetReviews datasetId={dataset.persistentId} />
             </Col>
           </Row>
 
@@ -168,7 +158,6 @@ export function Dataset({
               <Tabs.Tab eventKey="versions" title={t('Versions')}>
                 <div className={styles['tab-container']}>
                   <DatasetVersions
-                    datasetRepository={datasetRepository}
                     datasetId={dataset.persistentId}
                     currentVersionNumber={currentVersionNumber}
                     canUpdateDataset={canUpdateDataset}
@@ -184,19 +173,15 @@ export function Dataset({
                 <div className={styles['tab-container']}>
                   {filesTabInfiniteScrollEnabled ? (
                     <DatasetFilesScrollable
-                      filesRepository={fileRepository}
                       datasetPersistentId={dataset.persistentId}
                       datasetVersion={dataset.version}
                       canUpdateDataset={canUpdateDataset}
                       key={dataset.version.publishingStatus}
-                      datasetRepository={datasetRepository}
                     />
                   ) : (
                     <DatasetFiles
-                      filesRepository={fileRepository}
                       datasetPersistentId={dataset.persistentId}
                       datasetVersion={dataset.version}
-                      datasetRepository={datasetRepository}
                     />
                   )}
                 </div>
@@ -218,7 +203,6 @@ export function Dataset({
                   <DatasetTerms
                     license={dataset.license}
                     termsOfUse={dataset.termsOfUse}
-                    filesRepository={fileRepository}
                     datasetPersistentId={dataset.persistentId}
                     datasetVersion={dataset.version}
                     canUpdateDataset={canUpdateDataset}
@@ -229,7 +213,6 @@ export function Dataset({
               <Tabs.Tab eventKey="versions" title={t('Versions')}>
                 <div className={styles['tab-container']}>
                   <DatasetVersions
-                    datasetRepository={datasetRepository}
                     datasetId={dataset.persistentId}
                     currentVersionNumber={currentVersionNumber}
                     canUpdateDataset={canUpdateDataset}

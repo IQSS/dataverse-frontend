@@ -25,10 +25,7 @@ function EditDatasetMetadataWithParams() {
     <DatasetProvider
       repository={datasetRepository}
       searchParams={{ persistentId: persistentId, version: version }}>
-      <EditDatasetMetadata
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
+      <EditDatasetMetadata metadataBlockInfoRepository={metadataBlockInfoRepository} />
     </DatasetProvider>
   )
 }
