@@ -25,6 +25,7 @@ function StreamingZipHarness({
   strategy,
   partSize,
   partRetries = 0,
+  partRetryDelayMs = 0,
   fetchInit,
   sink,
   onApi
@@ -33,6 +34,7 @@ function StreamingZipHarness({
   zipName?: string
   strategy?: 'pause' | 'skip' | 'twopass'
   partSize?: number
+  partRetryDelayMs?: number
   fetchInit?: RequestInit | (() => RequestInit | undefined)
   sink?: ZipSink
   onApi?: (api: ReturnType<typeof useStreamingZipDownload>) => void
@@ -60,8 +62,7 @@ function StreamingZipHarness({
             partRetries,
             fetchInit,
             sink: sink ?? createBlobSink(),
-            // 0ms backoff keeps the retry-exhaustion paths snappy.
-            partRetryDelayMs: 0
+            partRetryDelayMs
           })
           setOpen(true)
         }}>
@@ -866,42 +867,65 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     })
   })
 
-  it('still retries on a transient 5xx with partRetries set', () => {
-    // Mirror of the no-retry-on-4xx test above, this time confirming
-    // that 5xx (transient) DOES still retry. Without this contrast
-    // it would be ambiguous whether the previous test passed because
-    // of the terminal-4xx logic or because of some other change.
-    const files: FileTreeFile[] = [
-      FileTreeFileMother.create({
-        id: 1,
-        name: 'flaky.txt',
-        path: 'flaky.txt',
-        size: 3,
-        downloadUrl: '/access/1'
-      })
-    ]
-    cy.customMount(<StreamingZipHarness files={files} zipName="503.zip" partRetries={3} />)
+  for (const status of [408, 425, 429, 503]) {
+    it(`retries a transient HTTP ${status} response`, () => {
+      const files: FileTreeFile[] = [
+        FileTreeFileMother.create({
+          id: 1,
+          name: 'flaky.txt',
+          path: 'flaky.txt',
+          size: 3,
+          downloadUrl: '/access/1'
+        })
+      ]
+      cy.customMount(<StreamingZipHarness files={files} zipName="503.zip" partRetries={3} />)
 
+      let attempts = 0
+      installFetchHandler(() => {
+        attempts += 1
+        if (attempts === 1) {
+          return Promise.resolve(
+            new Response('temporarily unavailable', {
+              status,
+              statusText: 'Service Unavailable'
+            })
+          )
+        }
+        return Promise.resolve(fakeResponseBody('AAA'))
+      })
+
+      cy.findByTestId('harness-start').click()
+      cy.contains(/download complete/i).should('exist')
+      cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+      cy.then(() => {
+        expect(attempts).to.equal(2)
+      })
+    })
+  }
+
+  it('uses three automatic retries by default before waiting for a decision', () => {
+    let api: ReturnType<typeof useStreamingZipDownload>
+    const files = chunkedFile(3)
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        onApi={(current) => {
+          api = current
+        }}
+      />
+    )
     let attempts = 0
     installFetchHandler(() => {
-      attempts += 1
-      if (attempts === 1) {
-        return Promise.resolve(
-          new Response('temporarily unavailable', {
-            status: 503,
-            statusText: 'Service Unavailable'
-          })
-        )
-      }
-      return Promise.resolve(fakeResponseBody('AAA'))
+      attempts++
+      return Promise.resolve(new Response('', { status: 503 }))
     })
-
-    cy.findByTestId('harness-start').click()
-    cy.contains(/download complete/i).should('exist')
-    cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
-    cy.then(() => {
-      expect(attempts).to.equal(2)
+    cy.then(() => api.start({ files, sink: createBlobSink() }))
+    cy.wrap(null).should(() => {
+      expect(api.state.status).to.equal('paused')
+      expect(attempts).to.equal(4)
     })
+    cy.get('@anchorClick').should('not.have.been.called')
+    cy.then(() => api.cancel())
   })
 
   it('re-presigns the URL when a non-first chunk gets 403, then resumes', () => {
@@ -1732,6 +1756,58 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
       const zip = new Uint8Array(await capturedZip().arrayBuffer())
       expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
     })
+  })
+
+  for (const failure of ['request', 'body'] as const) {
+    it(`cancels during a ${failure} retry delay without fetching again or saving a partial ZIP`, () => {
+      let api: ReturnType<typeof useStreamingZipDownload>
+      let attempts = 0
+      cy.customMount(
+        <StreamingZipHarness
+          files={chunkedFile(12)}
+          partSize={4}
+          partRetries={2}
+          partRetryDelayMs={1000}
+          onApi={(current) => {
+            api = current
+          }}
+        />
+      )
+      installFetchHandler(() => {
+        attempts++
+        if (failure === 'request') return Promise.resolve(new Response('', { status: 503 }))
+        return Promise.resolve(partResponse('AA', 0, 12))
+      })
+      cy.findByTestId('harness-start').click()
+      cy.wrap(null).should(() => expect(attempts).to.equal(1))
+      cy.wait(50)
+      cy.then(() => api.cancel())
+      cy.contains(/download cancelled/i).should('exist')
+      cy.wait(1100)
+      cy.then(() => expect(attempts).to.equal(1))
+      cy.get('@anchorClick').should('not.have.been.called')
+      cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+    })
+  }
+
+  it('preserves the caller signal when completing a download', () => {
+    const caller = new AbortController()
+    cy.customMount(
+      <StreamingZipHarness files={chunkedFile(3)} fetchInit={{ signal: caller.signal }} />
+    )
+    let requestSignal: AbortSignal | null | undefined
+    installFetchHandler((_input, init) => {
+      requestSignal = init?.signal
+      return Promise.resolve(fakeResponseBody('abc'))
+    })
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(requestSignal).not.to.equal(caller.signal)
+      expect(requestSignal?.aborted, 'completed run is cleaned up').to.equal(true)
+      expect(caller.signal.aborted, 'caller can reuse its signal').to.equal(false)
+    })
+    cy.get('@anchorClick').should('have.been.calledOnce')
   })
 
   it('aborts the download when Abort is chosen mid-entry', () => {
