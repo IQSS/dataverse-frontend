@@ -9,6 +9,7 @@ import { FileTreeFile } from '../../../../../../src/files/domain/models/FileTree
 import {
   ZipSink,
   createBlobSink,
+  pullDrivenStream,
   transferableChunk
 } from '../../../../../../src/sections/dataset/dataset-files/files-tree/zipStreamSink'
 import { FileTreeFileMother } from '../../../../files/domain/models/FileTreeItemMother'
@@ -2025,6 +2026,38 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/download cancelled/i).should('exist')
     cy.then(() => {
       expect(outcome).to.equal('errored')
+    })
+  })
+
+  it('handles cancellation by the ZIP consumer without an unhandled generator rejection', () => {
+    const source = 'AAAABBBBCCCC'
+    const unhandled: unknown[] = []
+    const streamingSink: ZipSink = {
+      streaming: true,
+      browserCanStream: true,
+      save: async ({ body }) => {
+        const onRejection = (event: PromiseRejectionEvent) => unhandled.push(event.reason)
+        window.addEventListener('unhandledrejection', onRejection)
+        try {
+          const pipe = pullDrivenStream(body)
+          const reader = pipe.readable.getReader()
+          await reader.read()
+          await reader.cancel('cancelled by the download')
+          await new Promise((resolve) => setTimeout(resolve, 20))
+          await pipe.done
+        } finally {
+          window.removeEventListener('unhandledrejection', onRejection)
+        }
+      }
+    }
+    cy.customMount(
+      <StreamingZipHarness files={chunkedFile(source.length)} sink={streamingSink} partSize={4} />
+    )
+    installFetchHandler(() => Promise.resolve(partResponse(source.slice(0, 4), 0, source.length)))
+    cy.findByTestId('harness-start').click()
+    cy.contains('the browser stopped reading the download').should('exist')
+    cy.then(() => {
+      expect(unhandled).to.deep.equal([])
     })
   })
 

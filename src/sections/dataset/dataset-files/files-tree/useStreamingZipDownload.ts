@@ -483,9 +483,14 @@ export function useStreamingZipDownload(): StreamingZipApi {
             runUpdate((prev) => ({ ...prev, status: 'error', message: withinCap.message }))
             return
           }
+          const input = iterableForZip()
+          const throwIntoInput = input.throw.bind(input)
+          // client-zip calls input.throw() on cancellation without handling its Promise.
+          input.throw = (reason) =>
+            throwIntoInput(reason).catch(() => ({ done: true, value: undefined }))
           await sink.save({
             name: zipName,
-            body: makeZip(iterableForZip()),
+            body: makeZip(input),
             shouldSave: () => !stale()
           })
           if (stale()) return
