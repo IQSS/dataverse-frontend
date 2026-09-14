@@ -1637,6 +1637,103 @@ describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
     cy.contains(/checksum/i).should('not.exist')
   })
 
+  for (const ending of ['error', 'short response'] as const) {
+    it(`automatically resumes a mid-body ${ending} without duplicating bytes`, () => {
+      const source = 'AAAABBBBCCCC'
+      const states: string[] = []
+      cy.customMount(
+        <StreamingZipHarness
+          files={chunkedFile(source.length)}
+          partSize={4}
+          partRetries={2}
+          onApi={(api) => states.push(api.state.status)}
+        />
+      )
+      captureObjectUrls()
+      const ranges: string[] = []
+      let dropped = false
+      installFetchHandler((_input, init) => {
+        const range = new Headers(init?.headers).get('Range') ?? ''
+        ranges.push(range)
+        const start = Number(range.replace('bytes=', '').split('-')[0])
+        if (start === 4 && !dropped) {
+          dropped = true
+          let sent = false
+          return Promise.resolve(
+            new Response(
+              new ReadableStream({
+                pull(controller) {
+                  if (!sent) {
+                    sent = true
+                    controller.enqueue(new TextEncoder().encode('BB'))
+                  } else if (ending === 'error') controller.error(new Error('connection reset'))
+                  else controller.close()
+                }
+              }),
+              { status: 206 }
+            )
+          )
+        }
+        return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+      })
+      cy.findByTestId('harness-start').click()
+      cy.contains(/download complete/i).should('exist')
+      cy.then(async () => {
+        expect(states).not.to.include('paused')
+        expect(ranges).to.deep.equal(['bytes=0-3', 'bytes=4-7', 'bytes=6-9', 'bytes=10-11'])
+        const zip = new Uint8Array(await capturedZip().arrayBuffer())
+        expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+      })
+    })
+  }
+
+  it('bounds repeated body failures despite partial progress, then allows manual Retry', () => {
+    const source = 'AAAABBBBCCCC'
+    cy.customMount(
+      <StreamingZipHarness files={chunkedFile(source.length)} partSize={4} partRetries={2} />
+    )
+    captureObjectUrls()
+    const ranges: string[] = []
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers).get('Range') ?? ''
+      ranges.push(range)
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      if (ranges.length <= 3) {
+        let sent = false
+        return Promise.resolve(
+          new Response(
+            new ReadableStream({
+              pull(controller) {
+                if (!sent) {
+                  sent = true
+                  controller.enqueue(new TextEncoder().encode(source.slice(start, start + 2)))
+                } else controller.error(new Error('connection reset'))
+              }
+            }),
+            { status: 206 }
+          )
+        )
+      }
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.then(() => expect(ranges).to.deep.equal(['bytes=0-3', 'bytes=2-5', 'bytes=4-7']))
+    cy.findByRole('button', { name: /retry this file/i }).click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(async () => {
+      expect(ranges).to.deep.equal([
+        'bytes=0-3',
+        'bytes=2-5',
+        'bytes=4-7',
+        'bytes=6-9',
+        'bytes=10-11'
+      ])
+      const zip = new Uint8Array(await capturedZip().arrayBuffer())
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+    })
+  })
+
   it('aborts the download when Abort is chosen mid-entry', () => {
     const source = 'AAAABBBBCCCC'
     const files = chunkedFile(source.length)

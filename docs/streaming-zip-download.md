@@ -35,6 +35,16 @@ against. Anything that stops holding is a bug, not a preference.
 Files at or under the part size (10 MB) are fetched unranged to begin with, so
 only larger files exercise the ranged paths.
 
+Transient request failures and interrupted/short ranged response bodies use
+the existing `partRetries` and `partRetryDelayMs` settings (defaults: three
+retries, 500 ms between attempts). A body retry resumes at the exact byte already
+delivered. Its budget resets after a complete range response, not after partial
+progress, so a repeatedly failing body eventually pauses for Retry or Abort.
+Manual Retry renews that budget. Request failures already exhausted by the
+request retry loop go straight to the existing prompt; cancellation interrupts
+the retry delay. This does not recreate a browser download destination that
+has already closed.
+
 ## Mount matrix
 
 The service worker answers a fake same-origin URL, `<scope>zipdl/<id>/<name>`.

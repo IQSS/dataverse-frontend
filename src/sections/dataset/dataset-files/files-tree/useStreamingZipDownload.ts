@@ -544,6 +544,21 @@ function isTransientHttpStatus(status: number): boolean {
   return status === 408 || status === 425 || status === 429
 }
 
+function waitForRetry(delayMs: number, signal?: AbortSignal | null): Promise<void> {
+  signal?.throwIfAborted()
+  return new Promise((resolve, reject) => {
+    const abort = () => {
+      clearTimeout(timer)
+      reject(signal?.reason)
+    }
+    const timer = setTimeout(() => {
+      signal?.removeEventListener('abort', abort)
+      resolve()
+    }, delayMs)
+    signal?.addEventListener('abort', abort, { once: true })
+  })
+}
+
 async function fetchWithRetries(args: {
   url: string
   rangeHeader: string | undefined
@@ -574,7 +589,7 @@ async function fetchWithRetries(args: {
         throw err
       }
       if (attempt < args.retries) {
-        await new Promise((resolve) => setTimeout(resolve, args.delayMs))
+        await waitForRetry(args.delayMs, attemptInit?.signal)
       }
     }
   }
@@ -716,6 +731,8 @@ function buildChunkedStream(args: {
   let delivered = 0
   let fetchedUpTo = usedRange ? Math.min(args.partSize, total) : total
   let staleUrl = false
+  let bodyRetries = 0
+  const streamAbort = new AbortController()
 
   const expectedChecksum = args.file.checksum
   const digest = expectedChecksum ? makeDigestAccumulator(expectedChecksum.type) : null
@@ -758,8 +775,12 @@ function buildChunkedStream(args: {
     return result.response.body.getReader()
   }
 
-  const recover = async (err: unknown): Promise<boolean> => {
+  const recover = async (err: unknown, bodyFailed = false): Promise<boolean> => {
     await dropReader()
+    streamAbort.signal.throwIfAborted()
+    const signal = args.fetchInit()?.signal
+    signal?.throwIfAborted()
+    if (args.cancelled()) return false
     const message = err instanceof Error ? err.message : String(err)
     if (!usedRange && delivered > 0) {
       return false
@@ -767,7 +788,18 @@ function buildChunkedStream(args: {
     if (!(err instanceof HttpError)) {
       staleUrl = true
     }
+    // Request failures already exhaust fetchWithRetries before reaching here.
+    // Body failures get the same bounded policy, without resetting on each byte.
+    if (bodyFailed && bodyRetries < args.partRetries) {
+      bodyRetries++
+      await waitForRetry(
+        args.partRetryDelayMs,
+        signal ? AbortSignal.any([signal, streamAbort.signal]) : streamAbort.signal
+      )
+      return !args.cancelled()
+    }
     const decision = await args.onEntryFailure(message)
+    if (decision === 'retry') bodyRetries = 0
     return decision === 'retry'
   }
 
@@ -810,7 +842,7 @@ function buildChunkedStream(args: {
         try {
           chunk = await reader.read()
         } catch (err) {
-          if (await recover(err)) continue
+          if (await recover(err, true)) continue
           controller.error(err instanceof Error ? err : new Error(String(err)))
           return
         }
@@ -820,10 +852,11 @@ function buildChunkedStream(args: {
           currentReader = null
           if (delivered < fetchedUpTo) {
             const short = new Error(`connection closed at byte ${delivered} of ${fetchedUpTo}`)
-            if (await recover(short)) continue
+            if (await recover(short, true)) continue
             controller.error(short)
             return
           }
+          bodyRetries = 0
           continue
         }
         if (value && value.byteLength > 0) {
@@ -837,6 +870,7 @@ function buildChunkedStream(args: {
     },
     /* istanbul ignore next */
     async cancel() {
+      streamAbort.abort()
       await dropReader()
     }
   })
