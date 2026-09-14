@@ -26,6 +26,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Avoided prop-drilling for file, guestbook, user and external tool repository, so used context to share repository instances.
 
 ### Fixed
+- Edit Collection Page: clearing out affiliation field removes it properly on update. (#972)
 
 - Edit Dataset Terms: navigate to the draft version of the dataset after saving changes to the terms, instead of the latest published version.
 - After saving on either Edit Template tab (Metadata or Terms), the user is redirected to the templates listing with a success toast instead of staying on the edit page.
