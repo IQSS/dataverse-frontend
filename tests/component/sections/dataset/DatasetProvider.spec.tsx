@@ -1,4 +1,5 @@
 import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvider'
+import { Dataset } from '../../../../src/dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 import { useDataset } from '../../../../src/sections/dataset/DatasetContext'
@@ -44,7 +45,7 @@ describe('DatasetProvider', () => {
   })
 
   it('gets the draft dataset by persistentId when no version param is provided', () => {
-    const draftDataset = DatasetMother.createDraft()
+    const draftDataset: Dataset = DatasetMother.createDraft()
     datasetRepository.getByPersistentId = cy
       .stub()
       .resolves(Cypress.Promise.resolve(draftDataset).delay(1000))
@@ -60,7 +61,10 @@ describe('DatasetProvider', () => {
     )
 
     cy.findByText('Loading...').should('exist')
-    cy.wrap(datasetRepository.getByPersistentId).should('be.calledOnceWith', draftDataset.persistentId)
+    cy.wrap(datasetRepository.getByPersistentId).should(
+      'be.calledOnceWith',
+      draftDataset.persistentId
+    )
     cy.findByText(draftDataset.version.title).should('exist')
     cy.findByText('Loading...').should('not.exist')
   })
