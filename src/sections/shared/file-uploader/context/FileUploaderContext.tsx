@@ -88,7 +88,9 @@ export const FileUploaderProvider = ({ children, initialConfig }: FileUploaderPr
     () =>
       Object.values(fileUploaderState.files).filter(
         (file): file is FileUploadState & { storageId: string; checksumValue: string } =>
-          file.status === FileUploadStatus.DONE && !!file.storageId && !!file.checksumValue
+          file.status === FileUploadStatus.DONE &&
+          !!file.storageId &&
+          file.checksumValue !== undefined
       ),
     [fileUploaderState.files]
   )

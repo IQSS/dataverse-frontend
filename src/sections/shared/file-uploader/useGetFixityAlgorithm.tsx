@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 
-export const useGetFixityAlgorithm = (fileRepository: FileRepository) => {
+type FixityAlgorithmProvider = Pick<FileRepository, 'getFixityAlgorithm'>
+
+export const useGetFixityAlgorithm = (fileRepository: FixityAlgorithmProvider) => {
   const [fixityAlgorithm, setFixityAlgorithm] = useState<FixityAlgorithm>(FixityAlgorithm.MD5)
   const [isLoadingFixityAlgorithm, setIsLoadingFixityAlgorithm] = useState<boolean>(true)
   const [errorLoadingFixityAlgorithm, setErrorLoadingFixityAlgorithm] = useState<boolean>(false)

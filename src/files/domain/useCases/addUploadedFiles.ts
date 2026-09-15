@@ -1,8 +1,10 @@
 import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 import { FileRepository } from '../repositories/FileRepository'
 
+type AddUploadedFilesRepository = Pick<FileRepository, 'addUploadedFiles'>
+
 export function addUploadedFiles(
-  fileRepository: FileRepository,
+  fileRepository: AddUploadedFilesRepository,
   datasetId: number | string,
   files: UploadedFileDTO[]
 ): Promise<void> {

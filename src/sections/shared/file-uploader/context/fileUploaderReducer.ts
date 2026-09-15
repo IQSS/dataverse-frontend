@@ -150,14 +150,17 @@ export const fileUploaderReducer = (
 
     case 'ADD_UPLOADING_TO_CANCEL': {
       const { key, cancel } = action
-      state.uploadingToCancelMap.set(key, cancel)
-      return state
+      return {
+        ...state,
+        uploadingToCancelMap: new Map(state.uploadingToCancelMap).set(key, cancel)
+      }
     }
 
     case 'REMOVE_UPLOADING_TO_CANCEL': {
       const { key } = action
-      state.uploadingToCancelMap.delete(key)
-      return state
+      const uploadingToCancelMap = new Map(state.uploadingToCancelMap)
+      uploadingToCancelMap.delete(key)
+      return { ...state, uploadingToCancelMap }
     }
 
     case 'SET_REPLACE_OPERATION_INFO': {

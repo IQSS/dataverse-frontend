@@ -20,7 +20,10 @@ describe('Collection Page', () => {
 
   it('navigates to a dataset from the list when clicking the title', () => {
     cy.wrap(DatasetHelper.createWithTitle(title), { timeout: 10000 }).then(() => {
-      cy.wait(1_000)
+      // 1s used to be enough for Solr to index the new dataset, but on a
+      // slower CI runner with our larger SPA bundle the collections list
+      // sometimes hasn't picked it up yet. Bump.
+      cy.wait(3_000)
       cy.visit(`${FRONTEND_BASE_PATH}/collections`)
 
       cy.findByText(/Dataverse Admin/i).should('exist')
