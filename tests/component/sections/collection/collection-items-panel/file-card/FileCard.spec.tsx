@@ -3,8 +3,13 @@ import { FileItemTypePreviewMother } from '@tests/component/files/domain/models/
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import { FileCardHelper } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCardHelper'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import { FileLabelType } from '@/files/domain/models/FileMetadata'
+import i18n from '@/i18n'
 
 describe('FileCard', () => {
+  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
+  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
+
   it('should render the card', () => {
     const userRoles = ['Admin', 'Contributor']
     const filePreview = FileItemTypePreviewMother.create({ userRoles: userRoles })
@@ -29,7 +34,10 @@ describe('FileCard', () => {
   })
 
   it('should render the card if file is tabular', () => {
-    const filePreview = FileItemTypePreviewMother.create({ fileType: 'Tab-Delimited' })
+    const filePreview = FileItemTypePreviewMother.create({
+      fileType: 'Tab-Delimited',
+      fileContentType: 'text/tab-separated-values'
+    })
     cy.customMount(<FileCard filePreview={filePreview} />)
 
     cy.contains(DateHelper.toDisplayFormat(filePreview.releaseOrCreateDate)).should('exist')
@@ -42,8 +50,10 @@ describe('FileCard', () => {
       filePreview.tags.forEach((tag) => {
         cy.findByText(tag.value).should('exist')
       })
-    filePreview.variables && cy.contains(filePreview.variables).should('exist')
-    filePreview.observations && cy.contains(filePreview.observations).should('exist')
+    filePreview.variables &&
+      cy.contains(new Intl.NumberFormat('en').format(filePreview.variables)).should('exist')
+    filePreview.observations &&
+      cy.contains(new Intl.NumberFormat('en').format(filePreview.observations)).should('exist')
   })
 
   it('should render the card if dateset is draft version', () => {
@@ -75,9 +85,30 @@ describe('FileCard', () => {
     cy.findByTestId('file-labels').children().should('have.length', 0)
   })
 
+  it('localizes the date, file type, system label, and tabular counts in Spanish', () => {
+    const filePreview = FileItemTypePreviewMother.create({
+      releaseOrCreateDate: new Date(2026, 8, 2, 12),
+      fileType: 'Tab-Delimited',
+      fileContentType: 'text/tab-separated-values',
+      variables: 53_305,
+      observations: 4_940,
+      tags: [{ value: 'Data', type: FileLabelType.CATEGORY }]
+    })
+
+    cy.wrap(i18n.changeLanguage('es')).then(() => {
+      cy.customMount(<FileCard filePreview={filePreview} />)
+    })
+
+    cy.findByText(/2 sept 2026/).should('exist')
+    cy.findByText('Valores separados por tabuladores').should('exist')
+    cy.findByText(/53\.305 variables, 4940 observaciones/).should('exist')
+    cy.findByText('Datos').should('have.class', 'bg-secondary')
+  })
+
   it('should default to 0 variables and 0 observations if file is tabular and they are not present', () => {
     const filePreview = FileItemTypePreviewMother.create({
       fileType: 'Tab-Delimited',
+      fileContentType: 'text/tab-separated-values',
       variables: undefined,
       observations: undefined
     })

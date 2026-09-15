@@ -81,5 +81,34 @@
     "helper": "Elige a cuál de tus colecciones te gustaría vincular esta colección.",
     "save": "Guardar colección vinculada",
     "success": "<wrapper>{{linkedCollectionName}} se ha vinculado correctamente a <a>{{linkingCollectionName}}</a></wrapper>"
+  },
+  "facets": {
+    "names": {
+      "subject": "Tema",
+      "authorName": "Nombre del autor",
+      "authorAffiliation": "Afiliación del autor"
+    },
+    "subjectValues": {
+      "agriculturalSciences": "Ciencias agrarias",
+      "artsAndHumanities": "Artes y humanidades",
+      "astronomyAndAstrophysics": "Astronomía y astrofísica",
+      "businessAndManagement": "Administración y empresas",
+      "chemistry": "Química",
+      "computerAndInformationScience": "Ciencias de la información y computación",
+      "earthAndEnvironmentalSciences": "Ciencias de la tierra y el medioambiente",
+      "engineering": "Ingeniería",
+      "law": "Derecho",
+      "mathematicalSciences": "Ciencias matemáticas",
+      "medicineHealthAndLifeSciences": "Ciencias médicas, de la salud y de la vida",
+      "physics": "Física",
+      "socialSciences": "Ciencias sociales",
+      "other": "Otra"
+    }
+  },
+  "fileCard": {
+    "variables_one": "{{formattedCount}} variable",
+    "variables_other": "{{formattedCount}} variables",
+    "observations_one": "{{formattedCount}} observación",
+    "observations_other": "{{formattedCount}} observaciones"
   }
 }

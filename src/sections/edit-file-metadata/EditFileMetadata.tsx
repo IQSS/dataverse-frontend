@@ -28,7 +28,7 @@ export enum EditFileMetadataReferrer {
 
 export const EditFileMetadata = ({ fileId, fileRepository, referrer }: EditFileMetadataProps) => {
   const { t: tEditFileMetadata } = useTranslation('editFileMetadata')
-  const { t: tFiles } = useTranslation('files')
+  const { t: tFiles, i18n } = useTranslation('files')
   const { setIsLoading } = useLoading()
   const { file, isLoading } = useFile(fileRepository, fileId)
 
@@ -70,7 +70,10 @@ export const EditFileMetadata = ({ fileId, fileRepository, referrer }: EditFileM
             <div className={styles.tab_container}>
               <EditFilesList
                 fileRepository={fileRepository}
-                editFileMetadataFormData={createEditFileMetadataFormData(file)}
+                editFileMetadataFormData={createEditFileMetadataFormData(
+                  file,
+                  i18n.resolvedLanguage || i18n.language
+                )}
                 referrer={referrer}
                 datasetPersistentId={file.hierarchy.parent?.persistentId}
                 datasetLastUpdateTime={file.datasetVersion.lastUpdateTime}
@@ -82,14 +85,14 @@ export const EditFileMetadata = ({ fileId, fileRepository, referrer }: EditFileM
     </section>
   )
 }
-const createEditFileMetadataFormData = (file: File): EditFileMetadataFormData => {
+const createEditFileMetadataFormData = (file: File, locale?: string): EditFileMetadataFormData => {
   return {
     files: [
       {
         id: file.id,
         fileName: file.name,
         fileType: file.metadata.type.value,
-        fileSizeString: file.metadata.size.toString(),
+        fileSizeString: file.metadata.size.toString(locale),
         checksumValue: file.metadata.checksum?.value.toString(),
         checksumAlgorithm: file.metadata.checksum?.algorithm,
         description: file.metadata.description ?? '',

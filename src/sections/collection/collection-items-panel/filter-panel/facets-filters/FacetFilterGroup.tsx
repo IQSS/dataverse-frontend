@@ -9,6 +9,29 @@ import styles from './FacetsFilters.module.scss'
 
 const FACETS_PER_VIEW = 5
 
+const FACET_NAME_TRANSLATION_KEY_BY_NAME: Record<string, string> = {
+  subject_ss: 'facets.names.subject',
+  authorName_ss: 'facets.names.authorName',
+  authorAffiliation_ss: 'facets.names.authorAffiliation'
+}
+
+const SUBJECT_TRANSLATION_KEY_BY_VALUE: Record<string, string> = {
+  'Agricultural Sciences': 'facets.subjectValues.agriculturalSciences',
+  'Arts and Humanities': 'facets.subjectValues.artsAndHumanities',
+  'Astronomy and Astrophysics': 'facets.subjectValues.astronomyAndAstrophysics',
+  'Business and Management': 'facets.subjectValues.businessAndManagement',
+  Chemistry: 'facets.subjectValues.chemistry',
+  'Computer and Information Science': 'facets.subjectValues.computerAndInformationScience',
+  'Earth and Environmental Sciences': 'facets.subjectValues.earthAndEnvironmentalSciences',
+  Engineering: 'facets.subjectValues.engineering',
+  Law: 'facets.subjectValues.law',
+  'Mathematical Sciences': 'facets.subjectValues.mathematicalSciences',
+  'Medicine, Health and Life Sciences': 'facets.subjectValues.medicineHealthAndLifeSciences',
+  Physics: 'facets.subjectValues.physics',
+  'Social Sciences': 'facets.subjectValues.socialSciences',
+  Other: 'facets.subjectValues.other'
+}
+
 export enum RemoveAddFacetFilter {
   REMOVE = 'remove',
   ADD = 'add'
@@ -27,10 +50,17 @@ export const FacetFilterGroup = ({
   onFacetChange,
   isLoadingCollectionItems
 }: FacetFilterGroupProps) => {
-  const { t } = useTranslation('collection')
+  const { t, i18n } = useTranslation('collection')
   const { t: tShared } = useTranslation('shared')
 
   const [visibleCount, setVisibleCount] = useState(FACETS_PER_VIEW)
+  const facetNameTranslationKey = Object.hasOwn(FACET_NAME_TRANSLATION_KEY_BY_NAME, facet.name)
+    ? FACET_NAME_TRANSLATION_KEY_BY_NAME[facet.name]
+    : undefined
+  const facetDisplayName = facetNameTranslationKey
+    ? t(facetNameTranslationKey, { defaultValue: facet.friendlyName })
+    : facet.friendlyName
+  const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language)
 
   const handleShowMore = () => {
     setVisibleCount((prev) => Math.min(prev + FACETS_PER_VIEW, facet.labels.length))
@@ -56,7 +86,7 @@ export const FacetFilterGroup = ({
 
   return (
     <li key={facet.name} className={styles['facet-filter-group']}>
-      <span className={styles['facet-name']}>{facet.friendlyName}</span>
+      <span className={styles['facet-name']}>{facetDisplayName}</span>
       <ul className={styles['labels-list']}>
         {[...facet.labels]
           .sort((a, b) =>
@@ -67,6 +97,14 @@ export const FacetFilterGroup = ({
           .slice(0, visibleCount)
           .map((label) => {
             const isFacetLabelSelected = Boolean(facetSelectedLabels?.includes(label.name))
+            const subjectTranslationKey =
+              facet.name === 'subject_ss' &&
+              Object.hasOwn(SUBJECT_TRANSLATION_KEY_BY_VALUE, label.name)
+                ? SUBJECT_TRANSLATION_KEY_BY_VALUE[label.name]
+                : undefined
+            const labelDisplayName = subjectTranslationKey
+              ? t(subjectTranslationKey, { defaultValue: label.name })
+              : label.name
 
             return (
               <li key={label.name}>
@@ -77,13 +115,13 @@ export const FacetFilterGroup = ({
                   })}
                   aria-label={
                     isFacetLabelSelected
-                      ? t('removeSelectedFacet', { labelName: label.name })
-                      : t('addFacetFilter', { labelName: label.name })
+                      ? t('removeSelectedFacet', { labelName: labelDisplayName })
+                      : t('addFacetFilter', { labelName: labelDisplayName })
                   }
                   disabled={isLoadingCollectionItems}
                   variant="link"
                   size="sm">
-                  <span>{`${label.name} (${label.count})`}</span>
+                  <span>{`${labelDisplayName} (${numberFormatter.format(label.count)})`}</span>
                   {isFacetLabelSelected && <CloseIcon size={22} />}
                 </Button>
               </li>

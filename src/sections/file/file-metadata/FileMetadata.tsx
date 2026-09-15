@@ -11,6 +11,7 @@ import { MarkdownComponent } from '@/sections/dataset/markdown/MarkdownComponent
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { ExportMetadataDropdown } from '@/sections/dataset/dataset-metadata/export-metadata-dropdown/ExportMetadataDropdown'
 import { File } from '@/files/domain/models/File'
+import { FileTypeLabel } from '@/sections/file/file-type-label/FileTypeLabel'
 import styles from './FileMetadata.module.scss'
 
 interface FileMetadataProps {
@@ -35,8 +36,9 @@ export function FileMetadata({
   datasetVersion,
   dataverseInfoRepository
 }: FileMetadataProps) {
-  const { t } = useTranslation('file')
+  const { t, i18n } = useTranslation('file')
   const appConfig = requireAppConfig()
+  const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language)
 
   return (
     <>
@@ -173,13 +175,18 @@ export function FileMetadata({
               <Col sm={3}>
                 <strong>{t('metadata.fields.size')}</strong>
               </Col>
-              <Col>{metadata.size.toString()}</Col>
+              <Col>{metadata.size.toString(i18n.resolvedLanguage || i18n.language)}</Col>
             </Row>
             <Row className={styles.row}>
               <Col sm={3}>
                 <strong>{t('metadata.fields.type')}</strong>
               </Col>
-              <Col>{metadata.type.toDisplayFormat()}</Col>
+              <Col>
+                <FileTypeLabel
+                  mimeType={metadata.type.value}
+                  fallback={metadata.type.toDisplayFormat()}
+                />
+              </Col>
             </Row>
             {metadata.tabularData && (
               <>
@@ -187,13 +194,13 @@ export function FileMetadata({
                   <Col sm={3}>
                     <strong>{t('metadata.fields.variables')}</strong>
                   </Col>
-                  <Col>{metadata.tabularData.variables}</Col>
+                  <Col>{numberFormatter.format(metadata.tabularData.variables)}</Col>
                 </Row>
                 <Row className={styles.row}>
                   <Col sm={3}>
                     <strong>{t('metadata.fields.observations')}</strong>
                   </Col>
-                  <Col>{metadata.tabularData.observations}</Col>
+                  <Col>{numberFormatter.format(metadata.tabularData.observations)}</Col>
                 </Row>
               </>
             )}

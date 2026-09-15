@@ -6,7 +6,7 @@ interface FileDownloadsProps {
   datasetPublishingStatus: DatasetPublishingStatus
 }
 export function FileDownloads({ downloadCount, datasetPublishingStatus }: FileDownloadsProps) {
-  const { t } = useTranslation('files')
+  const { t, i18n } = useTranslation('files')
   if (datasetPublishingStatus !== DatasetPublishingStatus.RELEASED) {
     return <></>
   }
@@ -14,7 +14,8 @@ export function FileDownloads({ downloadCount, datasetPublishingStatus }: FileDo
   return (
     <div>
       <span>
-        {downloadCount} {t('table.downloads')}
+        {new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language).format(downloadCount)}{' '}
+        {t('table.downloads')}
       </span>
     </div>
   )

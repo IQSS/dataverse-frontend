@@ -7,14 +7,16 @@ export function FileTabularData({
 }: {
   tabularData: FileTabularDataModel | undefined
 }) {
-  const { t } = useTranslation('files')
+  const { t, i18n } = useTranslation('files')
   if (!tabularData) {
     return <></>
   }
+  const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language)
+
   return (
     <div>
-      {tabularData.variables} {t('table.tabularData.variables')}, {tabularData.observations}{' '}
-      {t('table.tabularData.observations')}{' '}
+      {numberFormatter.format(tabularData.variables)} {t('table.tabularData.variables')},{' '}
+      {numberFormatter.format(tabularData.observations)} {t('table.tabularData.observations')}{' '}
       {tabularData.unf && <CopyToClipboardButton text={tabularData.unf} />}
     </div>
   )

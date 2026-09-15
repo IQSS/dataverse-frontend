@@ -71,6 +71,14 @@
       "observations": "Observations",
       "directory": "File Path",
       "description": "Description"
+    },
+    "fileTypes": {
+      "tabDelimited": "Tab-Delimited"
+    },
+    "systemFileCategories": {
+      "documentation": "Documentation",
+      "data": "Data",
+      "code": "Code"
     }
   },
   "actionButtons": {

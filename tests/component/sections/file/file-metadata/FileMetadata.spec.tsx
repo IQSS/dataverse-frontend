@@ -1,6 +1,6 @@
 import { FileMetadata as FileMetadataComponent } from '../../../../../src/sections/file/file-metadata/FileMetadata'
 import { FileMother } from '../../../files/domain/models/FileMother'
-import { FileSizeUnit } from '../../../../../src/files/domain/models/FileMetadata'
+import { FileLabelType, FileSizeUnit } from '../../../../../src/files/domain/models/FileMetadata'
 import {
   FileEmbargoMother,
   FileMetadataMother,
@@ -14,6 +14,7 @@ import { requireAppConfig } from '@/config'
 import { WithRepositories } from '@tests/component/WithRepositories'
 import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { type ComponentProps } from 'react'
+import i18n from '@/i18n'
 
 const appConfig = requireAppConfig()
 
@@ -25,6 +26,9 @@ const FileMetadata = (props: ComponentProps<typeof FileMetadataComponent>) => (
 )
 
 describe('FileMetadata', () => {
+  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
+  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
+
   const mountFileMetadata = (props: Partial<ComponentProps<typeof FileMetadata>> = {}) => {
     cy.customMount(
       <FileMetadata
@@ -421,6 +425,25 @@ describe('FileMetadata', () => {
 
     cy.findByText('Size').should('exist')
     cy.findByText('123 B').should('exist')
+  })
+
+  it('formats file values using the active Spanish language', () => {
+    const metadata = FileMetadataMother.create({
+      size: FileSizeMother.create({ value: 180.3, unit: FileSizeUnit.KILOBYTES }),
+      type: FileTypeMother.createTabular(),
+      labels: [{ value: 'Data', type: FileLabelType.CATEGORY }],
+      tabularData: FileTabularDataMother.create({ variables: 53_305, observations: 4_940 })
+    })
+
+    cy.wrap(i18n.changeLanguage('es')).then(() => {
+      mountFileMetadata({ metadata })
+    })
+
+    cy.findByText('180,3 KB').should('exist')
+    cy.findByText('Valores separados por tabuladores').should('exist')
+    cy.findByText('Datos').should('have.class', 'bg-secondary')
+    cy.findByText('53.305').should('exist')
+    cy.findByText('4940').should('exist')
   })
 
   it('renders the file type', () => {
