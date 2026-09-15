@@ -491,6 +491,7 @@ export function useStreamingZipDownload(): StreamingZipApi {
           await sink.save({
             name: zipName,
             body: makeZip(input),
+            signal: abortController.signal,
             shouldSave: () => !stale()
           })
           if (stale()) return

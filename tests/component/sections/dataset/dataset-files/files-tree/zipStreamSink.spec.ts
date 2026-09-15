@@ -299,7 +299,7 @@ describe('createServiceWorkerSink', () => {
     const navigated: string[] = []
     const worker = fakeWorker((message) => {
       sent.push(message)
-      message.ack?.postMessage({ type: 'zipdl-registered', id: message.id })
+      message.ack?.postMessage({ type: 'zipdl-registered', id: message.id, protocol: 2 })
     })
     return {
       sent,
@@ -347,6 +347,7 @@ describe('createServiceWorkerSink', () => {
       expect(sink?.streaming).to.equal(true)
       const drained: string[] = []
       const saving = sink?.save({ name: 'tree files.zip', body: streamOf(['one', 'two']) })
+      sent[0].ack?.postMessage({ type: 'zipdl-started', id: sent[0].id })
       const handed = sent[0].stream as ReadableStream<Uint8Array>
       const reader = handed.getReader()
       for (;;) {
@@ -354,6 +355,7 @@ describe('createServiceWorkerSink', () => {
         if (done) break
         if (value) drained.push(new TextDecoder().decode(value))
       }
+      sent[0].ack?.postMessage({ type: 'zipdl-closed', id: sent[0].id, bytes: 6 })
       await saving
       expect(drained.join('')).to.equal('onetwo')
       expect(sent).to.have.length(1)
@@ -415,7 +417,9 @@ describe('createServiceWorkerSink over a MessageChannel', () => {
     ack?: MessagePort
   }
 
-  const pumpFromWorkerSide = (port: MessagePort) => {
+  const pumpFromWorkerSide = (message: Ported) => {
+    const port = message.port as MessagePort
+    message.ack?.postMessage({ type: 'zipdl-started', id: message.id })
     const chunks: Uint8Array[] = []
     const failures: string[] = []
     const finished = new Promise<void>((resolve) => {
@@ -431,6 +435,11 @@ describe('createServiceWorkerSink over a MessageChannel', () => {
           resolve()
           return
         }
+        message.ack?.postMessage({
+          type: 'zipdl-closed',
+          id: message.id,
+          bytes: chunks.reduce((sum, chunk) => sum + chunk.byteLength, 0)
+        })
         resolve()
       }
       port.postMessage({ type: 'pull' })
@@ -438,11 +447,13 @@ describe('createServiceWorkerSink over a MessageChannel', () => {
     return { chunks, failures, finished }
   }
 
-  const sinkWithPort = async (onRegister: (message: Ported) => void) => {
+  const sinkWithPort = async (onRegister: (message: Ported) => void, onUnregister = () => {}) => {
     const worker = {
       postMessage: (message: Ported) => {
+        if (message.type === 'zipdl-unregister') onUnregister()
+        if (message.type !== 'zipdl-register') return
         onRegister(message)
-        message.ack?.postMessage({ type: 'zipdl-registered', id: message.id })
+        message.ack?.postMessage({ type: 'zipdl-registered', id: message.id, protocol: 2 })
       }
     } as unknown as ServiceWorker
     return createServiceWorkerSink({
@@ -460,7 +471,7 @@ describe('createServiceWorkerSink over a MessageChannel', () => {
     cy.then(async () => {
       const pumps: ReturnType<typeof pumpFromWorkerSide>[] = []
       const sink = await sinkWithPort((message) => {
-        pumps.push(pumpFromWorkerSide(message.port as MessagePort))
+        pumps.push(pumpFromWorkerSide(message))
       })
       const body = new ReadableStream<Uint8Array>({
         start(controller) {
@@ -478,12 +489,17 @@ describe('createServiceWorkerSink over a MessageChannel', () => {
     })
   })
 
-  it('tells the worker when the archive fails, so the download is not truncated', () => {
+  it('unregisters the worker stream when archive production fails', () => {
     cy.then(async () => {
-      const pumps: ReturnType<typeof pumpFromWorkerSide>[] = []
-      const sink = await sinkWithPort((message) => {
-        pumps.push(pumpFromWorkerSide(message.port as MessagePort))
-      })
+      let unregistered = false
+      const sink = await sinkWithPort(
+        (message) => {
+          pumpFromWorkerSide(message)
+        },
+        () => {
+          unregistered = true
+        }
+      )
       let sent = false
       const body = new ReadableStream<Uint8Array>({
         pull(controller) {
@@ -495,9 +511,198 @@ describe('createServiceWorkerSink over a MessageChannel', () => {
           controller.error(new Error('source died'))
         }
       })
-      await sink?.save({ name: 'broken.zip', body }).catch(() => undefined)
-      await pumps[0].finished
-      expect(pumps[0].failures.join('')).to.contain('source died')
+      let message = ''
+      await sink?.save({ name: 'broken.zip', body }).catch((error: Error) => {
+        message = error.message
+      })
+      expect(message).to.equal('source died')
+      expect(unregistered).to.equal(true)
+    })
+  })
+})
+
+describe('ZIP worker completion protocol', () => {
+  type Registration = {
+    type: string
+    id: string
+    protocol: number
+    stream?: ReadableStream<Uint8Array>
+    port?: MessagePort
+    ack: MessagePort
+  }
+  const setup = async (
+    args: {
+      protocol?: number
+      acknowledge?: boolean
+      bytes?: number
+      transferChunks?: boolean
+      navigate?: () => () => void
+      onChunk?: (chunk: Uint8Array) => void
+      onRegister?: (registration: Registration) => void
+      onUnregister?: () => void
+    } = {}
+  ) => {
+    const worker = {
+      postMessage(message: Registration) {
+        if (message.type === 'zipdl-unregister') {
+          args.onUnregister?.()
+          return
+        }
+        if (message.type !== 'zipdl-register') return
+        args.onRegister?.(message)
+        message.ack.postMessage({
+          type: 'zipdl-registered',
+          protocol: args.protocol ?? 2,
+          id: message.id
+        })
+        let bytes = 0
+        const port = message.port as MessagePort
+        port.onmessage = ({ data }: MessageEvent<{ type: string; chunk: ArrayBuffer }>) => {
+          if (data.type === 'chunk') {
+            const chunk = new Uint8Array(data.chunk)
+            bytes += chunk.byteLength
+            args.onChunk?.(chunk)
+            port.postMessage({ type: 'pull' })
+          } else if (data.type === 'close' && args.acknowledge !== false) {
+            message.ack.postMessage({
+              type: 'zipdl-closed',
+              id: message.id,
+              bytes: args.bytes ?? bytes
+            })
+          }
+        }
+        message.ack.postMessage({ type: 'zipdl-started', id: message.id })
+        port.postMessage({ type: 'pull' })
+      }
+    } as unknown as ServiceWorker
+    const sink = await createServiceWorkerSink({
+      url: '/zip-download-sw.js',
+      transferStreams: false,
+      transferChunks: args.transferChunks,
+      completionMs: 40,
+      handoverMs: 100,
+      firstByteMs: 100,
+      connect: () => Promise.resolve(worker),
+      probe: () => Promise.resolve(true),
+      navigate: args.navigate ?? (() => () => undefined)
+    })
+    if (!sink) throw new Error('Test sink unavailable')
+    return sink
+  }
+  const body = (size = 3) =>
+    new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new Uint8Array(size).fill(42))
+        controller.close()
+      }
+    })
+  const errorFrom = (promise: Promise<void>) =>
+    promise.then(
+      () => '',
+      (error: Error) => error.message
+    )
+
+  it('requires worker acknowledgement after the producer ends', () => {
+    cy.then(async () => {
+      const sink = await setup({ acknowledge: false })
+      expect(await errorFrom(sink.save({ name: 'missing.zip', body: body() }))).to.contain(
+        'did not confirm'
+      )
+    })
+  })
+  it('rejects mismatched worker byte counts', () => {
+    cy.then(async () => {
+      const sink = await setup({ bytes: 2 })
+      expect(await errorFrom(sink.save({ name: 'mismatch.zip', body: body() }))).to.contain(
+        'byte count'
+      )
+    })
+  })
+  it('rejects mismatched declared length', () => {
+    cy.then(async () => {
+      const sink = await setup()
+      expect(
+        await errorFrom(sink.save({ name: 'short.zip', body: body(), expectedBytes: 4 }))
+      ).to.contain('byte count')
+    })
+  })
+  it('rejects incompatible workers and releases the registration', () => {
+    cy.then(async () => {
+      let released = false
+      const sink = await setup({
+        protocol: 1,
+        onUnregister: () => {
+          released = true
+        }
+      })
+      expect(await errorFrom(sink.save({ name: 'old.zip', body: body() }))).to.contain('outdated')
+      expect(released).to.equal(true)
+    })
+  })
+  for (const transferChunks of [false, true]) {
+    it(`splits large views without changing bytes (${
+      transferChunks ? 'transfer' : 'clone'
+    })`, () => {
+      cy.then(async () => {
+        let total = 0
+        const sink = await setup({
+          transferChunks,
+          onChunk: (chunk) => {
+            expect(chunk.byteLength).to.be.at.most(256 * 1024)
+            expect(chunk.every((byte) => byte === 42)).to.equal(true)
+            total += chunk.byteLength
+          }
+        })
+        await sink.save({
+          name: 'large-chunk.zip',
+          body: body(1024 * 1024 + 17),
+          expectedBytes: 1024 * 1024 + 17
+        })
+        expect(total).to.equal(1024 * 1024 + 17)
+      })
+    })
+  }
+  it('cancels unfinished production and unregisters after navigation setup fails', () => {
+    cy.then(async () => {
+      let cancelled = false
+      let released = false
+      const sink = await setup({
+        navigate: () => {
+          throw new Error('navigation failed')
+        },
+        onUnregister: () => {
+          released = true
+        }
+      })
+      const stream = new ReadableStream<Uint8Array>({
+        cancel() {
+          cancelled = true
+        }
+      })
+      expect(await errorFrom(sink.save({ name: 'setup.zip', body: stream }))).to.equal(
+        'navigation failed'
+      )
+      expect(cancelled).to.equal(true)
+      expect(released).to.equal(true)
+    })
+  })
+  it('cancels a pending source read when the caller aborts', () => {
+    cy.then(async () => {
+      const abort = new AbortController()
+      let cancelled = false
+      const sink = await setup()
+      const saving = sink.save({
+        name: 'cancel.zip',
+        signal: abort.signal,
+        body: new ReadableStream<Uint8Array>({
+          cancel() {
+            cancelled = true
+          }
+        })
+      })
+      setTimeout(() => abort.abort('test interruption'), 20)
+      expect(await errorFrom(saving)).to.contain('cancelled')
+      expect(cancelled).to.equal(true)
     })
   })
 })

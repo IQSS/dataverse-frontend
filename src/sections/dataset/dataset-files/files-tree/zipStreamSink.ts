@@ -2,6 +2,8 @@ export interface ZipSaveRequest {
   name: string
   body: ReadableStream<Uint8Array>
   shouldSave?: () => boolean
+  expectedBytes?: number
+  signal?: AbortSignal
 }
 
 export interface ZipSink {
@@ -16,6 +18,10 @@ export interface ServiceWorkerSinkOptions {
   firstByteMs?: number
   handoverMs?: number
   transferStreams?: boolean
+  transferChunks?: boolean
+  holdWorkerUntilComplete?: boolean
+  completionMs?: number
+  onEvent?: (event: ZipSinkEvent) => void
   connect?: () => Promise<ServiceWorker | null>
   probe?: (worker: ServiceWorker) => Promise<boolean>
   navigate?: (url: string) => () => void
@@ -26,6 +32,19 @@ export function workerUrlForBase(base: string): string {
 }
 
 export const DEFAULT_ZIP_SERVICE_WORKER_URL = workerUrlForBase(import.meta.env.BASE_URL)
+
+export interface ZipSinkEvent {
+  type: string
+  [key: string]: unknown
+}
+
+export const ZIP_SINK_PROTOCOL = 2
+export const MAX_ZIP_CHUNK_BYTES = 256 * 1024
+
+export function cancellationDetail(reason: unknown): string {
+  if (reason instanceof Error) return `${reason.name}: ${reason.message}`.slice(0, 1024)
+  return String(reason ?? 'No reason supplied').slice(0, 1024)
+}
 
 const KEEPALIVE_MS = 4_000
 const CONTROL_TIMEOUT_MS = 10_000
@@ -79,12 +98,14 @@ export interface PulledStream {
   readable: ReadableStream<Uint8Array>
   done: Promise<void>
   hasPulled: () => boolean
+  bytesRead: () => number
   abandon: (reason: Error) => Promise<void>
 }
 
 export function pullDrivenStream(body: ReadableStream<Uint8Array>): PulledStream {
   const reader = body.getReader()
   let pulled = false
+  let bytes = 0
   let settle: () => void = () => undefined
   let reject: (reason: Error) => void = () => undefined
   const done = new Promise<void>((resolve, fail) => {
@@ -103,6 +124,7 @@ export function pullDrivenStream(body: ReadableStream<Uint8Array>): PulledStream
             settle()
             return
           }
+          bytes += value.byteLength
           controller.enqueue(value)
         } catch (error) {
           const failure = error instanceof Error ? error : new Error(String(error))
@@ -112,7 +134,11 @@ export function pullDrivenStream(body: ReadableStream<Uint8Array>): PulledStream
       },
       cancel(reason) {
         void reader.cancel(reason).catch(() => undefined)
-        reject(new Error('the browser stopped reading the download'))
+        reject(
+          new Error('the browser stopped reading the download', {
+            cause: cancellationDetail(reason)
+          })
+        )
       }
     },
     new CountQueuingStrategy({ highWaterMark: 0 })
@@ -121,6 +147,7 @@ export function pullDrivenStream(body: ReadableStream<Uint8Array>): PulledStream
     readable,
     done,
     hasPulled: () => pulled,
+    bytesRead: () => bytes,
     abandon: async (reason: Error) => {
       await reader.cancel(reason).catch(() => undefined)
       reject(reason)
@@ -161,11 +188,11 @@ function pingWorker(worker: ServiceWorker): Promise<boolean> {
 
 async function takeControl(options: ServiceWorkerSinkOptions): Promise<ServiceWorker | null> {
   const registration = await navigator.serviceWorker.register(options.url, {
-    scope: scopeFor(options)
+    scope: scopeFor(options),
+    updateViaCache: 'none'
   })
-  if (registration.active) return registration.active
   const pending = registration.installing ?? registration.waiting
-  if (!pending) return null
+  if (!pending) return registration.active
   return new Promise<ServiceWorker | null>((resolve) => {
     pending.addEventListener('statechange', () => {
       if (pending.state === 'activated') resolve(registration.active)
@@ -183,135 +210,280 @@ function navigateHiddenFrame(url: string): () => void {
   return () => frame.remove()
 }
 
-function handOver(
-  controller: ServiceWorker,
-  id: string,
-  name: string,
-  readable: ReadableStream<Uint8Array>,
-  signal: AbortSignal,
-  transferStreams: boolean
-): Promise<void> {
-  return new Promise<void>((resolve) => {
-    const ack = new MessageChannel()
-    ack.port1.onmessage = (event: MessageEvent) => {
-      const data = event.data as { type?: string; id?: string } | null
-      if (data?.type !== 'zipdl-registered' || data.id !== id) return
-      ack.port1.close()
-      resolve()
-    }
-    signal.addEventListener('abort', () => {
-      ack.port1.close()
-    })
-    if (transferStreams) {
-      controller.postMessage(
-        { type: 'zipdl-register', id, name, stream: readable, ack: ack.port2 },
-        [readable as unknown as Transferable, ack.port2]
-      )
-      return
-    }
-    const channel = new MessageChannel()
-    const reader = readable.getReader()
-    signal.addEventListener('abort', () => {
-      channel.port1.close()
-    })
-    channel.port1.onmessage = (event: MessageEvent) => {
-      const type = (event.data as { type?: string } | null)?.type
-      if (type === 'cancel') {
-        void reader.cancel('cancelled by the download').catch(() => undefined)
-        return
-      }
-      reader.read().then(
-        ({ value, done }) => {
-          if (done || !value) {
-            channel.port1.postMessage({ type: 'close' })
-            return
-          }
-          const buffer = transferableChunk(value)
-          channel.port1.postMessage({ type: 'chunk', chunk: buffer }, [buffer])
-        },
-        (error: unknown) => {
-          channel.port1.postMessage({
-            type: 'error',
-            message: error instanceof Error ? error.message : String(error)
-          })
-        }
-      )
-    }
-    controller.postMessage(
-      { type: 'zipdl-register', id, name, port: channel.port2, ack: ack.port2 },
-      [channel.port2, ack.port2]
-    )
+interface WorkerReply {
+  type?: string
+  id?: string
+  protocol?: number
+  bytes?: number
+  reason?: string
+}
+
+function deferred<T>() {
+  let resolve!: (value: T) => void
+  let reject!: (error: Error) => void
+  const promise = new Promise<T>((yes, no) => {
+    resolve = yes
+    reject = no
   })
+  void promise.catch(() => undefined)
+  return { promise, resolve, reject }
 }
 
 export async function createServiceWorkerSink(
   options: ServiceWorkerSinkOptions
 ): Promise<ZipSink | null> {
   if (!browserCanStreamToDisk()) return null
-  const scope = scopeFor(options)
-  const connect = options.connect ?? (() => takeControl(options))
-  const probe = options.probe ?? pingWorker
-  const navigate = options.navigate ?? navigateHiddenFrame
-  let controller: ServiceWorker | null = null
+  let worker: ServiceWorker | null
   try {
-    controller = await withTimeout(connect(), CONTROL_TIMEOUT_MS, null)
-    if (!controller) return null
-    if (!(await probe(controller))) return null
+    worker = await withTimeout(
+      (options.connect ?? (() => takeControl(options)))(),
+      CONTROL_TIMEOUT_MS,
+      null
+    )
+    if (!worker || !(await (options.probe ?? pingWorker)(worker))) return null
   } catch {
     return null
   }
-  const worker = controller
+  const controller = worker
   return {
     streaming: true,
     browserCanStream: true,
-    save: async ({ name, body, shouldSave }) => {
-      if (shouldSave && !shouldSave()) {
-        await body.cancel()
+    save: async ({ name, body, shouldSave, expectedBytes, signal }) => {
+      if (signal?.aborted || (shouldSave && !shouldSave())) {
+        await body.cancel(signal?.reason)
         return
       }
-      const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
-      const cleanup = new AbortController()
-      const pipe = pullDrivenStream(body)
-      const done = pipe.done
-      const abandon = async (reason: Error) => {
-        worker.postMessage({ type: 'zipdl-unregister', id })
-        cleanup.abort()
-        await pipe.abandon(reason)
-        throw reason
+      if (
+        expectedBytes !== undefined &&
+        (!Number.isSafeInteger(expectedBytes) || expectedBytes < 0)
+      ) {
+        await body.cancel('Invalid ZIP length')
+        throw new Error('The expected ZIP length must be a nonnegative safe integer.')
       }
-      const handedOver = await withTimeout(
-        handOver(
-          worker,
+      const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
+      const pipe = pullDrivenStream(body)
+      let sourceEnded = false
+      const produced = pipe.done.then(() => {
+        sourceEnded = true
+      })
+      void produced.catch(() => undefined)
+      const registered = deferred<void>()
+      const finished = deferred<number>()
+      const started = deferred<void>()
+      const disposers: Array<() => void> = []
+      let success = false
+      let failure = new Error('The ZIP download was interrupted.')
+      const emit = (event: ZipSinkEvent) => {
+        // Diagnostics must never change download behavior.
+        try {
+          options.onEvent?.(event)
+        } catch {
+          /* diagnostic consumer failed */
+        }
+      }
+      const fail = (error: Error) => {
+        registered.reject(error)
+        finished.reject(error)
+        started.reject(error)
+      }
+      const abort = () =>
+        fail(
+          new Error('The ZIP download was cancelled.', {
+            cause: cancellationDetail(signal?.reason)
+          })
+        )
+      signal?.addEventListener('abort', abort, { once: true })
+      disposers.push(() => signal?.removeEventListener('abort', abort))
+      try {
+        const ack = new MessageChannel()
+        disposers.push(() => {
+          ack.port1.close()
+          ack.port2.close()
+        })
+        ack.port1.onmessage = ({ data }: MessageEvent<WorkerReply>) => {
+          if (data?.id !== id) return
+          emit({ ...data, type: data.type ?? 'unknown-worker-message' })
+          if (data.type === 'zipdl-registered') {
+            if (data.protocol !== ZIP_SINK_PROTOCOL) {
+              fail(new Error('The ZIP download worker is outdated. Reload the page and retry.'))
+            } else registered.resolve()
+          } else if (data.type === 'zipdl-started') started.resolve()
+          else if (data.type === 'zipdl-closed') {
+            if (!Number.isSafeInteger(data.bytes) || (data.bytes as number) < 0) {
+              fail(new Error('The ZIP download worker returned an invalid byte count.'))
+            } else finished.resolve(data.bytes as number)
+          } else if (data.type === 'zipdl-error' || data.type === 'zipdl-cancelled') {
+            fail(
+              new Error(
+                data.type === 'zipdl-cancelled'
+                  ? 'the browser stopped reading the download'
+                  : 'The ZIP download worker could not finish the stream.',
+                { cause: data.reason }
+              )
+            )
+          }
+        }
+        const transferStreams = options.transferStreams ?? transferableStreamsSupported()
+        const message = {
+          type: 'zipdl-register',
+          protocol: ZIP_SINK_PROTOCOL,
           id,
           name,
-          pipe.readable,
-          cleanup.signal,
-          options.transferStreams ?? transferableStreamsSupported()
-        ).then(() => true),
-        options.handoverMs ?? HANDOVER_TIMEOUT_MS,
-        false
-      )
-      if (!handedOver) {
-        await abandon(new Error('the download service worker did not accept the zip stream'))
-      }
-      const removeFrame = navigate(`${scope}zipdl/${id}/${encodeURIComponent(name)}`)
-      const keepalive = setInterval(() => {
-        worker.postMessage({ type: 'zipdl-keepalive', id })
-      }, options.keepaliveMs ?? KEEPALIVE_MS)
-      const started = new Promise<'never read'>((resolve) => {
-        setTimeout(() => {
-          if (!pipe.hasPulled()) resolve('never read')
-        }, options.firstByteMs ?? FIRST_BYTE_TIMEOUT_MS)
-      })
-      try {
-        const outcome = await Promise.race([done.then(() => 'done' as const), started])
-        if (outcome === 'never read') {
-          await abandon(new Error('the browser never started the download'))
+          expectedBytes,
+          holdUntilComplete: options.holdWorkerUntilComplete === true,
+          ack: ack.port2
         }
-        await done
+        emit({
+          type: 'sink-options',
+          protocol: ZIP_SINK_PROTOCOL,
+          transferStreams,
+          transferChunks: options.transferChunks === true,
+          maxChunkBytes: MAX_ZIP_CHUNK_BYTES,
+          holdWorkerUntilComplete: options.holdWorkerUntilComplete === true,
+          expectedBytes
+        })
+        if (transferStreams) {
+          controller.postMessage({ ...message, stream: pipe.readable }, [
+            pipe.readable as unknown as Transferable,
+            ack.port2
+          ])
+        } else {
+          const channel = new MessageChannel()
+          const reader = pipe.readable.getReader()
+          let pending: Uint8Array | undefined
+          let offset = 0
+          let reading = false
+          let disposed = false
+          disposers.push(() => {
+            disposed = true
+            channel.port1.close()
+            channel.port2.close()
+            pending = undefined
+            if (!success) void reader.cancel(failure).catch(() => undefined)
+          })
+          channel.port1.onmessage = ({
+            data
+          }: MessageEvent<{ type?: string; reason?: string }>) => {
+            if (data?.type === 'cancel') {
+              const error = new Error('the browser stopped reading the download', {
+                cause: data.reason
+              })
+              fail(error)
+              void reader.cancel(error).catch(() => undefined)
+              return
+            }
+            if (data?.type !== 'pull' || reading || disposed) return
+            reading = true
+            void (async () => {
+              try {
+                if (!pending) {
+                  const next = await reader.read()
+                  if (disposed) return
+                  if (next.done) {
+                    channel.port1.postMessage({ type: 'close' })
+                    return
+                  }
+                  pending = next.value
+                  offset = 0
+                }
+                const end = Math.min(offset + MAX_ZIP_CHUNK_BYTES, pending.byteLength)
+                const chunk = transferableChunk(pending.subarray(offset, end))
+                offset = end
+                if (end === pending.byteLength) pending = undefined
+                channel.port1.postMessage(
+                  { type: 'chunk', chunk },
+                  options.transferChunks ? [chunk] : []
+                )
+              } catch (reason) {
+                const error = reason instanceof Error ? reason : new Error(String(reason))
+                if (!disposed) channel.port1.postMessage({ type: 'error', message: error.message })
+                fail(error)
+              } finally {
+                reading = false
+              }
+            })().catch((reason: unknown) => fail(new Error(cancellationDetail(reason))))
+          }
+          controller.postMessage({ ...message, port: channel.port2 }, [channel.port2, ack.port2])
+        }
+        const accepted = await withTimeout(
+          registered.promise.then(() => true),
+          options.handoverMs ?? HANDOVER_TIMEOUT_MS,
+          false
+        )
+        if (!accepted) throw new Error('the download service worker did not accept the zip stream')
+        signal?.throwIfAborted()
+        const removeFrame = (options.navigate ?? navigateHiddenFrame)(
+          `${scopeFor(options)}zipdl/${id}/${encodeURIComponent(name)}`
+        )
+        disposers.push(() => {
+          if (success) setTimeout(removeFrame, 4000)
+          else removeFrame()
+        })
+        const keepalive = setInterval(() => {
+          try {
+            controller.postMessage({ type: 'zipdl-keepalive', id })
+          } catch (error) {
+            fail(
+              new Error('The ZIP download worker is unavailable.', {
+                cause: cancellationDetail(error)
+              })
+            )
+          }
+        }, options.keepaliveMs ?? KEEPALIVE_MS)
+        disposers.push(() => clearInterval(keepalive))
+        const began = await withTimeout(
+          started.promise.then(() => true),
+          options.firstByteMs ?? FIRST_BYTE_TIMEOUT_MS,
+          false
+        )
+        if (!began) throw new Error('the browser never started the download')
+        const earlyFinish = finished.promise.then((bytes) => {
+          if (!sourceEnded)
+            throw new Error('The ZIP download worker closed before the producer finished.')
+          if (bytes !== pipe.bytesRead())
+            throw new Error('The ZIP download worker byte count does not match the producer.')
+        })
+        await Promise.race([produced, earlyFinish])
+        const bytes = await withTimeout(finished.promise, options.completionMs ?? 30_000, null)
+        if (bytes === null) throw new Error('The ZIP download worker did not confirm completion.')
+        if (
+          bytes !== pipe.bytesRead() ||
+          (expectedBytes !== undefined && bytes !== expectedBytes)
+        ) {
+          throw new Error('The ZIP download length did not match the expected byte count.')
+        }
+        await pipe.done
+        signal?.throwIfAborted()
+        success = true
+        emit({ type: 'sink-complete', bytes, verifiedOnDisk: false })
+      } catch (reason) {
+        failure = reason instanceof Error ? reason : new Error(String(reason))
+        emit({
+          type: 'sink-error',
+          message: failure.message,
+          reason: cancellationDetail(failure.cause ?? failure)
+        })
+        throw failure
       } finally {
-        clearInterval(keepalive)
-        setTimeout(removeFrame, 4_000)
+        if (!success) {
+          void pipe.abandon(failure).catch(() => undefined)
+          try {
+            controller.postMessage({
+              type: 'zipdl-unregister',
+              id,
+              reason: cancellationDetail(failure)
+            })
+          } catch {
+            /* worker already gone */
+          }
+        }
+        for (const dispose of disposers.reverse()) {
+          try {
+            dispose()
+          } catch {
+            /* preserve the original result */
+          }
+        }
       }
     }
   }

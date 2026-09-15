@@ -111,3 +111,33 @@ an over-cap selection is refused up front rather than failing at the end.
 The over-cap message distinguishes a browser that cannot stream at all, which is
 told which browsers can, from a browser that could but is on a page without a
 usable worker, which is not told to switch to the browser it is already using.
+
+## Download worker protocol and completion
+
+Protocol 2 requires the worker to acknowledge registration and response-body
+completion with the number of ZIP bytes consumed. The producer checks this count
+before resolving `save()`. This confirms stream delivery, not a filesystem flush
+or saved-file integrity. Old pages still work with the new worker; a new page
+rejects an older worker clearly and asks for reload rather than dropping flow control.
+
+MessageChannel delivery remains pull-driven and splits outgoing views into at
+most 256 KiB messages. It clones chunks by default; `transferChunks` allows an
+explicit comparison. The worker also splits transferred-stream chunks before
+forwarding them to the download response. A single current producer chunk can
+still be retained while its pieces are consumed; the adapter does not accumulate
+the whole archive. Setup errors, source failures, caller aborts and browser
+cancellation clean up ports, registration, timers and unfinished production.
+
+`expectedBytes` is optional and must be the exact final ZIP length, including
+headers, directory and any manifest. The worker declares `Content-Length` only
+when supplied and rejects shorter or longer bodies. Normal Dataverse downloads
+omit it because skipped files and late warning manifests can change the result.
+Do not use payload totals or an inflated estimate as the header value.
+
+`onEvent` exposes bounded-size cancellation reasons and worker lifecycle/byte
+observations for diagnostics. `holdWorkerUntilComplete` is an opt-in experiment
+that extends the fetch event until the body ends; production leaves it disabled
+because browser event deadlines can break otherwise working long downloads.
+The sink retains its existing page keepalives. Neither option provides recovery
+of a closed browser download, or establishes offline/sleep support in Firefox
+or Safari. The spike records options and verifies the separately saved ZIP.
