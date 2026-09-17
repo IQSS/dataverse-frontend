@@ -77,53 +77,50 @@ describe('File', () => {
       )
     })
 
-    it('shows export metadata on the file page for admin draft, admin latest published, and guest latest published views', () => {
-      cy.wrap(DatasetHelper.createWithFile(FileHelper.create())).then((draftDataset) => {
-        if (!draftDataset.file) {
-          throw new Error('Expected created dataset to include a file')
-        }
-
-        visitFileMetadataTabAndAssertExportMetadata(draftDataset.file.id, true)
-      })
-
+    it('shows the file metrics download count on the file page', () => {
       cy.wrap(DatasetHelper.createWithFileAndPublish(FileHelper.create()), { timeout: 6000 }).then(
-        (publishedDataset) => {
-          if (!publishedDataset.file) {
+        (datasetResponse) => {
+          if (!datasetResponse.file) {
             throw new Error('Expected created dataset to include a file')
           }
 
-          visitFileMetadataTabAndAssertExportMetadata(publishedDataset.file.id, true)
+          cy.visit(`${FRONTEND_BASE_PATH}/files?id=${datasetResponse.file.id}`)
 
-          TestsUtils.logout()
-          visitFileMetadataTabAndAssertExportMetadata(publishedDataset.file.id, true)
+          cy.findByText('File Metrics').should('exist')
+          cy.findByTestId('file-download-count').should('contain.text', '0 Downloads')
         }
       )
     })
 
-    it('hides export metadata on the file page for older published versions', () => {
-      cy.wrap(DatasetHelper.createWithFileAndPublish(FileHelper.create()), { timeout: 6000 })
-        .then((dataset) => {
-          if (!dataset.file) {
+    it('updates the file metrics download count after downloading the file', () => {
+      cy.wrap(DatasetHelper.createWithFileAndPublish(FileHelper.create()), { timeout: 6000 }).then(
+        (datasetResponse) => {
+          if (!datasetResponse.file) {
             throw new Error('Expected created dataset to include a file')
           }
 
-          return cy.wrap(
-            FileHelper.addLabel(dataset.file.id, []).then(async () => {
-              await DatasetHelper.publish(dataset.persistentId)
-              return dataset.file?.id
-            })
-          )
-        })
-        .then((fileId) => {
-          if (!fileId) {
-            throw new Error('Expected created dataset to include a file')
-          }
+          const fileId = datasetResponse.file.id
 
-          visitFileMetadataTabAndAssertExportMetadata(fileId, false, '1.0')
+          cy.visit(`${FRONTEND_BASE_PATH}/files?id=${fileId}`)
+          cy.findByTestId('file-download-count').should('contain.text', '0 Downloads')
 
-          TestsUtils.logout()
-          visitFileMetadataTabAndAssertExportMetadata(fileId, false, '1.0')
-        })
+          cy.window().then((window) => {
+            cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
+          })
+
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('be.visible')
+          cy.wait(500)
+          cy.get('@accessButton').click()
+          cy.findByTestId('download-original-file').should('exist').click({ force: true })
+
+          cy.get('@anchorClick').should('have.been.calledOnce')
+          cy.findByText('Your download has started.').should('exist')
+
+          cy.visit(`${FRONTEND_BASE_PATH}/files?id=${fileId}`)
+          cy.findByTestId('file-download-count').should('contain.text', '1 Download')
+        }
+      )
     })
 
     it('loads version summaries when clicking on the version tab', () => {
