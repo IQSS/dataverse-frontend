@@ -16,6 +16,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
   - the Create Guestbook page
   - a checkbox for including guestbooks from parent collections
 - Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
+- Storage Driver selection in Create Collection form, with dynamic fetching of available storage drivers from the backend.
 - Dataset Page: added a sidebar to show dataset reviews
 
 ### Changed
