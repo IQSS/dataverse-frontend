@@ -29,6 +29,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Fixed
 
 - Disable Save Changes button when file path contains invalid special characters during file upload. (#600)
+- Dataset Page: show draft version if user has permission when no version param is provided. (#1003)
 - Display facet name alongside facet value in selected filter chips above search results (#894)
 - Show accurate, user-specific API token status messages on the Account page (#943)
 - Publish Dataset modal custom messages now render configured HTML links and line breaks.
