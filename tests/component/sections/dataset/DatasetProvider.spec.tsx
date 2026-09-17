@@ -1,7 +1,7 @@
 import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvider'
 import { Dataset } from '../../../../src/dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
-import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
+import { DatasetMother, DatasetVersionMother } from '../../dataset/domain/models/DatasetMother'
 import { useDataset } from '../../../../src/sections/dataset/DatasetContext'
 import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 
@@ -45,7 +45,9 @@ describe('DatasetProvider', () => {
   })
 
   it('gets the draft dataset by persistentId when no version param is provided', () => {
-    const draftDataset: Dataset = DatasetMother.createDraft()
+    const draftDataset: Dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraft()
+    })
     const getByPersistentIdStub = cy
       .stub()
       .resolves(
