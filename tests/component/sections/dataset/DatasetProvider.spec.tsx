@@ -48,7 +48,7 @@ describe('DatasetProvider', () => {
     const draftDataset: Dataset = DatasetMother.createDraft()
     datasetRepository.getByPersistentId = cy
       .stub()
-      .resolves(Cypress.Promise.resolve(draftDataset).delay(1000))
+      .resolves(Cypress.Promise.resolve(draftDataset).delay(1000)) as unknown as typeof datasetRepository.getByPersistentId
 
     cy.mount(
       <LoadingProvider>
@@ -63,7 +63,8 @@ describe('DatasetProvider', () => {
     cy.findByText('Loading...').should('exist')
     cy.wrap(datasetRepository.getByPersistentId).should(
       'be.calledOnceWith',
-      draftDataset.persistentId
+      draftDataset.persistentId,
+      undefined
     )
     cy.findByText(draftDataset.version.title).should('exist')
     cy.findByText('Loading...').should('not.exist')
