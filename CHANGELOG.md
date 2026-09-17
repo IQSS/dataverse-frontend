@@ -29,9 +29,13 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Fixed
 
 - Edit Collection Page: clearing out affiliation field removes it properly on update. (#972)
+- Display facet name alongside facet value in selected filter chips above search results (#894)
+- Show accurate, user-specific API token status messages on the Account page (#943)
+- Publish Dataset modal custom messages now render configured HTML links and line breaks.
 - Edit Dataset Terms: navigate to the draft version of the dataset after saving changes to the terms, instead of the latest published version.
 - After saving on either Edit Template tab (Metadata or Terms), the user is redirected to the templates listing with a success toast instead of staying on the edit page.
 - Edit Template breadcrumb on the Terms page no longer renders the dataset's "Terms and Guestbook" label (templates have no guestbook).
+- Edit Metadata always loads the latest dataset version (draft if present, otherwise latest published), ignoring the browsed `version` query param so it matches JSF / Edit Terms. (#1024)
 
 ### Removed
 
