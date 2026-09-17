@@ -46,9 +46,12 @@ describe('DatasetProvider', () => {
 
   it('gets the draft dataset by persistentId when no version param is provided', () => {
     const draftDataset: Dataset = DatasetMother.createDraft()
-    datasetRepository.getByPersistentId = cy
+    const getByPersistentIdStub = cy
       .stub()
-      .resolves(Cypress.Promise.resolve(draftDataset).delay(1000)) as unknown as typeof datasetRepository.getByPersistentId
+      .resolves(
+        Cypress.Promise.resolve(draftDataset).delay(1000)
+      ) as unknown as typeof datasetRepository.getByPersistentId
+    datasetRepository.getByPersistentId = getByPersistentIdStub
 
     cy.mount(
       <LoadingProvider>
