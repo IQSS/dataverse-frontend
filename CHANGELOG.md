@@ -20,6 +20,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Changed
 
+- Add multilingual support for the banner message.
 - File pages now include a "Cite Data File" dropdown for downloading file citations in EndNote XML, RIS, and BibTeX formats.
 - Hide "Export Metadata" on dataset and file pages that are not for the latest published dataset version.
 - Show "Export Metadata" on dataset and file pages for draft version.
@@ -28,9 +29,12 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Fixed
 
 - Display facet name alongside facet value in selected filter chips above search results (#894)
+- Show accurate, user-specific API token status messages on the Account page (#943)
+- Publish Dataset modal custom messages now render configured HTML links and line breaks.
 - Edit Dataset Terms: navigate to the draft version of the dataset after saving changes to the terms, instead of the latest published version.
 - After saving on either Edit Template tab (Metadata or Terms), the user is redirected to the templates listing with a success toast instead of staying on the edit page.
 - Edit Template breadcrumb on the Terms page no longer renders the dataset's "Terms and Guestbook" label (templates have no guestbook).
+- Edit Metadata always loads the latest dataset version (draft if present, otherwise latest published), ignoring the browsed `version` query param so it matches JSF / Edit Terms. (#1024)
 
 ### Removed
 
@@ -84,6 +88,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Dataset versions: (1) file changes should be `Access: Restricted` instead of `isResticted: true/false`; (2) logic of View Detail button. (#879)
 - File versions: (1) logic of linking to a file version; (2)If file not included, show text information "File not included in this version.". (#879)
 - Dataset page publish flow now avoids rendering duplicate tab sets by making tabs skeleton and tabs content mutually exclusive.
+- Fixed custom terms navigation url while publishing a datsaet.
 
 ### Removed
 
