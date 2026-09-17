@@ -80,7 +80,9 @@ export const UploadedFilesList = ({
   }
 
   const form = useForm<FilesListFormData>({ mode: 'onChange' })
-  const { formState: { isValid } } = form
+  const {
+    formState: { isValid }
+  } = form
 
   const { fields: uploadedFilesFieldsFormArray, remove: removeFormField } = useFieldArray({
     control: form.control,
