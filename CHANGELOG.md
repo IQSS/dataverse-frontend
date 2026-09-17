@@ -17,6 +17,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
   - a checkbox for including guestbooks from parent collections
 - Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Dataset Page: added a sidebar to show dataset reviews
+- Dataset Page: "Styled Citation" now supports selecting any CSL citation style and renders the citation formatted in that style, using citeproc-js in the browser.
+- Dataset Page: added a copy icon in front of "Cite Dataset" to support a quick copy of citation in default style.
 
 ### Changed
 

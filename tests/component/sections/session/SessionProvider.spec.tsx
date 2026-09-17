@@ -74,7 +74,7 @@ describe('SessionProvider', () => {
                     <div>Sign up</div>
                   </>
                 }
-              />{' '}
+              />
             </Route>
           </Routes>
         </WithRepositories>
