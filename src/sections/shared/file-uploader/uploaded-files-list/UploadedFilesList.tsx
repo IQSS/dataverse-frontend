@@ -80,6 +80,7 @@ export const UploadedFilesList = ({
   }
 
   const form = useForm<FilesListFormData>({ mode: 'onChange' })
+  const { formState: { isValid } } = form
 
   const { fields: uploadedFilesFieldsFormArray, remove: removeFormField } = useFieldArray({
     control: form.control,
@@ -221,7 +222,7 @@ export const UploadedFilesList = ({
                         variant="secondary">
                         {t('cancel')}
                       </Button>
-                      <Button type="submit" disabled={isSaving || anyFileUploading}>
+                      <Button type="submit" disabled={isSaving || anyFileUploading || !isValid}>
                         <Stack direction="horizontal" gap={1}>
                           {t('saveChanges')}
                           {isSaving && <Spinner variant="light" animation="border" size="sm" />}
