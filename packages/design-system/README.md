@@ -56,6 +56,12 @@ function App() {
 export default App
 ```
 
+The Dataverse Design System's default stylesheet does not include Bootstrap's global Reboot or typography rules, so that importing components does not restyle the surrounding document. Applications that do want these page-level baselines can choose to import them at their application entry point:
+
+```jsx
+import '@iqss/dataverse-design-system/bootstrap-global.css'
+```
+
 For detailed usage instructions and available customization options, refer to the [Storybook](https://646fbe232a8d3b501a1943f3-mdvdyoulio.chromatic.com) provided with the package.
 
 [//]: # 'COMMING SOON'

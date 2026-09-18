@@ -1,0 +1,7 @@
+// Optional global Bootstrap baseline for applications that want Dataverse's
+// page-level normalization and typography. This is intentionally excluded from
+// the component stylesheet so embedding the design system does not restyle the
+// consumer's document.
+@import 'bootstrap-configuration';
+@import 'bootstrap/scss/reboot';
+@import 'bootstrap/scss/type';
