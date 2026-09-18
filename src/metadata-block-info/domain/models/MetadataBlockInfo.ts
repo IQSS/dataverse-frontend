@@ -1,3 +1,5 @@
+import type { TFunction } from 'i18next'
+
 import { DatasetMetadataFieldValue } from '../../../dataset/domain/models/Dataset'
 
 export interface MetadataBlockInfo {
@@ -91,3 +93,21 @@ export type MetadataFieldInfo = Pick<
 
 export const METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER = '#VALUE'
 export const METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER = '#NAME'
+
+export const PUBLICATION_RELATION_TYPE_FIELD_NAME = 'publicationRelationType'
+export const PUBLICATION_RELATION_TYPE_VALUES = [
+  'IsCitedBy',
+  'Cites',
+  'IsSupplementTo',
+  'IsSupplementedBy',
+  'IsReferencedBy',
+  'References'
+] as const
+
+export function getPublicationRelationLabel(value: string, t: TFunction): string {
+  if (!PUBLICATION_RELATION_TYPE_VALUES.some((relationType) => relationType === value)) {
+    return value
+  }
+
+  return t(`publicationRelationTypes.${value}`)
+}
