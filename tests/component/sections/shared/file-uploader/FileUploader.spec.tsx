@@ -1096,22 +1096,16 @@ describe('FileUploader', () => {
       )
       cy.findByText('users1.json').should('exist')
 
-      // Wait for upload to complete and form to populate
       cy.wait(3_000)
 
-      // Save button should initially be enabled
       cy.findByText('Save Changes').closest('button').should('not.be.disabled')
 
-      // Enter invalid characters in the File Path input
-      cy.get('input#files\\.0\\.fileDir').clear().type('invalid@path#dir)
+      cy.get('input#files\\.0\\.fileDir').clear().type('invalid@path#dir')
 
-      // Save button should now be disabled
       cy.findByText('Save Changes').closest('button').should('be.disabled')
 
-      // Clear the invalid characters
       cy.get('input#files\\.0\\.fileDir').clear().type('valid-path/folder')
 
-      // Save button should become enabled again
       cy.findByText('Save Changes').closest('button').should('not.be.disabled')
     })
   })
