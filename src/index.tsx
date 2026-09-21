@@ -5,6 +5,7 @@ import { initAppConfig, requireAppConfig } from './config'
 import { ConfigError } from './ConfigError'
 import { ApiConfig } from '@iqss/dataverse-client-javascript'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
+import 'leaflet/dist/leaflet.css'
 
 const AppEntrypoint = lazy(() => import('./index.app'))
 
