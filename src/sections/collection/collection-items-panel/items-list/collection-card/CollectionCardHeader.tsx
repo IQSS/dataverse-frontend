@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link45deg } from 'react-bootstrap-icons'
 import { Badge, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
 import { Route } from '@/sections/Route.enum'
