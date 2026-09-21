@@ -32,6 +32,20 @@
   "subtext": "This file is part of \"{{datasetTitle}}\".",
   "datasetCitationTitle": "Dataset Citation",
   "fileCitationTitle": "File Citation",
+  "metrics": {
+    "title": "File Metrics",
+    "tip": {
+      "default": "Metrics for this individual file."
+    },
+    "downloads": {
+      "count": {
+        "default_zero": "{{formattedCount}} Downloads",
+        "default_one": "{{formattedCount}} Download",
+        "default_other": "{{formattedCount}} Downloads"
+      },
+      "defaultTip": "Total downloads for this file."
+    }
+  },
   "fileAccess": {
     "title": "File Access",
     "restricted": {

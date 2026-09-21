@@ -10,12 +10,15 @@ import { DataverseInfoMockRepository } from '@/stories/shared-mock-repositories/
 import { ContactMockRepository } from '@/stories/shared-mock-repositories/contact/ContactMockRepository'
 import { DatasetVersionMother } from '@tests/component/dataset/domain/models/DatasetMother'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { FileMetadataMother } from '@tests/component/files/domain/models/FileMetadataMother'
 
 const fileRepository: FileRepository = {} as FileRepository
 
 describe('File', () => {
-  it('renders the File page title and details', () => {
-    const testFile = FileMother.createRealistic()
+  it('renders the File page title, details and metrics', () => {
+    const testFile = FileMother.createRealistic({
+      metadata: FileMetadataMother.createDefault({ downloadCount: 8 })
+    })
     fileRepository.getById = cy.stub().resolves(testFile)
 
     cy.customMount(
@@ -48,6 +51,8 @@ describe('File', () => {
     cy.findByRole('tab', { name: 'Versions' }).should('exist')
     cy.findByRole('button', { name: 'File Metadata' }).should('exist')
     cy.findByRole('group', { name: 'File Action Buttons' }).should('exist')
+    cy.findByText('File Metrics').should('exist')
+    cy.findByTestId('file-download-count').should('contain.text', '8 Downloads')
   })
 
   it('renders skeleton while loading', () => {
