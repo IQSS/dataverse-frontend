@@ -11,6 +11,7 @@ interface CollectionCardHeaderProps {
 }
 
 export function CollectionCardHeader({ collectionPreview }: CollectionCardHeaderProps) {
+  const { t } = useTranslation('collection')
   return (
     <header className={styles['card-header-container']}>
       <Stack direction="horizontal" gap={2} className="flex-wrap">
@@ -27,7 +28,7 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
         </span>
 
         <Stack direction="horizontal" gap={1} className="flex-wrap">
-          {!collectionPreview.isReleased && <Badge variant="warning">Unpublished</Badge>}
+          {!collectionPreview.isReleased && <Badge variant="warning">{t('unpublished')}</Badge>}
 
           {collectionPreview.userRoles && (
             <Stack direction="horizontal" gap={1} className="flex-wrap">
