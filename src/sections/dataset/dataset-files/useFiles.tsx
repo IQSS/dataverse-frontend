@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { FilePreview } from '../../../files/domain/models/FilePreview'
 import { getFilesByDatasetPersistentId } from '../../../files/domain/useCases/getFilesByDatasetPersistentId'
@@ -22,73 +22,73 @@ export function useFiles(
   const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>()
   const [filesTotalDownloadSize, setFilesTotalDownloadSize] = useState<number>(0)
 
-  const getFilesCountInfo = () => {
+  const getFilesCountInfo = useCallback(() => {
     return getFilesCountInfoByDatasetPersistentId(
       filesRepository,
       datasetPersistentId,
       datasetVersion.number,
       criteria
     )
-      .then((filesCountInfo: FilesCountInfo) => {
-        setFilesCountInfo(filesCountInfo)
-        if (filesCountInfo.total !== paginationInfo.totalItems) {
-          onPaginationInfoChange(paginationInfo.withTotal(filesCountInfo.total))
+      .then((countInfo: FilesCountInfo) => {
+        setFilesCountInfo(countInfo)
+        if (countInfo.total !== paginationInfo.totalItems) {
+          onPaginationInfoChange(paginationInfo.withTotal(countInfo.total))
         }
-        return filesCountInfo
+        return countInfo
       })
       .catch(() => {
         throw new Error('There was an error getting the files count info')
       })
-  }
+  }, [
+    filesRepository,
+    datasetPersistentId,
+    datasetVersion.number,
+    criteria,
+    paginationInfo,
+    onPaginationInfoChange
+  ])
 
-  const getFiles = (filesCount: FilesCountInfo) => {
-    if (filesCount) {
-      if (filesCount.total === 0) {
-        setIsLoading(false)
-        return
-      }
-      return getFilesByDatasetPersistentId(
-        filesRepository,
-        datasetPersistentId,
-        datasetVersion,
-        paginationInfo.withTotal(filesCount.total),
-        criteria
-      )
-        .then((files: FilePreview[]) => {
-          setFiles(files)
+  const getFiles = useCallback(
+    (countInfo: FilesCountInfo) => {
+      if (countInfo) {
+        if (countInfo.total === 0) {
           setIsLoading(false)
-        })
-        .catch(() => {
-          throw new Error('There was an error getting the files')
-        })
-    }
-  }
+          return
+        }
+        return getFilesByDatasetPersistentId(
+          filesRepository,
+          datasetPersistentId,
+          datasetVersion,
+          paginationInfo.withTotal(countInfo.total),
+          criteria
+        )
+          .then((retrievedFiles: FilePreview[]) => {
+            setFiles(retrievedFiles)
+            setIsLoading(false)
+          })
+          .catch(() => {
+            throw new Error('There was an error getting the files')
+          })
+      }
+    },
+    [filesRepository, datasetPersistentId, datasetVersion, paginationInfo, criteria]
+  )
 
   useEffect(() => {
     setIsLoading(true)
 
     getFilesCountInfo()
-      .then((filesCount) => getFiles(filesCount))
+      .then((countInfo) => getFiles(countInfo))
       .catch(() => {
         console.error('There was an error getting the files')
         setIsLoading(false)
       })
-
-    // TODO: Not a priority as the one for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    filesRepository,
-    datasetPersistentId,
-    datasetVersion,
-    paginationInfo.page,
-    paginationInfo.pageSize,
-    criteria
-  ])
+  }, [getFilesCountInfo, getFiles])
 
   useEffect(() => {
     getFilesTotalDownloadSize(filesRepository, datasetPersistentId, datasetVersion.number, criteria)
-      .then((filesTotalDownloadSize: number) => {
-        setFilesTotalDownloadSize(filesTotalDownloadSize)
+      .then((totalSize: number) => {
+        setFilesTotalDownloadSize(totalSize)
       })
       .catch((error) => {
         console.error('There was an error getting the files total download size', error)
