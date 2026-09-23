@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
 import { renderHook, act } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import {
@@ -12,7 +13,7 @@ import { RowSelection } from '@/sections/dataset/dataset-files/files-table/useFi
 
 describe('useFileSelection', () => {
   const paginationInfo: FilePaginationInfo = new FilePaginationInfo(1, 10, 20)
-  const file1 = FilePreviewMother.createDefault({ id: 1 })
+  const file1: FilePreview = FilePreviewMother.createDefault({ id: 1 })
   const mockRowModel: Record<string, Row<FilePreview>> = {
     '0': { original: file1 } as Row<FilePreview>
   }
@@ -36,7 +37,8 @@ describe('useFileSelection', () => {
       result.current.selectAllFiles()
     })
 
-    expect(setCurrentPageRowSelection).toHaveBeenCalledWith(createRowSelection(10))
+    const expectedRowSelection = createRowSelection(10)
+    expect(setCurrentPageRowSelection).toHaveBeenCalledWith(expectedRowSelection)
     expect(Object.keys(result.current.fileSelection).length).toBe(20)
   })
 
