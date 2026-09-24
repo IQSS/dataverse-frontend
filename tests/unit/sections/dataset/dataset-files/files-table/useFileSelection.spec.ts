@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import { renderHook, act } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import {
   useFileSelection,
-  createRowSelection
-} from '@/sections/dataset/dataset-files/files-table/row-selection/useFileSelection'
-import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
+  RowSelection
+} from '@/sections/dataset/dataset-files/files-table/useFileSelection'
 import { FilePaginationInfo } from '@/files/domain/models/FilePaginationInfo'
-import { Row } from '@tanstack/react-table'
 import { FilePreview } from '@/files/domain/models/FilePreview'
-import { RowSelection } from '@/sections/dataset/dataset-files/files-table/useFilesTable'
+import { FilePreviewMother } from '@tests/component/files/domain/models/FilePreviewMother'
+import { Row } from '@tanstack/react-table'
 
 describe('useFileSelection', () => {
   const paginationInfo: FilePaginationInfo = new FilePaginationInfo(1, 10, 20)
@@ -18,19 +17,27 @@ describe('useFileSelection', () => {
     '0': { original: file1 } as Row<FilePreview>
   }
 
+  const createRowSelection = (count: number): RowSelection => {
+    const selection: RowSelection = {}
+    for (let i = 0; i < count; i++) {
+      selection[i.toString()] = true
+    }
+    return selection
+  }
+
   it('initializes with empty file selection', () => {
-    const setCurrentPageRowSelection = vi.fn<(rowSelection: RowSelection) => void>()
+    const setCurrentPageRowSelection = vi.fn()
     const { result } = renderHook(() =>
-      useFileSelection({}, setCurrentPageRowSelection, paginationInfo)
+      useFileSelection({}, (selection: RowSelection) => setCurrentPageRowSelection(selection), paginationInfo)
     )
 
     expect(result.current.fileSelection).toEqual({})
   })
 
   it('selects all files properly', () => {
-    const setCurrentPageRowSelection = vi.fn<(rowSelection: RowSelection) => void>()
+    const setCurrentPageRowSelection = vi.fn()
     const { result } = renderHook(() =>
-      useFileSelection({}, setCurrentPageRowSelection, paginationInfo)
+      useFileSelection({}, (selection: RowSelection) => setCurrentPageRowSelection(selection), paginationInfo)
     )
 
     act(() => {
@@ -43,9 +50,9 @@ describe('useFileSelection', () => {
   })
 
   it('clears file selection', () => {
-    const setCurrentPageRowSelection = vi.fn<(rowSelection: RowSelection) => void>()
+    const setCurrentPageRowSelection = vi.fn()
     const { result } = renderHook(() =>
-      useFileSelection(mockRowModel, setCurrentPageRowSelection, paginationInfo)
+      useFileSelection(mockRowModel, (selection: RowSelection) => setCurrentPageRowSelection(selection), paginationInfo)
     )
 
     act(() => {
