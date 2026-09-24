@@ -285,6 +285,12 @@ PostgreSQL, Solr and Keycloak with the builtin users SPI), started with its `doc
 The URLs it needs are in `.env.backend-dev`.
 
 ```bash
+# root project directory of this repo
+
+# Build the app into the backend checkout, served at http://localhost:8080/modern
+# (defaults to ../dataverse; pass another path after --)
+$ npm run build:backend-dev -- ../dataverse
+
 # in your IQSS/dataverse checkout
 $ docker compose -f docker-compose-dev.yml -f docker-compose-dev.spa.yml up -d --build
 
@@ -292,11 +298,10 @@ $ docker compose -f docker-compose-dev.yml -f docker-compose-dev.spa.yml up -d -
 
 # Develop with hot reload at http://localhost:5173/modern
 $ npm run start:backend-dev
-
-# Or build the app and serve it from the backend at http://localhost:8080/modern
-# (defaults to ../dataverse; pass another path after --)
-$ npm run build:backend-dev -- ../dataverse
 ```
+
+Run `build:backend-dev` at least once before starting the backend: Payara can't deploy `/modern` from an empty
+directory. Later runs are picked up by the running backend without a restart.
 
 Log in with a Dataverse builtin user, e.g. `dataverseAdmin` / `admin1`. Both environments use the same container names,
 so stop one before starting the other.
