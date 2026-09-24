@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { FilePreview } from '../../../files/domain/models/FilePreview'
 import { getFilesByDatasetPersistentId } from '../../../files/domain/useCases/getFilesByDatasetPersistentId'
@@ -22,7 +22,11 @@ export function useFiles(
   const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>()
   const [filesTotalDownloadSize, setFilesTotalDownloadSize] = useState<number>(0)
 
-  const { page, pageSize, totalItems } = paginationInfo
+  const paginationInfoRef = useRef(paginationInfo)
+  paginationInfoRef.current = paginationInfo
+
+  const onPaginationInfoChangeRef = useRef(onPaginationInfoChange)
+  onPaginationInfoChangeRef.current = onPaginationInfoChange
 
   const getFilesCountInfo = useCallback(() => {
     return getFilesCountInfoByDatasetPersistentId(
@@ -33,8 +37,9 @@ export function useFiles(
     )
       .then((countInfo: FilesCountInfo) => {
         setFilesCountInfo(countInfo)
-        if (countInfo.total !== totalItems) {
-          onPaginationInfoChange(paginationInfo.withTotal(countInfo.total))
+        const currentPagination = paginationInfoRef.current
+        if (countInfo.total !== currentPagination.totalItems) {
+          onPaginationInfoChangeRef.current(currentPagination.withTotal(countInfo.total))
         }
         return countInfo
       })
@@ -45,10 +50,7 @@ export function useFiles(
     filesRepository,
     datasetPersistentId,
     datasetVersion.number,
-    criteria,
-    totalItems,
-    onPaginationInfoChange,
-    paginationInfo
+    criteria
   ])
 
   const getFiles = useCallback(
@@ -62,7 +64,7 @@ export function useFiles(
           filesRepository,
           datasetPersistentId,
           datasetVersion,
-          paginationInfo.withTotal(countInfo.total),
+          paginationInfoRef.current.withTotal(countInfo.total),
           criteria
         )
           .then((retrievedFiles: FilePreview[]) => {
@@ -74,8 +76,10 @@ export function useFiles(
           })
       }
     },
-    [filesRepository, datasetPersistentId, datasetVersion, page, pageSize, criteria, paginationInfo]
+    [filesRepository, datasetPersistentId, datasetVersion, criteria]
   )
+
+  const { page, pageSize } = paginationInfo
 
   useEffect(() => {
     setIsLoading(true)
@@ -87,12 +91,8 @@ export function useFiles(
         setIsLoading(false)
       })
   }, [
-    filesRepository,
-    datasetPersistentId,
-    datasetVersion,
     page,
     pageSize,
-    criteria,
     getFilesCountInfo,
     getFiles
   ])
@@ -105,7 +105,7 @@ export function useFiles(
       .catch((error) => {
         console.error('There was an error getting the files total download size', error)
       })
-  }, [filesRepository, datasetPersistentId, datasetVersion, criteria])
+  }, [filesRepository, datasetPersistentId, datasetVersion.number, criteria])
 
   return {
     files,
