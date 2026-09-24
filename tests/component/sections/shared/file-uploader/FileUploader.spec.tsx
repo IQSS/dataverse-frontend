@@ -1077,5 +1077,36 @@ describe('FileUploader', () => {
       cy.findByText(/Maximum of \d+ files available to upload./i).should('not.exist')
       cy.findByText(/Storage quota:/i).should('not.exist')
     })
+    it('disables Save button while the file path contains invalid characters', () => {
+      cy.customMount(
+        <TestFileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.ADD_FILES_TO_DATASET}
+        />
+      )
+
+      cy.findByTestId('file-uploader-drop-zone').as('dnd')
+      cy.get('@dnd').should('exist')
+
+      cy.get('@dnd').selectFile(
+        { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+        { action: 'drag-drop' }
+      )
+      cy.findByText('users1.json').should('exist')
+
+      cy.wait(3_000)
+
+      cy.findByText('Save Changes').closest('button').should('not.be.disabled')
+
+      cy.get('input#files\\.0\\.fileDir').clear().type('invalid@path#dir')
+
+      cy.findByText('Save Changes').closest('button').should('be.disabled')
+
+      cy.get('input#files\\.0\\.fileDir').clear().type('valid-path/folder')
+
+      cy.findByText('Save Changes').closest('button').should('not.be.disabled')
+    })
   })
 })
