@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 import { renderHook, act } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import {
@@ -28,7 +28,13 @@ describe('useFileSelection', () => {
   it('initializes with empty file selection', () => {
     const setCurrentPageRowSelection = vi.fn()
     const { result } = renderHook(() =>
-      useFileSelection({}, (selection: RowSelection) => setCurrentPageRowSelection(selection), paginationInfo)
+      useFileSelection(
+        {},
+        (selection: RowSelection) => {
+          setCurrentPageRowSelection(selection)
+        },
+        paginationInfo
+      )
     )
 
     expect(result.current.fileSelection).toEqual({})
@@ -37,7 +43,13 @@ describe('useFileSelection', () => {
   it('selects all files properly', () => {
     const setCurrentPageRowSelection = vi.fn()
     const { result } = renderHook(() =>
-      useFileSelection({}, (selection: RowSelection) => setCurrentPageRowSelection(selection), paginationInfo)
+      useFileSelection(
+        {},
+        (selection: RowSelection) => {
+          setCurrentPageRowSelection(selection)
+        },
+        paginationInfo
+      )
     )
 
     act(() => {
@@ -52,7 +64,13 @@ describe('useFileSelection', () => {
   it('clears file selection', () => {
     const setCurrentPageRowSelection = vi.fn()
     const { result } = renderHook(() =>
-      useFileSelection(mockRowModel, (selection: RowSelection) => setCurrentPageRowSelection(selection), paginationInfo)
+      useFileSelection(
+        mockRowModel,
+        (selection: RowSelection) => {
+          setCurrentPageRowSelection(selection)
+        },
+        paginationInfo
+      )
     )
 
     act(() => {
