@@ -19,6 +19,7 @@
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation-setup">Installation & Setup</a></li>
         <li><a href="#running-the-project-locally">Running the Project Locally</a></li>
+        <li><a href="#running-against-the-backend-dev-environment">Running Against the Backend Dev Environment</a></li>
       </ul>
     </li>
     <li><a href="#breakdown-of-architecture-design-methodology">Breakdown of Architecture Design Methodology</a>
@@ -276,6 +277,29 @@ $ ./add-env-data.sh
 
 > Note: The above command uses the [dataverse-sample-data][dv_repo_dvsampledata_url] repository whose scripts occasionally
 > fail, so some test data may not be added.
+
+### Running Against the Backend Dev Environment
+
+Instead of `/dev-env/`, you can use the backend's own dev environment from [IQSS/dataverse][dv_repo_url] (Dataverse,
+PostgreSQL, Solr and Keycloak with the builtin users SPI), started with its `docker-compose-dev.spa.yml` override.
+The URLs it needs are in `.env.backend-dev`.
+
+```bash
+# in your IQSS/dataverse checkout
+$ docker compose -f docker-compose-dev.yml -f docker-compose-dev.spa.yml up -d --build
+
+# root project directory of this repo
+
+# Develop with hot reload at http://localhost:5173/modern
+$ npm run start:backend-dev
+
+# Or build the app and serve it from the backend at http://localhost:8080/modern
+# (defaults to ../dataverse; pass another path after --)
+$ npm run build:backend-dev -- ../dataverse
+```
+
+Log in with a Dataverse builtin user, e.g. `dataverseAdmin` / `admin1`. Both environments use the same container names,
+so stop one before starting the other.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>

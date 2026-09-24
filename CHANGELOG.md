@@ -17,6 +17,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
   - a checkbox for including guestbooks from parent collections
 - Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Dataset Page: added a sidebar to show dataset reviews
+- Development: `npm run start:backend-dev` and `npm run build:backend-dev` to run the SPA against the backend dev environment (IQSS/dataverse `docker-compose-dev.spa.yml`), configured by `.env.backend-dev`.
 
 ### Changed
 

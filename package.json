@@ -64,6 +64,8 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
+    "start:backend-dev": "vite --mode backend-dev",
+    "build:backend-dev": "npm run build && node scripts/deploy-backend-dev.mjs",
     "build-keycloak-theme": "npm run build && keycloakify build",
     "preview": "vite preview",
     "lint": "npm run typecheck && npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",
