@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { FilePreview } from '../../../../../files/domain/models/FilePreview'
 import { Row } from '@tanstack/react-table'
 import { RowSelection } from '../useFilesTable'
@@ -14,40 +14,57 @@ export function useFileSelection(
   paginationInfo: FilePaginationInfo
 ) {
   const [fileSelection, setFileSelection] = useState<FileSelection>({})
-  const updateFileSelection = () => {
-    const currentPageFileSelection = getCurrentPageFileSelection()
-    const currentPageIndexes = getCurrentPageIndexes()
 
-    Object.keys(fileSelection).forEach((key) => {
-      const rowIndex = parseInt(key)
-      if (currentPageIndexes.includes(rowIndex)) {
-        if (!currentPageFileSelection[key]) {
-          delete fileSelection[key]
-        }
-      }
-    })
-
-    return { ...fileSelection, ...currentPageFileSelection }
-  }
-  const getCurrentPageIndexes = () => {
+  const currentPageIndexes = useMemo(() => {
     return Array.from(
       { length: paginationInfo.pageSize },
       (_, i) => i + (paginationInfo.page - 1) * paginationInfo.pageSize
     )
-  }
-  const getCurrentPageFileSelection = () => {
-    const rowSelectionFixed: FileSelection = {}
-    const currentPageIndexes = getCurrentPageIndexes()
+  }, [paginationInfo.page, paginationInfo.pageSize])
 
-    Object.entries(currentPageSelectedRowModel).forEach(([string, Row]) => {
+  const getCurrentPageFileSelection = useCallback(() => {
+    const rowSelectionFixed: FileSelection = {}
+
+    Object.entries(currentPageSelectedRowModel).forEach(([string, row]) => {
       const rowIndex = parseInt(string)
-      rowSelectionFixed[currentPageIndexes[rowIndex]] = Row.original
+      rowSelectionFixed[currentPageIndexes[rowIndex]] = row.original
     })
     return rowSelectionFixed
+  }, [currentPageSelectedRowModel, currentPageIndexes])
+
+  const selectAllFiles = () => {
+    setCurrentPageRowSelection(createRowSelection(paginationInfo.pageSize))
+
+    const totalFilesFileSelection = createFileSelection(paginationInfo.totalItems)
+    setFileSelection((prevSelection) => ({ ...totalFilesFileSelection, ...prevSelection }))
   }
-  const computeCurrentPageRowSelection = () => {
+
+  const clearFileSelection = () => {
+    setCurrentPageRowSelection({})
+    setFileSelection({})
+  }
+
+  useEffect(() => {
+    const currentPageFileSelection = getCurrentPageFileSelection()
+
+    setFileSelection((prevFileSelection) => {
+      const nextSelection = { ...prevFileSelection }
+
+      Object.keys(nextSelection).forEach((key) => {
+        const rowIndex = parseInt(key)
+        if (currentPageIndexes.includes(rowIndex)) {
+          if (!currentPageFileSelection[key]) {
+            delete nextSelection[key]
+          }
+        }
+      })
+
+      return { ...nextSelection, ...currentPageFileSelection }
+    })
+  }, [getCurrentPageFileSelection, currentPageIndexes])
+
+  useEffect(() => {
     const rowSelectionOfCurrentPage: RowSelection = {}
-    const currentPageIndexes = getCurrentPageIndexes()
 
     Object.keys(fileSelection).forEach((key) => {
       const rowIndex = parseInt(key)
@@ -56,31 +73,8 @@ export function useFileSelection(
       }
     })
 
-    return rowSelectionOfCurrentPage
-  }
-  const selectAllFiles = () => {
-    setCurrentPageRowSelection(createRowSelection(paginationInfo.pageSize))
-
-    const totalFilesFileSelection = createFileSelection(paginationInfo.totalItems)
-    const newFileSelection = { ...totalFilesFileSelection, ...fileSelection }
-    setFileSelection(newFileSelection)
-  }
-  const clearFileSelection = () => {
-    setCurrentPageRowSelection({})
-    setFileSelection({})
-  }
-
-  useEffect(() => {
-    setFileSelection(updateFileSelection())
-    // TODO: Not a priority as the one for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPageSelectedRowModel])
-
-  useEffect(() => {
-    setCurrentPageRowSelection(computeCurrentPageRowSelection())
-    // TODO: Not a priority as the one for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paginationInfo])
+    setCurrentPageRowSelection(rowSelectionOfCurrentPage)
+  }, [fileSelection, currentPageIndexes, setCurrentPageRowSelection])
 
   return {
     fileSelection,
