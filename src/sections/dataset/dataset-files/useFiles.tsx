@@ -46,12 +46,7 @@ export function useFiles(
       .catch(() => {
         throw new Error('There was an error getting the files count info')
       })
-  }, [
-    filesRepository,
-    datasetPersistentId,
-    datasetVersion.number,
-    criteria
-  ])
+  }, [filesRepository, datasetPersistentId, datasetVersion.number, criteria])
 
   const getFiles = useCallback(
     (countInfo: FilesCountInfo) => {
@@ -90,12 +85,7 @@ export function useFiles(
         console.error('There was an error getting the files')
         setIsLoading(false)
       })
-  }, [
-    page,
-    pageSize,
-    getFilesCountInfo,
-    getFiles
-  ])
+  }, [page, pageSize, getFilesCountInfo, getFiles])
 
   useEffect(() => {
     getFilesTotalDownloadSize(filesRepository, datasetPersistentId, datasetVersion.number, criteria)
