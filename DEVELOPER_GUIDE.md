@@ -191,6 +191,33 @@ Note that both Storybook instances are also published to Chromatic as part of th
 
 ### Running the Project Locally
 
+You have the choice of two backend environments.
+
+#### dataverse repo (backend repo)
+
+Follow the [quickstart](https://guides.dataverse.org/en/latest/developers/dev-environment.html#quickstart) for the main, backend [dataverse](https://github.com/IQSS/dataverse) repo to run all the services the app depends on.
+
+Then start the app like this:
+
+```bash
+# root project directory
+npm start -- --host
+```
+
+We use `--host` to listen on all interfaces to work with the backend services.
+
+You can then try logging in:
+
+- url: http://localhost:8000/modern
+- username: dataverseAdmin
+- password: admin1
+
+Note that because the app only works with S3 and because the default file store for the backend services is the file system, you much change the file storage to S3 for a collection or dataset to upload files.
+
+The "dataverse repo" option is especially good if you want to work on code in both repos at once.
+
+#### dataverse-frontend repo (this repo)
+
 A containerized environment, oriented to local development, is available to be run from the repository.
 
 This environment contains a dockerized instance of the Dataverse backend with its dependent services (database,
