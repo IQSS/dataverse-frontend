@@ -7,8 +7,9 @@
     "apiToken": "API Token"
   },
   "apiToken": {
-    "helperText": "Your API Token is valid for a year. Check out our <anchor>API Guide</anchor> for more information on using your API Token with the Dataverse APIs.",
-    "notCreatedApiToken": "API Token for Dataverse Admin has not been created.",
+    "helperText": "Your token is valid until the expiration date. Check out our <anchor>API Guide</anchor> for more information on using your API Token with the Dataverse APIs.",
+    "notCreatedApiToken": "API Token for {{userName}} has not been created.",
+    "expiredToken": "This token is expired, please generate a new one.",
     "expirationDate": "Expiration date",
     "copyToClipboard": "Copy to Clipboard",
     "recreateToken": "Recreate Token",
