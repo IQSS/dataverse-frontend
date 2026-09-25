@@ -2,6 +2,7 @@ import React from 'react'
 import App from './App'
 import './i18n'
 import { LoadingProvider } from './shared/contexts/loading/LoadingProvider'
+import '@iqss/dataverse-design-system/bootstrap-global.css'
 import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { AppLoader } from './sections/shared/layout/app-loader/AppLoader'
 
