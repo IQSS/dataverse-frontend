@@ -18,6 +18,7 @@ import './processShim'
 import './bootstrapAppConfig' // Initialize test runtime config before any commands/modules
 import './commands'
 import '@cypress/code-coverage/support'
+import '@iqss/dataverse-design-system/bootstrap-global.css'
 import '../../src/assets/global.scss'
 import '../../src/assets/swal-custom.scss'
 import '../../src/assets/react-toastify-custom.scss'
