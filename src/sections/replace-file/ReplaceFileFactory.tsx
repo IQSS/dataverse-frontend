@@ -1,3 +1,4 @@
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FileJSDataverseRepository } from '@/files/infrastructure/FileJSDataverseRepository'
@@ -21,8 +22,7 @@ function ReplaceFileWithParams() {
     searchParams.get(QueryParamKey.PERSISTENT_ID) === null ||
     searchParams.get(QueryParamKey.DATASET_VERSION) === null
   ) {
-    // TODO - show new Not Found Page here after is done.
-    throw new Error('Missing required query parameters')
+    return <NotFoundPage dvObjectNotFoundType="file" />
   }
 
   const fileId = Number(searchParams.get(QueryParamKey.FILE_ID) as string)
