@@ -6,6 +6,10 @@ import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { type CommonFieldProps } from '..'
 import { CustomInstructionsEditor } from '../CustomInstructionsEditor'
+import {
+  getPublicationRelationLabel,
+  PUBLICATION_RELATION_TYPE_FIELD_NAME
+} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import styles from '../index.module.scss'
 
 interface VocabularyProps extends CommonFieldProps {
@@ -35,7 +39,7 @@ export const Vocabulary = ({
   requiredIndicator,
   disableRequiredValidation
 }: VocabularyProps) => {
-  const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
+  const { t } = useTranslation('shared')
 
   const { control } = useFormContext()
 
@@ -71,7 +75,10 @@ export const Vocabulary = ({
       }
       return {
         ...rulesToApply,
-        required: t('field.required', { displayName, interpolation: { escapeValue: false } })
+        required: t('datasetMetadataForm.field.required', {
+          displayName,
+          interpolation: { escapeValue: false }
+        })
       }
     }
     return rulesToApply
@@ -89,6 +96,17 @@ export const Vocabulary = ({
     ? requiredIndicator
     : Boolean(rulesToApply?.required) || requiredIndicator || dynamicRequired
   const showSelectWithSearch = options.length > 10
+  const optionsWithLabels = useMemo(
+    () =>
+      options.map((option) => ({
+        value: option,
+        label:
+          name === PUBLICATION_RELATION_TYPE_FIELD_NAME
+            ? getPublicationRelationLabel(option, t)
+            : option
+      })),
+    [name, options, t]
+  )
 
   return (
     <Controller
@@ -123,7 +141,7 @@ export const Vocabulary = ({
                 {showSelectWithSearch ? (
                   <Form.Group.SelectAdvanced
                     defaultValue={value as string}
-                    options={options}
+                    options={optionsWithLabels}
                     onChange={onChange}
                     isInvalid={invalid}
                     ref={ref}
@@ -137,9 +155,9 @@ export const Vocabulary = ({
                     aria-required={labelRequired ? 'true' : 'false'}
                     ref={ref}>
                     <option value="">Select</option>
-                    {options.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
+                    {optionsWithLabels.map(({ value: optionValue, label }) => (
+                      <option key={optionValue} value={optionValue}>
+                        {label}
                       </option>
                     ))}
                   </Form.Group.Select>
