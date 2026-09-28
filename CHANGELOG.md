@@ -16,7 +16,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
   - the Create Guestbook page
   - a checkbox for including guestbooks from parent collections
 - Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
-- Dataset Page: added a sidebar to show dataset reviews
+- Dataset Page: added a sidebar to show dataset reviews.
+- File Page: added a File Metrics: File Download Count.
 
 ### Changed
 
