@@ -96,7 +96,8 @@ export class TestsUtils {
 
         cy.findByTestId('sign-up-page').should('be.visible')
         cy.findByTestId('valid-token-not-linked-account-form').should('exist')
-        cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
+        cy.findByTestId('termsAcceptedCheckbox').should('be.visible').and('be.enabled').check()
+        cy.findByTestId('termsAcceptedCheckbox').should('be.checked')
         cy.findByRole('button', { name: 'Create Account' }).should('be.enabled').click()
       })
   }
