@@ -275,7 +275,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
       .catch((error: ReadError) => {
         console.error(error)
-        if (version === DatasetNonNumericVersion.LATEST_PUBLISHED) {
+        if (!requestedVersion && version === DatasetNonNumericVersion.LATEST_PUBLISHED) {
+          return this.getByPersistentId(
+            persistentId,
+            DatasetNonNumericVersion.DRAFT,
+            requestedVersion,
+            keepRawFields
+          )
+        }
+        if (
+          version === DatasetNonNumericVersion.LATEST_PUBLISHED ||
+          version === DatasetNonNumericVersion.DRAFT
+        ) {
           throw new Error(`Failed to get dataset by persistent ID: ${error.message}`)
         }
         return this.getByPersistentId(

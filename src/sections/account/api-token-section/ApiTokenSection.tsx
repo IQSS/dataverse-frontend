@@ -9,12 +9,15 @@ import { TokenInfo } from '@/users/domain/models/TokenInfo'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import { Button } from '@iqss/dataverse-design-system'
 import { Alert } from '@iqss/dataverse-design-system'
+import { ExclamationTriangle } from 'react-bootstrap-icons'
 import { useUserRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { useSession } from '@/sections/session/SessionContext'
 import accountStyles from '../Account.module.scss'
 import styles from './ApiTokenSection.module.scss'
 
 export const ApiTokenSection = () => {
   const { userRepository } = useUserRepositories()
+  const { user } = useSession()
   const { t } = useTranslation('account', { keyPrefix: 'apiToken' })
   const [currentApiTokenInfo, setCurrentApiTokenInfo] = useState<TokenInfo>()
 
@@ -74,6 +77,10 @@ export const ApiTokenSection = () => {
     )
   }
 
+  const isTokenExpired = Boolean(
+    currentApiTokenInfo?.apiToken && currentApiTokenInfo.expirationDate.getTime() < Date.now()
+  )
+
   return (
     <>
       <p className={accountStyles['helper-text']}>
@@ -93,14 +100,22 @@ export const ApiTokenSection = () => {
       </p>
       {currentApiTokenInfo?.apiToken ? (
         <>
-          <p className={styles['exp-date']}>
-            {t('expirationDate')}{' '}
-            <time
-              data-testid="expiration-date"
-              dateTime={DateHelper.toISO8601Format(currentApiTokenInfo.expirationDate)}>
-              {DateHelper.toISO8601Format(currentApiTokenInfo.expirationDate)}
-            </time>
-          </p>
+          <div className={styles['expiration-row']}>
+            <p className={styles['exp-date']}>
+              {t('expirationDate')}{' '}
+              <time
+                data-testid="expiration-date"
+                dateTime={DateHelper.toISO8601Format(currentApiTokenInfo.expirationDate)}>
+                {DateHelper.toISO8601Format(currentApiTokenInfo.expirationDate)}
+              </time>
+            </p>
+            {isTokenExpired && (
+              <div className={styles['expired-warning']} role="alert">
+                <ExclamationTriangle aria-hidden="true" />
+                <span>{t('expiredToken')}</span>
+              </div>
+            )}
+          </div>
           <div className={styles['api-token']}>
             <code data-testid="api-token">{currentApiTokenInfo.apiToken}</code>
           </div>
@@ -121,7 +136,9 @@ export const ApiTokenSection = () => {
       ) : (
         <>
           <div className={styles['api-token']}>
-            <code data-testid="api-token">{t('notCreatedApiToken')}</code>
+            <code data-testid="api-token">
+              {t('notCreatedApiToken', { userName: user?.displayName })}
+            </code>
           </div>
           <div className={styles['btns-wrapper']} data-testid="noApiToken" role="group">
             <Button data-testid="createApi" variant="secondary" onClick={handleCreateToken}>
