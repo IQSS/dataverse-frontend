@@ -57,15 +57,17 @@ export const ViewStyledCitationModal = ({
         )}
         <Form>
           <Form.Group.Label htmlFor="cslStyle">{t('selectCSLStyle')}</Form.Group.Label>
-          <Form.Group.SelectAdvanced
-            inputButtonId="cslStyle"
-            options={cslStyleOptions}
-            isSearchable
-            hidePlaceholderOption
-            isDisabled={isLoading}
-            defaultValue={selectedStyleSlug}
-            onChange={setSelectedStyleSlug}
-          />
+          <div className={styles.citationStyleSelect}>
+            <Form.Group.SelectAdvanced
+              inputButtonId="cslStyle"
+              options={cslStyleOptions}
+              isSearchable
+              hidePlaceholderOption
+              isDisabled={isLoading}
+              defaultValue={selectedStyleSlug}
+              onChange={setSelectedStyleSlug}
+            />
+          </div>
           {!error && (
             <>
               <Form.Group.Label htmlFor="citationContent" className={styles['citationStyleLabel']}>
