@@ -13,7 +13,7 @@ import { useGetDatasetVersionsSummaries } from './useGetDatasetVersionsSummaries
 import { DatasetVersionViewDifferenceButton } from './view-difference/DatasetVersionViewDifferenceButton'
 import { useDatasetVersionSummaryDescription } from './useDatasetVersionSummaryDescription'
 import { DatasetViewDetailButton } from './DatasetViewDetailButton'
-import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
+import { DatasetVersionState, DatasetNonNumericVersion, DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './DatasetVersions.module.scss'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
@@ -149,7 +149,11 @@ export function DatasetVersions({
               }
 
               const previousVersion = findLastNonDeaccessionedPreviousVersion()
-              const isCurrentVersion = dataset.versionNumber === currentVersionNumber
+              const isCurrentVersion =
+                dataset.versionNumber === currentVersionNumber ||
+                (dataset.versionNumber === DatasetVersionState.DRAFT &&
+                  (currentVersionNumber === DatasetNonNumericVersion.DRAFT ||
+                    currentVersionNumber === DatasetNonNumericVersionSearchParam.DRAFT))
               const isCurrentVersionDeaccessioned = isVersionDeaccessioned(dataset)
 
               const isLinkable =
