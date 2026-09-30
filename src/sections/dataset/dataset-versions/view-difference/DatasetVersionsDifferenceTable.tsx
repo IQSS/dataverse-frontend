@@ -10,6 +10,11 @@ const formatTagsAndCategories = (tags?: string[], categories?: string[]): string
   return `[${combined.join(', ')}]`
 }
 
+const formatDiffValue = (val?: string): string => {
+  if (!val) return ''
+  return val.startsWith('[') ? val : `[${val}]`
+}
+
 interface datasetVersionsDifferenceTableProps {
   differences: DatasetVersionDiff
 }
@@ -154,13 +159,10 @@ export const DatasetVersionsDifferenceTable = ({
                                 ? tFile('fileAccess.restricted.name')
                                 : tFile('fileAccess.public.name')
                             }`
-                          : change.fieldName.toLowerCase() === 'tags' || change.fieldName.toLowerCase() === 'categories'
-                          ? `${t('versions.tags')}: ${
-                              change.oldValue && !change.oldValue.startsWith('[')
-                                ? `[${change.oldValue}]`
-                                : change.oldValue || ''
-                            }`
-                          : `${change.fieldName}: ${change.oldValue || ''}`}
+                          : change.fieldName.toLowerCase() === 'tags' ||
+                            change.fieldName.toLowerCase() === 'categories'
+                            ? `${t('versions.tags')}: ${formatDiffValue(change.oldValue)}`
+                            : `${change.fieldName}: ${change.oldValue || ''}`}
                       </div>
                     ))}
                   </td>
@@ -173,13 +175,10 @@ export const DatasetVersionsDifferenceTable = ({
                                 ? tFile('fileAccess.restricted.name')
                                 : tFile('fileAccess.public.name')
                             }`
-                          : change.fieldName.toLowerCase() === 'tags' || change.fieldName.toLowerCase() === 'categories'
-                          ? `${t('versions.tags')}: ${
-                              change.newValue && !change.newValue.startsWith('[')
-                                ? `[${change.newValue}]`
-                                : change.newValue || ''
-                            }`
-                          : `${change.fieldName}: ${change.newValue || ''}`}
+                          : change.fieldName.toLowerCase() === 'tags' ||
+                            change.fieldName.toLowerCase() === 'categories'
+                            ? `${t('versions.tags')}: ${formatDiffValue(change.newValue)}`
+                            : `${change.fieldName}: ${change.newValue || ''}`}
                       </div>
                     ))}
                   </td>
@@ -204,7 +203,8 @@ export const DatasetVersionsDifferenceTable = ({
                   {formatTagsAndCategories(oldFile.tags, oldFile.categories) && (
                     <>
                       <br />
-                      {t('versions.tags')}: {formatTagsAndCategories(oldFile.tags, oldFile.categories)}
+                      {t('versions.tags')}:{' '}
+                      {formatTagsAndCategories(oldFile.tags, oldFile.categories)}
                     </>
                   )}
                 </td>
@@ -217,7 +217,8 @@ export const DatasetVersionsDifferenceTable = ({
                   {formatTagsAndCategories(newFile.tags, newFile.categories) && (
                     <>
                       <br />
-                      {t('versions.tags')}: {formatTagsAndCategories(newFile.tags, newFile.categories)}
+                      {t('versions.tags')}:{' '}
+                      {formatTagsAndCategories(newFile.tags, newFile.categories)}
                     </>
                   )}
                 </td>

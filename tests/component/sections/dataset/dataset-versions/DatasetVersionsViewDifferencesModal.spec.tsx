@@ -432,4 +432,4 @@ describe('DatasetVersions', () => {
 
     cy.findByTestId('file-added-row-99').should('contain.text', 'Tags: [Documentation, Data]')
   })
-});
+})
