@@ -12,7 +12,7 @@ const formatTagsAndCategories = (tags?: string[], categories?: string[]): string
 
 const formatDiffValue = (fieldName: string, val?: string, defaultTagsLabel = ''): string => {
   if (fieldName.toLowerCase() === 'tags' || fieldName.toLowerCase() === 'categories') {
-    const formatted = val && !val.startsWith('[') ? `[${val}]` : (val ?? '')
+    const formatted = val && !val.startsWith('[') ? `[${val}]` : val ?? ''
     return `${defaultTagsLabel}: ${formatted}`
   }
   return `${fieldName}: ${val ?? ''}`
