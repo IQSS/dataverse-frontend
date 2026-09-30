@@ -13,7 +13,11 @@ import { useGetDatasetVersionsSummaries } from './useGetDatasetVersionsSummaries
 import { DatasetVersionViewDifferenceButton } from './view-difference/DatasetVersionViewDifferenceButton'
 import { useDatasetVersionSummaryDescription } from './useDatasetVersionSummaryDescription'
 import { DatasetViewDetailButton } from './DatasetViewDetailButton'
-import { DatasetVersionState, DatasetNonNumericVersion, DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
+import {
+  DatasetVersionState,
+  DatasetNonNumericVersion,
+  DatasetNonNumericVersionSearchParam
+} from '@/dataset/domain/models/Dataset'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './DatasetVersions.module.scss'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
