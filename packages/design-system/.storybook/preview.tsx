@@ -1,5 +1,6 @@
 import React from 'react'
 import type { Preview } from '@storybook/react'
+import '../src/lib/assets/styles/bootstrap-global.scss'
 import { ThemeProvider } from '../src/lib/components/theme/ThemeProvider'
 import DocumentationTemplate from '../src/lib/stories/DocumentationTemplate.mdx'
 
