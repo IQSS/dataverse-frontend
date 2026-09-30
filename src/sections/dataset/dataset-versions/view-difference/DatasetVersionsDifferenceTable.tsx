@@ -10,9 +10,12 @@ const formatTagsAndCategories = (tags?: string[], categories?: string[]): string
   return `[${combined.join(', ')}]`
 }
 
-const formatDiffValue = (val?: string): string => {
-  if (!val) return ''
-  return val.startsWith('[') ? val : `[${val}]`
+const formatDiffValue = (fieldName: string, val?: string, defaultTagsLabel?: string): string => {
+  if (fieldName.toLowerCase() === 'tags' || fieldName.toLowerCase() === 'categories') {
+    const formatted = val && !val.startsWith('[') ? `[${val}]` : val || ''
+    return `${defaultTagsLabel}: ${formatted}`
+  }
+  return `${fieldName}: ${val || ''}`
 }
 
 interface datasetVersionsDifferenceTableProps {
@@ -159,10 +162,7 @@ export const DatasetVersionsDifferenceTable = ({
                                 ? tFile('fileAccess.restricted.name')
                                 : tFile('fileAccess.public.name')
                             }`
-                          : change.fieldName.toLowerCase() === 'tags' ||
-                            change.fieldName.toLowerCase() === 'categories'
-                            ? `${t('versions.tags')}: ${formatDiffValue(change.oldValue)}`
-                            : `${change.fieldName}: ${change.oldValue || ''}`}
+                          : formatDiffValue(change.fieldName, change.oldValue, t('versions.tags'))}
                       </div>
                     ))}
                   </td>
@@ -175,10 +175,7 @@ export const DatasetVersionsDifferenceTable = ({
                                 ? tFile('fileAccess.restricted.name')
                                 : tFile('fileAccess.public.name')
                             }`
-                          : change.fieldName.toLowerCase() === 'tags' ||
-                            change.fieldName.toLowerCase() === 'categories'
-                            ? `${t('versions.tags')}: ${formatDiffValue(change.newValue)}`
-                            : `${change.fieldName}: ${change.newValue || ''}`}
+                          : formatDiffValue(change.fieldName, change.newValue, t('versions.tags'))}
                       </div>
                     ))}
                   </td>
