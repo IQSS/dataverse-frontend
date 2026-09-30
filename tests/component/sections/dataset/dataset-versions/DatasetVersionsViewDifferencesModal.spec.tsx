@@ -404,4 +404,32 @@ describe('DatasetVersions', () => {
       .eq(2)
       .should('have.text', 'Access: Restricted')
   })
-})
+  it('should render file tags and categories when present', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={{
+          ...datasetVersionDiff,
+          filesAdded: [
+            {
+              fileName: 'tagged_file.tab',
+              MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+              type: 'text/tab-separated-values',
+              fileId: 99,
+              description: '',
+              isRestricted: false,
+              filePath: '',
+              tags: ['Documentation'],
+              categories: ['Data']
+            }
+          ]
+        }}
+      />
+    )
+
+    cy.findByTestId('file-added-row-99').should('contain.text', 'Tags: [Documentation, Data]')
+  })
+});

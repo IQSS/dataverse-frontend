@@ -4,6 +4,12 @@ import { Table } from '@iqss/dataverse-design-system'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import styles from './DatasetVersionsDifferenceTable.module.scss'
 
+const formatTagsAndCategories = (tags?: string[], categories?: string[]): string | null => {
+  const combined = Array.from(new Set([...(tags || []), ...(categories || [])])).filter(Boolean)
+  if (combined.length === 0) return null
+  return `[${combined.join(', ')}]`
+}
+
 interface datasetVersionsDifferenceTableProps {
   differences: DatasetVersionDiff
 }
@@ -93,6 +99,12 @@ export const DatasetVersionsDifferenceTable = ({
                     {t('versions.type')}: {file.type || ''}
                     <br />
                     {t('versions.description')}: {file.description || ''}
+                    {formatTagsAndCategories(file.tags, file.categories) && (
+                      <>
+                        <br />
+                        {t('versions.tags')}: {formatTagsAndCategories(file.tags, file.categories)}
+                      </>
+                    )}
                     <br />
                     {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
                   </td>
@@ -114,6 +126,12 @@ export const DatasetVersionsDifferenceTable = ({
                     {t('versions.type')}: {file.type || ''}
                     <br />
                     {t('versions.description')}: {file.description || ''}
+                    {formatTagsAndCategories(file.tags, file.categories) && (
+                      <>
+                        <br />
+                        {t('versions.tags')}: {formatTagsAndCategories(file.tags, file.categories)}
+                      </>
+                    )}
                     <br />
                     {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
                   </td>
@@ -136,6 +154,12 @@ export const DatasetVersionsDifferenceTable = ({
                                 ? tFile('fileAccess.restricted.name')
                                 : tFile('fileAccess.public.name')
                             }`
+                          : change.fieldName.toLowerCase() === 'tags' || change.fieldName.toLowerCase() === 'categories'
+                          ? `${t('versions.tags')}: ${
+                              change.oldValue && !change.oldValue.startsWith('[')
+                                ? `[${change.oldValue}]`
+                                : change.oldValue || ''
+                            }`
                           : `${change.fieldName}: ${change.oldValue || ''}`}
                       </div>
                     ))}
@@ -148,6 +172,12 @@ export const DatasetVersionsDifferenceTable = ({
                               change.newValue === 'true'
                                 ? tFile('fileAccess.restricted.name')
                                 : tFile('fileAccess.public.name')
+                            }`
+                          : change.fieldName.toLowerCase() === 'tags' || change.fieldName.toLowerCase() === 'categories'
+                          ? `${t('versions.tags')}: ${
+                              change.newValue && !change.newValue.startsWith('[')
+                                ? `[${change.newValue}]`
+                                : change.newValue || ''
                             }`
                           : `${change.fieldName}: ${change.newValue || ''}`}
                       </div>
@@ -171,6 +201,12 @@ export const DatasetVersionsDifferenceTable = ({
                   {t('versions.MD5')} {oldFile.MD5}
                   <br />
                   {t('versions.name')}: {oldFile.fileName}
+                  {formatTagsAndCategories(oldFile.tags, oldFile.categories) && (
+                    <>
+                      <br />
+                      {t('versions.tags')}: {formatTagsAndCategories(oldFile.tags, oldFile.categories)}
+                    </>
+                  )}
                 </td>
                 <td>
                   {t('versions.fileID')} {newFile.fileId}
@@ -178,6 +214,12 @@ export const DatasetVersionsDifferenceTable = ({
                   {t('versions.MD5')} {newFile.MD5}
                   <br />
                   {t('versions.name')}: {newFile.fileName}
+                  {formatTagsAndCategories(newFile.tags, newFile.categories) && (
+                    <>
+                      <br />
+                      {t('versions.tags')}: {formatTagsAndCategories(newFile.tags, newFile.categories)}
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
