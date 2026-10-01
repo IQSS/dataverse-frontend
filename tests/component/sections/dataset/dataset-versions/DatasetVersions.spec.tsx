@@ -465,4 +465,25 @@ describe('DatasetVersions', () => {
     cy.findByText('1.0').should('exist')
     cy.findByText('11.0').should('not.exist')
   })
+  it('should not render a link for the DRAFT version when viewing the draft', () => {
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves({
+      summaries: versionSummaryInfoDraft,
+      totalCount: versionSummaryInfoDraft.length
+    })
+
+    cy.customMount(
+      <WithRepositories datasetRepository={datasetsRepository}>
+        <DatasetVersions
+          currentVersionNumber="DRAFT"
+          currentVersionState={DatasetVersionState.DRAFT}
+          paginationInfo={new DatasetVersionPaginationInfo()}
+          setPaginationInfo={() => {}}
+        />
+      </WithRepositories>
+    )
+
+    cy.findByTestId('dataset-versions-table').should('exist')
+    cy.findByText('DRAFT').should('exist').and('not.have.attr', 'href')
+    cy.findByRole('link', { name: 'DRAFT' }).should('not.exist')
+  })
 })
