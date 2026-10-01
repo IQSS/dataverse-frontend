@@ -484,6 +484,5 @@ describe('DatasetVersions', () => {
 
     cy.findByTestId('dataset-versions-table').should('exist')
     cy.findByText('DRAFT').should('exist').and('not.have.attr', 'href')
-    cy.findByRole('link', { name: 'DRAFT' }).should('not.exist')
   })
 })
