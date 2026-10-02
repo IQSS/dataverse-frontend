@@ -62,8 +62,7 @@ export function DatasetProvider({
       .catch((error) => {
         console.error('There was an error getting the dataset', error)
         const isDraft =
-          searchParams.version === ':draft' ||
-          searchParams.version?.toUpperCase() === 'DRAFT'
+          searchParams.version === ':draft' || searchParams.version?.toUpperCase() === 'DRAFT'
         if (isDraft && !token && !user && !oidcLoginInProgress && !isLoadingUser) {
           const state = encodeReturnToPathInStateQueryParam(`${pathname}${search}`)
           oidcLogin(state)
@@ -87,8 +86,7 @@ export function DatasetProvider({
         isLoading,
         refreshDataset: fetchDataset,
         isNotAuthorized
-      }}
-    >
+      }}>
       {children}
     </DatasetContext.Provider>
   )
