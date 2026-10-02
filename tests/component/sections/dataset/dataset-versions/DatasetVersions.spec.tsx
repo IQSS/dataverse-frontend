@@ -474,15 +474,18 @@ describe('DatasetVersions', () => {
     cy.customMount(
       <WithRepositories datasetRepository={datasetsRepository}>
         <DatasetVersions
+          datasetId="datasetId"
           currentVersionNumber="DRAFT"
           currentVersionState={DatasetVersionState.DRAFT}
-          paginationInfo={new DatasetVersionPaginationInfo()}
-          setPaginationInfo={() => {}}
+          canUpdateDataset={true}
+          isInView
         />
       </WithRepositories>
     )
 
     cy.findByTestId('dataset-versions-table').should('exist')
-    cy.findByText('DRAFT').should('exist').and('not.have.attr', 'href')
+    cy.findByText('DRAFT').should('exist')
+    cy.get('strong').should('contain.text', 'DRAFT')
+    cy.findByTestId('dataset-version-link-DRAFT').should('not.exist')
   })
 })
