@@ -213,11 +213,12 @@ const expectedDataset = {
     title: "Darwin's Finches",
     labels: [
       { semanticMeaning: 'dataset', value: 'Draft' },
-      { semanticMeaning: 'warning', value: 'Unpublished' }
+      { semanticMeaning: 'warning', value: 'Unpublished' },
+      { semanticMeaning: 'success', value: 'In Review' }
     ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
