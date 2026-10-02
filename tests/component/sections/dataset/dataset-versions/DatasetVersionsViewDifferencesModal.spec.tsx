@@ -1,3 +1,5 @@
+import i18next from '@/i18n'
+import fileTranslation from '../../../../../public/locales/en/file.json'
 import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
@@ -128,6 +130,10 @@ const datasetVersionDiff: DatasetVersionDiff | undefined = {
 }
 
 describe('DatasetVersions', () => {
+  before(() => {
+    i18next.addResourceBundle('en', 'file', fileTranslation, true, true)
+  })
+
   beforeEach(() => {
     cy.viewport('macbook-15')
   })
