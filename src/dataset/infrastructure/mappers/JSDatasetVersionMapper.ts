@@ -34,7 +34,7 @@ export class JSDatasetVersionMapper {
       jsDatasetLastUpdateTime,
       jsDatasettermsOfAccess,
       jsDatasetDeaccessionedNote
-    ).build()
+    )
   }
 
   static toVersionNumber(jsDatasetVersionInfo: JSDatasetVersionInfo): DatasetVersionNumber {
