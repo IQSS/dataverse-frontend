@@ -105,7 +105,7 @@ export function Dataset({
     }
   }
 
-  const currentVersionNumber = dataset.version.number.toString()
+  const currentVersionNumber = dataset.version.number.toSearchParam()
   const canUpdateDataset = dataset.permissions.canUpdateDataset
   const termsTabTitle = canUpdateDataset ? t('termsTabTitle') : t('termsTabTitleReadOnly')
 
