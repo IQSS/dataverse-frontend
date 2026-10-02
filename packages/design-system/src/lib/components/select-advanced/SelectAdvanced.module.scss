@@ -193,6 +193,10 @@
   }
 
   .option-label {
+    font-weight: $dv-font-weight;
+  }
+
+  .option-content:has(.option-description) .option-label {
     font-weight: $dv-font-weight-bold;
   }
 
