@@ -52,7 +52,7 @@ export function Dataset({
 }: DatasetProps) {
   const { datasetRepository } = useDatasetRepositories()
   const { setIsLoading } = useLoading()
-  const { dataset, isLoading: isDatasetLoading } = useDataset()
+  const { dataset, isLoading: isDatasetLoading, isNotAuthorized } = useDataset()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -84,6 +84,16 @@ export function Dataset({
   }
 
   if (!dataset) {
+    if (isNotAuthorized) {
+      return (
+        <div className="container pt-4" data-testid="not-authorized-container">
+          <div className="alert alert-danger" role="alert">
+            <h4 className="alert-heading">{t('alerts.notAuthorized.heading')}</h4>
+            <p>{t('alerts.notAuthorized.alertText')}</p>
+          </div>
+        </div>
+      )
+    }
     return <NotFoundPage dvObjectNotFoundType="dataset" />
   }
 
