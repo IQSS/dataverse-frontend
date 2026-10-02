@@ -147,6 +147,10 @@
       "heading": "Unpublished Dataset Private URL",
       "alertText": "This unpublished dataset is being privately shared."
     },
+      "notAuthorized": {
+        "heading": "Not Authorized",
+        "alertText": "You are not authorized to view this page."
+      },
     "datasetDeletedSuccessDraft": "The dataset draft has been deleted.",
     "datasetDeletedSuccessDataset": "The dataset has been deleted."
   },

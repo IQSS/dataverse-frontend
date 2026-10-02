@@ -1,3 +1,4 @@
+import { Alert, AlertMessageKey } from '@/alert/domain/models/Alert'
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
 import {
   Dataset,
@@ -273,29 +274,42 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           datasetDetails.fileStore
         )
       })
-      .catch((error: ReadError) => {
-        console.error(error)
-        if (!requestedVersion && version === DatasetNonNumericVersion.LATEST_PUBLISHED) {
+        .catch(async (error: ReadError) => {
+          console.error(error)
+          if (!requestedVersion && version === DatasetNonNumericVersion.LATEST_PUBLISHED) {
+            return this.getByPersistentId(
+              persistentId,
+              DatasetNonNumericVersion.DRAFT,
+              requestedVersion,
+              keepRawFields
+            )
+          }
+          if (version === DatasetNonNumericVersion.DRAFT) {
+            try {
+              const publishedDataset = await this.getByPersistentId(
+                persistentId,
+                DatasetNonNumericVersion.LATEST_PUBLISHED,
+                undefined,
+                keepRawFields
+              )
+              if (publishedDataset) {
+                publishedDataset.alerts.push(new Alert('danger', AlertMessageKey.NOT_AUTHORIZED))
+                return publishedDataset
+              }
+            } catch {
+              throw error
+            }
+          }
+          if (version === DatasetNonNumericVersion.LATEST_PUBLISHED) {
+            throw error
+          }
           return this.getByPersistentId(
             persistentId,
-            DatasetNonNumericVersion.DRAFT,
-            requestedVersion,
+            DatasetNonNumericVersion.LATEST_PUBLISHED,
+            (requestedVersion = version),
             keepRawFields
           )
-        }
-        if (
-          version === DatasetNonNumericVersion.LATEST_PUBLISHED ||
-          version === DatasetNonNumericVersion.DRAFT
-        ) {
-          throw new Error(`Failed to get dataset by persistent ID: ${error.message}`)
-        }
-        return this.getByPersistentId(
-          persistentId,
-          DatasetNonNumericVersion.LATEST_PUBLISHED,
-          (requestedVersion = version),
-          keepRawFields
-        )
-      })
+        })
   }
 
   getByPrivateUrlToken(privateUrlToken: string): Promise<Dataset | undefined> {

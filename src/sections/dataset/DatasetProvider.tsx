@@ -1,3 +1,8 @@
+import { useContext } from 'react'
+import { useLocation } from 'react-router-dom'
+import { AuthContext } from 'react-oauth2-code-pkce'
+import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
+import { useSession } from '@/sections/session/SessionContext'
 import { PropsWithChildren, useEffect, useState, useCallback } from 'react'
 import { useDeepCompareCallback } from 'use-deep-compare'
 import { DatasetContext } from './DatasetContext'
@@ -24,6 +29,10 @@ export function DatasetProvider({
 }: PropsWithChildren<DatasetProviderProps>) {
   const [dataset, setDataset] = useState<Dataset>()
   const [isLoading, setIsLoading] = useState(true)
+  const [isNotAuthorized, setIsNotAuthorized] = useState(false)
+  const { pathname, search } = useLocation()
+  const { token, loginInProgress: oidcLoginInProgress, logIn: oidcLogin } = useContext(AuthContext)
+  const { user, isLoadingUser } = useSession()
 
   const getDataset = useDeepCompareCallback(() => {
     if (searchParams.persistentId) {
@@ -52,6 +61,15 @@ export function DatasetProvider({
       })
       .catch((error) => {
         console.error('There was an error getting the dataset', error)
+        const isDraft = searchParams.version === ':draft' || searchParams.version?.toUpperCase() === 'DRAFT'
+        if (isDraft && !token && !user && !oidcLoginInProgress && !isLoadingUser) {
+          const state = encodeReturnToPathInStateQueryParam(`${pathname}${search}`)
+          oidcLogin(state)
+          return
+        }
+        if (isDraft) {
+          setIsNotAuthorized(true)
+        }
         setIsLoading(false)
       })
   }, [getDataset, isPublishing])
@@ -61,7 +79,7 @@ export function DatasetProvider({
   }, [fetchDataset])
 
   return (
-    <DatasetContext.Provider value={{ dataset, isLoading, refreshDataset: fetchDataset }}>
+    <DatasetContext.Provider value={{ dataset, isLoading, refreshDataset: fetchDataset, isNotAuthorized }}>
       {children}
     </DatasetContext.Provider>
   )
