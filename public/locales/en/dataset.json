@@ -281,7 +281,8 @@
     "fileReplaced": "File Replaced",
     "termsOfUseandAccess": "Terms of Use/Access",
     "deaccessionedReason": "Deaccessioned Reason",
-    "error": "Error on loading dataset versions"
+    "error": "Error on loading dataset versions",
+    "tags": "Tags"
   },
   "datasetVersionSummary": {
     "firstPublished": "This is the First Published Version.",

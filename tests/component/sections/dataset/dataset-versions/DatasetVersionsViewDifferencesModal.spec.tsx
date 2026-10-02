@@ -1,3 +1,5 @@
+import i18next from '@/i18n'
+import fileTranslation from '../../../../../public/locales/en/file.json'
 import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
@@ -128,6 +130,10 @@ const datasetVersionDiff: DatasetVersionDiff | undefined = {
 }
 
 describe('DatasetVersions', () => {
+  before(() => {
+    i18next.addResourceBundle('en', 'file', fileTranslation, true, true)
+  })
+
   beforeEach(() => {
     cy.viewport('macbook-15')
   })
@@ -403,5 +409,118 @@ describe('DatasetVersions', () => {
       .find('td')
       .eq(2)
       .should('have.text', 'Access: Restricted')
+  })
+  it('should render file tags and categories when present', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={{
+          ...datasetVersionDiff,
+          filesAdded: [
+            {
+              fileName: 'tagged_file.tab',
+              MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+              type: 'text/tab-separated-values',
+              fileId: 99,
+              description: '',
+              isRestricted: false,
+              filePath: '',
+              tags: ['Documentation'],
+              categories: ['Data']
+            }
+          ]
+        }}
+      />
+    )
+
+    cy.findByTestId('file-added-row-99').should('contain.text', 'Tags: [Documentation, Data]')
+  })
+
+  it('should render file tags and categories in filesRemoved, filesReplaced, and fileChanges with different formats', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={{
+          ...datasetVersionDiff,
+          filesRemoved: [
+            {
+              fileName: 'removed_file.tab',
+              MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+              type: 'text/tab-separated-values',
+              fileId: 101,
+              description: '',
+              isRestricted: false,
+              filePath: '',
+              tags: ['RemovedTag'],
+              categories: undefined
+            }
+          ],
+          filesReplaced: [
+            {
+              oldFile: {
+                fileName: 'old_file.tab',
+                MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+                type: 'text/tab-separated-values',
+                fileId: 102,
+                description: '',
+                isRestricted: false,
+                filePath: '',
+                tags: undefined,
+                categories: ['OldCategory']
+              },
+              newFile: {
+                fileName: 'new_file.tab',
+                MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+                type: 'text/tab-separated-values',
+                fileId: 103,
+                description: '',
+                isRestricted: false,
+                filePath: '',
+                tags: ['NewTag'],
+                categories: ['NewCategory']
+              }
+            }
+          ],
+          fileChanges: [
+            {
+              fileName: 'file_with_tag_changes.tab',
+              md5: '53d3d10e00812f7c55e0c9c3935f3769',
+              fileId: 104,
+              changed: [
+                {
+                  fieldName: 'tags',
+                  oldValue: 'Documentation',
+                  newValue: '[Documentation, Code]'
+                },
+                {
+                  fieldName: 'categories',
+                  oldValue: 'Data',
+                  newValue: '[Data, Survey]'
+                },
+                {
+                  fieldName: 'description',
+                  oldValue: undefined,
+                  newValue: 'New description'
+                }
+              ]
+            }
+          ]
+        }}
+      />
+    )
+
+    cy.findByTestId('file-removed-row-101').should('contain.text', 'Tags: [RemovedTag]')
+    cy.findByTestId('file-replaced-row-102').should('contain.text', 'Tags: [OldCategory]')
+    cy.findByTestId('file-replaced-row-102').should('contain.text', 'Tags: [NewTag, NewCategory]')
+    cy.findByTestId('file-changed-row-104').should('contain.text', 'Tags: [Documentation]')
+    cy.findByTestId('file-changed-row-104').should('contain.text', 'Tags: [Documentation, Code]')
+    cy.findByTestId('file-changed-row-104').should('contain.text', 'Tags: [Data]')
+    cy.findByTestId('file-changed-row-104').should('contain.text', 'Tags: [Data, Survey]')
   })
 })
