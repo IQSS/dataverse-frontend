@@ -87,7 +87,7 @@ it('renders alerts with correct text', () => {
         <DatasetAlertsWrapper alerts={alerts} />
       </AlertProvider>
     )
-    const alertItem = (dataset.alerts as AlertTextMap)[draftAlert.messageKey]
+    const alertItem = dataset.alerts[draftAlert.messageKey as keyof DatasetTranslation['alerts']]
     const alertHeading = alertItem.heading
     const alertText = removeMarkup(alertItem.alertText)
     cy.findByText(alertHeading).should('exist')
@@ -167,8 +167,7 @@ it('shows draft & share private url message if privateUrl exists and user can ed
     cy.findAllByRole('alert').should('have.length', 2)
     cy.findAllByRole('alert').each(($alert, index) => {
       const messageKey = expectedMessageKeys[index]
-      const textAlerts = datasetText.alerts as AlertTextMap
-      const itemText = textAlerts[messageKey]
+      const itemText = datasetText.alerts[messageKey as keyof DatasetTranslation['alerts']]
       cy.wrap($alert).findByText(itemText.heading).should('exist')
     })
   })
