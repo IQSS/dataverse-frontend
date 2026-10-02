@@ -1,3 +1,4 @@
+import { DatasetVersionNumber } from '@/dataset/domain/models/Dataset'
 import { useState } from 'react'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { getFileCitationByFormat } from '@/files/domain/useCases/getFileCitationByFormat'
@@ -6,10 +7,12 @@ import { downloadFile } from './useDownloadCitation'
 
 export function useDownloadFileCitation({
   fileRepository,
-  fileId
+  fileId,
+  versionNumber
 }: {
   fileRepository: FileRepository
   fileId: string | number
+  versionNumber?: DatasetVersionNumber
 }) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -20,7 +23,7 @@ export function useDownloadFileCitation({
     setIsLoading(true)
     setError(null)
     try {
-      return await getFileCitationByFormat(fileRepository, fileId, format)
+      return await getFileCitationByFormat(fileRepository, fileId, format, versionNumber)
     } catch (err) {
       setError('Failed to fetch citation.')
       return null

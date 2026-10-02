@@ -302,10 +302,14 @@
     "downloadRIS": "Descargar RIS",
     "downloadBibTeX": "Descargar BibTeX",
     "selectCSLStyle": "Seleccionar un estilo CSL",
+    "commonStyles": "Estilos comunes",
+    "moreStyles": "Más estilos",
     "citationInStyle": "Cita en estilo {{styleName}}",
     "downloadError": "Ocurrió un error al descargar la cita",
     "downloadSuccess": "Cita descargada correctamente",
-    "styledCitation": "Cita con estilo"
+    "styledCitation": "Cita con estilo",
+    "styleFormatError": "Ocurrió un error al formatear la cita en el estilo seleccionado. Intente con otro estilo o vuelva a intentarlo más tarde.",
+    "copyCitationToClipboard": "Copiar cita al portapapeles"
   },
   "expandableContent": {
     "truncateMoreBtn": "Leer todo el {{contentName}}",

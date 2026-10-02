@@ -32,7 +32,11 @@ export function FileCitation({
           tooltip={<DatasetCitationTooltip status={datasetVersion.publishingStatus} />}
         />
         <Stack direction="horizontal" gap={2} style={{ marginLeft: '-12px' }}>
-          <FileCitationDownloadButton fileRepository={fileRepository} fileId={fileId} />
+          <FileCitationDownloadButton
+            fileRepository={fileRepository}
+            fileId={fileId}
+            versionNumber={datasetVersion.number}
+          />
           <CitationLearnAbout />
         </Stack>
       </Col>
