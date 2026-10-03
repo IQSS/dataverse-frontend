@@ -10,6 +10,7 @@
 .items-list {
   --inline-padding: 1rem;
 
+  position: relative;
   height: 650px;
   max-height: 650px;
   padding-inline: var(--inline-padding);
