@@ -1,5 +1,6 @@
 import React from 'react'
 import type { Preview } from '@storybook/react'
+import '@iqss/dataverse-design-system/bootstrap-global.css'
 import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { createBrowserRouter, RouteObject, RouterProvider } from 'react-router-dom'
 import { FakerHelper } from '../tests/component/shared/FakerHelper'
