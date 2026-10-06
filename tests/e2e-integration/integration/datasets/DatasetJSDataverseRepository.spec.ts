@@ -172,6 +172,63 @@ describe('Dataset JSDataverse Repository', () => {
       )
     })
   })
+  it('throws error when draft rejects and no published version exists (e.g. unauthenticated access to draft-only dataset)', async () => {
+    const datasetResponse = await DatasetHelper.create(collectionId)
+
+    // Simulate logged out user
+    cy.clearAllLocalStorage()
+    cy.clearAllCookies()
+
+    let error: any
+    try {
+      await datasetRepository.getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
+    } catch (err) {
+      error = err
+    }
+    expect(error).to.exist
+  })
+
+  it('falls back to published version and returns NOT_AUTHORIZED alert when draft rejects but published exists', async () => {
+    cy.intercept('GET', /\/api\/v1\/datasets\/.*\/versions\/:draft/, {
+      statusCode: 403,
+      body: { status: 'ERROR', message: 'User not authorized' }
+    })
+
+    const datasetResponse = await DatasetHelper.create(collectionId)
+    await DatasetHelper.publish(datasetResponse.persistentId)
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
+
+    // Simulate logged out user
+    localStorage.clear()
+
+    const dataset = await datasetRepository.getByPersistentId(
+      datasetResponse.persistentId,
+      DRAFT_PARAM
+    )
+    expect(dataset).to.exist
+    if (dataset) {
+      const notAuthorizedAlert = dataset.alerts.find((a) => a.messageKey === 'notAuthorized')
+      expect(notAuthorizedAlert).to.exist
+      expect(dataset.version.publishingStatus).to.equal(DatasetPublishingStatus.RELEASED)
+    }
+  })
+
+  it('falls back to published version and returns VERSION_NOT_FOUND alert when draft is missing but published exists', async () => {
+    const datasetResponse = await DatasetHelper.create(collectionId)
+    await DatasetHelper.publish(datasetResponse.persistentId)
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
+
+    const dataset = await datasetRepository.getByPersistentId(
+      datasetResponse.persistentId,
+      DRAFT_PARAM
+    )
+    expect(dataset).to.exist
+    if (dataset) {
+      const notFoundAlert = dataset.alerts.find((a) => a.messageKey === 'requestedVersionNotFound')
+      expect(notFoundAlert).to.exist
+      expect(dataset.version.publishingStatus).to.equal(DatasetPublishingStatus.RELEASED)
+    }
+  })
 
   it('gets the dataset by persistentId', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)

@@ -28,6 +28,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Handle unauthorized access to dataset draft versions correctly, ensuring appropriate redirects to login, unauthorized messages with fallbacks to published versions, and version-not-found messages for missing drafts. (#1095)
 - Disable clickable DRAFT version link in Versions tab when viewing the draft version. (#1090)
 
 - Disable Save Changes button when file path contains invalid special characters during file upload. (#600)

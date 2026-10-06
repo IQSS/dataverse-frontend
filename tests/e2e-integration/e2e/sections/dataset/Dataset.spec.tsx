@@ -299,7 +299,7 @@ describe('Dataset', () => {
       })
     })
 
-    it('loads page not found when the user is not authenticated and tries to access a draft', () => {
+    it('redirects to login when the user is not authenticated and tries to access a draft', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
@@ -308,7 +308,7 @@ describe('Dataset', () => {
             `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
           )
 
-          cy.findByTestId('not-found-page').should('exist')
+          cy.get('#username', { timeout: 10_000 }).should('exist')
         })
     })
 
