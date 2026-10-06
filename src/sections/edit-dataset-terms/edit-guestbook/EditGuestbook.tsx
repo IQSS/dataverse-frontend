@@ -9,7 +9,7 @@ import { useAssignDatasetGuestbook } from './useAssignDatasetGuestbook'
 import { useRemoveDatasetGuestbook } from './useRemoveDatasetGuestbook'
 import { useDataset } from '../../dataset/DatasetContext'
 import { PreviewGuestbookModal } from '@/sections/guestbooks/preview-modal/PreviewGuestbookModal'
-import { buildDatasetDraftReturnUrl, buildDatasetTermsReturnUrl } from '../datasetTermsNavigation'
+import { buildDatasetTermsReturnUrl } from '../datasetTermsNavigation'
 import { useGuestbookRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './EditGuestbook.module.scss'
 
@@ -37,12 +37,6 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
     navigate(buildDatasetTermsReturnUrl(dataset))
   }, [dataset, navigate])
 
-  const navigateToDatasetDraftView = useCallback(() => {
-    if (!dataset) return
-
-    navigate(buildDatasetDraftReturnUrl(dataset))
-  }, [dataset, navigate])
-
   const handleCancel = () => {
     navigateToDatasetView()
   }
@@ -66,7 +60,7 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
     onSuccessfulAssignDatasetGuestbook: () => {
       toast.success(t('alerts.termsUpdated.alertText'))
       refreshDataset()
-      navigateToDatasetDraftView()
+      navigateToDatasetView()
     }
   })
   const {
@@ -78,7 +72,7 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
     onSuccessfulRemoveDatasetGuestbook: () => {
       toast.success(t('alerts.termsUpdated.alertText'))
       refreshDataset()
-      navigateToDatasetDraftView()
+      navigateToDatasetView()
     }
   })
 
