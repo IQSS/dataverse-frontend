@@ -9,7 +9,12 @@ export function Router() {
 }
 
 export function searchParamVersionToDomainVersion(version?: string): string | undefined {
-  if (version === 'DRAFT') {
+  if (version === undefined) {
+    return undefined
+  }
+
+  const normalized = version.trim().toUpperCase().replace(/^:/, '')
+  if (normalized === 'DRAFT') {
     return DatasetNonNumericVersion.DRAFT.toString()
   }
 
