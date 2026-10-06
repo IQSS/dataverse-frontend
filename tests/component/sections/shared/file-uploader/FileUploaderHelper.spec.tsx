@@ -98,6 +98,23 @@ describe('FileUploaderHelper', () => {
         })
       ).to.be.false
     })
+
+    it('returns false when combination is duplicate even with leading or trailing slashes in path', () => {
+      const testFileInFolder: UploadedFile = {
+        ...testFileOne,
+        fileName: 'data.csv',
+        fileDir: '/subfolder/'
+      }
+
+      expect(
+        FileUploaderHelper.isUniqueCombinationOfFilepathAndFilename({
+          fileName: 'data.csv',
+          filePath: 'subfolder',
+          fileKey: 'newFileKey',
+          allFiles: [testFileInFolder]
+        })
+      ).to.be.false
+    })
   })
 
   describe('isValidFilePath', () => {
