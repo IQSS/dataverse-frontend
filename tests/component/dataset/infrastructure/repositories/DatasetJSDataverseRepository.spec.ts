@@ -9,7 +9,6 @@ const { DRAFT, LATEST_PUBLISHED } = DatasetNonNumericVersion
 
 const readError = (statusCode: number) => new ReadError(`[${statusCode}] some reason`)
 
-// Stubs the single-version fetch so each test controls what every attempt returns
 function stubFetchByPersistentId(
   repository: DatasetJSDataverseRepository,
   ...results: (Dataset | Error)[]
@@ -84,7 +83,6 @@ describe('DatasetJSDataverseRepository getByPersistentId fallbacks', () => {
       expect(dataset).to.equal(published)
       expect(hasNotAuthorizedAlert(dataset as Dataset)).to.equal(false)
     })
-    // The requested draft is passed on so the version-not-found alert is generated
     cy.wrap(fetchStub).should('have.been.calledWith', PERSISTENT_ID, LATEST_PUBLISHED, DRAFT)
   })
 
@@ -111,7 +109,6 @@ describe('DatasetJSDataverseRepository getByPersistentId fallbacks', () => {
 
     cy.wrap(repository.getByPersistentId(PERSISTENT_ID)).should('equal', draft)
     cy.wrap(fetchStub).should('have.been.calledTwice')
-    // No requested version, so no "version :latest-published was not found" alert
     cy.wrap(fetchStub).should('have.been.calledWith', PERSISTENT_ID, DRAFT, undefined)
   })
 

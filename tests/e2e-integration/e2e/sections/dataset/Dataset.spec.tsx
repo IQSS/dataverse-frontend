@@ -313,11 +313,9 @@ describe('Dataset', () => {
     })
 
     describe('draft access', () => {
-      // Only the dataset version request for :draft, not its citation or other sub-resources
       const DRAFT_VERSION_REQUEST = /\/datasets\/:persistentId\/versions\/(:|%3A)draft\?/
       const NOT_AUTHORIZED_HEADING = 'Not Authorized'
       const NOT_AUTHORIZED_TEXT = 'You are not authorized to view this page.'
-      // The design-system Alert renders "<b>heading</b> - text" in one element, so match by contained text
       const VERSION_NOT_FOUND_TEXT = 'Version :draft was not found. This is version 1.0.'
 
       const rejectDraftRequestWith = (statusCode: number) => {

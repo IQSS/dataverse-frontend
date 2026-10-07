@@ -33,13 +33,10 @@ export function DatasetProvider({
   const { token, loginInProgress, logIn } = useContext(AuthContext)
   const isDraftRequest = searchParams.version === DatasetNonNumericVersion.DRAFT
 
-  // Kept in a ref so that auth or location changes don't trigger a dataset refetch
   const redirectToLoginIfAnonymousRef = useRef<() => boolean>(() => false)
   useEffect(() => {
     redirectToLoginIfAnonymousRef.current = () => {
       if (token) return false
-      // A second fetch (e.g. StrictMode) can fail after the first already started the login
-      // redirect; keep loading instead of showing the not authorized message meanwhile
       if (!loginInProgress) logIn(encodeReturnToPathInStateQueryParam(`${pathname}${search}`))
       return true
     }
