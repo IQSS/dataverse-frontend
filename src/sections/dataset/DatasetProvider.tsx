@@ -7,7 +7,6 @@ import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepo
 import { Dataset, DatasetNonNumericVersion } from '../../dataset/domain/models/Dataset'
 import { getDatasetByPersistentId } from '../../dataset/domain/useCases/getDatasetByPersistentId'
 import { getDatasetByPrivateUrlToken } from '../../dataset/domain/useCases/getDatasetByPrivateUrlToken'
-import { AlertMessageKey } from '@/alert/domain/models/Alert'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
 import { isPermissionError } from '@/shared/helpers/JSDataverseReadErrorHandler'
 
@@ -69,13 +68,6 @@ export function DatasetProvider({
 
     getDataset()
       .then((dataset: Dataset | undefined) => {
-        const draftNotAuthorized = dataset?.alerts.some(
-          (alert) => alert.messageKey === AlertMessageKey.NOT_AUTHORIZED
-        )
-        if (isDraftRequest && draftNotAuthorized && redirectToLoginIfAnonymousRef.current()) {
-          return
-        }
-
         setDataset(dataset)
         setIsLoading(false)
       })

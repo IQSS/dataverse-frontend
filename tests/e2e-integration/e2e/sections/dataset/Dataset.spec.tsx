@@ -342,15 +342,19 @@ describe('Dataset', () => {
           { timeout: 30_000 }
         )
 
-      it('redirects an anonymous user to login when a published dataset has a draft', () => {
+      it('shows the published version to an anonymous user instead of redirecting to login when the dataset has a draft', () => {
         const publishedTitle = faker.lorem.sentence()
-        createPublishedWithDraft(publishedTitle, faker.lorem.sentence())
+        const draftTitle = faker.lorem.sentence()
+        createPublishedWithDraft(publishedTitle, draftTitle)
           .its('persistentId')
           .then((persistentId: string) => {
             TestsUtils.logout()
             visitDraft(persistentId)
 
-            cy.get('#username', { timeout: 10_000 }).should('exist')
+            cy.findByRole('heading', { name: publishedTitle }).should('exist')
+            cy.findByRole('heading', { name: draftTitle }).should('not.exist')
+            cy.contains('[role="alert"]', VERSION_NOT_FOUND_TEXT).should('exist')
+            cy.get('#username').should('not.exist')
           })
       })
 

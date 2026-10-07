@@ -253,16 +253,13 @@ describe('DatasetProvider draft access', () => {
     cy.findByText('Not Authorized').should('not.exist')
   })
 
-  it('redirects an anonymous user to login instead of showing the published fallback', () => {
+  it('shows the published fallback to an anonymous user without redirecting to login', () => {
     const published = resolveWithPublishedFallback()
     mountDraftRequest(anonymous())
 
-    cy.get('@logIn').should(
-      'have.been.calledOnceWith',
-      encodeReturnToPathInStateQueryParam(DRAFT_PATH)
-    )
-    cy.findByText(published.version.title).should('not.exist')
-    cy.findByText('Loading...').should('exist')
+    cy.findByText(published.version.title).should('exist')
+    cy.findByText('Loading...').should('not.exist')
+    cy.get('@logIn').should('not.have.been.called')
   })
 
   it('keeps loading without showing Not Authorized while a login redirect is already in progress', () => {
