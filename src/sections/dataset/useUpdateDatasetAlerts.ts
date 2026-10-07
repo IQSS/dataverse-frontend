@@ -14,7 +14,9 @@ function useUpdateDatasetAlerts({ dataset, publishInProgress }: UseUpdateDataset
 
   useDeepCompareEffect(() => {
     if (dataset?.alerts) {
-      setAlerts(dataset.alerts)
+      setAlerts(
+        dataset.alerts.filter((alert) => alert.messageKey !== AlertMessageKey.NOT_AUTHORIZED)
+      )
       alertsInitialized.current = true
     }
     // 👇 Only to ignore setAlerts in the dependency array

@@ -47,3 +47,9 @@ export class JSDataverseReadErrorHandler {
     return false
   }
 }
+
+export function isPermissionError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false
+  const statusCode = new JSDataverseReadErrorHandler(error as ReadError).getStatusCode()
+  return statusCode === 401 || statusCode === 403
+}

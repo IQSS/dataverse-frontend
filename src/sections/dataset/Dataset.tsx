@@ -32,6 +32,7 @@ import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInf
 import { useAnonymized } from './anonymized/AnonymizedContext'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import { DatasetReviews } from './dataset-reviews/DatasetReviews'
+import { DatasetNotAuthorized } from './dataset-not-authorized/DatasetNotAuthorized'
 
 interface DatasetProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -85,14 +86,7 @@ export function Dataset({
 
   if (!dataset) {
     if (isNotAuthorized) {
-      return (
-        <div className="container pt-4" data-testid="not-authorized-container">
-          <div className="alert alert-danger" role="alert">
-            <h4 className="alert-heading">{t('alerts.notAuthorized.heading')}</h4>
-            <p>{t('alerts.notAuthorized.alertText')}</p>
-          </div>
-        </div>
-      )
+      return <DatasetNotAuthorized />
     }
     return <NotFoundPage dvObjectNotFoundType="dataset" />
   }

@@ -1,17 +1,15 @@
-import { useContext } from 'react'
+import { PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { AuthContext } from 'react-oauth2-code-pkce'
-import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
-import { useSession } from '@/sections/session/SessionContext'
-import { PropsWithChildren, useEffect, useState, useCallback } from 'react'
 import { useDeepCompareCallback } from 'use-deep-compare'
 import { DatasetContext } from './DatasetContext'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { Dataset } from '../../dataset/domain/models/Dataset'
+import { Dataset, DatasetNonNumericVersion } from '../../dataset/domain/models/Dataset'
 import { getDatasetByPersistentId } from '../../dataset/domain/useCases/getDatasetByPersistentId'
 import { getDatasetByPrivateUrlToken } from '../../dataset/domain/useCases/getDatasetByPrivateUrlToken'
-
 import { AlertMessageKey } from '@/alert/domain/models/Alert'
+import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
+import { isPermissionError } from '@/shared/helpers/JSDataverseReadErrorHandler'
 
 interface DatasetProviderProps {
   repository: DatasetRepository
@@ -23,15 +21,6 @@ interface DatasetProviderProps {
   isPublishing?: boolean
 }
 
-function useOptionalLocation() {
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useLocation()
-  } catch {
-    return { pathname: '/', search: '' }
-  }
-}
-
 export function DatasetProvider({
   repository,
   searchParams,
@@ -41,14 +30,21 @@ export function DatasetProvider({
   const [dataset, setDataset] = useState<Dataset>()
   const [isLoading, setIsLoading] = useState(true)
   const [isNotAuthorized, setIsNotAuthorized] = useState(false)
-  const location = useOptionalLocation()
-  const pathname = location?.pathname ?? '/'
-  const search = location?.search ?? ''
-  const authContext = useContext(AuthContext)
-  const token = authContext?.token
-  const oidcLoginInProgress = authContext?.loginInProgress
-  const oidcLogin = authContext?.logIn
-  const { user, isLoadingUser } = useSession()
+  const { pathname, search } = useLocation()
+  const { token, loginInProgress, logIn } = useContext(AuthContext)
+  const isDraftRequest = searchParams.version === DatasetNonNumericVersion.DRAFT
+
+  // Kept in a ref so that auth or location changes don't trigger a dataset refetch
+  const redirectToLoginIfAnonymousRef = useRef<() => boolean>(() => false)
+  useEffect(() => {
+    redirectToLoginIfAnonymousRef.current = () => {
+      if (token) return false
+      // A second fetch (e.g. StrictMode) can fail after the first already started the login
+      // redirect; keep loading instead of showing the not authorized message meanwhile
+      if (!loginInProgress) logIn(encodeReturnToPathInStateQueryParam(`${pathname}${search}`))
+      return true
+    }
+  }, [token, loginInProgress, logIn, pathname, search])
 
   const getDataset = useDeepCompareCallback(() => {
     if (searchParams.persistentId) {
@@ -69,21 +65,15 @@ export function DatasetProvider({
   const fetchDataset = useCallback(() => {
     if (isPublishing) return
     setIsLoading(true)
+    setIsNotAuthorized(false)
 
     getDataset()
       .then((dataset: Dataset | undefined) => {
-        const isDraft =
-          searchParams.version === ':draft' || searchParams.version?.toUpperCase() === 'DRAFT'
-
-        if (
-          isDraft &&
-          dataset?.alerts.some((a) => a.messageKey === AlertMessageKey.NOT_AUTHORIZED)
-        ) {
-          if (!token && !user && !oidcLoginInProgress) {
-            const state = encodeReturnToPathInStateQueryParam(`${pathname}${search}`)
-            oidcLogin?.(state)
-            return
-          }
+        const draftNotAuthorized = dataset?.alerts.some(
+          (alert) => alert.messageKey === AlertMessageKey.NOT_AUTHORIZED
+        )
+        if (isDraftRequest && draftNotAuthorized && redirectToLoginIfAnonymousRef.current()) {
+          return
         }
 
         setDataset(dataset)
@@ -91,30 +81,13 @@ export function DatasetProvider({
       })
       .catch((error) => {
         console.error('There was an error getting the dataset', error)
-        const isDraft =
-          searchParams.version === ':draft' || searchParams.version?.toUpperCase() === 'DRAFT'
-        if (isDraft && !token && !user && !oidcLoginInProgress) {
-          const state = encodeReturnToPathInStateQueryParam(`${pathname}${search}`)
-          oidcLogin?.(state)
-          return
-        }
-        if (isDraft) {
+        if (isDraftRequest && isPermissionError(error)) {
+          if (redirectToLoginIfAnonymousRef.current()) return
           setIsNotAuthorized(true)
         }
         setIsLoading(false)
       })
-  }, [
-    getDataset,
-    isPublishing,
-    token,
-    user,
-    oidcLoginInProgress,
-    isLoadingUser,
-    pathname,
-    search,
-    oidcLogin,
-    searchParams.version
-  ])
+  }, [getDataset, isPublishing, isDraftRequest])
 
   useEffect(() => {
     fetchDataset()
@@ -122,12 +95,7 @@ export function DatasetProvider({
 
   return (
     <DatasetContext.Provider
-      value={{
-        dataset,
-        isLoading,
-        refreshDataset: fetchDataset,
-        isNotAuthorized
-      }}>
+      value={{ dataset, isLoading, refreshDataset: fetchDataset, isNotAuthorized }}>
       {children}
     </DatasetContext.Provider>
   )
