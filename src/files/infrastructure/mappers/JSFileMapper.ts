@@ -33,7 +33,13 @@ export class JSFileMapper {
       name: this.toFileName(jsFile.name),
       datasetPublishingStatus: datasetVersion.publishingStatus,
       datasetVersionNumber: datasetVersion.number,
-      access: JSFileAccessMapper.toFileAccess(jsFile.restricted, jsFile.fileAccessRequest || false),
+      access: JSFileAccessMapper.toFileAccess(
+        jsFile.restricted,
+        jsFile.fileAccessRequest || false,
+        (jsFile as JSFile & { fileAccessRequested?: boolean; requested?: boolean }).fileAccessRequested ||
+          (jsFile as JSFile & { fileAccessRequested?: boolean; requested?: boolean }).requested ||
+          false
+      ),
       ingest: JSFileIngestMapper.toFileIngest(),
       metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),
       permissions: permissions
@@ -66,7 +72,13 @@ export class JSFileMapper {
       datasetLicense: jsDataset.license,
       datasetCustomTerms: jsDataset.termsOfUse?.customTerms,
       name: this.toFileName(jsFile.name),
-      access: JSFileAccessMapper.toFileAccess(jsFile.restricted, jsFile.fileAccessRequest || false),
+      access: JSFileAccessMapper.toFileAccess(
+        jsFile.restricted,
+        jsFile.fileAccessRequest || false,
+        (jsFile as JSFile & { fileAccessRequested?: boolean; requested?: boolean }).fileAccessRequested ||
+          (jsFile as JSFile & { fileAccessRequested?: boolean; requested?: boolean }).requested ||
+          false
+      ),
       datasetVersion: datasetVersion,
       citation: citation,
       metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),
