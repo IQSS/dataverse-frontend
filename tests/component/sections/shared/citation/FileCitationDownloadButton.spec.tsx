@@ -42,7 +42,11 @@ describe('FileCitationDownloadButton', () => {
     cy.findByText('Download BibTeX').click()
 
     cy.then(() => {
-      expect(fileRepository.getFileCitationByFormat).to.have.been.calledWith(3, 'BibTeX')
+      expect(fileRepository.getFileCitationByFormat).to.have.been.calledWithExactly(
+        3,
+        'BibTeX',
+        undefined
+      )
     })
     cy.window().then((win) => {
       expect(win.URL['createObjectURL']).to.have.been.called

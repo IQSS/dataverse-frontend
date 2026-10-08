@@ -1,3 +1,4 @@
+import { DatasetVersionNumber } from '@/dataset/domain/models/Dataset'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -9,17 +10,20 @@ import { useDownloadFileCitation } from './useDownloadFileCitation'
 interface FileCitationDownloadButtonProps {
   fileRepository: FileRepository
   fileId: string | number
+  versionNumber?: DatasetVersionNumber
 }
 
 export function FileCitationDownloadButton({
   fileRepository,
-  fileId
+  fileId,
+  versionNumber
 }: FileCitationDownloadButtonProps) {
   const { t } = useTranslation('shared', { keyPrefix: 'downloadCitation' })
 
   const { error, handleDownloadCitation } = useDownloadFileCitation({
     fileRepository,
-    fileId
+    fileId,
+    versionNumber
   })
 
   useEffect(() => {
