@@ -8,9 +8,11 @@ declare global {
 
 let CONFIG: AppConfig | undefined
 
+const BannerMessageSchema = z.union([z.string(), z.record(z.string(), z.string())])
+
 const AppConfigSchema = z.object({
   backendUrl: z.url(),
-  bannerMessage: z.string().optional(),
+  bannerMessage: BannerMessageSchema.optional(),
   oidc: z.object({
     clientId: z.string(),
     authorizationEndpoint: z.url(),

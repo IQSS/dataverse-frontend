@@ -10,6 +10,7 @@ import { type DatasetMetadataFormMode } from '.'
 import { QueryParamKey, Route } from '../../../Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '../../../../dataset/domain/models/Dataset'
 import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -39,7 +40,8 @@ export function useSubmitDataset(
   datasetRepository: DatasetRepository,
   onSubmitErrorCallback: () => void,
   datasetPersistentID?: string,
-  datasetLastUpdateTime?: string
+  datasetLastUpdateTime?: string,
+  datasetTypeName?: DatasetType['name']
 ): UseSubmitDatasetReturnType {
   const navigate = useNavigate()
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
@@ -61,7 +63,7 @@ export function useSubmitDataset(
     )
 
     if (mode === 'create') {
-      createDataset(datasetRepository, formattedFormValues, collectionId)
+      createDataset(datasetRepository, formattedFormValues, collectionId, datasetTypeName)
         .then(({ persistentId }) => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)

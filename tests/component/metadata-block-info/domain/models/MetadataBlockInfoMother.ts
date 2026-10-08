@@ -50,6 +50,12 @@ export class MetadataBlockInfoMother {
           title: 'Subject',
           description: 'The area of study relevant to the Dataset'
         },
+        keyword: {
+          displayFormat: '#VALUE',
+          type: 'TEXT',
+          title: 'Keyword',
+          description: 'Key terms that describe important aspects of the Dataset'
+        },
         author: {
           displayFormat: '',
           type: 'NONE',
@@ -121,6 +127,18 @@ export class MetadataBlockInfoMother {
           type: 'TEXTBOX',
           title: 'Text',
           description: 'A summary describing the purpose, nature, and scope of the Dataset'
+        },
+        publication: {
+          displayFormat: '#VALUE',
+          type: 'TEXT',
+          title: 'Related Publication',
+          description: 'A publication that uses, cites, or is related to this Dataset'
+        },
+        notesText: {
+          displayFormat: '#VALUE',
+          type: 'TEXTBOX',
+          title: 'Notes',
+          description: 'Additional important information about the Dataset'
         },
         producerURL: {
           displayFormat: '[#VALUE](#VALUE)',

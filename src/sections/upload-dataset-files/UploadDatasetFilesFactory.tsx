@@ -25,7 +25,7 @@ function UploadDatasetFilesWithSearchParams() {
     <DatasetProvider
       repository={datasetRepository}
       searchParams={{ persistentId: persistentId, version: version }}>
-      <UploadDatasetFiles fileRepository={fileRepository} datasetRepository={datasetRepository} />
+      <UploadDatasetFiles fileRepository={fileRepository} />
     </DatasetProvider>
   )
 }

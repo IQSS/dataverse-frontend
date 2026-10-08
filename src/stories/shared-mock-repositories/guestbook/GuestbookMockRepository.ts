@@ -1,6 +1,7 @@
-import { type Guestbook as JSDataverseGuestbook } from '@iqss/dataverse-client-javascript'
+import { type CreateGuestbookDTO } from '@iqss/dataverse-client-javascript'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { GuestbookResponseSubset } from '@/guestbooks/domain/models/GuestbookResponse'
 
 export const storybookGuestbook: Guestbook = {
   id: 3,
@@ -20,31 +21,56 @@ export const storybookGuestbook: Guestbook = {
     }
   ],
   createTime: '2026-01-01T00:00:00.000Z',
-  dataverseId: 1
+  dataverseId: 1,
+  usageCount: 7,
+  responseCount: 3
 }
 
-export const storybookClientGuestbooks: JSDataverseGuestbook[] = [
-  {
-    id: storybookGuestbook.id,
-    name: storybookGuestbook.name,
-    enabled: storybookGuestbook.enabled,
-    nameRequired: storybookGuestbook.nameRequired,
-    emailRequired: storybookGuestbook.emailRequired,
-    institutionRequired: storybookGuestbook.institutionRequired,
-    positionRequired: storybookGuestbook.positionRequired,
-    createTime: storybookGuestbook.createTime,
-    dataverseId: storybookGuestbook.dataverseId,
-    customQuestions: storybookGuestbook.customQuestions
-  }
-]
-
 export class GuestbookMockRepository implements GuestbookRepository {
+  createGuestbook(_collectionIdOrAlias: number | string, _guestbook: CreateGuestbookDTO) {
+    return Promise.resolve(storybookGuestbook.id)
+  }
+
   getGuestbook(_guestbookId: number): Promise<Guestbook> {
     return Promise.resolve(storybookGuestbook)
   }
 
-  getGuestbooksByCollectionId(_collectionIdOrAlias: number | string): Promise<Guestbook[]> {
-    return Promise.resolve(storybookClientGuestbooks as Guestbook[])
+  getGuestbooksByCollectionId(
+    _collectionIdOrAlias: number | string,
+    _includeStats?: boolean,
+    _includeInherited?: boolean
+  ): Promise<Guestbook[]> {
+    return Promise.resolve([storybookGuestbook])
+  }
+
+  setGuestbookEnabled(
+    _collectionIdOrAlias: number | string,
+    _guestbookId: number,
+    _enabled: boolean
+  ): Promise<void> {
+    return Promise.resolve()
+  }
+
+  getGuestbookResponsesByGuestbookId(
+    _guestbookId: number,
+    _limit?: number,
+    _offset?: number
+  ): Promise<GuestbookResponseSubset> {
+    return Promise.resolve({
+      guestbookResponses: [],
+      totalGuestbookResponseCount: 0
+    })
+  }
+
+  downloadGuestbookResponsesByCollectionId(_collectionIdOrAlias: number | string): Promise<string> {
+    return Promise.resolve('name,email\nJane Doe,jane@example.com')
+  }
+
+  downloadGuestbookResponsesByGuestbookId(
+    _dataverseId: number | string,
+    _guestbookId: number
+  ): Promise<string> {
+    return Promise.resolve('name,email\nJane Doe,jane@example.com')
   }
 
   assignDatasetGuestbook(_datasetId: number | string, _guestbookId: number): Promise<void> {

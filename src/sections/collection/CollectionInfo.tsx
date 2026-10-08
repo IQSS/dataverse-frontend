@@ -25,7 +25,7 @@ export function CollectionInfo({ collection }: CollectionInfoProps) {
           )}
           {!collection.isReleased && (
             <div>
-              <Badge variant={DatasetLabelSemanticMeaning.WARNING}>Unpublished</Badge>
+              <Badge variant={DatasetLabelSemanticMeaning.WARNING}>{t('unpublished')}</Badge>
             </div>
           )}
         </div>

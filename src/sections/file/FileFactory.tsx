@@ -1,7 +1,6 @@
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
-import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { File } from './File'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { searchParamVersionToDomainVersion } from '../../router'
@@ -10,24 +9,18 @@ import { DataverseInfoJSDataverseRepository } from '@/info/infrastructure/reposi
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 import { AccessJSDataverseRepository } from '@/access/infrastructure/repositories/AccessJSDataverseRepository'
 import { AccessRepositoryProvider } from '../access/AccessRepositoryProvider'
-import { GuestbookJSDataverseRepository } from '@/guestbooks/infrastructure/repositories/GuestbookJSDataverseRepository'
-import { GuestbookRepositoryProvider } from '../guestbooks/GuestbookRepositoryProvider'
 
 const repository = new FileJSDataverseRepository()
-const datasetRepository = new DatasetJSDataverseRepository()
 const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
 const accessRepository = new AccessJSDataverseRepository()
-const guestbookRepository = new GuestbookJSDataverseRepository()
 
 export class FileFactory {
   static create(): ReactElement {
     return (
-      <GuestbookRepositoryProvider repository={guestbookRepository}>
-        <AccessRepositoryProvider repository={accessRepository}>
-          <FileWithSearchParams />
-        </AccessRepositoryProvider>
-      </GuestbookRepositoryProvider>
+      <AccessRepositoryProvider repository={accessRepository}>
+        <FileWithSearchParams />
+      </AccessRepositoryProvider>
     )
   }
 }
@@ -50,7 +43,6 @@ function FileWithSearchParams() {
       repository={repository}
       id={id}
       datasetVersionNumber={datasetVersionNumber}
-      datasetRepository={datasetRepository}
       toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}
       dataverseInfoRepository={dataverseInfoRepository}
       contactRepository={contactRepository}

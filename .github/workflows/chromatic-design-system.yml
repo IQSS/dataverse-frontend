@@ -10,6 +10,8 @@ on:
 # List of jobs
 jobs:
   chromatic-deployment:
+    # Avoid being triggered by forks. See https://github.com/IQSS/dataverse-frontend/issues/1042
+    if: '! github.event.pull_request.head.repo.fork'
     # Operating System
     runs-on: ubuntu-latest
     # Job steps

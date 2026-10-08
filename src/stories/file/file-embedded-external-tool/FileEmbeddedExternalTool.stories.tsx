@@ -4,6 +4,7 @@ import { FileEmbeddedExternalTool } from '@/sections/file/file-embedded-external
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
 import { ExternalToolsMockRepository } from '@/stories/shared-mock-repositories/externalTools/ExternalToolsMockRepository'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof FileEmbeddedExternalTool> = {
   title: 'Sections/File Page/File External Tools Tab',
@@ -19,27 +20,29 @@ const externalToolsRepository = new ExternalToolsMockRepository()
 
 export const WithOneToolOnly: Story = {
   render: () => (
-    <FileEmbeddedExternalTool
-      file={file}
-      isInView={true}
-      applicableTools={[ExternalToolsMother.createFileQueryTool()]}
-      toolTypeSelectedQueryParam=""
-      externalToolsRepository={externalToolsRepository}
-    />
+    <RepositoriesStoryProvider externalToolsRepository={externalToolsRepository}>
+      <FileEmbeddedExternalTool
+        file={file}
+        isInView={true}
+        applicableTools={[ExternalToolsMother.createFileQueryTool()]}
+        toolTypeSelectedQueryParam=""
+      />
+    </RepositoriesStoryProvider>
   )
 }
 
 export const WithMoreThanOneTool: Story = {
   render: () => (
-    <FileEmbeddedExternalTool
-      file={file}
-      isInView={true}
-      applicableTools={[
-        ExternalToolsMother.createFilePreviewTool(),
-        ExternalToolsMother.createFileQueryTool()
-      ]}
-      toolTypeSelectedQueryParam=""
-      externalToolsRepository={externalToolsRepository}
-    />
+    <RepositoriesStoryProvider externalToolsRepository={externalToolsRepository}>
+      <FileEmbeddedExternalTool
+        file={file}
+        isInView={true}
+        applicableTools={[
+          ExternalToolsMother.createFilePreviewTool(),
+          ExternalToolsMother.createFileQueryTool()
+        ]}
+        toolTypeSelectedQueryParam=""
+      />
+    </RepositoriesStoryProvider>
   )
 }

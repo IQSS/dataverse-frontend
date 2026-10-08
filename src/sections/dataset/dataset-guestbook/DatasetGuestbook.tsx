@@ -4,13 +4,13 @@ import { Button, Col, QuestionMarkTooltip, Row, Spinner } from '@iqss/dataverse-
 import { useGetGuestbookById } from './useGetGuestbookById'
 import { PreviewGuestbookModal } from '@/sections/guestbooks/preview-modal/PreviewGuestbookModal'
 import { useDataset } from '@/sections/dataset/DatasetContext'
-import { useGuestbookRepository } from '@/sections/guestbooks/GuestbookRepositoryContext'
+import { useGuestbookRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 
 export const DatasetGuestbook = () => {
   const { t } = useTranslation('dataset')
   const { dataset } = useDataset()
-  const guestbookRepository = useGuestbookRepository()
+  const { guestbookRepository } = useGuestbookRepositories()
   const [showPreview, setShowPreview] = useState(false)
   const { guestbook, isLoadingGuestbook } = useGetGuestbookById({
     guestbookRepository,

@@ -1,0 +1,63 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.form {
+  margin-top: 1.5rem;
+}
+
+.form-row {
+  margin-bottom: 2rem;
+}
+
+.row-label {
+  font-weight: 700;
+}
+
+.help {
+  color: $dv-subtext-color;
+  margin-bottom: 1rem;
+}
+
+.checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.add-question-button {
+  min-width: 3rem;
+}
+
+.question-controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.question-block {
+  margin-bottom: 1rem;
+}
+
+.response-options {
+  margin-top: 0.75rem;
+}
+
+.option-row {
+  margin-top: 0.75rem;
+}
+
+.option-button {
+  min-width: 3rem;
+}
+
+.question-separator {
+  border-bottom: 1px solid rgba($dv-subtext-color, 0.2);
+  margin-top: 1rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}

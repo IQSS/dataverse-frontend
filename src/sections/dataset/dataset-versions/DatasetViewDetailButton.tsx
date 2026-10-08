@@ -3,20 +3,19 @@ import { Button } from '@iqss/dataverse-design-system'
 import { useState } from 'react'
 import { VersionDetailModal } from './view-difference/DatasetVersionsDetailModal'
 import { useGetDatasetVersionDiff } from './view-difference/useGetDatasetVersionDiff'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface DatasetViewDetailButtonProps {
   oldVersionNumber: string
   newVersionNumber: string
-  datasetRepository: DatasetRepository
   datasetId: string
 }
 export function DatasetViewDetailButton({
   oldVersionNumber,
   newVersionNumber,
-  datasetRepository,
   datasetId
 }: DatasetViewDetailButtonProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const { t } = useTranslation('dataset')
   const [showModal, setShowModal] = useState(false)
   const { differences, error, isLoading } = useGetDatasetVersionDiff({

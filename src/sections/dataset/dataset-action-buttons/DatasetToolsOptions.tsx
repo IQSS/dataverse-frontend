@@ -5,7 +5,7 @@ import { BarChartFill as BarChartFillIcon, GearFill } from 'react-bootstrap-icon
 import { DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { useExternalTools } from '@/shared/contexts/external-tools/ExternalToolsProvider'
 import { getDatasetExternalToolResolved } from '@/externalTools/domain/useCases/GetDatasetExternalToolResolved'
-import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
+import { useExternalToolsRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 type ToolKind = 'explore' | 'configure'
 
@@ -16,7 +16,7 @@ interface DatasetToolOptionsProps {
 
 const DatasetToolOptions = ({ persistentId, kind }: DatasetToolOptionsProps) => {
   const { t } = useTranslation('shared')
-  const { datasetExploreTools, datasetConfigureTools, externalToolsRepository } = useExternalTools()
+  const { datasetExploreTools, datasetConfigureTools } = useExternalTools()
 
   const tools = kind === 'explore' ? datasetExploreTools : datasetConfigureTools
   if (!tools || tools.length === 0) return null
@@ -35,7 +35,6 @@ const DatasetToolOptions = ({ persistentId, kind }: DatasetToolOptionsProps) => 
         <ToolOption
           toolId={tool.id}
           toolDisplayName={tool.displayName}
-          externalToolsRepository={externalToolsRepository}
           persistentId={persistentId}
           key={tool.id}
         />
@@ -48,15 +47,10 @@ interface ToolOptionProps {
   toolId: number
   toolDisplayName: string
   persistentId: string
-  externalToolsRepository: ExternalToolsRepository
 }
 
-const ToolOption = ({
-  toolId,
-  toolDisplayName,
-  persistentId,
-  externalToolsRepository
-}: ToolOptionProps) => {
+const ToolOption = ({ toolId, toolDisplayName, persistentId }: ToolOptionProps) => {
+  const { externalToolsRepository } = useExternalToolsRepositories()
   const [isOpening, setIsOpening] = useState(false)
   const { t, i18n } = useTranslation('shared')
   const openingRef = useRef(false)

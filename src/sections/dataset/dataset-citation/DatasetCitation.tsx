@@ -6,11 +6,9 @@ import { CitationDescription } from '../../shared/citation/CitationDescription'
 import { DatasetCitationTooltip } from './DatasetCitationTooltip'
 import { CitationLearnAbout } from '../../shared/citation/CitationLearnAbout'
 import { CitationDownloadButton } from '@/sections/shared/citation/citation-download/CitationDownloadButton'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import styles from './DatasetCitation.module.scss'
 
 interface DatasetCitationProps {
-  datasetRepository: DatasetRepository
   datasetId: string
   thumbnail?: string
   version: DatasetVersion
@@ -18,7 +16,6 @@ interface DatasetCitationProps {
 }
 
 export function DatasetCitation({
-  datasetRepository,
   datasetId,
   thumbnail,
   version,
@@ -49,11 +46,7 @@ export function DatasetCitation({
             tooltip={<DatasetCitationTooltip status={version.publishingStatus} />}
           />
           <Stack direction="horizontal" gap={2} style={{ marginLeft: '-12px' }}>
-            <CitationDownloadButton
-              datasetRepository={datasetRepository}
-              datasetId={datasetId}
-              version={version.number.toString()}
-            />
+            <CitationDownloadButton datasetId={datasetId} version={version.number.toString()} />
             <CitationLearnAbout />
           </Stack>
         </Col>

@@ -258,6 +258,10 @@ The **QA** environment is a dedicated, short-lived testing space. It is deployed
 > #### Featured Items
 >
 > A feature has been added that lets users customize their collections by adding a carousel with featured collections, datasets, files, blog posts, news, and other types of content.
+>
+> #### Cleaner Display When Fields Allow Multiples
+>
+> When fields such allow multiples, a cleaner display with linebreaks is shown.
 
 </details>
 

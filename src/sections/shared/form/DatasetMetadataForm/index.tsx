@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useLoading } from '../../../../shared/contexts/loading/LoadingContext'
 import { useGetMetadataBlocksInfo } from './useGetMetadataBlocksInfo'
-import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataFieldsHelper } from './MetadataFieldsHelper'
 import { MetadataFormSkeleton } from './MetadataForm/MetadataFormSkeleton'
@@ -9,27 +8,28 @@ import { MetadataForm } from './MetadataForm'
 import { DatasetMetadataBlocks } from '../../../../dataset/domain/models/Dataset'
 import { Alert } from '@iqss/dataverse-design-system'
 import { Template } from '@/templates/domain/models/Template'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 type DatasetMetadataFormProps =
   | {
       mode: 'create'
       collectionId: string
-      datasetRepository: DatasetRepository
       datasetPersistentID?: never
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues?: never
       datasetLastUpdateTime?: never
       datasetTemplate?: Template
+      datasetTypeName?: DatasetType['name']
     }
   | {
       mode: 'edit'
       collectionId: string
-      datasetRepository: DatasetRepository
       datasetPersistentID: string
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
       datasetLastUpdateTime?: string
       datasetTemplate?: never
+      datasetTypeName?: DatasetType['name']
     }
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
@@ -37,12 +37,12 @@ export type DatasetMetadataFormMode = 'create' | 'edit'
 export const DatasetMetadataForm = ({
   mode,
   collectionId,
-  datasetRepository,
   datasetPersistentID,
   metadataBlockInfoRepository,
   datasetMetadaBlocksCurrentValues,
   datasetLastUpdateTime,
-  datasetTemplate
+  datasetTemplate,
+  datasetTypeName
 }: DatasetMetadataFormProps) => {
   const { setIsLoading } = useLoading()
 
@@ -53,7 +53,8 @@ export const DatasetMetadataForm = ({
   } = useGetMetadataBlocksInfo({
     mode: 'create',
     collectionId,
-    metadataBlockInfoRepository
+    metadataBlockInfoRepository,
+    datasetTypeName
   })
 
   const {
@@ -63,7 +64,8 @@ export const DatasetMetadataForm = ({
   } = useGetMetadataBlocksInfo({
     mode: 'edit',
     collectionId,
-    metadataBlockInfoRepository
+    metadataBlockInfoRepository,
+    datasetTypeName
   })
 
   const isLoadingData =
@@ -105,10 +107,10 @@ export const DatasetMetadataForm = ({
       collectionId={collectionId}
       formDefaultValues={formDefaultValues}
       metadataBlocksInfo={metadataBlocksInfo}
-      datasetRepository={datasetRepository}
       datasetPersistentID={datasetPersistentID}
       datasetLastUpdateTime={datasetLastUpdateTime}
       datasetTemplateInstructions={datasetTemplate?.instructions}
+      datasetTypeName={datasetTypeName}
     />
   )
 }

@@ -39,10 +39,11 @@ withNoLinkedCollectionsDatasetRepo.getDatasetLinkedCollections = () => {
 
 export const Default: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={withNoLinkedCollectionsDatasetRepo}>
       <LinkDatasetButton
         dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-        datasetRepository={withNoLinkedCollectionsDatasetRepo}
         updateParent={() => {}}
       />
     </RepositoriesStoryProvider>
@@ -57,10 +58,11 @@ export const Default: Story = {
 
 export const WithLinkedCollections: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <LinkDatasetButton
         dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-        datasetRepository={new DatasetMockRepository()}
         updateParent={() => {}}
       />
     </RepositoriesStoryProvider>
@@ -90,10 +92,11 @@ withOnlyOneCollectionToLinkRepo.getForLinking = () => {
 
 export const WithOnlyOneCollectionToLink: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={withOnlyOneCollectionToLinkRepo}>
+    <RepositoriesStoryProvider
+      collectionRepository={withOnlyOneCollectionToLinkRepo}
+      datasetRepository={withNoLinkedCollectionsDatasetRepo}>
       <LinkDatasetButton
         dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
-        datasetRepository={withNoLinkedCollectionsDatasetRepo}
         updateParent={() => {}}
       />
     </RepositoriesStoryProvider>

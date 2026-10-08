@@ -6,7 +6,6 @@ import { useState } from 'react'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
 import { useNotImplementedModal } from '../../../../../not-implemented/NotImplementedModalContext'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DatasetRestrictFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetRestrictFileButton'
 import { DatasetDeleteFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetDeleteFileButton'
 import { RouteWithParams } from '@/sections/Route.enum'
@@ -15,26 +14,21 @@ import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFile
 import { useSettings } from '@/sections/settings/SettingsContext'
 import { SettingName } from '@/settings/domain/models/Setting'
 import { DatasetEditFileTagsButton } from './DatasetEditFileTagsButton'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 type EditFilesOptionsProps =
   | {
       files: FilePreview[]
       file?: never
       fileSelection: FileSelection
-      fileRepository: FileRepository
       datasetInfo?: never
       isHeader: true
-      datasetRepository: DatasetRepository
     }
   | {
       files?: never
       file: FilePreview
       fileSelection?: never
-      fileRepository: FileRepository
       datasetInfo: EditFilesMenuDatasetInfo
       isHeader: false
-      datasetRepository: DatasetRepository
     }
 
 export interface EditFilesMenuDatasetInfo {
@@ -50,10 +44,8 @@ export function EditFilesOptions({
   file,
   files,
   fileSelection,
-  fileRepository,
   datasetInfo,
-  isHeader,
-  datasetRepository
+  isHeader
 }: EditFilesOptionsProps) {
   const { t } = useTranslation('files')
   const { t: tFile } = useTranslation('file')
@@ -82,7 +74,6 @@ export function EditFilesOptions({
         <DatasetRestrictFileButton
           fileId={file.id}
           isRestricted={file.access.restricted}
-          fileRepository={fileRepository}
           datasetInfo={datasetInfo}
         />
         {/* TODO: remove this when we can handle non-S3 files */}
@@ -101,18 +92,12 @@ export function EditFilesOptions({
 
         <DatasetEditFileTagsButton
           fileId={file.id}
-          fileRepository={fileRepository}
           datasetPersistentId={datasetInfo.persistentId}
           existingLabels={file.metadata.labels}
           isTabularFile={file.metadata.isTabular}
-          datasetRepository={datasetRepository}
         />
 
-        <DatasetDeleteFileButton
-          fileId={file.id}
-          fileRepository={fileRepository}
-          datasetInfo={datasetInfo}
-        />
+        <DatasetDeleteFileButton fileId={file.id} datasetInfo={datasetInfo} />
       </>
     )
   }

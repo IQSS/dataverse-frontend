@@ -420,8 +420,7 @@ describe('SelectAdvanced', () => {
       toggleOptionsMenu()
       cy.findByText('Reading').click()
       cy.findAllByText('Reading').spread((_selectedItem, selectedListOption) => {
-        const element = cy.get(selectedListOption)
-        element.should('have.class', 'active')
+        cy.get(selectedListOption).closest('[role="option"]').should('have.class', 'active')
       })
 
       cy.findByTestId('toggle-inner-content')
@@ -462,9 +461,10 @@ describe('SelectAdvanced', () => {
     cy.findAllByText('Reading')
       .should('have.length', 2)
       .spread((_selectedItem, selectedListOption) => {
-        const element = cy.get(selectedListOption)
-        element.should('have.class', 'active')
-        element.should('have.attr', 'aria-selected', 'true')
+        cy.get(selectedListOption).closest('[role="option"]').should('have.class', 'active')
+        cy.get(selectedListOption)
+          .closest('[role="option"]')
+          .should('have.attr', 'aria-selected', 'true')
       })
 
     toggleOptionsMenu()
@@ -474,11 +474,13 @@ describe('SelectAdvanced', () => {
     cy.findAllByText('Swimming')
       .should('have.length', 2)
       .spread((_selectedItem, selectedListOption) => {
-        const element = cy.get(selectedListOption)
-        element.should('have.class', 'active')
-        element.should('have.attr', 'aria-selected', 'true')
+        cy.get(selectedListOption).closest('[role="option"]').should('have.class', 'active')
+        cy.get(selectedListOption)
+          .closest('[role="option"]')
+          .should('have.attr', 'aria-selected', 'true')
       })
     cy.findByText('Reading')
+      .closest('[role="option"]')
       .should('not.have.class', 'active')
       .should('have.attr', 'aria-selected', 'false')
   })
@@ -498,13 +500,11 @@ describe('SelectAdvanced', () => {
     cy.findAllByText('Reading')
       .should('have.length', 2)
       .spread((_selectedItem, selectedListOption) => {
-        const element = cy.get(selectedListOption)
-        element.should('have.class', 'active')
+        cy.get(selectedListOption).closest('[role="option"]').should('have.class', 'active')
       })
 
     cy.findAllByText('Reading').spread((_selectedItem, selectedListOption) => {
-      const element = cy.get(selectedListOption)
-      element.click()
+      cy.get(selectedListOption).click()
     })
 
     toggleOptionsMenu()
@@ -512,8 +512,7 @@ describe('SelectAdvanced', () => {
     cy.findAllByText('Reading')
       .should('have.length', 2)
       .spread((_selectedItem, selectedListOption) => {
-        const element = cy.get(selectedListOption)
-        element.should('have.class', 'active')
+        cy.get(selectedListOption).closest('[role="option"]').should('have.class', 'active')
       })
   })
 

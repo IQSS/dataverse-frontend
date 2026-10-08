@@ -5,11 +5,12 @@ import { WithI18next } from '@/stories/WithI18next'
 import { WithToasts } from '@/stories/WithToasts'
 import { Meta, StoryObj } from '@storybook/react'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
+import { WithRepositories } from '@/stories/WithRepositories'
 
 const meta: Meta<typeof FileUploader> = {
   title: 'Sections/Shared/File Uploader',
   component: FileUploader,
-  decorators: [WithI18next],
+  decorators: [WithI18next, WithRepositories({ datasetRepository: new DatasetMockRepository() })],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -28,7 +29,6 @@ export const ReplaceMode: Story = {
       storageType="S3"
       operationType={OperationType.REPLACE_FILE}
       originalFile={FileMother.createRealistic()}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -41,7 +41,6 @@ export const AddFilesToDataset: Story = {
       datasetPersistentId="doi:10.5072/FK2/8YOKQI"
       storageType="S3"
       operationType={OperationType.ADD_FILES_TO_DATASET}
-      datasetRepository={new DatasetMockRepository()}
     />
   )
 }

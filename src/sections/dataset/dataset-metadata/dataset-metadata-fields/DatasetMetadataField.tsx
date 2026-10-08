@@ -4,20 +4,24 @@ import { DatasetMetadataFieldValue as DatasetMetadataFieldValueModel } from '../
 import { DatasetMetadataFieldValue } from './DatasetMetadataFieldValue'
 import { DatasetMetadataFieldTitle } from './DatasetMetadataFieldTitle'
 import { MetadataBlockInfoDisplayFormat } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
 import styles from './DatasetMetadataField.module.scss'
 
 interface DatasetMetadataFieldProps {
   metadataFieldName: string
   metadataFieldValue: DatasetMetadataFieldValueModel
   metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
+  datasetTemplateInstructions?: DatasetTemplateInstruction[]
 }
 
 export function DatasetMetadataField({
   metadataFieldName,
   metadataFieldValue,
-  metadataBlockDisplayFormatInfo
+  metadataBlockDisplayFormatInfo,
+  datasetTemplateInstructions
 }: DatasetMetadataFieldProps) {
   const { t } = useTranslation('dataset')
+  const { t: tTemplates } = useTranslation('datasetTemplates')
 
   // To show custom titles and descriptions for specific fields
   const getFieldInfo = (fieldName: string) => {
@@ -58,12 +62,21 @@ export function DatasetMetadataField({
   const { title, description } = getFieldInfo(metadataFieldName)
   const fieldTip = getFieldTip(metadataFieldName)
 
+  const customInstructionText = datasetTemplateInstructions
+    ?.find((instruction) => instruction.instructionField === metadataFieldName)
+    ?.instructionText?.trim()
+
   return (
     <Row>
       <Col md={3}>
         <DatasetMetadataFieldTitle title={title} description={description} />
       </Col>
       <Col md={9} className="pt-1 pt-md-0 pb-1">
+        {customInstructionText ? (
+          <span className={styles.customInstructions}>
+            <em>{tTemplates('createTemplate.customInstructions.label')}</em> {customInstructionText}
+          </span>
+        ) : null}
         {fieldTip && <span className={styles.tip}>{fieldTip}</span>}
 
         <DatasetMetadataFieldValue

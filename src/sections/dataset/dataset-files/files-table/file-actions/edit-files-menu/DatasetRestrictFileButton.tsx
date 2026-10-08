@@ -3,27 +3,26 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import { ConfirmRestrictFileModal } from '@/sections/file/file-action-buttons/edit-file-menu/restrict-file-button/confirm-restrict-file-modal/ConfirmRestrictFileModal'
 import { useRestrictFile } from '@/sections/file/file-action-buttons/edit-file-menu/restrict-file-button/useRestrictFile'
 import { useFilesContext } from '@/sections/file/FilesContext'
 import { EditFilesMenuDatasetInfo } from './EditFilesOptions'
+import { useFileRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 interface DatasetRestrictFileButtonProps {
   fileId: number
   isRestricted: boolean
-  fileRepository: FileRepository
   datasetInfo: EditFilesMenuDatasetInfo
 }
 
 export const DatasetRestrictFileButton = ({
   fileId,
   isRestricted,
-  fileRepository,
   datasetInfo
 }: DatasetRestrictFileButtonProps) => {
+  const { fileRepository } = useFileRepositories()
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const navigate = useNavigate()
   const { t } = useTranslation('file')

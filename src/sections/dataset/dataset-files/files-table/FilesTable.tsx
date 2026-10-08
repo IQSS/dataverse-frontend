@@ -10,17 +10,13 @@ import { useEffect, useState } from 'react'
 import { FileSelection } from './row-selection/useFileSelection'
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface FilesTableProps {
   files: FilePreview[]
-  fileRepository: FileRepository
   isLoading: boolean
   paginationInfo: FilePaginationInfo
   filesTotalDownloadSize: number
   criteria: FileCriteria
-  datasetRepository: DatasetRepository
 }
 
 export function FilesTable({
@@ -28,15 +24,11 @@ export function FilesTable({
   isLoading,
   paginationInfo,
   filesTotalDownloadSize,
-  fileRepository,
-  criteria,
-  datasetRepository
+  criteria
 }: FilesTableProps) {
   const { table, fileSelection, selectAllFiles, clearFileSelection } = useFilesTable(
     files,
-    paginationInfo,
-    fileRepository,
-    datasetRepository
+    paginationInfo
   )
 
   const [visitedPagination, setVisitedPagination] = useState<FilePaginationInfo>(paginationInfo)

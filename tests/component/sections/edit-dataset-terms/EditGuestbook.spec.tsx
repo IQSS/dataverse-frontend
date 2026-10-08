@@ -12,6 +12,7 @@ import {
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const LocationDisplay = () => {
   const location = useLocation()
@@ -56,35 +57,57 @@ const mockGuestbooks: Guestbook[] = [
   }
 ]
 
+const disabledGuestbook: Guestbook = {
+  id: 3,
+  name: 'Disabled Guestbook',
+  enabled: false,
+  emailRequired: true,
+  nameRequired: false,
+  institutionRequired: false,
+  positionRequired: false,
+  customQuestions: [],
+  createTime: '2026-01-01T00:00:00.000Z',
+  dataverseId: 1
+}
+
 describe('EditGuestbook', () => {
   const withProviders = (component: ReactNode, dataset: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
 
     return (
-      <DatasetProvider
-        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
-        repository={datasetRepository}>
-        {component}
-      </DatasetProvider>
+      <WithRepositories guestbookRepository={guestbookRepository}>
+        <DatasetProvider
+          searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}
+          repository={datasetRepository}>
+          {component}
+        </DatasetProvider>
+      </WithRepositories>
     )
   }
 
   const withDatasetContext = (component: ReactNode, dataset: Dataset | undefined) => (
-    <DatasetContext.Provider
-      value={{
-        dataset,
-        isLoading: false,
-        refreshDataset: () => {}
-      }}>
-      {component}
-    </DatasetContext.Provider>
+    <WithRepositories guestbookRepository={guestbookRepository}>
+      <DatasetContext.Provider
+        value={{
+          dataset,
+          isLoading: false,
+          refreshDataset: () => {}
+        }}>
+        {component}
+      </DatasetContext.Provider>
+    </WithRepositories>
   )
 
   beforeEach(() => {
     guestbookRepository = {
+      createGuestbook: cy.stub(),
       getGuestbook: cy.stub(),
       getGuestbooksByCollectionId: cy.stub().resolves(mockGuestbooks),
+      getGuestbookResponsesByGuestbookId: cy.stub(),
+      setGuestbookEnabled: cy.stub(),
+      downloadGuestbookResponsesByCollectionId: cy.stub(),
+      downloadGuestbookResponsesByGuestbookId: cy.stub(),
       assignDatasetGuestbook: cy.stub().resolves(undefined),
       removeDatasetGuestbook: cy.stub().resolves(undefined)
     }
@@ -93,22 +116,42 @@ describe('EditGuestbook', () => {
   it('renders guestbook options and keeps Save Changes disabled for current guestbook', () => {
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
+
+    cy.findByLabelText('Data Request Guestbook').should('be.checked')
+    cy.findByLabelText('Secondary Guestbook').should('not.be.checked')
+    cy.wrap(
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    ).should('have.been.calledWith', 'root', false, false)
+    cy.findByRole('button', { name: 'Clear Selection' }).should('be.enabled')
+    cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+  })
+
+  it('includes inherited guestbooks when the dataset is in a subcollection', () => {
+    const dataset = DatasetMother.create({
+      guestbookId: mockGuestbooks[0].id,
+      hierarchy: UpwardHierarchyNodeMother.createDataset({
+        parent: UpwardHierarchyNodeMother.createSubCollection({
+          id: '17',
+          name: 'SubCollection',
+          parent: UpwardHierarchyNodeMother.createCollection({ id: 'root', name: 'Root' })
+        })
+      })
+    })
+
     cy.customMount(
       withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
     )
 
-    cy.findByLabelText('Data Request Guestbook').should('be.checked')
-    cy.findByLabelText('Secondary Guestbook').should('not.be.checked')
-    cy.findByRole('button', { name: 'Clear Selection' }).should('be.enabled')
-    cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+    cy.wrap(
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    ).should('have.been.calledWith', '17', false, true)
   })
 
   it('enables Save Changes when selecting a different guestbook', () => {
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findByLabelText('Secondary Guestbook').click()
     cy.findByRole('button', { name: 'Save Changes' }).should('be.enabled')
@@ -118,15 +161,7 @@ describe('EditGuestbook', () => {
     const onFormStateChange = cy.stub().as('onFormStateChange')
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(
-        <EditGuestbook
-          guestbookRepository={guestbookRepository}
-          onFormStateChange={onFormStateChange}
-        />,
-        dataset
-      )
-    )
+    cy.customMount(withProviders(<EditGuestbook onFormStateChange={onFormStateChange} />, dataset))
 
     cy.findByLabelText('Secondary Guestbook').click()
 
@@ -136,9 +171,7 @@ describe('EditGuestbook', () => {
   it('keeps Save Changes disabled when dataset has no assigned guestbook and none is selected', () => {
     const dataset = DatasetMother.create({ guestbookId: undefined })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findByLabelText('Data Request Guestbook').should('not.be.checked')
     cy.findByLabelText('Secondary Guestbook').should('not.be.checked')
@@ -149,9 +182,7 @@ describe('EditGuestbook', () => {
   it('falls back to no preselection when dataset has no guestbook id', () => {
     const dataset = DatasetMother.create({ guestbookId: undefined })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findByLabelText('Data Request Guestbook').should('not.be.checked')
     cy.findByLabelText('Secondary Guestbook').should('not.be.checked')
@@ -159,12 +190,26 @@ describe('EditGuestbook', () => {
     cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
   })
 
-  it('clears the selected guestbook when clicking Clear Selection', () => {
-    const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
+  it('does not show disabled guestbooks in the list', () => {
+    ;(guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>).resolves([
+      ...mockGuestbooks,
+      disabledGuestbook
+    ])
+    const dataset = DatasetMother.create({ guestbookId: undefined })
 
     cy.customMount(
       withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
     )
+
+    cy.findByLabelText('Data Request Guestbook').should('exist')
+    cy.findByLabelText('Secondary Guestbook').should('exist')
+    cy.findByLabelText('Disabled Guestbook').should('not.exist')
+  })
+
+  it('clears the selected guestbook when clicking Clear Selection', () => {
+    const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
+
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findByRole('button', { name: 'Clear Selection' }).click()
 
@@ -180,9 +225,7 @@ describe('EditGuestbook', () => {
     )
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findByLabelText('Data Request Guestbook').should('not.exist')
     cy.findByLabelText('Secondary Guestbook').should('not.exist')
@@ -200,9 +243,7 @@ describe('EditGuestbook', () => {
   it('opens preview modal when clicking Preview Guestbook', () => {
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findAllByRole('button', { name: 'Preview Guestbook' }).should('have.length', 2)
     cy.findAllByRole('button', { name: 'Preview Guestbook' }).eq(1).click()
@@ -226,9 +267,7 @@ describe('EditGuestbook', () => {
   it('closes preview modal when clicking Close', () => {
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findAllByRole('button', { name: 'Preview Guestbook' }).eq(0).click()
     cy.findByRole('dialog').should('be.visible')
@@ -240,12 +279,7 @@ describe('EditGuestbook', () => {
     const onPreview = cy.stub().as('onPreview')
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(
-        <EditGuestbook guestbookRepository={guestbookRepository} onPreview={onPreview} />,
-        dataset
-      )
-    )
+    cy.customMount(withProviders(<EditGuestbook onPreview={onPreview} />, dataset))
 
     cy.findAllByRole('button', { name: 'Preview Guestbook' }).eq(0).click()
     cy.get('@onPreview').should('have.been.calledOnce')
@@ -259,9 +293,7 @@ describe('EditGuestbook', () => {
     assignDatasetGuestbookStub.as('assignDatasetGuestbookExecute')
     const dataset = DatasetMother.create({ id: 999, guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findByLabelText('Secondary Guestbook').click()
     cy.findByRole('button', { name: 'Save Changes' }).click()
@@ -287,7 +319,7 @@ describe('EditGuestbook', () => {
     cy.customMount(
       withProviders(
         <>
-          <EditGuestbook guestbookRepository={guestbookRepository} />
+          <EditGuestbook />
           <LocationDisplay />
         </>,
         releasedDataset
@@ -316,7 +348,7 @@ describe('EditGuestbook', () => {
     cy.customMount(
       withProviders(
         <>
-          <EditGuestbook guestbookRepository={guestbookRepository} />
+          <EditGuestbook />
           <LocationDisplay />
         </>,
         draftDataset
@@ -331,7 +363,7 @@ describe('EditGuestbook', () => {
     )
   })
 
-  it('navigates with numeric version query param after successful submit for non-draft datasets', () => {
+  it('navigates with DRAFT version query param after successful submit for non-draft datasets', () => {
     ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).resolves(
       undefined
     )
@@ -345,7 +377,7 @@ describe('EditGuestbook', () => {
     cy.customMount(
       withProviders(
         <>
-          <EditGuestbook guestbookRepository={guestbookRepository} />
+          <EditGuestbook />
           <LocationDisplay />
         </>,
         releasedDataset
@@ -356,7 +388,7 @@ describe('EditGuestbook', () => {
     cy.findByRole('button', { name: 'Save Changes' }).click()
     cy.findByTestId('location-display').should(
       'have.text',
-      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0'
+      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=DRAFT'
     )
   })
 
@@ -385,7 +417,7 @@ describe('EditGuestbook', () => {
       const [dataset, setDataset] = useState<Dataset>(createDataset(collectionA))
       return (
         <>
-          {withDatasetContext(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)}
+          {withDatasetContext(<EditGuestbook />, dataset)}
           <button onClick={() => setDataset(createDataset(collectionB))} type="button">
             Switch Collection
           </button>
@@ -427,7 +459,7 @@ describe('EditGuestbook', () => {
       const [dataset, setDataset] = useState<Dataset>(createDataset(collectionA))
       return (
         <>
-          {withDatasetContext(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)}
+          {withDatasetContext(<EditGuestbook />, dataset)}
           <button onClick={() => setDataset(createDataset(collectionB))} type="button">
             Switch Collection
           </button>
@@ -452,9 +484,7 @@ describe('EditGuestbook', () => {
     )
     const dataset = DatasetMother.create({ id: 999, guestbookId: undefined })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.get('form').submit()
     cy.get('@assignDatasetGuestbookExecute').should('not.have.been.called')
@@ -469,9 +499,7 @@ describe('EditGuestbook', () => {
       'removeDatasetGuestbookExecute'
     )
 
-    cy.customMount(
-      withDatasetContext(<EditGuestbook guestbookRepository={guestbookRepository} />, undefined)
-    )
+    cy.customMount(withDatasetContext(<EditGuestbook />, undefined))
 
     cy.get('form').submit()
     cy.get('@assignDatasetGuestbookExecute').should('not.have.been.called')
@@ -485,9 +513,7 @@ describe('EditGuestbook', () => {
     removeDatasetGuestbookStub.as('removeDatasetGuestbookExecute')
     const dataset = DatasetMother.create({ id: 999, guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findByRole('button', { name: 'Clear Selection' }).click()
     cy.findByRole('button', { name: 'Save Changes' }).click()
@@ -502,9 +528,7 @@ describe('EditGuestbook', () => {
     )
     const dataset = DatasetMother.create({ id: 999, guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findByLabelText('Secondary Guestbook').click()
     cy.findByRole('button', { name: 'Save Changes' }).click()
@@ -519,9 +543,7 @@ describe('EditGuestbook', () => {
     )
     const dataset = DatasetMother.create({ id: 999, guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findByRole('button', { name: 'Clear Selection' }).click()
     cy.findByRole('button', { name: 'Save Changes' }).click()
@@ -536,9 +558,7 @@ describe('EditGuestbook', () => {
     )
     const dataset = DatasetMother.create({ guestbookId: mockGuestbooks[0].id })
 
-    cy.customMount(
-      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
-    )
+    cy.customMount(withProviders(<EditGuestbook />, dataset))
 
     cy.findByText(
       /Something went wrong getting guestbooks by collection id. Try again later./

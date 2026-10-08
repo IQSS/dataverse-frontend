@@ -19,6 +19,7 @@ import { FileMetadataDTO } from '@/files/domain/useCases/DTOs/FileMetadataDTO'
 import { RestrictFileDTO } from '@/files/domain/useCases/restrictFileDTO'
 import { FileVersionSummarySubset } from '@/files/domain/models/FileVersionSummaryInfo'
 import { FileVersionPaginationInfo } from '@/files/domain/models/FileVersionPaginationInfo'
+import { FileCitationFormat, FormattedFileCitation } from '@/files/domain/models/FileCitation'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -167,6 +168,20 @@ export class FileMockRepository implements FileRepository {
       setTimeout(() => {
         const summaries = FileMother.createFileVersionSummary()
         resolve({ summaries, totalCount: summaries.length })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getFileCitationByFormat(
+    _fileId: number | string,
+    _format: FileCitationFormat
+  ): Promise<FormattedFileCitation> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          content: 'Formatted file citation content',
+          contentType: 'text/plain'
+        })
       }, FakerHelper.loadingTimout())
     })
   }

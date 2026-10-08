@@ -16,6 +16,48 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ---
 
+## [v0.4.0] -- 2026-10-08
+
+### Added
+
+- Edit Dataset Template Integration: "Edit Template" dropdown on the Dataset Templates listing now opens the Metadata or Terms editor and shows a "Template updated" toast on return.
+- External Tools: Added guestbook and terms modal for Dataverse external tools.
+- Manage Guestbooks page integration, including:
+  - a guestbooks table with sorting, enable/disable actions, preview, and per-guestbook response download
+  - Create Guestbook and Download All Responses actions
+  - the Create Guestbook page
+  - a checkbox for including guestbooks from parent collections
+- Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
+- Dataset Page: added a sidebar to show dataset reviews
+
+### Changed
+
+- Add multilingual support for the banner message.
+- File pages now include a "Cite Data File" dropdown for downloading file citations in EndNote XML, RIS, and BibTeX formats.
+- Hide "Export Metadata" on dataset and file pages that are not for the latest published dataset version.
+- Show "Export Metadata" on dataset and file pages for draft version.
+- Avoided prop-drilling for file, guestbook, user and external tool repository, so used context to share repository instances.
+
+### Fixed
+
+- Disable clickable DRAFT version link in Versions tab when viewing the draft version. (#1090)
+- Disable Save Changes button when file path contains invalid special characters during file upload. (#600)
+- Fix "Filter by" File Type dropdown getting cut off by adding max-height and scrolling. (#792)
+- Dataset Page: show draft version if user has permission when no version param is provided. (#1003)
+- Display facet name alongside facet value in selected filter chips above search results (#894)
+- Show accurate, user-specific API token status messages on the Account page (#943)
+- Publish Dataset modal custom messages now render configured HTML links and line breaks.
+- Edit Dataset Terms: navigate to the draft version of the dataset after saving changes to the terms, instead of the latest published version.
+- After saving on either Edit Template tab (Metadata or Terms), the user is redirected to the templates listing with a success toast instead of staying on the edit page.
+- Edit Template breadcrumb on the Terms page no longer renders the dataset's "Terms and Guestbook" label (templates have no guestbook).
+- Edit Metadata always loads the latest dataset version (draft if present, otherwise latest published), ignoring the browsed `version` query param so it matches JSF / Edit Terms. (#1024)
+
+### Removed
+
+- Standalone `EditTemplateMetadataFactory` and `EditTemplateTermsFactory` route factories — replaced by a single `EditTemplateFactory` dispatcher that selects the right page based on `editMode`.
+
+---
+
 ## [v0.3.1] -- 2026-04-30
 
 - Added pagination to the Versions tabs on Dataset and File pages so version summaries are loaded and displayed one page at a time.
@@ -36,6 +78,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Added Notifications tab in Account Page
 - Added runtime configuration options for homepage branding and support link.
 - Added an environment variable to docker-compose-dev.yml to hide the OIDC client used in the SPA from the JSF frontend: DATAVERSE_AUTH_OIDC_HIDDEN_JSF: 1
+- Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Added a message note to the login page
 - Download with terms of use and guestbook.
 - Show terms modal before download when dataset has custom terms, a non-default license (not CC0 1.0), or a guestbook. Draft datasets and dataset editors bypass the modal.
@@ -61,6 +104,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Dataset versions: (1) file changes should be `Access: Restricted` instead of `isResticted: true/false`; (2) logic of View Detail button. (#879)
 - File versions: (1) logic of linking to a file version; (2)If file not included, show text information "File not included in this version.". (#879)
 - Dataset page publish flow now avoids rendering duplicate tab sets by making tabs skeleton and tabs content mutually exclusive.
+- Fixed custom terms navigation url while publishing a datsaet.
 
 ### Removed
 

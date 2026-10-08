@@ -1,0 +1,35 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.container {
+  padding-bottom: $spacer;
+}
+
+.header {
+  margin-bottom: $spacer;
+}
+
+.breadcrumb {
+  margin-bottom: $spacer;
+}
+
+.template-name-row {
+  margin-bottom: $spacer;
+}
+
+.accordion {
+  margin-top: $spacer;
+}
+
+.form-actions {
+  margin-top: $spacer;
+}
+
+.terms-section {
+  margin-top: $spacer;
+}
+
+.terms-row {
+  margin-bottom: $spacer;
+}
