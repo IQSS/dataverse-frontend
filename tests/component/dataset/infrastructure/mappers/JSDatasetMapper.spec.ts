@@ -213,11 +213,12 @@ const expectedDataset = {
     title: "Darwin's Finches",
     labels: [
       { semanticMeaning: 'dataset', value: 'Draft' },
-      { semanticMeaning: 'warning', value: 'Unpublished' }
+      { semanticMeaning: 'warning', value: 'Unpublished' },
+      { semanticMeaning: 'success', value: 'In Review' }
     ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
@@ -324,10 +325,13 @@ const expectedDatasetWithPublicationDate = {
   version: {
     id: 101,
     title: "Darwin's Finches",
-    labels: [{ semanticMeaning: 'dataset', value: 'Draft' }],
+    labels: [
+      { semanticMeaning: 'dataset', value: 'Draft' },
+      { semanticMeaning: 'success', value: 'In Review' }
+    ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     termsOfAccess: termsOfAccess,
     deaccessionNote: undefined,
     latestVersionPublishingStatus: 'draft',
@@ -435,10 +439,13 @@ const expectedDatasetWithNextVersionNumbers = {
   version: {
     id: 101,
     title: "Darwin's Finches",
-    labels: [{ semanticMeaning: 'dataset', value: 'Draft' }],
+    labels: [
+      { semanticMeaning: 'dataset', value: 'Draft' },
+      { semanticMeaning: 'success', value: 'In Review' }
+    ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
@@ -549,11 +556,12 @@ const expectedDatasetAlternateVersion = {
     title: "Darwin's Finches",
     labels: [
       { semanticMeaning: 'dataset', value: 'Draft' },
-      { semanticMeaning: 'warning', value: 'Unpublished' }
+      { semanticMeaning: 'warning', value: 'Unpublished' },
+      { semanticMeaning: 'success', value: 'In Review' }
     ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
