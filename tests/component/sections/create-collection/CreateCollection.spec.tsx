@@ -54,7 +54,7 @@ describe('CreateCollection', () => {
       return Cypress.Promise.delay(DELAYED_TIME).then(() => collection)
     })
 
-    cy.customMount(
+    cy.mountAuthenticated(
       <WithRepositories collectionRepository={collectionRepository}>
         <CreateCollection
           metadataBlockInfoRepository={metadataBlockInfoRepository}
@@ -74,7 +74,7 @@ describe('CreateCollection', () => {
   })
 
   it('should render the correct breadcrumbs', () => {
-    cy.customMount(
+    cy.mountAuthenticated(
       <WithRepositories collectionRepository={collectionRepository}>
         <CreateCollection
           metadataBlockInfoRepository={metadataBlockInfoRepository}
@@ -94,7 +94,7 @@ describe('CreateCollection', () => {
   it('should show page not found when owner collection does not exist', () => {
     collectionRepository.getById = cy.stub().resolves(null)
 
-    cy.customMount(
+    cy.mountAuthenticated(
       <WithRepositories collectionRepository={collectionRepository}>
         <CreateCollection
           metadataBlockInfoRepository={metadataBlockInfoRepository}
