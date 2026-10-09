@@ -804,7 +804,7 @@ describe('EditDatasetTerms', () => {
         })
     })
 
-    it('navigates to the draft dataset version after saving guestbook edits', () => {
+    it('navigates to the current dataset version after saving guestbook edits', () => {
       const dataset = DatasetMother.create({
         persistentId: 'some-persistent-id',
         version: DatasetVersionMother.createReleased(),
@@ -831,11 +831,11 @@ describe('EditDatasetTerms', () => {
       cy.wrap(guestbookRepository.assignDatasetGuestbook).should('have.been.called')
       cy.findByTestId('current-location').should(
         'have.text',
-        '/datasets?persistentId=some-persistent-id&version=DRAFT'
+        '/datasets?persistentId=some-persistent-id&version=1.0'
       )
     })
 
-    it('navigates to the draft dataset version after removing a guestbook', () => {
+    it('navigates to the current dataset version after removing a guestbook', () => {
       const dataset = DatasetMother.create({
         persistentId: 'some-persistent-id',
         version: DatasetVersionMother.createReleased(),
@@ -862,7 +862,7 @@ describe('EditDatasetTerms', () => {
       cy.wrap(guestbookRepository.removeDatasetGuestbook).should('have.been.called')
       cy.findByTestId('current-location').should(
         'have.text',
-        '/datasets?persistentId=some-persistent-id&version=DRAFT'
+        '/datasets?persistentId=some-persistent-id&version=1.0'
       )
     })
 
