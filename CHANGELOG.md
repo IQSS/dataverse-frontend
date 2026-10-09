@@ -12,6 +12,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Dataset Versions: the "View Differences" modal now shows file tags and categories for added, removed, replaced, and changed files.
+
 ### Removed
 
 ---
