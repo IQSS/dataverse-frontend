@@ -1,9 +1,5 @@
 import { Accordion } from '@iqss/dataverse-design-system'
-import {
-  Dataset,
-  DatasetPublishingStatus,
-  MetadataBlockName
-} from '../../../dataset/domain/models/Dataset'
+import { Dataset, MetadataBlockName } from '../../../dataset/domain/models/Dataset'
 import { DatasetMetadataBlock } from './dataset-metadata-block/DatasetMetadataBlock'
 import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
@@ -27,12 +23,8 @@ export function DatasetMetadata({
       <div className="d-flex justify-content-end mb-3">
         <ExportMetadataDropdown
           datasetPersistentId={dataset.persistentId}
+          datasetVersion={dataset.version}
           anonymizedView={anonymizedView}
-          datasetIsReleased={dataset.version.someDatasetVersionHasBeenReleased}
-          datasetIsDeaccessioned={
-            dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
-          }
-          canUpdateDataset={dataset.permissions?.canUpdateDataset}
           dataverseInfoRepository={dataverseInfoRepository}
         />
       </div>

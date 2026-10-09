@@ -1,4 +1,7 @@
 {
+  "datasetType": {
+    "label": "Dataset Type"
+  },
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
   "termsTabTitle": "Terms and Guestbook",
@@ -329,6 +332,9 @@
       "makeDataCountTip": "Each file downloaded is counted as 1, and added to the total download count."
     },
     "defaultGetDownloadCountError": "Something went wrong while getting the dataset download count. Try again later."
+  },
+  "reviews": {
+    "title": "Dataset Reviews"
   },
   "persistentId": {
     "name": "Persistent Identifier",

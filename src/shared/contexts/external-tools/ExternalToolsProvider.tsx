@@ -1,9 +1,9 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ExternalTool, ToolScope, ToolType } from '@/externalTools/domain/models/ExternalTool'
-import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 import { getExternalTools } from '@/externalTools/domain/useCases/GetExternalTools'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
+import { useExternalToolsRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 type ExternalToolsContextValue = {
   externalTools: ExternalTool[]
@@ -16,20 +16,16 @@ type ExternalToolsContextValue = {
   filePreviewTools: ExternalTool[]
   fileQueryTools: ExternalTool[]
   fileConfigureTools: ExternalTool[]
-  externalToolsRepository: ExternalToolsRepository
 }
 
 const ExternalToolsContext = createContext<ExternalToolsContextValue | undefined>(undefined)
 
 type ExternalToolsProviderProps = {
-  externalToolsRepository: ExternalToolsRepository
   children: React.ReactNode
 }
 
-export function ExternalToolsProvider({
-  externalToolsRepository,
-  children
-}: ExternalToolsProviderProps) {
+export function ExternalToolsProvider({ children }: ExternalToolsProviderProps) {
+  const { externalToolsRepository } = useExternalToolsRepositories()
   const [externalTools, setExternalTools] = useState<ExternalTool[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -111,8 +107,7 @@ export function ExternalToolsProvider({
       filePreviewTools,
       fileQueryTools,
       fileConfigureTools,
-      refreshExternalTools: fetchExternalTools,
-      externalToolsRepository
+      refreshExternalTools: fetchExternalTools
     }),
     [
       externalTools,
@@ -124,8 +119,7 @@ export function ExternalToolsProvider({
       filePreviewTools,
       fileQueryTools,
       fileConfigureTools,
-      fetchExternalTools,
-      externalToolsRepository
+      fetchExternalTools
     ]
   )
 

@@ -26,4 +26,6 @@ export interface Guestbook {
   customQuestions: GuestbookCustomQuestion[]
   createTime: string
   dataverseId: number
+  usageCount?: number
+  responseCount?: number
 }

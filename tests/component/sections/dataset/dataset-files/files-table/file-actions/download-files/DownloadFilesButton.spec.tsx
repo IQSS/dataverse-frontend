@@ -1,6 +1,5 @@
 import { ReactNode, Suspense } from 'react'
 import {
-  getGuestbook,
   submitGuestbookForDatasetDownload,
   submitGuestbookForDatafilesDownload
 } from '@iqss/dataverse-client-javascript'
@@ -24,10 +23,26 @@ import {
   CustomTermsMother,
   TermsOfUseMother
 } from '../../../../../../dataset/domain/models/TermsOfUseMother'
+import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const fileRepository = {} as FileRepository
 describe('DownloadFilesButton', () => {
+  const guestbook: Guestbook = {
+    id: 10,
+    name: 'Guestbook Test',
+    enabled: true,
+    nameRequired: true,
+    emailRequired: true,
+    institutionRequired: false,
+    positionRequired: false,
+    customQuestions: [],
+    createTime: '2026-01-01T00:00:00.000Z',
+    dataverseId: 1
+  }
+
   const TranslationPreloader = ({ children }: { children: ReactNode }) => {
     useTranslation('files')
     useTranslation('dataset')
@@ -66,6 +81,21 @@ describe('DownloadFilesButton', () => {
       <AccessRepositoryProvider repository={accessRepository}>{component}</AccessRepositoryProvider>
     )
   }
+
+  const createGuestbookRepository = (
+    repositoryOverrides: Partial<GuestbookRepository> = {}
+  ): GuestbookRepository => ({
+    getGuestbook: cy.stub().resolves(guestbook),
+    getGuestbooksByCollectionId: cy.stub().resolves([]),
+    assignDatasetGuestbook: cy.stub().resolves(),
+    removeDatasetGuestbook: cy.stub().resolves(),
+    ...repositoryOverrides
+  })
+
+  const withGuestbookRepository = (
+    component: ReactNode,
+    guestbookRepository: GuestbookRepository
+  ) => <WithRepositories guestbookRepository={guestbookRepository}>{component}</WithRepositories>
 
   beforeEach(() => {
     fileRepository.getMultipleFileDownloadUrl = cy
@@ -463,32 +493,24 @@ describe('DownloadFilesButton', () => {
     const fileSelection = {
       'some-file-id': files[0]
     }
-    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
 
     cy.mountAuthenticated(
-      withDataset(
-        <DownloadFilesButton files={files} fileSelection={fileSelection} />,
-        datasetWithGuestbook
+      withGuestbookRepository(
+        withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithGuestbook
+        ),
+        guestbookRepository
       )
     )
 
-    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.wrap(guestbookRepository.getGuestbook).should('not.have.been.called')
 
     cy.get('#download-files').click()
     cy.findByRole('button', { name: 'Original Format' }).click()
 
-    cy.wrap(getGuestbookExecute).should('have.been.calledOnceWith', 10)
+    cy.wrap(guestbookRepository.getGuestbook).should('have.been.calledOnceWith', 10)
   })
 
   it('submits guestbook for the dataset when all files are selected and guestbook exists', () => {
@@ -509,18 +531,7 @@ describe('DownloadFilesButton', () => {
       'file-c': undefined
     }
 
-    cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
     const submitDatasetStub = cy
       .stub(submitGuestbookForDatasetDownload, 'execute')
       .resolves('/api/v1/access/dataset/999?token=test')
@@ -532,9 +543,12 @@ describe('DownloadFilesButton', () => {
     })
 
     cy.mountAuthenticated(
-      withDataset(
-        <DownloadFilesButton files={files} fileSelection={fileSelection} />,
-        datasetWithGuestbook
+      withGuestbookRepository(
+        withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithGuestbook
+        ),
+        guestbookRepository
       )
     )
 
@@ -563,35 +577,27 @@ describe('DownloadFilesButton', () => {
     const fileSelection = {
       'some-file-id': files[0]
     }
-    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
 
     cy.window().then((window) => {
       cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
     })
 
     cy.mountAuthenticated(
-      withAccessRepository(
-        withDataset(
-          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
-          datasetWithGuestbook
-        )
+      withGuestbookRepository(
+        withAccessRepository(
+          withDataset(
+            <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+            datasetWithGuestbook
+          )
+        ),
+        guestbookRepository
       )
     )
 
     cy.get('#download-files').click()
 
-    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.wrap(guestbookRepository.getGuestbook).should('not.have.been.called')
     cy.get('@anchorClick').should('have.been.calledOnce')
     cy.findByRole('dialog').should('not.exist')
     cy.findByText('Your download has started.').should('exist')
@@ -612,35 +618,27 @@ describe('DownloadFilesButton', () => {
     const fileSelection = {
       'some-file-id': files[0]
     }
-    const getGuestbookExecute = cy.stub(getGuestbook, 'execute').resolves({
-      id: 10,
-      name: 'Guestbook Test',
-      enabled: true,
-      nameRequired: true,
-      emailRequired: true,
-      institutionRequired: false,
-      positionRequired: false,
-      customQuestions: [],
-      createTime: '2026-01-01T00:00:00.000Z',
-      dataverseId: 1
-    })
+    const guestbookRepository = createGuestbookRepository()
 
     cy.window().then((window) => {
       cy.stub(window.HTMLAnchorElement.prototype, 'click').as('anchorClick')
     })
 
     cy.mountAuthenticated(
-      withAccessRepository(
-        withDataset(
-          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
-          datasetWithGuestbook
-        )
+      withGuestbookRepository(
+        withAccessRepository(
+          withDataset(
+            <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+            datasetWithGuestbook
+          )
+        ),
+        guestbookRepository
       )
     )
 
     cy.get('#download-files').click()
 
-    cy.wrap(getGuestbookExecute).should('not.have.been.called')
+    cy.wrap(guestbookRepository.getGuestbook).should('not.have.been.called')
     cy.get('@anchorClick').should('have.been.calledOnce')
     cy.findByRole('dialog').should('not.exist')
     cy.findByText('Your download has started.').should('exist')

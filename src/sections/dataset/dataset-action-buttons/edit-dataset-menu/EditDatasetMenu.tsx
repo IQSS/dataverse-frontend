@@ -11,13 +11,11 @@ import { DeleteDraftDatasetButton } from './delete-draft-dataset/DeleteDraftData
 import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
 import { useSession } from '../../../session/SessionContext'
 import { QueryParamKey, Route } from '../../../Route.enum'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useNotImplementedModal } from '../../.././not-implemented/NotImplementedModalContext'
 import { DatasetConfigureOptions } from '../DatasetToolsOptions'
 
 interface EditDatasetMenuProps {
   dataset: Dataset
-  datasetRepository: DatasetRepository
 }
 
 export enum EditDatasetMenuItems {
@@ -31,7 +29,7 @@ export enum EditDatasetMenuItems {
   DELETE = 'delete'
 }
 
-export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuProps) {
+export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
   const { user } = useSession()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
@@ -118,10 +116,8 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
 
       <DatasetConfigureOptions persistentId={dataset.persistentId} />
 
-      <DeleteDraftDatasetButton dataset={dataset} datasetRepository={datasetRepository} />
-      {!isDeaccessioned && (
-        <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
-      )}
+      <DeleteDraftDatasetButton dataset={dataset} />
+      {!isDeaccessioned && <DeaccessionDatasetButton dataset={dataset} />}
     </DropdownButton>
   )
 }

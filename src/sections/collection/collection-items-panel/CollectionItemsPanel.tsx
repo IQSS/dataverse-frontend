@@ -371,6 +371,7 @@ export const CollectionItemsPanel = ({
         <Stack direction="vertical" gap={2}>
           {showSelectedFacets && facets.length > 0 && (
             <SelectedFacets
+              facets={facets}
               onRemoveFacet={(filterQuery: FilterQuery) =>
                 handleFacetChange(filterQuery, RemoveAddFacetFilter.REMOVE)
               }

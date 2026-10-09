@@ -1,15 +1,13 @@
 import { lazy, Suspense } from 'react'
 import { Navigate, RouteObject } from 'react-router-dom'
-import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
 import { Route } from '@/sections/Route.enum'
 import { Layout } from '@/sections/layout/Layout'
 import { ErrorPage } from '@/sections/error-page/ErrorPage'
 import { AppLoader } from '@/sections/shared/layout/app-loader/AppLoader'
 import { AuthCallback } from '@/sections/auth-callback/AuthCallback'
 import { SessionProvider } from '@/sections/session/SessionProvider'
+import { GuestbookSkeleton } from '@/sections/guestbooks/GuestbookSkeleton'
 import { ProtectedRoute } from './ProtectedRoute'
-
-const userRepository = new UserJSDataverseRepository()
 
 const Homepage = lazy(() =>
   import('../sections/homepage/HomepageFactory').then(({ HomepageFactory }) => ({
@@ -93,6 +91,28 @@ const EditFeaturedItems = lazy(() =>
   )
 )
 
+const DatasetTemplatesPage = lazy(() =>
+  import('../sections/templates/DatasetTemplatesFactory').then(({ DatasetTemplatesFactory }) => ({
+    default: () => DatasetTemplatesFactory.create()
+  }))
+)
+
+const CreateTemplatePage = lazy(() =>
+  import('../sections/templates/create-template/CreateTemplateFactory').then(
+    ({ CreateTemplateFactory }) => ({
+      default: () => CreateTemplateFactory.create()
+    })
+  )
+)
+
+const EditDatasetTemplatePage = lazy(() =>
+  import('../sections/templates/edit-template/EditTemplateFactory').then(
+    ({ EditTemplateFactory }) => ({
+      default: () => EditTemplateFactory.create()
+    })
+  )
+)
+
 const ReplaceFile = lazy(() =>
   import('../sections/replace-file/ReplaceFileFactory').then(({ ReplaceFileFactory }) => ({
     default: () => ReplaceFileFactory.create()
@@ -111,6 +131,20 @@ const FeaturedItemPage = lazy(() =>
   import('../sections/featured-item/FeaturedItemFactory').then(({ FeaturedItemFactory }) => ({
     default: () => FeaturedItemFactory.create()
   }))
+)
+
+const GuestbooksPage = lazy(() =>
+  import('../sections/guestbooks/GuestbooksFactory').then(({ GuestbooksFactory }) => ({
+    default: () => GuestbooksFactory.create()
+  }))
+)
+
+const CreateGuestbookPage = lazy(() =>
+  import('../sections/guestbooks/create-guestbooks/CreateGuestbookFactory').then(
+    ({ CreateGuestbookFactory }) => ({
+      default: () => CreateGuestbookFactory.create()
+    })
+  )
 )
 
 const NotFoundPage = lazy(() =>
@@ -133,7 +167,7 @@ const AdvancedSearchPage = lazy(() =>
 
 export const routes: RouteObject[] = [
   {
-    element: <SessionProvider repository={userRepository} />,
+    element: <SessionProvider />,
     children: [
       {
         path: '/',
@@ -288,6 +322,51 @@ export const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<AppLoader />}>
                     <EditFeaturedItems />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.GUESTBOOKS,
+                element: (
+                  <Suspense fallback={<GuestbookSkeleton />}>
+                    <GuestbooksPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.COLLECTION_TEMPLATES,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <DatasetTemplatesPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.GUESTBOOKS_CREATE,
+                element: (
+                  <Suspense fallback={<GuestbookSkeleton />}>
+                    <CreateGuestbookPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.TEMPLATES_CREATE,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <CreateTemplatePage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.TEMPLATES_EDIT,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditDatasetTemplatePage />
                   </Suspense>
                 ),
                 errorElement: <ErrorPage />

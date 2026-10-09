@@ -13,7 +13,7 @@ This directory contains a specialized version of the development environment tai
 To use this environment, follow these steps:
 
 1. Replace the `.env` file at the project root with the contents of `.env.example.shib`.
-2. Fill in the `.env` variables inside the `shib-dev-env/` folder, similarly to how it's done in the standard `dev-env/` folder.
+2. Copy `shib-dev-env/.env.example` to `shib-dev-env/.env`, as it's done in the standard `dev-env/` folder. File uploads use the LocalStack S3 service included in this environment, so no AWS credentials are needed.
 3. To run the environment, use the `run-env.sh` script with the Dataverse backend image tag as a parameter. For example:
 
    ```bash

@@ -1,4 +1,7 @@
 {
+  "datasetType": {
+    "label": "Tipo de Dataset"
+  },
   "filesTabTitle": "Ficheros",
   "metadataTabTitle": "Metadatos",
   "termsTabTitle": "Términos y libros de visitas",
@@ -331,6 +334,9 @@
       "makeDataCountTip": "Cada fichero descargado cuenta como 1 y se suma al total de descargas."
     },
     "defaultGetDownloadCountError": "Algo salió mal al obtener el conteo de descargas del dataset. Intenta nuevamente más tarde."
+  },
+  "reviews": {
+    "title": "Reseñas del dataset"
   },
   "persistentId": {
     "name": "Identificador persistente",

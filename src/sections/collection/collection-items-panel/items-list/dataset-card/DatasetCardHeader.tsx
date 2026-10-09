@@ -66,7 +66,14 @@ export function DatasetCardHeader({
 
       <div className={styles['top-right-icon']}>
         <Icon name={IconName.DATASET} />
-        {isLinked && <Link45deg size={26} title="linked" data-testid="linked-dataset-icon" />}
+        {isLinked && (
+          <Link45deg
+            size={26}
+            role="img"
+            aria-label="Linked dataset"
+            data-testid="linked-dataset-icon"
+          />
+        )}
       </div>
     </header>
   )

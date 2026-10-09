@@ -1,18 +1,25 @@
 import { ApiTokenSection } from '../../../../src/sections/account/api-token-section/ApiTokenSection'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 describe('ApiTokenSection', () => {
   const mockApiTokenInfo = {
     apiToken: 'mocked-api',
-    expirationDate: new Date('2024-12-31')
+    expirationDate: new Date('2099-12-31')
   }
   const newMockApiTokenInfo = {
     apiToken: 'new-mocked-api',
-    expirationDate: new Date('2025-12-31')
+    expirationDate: new Date('2098-12-31')
   }
 
   let userRepository: UserRepository
+
+  const ApiTokenSectionWithRepositories = () => (
+    <WithRepositories userRepository={userRepository}>
+      <ApiTokenSection />
+    </WithRepositories>
+  )
 
   beforeEach(() => {
     userRepository = {
@@ -23,7 +30,7 @@ describe('ApiTokenSection', () => {
       register: cy.stub().resolves()
     }
 
-    cy.mountAuthenticated(<ApiTokenSection repository={userRepository} />)
+    cy.mountAuthenticated(<ApiTokenSectionWithRepositories />)
   })
 
   it('should show the loading skeleton while fetching the token', () => {
@@ -31,7 +38,7 @@ describe('ApiTokenSection', () => {
       return Cypress.Promise.delay(500).then(() => mockApiTokenInfo)
     })
 
-    cy.mount(<ApiTokenSection repository={userRepository} />)
+    cy.mount(<ApiTokenSectionWithRepositories />)
     cy.get('[data-testid="loadingSkeleton"]').should('exist')
 
     cy.wait(500)
@@ -62,6 +69,42 @@ describe('ApiTokenSection', () => {
     )
   })
 
+  it('should describe the token as valid until its expiration date', () => {
+    cy.findByText(/Your token is valid until the expiration date\./).should('exist')
+    cy.get('body').should('not.contain.text', 'valid for a year')
+  })
+
+  it('should show the authenticated user in the no-token message', () => {
+    userRepository.getCurrentApiToken = cy.stub().resolves({
+      apiToken: '',
+      expirationDate: new Date(0)
+    })
+
+    cy.mountAuthenticated(<ApiTokenSectionWithRepositories />, undefined, {
+      displayName: 'Ada Lovelace'
+    })
+
+    cy.findByText('API Token for Ada Lovelace has not been created.').should('exist')
+  })
+
+  it('should warn when the API token has expired', () => {
+    userRepository.getCurrentApiToken = cy.stub().resolves({
+      apiToken: 'expired-api-token',
+      expirationDate: new Date('2020-01-01')
+    })
+
+    cy.mountAuthenticated(<ApiTokenSectionWithRepositories />)
+
+    cy.findByRole('alert').should(
+      'contain.text',
+      'This token is expired, please generate a new one.'
+    )
+  })
+
+  it('should not show an expiration warning for a valid API token', () => {
+    cy.findByText('This token is expired, please generate a new one.').should('not.exist')
+  })
+
   it('should recreate and display a new API token', () => {
     userRepository.recreateApiToken = cy.stub().resolves(newMockApiTokenInfo)
     cy.get('button').contains('Recreate Token').click()
@@ -81,7 +124,7 @@ describe('ApiTokenSection', () => {
   it('should show error message when failing to fetch the current API token', () => {
     userRepository.getCurrentApiToken = cy.stub().rejects(new Error('Failed to fetch API token'))
 
-    cy.mountAuthenticated(<ApiTokenSection repository={userRepository} />)
+    cy.mountAuthenticated(<ApiTokenSectionWithRepositories />)
 
     cy.findByText(/Failed to fetch API token/).should('exist')
   })

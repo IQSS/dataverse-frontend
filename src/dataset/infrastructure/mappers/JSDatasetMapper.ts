@@ -103,7 +103,8 @@ export class JSDatasetMapper {
       ),
       JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff),
       fileStore,
-      jsDataset.guestbookId as number
+      jsDataset.guestbookId as number,
+      (jsDataset as { datasetType?: string }).datasetType
     ).build()
   }
 

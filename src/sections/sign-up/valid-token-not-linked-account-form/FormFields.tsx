@@ -3,20 +3,20 @@ import { AuthContext } from 'react-oauth2-code-pkce'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button, Col, Form, Stack } from '@iqss/dataverse-design-system'
-import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { Validator } from '@/shared/helpers/Validator'
 import { type ValidTokenNotLinkedAccountFormData } from './types'
 import { TermsOfUse } from '@/info/domain/models/TermsOfUse'
 import { SubmissionStatus, useSubmitUser } from './useSubmitUser'
+import { useUserRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './FormFields.module.scss'
 
 interface FormFieldsProps {
-  userRepository: UserRepository
   formDefaultValues: ValidTokenNotLinkedAccountFormData
   termsOfUse: TermsOfUse
 }
 
-export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: FormFieldsProps) => {
+export const FormFields = ({ formDefaultValues, termsOfUse }: FormFieldsProps) => {
+  const { userRepository } = useUserRepositories()
   const { tokenData, logOut } = useContext(AuthContext)
   const { t } = useTranslation('signUp')
   const { t: tShared } = useTranslation('shared')

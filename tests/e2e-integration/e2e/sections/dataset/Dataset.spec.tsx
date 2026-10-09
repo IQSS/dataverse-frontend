@@ -11,11 +11,33 @@ import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from '../../../../../src/sections/dataset/config'
 import { GuestbookHelper } from '../../../shared/guestbooks/GuestbookHelper'
 import { faker } from '@faker-js/faker'
+import {
+  DatasetReviewHelper,
+  REVIEW_SOLR_SCHEMA_FIELD_NAMES
+} from '../../../shared/datasets/DatasetReviewHelper'
 
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
 }
 const DRAFT_PARAM = DatasetNonNumericVersionSearchParam.DRAFT
+
+const visitDatasetMetadataTabAndAssertExportMetadata = (
+  persistentId: string,
+  shouldExist: boolean,
+  version?: string
+) => {
+  const searchParams = new URLSearchParams({
+    persistentId,
+    tab: 'metadata'
+  })
+
+  if (version) {
+    searchParams.set('version', version)
+  }
+
+  cy.visit(`${FRONTEND_BASE_PATH}/datasets?${searchParams.toString()}`)
+  cy.findByRole('button', { name: 'Export Metadata' }).should(shouldExist ? 'exist' : 'not.exist')
+}
 
 describe('Dataset', () => {
   beforeEach(() => {
@@ -179,6 +201,102 @@ describe('Dataset', () => {
             cy.findByText('Files').should('exist')
           })
         })
+    })
+
+    it('shows export metadata on the dataset page for admin draft, admin latest published, and guest latest published views', () => {
+      cy.wrap(DatasetHelper.create()).then((draftDataset) => {
+        visitDatasetMetadataTabAndAssertExportMetadata(draftDataset.persistentId, true, DRAFT_PARAM)
+      })
+
+      cy.wrap(DatasetHelper.createAndPublish())
+        .its('persistentId')
+        .then((persistentId: string) => {
+          visitDatasetMetadataTabAndAssertExportMetadata(persistentId, true)
+
+          TestsUtils.logout()
+          visitDatasetMetadataTabAndAssertExportMetadata(persistentId, true)
+        })
+    })
+
+    it('hides export metadata on the dataset page for older published versions', () => {
+      cy.wrap(DatasetHelper.createWithFileAndPublish(FileHelper.create()), { timeout: 6000 })
+        .then((dataset) => {
+          if (!dataset.file) {
+            throw new Error('Expected created dataset to include a file')
+          }
+
+          return cy.wrap(
+            FileHelper.addLabel(dataset.file.id, []).then(async () => {
+              await DatasetHelper.publish(dataset.persistentId)
+              return dataset.persistentId
+            })
+          )
+        })
+        .then((persistentId) => {
+          visitDatasetMetadataTabAndAssertExportMetadata(persistentId, false, '1.0')
+
+          TestsUtils.logout()
+          visitDatasetMetadataTabAndAssertExportMetadata(persistentId, false, '1.0')
+        })
+    })
+
+    it('shows dataset reviews for a dataset with a published local review dataset', () => {
+      const timestamp = new Date().valueOf()
+      const collectionAlias = `dataset-reviews-${timestamp}`
+      const targetDatasetTitle = `Dataset with Review ${timestamp}`
+      const reviewDatasetTitle = `Review of Dataset ${timestamp}`
+
+      cy.then(() => DatasetReviewHelper.ensureReviewMetadataBlocksExist())
+      cy.task('replaceSolrSchemaWithDataverseGeneratedSchema')
+      REVIEW_SOLR_SCHEMA_FIELD_NAMES.forEach((fieldName) => {
+        cy.task('solrSchemaFieldExists', fieldName).should('equal', true)
+      })
+
+      cy.then(() =>
+        CollectionHelper.create(collectionAlias).then(async (collection) => {
+          await DatasetReviewHelper.ensureReviewDatasetTypeExists()
+          await DatasetReviewHelper.allowReviewDatasetTypeInCollection(collectionAlias)
+
+          if (!collection.isReleased) {
+            await CollectionHelper.publish(collection.id)
+          }
+        })
+      )
+
+      cy.then(
+        {
+          timeout: 45_000
+        },
+        () =>
+          DatasetHelper.createWithTitle(targetDatasetTitle, collectionAlias).then(
+            async (target) => {
+              await DatasetHelper.publish(target.persistentId)
+              const review = await DatasetReviewHelper.createReviewDataset(
+                collectionAlias,
+                target.persistentId,
+                reviewDatasetTitle
+              )
+              await DatasetHelper.publish(review.persistentId)
+              const indexedReview = await DatasetReviewHelper.waitForDatasetReview(
+                target.persistentId,
+                Number(review.id)
+              )
+
+              return { target, indexedReview }
+            }
+          )
+      ).then(({ target, indexedReview }) => {
+        cy.visit(`${FRONTEND_BASE_PATH}/datasets?persistentId=${target.persistentId}`)
+
+        cy.findByText('Dataset Reviews').should('exist')
+        cy.findByRole('link', { name: reviewDatasetTitle })
+          .should('exist')
+          .and(
+            'have.attr',
+            'href',
+            `/modern/datasets?persistentId=${encodeURIComponent(indexedReview.persistentId)}`
+          )
+      })
     })
 
     it('loads page not found when the user is not authenticated and tries to access a draft', () => {
@@ -817,7 +935,8 @@ describe('Dataset', () => {
     it('downloads the dataset directly for dataset editors even when a guestbook is assigned', () => {
       const guestbookName = `Guestbook ${faker.datatype.uuid()}`
 
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then((dataset) => {
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then(async (dataset) => {
+        await TestsUtils.waitForNoLocks(dataset.persistentId)
         cy.wrap(
           GuestbookHelper.createAndGetByName(guestbookName).then(async (guestbook) => {
             await GuestbookHelper.assignToDataset(Number(dataset.id), guestbook.id)
@@ -848,7 +967,8 @@ describe('Dataset', () => {
     it('opens the guestbook modal for guests when downloading a dataset with an assigned guestbook', () => {
       const guestbookName = `Guestbook ${faker.datatype.uuid()}`
 
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then((dataset) => {
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(2))).then(async (dataset) => {
+        await TestsUtils.waitForNoLocks(dataset.persistentId)
         cy.wrap(
           GuestbookHelper.createAndGetByName(guestbookName).then(async (guestbook) => {
             await GuestbookHelper.assignToDataset(Number(dataset.id), guestbook.id)
@@ -878,6 +998,7 @@ describe('Dataset', () => {
     it('opens the custom terms modal for guests when downloading a dataset with custom terms and no guestbook', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then(async (dataset) => {
+          await TestsUtils.waitForNoLocks(dataset.persistentId)
           await DatasetHelper.setCustomTermsOfUse(dataset.id, {
             termsOfUse: 'These are custom terms of use for testing'
           })
@@ -906,6 +1027,7 @@ describe('Dataset', () => {
     it('downloads the dataset directly for editors even when custom terms exist without a guestbook', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then(async (dataset) => {
+          await TestsUtils.waitForNoLocks(dataset.persistentId)
           await DatasetHelper.setCustomTermsOfUse(dataset.id, {
             termsOfUse: 'These are custom terms of use for testing'
           })
@@ -961,7 +1083,8 @@ describe('Dataset', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(3)).then((dataset) =>
           DatasetHelper.publish(dataset.persistentId)
-        )
+        ),
+        { timeout: 30_000 }
       )
         .its('persistentId')
         .then((persistentId: string) => {

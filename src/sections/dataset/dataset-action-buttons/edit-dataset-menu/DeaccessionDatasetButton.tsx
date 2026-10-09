@@ -3,17 +3,12 @@ import { Dataset } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButtonItem, DropdownSeparator } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { DeaccessionDatasetModal } from '@/sections/dataset/deaccession-dataset/DeaccessionDatasetModal'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface DeaccessionDatasetButtonProps {
   dataset: Dataset
-  datasetRepository: DatasetRepository
 }
 
-export function DeaccessionDatasetButton({
-  dataset,
-  datasetRepository
-}: DeaccessionDatasetButtonProps) {
+export function DeaccessionDatasetButton({ dataset }: DeaccessionDatasetButtonProps) {
   const { t } = useTranslation('dataset')
   const [showDeaccessionModal, setShowDeaccessionModal] = useState(false)
 
@@ -38,7 +33,6 @@ export function DeaccessionDatasetButton({
         {t('datasetActionButtons.editDataset.deaccession')}
       </DropdownButtonItem>
       <DeaccessionDatasetModal
-        datasetRepository={datasetRepository}
         datasetPersistentId={dataset.persistentId}
         show={showDeaccessionModal}
         handleCloseDeaccessionModal={handleCloseDeaccessionModal}

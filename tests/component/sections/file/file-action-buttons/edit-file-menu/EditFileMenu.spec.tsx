@@ -5,27 +5,29 @@ import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { FileMockRepository } from '@/stories/file/FileMockRepository'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const testFile = FileMother.createRealistic()
 
 describe('EditFileMenu', () => {
   it('renders the edit file menu', () => {
     cy.customMount(
-      <EditFileMenu
-        fileId={testFile.id}
-        fileRepository={new FileMockRepository()}
-        isRestricted={false}
-        datasetInfo={{
-          persistentId: testFile.datasetPersistentId,
-          versionNumber: testFile.datasetVersion.number.toSearchParam(),
-          releasedVersionExists: false,
-          requestAccess: false
-        }}
-        storageIdentifier="s3://10.5072/FK2/FNJFOR"
-        isTabularFile={true}
-        datasetRepository={new DatasetMockRepository()}
-        fileType={testFile.metadata.type.value}
-      />
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <EditFileMenu
+          fileId={testFile.id}
+          fileRepository={new FileMockRepository()}
+          isRestricted={false}
+          datasetInfo={{
+            persistentId: testFile.datasetPersistentId,
+            versionNumber: testFile.datasetVersion.number.toSearchParam(),
+            releasedVersionExists: false,
+            requestAccess: false
+          }}
+          storageIdentifier="s3://10.5072/FK2/FNJFOR"
+          isTabularFile={true}
+          fileType={testFile.metadata.type.value}
+        />
+      </WithRepositories>
     )
 
     cy.findByRole('button', { name: 'Edit File' }).should('exist').click()
@@ -50,29 +52,7 @@ describe('EditFileMenu', () => {
 
   it('does not render the replace file button if file storageIdentifier does not start with "s3"', () => {
     cy.customMount(
-      <EditFileMenu
-        fileId={testFile.id}
-        fileRepository={new FileMockRepository()}
-        isRestricted={false}
-        datasetInfo={{
-          persistentId: testFile.datasetPersistentId,
-          versionNumber: testFile.datasetVersion.number.toSearchParam(),
-          releasedVersionExists: false,
-          requestAccess: false
-        }}
-        isTabularFile={true}
-        storageIdentifier="non-s3://10.5072/FK2/FNJFOR"
-        datasetRepository={new DatasetMockRepository()}
-        fileType={testFile.metadata.type.value}
-      />
-    )
-
-    cy.findByRole('link', { name: 'Replace' }).should('not.exist')
-  })
-
-  describe('Delete button', () => {
-    it('opens and close the delete file confirmation modal', () => {
-      cy.customMount(
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
         <EditFileMenu
           fileId={testFile.id}
           fileRepository={new FileMockRepository()}
@@ -83,11 +63,35 @@ describe('EditFileMenu', () => {
             releasedVersionExists: false,
             requestAccess: false
           }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
           isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
+          storageIdentifier="non-s3://10.5072/FK2/FNJFOR"
           fileType={testFile.metadata.type.value}
         />
+      </WithRepositories>
+    )
+
+    cy.findByRole('link', { name: 'Replace' }).should('not.exist')
+  })
+
+  describe('Delete button', () => {
+    it('opens and close the delete file confirmation modal', () => {
+      cy.customMount(
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              releasedVersionExists: false,
+              requestAccess: false
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -101,21 +105,22 @@ describe('EditFileMenu', () => {
 
     it('file dataset has a released version, shows custom message also', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: true,
-            requestAccess: false
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              releasedVersionExists: true,
+              requestAccess: false
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -129,21 +134,22 @@ describe('EditFileMenu', () => {
 
     it('closes the modal and shows toast success message when delete file succeeds', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: false,
-            requestAccess: false
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              releasedVersionExists: false,
+              requestAccess: false
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -166,21 +172,22 @@ describe('EditFileMenu', () => {
       fileRepository.delete = cy.stub().rejects(new WriteError('Testing delete error message.'))
 
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={fileRepository}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: false,
-            requestAccess: false
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={fileRepository}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              releasedVersionExists: false,
+              requestAccess: false
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -197,21 +204,22 @@ describe('EditFileMenu', () => {
       fileRepository.delete = cy.stub().rejects('Some error')
 
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={fileRepository}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: false,
-            requestAccess: false
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={fileRepository}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              releasedVersionExists: false,
+              requestAccess: false
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -227,21 +235,22 @@ describe('EditFileMenu', () => {
   describe('Restrict button', () => {
     it('opens and close the restrict file modal', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            requestAccess: true
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: false,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              requestAccess: true
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -257,22 +266,23 @@ describe('EditFileMenu', () => {
 
     it('should show terms Of Access For Restricted Files in restrict file modal', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: false,
-            termsOfAccessForRestrictedFiles: 'test terms of access',
-            requestAccess: false
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              releasedVersionExists: false,
+              termsOfAccessForRestrictedFiles: 'test terms of access',
+              requestAccess: false
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -289,21 +299,22 @@ describe('EditFileMenu', () => {
 
     it('file dataset has a released version, shows custom message also', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: true,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            requestAccess: false
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: true,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              requestAccess: false
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -317,21 +328,22 @@ describe('EditFileMenu', () => {
 
     it('should disable Save button if no terms of acccess and disenable access request', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            requestAccess: false
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: false,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              requestAccess: false
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -347,21 +359,22 @@ describe('EditFileMenu', () => {
 
     it('closes the modal and shows toast success message when restrict file succeeds', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            requestAccess: true
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: false,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              requestAccess: true
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -383,21 +396,22 @@ describe('EditFileMenu', () => {
       fileRepository.restrict = cy.stub().rejects('Some error')
 
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={fileRepository}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            requestAccess: true
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={fileRepository}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: false,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              requestAccess: true
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -414,21 +428,22 @@ describe('EditFileMenu', () => {
       fileRepository.restrict = cy.stub().rejects(new WriteError('error message.'))
 
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={fileRepository}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            requestAccess: true
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={fileRepository}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: false,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              requestAccess: true
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -442,21 +457,22 @@ describe('EditFileMenu', () => {
 
     it('should be able to restrict file with access request', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            requestAccess: false
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: false,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              requestAccess: false
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -477,20 +493,21 @@ describe('EditFileMenu', () => {
   describe('Unrestrict button', () => {
     it('opens and close the unrestrict file modal', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={true}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={true}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: false,
+              versionNumber: testFile.datasetVersion.number.toSearchParam()
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -505,20 +522,21 @@ describe('EditFileMenu', () => {
 
     it('file dataset has a released version, shows custom message also', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={true}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: true,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={true}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: true,
+              versionNumber: testFile.datasetVersion.number.toSearchParam()
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -531,20 +549,21 @@ describe('EditFileMenu', () => {
 
     it('closes the modal and shows toast success message when unrestrict file succeeds', () => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={true}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={true}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: false,
+              versionNumber: testFile.datasetVersion.number.toSearchParam()
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -566,20 +585,21 @@ describe('EditFileMenu', () => {
       fileRepository.restrict = cy.stub().rejects('Some error')
 
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={fileRepository}
-          isRestricted={true}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={fileRepository}
+            isRestricted={true}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: false,
+              versionNumber: testFile.datasetVersion.number.toSearchParam()
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -596,20 +616,21 @@ describe('EditFileMenu', () => {
       fileRepository.restrict = cy.stub().rejects(new WriteError('error message.'))
 
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={fileRepository}
-          isRestricted={true}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
-          }}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={fileRepository}
+            isRestricted={true}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              releasedVersionExists: false,
+              versionNumber: testFile.datasetVersion.number.toSearchParam()
+            }}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            isTabularFile={true}
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'Edit File' }).click()
@@ -625,27 +646,28 @@ describe('EditFileMenu', () => {
   describe('Tags button', () => {
     beforeEach(() => {
       cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
-            releasedVersionExists: false,
-            requestAccess: false
-          }}
-          existingLabels={[
-            { value: 'Data', type: FileLabelType.CATEGORY },
-            { value: 'Code', type: FileLabelType.CATEGORY },
-            { value: 'Survey', type: FileLabelType.TAG },
-            { value: 'Panel', type: FileLabelType.TAG }
-          ]}
-          isTabularFile={true}
-          datasetRepository={new DatasetMockRepository()}
-          storageIdentifier="s3://10.5072/FK2/FNJFOR"
-          fileType={testFile.metadata.type.value}
-        />
+        <WithRepositories datasetRepository={new DatasetMockRepository()}>
+          <EditFileMenu
+            fileId={testFile.id}
+            fileRepository={new FileMockRepository()}
+            isRestricted={false}
+            datasetInfo={{
+              persistentId: testFile.datasetPersistentId,
+              versionNumber: testFile.datasetVersion.number.toSearchParam(),
+              releasedVersionExists: false,
+              requestAccess: false
+            }}
+            existingLabels={[
+              { value: 'Data', type: FileLabelType.CATEGORY },
+              { value: 'Code', type: FileLabelType.CATEGORY },
+              { value: 'Survey', type: FileLabelType.TAG },
+              { value: 'Panel', type: FileLabelType.TAG }
+            ]}
+            isTabularFile={true}
+            storageIdentifier="s3://10.5072/FK2/FNJFOR"
+            fileType={testFile.metadata.type.value}
+          />
+        </WithRepositories>
       )
     })
 

@@ -1,9 +1,17 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
+.expiration-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 3rem;
+  align-items: center;
+}
+
 .exp-date {
   display: flex;
   gap: 1.5rem;
   align-items: center;
+  margin: 0;
   padding-left: 0.5rem;
   font-weight: bold;
 
@@ -13,6 +21,17 @@
 
   @media (min-width: 768px) {
     gap: 3rem;
+  }
+}
+
+.expired-warning {
+  display: flex;
+  gap: 0.375rem;
+  align-items: center;
+  color: $dv-warning-color;
+
+  svg {
+    flex: 0 0 auto;
   }
 }
 

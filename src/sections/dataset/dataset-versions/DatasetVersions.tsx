@@ -8,19 +8,22 @@ import {
   DatasetVersionSummaryInfo,
   DatasetVersionSummaryStringValues
 } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { useGetDatasetVersionsSummaries } from './useGetDatasetVersionsSummaries'
 import { DatasetVersionViewDifferenceButton } from './view-difference/DatasetVersionViewDifferenceButton'
 import { useDatasetVersionSummaryDescription } from './useDatasetVersionSummaryDescription'
 import { DatasetViewDetailButton } from './DatasetViewDetailButton'
-import { DatasetVersionState } from '@/dataset/domain/models/Dataset'
+import {
+  DatasetVersionState,
+  DatasetNonNumericVersion,
+  DatasetNonNumericVersionSearchParam
+} from '@/dataset/domain/models/Dataset'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './DatasetVersions.module.scss'
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { PaginationControls } from '@/sections/shared/pagination/PaginationControls'
 
 interface DatasetVersionsProps {
-  datasetRepository: DatasetRepository
   datasetId: string
   currentVersionNumber: string
   canUpdateDataset: boolean
@@ -33,12 +36,12 @@ const isVersionDeaccessioned = (version: DatasetVersionSummaryInfo) =>
   'deaccessioned' in version.summary
 
 export function DatasetVersions({
-  datasetRepository,
   datasetId,
   currentVersionNumber,
   canUpdateDataset,
   isInView
 }: DatasetVersionsProps) {
+  const { datasetRepository } = useDatasetRepositories()
   const { t } = useTranslation('dataset')
   const [selectedVersions, setSelectedVersions] = useState<DatasetVersionSummaryInfo[]>([])
   const [paginationInfo, setPaginationInfo] = useState<DatasetVersionPaginationInfo>(
@@ -111,7 +114,6 @@ export function DatasetVersions({
     <>
       {selectedVersions.length === 2 && (
         <DatasetVersionViewDifferenceButton
-          datasetRepository={datasetRepository}
           persistentId={datasetId}
           selectedVersions={selectedVersions}
         />
@@ -151,7 +153,11 @@ export function DatasetVersions({
               }
 
               const previousVersion = findLastNonDeaccessionedPreviousVersion()
-              const isCurrentVersion = dataset.versionNumber === currentVersionNumber
+              const isCurrentVersion =
+                dataset.versionNumber === currentVersionNumber ||
+                (dataset.versionNumber === DatasetVersionState.DRAFT &&
+                  (currentVersionNumber === DatasetNonNumericVersion.DRAFT ||
+                    currentVersionNumber === DatasetNonNumericVersionSearchParam.DRAFT))
               const isCurrentVersionDeaccessioned = isVersionDeaccessioned(dataset)
 
               const isLinkable =
@@ -198,7 +204,6 @@ export function DatasetVersions({
                       />
                       {showViewDetails && (
                         <DatasetViewDetailButton
-                          datasetRepository={datasetRepository}
                           oldVersionNumber={previousVersion.versionNumber}
                           newVersionNumber={dataset.versionNumber}
                           datasetId={datasetId}

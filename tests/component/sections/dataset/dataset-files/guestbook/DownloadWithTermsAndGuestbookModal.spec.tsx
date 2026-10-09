@@ -1,6 +1,11 @@
 import { DownloadWithTermsAndGuestbookModal } from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/DownloadWithTermsAndGuestbookModal'
+import {
+  getGuestbookCustomQuestionFieldName,
+  GuestbookCollectForm,
+  isGuestbookCollectFormEmailValid
+} from '@/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/GuestbookCollectForm'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
-import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import { Guestbook, GuestbookCustomQuestion } from '@/guestbooks/domain/models/Guestbook'
 import { DatasetLicense } from '@/dataset/domain/models/Dataset'
 import { FileDownloadMode } from '@/files/domain/models/FileMetadata'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
@@ -9,9 +14,8 @@ import {
   GuestbookResponseDTO
 } from '@/access/domain/repositories/AccessRepository'
 import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
-import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
-import { SessionContext } from '@/sections/session/SessionContext'
 import { DatasetMother } from '@tests/component/dataset/domain/models/DatasetMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const guestbook: Guestbook = {
   id: 10,
@@ -90,6 +94,83 @@ const datasetLicense: DatasetLicense = {
   uri: 'https://creativecommons.org/publicdomain/zero/1.0/'
 }
 
+const guestbookCollectFormLicense: DatasetLicense = {
+  ...datasetLicense,
+  iconUri: 'https://example.com/cc0.png'
+}
+
+const guestbookCollectFormCustomTerms = {
+  termsOfUse: 'Custom terms for this dataset',
+  confidentialityDeclaration: 'Confidentiality declaration text'
+}
+
+const guestbookCollectFormCustomQuestions: GuestbookCustomQuestion[] = [
+  {
+    question: 'Hidden question',
+    required: false,
+    displayOrder: 0,
+    type: 'text',
+    hidden: true
+  },
+  {
+    question: 'Research purpose',
+    required: true,
+    displayOrder: 1,
+    type: 'text',
+    hidden: false
+  },
+  {
+    question: 'Preferred format',
+    required: false,
+    displayOrder: 2,
+    type: 'options',
+    hidden: false,
+    optionValues: [
+      { value: 'CSV', displayOrder: 1 },
+      { value: 'JSON', displayOrder: 2 }
+    ]
+  },
+  {
+    question: 'Additional context',
+    required: false,
+    displayOrder: 3,
+    type: 'textarea',
+    hidden: false
+  }
+]
+
+const guestbookCollectFormGuestbook: Guestbook = {
+  ...guestbook,
+  customQuestions: guestbookCollectFormCustomQuestions
+}
+
+const guestbookCollectFormBaseProps = {
+  formValues: {
+    name: 'Test User',
+    email: 'test.user@example.com',
+    institution: 'Example University',
+    'custom-question-1-0': 'Existing research purpose',
+    'custom-question-2-1': 'CSV',
+    'custom-question-3-2': 'Existing context'
+  },
+  hasAttemptedAccept: false,
+  accountFieldErrors: {
+    name: null,
+    email: null,
+    institution: null,
+    position: null
+  },
+  customQuestionErrors: {
+    'custom-question-1-0': null,
+    'custom-question-2-1': null,
+    'custom-question-3-2': null
+  },
+  accountFieldKeys: ['name', 'email', 'institution'],
+  shouldLockIdentityFields: false,
+  isAccountFieldRequired: (fieldName: string) => fieldName === 'name' || fieldName === 'email',
+  onFieldChange: () => {}
+}
+
 describe('DownloadWithTermsAndGuestbookModal', () => {
   let getGuestbookImpl: (guestbookId: number) => Promise<Guestbook>
   let submitGuestbookForDatafileDownloadImpl: (
@@ -113,25 +194,12 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
         isLoading: false,
         refreshDataset: () => {}
       }}>
-      <GuestbookRepositoryProvider repository={guestbookRepository}>
+      <WithRepositories guestbookRepository={guestbookRepository}>
         <AccessRepositoryProvider repository={accessRepository}>
           {component}
         </AccessRepositoryProvider>
-      </GuestbookRepositoryProvider>
+      </WithRepositories>
     </DatasetContext.Provider>
-  )
-
-  const withAnonymousSession = (component: React.ReactNode) => (
-    <SessionContext.Provider
-      value={{
-        user: null,
-        isLoadingUser: false,
-        sessionError: null,
-        setUser: () => {},
-        refetchUserSession: () => Promise.resolve()
-      }}>
-      {withRepositories(component)}
-    </SessionContext.Provider>
   )
 
   beforeEach(() => {
@@ -142,6 +210,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
       Promise.resolve('/api/v1/access/datafiles/10,11?token=test')
 
     guestbookRepository = {
+      createGuestbook: cy.stub(),
       getGuestbook: cy
         .stub()
         .as('getGuestbook')
@@ -149,6 +218,10 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
           return getGuestbookImpl(guestbookId)
         }),
       getGuestbooksByCollectionId: cy.stub().resolves([]),
+      getGuestbookResponsesByGuestbookId: cy.stub(),
+      setGuestbookEnabled: cy.stub(),
+      downloadGuestbookResponsesByCollectionId: cy.stub(),
+      downloadGuestbookResponsesByGuestbookId: cy.stub(),
       assignDatasetGuestbook: (_datasetId: number | string, _guestbookId: number) =>
         Promise.resolve(),
       removeDatasetGuestbook: (_datasetId: number | string) => Promise.resolve()
@@ -175,7 +248,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
 
   it('renders modal title and actions', () => {
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -195,7 +268,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
 
   it('renders dataset terms and license when they are provided', () => {
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -212,7 +285,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
 
   it('renders custom dataset terms when custom terms are available', () => {
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -239,7 +312,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
 
   it('enables accept when no guestbook but custom terms exist (custom terms only)', () => {
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -267,7 +340,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -292,7 +365,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     const handleClose = cy.stub().as('handleClose')
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -314,7 +387,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -324,8 +397,9 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
       )
     )
 
-    cy.findByLabelText(/^Name/).clear().type('Test User')
+    cy.findByLabelText(/^Name/).should('not.be.disabled').clear().type('Test User')
     cy.findByLabelText(/^Email/)
+      .should('not.be.disabled')
       .clear()
       .type('test.user@example.com')
     cy.findByRole('button', { name: 'Accept' }).click()
@@ -346,7 +420,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -356,8 +430,9 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
       )
     )
 
-    cy.findByLabelText(/^Name/).clear().type('Test User')
+    cy.findByLabelText(/^Name/).should('not.be.disabled').clear().type('Test User')
     cy.findByLabelText(/^Email/)
+      .should('not.be.disabled')
       .clear()
       .type('test.user@example.com')
     cy.findByRole('button', { name: 'Accept' }).click()
@@ -379,7 +454,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -389,8 +464,9 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
       )
     )
 
-    cy.findByLabelText(/^Name/).clear().type('Test User')
+    cy.findByLabelText(/^Name/).should('not.be.disabled').clear().type('Test User')
     cy.findByLabelText(/^Email/)
+      .should('not.be.disabled')
       .clear()
       .type('test.user@example.com')
     cy.findByRole('button', { name: 'Accept' }).click()
@@ -409,7 +485,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -441,7 +517,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -479,6 +555,44 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     cy.findByLabelText(/^Email/).should('be.disabled')
   })
 
+  it('prefills and locks all account fields for authenticated users', () => {
+    getGuestbookImpl = () =>
+      Promise.resolve({
+        ...guestbook,
+        institutionRequired: true,
+        positionRequired: true
+      })
+
+    cy.mountAuthenticated(
+      withRepositories(
+        <DownloadWithTermsAndGuestbookModal
+          show
+          handleClose={cy.stub().as('handleClose')}
+          guestbookId={10}
+          fileId={10}
+        />
+      ),
+      undefined,
+      {
+        displayName: 'Authenticated User',
+        email: 'authenticated.user@example.com',
+        affiliation: 'Example Institute',
+        position: 'Data Curator'
+      }
+    )
+
+    cy.findByLabelText(/^Name/).should('be.disabled').and('have.value', 'Authenticated User')
+    cy.findByLabelText(/^Email/)
+      .should('be.disabled')
+      .and('have.value', 'authenticated.user@example.com')
+    cy.findByLabelText(/^Institution/)
+      .should('not.be.disabled')
+      .and('have.value', 'Example Institute')
+    cy.findByLabelText(/^Position/)
+      .should('not.be.disabled')
+      .and('have.value', 'Data Curator')
+  })
+
   it('submits filled form and accepts for multiple files', () => {
     const handleClose = cy.stub().as('handleClose')
 
@@ -487,7 +601,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -522,7 +636,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -549,7 +663,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
 
   it('shows required field validation after clicking accept', () => {
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -566,7 +680,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
 
   it('does not show required field validation before clicking accept', () => {
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -583,7 +697,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     getGuestbookImpl = () => Promise.resolve(guestbookWithCustomQuestions)
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -617,7 +731,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -633,7 +747,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
       .parents('div')
       .first()
       .find('textarea')
-      .type('For a replication package')
+      .type('For a replication package{enter}With a second line')
 
     cy.findByText('Preferred format').parents('div').first().find('button').click()
     cy.findByText('JSON').should('exist')
@@ -656,7 +770,10 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
           position: undefined,
           answers: [
             { id: 'custom-question-2-0', value: 'CSV' },
-            { id: 'custom-question-1-1', value: 'For a replication package' }
+            {
+              id: 'custom-question-1-1',
+              value: ['For a replication package', 'With a second line']
+            }
           ]
         }
       })
@@ -673,7 +790,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -726,7 +843,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={handleClose}
@@ -751,7 +868,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     getGuestbookImpl = () => Promise.resolve(guestbookWithCustomQuestions)
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -771,7 +888,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     getGuestbookImpl = () => Promise.reject(new Error('some guestbook error'))
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -789,7 +906,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     submitGuestbookForDatafileDownloadImpl = () => Promise.reject(new Error('submit failed'))
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -819,7 +936,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -846,7 +963,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
     })
 
     cy.customMount(
-      withAnonymousSession(
+      withRepositories(
         <DownloadWithTermsAndGuestbookModal
           show
           handleClose={cy.stub().as('handleClose')}
@@ -864,5 +981,142 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
 
     cy.findByText(/Error/).should('exist')
     cy.findByText(/Something went wrong downloading the file. Try again later./i).should('exist')
+  })
+
+  describe('GuestbookCollectForm', () => {
+    it('builds custom question field names and validates email addresses', () => {
+      expect(
+        getGuestbookCustomQuestionFieldName(guestbookCollectFormCustomQuestions[1], 0)
+      ).to.equal('custom-question-1-0')
+      expect(isGuestbookCollectFormEmailValid('test.user@example.com')).to.equal(true)
+      expect(isGuestbookCollectFormEmailValid('not-an-email')).to.equal(false)
+    })
+
+    it('renders license details including the license icon', () => {
+      cy.customMount(
+        <GuestbookCollectForm
+          {...guestbookCollectFormBaseProps}
+          license={guestbookCollectFormLicense}
+          customTerms={guestbookCollectFormCustomTerms}
+          guestbook={undefined}
+        />
+      )
+
+      cy.findByText('License/Data Use Agreement').should('exist')
+      cy.findByRole('img', { name: `License image for ${guestbookCollectFormLicense.name}` })
+        .should('have.attr', 'src', guestbookCollectFormLicense.iconUri)
+        .and('have.attr', 'title', guestbookCollectFormLicense.name)
+      cy.findByRole('link', { name: guestbookCollectFormLicense.name }).should(
+        'have.attr',
+        'href',
+        guestbookCollectFormLicense.uri
+      )
+      cy.findByText('Custom terms for this dataset').should('exist')
+    })
+
+    it('renders account fields, locks identity fields, and reports account validation errors', () => {
+      const onFieldChange = cy.stub().as('onFieldChange')
+
+      cy.customMount(
+        <GuestbookCollectForm
+          {...guestbookCollectFormBaseProps}
+          guestbook={guestbookCollectFormGuestbook}
+          hasAttemptedAccept
+          shouldLockIdentityFields
+          accountFieldErrors={{
+            name: 'Name is required.',
+            email: null,
+            institution: 'Institution is invalid.'
+          }}
+          formValues={{
+            ...guestbookCollectFormBaseProps.formValues,
+            institution: ''
+          }}
+          onFieldChange={onFieldChange}
+        />
+      )
+
+      cy.findByLabelText(/^Name/).should('be.disabled')
+      cy.findByLabelText(/^Email/).should('be.disabled')
+      cy.findByLabelText(/^Institution/)
+        .should('not.be.disabled')
+        .type('N')
+
+      cy.findByText('Name is required.').should('exist')
+      cy.findByText('Institution is invalid.').should('exist')
+      cy.get('@onFieldChange').should('have.been.calledWith', 'institution', 'N')
+    })
+
+    it('renders visible custom question types and reports custom question validation errors', () => {
+      const onFieldChange = cy.stub().as('onFieldChange')
+
+      cy.customMount(
+        <GuestbookCollectForm
+          {...guestbookCollectFormBaseProps}
+          guestbook={guestbookCollectFormGuestbook}
+          hasAttemptedAccept
+          customQuestionErrors={{
+            'custom-question-1-0': 'Research purpose is required.',
+            'custom-question-2-1': 'Preferred format is required.',
+            'custom-question-3-2': null
+          }}
+          formValues={{
+            ...guestbookCollectFormBaseProps.formValues,
+            'custom-question-1-0': '',
+            'custom-question-3-2': ''
+          }}
+          onFieldChange={onFieldChange}
+        />
+      )
+
+      cy.findByText('Additional Questions').should('exist')
+      cy.findByText('Hidden question').should('not.exist')
+
+      cy.findByText('Research purpose')
+        .parents('div')
+        .first()
+        .within(() => {
+          cy.findByRole('textbox').type('R')
+          cy.findByText('Research purpose is required.').should('exist')
+        })
+
+      cy.findByText('Preferred format')
+        .parents('div')
+        .first()
+        .within(() => {
+          cy.findByRole('button', { name: 'CSV' }).click()
+        })
+      cy.findByRole('button', { name: 'JSON' }).click()
+      cy.findByText('Preferred format is required.').should('exist')
+
+      cy.findByText('Additional context')
+        .parents('div')
+        .first()
+        .within(() => {
+          cy.get('textarea').type('M')
+        })
+
+      cy.get('@onFieldChange').should('have.been.calledWith', 'custom-question-1-0', 'R')
+      cy.get('@onFieldChange').should('have.been.calledWith', 'custom-question-2-1', 'JSON')
+      cy.get('@onFieldChange').should('have.been.calledWith', 'custom-question-3-2', 'M')
+    })
+
+    it('does not render the additional questions section when all custom questions are hidden', () => {
+      cy.customMount(
+        <GuestbookCollectForm
+          {...guestbookCollectFormBaseProps}
+          guestbook={{
+            ...guestbookCollectFormGuestbook,
+            customQuestions: guestbookCollectFormCustomQuestions.map((question) => ({
+              ...question,
+              hidden: true
+            }))
+          }}
+        />
+      )
+
+      cy.findByText('Additional Questions').should('not.exist')
+      cy.findByText('Hidden question').should('not.exist')
+    })
   })
 })

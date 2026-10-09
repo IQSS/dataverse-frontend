@@ -1,13 +1,12 @@
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FileJSDataverseRepository } from '@/files/infrastructure/FileJSDataverseRepository'
-import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { ReplaceFile, ReplaceFileReferrer } from './ReplaceFile'
 import { QueryParamKey } from '../Route.enum'
 import { searchParamVersionToDomainVersion } from '@/router'
 
 const fileRepository = new FileJSDataverseRepository()
-const datasetRepository = new DatasetJSDataverseRepository()
 
 export class ReplaceFileFactory {
   static create(): ReactElement {
@@ -23,8 +22,7 @@ function ReplaceFileWithParams() {
     searchParams.get(QueryParamKey.PERSISTENT_ID) === null ||
     searchParams.get(QueryParamKey.DATASET_VERSION) === null
   ) {
-    // TODO - show new Not Found Page here after is done.
-    throw new Error('Missing required query parameters')
+    return <NotFoundPage dvObjectNotFoundType="file" />
   }
 
   const fileId = Number(searchParams.get(QueryParamKey.FILE_ID) as string)
@@ -39,7 +37,6 @@ function ReplaceFileWithParams() {
   return (
     <ReplaceFile
       fileRepository={fileRepository}
-      datasetRepository={datasetRepository}
       fileIdFromParams={fileId}
       datasetPidFromParams={datasetId}
       datasetVersionFromParams={datasetVersionNumber}

@@ -10,6 +10,8 @@ on:
 # List of jobs
 jobs:
   chromatic-deployment:
+    # Avoid being triggered by forks
+    if: '! github.event.pull_request.head.repo.fork'
     # Operating System
     runs-on: ubuntu-latest
     # Job steps

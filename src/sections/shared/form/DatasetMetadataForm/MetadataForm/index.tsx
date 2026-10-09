@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
 import { useSession } from '@/sections/session/SessionContext'
 import { Accordion, Alert, Button } from '@iqss/dataverse-design-system'
-import { type DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { type MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { type DatasetMetadataFormValues } from '../MetadataFieldsHelper'
 import { type DatasetMetadataFormMode } from '..'
@@ -15,6 +14,8 @@ import { RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { usePrefillFieldsWithUserData } from './usePrefillFieldsWithUserData'
 import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 import styles from './index.module.scss'
 
 interface FormProps {
@@ -22,10 +23,10 @@ interface FormProps {
   collectionId: string
   formDefaultValues: DatasetMetadataFormValues
   metadataBlocksInfo: MetadataBlockInfo[]
-  datasetRepository: DatasetRepository
   datasetPersistentID?: string
   datasetLastUpdateTime?: string
   datasetTemplateInstructions?: DatasetTemplateInstruction[]
+  datasetTypeName?: DatasetType['name']
 }
 
 export const MetadataForm = ({
@@ -33,11 +34,12 @@ export const MetadataForm = ({
   collectionId,
   formDefaultValues,
   metadataBlocksInfo,
-  datasetRepository,
   datasetPersistentID,
   datasetLastUpdateTime,
-  datasetTemplateInstructions
+  datasetTemplateInstructions,
+  datasetTypeName
 }: FormProps) => {
+  const { datasetRepository } = useDatasetRepositories()
   const { user } = useSession()
   const navigate = useNavigate()
   const { t } = useTranslation('shared')
@@ -57,7 +59,8 @@ export const MetadataForm = ({
     datasetRepository,
     onSubmitDatasetError,
     datasetPersistentID,
-    datasetLastUpdateTime
+    datasetLastUpdateTime,
+    datasetTypeName
   )
 
   usePrefillFieldsWithUserData({ mode, user, formDefaultValues, setValue })

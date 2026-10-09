@@ -29,7 +29,9 @@ type Story = StoryObj<typeof DatasetActionButtons>
 
 export const WithPublishPermissions: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <DatasetActionButtons
         dataset={DatasetMother.create({
           permissions: DatasetPermissionsMother.createWithAllAllowed(),
@@ -42,7 +44,6 @@ export const WithPublishPermissions: Story = {
           ],
           isValid: true
         })}
-        datasetRepository={new DatasetMockRepository()}
         contactRepository={new ContactMockRepository()}
       />
     </RepositoriesStoryProvider>
@@ -51,7 +52,9 @@ export const WithPublishPermissions: Story = {
 
 export const WithNoDatasetPermissions: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <DatasetActionButtons
         dataset={DatasetMother.create({
           permissions: DatasetPermissionsMother.createWithNoDatasetPermissions(),
@@ -63,7 +66,6 @@ export const WithNoDatasetPermissions: Story = {
           ],
           isValid: true
         })}
-        datasetRepository={new DatasetMockRepository()}
         contactRepository={new ContactMockRepository()}
       />
     </RepositoriesStoryProvider>
@@ -72,7 +74,9 @@ export const WithNoDatasetPermissions: Story = {
 
 export const WithUpdateAndNoPublishDatasetPermissions: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}>
       <DatasetActionButtons
         dataset={DatasetMother.create({
           permissions: DatasetPermissionsMother.create({
@@ -88,7 +92,6 @@ export const WithUpdateAndNoPublishDatasetPermissions: Story = {
           ],
           isValid: true
         })}
-        datasetRepository={new DatasetMockRepository()}
         contactRepository={new ContactMockRepository()}
       />
     </RepositoriesStoryProvider>

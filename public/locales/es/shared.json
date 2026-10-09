@@ -7,6 +7,7 @@
   "files": "Ficheros",
   "page": "Página",
   "asterisksIndicateRequiredFields": "Los asteriscos indican los campos obligatorios",
+  "asterisksRequiredDatasetFields": "Los asteriscos indican los campos de metadatos que los usuarios deberán completar al agregar un conjunto de datos a este dataverse.",
   "remove": "Eliminar",
   "add": "Agregar",
   "yes": "Sí",
@@ -31,6 +32,7 @@
   "allowPopups": "Debes habilitar las ventanas emergentes en tu navegador para abrir herramientas externas en una nueva ventana o pestaña.",
   "externalToolOpeningFailed": "Hubo un problema al abrir la herramienta externa. Por favor, inténtalo de nuevo.",
   "exportMetadata": "Exportar metadatos",
+  "exportMetadataError": "Hubo un problema al exportar los metadatos del dataset. Por favor, inténtalo de nuevo.",
   "pageNumberNotFound": {
     "heading": "Número de página no encontrado",
     "message": "El número de página solicitado no existe. Intenta con un número diferente."
@@ -293,6 +295,8 @@
   },
   "downloadCitation": {
     "title": "Descargar cita",
+    "citeDataset": "Citar dataset",
+    "citeDataFile": "Citar archivo de datos",
     "viewStyledCitation": "Ver cita con estilo",
     "downloadEndNoteXML": "Descargar EndNote XML",
     "downloadRIS": "Descargar RIS",
@@ -300,6 +304,7 @@
     "selectCSLStyle": "Seleccionar un estilo CSL",
     "citationInStyle": "Cita en estilo {{styleName}}",
     "downloadError": "Ocurrió un error al descargar la cita",
+    "downloadSuccess": "Cita descargada correctamente",
     "styledCitation": "Cita con estilo"
   },
   "expandableContent": {

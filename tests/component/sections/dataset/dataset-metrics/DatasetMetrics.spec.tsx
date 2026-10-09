@@ -3,6 +3,7 @@ import { DatasetMetrics } from '@/sections/dataset/dataset-metrics/DatasetMetric
 import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { DatasetDownloadCountMother } from '@tests/component/dataset/domain/models/DatasetDownloadCountMother'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
@@ -15,7 +16,11 @@ describe('DatasetMetrics', () => {
       return Cypress.Promise.delay(DELAYED_TIME).then(() => datasetCountWihtoutMDC)
     })
 
-    cy.customMount(<DatasetMetrics datasetRepository={datasetRepository} datasetId={1} />)
+    cy.customMount(
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetrics datasetId={1} />
+      </WithRepositories>
+    )
 
     cy.clock()
 
@@ -37,7 +42,9 @@ describe('DatasetMetrics', () => {
     }
 
     cy.customMount(
-      <DatasetMetrics datasetRepository={datasetMockRepoWithoutMakeDataCount} datasetId={1} />
+      <WithRepositories datasetRepository={datasetMockRepoWithoutMakeDataCount}>
+        <DatasetMetrics datasetId={1} />
+      </WithRepositories>
     )
 
     cy.findByTestId('classic-download-count').should('exist').should('be.visible')
@@ -47,7 +54,11 @@ describe('DatasetMetrics', () => {
   })
 
   it('should render MDC downloads when calling download count with MDC and receiving MDCStartDate', () => {
-    cy.customMount(<DatasetMetrics datasetRepository={new DatasetMockRepository()} datasetId={1} />)
+    cy.customMount(
+      <WithRepositories datasetRepository={new DatasetMockRepository()}>
+        <DatasetMetrics datasetId={1} />
+      </WithRepositories>
+    )
 
     cy.findByTestId('mdc-download-count').should('exist').should('be.visible')
     cy.findByTestId('classic-download-count').should('not.exist')
@@ -62,7 +73,11 @@ describe('DatasetMetrics', () => {
   it('should not render anything when there is an unknown error while loading download count', () => {
     datasetRepository.getDownloadCount = cy.stub().rejects()
 
-    cy.customMount(<DatasetMetrics datasetRepository={datasetRepository} datasetId={1} />)
+    cy.customMount(
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetrics datasetId={1} />
+      </WithRepositories>
+    )
 
     cy.findByTestId('dataset-metrics-skeleton').should('not.exist')
     cy.findByTestId('classic-download-count').should('not.exist')
@@ -72,7 +87,11 @@ describe('DatasetMetrics', () => {
   it('should not render anything when there is an ReadError instance error while loading download count', () => {
     datasetRepository.getDownloadCount = cy.stub().rejects(new ReadError('Some error'))
 
-    cy.customMount(<DatasetMetrics datasetRepository={datasetRepository} datasetId={1} />)
+    cy.customMount(
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetMetrics datasetId={1} />
+      </WithRepositories>
+    )
 
     cy.findByTestId('dataset-metrics-skeleton').should('not.exist')
     cy.findByTestId('classic-download-count').should('not.exist')

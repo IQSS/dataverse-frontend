@@ -50,10 +50,7 @@ describe('Create Dataset', () => {
     let datasetTemplateId: number
 
     beforeEach(async () => {
-      await DatasetHelper.createTemplate()
-      const templates = await DatasetHelper.getTemplatesByCollectionId()
-
-      const { id } = templates[0]
+      const { id } = await DatasetHelper.createTemplate()
       datasetTemplateId = id
     })
 
@@ -71,7 +68,9 @@ describe('Create Dataset', () => {
 
       cy.get('@templateSelect').within(() => {
         cy.findByLabelText('Toggle options menu').click({ force: true })
-        cy.findByText('Dataset Template One').click({ force: true })
+        cy.get(`[role="option"][data-value="${datasetTemplateId}"]`)
+          .should('have.text', 'Dataset Template One')
+          .click({ force: true })
       })
 
       cy.findByLabelText(/^Title/i).should('have.value', 'Dataset Template One Title')

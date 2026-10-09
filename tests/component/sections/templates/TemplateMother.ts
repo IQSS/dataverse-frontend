@@ -1,7 +1,13 @@
 import { faker } from '@faker-js/faker'
 import { Template } from '@/templates/domain/models/Template'
 
-export class DatasetTemplateMother {
+export class TemplateMother {
+  static createTemplates(
+    overrides: Array<Partial<Template> & Pick<Template, 'id' | 'name'>>
+  ): Template[] {
+    return overrides.map((props) => this.create(props))
+  }
+
   static createMany(count: number, props?: Partial<Template>): Template[] {
     return Array.from({ length: count }, () => this.create(props))
   }

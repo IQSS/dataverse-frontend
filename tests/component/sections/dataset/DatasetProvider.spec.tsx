@@ -1,6 +1,7 @@
 import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvider'
+import { Dataset } from '../../../../src/dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
-import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
+import { DatasetMother, DatasetVersionMother } from '../../dataset/domain/models/DatasetMother'
 import { useDataset } from '../../../../src/sections/dataset/DatasetContext'
 import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 
@@ -40,6 +41,37 @@ describe('DatasetProvider', () => {
     cy.findByText('Loading...').should('exist')
     cy.wrap(datasetRepository.getByPersistentId).should('be.calledOnceWith', dataset.persistentId)
     cy.findByText(dataset.version.title).should('exist')
+    cy.findByText('Loading...').should('not.exist')
+  })
+
+  it('gets the draft dataset by persistentId when no version param is provided', () => {
+    const draftDataset: Dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraft()
+    })
+    const getByPersistentIdStub = cy
+      .stub()
+      .resolves(
+        Cypress.Promise.resolve(draftDataset).delay(1000)
+      ) as unknown as typeof datasetRepository.getByPersistentId
+    datasetRepository.getByPersistentId = getByPersistentIdStub
+
+    cy.mount(
+      <LoadingProvider>
+        <DatasetProvider
+          repository={datasetRepository}
+          searchParams={{ persistentId: draftDataset.persistentId }}>
+          <TestComponent />
+        </DatasetProvider>
+      </LoadingProvider>
+    )
+
+    cy.findByText('Loading...').should('exist')
+    cy.wrap(datasetRepository.getByPersistentId).should(
+      'be.calledOnceWith',
+      draftDataset.persistentId,
+      undefined
+    )
+    cy.findByText(draftDataset.version.title).should('exist')
     cy.findByText('Loading...').should('not.exist')
   })
 
@@ -99,19 +131,43 @@ describe('DatasetProvider', () => {
   })
 
   it('stops loading if error happens', () => {
+    cy.stub(console, 'error').as('consoleError')
     datasetRepository.getByPersistentId = cy.stub().rejects(new Error('some error'))
     cy.mount(
       <LoadingProvider>
         <DatasetProvider
           repository={datasetRepository}
-          searchParams={{ privateUrlToken: 'some-private-url-token' }}>
+          searchParams={{ persistentId: dataset.persistentId }}>
           <TestComponent />
         </DatasetProvider>
       </LoadingProvider>
     )
 
     cy.findByText('Loading...').should('exist')
+    cy.wrap(datasetRepository.getByPersistentId).should('have.been.calledOnce')
+    cy.get('@consoleError').should(
+      'have.been.calledWithMatch',
+      'There was an error getting the dataset'
+    )
     cy.findByText('Dataset Not Found').should('exist')
     cy.findByText('Loading...').should('not.exist')
+  })
+
+  it('does not fetch the dataset while publishing', () => {
+    cy.mount(
+      <LoadingProvider>
+        <DatasetProvider
+          repository={datasetRepository}
+          searchParams={{ persistentId: dataset.persistentId }}
+          isPublishing>
+          <TestComponent />
+        </DatasetProvider>
+      </LoadingProvider>
+    )
+
+    cy.wrap(datasetRepository.getByPersistentId).should('not.have.been.called')
+    cy.wrap(datasetRepository.getByPrivateUrlToken).should('not.have.been.called')
+    cy.findByText('Loading...').should('exist')
+    cy.findByText('Dataset Not Found').should('exist')
   })
 })

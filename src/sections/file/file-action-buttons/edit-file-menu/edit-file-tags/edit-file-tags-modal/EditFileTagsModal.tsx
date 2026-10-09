@@ -5,8 +5,8 @@ import { FileLabels } from '@/sections/file/file-labels/FileLabels'
 import { FileLabel, FileLabelType } from '@/files/domain/models/FileMetadata'
 import { useFilesContext } from '@/sections/file/FilesContext'
 import { Utils } from '@/shared/helpers/Utils'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { useGetAvailableCategories } from './useGetAvailableCategories'
+import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
 const TABULAR_TAG_OPTIONS = [
   'Survey',
@@ -38,7 +38,6 @@ interface EditFileTagsModalProps {
   ) => Promise<void>
   isUpdatingTabularTags: boolean
   errorUpdatingTabularTags: string | null
-  datasetRepository: DatasetRepository
   datasetPersistentId: string
 }
 
@@ -54,9 +53,9 @@ export const EditFileTagsModal = ({
   errorUpdatingFileCategories,
   isUpdatingTabularTags,
   errorUpdatingTabularTags,
-  datasetRepository,
   datasetPersistentId
 }: EditFileTagsModalProps) => {
+  const { datasetRepository } = useDatasetRepositories()
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('file')
   const modalTitle = t('editFileTagsModal.title')

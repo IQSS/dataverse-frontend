@@ -1,8 +1,12 @@
 import { DatasetMetadataBlocks } from '../../../../../src/dataset/domain/models/Dataset'
-import { DatasetDTO } from '../../../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
+import {
+  DatasetDTO,
+  DatasetMetadataFieldsDTO
+} from '../../../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
 import {
   MetadataBlockInfo,
-  MetadataBlockInfoWithMaybeValues
+  MetadataBlockInfoWithMaybeValues,
+  MetadataField
 } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import {
   DatasetMetadataFormValues,
@@ -1532,6 +1536,121 @@ describe('MetadataFieldsHelper', () => {
       expect(result).to.equal(
         `${metadataBlockName}.${compoundParentName}.${fieldsArrayIndex}.${fieldName}`
       )
+    })
+  })
+
+  describe('buildTemplateFieldsFromMetadataValues', () => {
+    const buildField = (overrides: Partial<MetadataField>): MetadataField => ({
+      name: 'field',
+      displayName: 'Field',
+      title: 'Field',
+      type: 'TEXT',
+      typeClass: 'primitive',
+      watermark: '',
+      description: '',
+      multiple: false,
+      isControlledVocabulary: false,
+      displayFormat: '',
+      isRequired: false,
+      displayOnCreate: true,
+      displayOrder: 0,
+      isAdvancedSearchFieldType: false,
+      ...overrides
+    })
+
+    it('builds template fields with primitive, vocabulary, and compound values', () => {
+      const metadataFields: Record<string, MetadataField> = {
+        title: buildField({ name: 'title', displayName: 'Title', title: 'Title' }),
+        subject: buildField({
+          name: 'subject',
+          displayName: 'Subject',
+          title: 'Subject',
+          typeClass: 'controlledVocabulary',
+          isControlledVocabulary: true,
+          multiple: true,
+          controlledVocabularyValues: ['A', 'B']
+        }),
+        author: buildField({
+          name: 'author',
+          displayName: 'Author',
+          title: 'Author',
+          type: 'NONE',
+          typeClass: 'compound',
+          multiple: true,
+          childMetadataFields: {
+            authorName: buildField({
+              name: 'authorName',
+              displayName: 'Author Name',
+              title: 'Name'
+            }),
+            authorAffiliation: buildField({
+              name: 'authorAffiliation',
+              displayName: 'Author Affiliation',
+              title: 'Affiliation'
+            })
+          }
+        }),
+        emptyField: buildField({ name: 'emptyField', displayName: 'Empty Field', title: 'Empty' })
+      }
+
+      const fieldValues: DatasetMetadataFieldsDTO = {
+        title: 'My Title',
+        subject: ['A'],
+        author: [
+          { authorName: 'Ada', authorAffiliation: 'Org' },
+          { authorName: 'Bob', authorAffiliation: '' }
+        ],
+        emptyField: ''
+      }
+
+      const templateFields = MetadataFieldsHelper.buildTemplateFieldsFromMetadataValues(
+        fieldValues,
+        metadataFields
+      )
+
+      expect(templateFields).to.deep.equal([
+        {
+          typeName: 'title',
+          multiple: false,
+          typeClass: 'primitive',
+          value: 'My Title'
+        },
+        {
+          typeName: 'subject',
+          multiple: true,
+          typeClass: 'controlledVocabulary',
+          value: ['A']
+        },
+        {
+          typeName: 'author',
+          multiple: true,
+          typeClass: 'compound',
+          value: [
+            {
+              authorName: {
+                value: 'Ada',
+                typeName: 'authorName',
+                multiple: false,
+                typeClass: 'primitive'
+              },
+              authorAffiliation: {
+                value: 'Org',
+                typeName: 'authorAffiliation',
+                multiple: false,
+                typeClass: 'primitive'
+              }
+            },
+            {
+              authorName: {
+                value: 'Bob',
+                typeName: 'authorName',
+                multiple: false,
+                typeClass: 'primitive'
+              }
+            }
+          ]
+        }
+      ])
     })
   })
 

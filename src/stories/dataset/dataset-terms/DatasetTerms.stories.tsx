@@ -13,7 +13,8 @@ import {
   storybookGuestbook
 } from '@/stories/shared-mock-repositories/guestbook/GuestbookMockRepository'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
-import { GuestbookRepositoryProvider } from '@/sections/guestbooks/GuestbookRepositoryProvider'
+import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
 
 const meta: Meta<typeof DatasetTerms> = {
   title: 'Sections/Dataset Page/DatasetTerms',
@@ -35,29 +36,39 @@ const guestbookRepository = new GuestbookMockRepository()
 
 const withDatasetContext = (dataset = testDatasetWithGuestbook) => {
   const DatasetTermsStoryDecorator = (Story: () => JSX.Element) => (
-    <GuestbookRepositoryProvider repository={guestbookRepository}>
-      <DatasetContext.Provider
-        value={{
-          dataset,
-          isLoading: false,
-          refreshDataset: () => {}
-        }}>
-        <Story />
-      </DatasetContext.Provider>
-    </GuestbookRepositoryProvider>
+    <DatasetContext.Provider
+      value={{
+        dataset,
+        isLoading: false,
+        refreshDataset: () => {}
+      }}>
+      <Story />
+    </DatasetContext.Provider>
   )
 
   DatasetTermsStoryDecorator.displayName = 'DatasetTermsStoryDecorator'
   return DatasetTermsStoryDecorator
 }
 
+const withFileRepository = (fileRepository: FileRepository) => {
+  const DatasetTermsFileRepositoryStoryDecorator = (Story: () => JSX.Element) => (
+    <RepositoriesStoryProvider
+      fileRepository={fileRepository}
+      guestbookRepository={guestbookRepository}>
+      <Story />
+    </RepositoriesStoryProvider>
+  )
+
+  DatasetTermsFileRepositoryStoryDecorator.displayName = 'DatasetTermsFileRepositoryStoryDecorator'
+  return DatasetTermsFileRepositoryStoryDecorator
+}
+
 export const Default: Story = {
-  decorators: [withDatasetContext()],
+  decorators: [withDatasetContext(), withFileRepository(new FileMockRepository())],
   render: () => (
     <DatasetTerms
       license={license}
       termsOfUse={termsOfUseWithoutCustomTerms}
-      filesRepository={new FileMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -65,11 +76,11 @@ export const Default: Story = {
 }
 
 export const Loading: Story = {
+  decorators: [withFileRepository(new FileMockLoadingRepository())],
   render: () => (
     <DatasetTerms
       license={license}
       termsOfUse={termsOfUseWithoutCustomTerms}
-      filesRepository={new FileMockLoadingRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -77,12 +88,11 @@ export const Loading: Story = {
 }
 
 export const RestrictedFiles: Story = {
-  decorators: [withDatasetContext()],
+  decorators: [withDatasetContext(), withFileRepository(new FileMockRestrictedFilesRepository())],
   render: () => (
     <DatasetTerms
       license={license}
       termsOfUse={termsOfUseWithoutCustomTerms}
-      filesRepository={new FileMockRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -90,24 +100,22 @@ export const RestrictedFiles: Story = {
 }
 
 export const NoRestrictedFiles: Story = {
-  decorators: [withDatasetContext()],
+  decorators: [withDatasetContext(), withFileRepository(new FileMockNoRestrictedFilesRepository())],
   render: () => (
     <DatasetTerms
       license={license}
       termsOfUse={termsOfUseWithoutCustomTerms}
-      filesRepository={new FileMockNoRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
   )
 }
 export const CustomTerms: Story = {
-  decorators: [withDatasetContext()],
+  decorators: [withDatasetContext(), withFileRepository(new FileMockNoRestrictedFilesRepository())],
   render: () => (
     <DatasetTerms
       license={undefined}
       termsOfUse={TermsOfUseMother.createRealistic()}
-      filesRepository={new FileMockNoRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -115,12 +123,14 @@ export const CustomTerms: Story = {
 }
 
 export const WithoutAssignedGuestbook: Story = {
-  decorators: [withDatasetContext(DatasetMother.createRealistic({ guestbookId: undefined }))],
+  decorators: [
+    withDatasetContext(DatasetMother.createRealistic({ guestbookId: undefined })),
+    withFileRepository(new FileMockNoRestrictedFilesRepository())
+  ],
   render: () => (
     <DatasetTerms
       license={license}
       termsOfUse={termsOfUseWithoutCustomTerms}
-      filesRepository={new FileMockNoRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />
@@ -128,12 +138,14 @@ export const WithoutAssignedGuestbook: Story = {
 }
 
 export const GuestbookEmptyState: Story = {
-  decorators: [withDatasetContext(DatasetMother.createRealistic({ guestbookId: undefined }))],
+  decorators: [
+    withDatasetContext(DatasetMother.createRealistic({ guestbookId: undefined })),
+    withFileRepository(new FileMockNoRestrictedFilesRepository())
+  ],
   render: () => (
     <DatasetTerms
       license={license}
       termsOfUse={termsOfUseWithoutCustomTerms}
-      filesRepository={new FileMockNoRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
     />

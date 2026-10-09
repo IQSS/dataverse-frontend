@@ -25,10 +25,11 @@ type Story = StoryObj<typeof Account>
 
 export const Default: Story = {
   render: () => (
-    <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+    <RepositoriesStoryProvider
+      collectionRepository={new CollectionMockRepository()}
+      userRepository={new UserMockRepository()}>
       <Account
         defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
-        userRepository={new UserMockRepository()}
         roleRepository={new RoleMockRepository()}
         notificationRepository={new NotificationMockRepository()}
       />

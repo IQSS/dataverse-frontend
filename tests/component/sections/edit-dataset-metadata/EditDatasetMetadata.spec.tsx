@@ -7,6 +7,7 @@ import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvide
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { EditDatasetMetadata } from '../../../../src/sections/edit-dataset-metadata/EditDatasetMetadata'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -33,19 +34,18 @@ describe('EditDatasetMetadata', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
-          {component}
-        </DatasetProvider>
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
+            {component}
+          </DatasetProvider>
+        </WithRepositories>
       </LoadingProvider>
     )
   }
 
   it('renders the correct breadcrumbs', () => {
     mountWithDataset(
-      <EditDatasetMetadata
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />,
+      <EditDatasetMetadata metadataBlockInfoRepository={metadataBlockInfoRepository} />,
       dataset
     )
 
@@ -61,10 +61,7 @@ describe('EditDatasetMetadata', () => {
 
   it('renders skeleton while loading', () => {
     mountWithDataset(
-      <EditDatasetMetadata
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />,
+      <EditDatasetMetadata metadataBlockInfoRepository={metadataBlockInfoRepository} />,
       dataset
     )
 
@@ -75,10 +72,7 @@ describe('EditDatasetMetadata', () => {
     const emptyDataset = DatasetMother.createEmpty()
 
     mountWithDataset(
-      <EditDatasetMetadata
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />,
+      <EditDatasetMetadata metadataBlockInfoRepository={metadataBlockInfoRepository} />,
       emptyDataset
     )
 
@@ -86,6 +80,17 @@ describe('EditDatasetMetadata', () => {
   })
 
   it('renders the Host Collection', () => {
+    mountWithDataset(
+      <EditDatasetMetadata metadataBlockInfoRepository={metadataBlockInfoRepository} />,
+      dataset
+    )
+
+    cy.findByTestId('edit-dataset-metadata-skeleton').should('not.exist')
+    cy.findByText(/^Host Collection/i).should('exist')
+    cy.findByDisplayValue('Root').should('exist').should('have.attr', 'readonly', 'readonly')
+  })
+
+  it('renders the Dataset Type', () => {
     mountWithDataset(
       <EditDatasetMetadata
         datasetRepository={datasetRepository}
@@ -95,7 +100,7 @@ describe('EditDatasetMetadata', () => {
     )
 
     cy.findByTestId('edit-dataset-metadata-skeleton').should('not.exist')
-    cy.findByText(/^Host Collection/i).should('exist')
-    cy.findByDisplayValue('Root').should('exist').should('have.attr', 'readonly', 'readonly')
+    cy.findByText(/^Dataset Type/i).should('exist')
+    cy.findByDisplayValue('dataset').should('exist').should('have.attr', 'readonly', 'readonly')
   })
 })

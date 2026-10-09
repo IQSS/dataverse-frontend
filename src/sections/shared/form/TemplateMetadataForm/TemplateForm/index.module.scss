@@ -1,0 +1,21 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+.template-name-row {
+  margin-bottom: $spacer;
+}
+
+.required-field-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.accordion {
+  margin-top: $spacer;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: $spacer;
+}

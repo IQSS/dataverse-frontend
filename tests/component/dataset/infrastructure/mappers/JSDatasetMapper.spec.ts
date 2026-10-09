@@ -207,6 +207,7 @@ const jsDatasetFilesTotalArchivalDownloadSize = 7
 const expectedDataset = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
@@ -320,13 +321,17 @@ const expectedDataset = {
 const expectedDatasetWithPublicationDate = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
-    labels: [{ semanticMeaning: 'dataset', value: 'Draft' }],
+    labels: [
+      { semanticMeaning: 'dataset', value: 'Draft' },
+      { semanticMeaning: 'success', value: 'In Review' }
+    ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     termsOfAccess: termsOfAccess,
     deaccessionNote: undefined,
     latestVersionPublishingStatus: 'draft',
@@ -430,13 +435,17 @@ const expectedDatasetWithPublicationDate = {
 const expectedDatasetWithNextVersionNumbers = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
-    labels: [{ semanticMeaning: 'dataset', value: 'Draft' }],
+    labels: [
+      { semanticMeaning: 'dataset', value: 'Draft' },
+      { semanticMeaning: 'success', value: 'In Review' }
+    ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
@@ -541,16 +550,18 @@ const expectedDatasetWithNextVersionNumbers = {
 const expectedDatasetAlternateVersion = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
     labels: [
       { semanticMeaning: 'dataset', value: 'Draft' },
-      { semanticMeaning: 'warning', value: 'Unpublished' }
+      { semanticMeaning: 'warning', value: 'Unpublished' },
+      { semanticMeaning: 'success', value: 'In Review' }
     ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,

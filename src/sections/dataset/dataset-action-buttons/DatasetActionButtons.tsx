@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { ButtonGroup } from '@iqss/dataverse-design-system'
 import { Dataset, DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { AccessDatasetMenu } from './access-dataset-menu/AccessDatasetMenu'
 import { PublishDatasetMenu } from './publish-dataset-menu/PublishDatasetMenu'
 import { SubmitForReviewButton } from './submit-for-review-button/SubmitForReviewButton'
@@ -14,15 +13,10 @@ import styles from './DatasetActionButtons.module.scss'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
-  datasetRepository: DatasetRepository
   contactRepository: ContactRepository
 }
 
-export function DatasetActionButtons({
-  dataset,
-  datasetRepository,
-  contactRepository
-}: DatasetActionButtonsProps) {
+export function DatasetActionButtons({ dataset, contactRepository }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
 
   const isCurrentVersionDeaccessioned =
@@ -42,10 +36,10 @@ export function DatasetActionButtons({
         license={dataset.license}
         customTerms={dataset.termsOfUse.customTerms}
       />
-      <PublishDatasetMenu dataset={dataset} datasetRepository={datasetRepository} />
+      <PublishDatasetMenu dataset={dataset} />
       <SubmitForReviewButton dataset={dataset} />
-      <EditDatasetMenu dataset={dataset} datasetRepository={datasetRepository} />
-      <LinkAndUnlinkActions dataset={dataset} datasetRepository={datasetRepository} />
+      <EditDatasetMenu dataset={dataset} />
+      <LinkAndUnlinkActions dataset={dataset} />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
         <ContactButton
           toContactName={dataset.metadataBlocks[0].fields.title}

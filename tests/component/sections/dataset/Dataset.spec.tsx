@@ -1,5 +1,6 @@
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../../../src/sections/dataset/Dataset'
+import { TabsSkeleton } from '../../../../src/sections/dataset/DatasetSkeleton'
 import { DatasetMother, DatasetPermissionsMother } from '../../dataset/domain/models/DatasetMother'
 import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
 import {
@@ -28,6 +29,9 @@ import { ContactRepository } from '@/contact/domain/repositories/ContactReposito
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { DatasetMetadataExportFormatsMother } from '@tests/component/info/domain/models/DatasetMetadataExportFormatsMother'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { DatasetReview } from '@/dataset/domain/models/DatasetReview'
+import { useLocation } from 'react-router-dom'
+import { TermsOfUseMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
@@ -152,11 +156,17 @@ const versionSummaryInfo: DatasetVersionSummaryInfo[] = [
 const testDatasetMetadataExportFormats = DatasetMetadataExportFormatsMother.create()
 const termsTabLabelRegex = /^Terms(?: and Guestbook)?$/
 
+function LocationDisplay() {
+  const location = useLocation()
+  return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>
+}
+
 describe('Dataset', () => {
   const mountWithDataset = (
     component: ReactNode,
     dataset: DatasetModel | undefined,
-    anonymizedView = false
+    anonymizedView = false,
+    datasetReviews: DatasetReview[] = []
   ) => {
     const searchParams = anonymizedView
       ? { privateUrlToken: 'some-private-url-token' }
@@ -164,6 +174,7 @@ describe('Dataset', () => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
     datasetRepository.getLocks = cy.stub().resolves([])
+    datasetRepository.getDatasetReviews = cy.stub().resolves(datasetReviews)
     contactRepository.sendFeedbacktoOwners = cy.stub().resolves([])
     fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(testFiles)
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
@@ -309,7 +320,10 @@ describe('Dataset', () => {
     cy.customMount(
       <LoadingProvider>
         <AlertProvider>
-          <WithRepositories collectionRepository={collectionRepository}>
+          <WithRepositories
+            collectionRepository={collectionRepository}
+            datasetRepository={datasetRepository}
+            fileRepository={fileRepository}>
             <AnonymizedContext.Provider
               value={{ anonymizedView: anonymizedView, setAnonymizedView }}>
               <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
@@ -325,8 +339,6 @@ describe('Dataset', () => {
   it('renders skeleton while loading', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -343,8 +355,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -361,8 +371,6 @@ describe('Dataset', () => {
     mountWithDataset(
       <Dataset
         publishInProgress={true}
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -376,11 +384,36 @@ describe('Dataset', () => {
     cy.findAllByRole('tab', { name: 'Versions' }).should('have.length', 1)
   })
 
+  it('redirects to the dataset page when publish completes', () => {
+    const publishedDataset = DatasetMother.create({
+      persistentId: 'doi:10.5072/FK2/PUBLISHDONE'
+    })
+    cy.clock()
+    mountWithDataset(
+      <>
+        <Dataset
+          publishInProgress={true}
+          fileRepository={fileRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          contactRepository={contactRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
+        <LocationDisplay />
+      </>,
+      publishedDataset
+    )
+
+    cy.findByText('Publish in Progress').should('exist')
+    cy.tick(2_000)
+    cy.findByTestId('location-display').should(
+      'have.text',
+      '/datasets?persistentId=doi:10.5072/FK2/PUBLISHDONE'
+    )
+  })
+
   it('renders the breadcrumbs', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -395,8 +428,6 @@ describe('Dataset', () => {
   it('renders the Dataset page title and labels', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -414,8 +445,6 @@ describe('Dataset', () => {
   it('renders the Dataset Metadata tab', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -436,8 +465,6 @@ describe('Dataset', () => {
   it('renders the Dataset Terms tab', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -456,6 +483,40 @@ describe('Dataset', () => {
     cy.findByTestId('dataset-guestbook-section').should('exist')
   })
 
+  it('opens the terms tab from the custom terms summary link', () => {
+    const customTermsDataset = DatasetMother.create({
+      license: undefined,
+      termsOfUse: TermsOfUseMother.create({
+        customTerms: {
+          termsOfUse: 'Custom terms summary text',
+          confidentialityDeclaration: '',
+          specialPermissions: '',
+          restrictions: '',
+          citationRequirements: '',
+          depositorRequirements: '',
+          conditions: '',
+          disclaimer: ''
+        }
+      })
+    })
+
+    mountWithDataset(
+      <>
+        <Dataset
+          fileRepository={fileRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          contactRepository={contactRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
+        <LocationDisplay />
+      </>,
+      customTermsDataset
+    )
+
+    cy.findByRole('button', { name: 'Custom Dataset Terms' }).click()
+    cy.findByTestId('location-display').should('contain', '?tab=terms')
+  })
+
   it('renders the read-only terms tab title when user cannot edit dataset', () => {
     const readOnlyDataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithUpdateDatasetNotAllowed()
@@ -463,8 +524,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -479,8 +538,6 @@ describe('Dataset', () => {
   it('renders the Dataset Files tab', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -502,8 +559,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -523,8 +578,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -535,13 +588,55 @@ describe('Dataset', () => {
     cy.findByTestId('dataset-metrics').should('not.exist')
   })
 
+  it('renders dataset reviews under the right-side metrics', () => {
+    const datasetReview: DatasetReview = {
+      id: 23,
+      title: 'Review of Some Title',
+      authors: ['Reviewer One'],
+      persistentId: 'doi:10.5072/FK2/REVIEW1',
+      persistentIdUrl: 'https://doi.org/10.5072/FK2/REVIEW1',
+      citation: 'Review citation',
+      citationHtml: 'Review citation',
+      datePublished: '2026-02-03',
+      description: 'A review dataset',
+      rubricMetadataBlocks: []
+    }
+    mountWithDataset(
+      <Dataset
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
+      />,
+      testDataset,
+      false,
+      [datasetReview]
+    )
+
+    cy.findByText('Dataset Reviews').should('exist')
+    cy.findByRole('link', { name: datasetReview.title })
+      .should('have.attr', 'href')
+      .and('include', '/datasets?persistentId=doi%3A10.5072%2FFK2%2FREVIEW1')
+    cy.wrap(datasetRepository.getDatasetReviews).should(
+      'have.been.calledWith',
+      testDataset.persistentId
+    )
+  })
+
+  it('renders the dataset tabs skeleton', () => {
+    cy.customMount(<TabsSkeleton />)
+
+    cy.findByRole('tab', { name: 'Files' }).should('exist')
+    cy.findByRole('tab', { name: 'Metadata' }).should('exist')
+    cy.findByRole('tab', { name: 'Terms' }).should('exist')
+    cy.findByRole('tab', { name: 'Versions' }).should('exist')
+  })
+
   it('should render all tabs if the dataset is in deaccessioned version, and user has edit permission', () => {
     const testDataset = DatasetMother.createDeaccessionedwithEditPermission()
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -561,8 +656,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -578,8 +671,6 @@ describe('Dataset', () => {
   it('renders the Dataset Action Buttons', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -593,8 +684,6 @@ describe('Dataset', () => {
   it('renders the Dataset Files list table with infinite scrolling enabled', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         filesTabInfiniteScrollEnabled={true}
         contactRepository={contactRepository}
@@ -611,8 +700,6 @@ describe('Dataset', () => {
   it('shows the toast when the information was sent to contact successfully', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -645,8 +732,6 @@ describe('Dataset', () => {
   it('does not show the tooltip for contact owner button', () => {
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -668,8 +753,6 @@ describe('Dataset', () => {
 
     mountWithDataset(
       <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}
@@ -685,5 +768,14 @@ describe('Dataset', () => {
     // cy.findByText('Version Note').should('exist')
     cy.findByText('Contributors').should('exist')
     cy.findByText('Published On').should('exist')
+  })
+
+  it('renders the dataset tabs skeleton', () => {
+    cy.customMount(<TabsSkeleton />)
+
+    cy.findByRole('tab', { name: 'Files' }).should('exist')
+    cy.findByRole('tab', { name: 'Metadata' }).should('exist')
+    cy.findByRole('tab', { name: 'Terms' }).should('exist')
+    cy.findByRole('tab', { name: 'Versions' }).should('exist')
   })
 })

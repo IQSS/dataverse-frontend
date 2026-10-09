@@ -8,6 +8,7 @@ import {
   UpwardHierarchyNode
 } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { JSUpwardHierarchyNodeMapper } from '../../../shared/hierarchy/infrastructure/mappers/JSUpwardHierarchyNodeMapper'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 export class JSCollectionMapper {
   static toCollection(jsCollection: JSCollection): Collection {
@@ -27,7 +28,9 @@ export class JSCollectionMapper {
       contacts: jsCollection.contacts ?? [],
       isMetadataBlockRoot: jsCollection.isMetadataBlockRoot,
       isFacetRoot: jsCollection.isFacetRoot,
-      childCount: jsCollection.childCount
+      childCount: jsCollection.childCount,
+      allowedDatasetTypes: (jsCollection as unknown as Record<string, unknown>)
+        .allowedDatasetTypes as DatasetType[] | undefined
     }
   }
 

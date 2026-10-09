@@ -9,7 +9,6 @@ import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 import { EditFileMetadataReferrer } from '@/sections/edit-file-metadata/EditFileMetadata'
 import { EditFileTagsButton } from './edit-file-tags/EditFileTagsButton'
 import { FileLabel } from '@/files/domain/models/FileMetadata'
-import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { FileConfigureToolsOptions } from '../access-file-menu/FileToolOptions'
 
 interface EditFileMenuProps {
@@ -19,7 +18,6 @@ interface EditFileMenuProps {
   datasetInfo: EditFileMenuDatasetInfo
   storageIdentifier: string | undefined
   existingLabels?: FileLabel[]
-  datasetRepository: DatasetRepository
   isTabularFile: boolean
   fileType: string
 }
@@ -40,7 +38,6 @@ export const EditFileMenu = ({
   storageIdentifier,
   existingLabels,
   isTabularFile,
-  datasetRepository,
   fileType
 }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
@@ -86,7 +83,6 @@ export const EditFileMenu = ({
         existingLabels={existingLabels}
         datasetPersistentId={datasetInfo.persistentId}
         isTabularFile={isTabularFile}
-        datasetRepository={datasetRepository}
       />
       <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
       <FileConfigureToolsOptions fileId={fileId} fileType={fileType} />

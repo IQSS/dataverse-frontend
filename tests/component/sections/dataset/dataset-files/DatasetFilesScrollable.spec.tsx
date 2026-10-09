@@ -24,6 +24,7 @@ import { FilesWithCount } from '../../../../../src/files/domain/models/FilesWith
 import { getCellStyle } from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTableScrollable'
 import { DatasetMockRepository } from '../../../../../src/stories/dataset/DatasetMockRepository'
 import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
+import { WithRepositories } from '@tests/component/WithRepositories'
 
 const TOTAL_FILES_COUNT = 200
 const ONLY_4_FILES_COUNT = 4
@@ -92,12 +93,12 @@ describe('DatasetFilesScrollable', () => {
 
   it('renders the scrollable files table', () => {
     cy.customMount(
-      <DatasetFilesScrollable
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+        <DatasetFilesScrollable
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      </WithRepositories>
     )
 
     cy.wait(1000)
@@ -107,13 +108,13 @@ describe('DatasetFilesScrollable', () => {
 
   it('check that the files sections are rendered even without edit permissions', () => {
     cy.customMount(
-      <DatasetFilesScrollable
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-        canUpdateDataset={false}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+        <DatasetFilesScrollable
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+          canUpdateDataset={false}
+        />
+      </WithRepositories>
     )
 
     cy.wait(1000)
@@ -139,12 +140,12 @@ describe('DatasetFilesScrollable', () => {
 
   it('renders the first 10 files', () => {
     cy.customMount(
-      <DatasetFilesScrollable
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+        <DatasetFilesScrollable
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('10 of 200 Files displayed').should('exist')
@@ -161,12 +162,12 @@ describe('DatasetFilesScrollable', () => {
       totalFilesCount: 0
     })
     cy.customMount(
-      <DatasetFilesScrollable
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-        datasetRepository={datasetRepository}
-      />
+      <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+        <DatasetFilesScrollable
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      </WithRepositories>
     )
 
     cy.findByText('There are no files in this dataset.').should('exist')
@@ -177,12 +178,12 @@ describe('DatasetFilesScrollable', () => {
       fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(only4Files)
 
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByText(`${ONLY_4_FILES_COUNT} Files`).should('exist')
@@ -196,12 +197,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('loads more files when scrolling to the bottom ', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByText('10 of 200 Files displayed').should('exist')
@@ -218,12 +219,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('scrolls to the top when criteria changes', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByText('10 of 200 Files displayed').should('exist')
@@ -243,12 +244,12 @@ describe('DatasetFilesScrollable', () => {
     describe('Sticky elements', () => {
       it('should stick the header table when scrolling down', () => {
         cy.customMount(
-          <DatasetFilesScrollable
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-            datasetRepository={datasetRepository}
-          />
+          <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+            <DatasetFilesScrollable
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </WithRepositories>
         )
 
         cy.findByText('10 of 200 Files displayed').should('exist')
@@ -269,14 +270,14 @@ describe('DatasetFilesScrollable', () => {
 
       it('should stick the table top messages on top of the table header when scrolling down with selected files', () => {
         cy.customMount(
-          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-            <DatasetFilesScrollable
-              filesRepository={fileRepository}
-              datasetPersistentId={datasetPersistentId}
-              datasetVersion={datasetVersion}
-              datasetRepository={datasetRepository}
-            />
-          </SettingsProvider>
+          <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+            <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+              <DatasetFilesScrollable
+                datasetPersistentId={datasetPersistentId}
+                datasetVersion={datasetVersion}
+              />
+            </SettingsProvider>
+          </WithRepositories>
         )
 
         cy.findByText('10 of 200 Files displayed').should('exist')
@@ -303,14 +304,14 @@ describe('DatasetFilesScrollable', () => {
 
       it('table header should have css top value according to criteria container height', () => {
         cy.customMount(
-          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-            <DatasetFilesScrollable
-              filesRepository={fileRepository}
-              datasetPersistentId={datasetPersistentId}
-              datasetVersion={datasetVersion}
-              datasetRepository={datasetRepository}
-            />
-          </SettingsProvider>
+          <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+            <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+              <DatasetFilesScrollable
+                datasetPersistentId={datasetPersistentId}
+                datasetVersion={datasetVersion}
+              />
+            </SettingsProvider>
+          </WithRepositories>
         )
 
         cy.findByText('10 of 200 Files displayed').should('exist')
@@ -340,14 +341,14 @@ describe('DatasetFilesScrollable', () => {
 
       it('table header should have css top value according to criteria container height + top messages container height when selected files ,top messages container should have top value only according to criteria container height', () => {
         cy.customMount(
-          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-            <DatasetFilesScrollable
-              filesRepository={fileRepository}
-              datasetPersistentId={datasetPersistentId}
-              datasetVersion={datasetVersion}
-              datasetRepository={datasetRepository}
-            />
-          </SettingsProvider>
+          <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+            <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+              <DatasetFilesScrollable
+                datasetPersistentId={datasetPersistentId}
+                datasetVersion={datasetVersion}
+              />
+            </SettingsProvider>
+          </WithRepositories>
         )
 
         cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -407,12 +408,12 @@ describe('DatasetFilesScrollable', () => {
   describe('File selection', () => {
     it('selects first 10 files when clicking the top header checkbox', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
@@ -426,12 +427,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('selects all files when clicking the select all button', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
@@ -449,12 +450,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('selects all files when clicking the select all button and mantains selection when loading more on scroll to bottom', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
@@ -489,12 +490,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('maintains the selection when scrolling to bottom and loading more files', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -534,12 +535,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('removes the selection when the header checkbox is clicked again', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
@@ -557,12 +558,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('selects all loaded by scroll files when clicking the header checkbox', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.findByText('10 of 200 Files displayed').should('exist')
@@ -585,12 +586,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('all new loaded files should be checked if selecting all files when only displayed 10 and then scrolling to bottom to load 10 more files', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.findByTestId('header-checkbox').should('be.visible').check({ force: true })
@@ -621,12 +622,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('removes the selection when the filters change', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -638,12 +639,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('removes the selection when the Sort by changes', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -655,12 +656,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('removes the selection when the Search bar is used', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -671,12 +672,12 @@ describe('DatasetFilesScrollable', () => {
 
     it('removes the selection when the clear all button is clicked', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -695,14 +696,14 @@ describe('DatasetFilesScrollable', () => {
         metadata: FileMetadataMother.create({ size: new FileSize(2, FileSizeUnit.BYTES) })
       })
       cy.customMount(
-        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-          <DatasetFilesScrollable
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-            datasetRepository={datasetRepository}
-          />
-        </SettingsProvider>
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+            <DatasetFilesScrollable
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        </WithRepositories>
       )
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
 
@@ -721,14 +722,14 @@ describe('DatasetFilesScrollable', () => {
 
     it('renders the zip download limit message when selecting all rows', () => {
       cy.customMount(
-        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-          <DatasetFilesScrollable
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-            datasetRepository={datasetRepository}
-          />
-        </SettingsProvider>
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+            <DatasetFilesScrollable
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        </WithRepositories>
       )
 
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -741,14 +742,14 @@ describe('DatasetFilesScrollable', () => {
 
     it('renders the zip download limit message when selecting all rows and then scrolling to bottom to load more files', () => {
       cy.customMount(
-        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-          <DatasetFilesScrollable
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-            datasetRepository={datasetRepository}
-          />
-        </SettingsProvider>
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+            <DatasetFilesScrollable
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        </WithRepositories>
       )
 
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
@@ -769,12 +770,12 @@ describe('DatasetFilesScrollable', () => {
   describe('Calling use cases', () => {
     it('calls the useGetAccumulatedFiles hook with the correct parameters', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.wrap(fileRepository.getAllByDatasetPersistentIdWithCount).should(
         'be.calledWith',
@@ -789,12 +790,12 @@ describe('DatasetFilesScrollable', () => {
     })
     it('calls the useGetAccumulatedFiles hook with the correct parameters when sortBy criteria changes', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('button', { name: /Sort/ }).click()
       cy.findByText('Name (Z-A)').should('exist').click()
@@ -808,12 +809,12 @@ describe('DatasetFilesScrollable', () => {
     })
     it('calls the useGetAccumulatedFiles hook with the correct parameters when filterByType criteria changes', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('button', { name: 'File Type: All' }).click()
       cy.findByText('PNG Image (485)').should('exist').click()
@@ -827,12 +828,12 @@ describe('DatasetFilesScrollable', () => {
     })
     it('calls the useGetAccumulatedFiles hook with the correct parameters when filterByAccess criteria changes', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('button', { name: 'Access: All' }).click()
       cy.findByText('Public (222)').should('exist').click()
@@ -846,12 +847,12 @@ describe('DatasetFilesScrollable', () => {
     })
     it('calls the useGetAccumulatedFiles hook with the correct parameters when filterByTag criteria changes', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByRole('button', { name: 'File Tags: All' }).click()
       cy.findByText('Document (5)').should('exist').click()
@@ -865,12 +866,12 @@ describe('DatasetFilesScrollable', () => {
     })
     it('calls the useGetAccumulatedFiles hook with the correct parameters when searchText criteria changes', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByLabelText('Search').type('test{enter}')
       cy.wrap(fileRepository.getAllByDatasetPersistentIdWithCount).should(
@@ -883,12 +884,12 @@ describe('DatasetFilesScrollable', () => {
     })
     it('calls the useGetAccumulatedFiles hook with the correct parameters when scrolling to bottom', () => {
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
 
       cy.wrap(fileRepository.getAllByDatasetPersistentIdWithCount).should(
@@ -914,14 +915,14 @@ describe('DatasetFilesScrollable', () => {
     })
     it('calls getFilesTotalDownloadSizeByDatasetPersistentId with the correct parameters when applying search file criteria', () => {
       cy.customMount(
-        <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-          <DatasetFilesScrollable
-            filesRepository={fileRepository}
-            datasetPersistentId={datasetPersistentId}
-            datasetVersion={datasetVersion}
-            datasetRepository={datasetRepository}
-          />
-        </SettingsProvider>
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
+            <DatasetFilesScrollable
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        </WithRepositories>
       )
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
@@ -949,12 +950,12 @@ describe('DatasetFilesScrollable', () => {
         .rejects(new Error('Some error on getAllByDatasetPersistentIdWithCount'))
 
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByText('Error').should('exist')
     })
@@ -963,12 +964,12 @@ describe('DatasetFilesScrollable', () => {
       fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().rejects(new Error())
 
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByText(/There was an error getting the files total download size/).should('exist')
     })
@@ -979,12 +980,12 @@ describe('DatasetFilesScrollable', () => {
         .rejects(new Error('Some error on getFilesTotalDownloadSizeByDatasetPersistentId'))
 
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByText('Error').should('exist')
     })
@@ -993,12 +994,12 @@ describe('DatasetFilesScrollable', () => {
       fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().rejects(new Error())
 
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByText(/There was an error getting the files total download size/).should('exist')
     })
@@ -1009,12 +1010,12 @@ describe('DatasetFilesScrollable', () => {
         .rejects(new Error('Some error on getFilesCountInfoByDatasetPersistentId'))
 
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByText('Error').should('exist')
     })
@@ -1023,12 +1024,12 @@ describe('DatasetFilesScrollable', () => {
       fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().rejects(new Error())
 
       cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-          datasetRepository={datasetRepository}
-        />
+        <WithRepositories datasetRepository={datasetRepository} fileRepository={fileRepository}>
+          <DatasetFilesScrollable
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </WithRepositories>
       )
       cy.findByText(/There was an error getting the files count info/).should('exist')
     })

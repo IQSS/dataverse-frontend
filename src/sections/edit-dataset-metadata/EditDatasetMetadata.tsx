@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, Tabs } from '@iqss/dataverse-design-system'
-import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { Alert, Col, Form, Tabs } from '@iqss/dataverse-design-system'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useDataset } from '../dataset/DatasetContext'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
@@ -15,14 +14,10 @@ import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import styles from './EditDatasetMetadata.module.scss'
 
 interface EditDatasetMetadataProps {
-  datasetRepository: DatasetRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
-export const EditDatasetMetadata = ({
-  datasetRepository,
-  metadataBlockInfoRepository
-}: EditDatasetMetadataProps) => {
+export const EditDatasetMetadata = ({ metadataBlockInfoRepository }: EditDatasetMetadataProps) => {
   const { t } = useTranslation('editDatasetMetadata')
   const { dataset, isLoading } = useDataset()
   const { setIsLoading } = useLoading()
@@ -59,6 +54,18 @@ export const EditDatasetMetadata = ({
         {t('infoAlert.text')}
       </Alert>
       <HostCollection collectionName={datasetParentCollection?.name} />
+      <Form.Group>
+        <Form.Group.Label column sm={3}>
+          {t('datasetType.label')}
+        </Form.Group.Label>
+        <Col sm={9}>
+          <Form.Group.Input
+            readOnly
+            defaultValue={dataset.datasetType}
+            className="text-capitalize"
+          />
+        </Col>
+      </Form.Group>
       <SeparationLine />
       <Tabs defaultActiveKey="metadata">
         <Tabs.Tab eventKey="metadata" title={t('metadata')}>
@@ -66,11 +73,11 @@ export const EditDatasetMetadata = ({
             <DatasetMetadataForm
               mode="edit"
               collectionId={datasetParentCollection?.id}
-              datasetRepository={datasetRepository}
               metadataBlockInfoRepository={metadataBlockInfoRepository}
               datasetPersistentID={dataset.persistentId}
               datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
               datasetLastUpdateTime={dataset.version.lastUpdateTime}
+              datasetTypeName={dataset.datasetType}
             />
           </div>
         </Tabs.Tab>
