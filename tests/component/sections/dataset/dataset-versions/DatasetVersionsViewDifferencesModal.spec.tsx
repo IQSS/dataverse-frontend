@@ -373,7 +373,7 @@ describe('DatasetVersions', () => {
     cy.findAllByText('File Replaced').should('have.length', 1)
 
     datasetVersionDiff.filesReplaced?.forEach((file) => {
-      cy.findByTestId(`file-replaced-row-${file.newFile.fileId}`).should('exist')
+      cy.findByTestId(`file-replaced-row-${file.oldFile.fileId}`).should('exist')
     })
   })
 

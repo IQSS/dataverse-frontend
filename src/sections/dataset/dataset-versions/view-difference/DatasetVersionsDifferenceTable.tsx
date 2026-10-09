@@ -189,7 +189,9 @@ export const DatasetVersionsDifferenceTable = ({
         <Table bordered>
           <tbody>
             {filesReplaced.map(({ oldFile, newFile }) => (
-              <tr key={`replaced-${oldFile.fileId}-${newFile.fileId}`}>
+              <tr
+                key={`replaced-${oldFile.fileId}-${newFile.fileId}`}
+                data-testid={`file-replaced-row-${oldFile.fileId}`}>
                 <td>{t('versions.fileReplaced')}</td>
                 <td>
                   {t('versions.fileID')} {oldFile.fileId}
