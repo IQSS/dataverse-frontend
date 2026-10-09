@@ -5,11 +5,13 @@ interface DatasetContextProps {
   dataset: Dataset | undefined
   isLoading: boolean
   refreshDataset: () => void
+  isNotAuthorized?: boolean
 }
 export const DatasetContext = createContext<DatasetContextProps>({
   dataset: undefined,
   isLoading: false,
-  refreshDataset: () => {}
+  refreshDataset: () => {},
+  isNotAuthorized: false
 })
 
 export const useDataset = () => useContext(DatasetContext)

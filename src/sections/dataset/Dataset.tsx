@@ -32,6 +32,7 @@ import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInf
 import { useAnonymized } from './anonymized/AnonymizedContext'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import { DatasetReviews } from './dataset-reviews/DatasetReviews'
+import { DatasetNotAuthorized } from './dataset-not-authorized/DatasetNotAuthorized'
 
 interface DatasetProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -52,7 +53,7 @@ export function Dataset({
 }: DatasetProps) {
   const { datasetRepository } = useDatasetRepositories()
   const { setIsLoading } = useLoading()
-  const { dataset, isLoading: isDatasetLoading } = useDataset()
+  const { dataset, isLoading: isDatasetLoading, isNotAuthorized } = useDataset()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -84,6 +85,9 @@ export function Dataset({
   }
 
   if (!dataset) {
+    if (isNotAuthorized) {
+      return <DatasetNotAuthorized />
+    }
     return <NotFoundPage dvObjectNotFoundType="dataset" />
   }
 

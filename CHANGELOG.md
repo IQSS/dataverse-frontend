@@ -40,6 +40,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Handle unauthorized access to dataset draft versions correctly: fall back to the published version when one exists (for anonymous users too), redirect anonymous users to login only when there is no published version, show an unauthorized message to logged in users without access to a draft-only dataset, and show version-not-found messages for missing drafts. (#1095)
 - Disable clickable DRAFT version link in Versions tab when viewing the draft version. (#1090)
 - Disable Save Changes button when file path contains invalid special characters during file upload. (#600)
 - Fix "Filter by" File Type dropdown getting cut off by adding max-height and scrolling. (#792)

@@ -299,7 +299,7 @@ describe('Dataset', () => {
       })
     })
 
-    it('loads page not found when the user is not authenticated and tries to access a draft', () => {
+    it('redirects to login when the user is not authenticated and tries to access a draft', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
@@ -308,8 +308,131 @@ describe('Dataset', () => {
             `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
           )
 
-          cy.findByTestId('not-found-page').should('exist')
+          cy.get('#username', { timeout: 10_000 }).should('exist')
         })
+    })
+
+    describe('draft access', () => {
+      const DRAFT_VERSION_REQUEST = /\/datasets\/:persistentId\/versions\/(:|%3A)draft\?/
+      const NOT_AUTHORIZED_HEADING = 'Not Authorized'
+      const NOT_AUTHORIZED_TEXT = 'You are not authorized to view this page.'
+      const VERSION_NOT_FOUND_TEXT = 'Version :draft was not found. This is version 1.0.'
+
+      const rejectDraftRequestWith = (statusCode: number) => {
+        cy.intercept('GET', DRAFT_VERSION_REQUEST, {
+          statusCode,
+          body: { status: 'ERROR', message: 'User is not permitted to perform requested action.' }
+        })
+      }
+
+      const visitDraft = (persistentId: string) =>
+        cy.visit(
+          `${FRONTEND_BASE_PATH}/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`
+        )
+
+      const createPublishedWithDraft = (publishedTitle: string, draftTitle: string) =>
+        cy.wrap(
+          DatasetHelper.createWithTitle(publishedTitle).then(async (dataset) => {
+            await DatasetHelper.publish(dataset.persistentId)
+            await DatasetHelper.createDraftWithTitle(dataset.persistentId, draftTitle)
+            return dataset
+          }),
+          { timeout: 30_000 }
+        )
+
+      it('shows the published version to an anonymous user instead of redirecting to login when the dataset has a draft', () => {
+        const publishedTitle = faker.lorem.sentence()
+        const draftTitle = faker.lorem.sentence()
+        createPublishedWithDraft(publishedTitle, draftTitle)
+          .its('persistentId')
+          .then((persistentId: string) => {
+            TestsUtils.logout()
+            visitDraft(persistentId)
+
+            cy.findByRole('heading', { name: publishedTitle }).should('exist')
+            cy.findByRole('heading', { name: draftTitle }).should('not.exist')
+            cy.contains('[role="alert"]', VERSION_NOT_FOUND_TEXT).should('exist')
+            cy.get('#username').should('not.exist')
+          })
+      })
+
+      it('returns to the requested draft after the anonymous user logs in', () => {
+        const draftTitle = faker.lorem.sentence()
+        cy.wrap(DatasetHelper.createWithTitle(draftTitle))
+          .its('persistentId')
+          .then((persistentId: string) => {
+            TestsUtils.logout()
+            visitDraft(persistentId)
+            TestsUtils.enterCredentialsInKeycloak()
+
+            cy.location('search', { timeout: 30_000 }).should('contain', `version=${DRAFT_PARAM}`)
+            cy.findByRole('heading', { name: draftTitle }).should('exist')
+            cy.findByText(DatasetLabelValue.DRAFT).should('exist')
+          })
+      })
+
+      it('shows the Not Authorized alert to a logged in user without access to a draft-only dataset', () => {
+        cy.wrap(DatasetHelper.create())
+          .its('persistentId')
+          .then((persistentId: string) => {
+            rejectDraftRequestWith(401)
+            visitDraft(persistentId)
+
+            cy.findByTestId('not-authorized-container').within(() => {
+              cy.findByRole('alert')
+                .should('contain.text', NOT_AUTHORIZED_HEADING)
+                .and('contain.text', NOT_AUTHORIZED_TEXT)
+            })
+            cy.findByTestId('not-found-page').should('not.exist')
+            cy.get('.breadcrumb').should('not.exist')
+          })
+      })
+
+      it('shows the published version with only the version-not-found alert to a logged in user without access to the draft', () => {
+        const publishedTitle = faker.lorem.sentence()
+        const draftTitle = faker.lorem.sentence()
+        createPublishedWithDraft(publishedTitle, draftTitle)
+          .its('persistentId')
+          .then((persistentId: string) => {
+            rejectDraftRequestWith(401)
+            visitDraft(persistentId)
+
+            cy.findByRole('heading', { name: publishedTitle }).should('exist')
+            cy.findByRole('heading', { name: draftTitle }).should('not.exist')
+            cy.contains('[role="alert"]', VERSION_NOT_FOUND_TEXT).should('exist')
+            cy.findByText(NOT_AUTHORIZED_HEADING).should('not.exist')
+          })
+      })
+
+      it('shows the published version with the version-not-found alert when the dataset has no draft', () => {
+        const publishedTitle = faker.lorem.sentence()
+        cy.wrap(
+          DatasetHelper.createWithTitle(publishedTitle).then((dataset) =>
+            DatasetHelper.publish(dataset.persistentId)
+          )
+        )
+          .its('persistentId')
+          .then((persistentId: string) => {
+            visitDraft(persistentId)
+
+            cy.findByRole('heading', { name: publishedTitle }).should('exist')
+            cy.contains('[role="alert"]', VERSION_NOT_FOUND_TEXT).should('exist')
+            cy.findByText(DatasetLabelValue.DRAFT).should('not.exist')
+            cy.findByText(NOT_AUTHORIZED_HEADING).should('not.exist')
+          })
+      })
+
+      it('does not label a server error on the draft as Not Authorized', () => {
+        cy.wrap(DatasetHelper.create())
+          .its('persistentId')
+          .then((persistentId: string) => {
+            rejectDraftRequestWith(500)
+            visitDraft(persistentId)
+
+            cy.findByTestId('not-found-page').should('exist')
+            cy.findByText(NOT_AUTHORIZED_HEADING).should('not.exist')
+          })
+      })
     })
 
     it('successfully loads a dataset when passing the id and version', () => {

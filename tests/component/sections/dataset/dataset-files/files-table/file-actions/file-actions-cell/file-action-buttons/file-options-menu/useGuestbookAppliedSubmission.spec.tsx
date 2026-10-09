@@ -13,7 +13,7 @@ const guestbookResponse = {
   }
 }
 
-const guestbook: Guestbook = {
+const _guestbook: Guestbook = {
   id: 10,
   name: 'Guestbook Test',
   enabled: true,

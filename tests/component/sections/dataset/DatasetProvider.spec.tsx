@@ -4,14 +4,21 @@ import { DatasetRepository } from '../../../../src/dataset/domain/repositories/D
 import { DatasetMother, DatasetVersionMother } from '../../dataset/domain/models/DatasetMother'
 import { useDataset } from '../../../../src/sections/dataset/DatasetContext'
 import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
+import { useState } from 'react'
+import { AuthContext, IAuthContext } from 'react-oauth2-code-pkce'
+import { ReadError } from '@iqss/dataverse-client-javascript'
+import { Alert, AlertMessageKey } from '@/alert/domain/models/Alert'
+import { DatasetNonNumericVersion } from '@/dataset/domain/models/Dataset'
+import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
 
 function TestComponent() {
-  const { dataset, isLoading } = useDataset()
+  const { dataset, isLoading, isNotAuthorized } = useDataset()
 
   return (
     <div>
       {dataset ? <span>{dataset.version.title}</span> : <span>Dataset Not Found</span>}
       {isLoading && <div>Loading...</div>}
+      {isNotAuthorized && <div>Not Authorized</div>}
     </div>
   )
 }
@@ -28,7 +35,7 @@ describe('DatasetProvider', () => {
   })
 
   it('gets the dataset by persistentId', () => {
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
         <DatasetProvider
           repository={datasetRepository}
@@ -55,7 +62,7 @@ describe('DatasetProvider', () => {
       ) as unknown as typeof datasetRepository.getByPersistentId
     datasetRepository.getByPersistentId = getByPersistentIdStub
 
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
         <DatasetProvider
           repository={datasetRepository}
@@ -76,7 +83,7 @@ describe('DatasetProvider', () => {
   })
 
   it('gets the dataset by persistentId and version', () => {
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
         <DatasetProvider
           repository={datasetRepository}
@@ -97,7 +104,7 @@ describe('DatasetProvider', () => {
   })
 
   it('gets the dataset by privateUrlToken', () => {
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
         <DatasetProvider
           repository={datasetRepository}
@@ -117,7 +124,7 @@ describe('DatasetProvider', () => {
   })
 
   it('stops loading if searchParams not passed', () => {
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
         <DatasetProvider repository={datasetRepository} searchParams={{}}>
           <TestComponent />
@@ -133,7 +140,7 @@ describe('DatasetProvider', () => {
   it('stops loading if error happens', () => {
     cy.stub(console, 'error').as('consoleError')
     datasetRepository.getByPersistentId = cy.stub().rejects(new Error('some error'))
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
         <DatasetProvider
           repository={datasetRepository}
@@ -154,7 +161,7 @@ describe('DatasetProvider', () => {
   })
 
   it('does not fetch the dataset while publishing', () => {
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
         <DatasetProvider
           repository={datasetRepository}
@@ -169,5 +176,173 @@ describe('DatasetProvider', () => {
     cy.wrap(datasetRepository.getByPrivateUrlToken).should('not.have.been.called')
     cy.findByText('Loading...').should('exist')
     cy.findByText('Dataset Not Found').should('exist')
+  })
+})
+
+describe('DatasetProvider draft access', () => {
+  const DRAFT_PATH = `/datasets?persistentId=${dataset.persistentId}&version=DRAFT`
+
+  const authContextValue = (overrides: Partial<IAuthContext> = {}): IAuthContext => ({
+    token: '',
+    idToken: undefined,
+    logIn: cy.stub().as('logIn'),
+    logOut: () => {},
+    loginInProgress: false,
+    tokenData: undefined,
+    idTokenData: undefined,
+    error: null,
+    login: () => {},
+    ...overrides
+  })
+  const anonymous = () => authContextValue()
+  const loggedIn = () => authContextValue({ token: 'some-token' })
+
+  const mountDraftRequest = (
+    auth: IAuthContext,
+    version: string = DatasetNonNumericVersion.DRAFT
+  ) => {
+    cy.customMount(
+      <AuthContext.Provider value={auth}>
+        <LoadingProvider>
+          <DatasetProvider
+            repository={datasetRepository}
+            searchParams={{ persistentId: dataset.persistentId, version }}>
+            <TestComponent />
+          </DatasetProvider>
+        </LoadingProvider>
+      </AuthContext.Provider>,
+      [DRAFT_PATH]
+    )
+  }
+
+  const rejectWith = (statusCode: number) => {
+    datasetRepository.getByPersistentId = cy
+      .stub()
+      .rejects(new ReadError(`[${statusCode}] some reason`))
+  }
+
+  const resolveWithPublishedFallback = () => {
+    const published = DatasetMother.create()
+    published.alerts.push(new Alert('danger', AlertMessageKey.NOT_AUTHORIZED))
+    datasetRepository.getByPersistentId = cy.stub().resolves(published)
+    return published
+  }
+
+  beforeEach(() => {
+    cy.stub(console, 'error')
+  })
+
+  it('shows the draft when the draft request succeeds', () => {
+    datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
+    mountDraftRequest(anonymous())
+
+    cy.findByText(dataset.version.title).should('exist')
+    cy.get('@logIn').should('not.have.been.called')
+    cy.findByText('Not Authorized').should('not.exist')
+  })
+
+  it('redirects an anonymous user to login with the return URL when the draft-only dataset is not authorized', () => {
+    rejectWith(401)
+    mountDraftRequest(anonymous())
+
+    cy.get('@logIn').should(
+      'have.been.calledOnceWith',
+      encodeReturnToPathInStateQueryParam(DRAFT_PATH)
+    )
+    cy.findByText('Loading...').should('exist')
+    cy.findByText('Not Authorized').should('not.exist')
+  })
+
+  it('shows the published fallback to an anonymous user without redirecting to login', () => {
+    const published = resolveWithPublishedFallback()
+    mountDraftRequest(anonymous())
+
+    cy.findByText(published.version.title).should('exist')
+    cy.findByText('Loading...').should('not.exist')
+    cy.get('@logIn').should('not.have.been.called')
+  })
+
+  it('keeps loading without showing Not Authorized while a login redirect is already in progress', () => {
+    rejectWith(401)
+    mountDraftRequest(authContextValue({ loginInProgress: true }))
+
+    cy.wrap(datasetRepository.getByPersistentId).should('have.been.called')
+    cy.get('@logIn').should('not.have.been.called')
+    cy.findByText('Loading...').should('exist')
+    cy.findByText('Not Authorized').should('not.exist')
+  })
+
+  it('shows Not Authorized to a logged in user when the draft-only dataset is not authorized', () => {
+    rejectWith(403)
+    mountDraftRequest(loggedIn())
+
+    cy.findByText('Not Authorized').should('exist')
+    cy.findByText('Loading...').should('not.exist')
+    cy.get('@logIn').should('not.have.been.called')
+  })
+
+  it('shows the published fallback to a logged in user when the draft is not authorized', () => {
+    const published = resolveWithPublishedFallback()
+    mountDraftRequest(loggedIn())
+
+    cy.findByText(published.version.title).should('exist')
+    cy.get('@logIn').should('not.have.been.called')
+  })
+
+  it('does not label a missing dataset as Not Authorized', () => {
+    rejectWith(404)
+    mountDraftRequest(loggedIn())
+
+    cy.findByText('Dataset Not Found').should('exist')
+    cy.findByText('Loading...').should('not.exist')
+    cy.findByText('Not Authorized').should('not.exist')
+  })
+
+  it('does not label a server or network error as Not Authorized', () => {
+    datasetRepository.getByPersistentId = cy.stub().rejects(new Error('Network Error'))
+    mountDraftRequest(loggedIn())
+
+    cy.findByText('Dataset Not Found').should('exist')
+    cy.findByText('Not Authorized').should('not.exist')
+    cy.get('@logIn').should('not.have.been.called')
+  })
+
+  it('does not redirect or show Not Authorized when a non-draft version is not authorized', () => {
+    rejectWith(401)
+    mountDraftRequest(anonymous(), '1.0')
+
+    cy.findByText('Dataset Not Found').should('exist')
+    cy.findByText('Not Authorized').should('not.exist')
+    cy.get('@logIn').should('not.have.been.called')
+  })
+
+  it('does not refetch the dataset when the auth state changes', () => {
+    datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
+    const logIn = cy.stub()
+
+    function AuthStateToggle() {
+      const [token, setToken] = useState('')
+      return (
+        <AuthContext.Provider value={{ ...authContextValue({ logIn }), token }}>
+          <button onClick={() => setToken('some-token')}>Log in</button>
+          <LoadingProvider>
+            <DatasetProvider
+              repository={datasetRepository}
+              searchParams={{
+                persistentId: dataset.persistentId,
+                version: DatasetNonNumericVersion.DRAFT
+              }}>
+              <TestComponent />
+            </DatasetProvider>
+          </LoadingProvider>
+        </AuthContext.Provider>
+      )
+    }
+    cy.customMount(<AuthStateToggle />, [DRAFT_PATH])
+
+    cy.findByText(dataset.version.title).should('exist')
+    cy.findByRole('button', { name: 'Log in' }).click()
+    cy.findByText(dataset.version.title).should('exist')
+    cy.wrap(datasetRepository.getByPersistentId).should('have.been.calledOnce')
   })
 })

@@ -32,6 +32,14 @@ import { WithRepositories } from '@tests/component/WithRepositories'
 import { DatasetReview } from '@/dataset/domain/models/DatasetReview'
 import { useLocation } from 'react-router-dom'
 import { TermsOfUseMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
+import { DatasetVersionMother } from '@tests/component/dataset/domain/models/DatasetMother'
+import { DatasetContext } from '@/sections/dataset/DatasetContext'
+import { Alert, AlertMessageKey } from '@/alert/domain/models/Alert'
+import {
+  DatasetNonNumericVersion,
+  DatasetPublishingStatus,
+  DatasetVersionNumber
+} from '@/dataset/domain/models/Dataset'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
@@ -365,6 +373,62 @@ describe('Dataset', () => {
     cy.findByTestId('not-found-page').should('exist')
   })
 
+  it('renders the Not Authorized alert without breadcrumbs when the draft is not authorized', () => {
+    cy.customMount(
+      <LoadingProvider>
+        <AlertProvider>
+          <WithRepositories datasetRepository={datasetRepository}>
+            <DatasetContext.Provider
+              value={{
+                dataset: undefined,
+                isLoading: false,
+                refreshDataset: () => {},
+                isNotAuthorized: true
+              }}>
+              <Dataset
+                metadataBlockInfoRepository={metadataBlockInfoRepository}
+                contactRepository={contactRepository}
+                dataverseInfoRepository={dataverseInfoRepository}
+              />
+            </DatasetContext.Provider>
+          </WithRepositories>
+        </AlertProvider>
+      </LoadingProvider>
+    )
+
+    cy.findByTestId('not-authorized-container').within(() => {
+      cy.findByRole('alert')
+        .should('contain.text', 'Not Authorized')
+        .and('contain.text', 'You are not authorized to view this page.')
+    })
+    cy.findByTestId('not-found-page').should('not.exist')
+    cy.get('.breadcrumb').should('not.exist')
+  })
+
+  it('shows only the version-not-found alert when falling back from an unauthorized draft to the published version', () => {
+    const publishedFallback = DatasetMother.create({
+      version: DatasetVersionMother.create({
+        number: new DatasetVersionNumber(1, 0),
+        publishingStatus: DatasetPublishingStatus.RELEASED,
+        latestVersionPublishingStatus: DatasetPublishingStatus.RELEASED
+      }),
+      requestedVersion: DatasetNonNumericVersion.DRAFT
+    })
+    publishedFallback.alerts.push(new Alert('danger', AlertMessageKey.NOT_AUTHORIZED))
+
+    mountWithDataset(
+      <Dataset
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        contactRepository={contactRepository}
+        dataverseInfoRepository={dataverseInfoRepository}
+      />,
+      publishedFallback
+    )
+
+    cy.findByText(/Version :draft was not found\. This is version 1\.0\./).should('exist')
+    cy.findByText('Not Authorized').should('not.exist')
+  })
+
   it('renders In Progress alert when dataset publish is inProgress', () => {
     const dataset = DatasetMother.create()
 
@@ -393,7 +457,6 @@ describe('Dataset', () => {
       <>
         <Dataset
           publishInProgress={true}
-          fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           contactRepository={contactRepository}
           dataverseInfoRepository={dataverseInfoRepository}
@@ -503,7 +566,6 @@ describe('Dataset', () => {
     mountWithDataset(
       <>
         <Dataset
-          fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           contactRepository={contactRepository}
           dataverseInfoRepository={dataverseInfoRepository}
@@ -603,7 +665,6 @@ describe('Dataset', () => {
     }
     mountWithDataset(
       <Dataset
-        fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         contactRepository={contactRepository}
         dataverseInfoRepository={dataverseInfoRepository}

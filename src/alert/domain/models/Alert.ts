@@ -9,6 +9,7 @@ export enum AlertMessageKey {
   REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT = 'requestedVersionNotFoundShowDraft',
   SHARE_UNPUBLISHED_DATASET = 'shareUnpublishedDataset',
   UNPUBLISHED_DATASET = 'unpublishedDataset',
+  NOT_AUTHORIZED = 'notAuthorized',
   METADATA_UPDATED = 'metadataUpdated',
   FILES_UPDATED = 'filesUpdated',
   TERMS_UPDATED = 'termsUpdated',

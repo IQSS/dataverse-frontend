@@ -1,3 +1,4 @@
+import { Alert, AlertMessageKey } from '@/alert/domain/models/Alert'
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
 import {
   Dataset,
@@ -64,7 +65,10 @@ import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCou
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { FormattedCitation, CitationFormat } from '@/dataset/domain/models/DatasetCitation'
 import { DatasetLicenseUpdateRequest } from '../../domain/models/DatasetLicenseUpdateRequest'
-import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
+import {
+  JSDataverseReadErrorHandler,
+  isPermissionError
+} from '@/shared/helpers/JSDataverseReadErrorHandler'
 import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 import { DatasetReview } from '@/dataset/domain/models/DatasetReview'
@@ -218,6 +222,46 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     requestedVersion?: string,
     keepRawFields?: boolean
   ): Promise<Dataset | undefined> {
+    return this.fetchByPersistentId(persistentId, version, requestedVersion, keepRawFields).catch(
+      (error: unknown) => {
+        if (version === DatasetNonNumericVersion.LATEST_PUBLISHED) {
+          if (!requestedVersion) {
+            return this.fetchByPersistentId(
+              persistentId,
+              DatasetNonNumericVersion.DRAFT,
+              undefined,
+              keepRawFields
+            )
+          }
+          throw error
+        }
+
+        return this.fetchByPersistentId(
+          persistentId,
+          DatasetNonNumericVersion.LATEST_PUBLISHED,
+          version,
+          keepRawFields
+        ).then(
+          (dataset) => {
+            if (isPermissionError(error)) {
+              dataset?.alerts.push(new Alert('danger', AlertMessageKey.NOT_AUTHORIZED))
+            }
+            return dataset
+          },
+          () => {
+            throw error
+          }
+        )
+      }
+    )
+  }
+
+  private fetchByPersistentId(
+    persistentId: string,
+    version: string,
+    requestedVersion?: string,
+    keepRawFields?: boolean
+  ): Promise<Dataset | undefined> {
     return getDataset
       .execute(persistentId, version, includeDeaccessioned, keepRawFields)
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
@@ -271,29 +315,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           datasetDetails.latestPublishedVersionMinorNumber,
           datasetDetails.datasetVersionDiff,
           datasetDetails.fileStore
-        )
-      })
-      .catch((error: ReadError) => {
-        console.error(error)
-        if (!requestedVersion && version === DatasetNonNumericVersion.LATEST_PUBLISHED) {
-          return this.getByPersistentId(
-            persistentId,
-            DatasetNonNumericVersion.DRAFT,
-            requestedVersion,
-            keepRawFields
-          )
-        }
-        if (
-          version === DatasetNonNumericVersion.LATEST_PUBLISHED ||
-          version === DatasetNonNumericVersion.DRAFT
-        ) {
-          throw new Error(`Failed to get dataset by persistent ID: ${error.message}`)
-        }
-        return this.getByPersistentId(
-          persistentId,
-          DatasetNonNumericVersion.LATEST_PUBLISHED,
-          (requestedVersion = version),
-          keepRawFields
         )
       })
   }
