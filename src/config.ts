@@ -2,7 +2,7 @@ import * as z from 'zod'
 
 declare global {
   interface Window {
-    __APP_CONFIG__: AppConfig | undefined
+    __APP_CONFIG__: AppConfigInput | undefined
   }
 }
 
@@ -11,7 +11,12 @@ let CONFIG: AppConfig | undefined
 const BannerMessageSchema = z.union([z.string(), z.record(z.string(), z.string())])
 
 const AppConfigSchema = z.object({
-  backendUrl: z.url(),
+  // When omitted or empty, defaults to the origin the app is served from,
+  // e.g. when deployed as a war in the same Payara as the Dataverse backend.
+  backendUrl: z
+    .union([z.url(), z.literal('')])
+    .optional()
+    .transform((url) => url || window.location.origin),
   bannerMessage: BannerMessageSchema.optional(),
   oidc: z.object({
     clientId: z.string(),
@@ -46,6 +51,7 @@ const AppConfigSchema = z.object({
 })
 
 export type AppConfig = z.infer<typeof AppConfigSchema>
+export type AppConfigInput = z.input<typeof AppConfigSchema>
 
 export type AppConfigResult =
   | { ok: true; value: AppConfig }

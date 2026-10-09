@@ -1134,6 +1134,38 @@ path included will redirect to the frontend application.
 
 </details>
 
+#### Configuring a deployed war
+
+The war ships with a `config.js` holding development defaults (a `localhost` backend and a test Keycloak realm). The SPA
+reads this file in the browser on every page load, so it can be edited after deployment without rebuilding.
+
+Payara expands the war on deployment. For an application deployed with `--name dataverse-frontend`, the file is at:
+
+```
+<payara-home>/glassfish/domains/domain1/applications/dataverse-frontend/config.js
+```
+
+Edit it to match your installation:
+
+- `backendUrl`: leave it empty (`''`) or remove it when the frontend runs in the same Payara as Dataverse; the SPA then
+  uses the origin it is served from. Set it only when the backend is on a different host.
+- `oidc.clientId`: a **public** client with PKCE enabled in your OIDC provider. The backend's
+  `dataverse.auth.oidc.client-id` is usually a confidential client and cannot be reused here.
+- `oidc.authorizationEndpoint`, `oidc.tokenEndpoint`, `oidc.logoutEndpoint`: listed in your provider's
+  `<issuer>/.well-known/openid-configuration`. For Keycloak, they are
+  `<keycloak-url>/realms/<realm>/protocol/openid-connect/{auth,token,logout}`.
+- `oidc.localStorageKeyPrefix`, `branding`, `homepage`, `footer`, `languages`, `bannerMessage`: adjust as needed.
+
+In the OIDC client, allow redirects back to the frontend base path, for example
+`https://dataverse.example.edu/modern/*`.
+
+The change takes effect on the next page load; no restart is needed. Browsers may cache `config.js`, so use a hard
+refresh to verify.
+
+> [!WARNING]
+> Redeploying or upgrading the war replaces `config.js` with the packaged defaults. Keep a copy of your edited file
+> outside the Payara directory and copy it back after each deployment.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
 
