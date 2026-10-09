@@ -10,6 +10,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Changed
 
+- `backendUrl` in `config.js` is now optional. When omitted or empty, the SPA uses the origin it is served from (e.g. when deployed as a war in the same Payara as Dataverse).
+
 ### Fixed
 
 ### Removed
