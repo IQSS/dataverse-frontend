@@ -51,6 +51,14 @@
     "learnAbout": "Learn About",
     "standards": "Data Citation Standards"
   },
+  "publicationRelationTypes": {
+    "IsCitedBy": "Is Cited By",
+    "Cites": "Cites",
+    "IsSupplementTo": "Is Supplement To",
+    "IsSupplementedBy": "Is Supplemented By",
+    "IsReferencedBy": "Is Referenced By",
+    "References": "References"
+  },
   "datasetMetadataForm": {
     "metadataTip": {
       "title": "Metadata Tip",
