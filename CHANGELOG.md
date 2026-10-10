@@ -12,6 +12,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Normalize directory slashes when validating unique file path combination in file uploader. (#1106)
+
 ### Removed
 
 ---

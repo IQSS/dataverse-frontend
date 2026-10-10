@@ -14,13 +14,20 @@ export class FileUploaderHelper {
     allFiles
   }: {
     fileName: string
-    filePath: string
+    filePath?: string
     fileKey: string
     allFiles: UploadedFile[]
   }): boolean {
-    return !allFiles
-      .filter((f) => f.key !== fileKey)
-      .some((file) => `${file.fileDir}/${file.fileName}` === `${filePath}/${fileName}`)
+    const normalizeDirectory = (directory?: string): string =>
+      (directory ?? '').replace(/^\/+|\/+$/g, '')
+    const targetDirectory = normalizeDirectory(filePath)
+
+    return !allFiles.some(
+      (file) =>
+        file.key !== fileKey &&
+        file.fileName === fileName &&
+        normalizeDirectory(file.fileDir) === targetDirectory
+    )
   }
 
   public static isValidFilePath(filePath: string): boolean {

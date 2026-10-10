@@ -98,6 +98,57 @@ describe('FileUploaderHelper', () => {
         })
       ).to.be.false
     })
+
+    it('returns false when combination is duplicate even with leading or trailing slashes in path', () => {
+      const testFileInFolder: UploadedFile = {
+        ...testFileOne,
+        fileName: 'data.csv',
+        fileDir: '/subfolder/'
+      }
+
+      expect(
+        FileUploaderHelper.isUniqueCombinationOfFilepathAndFilename({
+          fileName: 'data.csv',
+          filePath: 'subfolder',
+          fileKey: 'newFileKey',
+          allFiles: [testFileInFolder]
+        })
+      ).to.be.false
+    })
+
+    it('returns false when combination is duplicate with root directory slash differences', () => {
+      const testFileInRoot: UploadedFile = {
+        ...testFileOne,
+        fileName: 'data.csv',
+        fileDir: ''
+      }
+
+      expect(
+        FileUploaderHelper.isUniqueCombinationOfFilepathAndFilename({
+          fileName: 'data.csv',
+          filePath: '/',
+          fileKey: 'newFileKey',
+          allFiles: [testFileInRoot]
+        })
+      ).to.be.false
+    })
+
+    it('returns false when combination is duplicate and directory path is undefined', () => {
+      const testFileWithUndefinedDir: UploadedFile = {
+        ...testFileOne,
+        fileName: 'data.csv',
+        fileDir: undefined as unknown as string
+      }
+
+      expect(
+        FileUploaderHelper.isUniqueCombinationOfFilepathAndFilename({
+          fileName: 'data.csv',
+          filePath: undefined,
+          fileKey: 'newFileKey',
+          allFiles: [testFileWithUndefinedDir]
+        })
+      ).to.be.false
+    })
   })
 
   describe('isValidFilePath', () => {
