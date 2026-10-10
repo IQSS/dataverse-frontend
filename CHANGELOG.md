@@ -40,6 +40,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Preserve file access request state dynamically in JSFileAccessMapper instead of hardcoding false. (#1084)
 - Disable clickable DRAFT version link in Versions tab when viewing the draft version. (#1090)
 - Disable Save Changes button when file path contains invalid special characters during file upload. (#600)
 - Fix "Filter by" File Type dropdown getting cut off by adding max-height and scrolling. (#792)
