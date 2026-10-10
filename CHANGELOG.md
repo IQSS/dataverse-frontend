@@ -12,6 +12,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Display "In Review" status label on dataset page when a draft version is under review. (#1094)
+
 ### Removed
 
 ---
