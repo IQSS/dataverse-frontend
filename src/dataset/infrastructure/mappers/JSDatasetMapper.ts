@@ -51,7 +51,9 @@ export class JSDatasetMapper {
     datasetVersionDiff?: JSDatasetVersionDiff,
     fileStore?: string
   ): Dataset {
-    const isInReview = jsDatasetLocks.some((lock) => lock.lockType === 'InReview')
+    const isInReview =
+      jsDataset.versionInfo.state === DatasetVersionState.DRAFT &&
+      jsDatasetLocks.some((lock) => lock.lockType === 'InReview')
     const version = JSDatasetVersionMapper.toVersion(
       jsDataset.versionId,
       jsDataset.versionInfo,

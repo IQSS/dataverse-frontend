@@ -11,7 +11,11 @@ import {
   CitationMetadataBlock,
   DatasetMetadataBlock
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
-import { DatasetLockReason, TermsOfAccess } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  DatasetLabelValue,
+  DatasetLockReason,
+  TermsOfAccess
+} from '../../../../../src/dataset/domain/models/Dataset'
 import {
   FileDownloadMode,
   FileDownloadSize,
@@ -986,5 +990,32 @@ describe('JS Dataset Mapper', () => {
     }
     const actual = JSDatasetMapper.toDatasetVersionDiff(jsDatasetVersionDiff)
     expect(expectedDatasetVersionDiff).to.deep.equal(actual)
+  })
+
+  it('does not set isInReview to true when the version is released even if dataset has an InReview lock', () => {
+    const jsReleasedDataset = {
+      ...jsDataset,
+      versionInfo: {
+        ...jsDataset.versionInfo,
+        state: DatasetVersionState.RELEASED,
+        majorNumber: 1,
+        minorNumber: 0
+      }
+    }
+
+    const mapped = JSDatasetMapper.toDataset(
+      jsReleasedDataset,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
+    )
+
+    expect(mapped.version.isInReview).to.equal(false)
+    expect(
+      mapped.version.labels.some((label) => label.value === DatasetLabelValue.IN_REVIEW)
+    ).to.equal(false)
   })
 })
