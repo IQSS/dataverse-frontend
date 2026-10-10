@@ -115,6 +115,23 @@ describe('FileUploaderHelper', () => {
         })
       ).to.be.false
     })
+
+    it('returns false when combination is duplicate with root directory slash differences', () => {
+      const testFileInRoot: UploadedFile = {
+        ...testFileOne,
+        fileName: 'data.csv',
+        fileDir: ''
+      }
+
+      expect(
+        FileUploaderHelper.isUniqueCombinationOfFilepathAndFilename({
+          fileName: 'data.csv',
+          filePath: '/',
+          fileKey: 'newFileKey',
+          allFiles: [testFileInRoot]
+        })
+      ).to.be.false
+    })
   })
 
   describe('isValidFilePath', () => {

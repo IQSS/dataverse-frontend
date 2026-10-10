@@ -18,16 +18,15 @@ export class FileUploaderHelper {
     fileKey: string
     allFiles: UploadedFile[]
   }): boolean {
-    const normalizePath = (dir?: string, name?: string): string => {
-      const cleanDir = (dir || '').replace(/^\/+|\/+$/g, '')
-      return cleanDir ? `${cleanDir}/${name || ''}` : `${name || ''}`
-    }
+    const normalizeDirectory = (directory: string): string => directory.replace(/^\/+|\/+$/g, '')
+    const targetDirectory = normalizeDirectory(filePath)
 
-    const targetFullPath = normalizePath(filePath, fileName)
-
-    return !allFiles
-      .filter((f) => f.key !== fileKey)
-      .some((file) => normalizePath(file.fileDir, file.fileName) === targetFullPath)
+    return !allFiles.some(
+      (file) =>
+        file.key !== fileKey &&
+        file.fileName === fileName &&
+        normalizeDirectory(file.fileDir) === targetDirectory
+    )
   }
 
   public static isValidFilePath(filePath: string): boolean {
