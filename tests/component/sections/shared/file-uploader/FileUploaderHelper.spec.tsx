@@ -132,6 +132,23 @@ describe('FileUploaderHelper', () => {
         })
       ).to.be.false
     })
+
+    it('returns false when combination is duplicate and directory path is undefined', () => {
+      const testFileWithUndefinedDir: UploadedFile = {
+        ...testFileOne,
+        fileName: 'data.csv',
+        fileDir: undefined as unknown as string
+      }
+
+      expect(
+        FileUploaderHelper.isUniqueCombinationOfFilepathAndFilename({
+          fileName: 'data.csv',
+          filePath: undefined,
+          fileKey: 'newFileKey',
+          allFiles: [testFileWithUndefinedDir]
+        })
+      ).to.be.false
+    })
   })
 
   describe('isValidFilePath', () => {

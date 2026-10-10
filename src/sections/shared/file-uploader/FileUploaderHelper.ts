@@ -14,11 +14,12 @@ export class FileUploaderHelper {
     allFiles
   }: {
     fileName: string
-    filePath: string
+    filePath?: string
     fileKey: string
     allFiles: UploadedFile[]
   }): boolean {
-    const normalizeDirectory = (directory: string): string => directory.replace(/^\/+|\/+$/g, '')
+    const normalizeDirectory = (directory?: string): string =>
+      (directory ?? '').replace(/^\/+|\/+$/g, '')
     const targetDirectory = normalizeDirectory(filePath)
 
     return !allFiles.some(
