@@ -19,7 +19,7 @@ on:
         required: false
 
 jobs:
-  build:
+  generate-war:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,96 +30,64 @@ jobs:
           node-version: 22
           cache: 'npm'
 
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
       - name: Create .npmrc
         run: |
           cp .npmrc.example .npmrc
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
           sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
 
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build Dataverse UI Library
-        working-directory: packages/design-system
-        run: npm run build
-
-      - name: Build with base path
-        run: npm run build -- --base=/${{ github.event.inputs.basepath }}
-
-      - name: Override runtime config.js for BETA
+      - name: Build war file for BETA
         if: ${{ github.event.inputs.environment == 'beta' }}
         env:
+          BASE_PATH: /${{ github.event.inputs.basepath }}
           DATAVERSE_BACKEND_URL: ${{ secrets.BETA_DATAVERSE_BACKEND_URL }}
           OIDC_CLIENT_ID: ${{ secrets.BETA_OIDC_CLIENT_ID }}
           OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.BETA_OIDC_AUTHORIZATION_ENDPOINT }}
           OIDC_TOKEN_ENDPOINT: ${{ secrets.BETA_OIDC_TOKEN_ENDPOINT }}
           OIDC_LOGOUT_ENDPOINT: ${{ secrets.BETA_OIDC_LOGOUT_ENDPOINT }}
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.BETA_OIDC_STORAGE_KEY_PREFIX }}
-        run: node ./scripts/write-runtime-config.mjs
+        run: scripts/build-war.sh --install --base "$BASE_PATH" --version "$GITHUB_REF_NAME"
 
-      - name: Override runtime config.js for QA
+      - name: Build war file for QA
         if: ${{ github.event.inputs.environment == 'qa' }}
         env:
+          BASE_PATH: /${{ github.event.inputs.basepath }}
           DATAVERSE_BACKEND_URL: ${{ secrets.QA_DATAVERSE_BACKEND_URL }}
           OIDC_CLIENT_ID: ${{ secrets.QA_OIDC_CLIENT_ID }}
           OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.QA_OIDC_AUTHORIZATION_ENDPOINT }}
           OIDC_TOKEN_ENDPOINT: ${{ secrets.QA_OIDC_TOKEN_ENDPOINT }}
           OIDC_LOGOUT_ENDPOINT: ${{ secrets.QA_OIDC_LOGOUT_ENDPOINT }}
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.QA_OIDC_STORAGE_KEY_PREFIX }}
-        run: node ./scripts/write-runtime-config.mjs
+        run: scripts/build-war.sh --install --base "$BASE_PATH" --version "$GITHUB_REF_NAME"
 
-      - name: Override runtime config.js for DEMO
+      - name: Build war file for DEMO
         if: ${{ github.event.inputs.environment == 'demo' }}
         env:
+          BASE_PATH: /${{ github.event.inputs.basepath }}
           DATAVERSE_BACKEND_URL: ${{ secrets.DEMO_DATAVERSE_BACKEND_URL }}
           OIDC_CLIENT_ID: ${{ secrets.DEMO_OIDC_CLIENT_ID }}
           OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.DEMO_OIDC_AUTHORIZATION_ENDPOINT }}
           OIDC_TOKEN_ENDPOINT: ${{ secrets.DEMO_OIDC_TOKEN_ENDPOINT }}
           OIDC_LOGOUT_ENDPOINT: ${{ secrets.DEMO_OIDC_LOGOUT_ENDPOINT }}
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.DEMO_OIDC_STORAGE_KEY_PREFIX }}
-        run: node ./scripts/write-runtime-config.mjs
+        run: scripts/build-war.sh --install --base "$BASE_PATH" --version "$GITHUB_REF_NAME"
 
-      - name: Override runtime config.js for PRODUCTION
+      - name: Build war file for PRODUCTION
         if: ${{ github.event.inputs.environment == 'production' }}
         env:
+          BASE_PATH: /${{ github.event.inputs.basepath }}
           DATAVERSE_BACKEND_URL: ${{ secrets.PROD_DATAVERSE_BACKEND_URL }}
           OIDC_CLIENT_ID: ${{ secrets.PROD_OIDC_CLIENT_ID }}
           OIDC_AUTHORIZATION_ENDPOINT: ${{ secrets.PROD_OIDC_AUTHORIZATION_ENDPOINT }}
           OIDC_TOKEN_ENDPOINT: ${{ secrets.PROD_OIDC_TOKEN_ENDPOINT }}
           OIDC_LOGOUT_ENDPOINT: ${{ secrets.PROD_OIDC_LOGOUT_ENDPOINT }}
           OIDC_STORAGE_KEY_PREFIX: ${{ secrets.PROD_OIDC_STORAGE_KEY_PREFIX }}
-        run: node ./scripts/write-runtime-config.mjs
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: built-site
-          path: ./dist
-          include-hidden-files: true
-
-  generate-war:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-java@v3
-        with:
-          distribution: zulu
-          java-version: '11'
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: built-site
-          path: ./dist
-
-      - name: Get branch name
-        id: branch-name
-        uses: tj-actions/branch-names@v6
-
-      - name: Build war file
-        working-directory: ./deployment/payara
-        run: mvn package "-Dversion=${{ steps.branch-name.outputs.current_branch }}"
+        run: scripts/build-war.sh --install --base "$BASE_PATH" --version "$GITHUB_REF_NAME"
 
       - uses: actions/upload-artifact@v4
         with:
