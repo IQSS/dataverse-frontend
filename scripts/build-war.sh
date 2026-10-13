@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
-# Build a frontend WAR for deploying to a local Dataverse (Payara) instance.
+# Build a frontend WAR for deploying to a Dataverse (Payara) instance.
+# Also used by the GitHub Actions workflows that build and deploy the WAR.
 #
-# Usage: scripts/build-war.sh [--install] [--tag <tag>]
+# Usage: scripts/build-war.sh [--install] [--base <path>] [--version <v> | --tag <tag>]
 #
-#   --install    Run `npm ci` first (needed on a fresh clone; requires .npmrc).
-#   --tag <tag>  Build from a git tag (e.g. v0.4.0) in a temporary worktree,
-#                leaving the current checkout untouched. Always runs `npm ci`.
+#   --install        Run `npm ci` first (needed on a fresh clone; requires .npmrc).
+#   --base <path>    Base path the frontend is served from, e.g. /modern or /
+#                    (default: the base in vite.config.ts, currently /modern).
+#   --version <v>    Maven version recorded in the WAR's metadata (default: local).
+#   --tag <tag>      Build from a git tag (e.g. v0.4.0) in a temporary worktree,
+#                    leaving the current checkout untouched. Always runs `npm ci`.
 #
 # Environment:
 #   DATAVERSE_BACKEND_URL  Backend URL written to config.js
-#                          (default: http://localhost:8080)
+#                          (default when unset: http://localhost:8080)
+#   OIDC_*                 Optional OIDC overrides; see scripts/write-runtime-config.mjs
 #
 # Output:
 #   deployment/payara/target/dataverse-frontend.war        (current checkout)
@@ -20,10 +25,18 @@ cd "$(dirname "$0")/.."
 repo_root="$PWD"
 
 install=false
+base=""
+maven_version=""
 tag=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --install) install=true; shift ;;
+    --base)
+      [[ $# -ge 2 ]] || { echo "--base requires a value" >&2; exit 1; }
+      base="$2"; shift 2 ;;
+    --version)
+      [[ $# -ge 2 ]] || { echo "--version requires a value" >&2; exit 1; }
+      maven_version="$2"; shift 2 ;;
     --tag)
       [[ $# -ge 2 ]] || { echo "--tag requires a value" >&2; exit 1; }
       tag="$2"; shift 2 ;;
@@ -31,7 +44,14 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-export DATAVERSE_BACKEND_URL="${DATAVERSE_BACKEND_URL:-http://localhost:8080}"
+if [[ -n "$tag" && -n "$maven_version" ]]; then
+  echo "--version can't be combined with --tag, which sets the version" >&2
+  exit 1
+fi
+
+# Default only when unset. In CI an empty secret comes through as an empty
+# string, and write-runtime-config.mjs then keeps backendUrl from public/config.js.
+export DATAVERSE_BACKEND_URL="${DATAVERSE_BACKEND_URL-http://localhost:8080}"
 
 # Build the WAR in the given source tree with the given Maven version.
 build_war() {
@@ -46,10 +66,14 @@ build_war() {
 
     npm --prefix packages/design-system run build
 
-    # The /modern base path comes from vite.config.ts.
-    npm run build
+    if [[ -n "$base" ]]; then
+      npm run build -- --base="$base"
+    else
+      # The /modern base path comes from vite.config.ts.
+      npm run build
+    fi
 
-    # Override the frontend backend URL for the local Dataverse instance.
+    # Override the backend URL (and any OIDC settings) in dist/config.js.
     node scripts/write-runtime-config.mjs
 
     mvn -f deployment/payara/pom.xml clean package -Dversion="$version"
@@ -57,7 +81,7 @@ build_war() {
 }
 
 if [[ -z "$tag" ]]; then
-  build_war "$repo_root" local
+  build_war "$repo_root" "${maven_version:-local}"
   exit 0
 fi
 
