@@ -36,7 +36,8 @@ export class JSFileMapper {
       access: JSFileAccessMapper.toFileAccess(
         jsFile.restricted,
         jsFile.fileAccessRequest || false,
-        (jsFile as JSFile & { fileAccessRequested?: boolean; requested?: boolean }).fileAccessRequested ||
+        (jsFile as JSFile & { fileAccessRequested?: boolean; requested?: boolean })
+          .fileAccessRequested ||
           (jsFile as JSFile & { fileAccessRequested?: boolean; requested?: boolean }).requested ||
           false
       ),
@@ -75,7 +76,8 @@ export class JSFileMapper {
       access: JSFileAccessMapper.toFileAccess(
         jsFile.restricted,
         jsFile.fileAccessRequest || false,
-        (jsFile as JSFile & { fileAccessRequested?: boolean; requested?: boolean }).fileAccessRequested ||
+        (jsFile as JSFile & { fileAccessRequested?: boolean; requested?: boolean })
+          .fileAccessRequested ||
           (jsFile as JSFile & { fileAccessRequested?: boolean; requested?: boolean }).requested ||
           false
       ),
