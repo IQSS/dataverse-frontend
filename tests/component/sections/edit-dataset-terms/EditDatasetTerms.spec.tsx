@@ -171,6 +171,17 @@ describe('EditDatasetTerms', () => {
       )
     })
 
+    it('builds a dataset terms return URL with viewed version from search param', () => {
+      const dataset = DatasetMother.create({
+        persistentId: 'some-persistent-id',
+        version: DatasetVersionMother.createDraftAsLatestVersion()
+      })
+
+      expect(buildDatasetTermsReturnUrl(dataset, '1.0')).to.equal(
+        '/datasets?persistentId=some-persistent-id&version=1.0'
+      )
+    })
+
     it('builds a dataset draft return URL', () => {
       const dataset = DatasetMother.create({
         persistentId: 'some-persistent-id',
@@ -892,6 +903,100 @@ describe('EditDatasetTerms', () => {
       cy.findByTestId('current-location').should(
         'have.text',
         '/datasets?persistentId=some-persistent-id&version=DRAFT'
+      )
+    })
+
+    it('navigates to the viewed dataset version from searchParams after saving guestbook edits', () => {
+      const dataset = DatasetMother.create({
+        persistentId: 'some-persistent-id',
+        version: DatasetVersionMother.createDraftAsLatestVersion(),
+        license: mockLicenses[0],
+        guestbookId: mockGuestbooks[0].id
+      })
+
+      cy.customMount(
+        withProviders(
+          <>
+            <EditDatasetTerms
+              defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
+              licenseRepository={licenseRepository}
+            />
+            <LocationDisplay />
+          </>,
+          dataset
+        ),
+        ['/datasets/edit-terms?persistentId=some-persistent-id&version=1.0']
+      )
+
+      cy.findByLabelText('Secondary Guestbook').click()
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+
+      cy.wrap(guestbookRepository.assignDatasetGuestbook).should('have.been.called')
+      cy.findByTestId('current-location').should(
+        'have.text',
+        '/datasets?persistentId=some-persistent-id&version=1.0'
+      )
+    })
+
+    it('navigates to the viewed dataset version from searchParams after removing a guestbook', () => {
+      const dataset = DatasetMother.create({
+        persistentId: 'some-persistent-id',
+        version: DatasetVersionMother.createDraftAsLatestVersion(),
+        license: mockLicenses[0],
+        guestbookId: mockGuestbooks[0].id
+      })
+
+      cy.customMount(
+        withProviders(
+          <>
+            <EditDatasetTerms
+              defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
+              licenseRepository={licenseRepository}
+            />
+            <LocationDisplay />
+          </>,
+          dataset
+        ),
+        ['/datasets/edit-terms?persistentId=some-persistent-id&version=1.0']
+      )
+
+      cy.findByRole('button', { name: 'Clear Selection' }).click()
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+
+      cy.wrap(guestbookRepository.removeDatasetGuestbook).should('have.been.called')
+      cy.findByTestId('current-location').should(
+        'have.text',
+        '/datasets?persistentId=some-persistent-id&version=1.0'
+      )
+    })
+
+    it('navigates to the viewed dataset version from searchParams after canceling guestbook edits', () => {
+      const dataset = DatasetMother.create({
+        persistentId: 'some-persistent-id',
+        version: DatasetVersionMother.createDraftAsLatestVersion(),
+        license: mockLicenses[0],
+        guestbookId: mockGuestbooks[0].id
+      })
+
+      cy.customMount(
+        withProviders(
+          <>
+            <EditDatasetTerms
+              defaultActiveTabKey={EditDatasetTermsHelper.EDIT_DATASET_TERMS_TABS_KEYS.guestbook}
+              licenseRepository={licenseRepository}
+            />
+            <LocationDisplay />
+          </>,
+          dataset
+        ),
+        ['/datasets/edit-terms?persistentId=some-persistent-id&version=2.0']
+      )
+
+      cy.findByRole('button', { name: 'Cancel' }).click()
+
+      cy.findByTestId('current-location').should(
+        'have.text',
+        '/datasets?persistentId=some-persistent-id&version=2.0'
       )
     })
   })

@@ -5,11 +5,16 @@ import {
 } from '@/dataset/domain/models/Dataset'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 
-export const buildDatasetTermsReturnUrl = (dataset: Dataset): string => {
+export const buildDatasetTermsReturnUrl = (
+  dataset: Dataset,
+  versionSearchParam?: string | null
+): string => {
   const searchParams = new URLSearchParams()
   searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
 
-  if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
+  if (versionSearchParam) {
+    searchParams.set(QueryParamKey.VERSION, versionSearchParam)
+  } else if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
     searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
   } else {
     searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
