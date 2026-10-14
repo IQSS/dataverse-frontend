@@ -17,7 +17,7 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation-setup">Installation & Setup</a></li>
+        <li><a href="#installation--setup">Installation & Setup</a></li>
         <li><a href="#running-the-project-locally">Running the Project Locally</a></li>
       </ul>
     </li>

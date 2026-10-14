@@ -8,6 +8,20 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+### Changed
+
+### Fixed
+
+- Display "In Review" status label on dataset page when a draft version is under review. (#1094)
+
+### Removed
+
+---
+
+## [v0.4.0] -- 2026-10-08
+
+### Added
+
 - Edit Dataset Template Integration: "Edit Template" dropdown on the Dataset Templates listing now opens the Metadata or Terms editor and shows a "Template updated" toast on return.
 - External Tools: Added guestbook and terms modal for Dataverse external tools.
 - Manage Guestbooks page integration, including:
@@ -29,7 +43,6 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Fixed
 
 - Disable clickable DRAFT version link in Versions tab when viewing the draft version. (#1090)
-
 - Disable Save Changes button when file path contains invalid special characters during file upload. (#600)
 - Fix "Filter by" File Type dropdown getting cut off by adding max-height and scrolling. (#792)
 - Dataset Page: show draft version if user has permission when no version param is provided. (#1003)
