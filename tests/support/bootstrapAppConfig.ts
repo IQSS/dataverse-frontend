@@ -1,11 +1,11 @@
 // Ensure runtime app config exists in Cypress (e2e and component) before any test code runs.
 // This mimics public/config.js but lets tests override values via Cypress.env.
 
-import { initAppConfig, type AppConfig } from '@/config'
+import { initAppConfig, type AppConfig, type AppConfigInput } from '@/config'
 
 declare global {
   interface Window {
-    __APP_CONFIG__: AppConfig | undefined
+    __APP_CONFIG__: AppConfigInput | undefined
   }
 }
 
