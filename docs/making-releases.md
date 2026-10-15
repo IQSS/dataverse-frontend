@@ -9,6 +9,7 @@
 - [Create a Draft Release on GitHub and Tag the Version](#create-a-draft-release-on-github-and-tag-the-version)
 - [Sync "develop" branch with changes from "main"](#sync-develop-branch-with-changes-from-main)
 - [Delete "release branch" and "sync develop" branch](#delete-release-branch-and-sync-develop-branch)
+- [Build the WAR File Locally](#build-the-war-file-locally)
 
 ## Introduction
 
@@ -142,3 +143,52 @@ This is a good time to revert or adjust any release-specific changes that are **
 ## Delete "release branch" and "sync-develop" branch.
 
 Once the release process is complete and the changes have been merged into both `main` and `develop`, you can delete the `release` branch and the `sync-develop` branch to keep the repository clean.
+
+## Build the WAR File Locally
+
+### Build an Untagged WAR File
+
+To build a WAR file of the frontend for deploying to a local Dataverse (Payara) instance from the latest code, run this from the root of the repo:
+
+```bash
+scripts/build-war.sh
+```
+
+The script:
+
+1. Builds the design system in `packages/design-system`.
+2. Builds the frontend with the `/modern` base path (set in `vite.config.ts`).
+3. Writes `dist/config.js` using `scripts/write-runtime-config.mjs`, pointing the frontend at the backend URL.
+4. Packages `dist` into a WAR with Maven (`deployment/payara/pom.xml`).
+
+The WAR is written to `deployment/payara/target/dataverse-frontend.war`.
+
+The backend URL defaults to `http://localhost:8080`. To use a different one, set `DATAVERSE_BACKEND_URL`:
+
+```bash
+DATAVERSE_BACKEND_URL=https://demo.dataverse.org scripts/build-war.sh
+```
+
+On a fresh clone, install dependencies first by passing `--install`, which runs `npm ci`. This requires an `.npmrc` file (copy `.npmrc.example` and fill in your tokens):
+
+```bash
+scripts/build-war.sh --install
+```
+
+### Build a WAR File from a Tag/Release
+
+To build a WAR from a released version, pass the git tag with `--tag`:
+
+```bash
+scripts/build-war.sh --tag v0.4.0
+```
+
+The script checks out the tag into a temporary git worktree, runs `npm ci` and the build steps above there, and then removes the worktree. Your current checkout is not touched. The tag must exist locally, so run `git fetch --tags` first if needed.
+
+The WAR is written to `deployment/payara/target/dataverse-frontend-0.4.0.war`, with the leading `v` dropped from the tag. The same version is recorded in the WAR's Maven metadata (`-Dversion=0.4.0`), whereas untagged builds use `-Dversion=local`.
+
+The version in the footer of the deployed frontend shows the version and the tag's commit, such as `frontend version: 0.4.0-a9b263034`. Untagged builds show only the commit.
+
+Note that an untagged build runs `mvn clean`, which deletes everything in `deployment/payara/target`, including WARs built from tags. Copy them elsewhere if you want to keep them.
+
+Note that WAR files for the QA, demo, beta, and production environments are built by the `generate-war.yml` and `deploy.yml` GitHub Actions workflows, not by this script.
