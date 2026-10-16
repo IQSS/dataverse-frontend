@@ -1,0 +1,32 @@
+@import '../../assets/styles/design-tokens/typography.module';
+
+.map-wrapper {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.map-status {
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+  background: #fff;
+}
+
+.map-container {
+  height: 480px;
+}
+
+.results {
+  margin-right: 4px;
+  font-weight: $dv-font-weight-bold;
+}
+
+.error {
+  padding: 0.75rem;
+  color: #dc3545;
+  font-size: 14px;
+}
