@@ -289,6 +289,7 @@ describe('DatasetProvider draft access', () => {
     mountDraftRequest(loggedIn())
 
     cy.findByText(published.version.title).should('exist')
+    cy.findByText('Not Authorized').should('not.exist')
     cy.get('@logIn').should('not.have.been.called')
   })
 

@@ -15,7 +15,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Normalize directory slashes when validating unique file path combination in file uploader. (#1106)
 - Display "In Review" status label on dataset page when a draft version is under review. (#1094)
 - Navigate to the currently viewed dataset version after guestbook assignment or removal. (#1099)
-- Handle unauthorized access to dataset draft versions correctly: redirect anonymous users to login with the return URL when draft access is denied, fall back to the published version for logged in users when one exists, show an unauthorized message to logged in users without access to a draft-only dataset, and show version-not-found messages for missing drafts. (#1095)
+- Handle unauthorized access to dataset draft versions correctly: redirect anonymous users to login with the return URL when draft access is denied, hide dataset content and show a standalone Not Authorized message to logged in users denied draft access, and show version-not-found messages for missing drafts. (#1095)
 
 ### Removed
 

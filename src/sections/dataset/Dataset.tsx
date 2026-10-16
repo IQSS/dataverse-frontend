@@ -32,6 +32,7 @@ import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInf
 import { useAnonymized } from './anonymized/AnonymizedContext'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import { DatasetReviews } from './dataset-reviews/DatasetReviews'
+import { AlertMessageKey } from '@/alert/domain/models/Alert'
 import { DatasetNotAuthorized } from './dataset-not-authorized/DatasetNotAuthorized'
 
 interface DatasetProps {
@@ -84,10 +85,14 @@ export function Dataset({
     return <DatasetSkeleton />
   }
 
+  if (
+    isNotAuthorized ||
+    dataset?.alerts.some((alert) => alert.messageKey === AlertMessageKey.NOT_AUTHORIZED)
+  ) {
+    return <DatasetNotAuthorized />
+  }
+
   if (!dataset) {
-    if (isNotAuthorized) {
-      return <DatasetNotAuthorized />
-    }
     return <NotFoundPage dvObjectNotFoundType="dataset" />
   }
 

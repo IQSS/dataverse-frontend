@@ -80,6 +80,7 @@ export function DatasetProvider({
         console.error('There was an error getting the dataset', error)
         if (isDraftRequest && isPermissionError(error)) {
           if (redirectToLoginIfAnonymousRef.current()) return
+          setDataset(undefined)
           setIsNotAuthorized(true)
         }
         setIsLoading(false)

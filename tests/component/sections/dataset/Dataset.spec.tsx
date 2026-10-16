@@ -405,7 +405,7 @@ describe('Dataset', () => {
     cy.get('.breadcrumb').should('not.exist')
   })
 
-  it('shows only the version-not-found alert when falling back from an unauthorized draft to the published version', () => {
+  it('hides the dataset and shows standalone Not Authorized when a published fallback exists', () => {
     const publishedFallback = DatasetMother.create({
       version: DatasetVersionMother.create({
         number: new DatasetVersionNumber(1, 0),
@@ -425,8 +425,13 @@ describe('Dataset', () => {
       publishedFallback
     )
 
-    cy.findByText(/Version :draft was not found\. This is version 1\.0\./).should('exist')
-    cy.findByText('Not Authorized').should('not.exist')
+    cy.findByText(/Version :draft was not found\. This is version 1\.0\./).should('not.exist')
+    cy.findByTestId('not-authorized-container').should('exist')
+    cy.findByText('Not Authorized').should('exist')
+    cy.findByText('You are not authorized to view this page.').should('exist')
+    cy.findByRole('heading', { name: publishedFallback.version.title }).should('not.exist')
+    cy.findByRole('tablist').should('not.exist')
+    cy.get('.breadcrumb').should('not.exist')
   })
 
   it('renders In Progress alert when dataset publish is inProgress', () => {

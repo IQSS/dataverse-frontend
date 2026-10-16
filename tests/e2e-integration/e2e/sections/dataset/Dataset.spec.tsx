@@ -390,7 +390,7 @@ describe('Dataset', () => {
           })
       })
 
-      it('shows the published version with only the version-not-found alert to a logged in user without access to the draft', () => {
+      it('hides the published dataset and shows Not Authorized to a logged in user without draft access', () => {
         const publishedTitle = faker.lorem.sentence()
         const draftTitle = faker.lorem.sentence()
         createPublishedWithDraft(publishedTitle, draftTitle)
@@ -399,10 +399,11 @@ describe('Dataset', () => {
             rejectDraftRequestWith(401)
             visitDraft(persistentId)
 
-            cy.findByRole('heading', { name: publishedTitle }).should('exist')
+            cy.findByRole('heading', { name: publishedTitle }).should('not.exist')
+            cy.contains('[role="alert"]', NOT_AUTHORIZED_HEADING).should('exist')
+            cy.findByTestId('not-authorized-container').should('contain.text', NOT_AUTHORIZED_TEXT)
             cy.findByRole('heading', { name: draftTitle }).should('not.exist')
-            cy.contains('[role="alert"]', VERSION_NOT_FOUND_TEXT).should('exist')
-            cy.findByText(NOT_AUTHORIZED_HEADING).should('not.exist')
+            cy.contains('[role="alert"]', VERSION_NOT_FOUND_TEXT).should('not.exist')
           })
       })
 
