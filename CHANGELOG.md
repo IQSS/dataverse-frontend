@@ -8,6 +8,22 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+### Changed
+
+### Fixed
+
+- Normalize directory slashes when validating unique file path combination in file uploader. (#1106)
+- Display "In Review" status label on dataset page when a draft version is under review. (#1094)
+- Navigate to the currently viewed dataset version after guestbook assignment or removal. (#1099)
+
+### Removed
+
+---
+
+## [v0.4.0] -- 2026-10-08
+
+### Added
+
 - Edit Dataset Template Integration: "Edit Template" dropdown on the Dataset Templates listing now opens the Metadata or Terms editor and shows a "Template updated" toast on return.
 - External Tools: Added guestbook and terms modal for Dataverse external tools.
 - Manage Guestbooks page integration, including:
@@ -30,7 +46,6 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 - Handle unauthorized access to dataset draft versions correctly: redirect anonymous users to login with the return URL when draft access is denied, fall back to the published version for logged in users when one exists, show an unauthorized message to logged in users without access to a draft-only dataset, and show version-not-found messages for missing drafts. (#1095)
 - Disable clickable DRAFT version link in Versions tab when viewing the draft version. (#1090)
-
 - Disable Save Changes button when file path contains invalid special characters during file upload. (#600)
 - Fix "Filter by" File Type dropdown getting cut off by adding max-height and scrolling. (#792)
 - Dataset Page: show draft version if user has permission when no version param is provided. (#1003)
