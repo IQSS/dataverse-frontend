@@ -20,8 +20,10 @@ import { PublishLicense } from '@/sections/dataset/publish-dataset/PublishLicens
 import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { useSettings } from '@/sections/settings/SettingsContext'
 import { SettingName } from '@/settings/domain/models/Setting'
-import styles from './PublishDatasetModal.module.scss'
 import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import styles from './PublishDatasetModal.module.scss'
+import DOMPurify from 'dompurify'
+import parse from 'html-react-parser'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -81,6 +83,9 @@ export function PublishDatasetModal({
   )?.value
 
   const shouldShowCustomPopupText = Boolean(datasetPublishPopupCustomText?.trim())
+  const sanitizedDatasetPublishPopupCustomText = datasetPublishPopupCustomText
+    ? DOMPurify.sanitize(datasetPublishPopupCustomText, { USE_PROFILES: { html: true } })
+    : ''
   const shouldShowDisclaimer = Boolean(publishDisclaimerText?.trim())
   const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false)
 
@@ -119,7 +124,9 @@ export function PublishDatasetModal({
 
           {shouldShowCustomPopupText && (
             <div className={styles.customPopupTextBlock}>
-              <p className={styles.customPopupText}>{datasetPublishPopupCustomText}</p>
+              <p className={styles.customPopupText}>
+                {parse(sanitizedDatasetPublishPopupCustomText)}
+              </p>
             </div>
           )}
 
@@ -158,9 +165,7 @@ export function PublishDatasetModal({
             handleCustomTermsClick={() => {
               const searchParams = new URLSearchParams(location.search)
               searchParams.set('tab', 'terms')
-              const newUrl = `${import.meta.env.BASE_URL}${
-                location.pathname
-              }?${searchParams.toString()}`
+              const newUrl = `${location.pathname}?${searchParams.toString()}`
 
               window.open(newUrl, '_blank')
             }}

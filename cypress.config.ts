@@ -18,6 +18,10 @@ type ExecFileError = Error & {
 
 export default defineConfig({
   video: false,
+  // LocalStack is exposed on IPv4 loopback; keep browser download redirects on that address.
+  hosts: {
+    's3.localhost': '127.0.0.1'
+  },
   e2e: {
     baseUrl: 'http://localhost:8000',
     specPattern: 'tests/e2e-integration/**/*.spec.{js,jsx,ts,tsx}',

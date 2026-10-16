@@ -82,6 +82,7 @@
     "save": "Save Linked Collection",
     "success": "<wrapper>{{linkedCollectionName}} has been successfully linked to <a>{{linkingCollectionName}}</a></wrapper>"
   },
+  "unpublished": "Unpublished",
   "map": {
     "showMore": "Load more",
     "errorLabel": "Error:",
