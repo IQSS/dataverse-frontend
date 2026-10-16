@@ -428,7 +428,7 @@ describe('Dataset', () => {
     cy.findByText(/Version :draft was not found\. This is version 1\.0\./).should('not.exist')
     cy.findByTestId('not-authorized-container').should('exist')
     cy.findByText('Not Authorized').should('exist')
-    cy.findByText('You are not authorized to view this page.').should('exist')
+    cy.findByText(/You are not authorized to view this page./).should('exist')
     cy.findByRole('heading', { name: publishedFallback.version.title }).should('not.exist')
     cy.findByRole('tablist').should('not.exist')
     cy.get('.breadcrumb').should('not.exist')
