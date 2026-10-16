@@ -1,8 +1,22 @@
 import { useEffect } from 'react'
 import { useMap } from 'react-leaflet'
 import L from 'leaflet'
+import markerIconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
+import markerIconUrl from 'leaflet/dist/images/marker-icon.png'
+import markerShadowUrl from 'leaflet/dist/images/marker-shadow.png'
 import 'leaflet.markercluster'
 import { GeoDatasetItem } from './types'
+
+const datasetMarkerIcon = L.icon({
+  iconUrl: markerIconUrl,
+  iconRetinaUrl: markerIconRetinaUrl,
+  shadowUrl: markerShadowUrl,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41]
+})
 
 interface Props {
   items: GeoDatasetItem[]
@@ -15,7 +29,7 @@ export function MarkerClusterGroup({ items }: Props) {
     const cluster = L.markerClusterGroup()
 
     const markerList = items.map((item) => {
-      const marker = L.marker([item.pinLat, item.pinLon])
+      const marker = L.marker([item.pinLat, item.pinLon], { icon: datasetMarkerIcon })
 
       let rects: L.Rectangle[] = []
       let inCluster = true
