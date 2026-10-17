@@ -26,6 +26,7 @@ import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInf
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { ContactButton } from '../shared/contact/ContactButton'
 import { ShareFileButton } from './share-file-button/ShareFileButton'
+import { FileMetrics } from './file-metrics/FileMetrics'
 
 interface FileProps {
   id: number
@@ -192,6 +193,7 @@ export function File({
                   {!isDeaccessioned && <ShareFileButton />}
                 </ButtonGroup>
               </ButtonGroup>
+              <FileMetrics downloadCount={file.metadata.downloadCount} />
             </Col>
           </Row>
           <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
