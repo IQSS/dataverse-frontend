@@ -23,6 +23,8 @@ import { CollectionHelper } from '@/sections/collection/CollectionHelper'
 import { MetadataFieldsHelper } from '../DatasetMetadataForm/MetadataFieldsHelper'
 import { MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { useGetCollectionAllowedStorageDrivers } from '@/shared/hooks/useGetCollectionAllowedStorageDrivers'
+import { useGetCollectionStorageDriver } from '@/shared/hooks/useGetCollectionStorageDriver'
 
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
 export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
@@ -66,6 +68,8 @@ export const EditCreateCollectionForm = ({
   const onEditMode = mode === 'edit'
   const isEditingRootCollection =
     onEditMode && CollectionHelper.isRootCollection(collection.hierarchy)
+  const canSelectStorageDriver = user.superuser
+  const storageDriverCollectionId = onEditMode ? collection.id : parentCollection.id
 
   const {
     metadataBlocksInfo,
@@ -100,6 +104,38 @@ export const EditCreateCollectionForm = ({
     error: facetableMetadataFieldsError
   } = useGetAllFacetableMetadataFields({
     metadataBlockInfoRepository
+  })
+
+  const {
+    allowedStorageDrivers,
+    isLoading: isLoadingAllowedStorageDrivers,
+    error: allowedStorageDriversError
+  } = useGetCollectionAllowedStorageDrivers({
+    collectionIdOrAlias: storageDriverCollectionId,
+    collectionRepository,
+    enabled: canSelectStorageDriver
+  })
+
+  const {
+    storageDriver,
+    isLoading: isLoadingStorageDriver,
+    error: storageDriverError
+  } = useGetCollectionStorageDriver({
+    collectionIdOrAlias: storageDriverCollectionId,
+    collectionRepository,
+    enabled: canSelectStorageDriver,
+    getEffective: false
+  })
+
+  const {
+    storageDriver: effectiveStorageDriver,
+    isLoading: isLoadingEffectiveStorageDriver,
+    error: effectiveStorageDriverError
+  } = useGetCollectionStorageDriver({
+    collectionIdOrAlias: storageDriverCollectionId,
+    collectionRepository,
+    enabled: canSelectStorageDriver,
+    getEffective: true
   })
 
   const baseInputLevels: FormattedCollectionInputLevels = useDeepCompareMemo(() => {
@@ -149,13 +185,19 @@ export const EditCreateCollectionForm = ({
     isLoadingMetadataBlocksInfo ||
     isLoadingAllMetadataBlocksInfo ||
     isLoadingCollectionFacets ||
-    isLoadingFacetableMetadataFields
+    isLoadingFacetableMetadataFields ||
+    isLoadingAllowedStorageDrivers ||
+    isLoadingStorageDriver ||
+    isLoadingEffectiveStorageDriver
 
   const dataLoadingErrors = [
     metadataBlockInfoError,
     allMetadataBlocksInfoError,
     collectionFacetsError,
-    facetableMetadataFieldsError
+    facetableMetadataFieldsError,
+    allowedStorageDriversError,
+    storageDriverError,
+    effectiveStorageDriverError
   ]
 
   useEffect(() => {
@@ -204,6 +246,21 @@ export const EditCreateCollectionForm = ({
     mode === 'edit' ? collection.isFacetRoot : undefined
   )
 
+  const currentStorageDriverLabel = storageDriver?.label ?? storageDriver?.name
+  const effectiveStorageDriverLabel = effectiveStorageDriver?.label ?? effectiveStorageDriver?.name
+  const effectiveStorageDriverDisplayName =
+    effectiveStorageDriverLabel && allowedStorageDrivers[effectiveStorageDriverLabel] !== undefined
+      ? allowedStorageDrivers[effectiveStorageDriverLabel]
+      : effectiveStorageDriverLabel
+  const defaultStorageDriver =
+    storageDriver === null
+      ? ''
+      : (currentStorageDriverLabel && allowedStorageDrivers[currentStorageDriverLabel] !== undefined
+          ? currentStorageDriverLabel
+          : undefined) ??
+        Object.keys(allowedStorageDrivers)[0] ??
+        ''
+
   const formDefaultValues: CollectionFormData = {
     hostCollection: isEditingRootCollection
       ? null
@@ -213,7 +270,7 @@ export const EditCreateCollectionForm = ({
     type: onEditMode ? collection.type : '',
     contacts: defaultContacts,
     affiliation: onEditMode ? collection.affiliation ?? '' : user?.affiliation ?? '',
-    storage: 'S3',
+    storage: defaultStorageDriver,
     description: onEditMode ? collection.description ?? '' : '',
     [USE_FIELDS_FROM_PARENT]: useFieldsFromParentDefault,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
@@ -231,6 +288,9 @@ export const EditCreateCollectionForm = ({
       allFacetableMetadataFields={facetableMetadataFields}
       defaultCollectionFacets={defaultCollectionFacets}
       isEditingRootCollection={isEditingRootCollection}
+      canSelectStorageDriver={canSelectStorageDriver}
+      allowedStorageDrivers={allowedStorageDrivers}
+      inheritedOrDefaultStorageDriverName={effectiveStorageDriverDisplayName}
     />
   )
 }

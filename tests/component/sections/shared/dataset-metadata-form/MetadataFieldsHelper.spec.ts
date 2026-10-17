@@ -16,6 +16,24 @@ import {
 } from '../../../../../src/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 import { defaultLicense } from '../../../../../src/dataset/domain/models/Dataset'
 
+const buildMetadataField = (overrides: Partial<MetadataField> = {}): MetadataField => ({
+  name: 'field',
+  displayName: 'Field',
+  title: 'Field',
+  type: 'TEXT',
+  typeClass: 'primitive',
+  watermark: '',
+  description: '',
+  multiple: false,
+  isControlledVocabulary: false,
+  displayFormat: '',
+  isRequired: false,
+  displayOnCreate: true,
+  displayOrder: 0,
+  isAdvancedSearchFieldType: false,
+  ...overrides
+})
+
 const metadataBlocksInfo: MetadataBlockInfo[] = [
   {
     id: 10,
@@ -1539,29 +1557,176 @@ describe('MetadataFieldsHelper', () => {
     })
   })
 
-  describe('buildTemplateFieldsFromMetadataValues', () => {
-    const buildField = (overrides: Partial<MetadataField>): MetadataField => ({
-      name: 'field',
-      displayName: 'Field',
-      title: 'Field',
-      type: 'TEXT',
-      typeClass: 'primitive',
-      watermark: '',
-      description: '',
-      multiple: false,
-      isControlledVocabulary: false,
-      displayFormat: '',
-      isRequired: false,
-      displayOnCreate: true,
-      displayOrder: 0,
-      isAdvancedSearchFieldType: false,
-      ...overrides
+  describe('defineMetadataBlockInfo', () => {
+    const createBlocks: MetadataBlockInfo[] = [
+      {
+        id: 1,
+        name: 'citation',
+        displayName: 'Citation',
+        displayOnCreate: true,
+        metadataFields: {
+          title: buildMetadataField({
+            name: 'title',
+            displayName: 'Title',
+            title: 'Title',
+            displayOrder: 2
+          }),
+          subject: buildMetadataField({
+            name: 'subject',
+            displayName: 'Subject',
+            title: 'Subject',
+            typeClass: 'controlledVocabulary',
+            isControlledVocabulary: true,
+            controlledVocabularyValues: ['Medicine'],
+            displayOrder: 1
+          })
+        }
+      }
+    ]
+
+    const editBlocks: MetadataBlockInfo[] = [
+      {
+        ...createBlocks[0],
+        metadataFields: {
+          ...createBlocks[0].metadataFields,
+          'producer.name': buildMetadataField({
+            name: 'producer.name',
+            displayName: 'Producer',
+            title: 'Producer',
+            displayOnCreate: false,
+            displayOrder: 3
+          })
+        }
+      },
+      {
+        id: 2,
+        name: 'geo',
+        displayName: 'Geospatial',
+        displayOnCreate: false,
+        metadataFields: {
+          'bounding.box': buildMetadataField({
+            name: 'bounding.box',
+            displayName: 'Bounding Box',
+            title: 'Bounding Box',
+            displayOnCreate: false,
+            displayOrder: 1
+          })
+        }
+      }
+    ]
+
+    it('returns normalized create metadata blocks when no template is provided', () => {
+      const result = MetadataFieldsHelper.defineMetadataBlockInfo(
+        'create',
+        createBlocks,
+        editBlocks,
+        undefined,
+        undefined
+      )
+
+      expect(result).to.deep.equal(createBlocks)
     })
 
+    it('adds template-only fields and blocks from edit metadata in create mode', () => {
+      const result = MetadataFieldsHelper.defineMetadataBlockInfo(
+        'create',
+        createBlocks,
+        editBlocks,
+        undefined,
+        [
+          {
+            name: 'citation',
+            fields: {
+              'producer.name': 'Ada Lovelace',
+              unknownField: 'Ignored'
+            }
+          },
+          {
+            name: 'geo',
+            fields: {
+              'bounding.box': '10,20,30,40'
+            }
+          },
+          {
+            name: 'missingFromEdit',
+            fields: {
+              field: 'Ignored'
+            }
+          },
+          {
+            name: 'emptyTemplateBlock',
+            fields: {}
+          }
+        ]
+      )
+
+      const citationFields = result.find((block) => block.name === 'citation')?.metadataFields
+      const geoFields = result.find((block) => block.name === 'geo')?.metadataFields
+
+      expect(Object.keys(citationFields ?? {})).to.deep.equal(['subject', 'title', 'producer/name'])
+      expect(citationFields?.['producer/name']).to.include({
+        name: 'producer/name',
+        value: 'Ada Lovelace'
+      })
+      expect(citationFields).not.to.have.property('unknownField')
+      expect(geoFields?.['bounding/box']).to.include({
+        name: 'bounding/box',
+        value: '10,20,30,40'
+      })
+      expect(result.map((block) => block.name)).to.deep.equal(['citation', 'geo'])
+    })
+
+    it('adds current dataset values and orders fields in edit mode', () => {
+      const result = MetadataFieldsHelper.defineMetadataBlockInfo(
+        'edit',
+        createBlocks,
+        editBlocks,
+        [
+          {
+            name: 'citation',
+            fields: {
+              title: 'Dataset title',
+              subject: ['Medicine'],
+              'producer.name': 'Grace Hopper'
+            }
+          }
+        ] as unknown as DatasetMetadataBlocks,
+        undefined
+      )
+
+      const fields = (result as MetadataBlockInfoWithMaybeValues[])[0].metadataFields
+
+      expect(Object.keys(fields)).to.deep.equal(['subject', 'title', 'producer/name'])
+      expect(fields.title.value).to.equal('Dataset title')
+      expect(fields.subject.value).to.deep.equal(['Medicine'])
+      expect(fields['producer/name'].value).to.equal('Grace Hopper')
+    })
+  })
+
+  describe('addFieldsFromTemplateToMetadataBlocksInfoForDisplayOnCreate', () => {
+    it('returns the create metadata blocks when the template has no fields to add', () => {
+      expect(
+        MetadataFieldsHelper.addFieldsFromTemplateToMetadataBlocksInfoForDisplayOnCreate(
+          metadataBlocksInfo,
+          normalizedMetadataBlocksInfo,
+          undefined
+        )
+      ).to.equal(metadataBlocksInfo)
+      expect(
+        MetadataFieldsHelper.addFieldsFromTemplateToMetadataBlocksInfoForDisplayOnCreate(
+          metadataBlocksInfo,
+          normalizedMetadataBlocksInfo,
+          []
+        )
+      ).to.equal(metadataBlocksInfo)
+    })
+  })
+
+  describe('buildTemplateFieldsFromMetadataValues', () => {
     it('builds template fields with primitive, vocabulary, and compound values', () => {
       const metadataFields: Record<string, MetadataField> = {
-        title: buildField({ name: 'title', displayName: 'Title', title: 'Title' }),
-        subject: buildField({
+        title: buildMetadataField({ name: 'title', displayName: 'Title', title: 'Title' }),
+        subject: buildMetadataField({
           name: 'subject',
           displayName: 'Subject',
           title: 'Subject',
@@ -1570,7 +1735,7 @@ describe('MetadataFieldsHelper', () => {
           multiple: true,
           controlledVocabularyValues: ['A', 'B']
         }),
-        author: buildField({
+        author: buildMetadataField({
           name: 'author',
           displayName: 'Author',
           title: 'Author',
@@ -1578,19 +1743,23 @@ describe('MetadataFieldsHelper', () => {
           typeClass: 'compound',
           multiple: true,
           childMetadataFields: {
-            authorName: buildField({
+            authorName: buildMetadataField({
               name: 'authorName',
               displayName: 'Author Name',
               title: 'Name'
             }),
-            authorAffiliation: buildField({
+            authorAffiliation: buildMetadataField({
               name: 'authorAffiliation',
               displayName: 'Author Affiliation',
               title: 'Affiliation'
             })
           }
         }),
-        emptyField: buildField({ name: 'emptyField', displayName: 'Empty Field', title: 'Empty' })
+        emptyField: buildMetadataField({
+          name: 'emptyField',
+          displayName: 'Empty Field',
+          title: 'Empty'
+        })
       }
 
       const fieldValues: DatasetMetadataFieldsDTO = {
@@ -1651,6 +1820,128 @@ describe('MetadataFieldsHelper', () => {
           ]
         }
       ])
+    })
+
+    it('ignores unknown, empty, and malformed template field values', () => {
+      const metadataFields: Record<string, MetadataField> = {
+        keywords: buildMetadataField({
+          name: 'keywords',
+          displayName: 'Keywords',
+          title: 'Keywords',
+          multiple: true
+        }),
+        author: buildMetadataField({
+          name: 'author',
+          displayName: 'Author',
+          title: 'Author',
+          type: 'NONE',
+          typeClass: 'compound',
+          childMetadataFields: {
+            authorName: buildMetadataField({ name: 'authorName' }),
+            authorAffiliation: buildMetadataField({ name: 'authorAffiliation' })
+          }
+        }),
+        notes: buildMetadataField({ name: 'notes' })
+      }
+
+      const templateFields = MetadataFieldsHelper.buildTemplateFieldsFromMetadataValues(
+        {
+          keywords: ['valid', { invalid: true }],
+          author: [
+            null,
+            ['invalid'],
+            { missingChild: 'Ignored' },
+            { authorName: '', authorAffiliation: undefined },
+            { authorName: 'Ada', authorAffiliation: 'Math' }
+          ],
+          notes: null,
+          unknown: 'Ignored'
+        } as unknown as DatasetMetadataFieldsDTO,
+        metadataFields
+      )
+
+      expect(templateFields).to.deep.equal([
+        {
+          typeName: 'author',
+          multiple: false,
+          typeClass: 'compound',
+          value: {
+            authorName: {
+              value: 'Ada',
+              typeName: 'authorName',
+              multiple: false,
+              typeClass: 'primitive'
+            },
+            authorAffiliation: {
+              value: 'Math',
+              typeName: 'authorAffiliation',
+              multiple: false,
+              typeClass: 'primitive'
+            }
+          }
+        }
+      ])
+    })
+  })
+
+  describe('formatFormValuesToDatasetDTO', () => {
+    it('omits empty composed values in create mode and keeps them in edit mode', () => {
+      const formValues: DatasetMetadataFormValues = {
+        citation: {
+          title: '',
+          subjects: [],
+          keyword: [{ value: '' }],
+          author: { authorName: '', authorAffiliation: '' },
+          grant: [{ grantNumber: '' }]
+        }
+      }
+
+      expect(MetadataFieldsHelper.formatFormValuesToDatasetDTO(formValues, 'create')).to.deep.equal(
+        {
+          licence: defaultLicense,
+          metadataBlocks: [
+            {
+              name: 'citation',
+              fields: {}
+            }
+          ]
+        }
+      )
+      expect(MetadataFieldsHelper.formatFormValuesToDatasetDTO(formValues, 'edit')).to.deep.equal({
+        licence: defaultLicense,
+        metadataBlocks: [
+          {
+            name: 'citation',
+            fields: {
+              title: '',
+              subjects: [],
+              keyword: [],
+              author: {
+                authorName: '',
+                authorAffiliation: ''
+              },
+              grant: [
+                {
+                  grantNumber: ''
+                }
+              ]
+            }
+          }
+        ]
+      })
+    })
+  })
+
+  describe('getValidationFailedFieldError', () => {
+    it('extracts validation failure text and returns null for unrelated errors', () => {
+      expect(
+        MetadataFieldsHelper.getValidationFailedFieldError(
+          'Validation Failed: Point of Contact E-mail test@test.c is not valid. (Invalid value:abc)'
+        )
+      ).to.equal('Point of Contact E-mail test@test.c is not valid.')
+      expect(MetadataFieldsHelper.getValidationFailedFieldError('Something else failed')).to.equal(
+        null
+      )
     })
   })
 
@@ -1769,6 +2060,62 @@ describe('MetadataFieldsHelper', () => {
           expect(res.errorCode, `code for "${input}"`).to.eq(code)
         }
       })
+    })
+  })
+
+  describe('date validation helpers', () => {
+    it('validates date patterns directly', () => {
+      expect(MetadataFieldsHelper.isValidDateAgainstPattern('', 'yyyy')).to.equal(false)
+      expect(MetadataFieldsHelper.isValidDateAgainstPattern('9999', 'yyyy')).to.equal(true)
+      expect(MetadataFieldsHelper.isValidDateAgainstPattern('10000', 'yyyy')).to.equal(false)
+      expect(MetadataFieldsHelper.isValidDateAgainstPattern('2023-12', 'yyyy-MM')).to.equal(true)
+      expect(MetadataFieldsHelper.isValidDateAgainstPattern('2023-00', 'yyyy-MM')).to.equal(false)
+      expect(MetadataFieldsHelper.isValidDateAgainstPattern('2020-02-29', 'yyyy-MM-dd')).to.equal(
+        true
+      )
+      expect(MetadataFieldsHelper.isValidDateAgainstPattern('2021-02-29', 'yyyy-MM-dd')).to.equal(
+        false
+      )
+      expect(
+        MetadataFieldsHelper.isValidDateAgainstPattern(
+          '2023-11-30T23:59:59',
+          "yyyy-MM-dd'T'HH:mm:ss"
+        )
+      ).to.equal(true)
+      expect(
+        MetadataFieldsHelper.isValidDateAgainstPattern(
+          '2023-11-30T24:00:00',
+          "yyyy-MM-dd'T'HH:mm:ss"
+        )
+      ).to.equal(false)
+      expect(
+        MetadataFieldsHelper.isValidDateAgainstPattern(
+          '2023-11-30T23:59:59.123',
+          "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        )
+      ).to.equal(true)
+      expect(
+        MetadataFieldsHelper.isValidDateAgainstPattern(
+          '2023-11-30T23:59:59.12',
+          "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        )
+      ).to.equal(false)
+      expect(
+        MetadataFieldsHelper.isValidDateAgainstPattern('2023-11-30 23:59:59', 'yyyy-MM-dd HH:mm:ss')
+      ).to.equal(true)
+      expect(MetadataFieldsHelper.isValidDateAgainstPattern('2023', 'unsupported')).to.equal(false)
+    })
+
+    it('validates time and leap-year helpers directly', () => {
+      expect(MetadataFieldsHelper.isValidHMS('23', '59', '59')).to.equal(true)
+      expect(MetadataFieldsHelper.isValidHMS('24', '00', '00')).to.equal(false)
+      expect(MetadataFieldsHelper.isValidHMS('23', '60', '00')).to.equal(false)
+      expect(MetadataFieldsHelper.isValidHMS('23', '59', '60')).to.equal(false)
+      expect(MetadataFieldsHelper.daysInMonth(2024, 2)).to.equal(29)
+      expect(MetadataFieldsHelper.daysInMonth(2023, 2)).to.equal(28)
+      expect(MetadataFieldsHelper.daysInMonth(2023, 13)).to.equal(0)
+      expect(MetadataFieldsHelper.isLeapYear(2000)).to.equal(true)
+      expect(MetadataFieldsHelper.isLeapYear(1900)).to.equal(false)
     })
   })
 })

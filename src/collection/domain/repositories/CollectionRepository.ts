@@ -13,6 +13,8 @@ import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus
 import { LinkingObjectType } from '../useCases/getCollectionsForLinking'
 import { CollectionSummary } from '../models/CollectionSummary'
 import { CollectionLinks } from '../models/CollectionLinks'
+import { AllowedStorageDrivers } from '../models/AllowedStorageDrivers'
+import { StorageDriver } from '../models/StorageDriver'
 
 export interface CollectionRepository {
   getById: (id?: string) => Promise<Collection>
@@ -58,4 +60,11 @@ export interface CollectionRepository {
     linkingCollectionIdOrAlias: number | string
   ): Promise<void>
   getLinks(collectionIdOrAlias: number | string): Promise<CollectionLinks>
+  getAllowedStorageDrivers(collectionIdOrAlias: number | string): Promise<AllowedStorageDrivers>
+  getStorageDriver(
+    collectionIdOrAlias: number | string,
+    getEffective?: boolean
+  ): Promise<StorageDriver | undefined>
+  setStorageDriver(collectionIdOrAlias: number | string, driverLabel: string): Promise<string>
+  deleteStorageDriver(collectionIdOrAlias: number | string): Promise<string>
 }

@@ -6,12 +6,22 @@ import { collectionTypeOptions } from '@/collection/domain/useCases/DTOs/Collect
 import { ContactsField } from './ContactsField'
 import { IdentifierField } from './IdentifierField'
 import { DescriptionField } from './DescriptionField'
+import { StorageField } from './StorageField'
+import { AllowedStorageDrivers } from '@/collection/domain/models/AllowedStorageDrivers'
 
 interface TopFieldsSectionProps {
   isEditingRootCollection: boolean
+  canSelectStorageDriver: boolean
+  allowedStorageDrivers: AllowedStorageDrivers
+  inheritedOrDefaultStorageDriverName?: string
 }
 
-export const TopFieldsSection = ({ isEditingRootCollection }: TopFieldsSectionProps) => {
+export const TopFieldsSection = ({
+  isEditingRootCollection,
+  canSelectStorageDriver,
+  allowedStorageDrivers,
+  inheritedOrDefaultStorageDriverName
+}: TopFieldsSectionProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
   const { control } = useFormContext()
 
@@ -152,34 +162,12 @@ export const TopFieldsSection = ({ isEditingRootCollection }: TopFieldsSectionPr
       <Row>
         <IdentifierField rules={aliasRules} />
 
-        {/* 👇 To be defined, at the moment the SPA only supports file uploading through direct upload (S3), so we are disabling the storage selector */}
-        {/* <Form.Group controlId="storage" as={Col} md={6}>
-          <Form.Group.Label message={t('fields.storage.description')}>
-            {t('fields.storage.label')}
-          </Form.Group.Label>
-          <Controller
-            name="storage"
-            control={control}
-            render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-              <Col>
-                <Form.Group.Select
-                  onChange={onChange}
-                  value={value as string}
-                  isInvalid={invalid}
-                  ref={ref}
-                  disabled>
-                  <option value="">Select...</option>
-                  {Object.values(collectionStorageOptions).map((type) => (
-                    <option value={type} key={type}>
-                      {type}
-                    </option>
-                  ))}
-                </Form.Group.Select>
-                <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-              </Col>
-            )}
+        {canSelectStorageDriver && (
+          <StorageField
+            allowedStorageDrivers={allowedStorageDrivers}
+            inheritedOrDefaultStorageDriverName={inheritedOrDefaultStorageDriverName}
           />
-        </Form.Group> */}
+        )}
       </Row>
 
       {/* Category (type) & Email (contacts) & Description */}
