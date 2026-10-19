@@ -3,6 +3,7 @@ import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { TestsUtils } from '../../shared/TestsUtils'
 import {
+  Dataset,
   DatasetLabel,
   DatasetLabelSemanticMeaning,
   DatasetLockReason,
@@ -23,6 +24,7 @@ import { DatasetDTO } from '../../../../src/dataset/domain/useCases/DTOs/Dataset
 import { CollectionHelper } from '../../shared/collection/CollectionHelper'
 const DRAFT_PARAM = DatasetNonNumericVersion.DRAFT
 import { VersionUpdateType } from '../../../../src/dataset/domain/models/VersionUpdateType'
+import { AlertMessageKey } from '../../../../src/alert/domain/models/Alert'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -169,6 +171,70 @@ describe('Dataset JSDataverse Repository', () => {
     TestsUtils.login().then((token) => {
       cy.wrap(TestsUtils.setup(token)).then(
         async () => await CollectionHelper.createAndPublish(collectionId)
+      )
+    })
+  })
+  describe('draft access fallbacks', () => {
+    const actAsAnonymousUser = () => localStorage.clear()
+
+    const alertKeys = (dataset: Dataset | undefined) =>
+      dataset?.alerts.map((alert) => alert.messageKey) ?? []
+
+    it('rejects with the permission error when an anonymous user requests a draft-only dataset', async () => {
+      const datasetResponse = await DatasetHelper.create(collectionId)
+      actAsAnonymousUser()
+
+      const error = await datasetRepository
+        .getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
+        .then(
+          () => undefined,
+          (err: Error) => err
+        )
+
+      expect(error?.message).to.match(/\[401\]/)
+    })
+
+    it('falls back to the published version and flags NOT_AUTHORIZED when an anonymous user requests an existing draft', async () => {
+      const datasetResponse = await DatasetHelper.create(collectionId)
+      await DatasetHelper.publish(datasetResponse.persistentId)
+      await DatasetHelper.createDraftWithTitle(datasetResponse.persistentId, 'Draft only title')
+      actAsAnonymousUser()
+
+      const dataset = await datasetRepository.getByPersistentId(
+        datasetResponse.persistentId,
+        DRAFT_PARAM
+      )
+
+      expect(dataset?.version.publishingStatus).to.equal(DatasetPublishingStatus.RELEASED)
+      expect(dataset?.version.title).not.to.equal('Draft only title')
+      expect(alertKeys(dataset)).to.include.members([
+        AlertMessageKey.NOT_AUTHORIZED,
+        AlertMessageKey.REQUESTED_VERSION_NOT_FOUND
+      ])
+    })
+
+    it('falls back to the published version with only the version-not-found alert when the draft does not exist', async () => {
+      const datasetResponse = await DatasetHelper.create(collectionId)
+      await DatasetHelper.publish(datasetResponse.persistentId)
+
+      const dataset = await datasetRepository.getByPersistentId(
+        datasetResponse.persistentId,
+        DRAFT_PARAM
+      )
+
+      expect(dataset?.version.publishingStatus).to.equal(DatasetPublishingStatus.RELEASED)
+      expect(alertKeys(dataset)).to.include(AlertMessageKey.REQUESTED_VERSION_NOT_FOUND)
+      expect(alertKeys(dataset)).not.to.include(AlertMessageKey.NOT_AUTHORIZED)
+    })
+
+    it('loads a draft-only dataset without a requested-version alert when no version is given', async () => {
+      const datasetResponse = await DatasetHelper.create(collectionId)
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+
+      expect(dataset?.version.publishingStatus).to.equal(DatasetPublishingStatus.DRAFT)
+      expect(alertKeys(dataset)).not.to.include(
+        AlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT
       )
     })
   })
