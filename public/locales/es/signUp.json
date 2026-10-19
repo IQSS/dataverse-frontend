@@ -10,6 +10,17 @@
   },
   "accountInfo": "Información de la cuenta",
   "aboutPrefilledFields": "Algunos campos de este formulario están precompletados con información de tu proveedor de identidad y no pueden cambiarse en esta etapa.\nEsto garantiza consistencia y seguridad. Completa los campos restantes para finalizar tu registro.",
+  "builtinSignUp": {
+    "created": {
+      "heading": "Cuenta creada",
+      "text": "Tu cuenta {{identifier}} está lista. Te hemos enviado un correo de bienvenida con un enlace para confirmar tu dirección de correo. Ya puedes iniciar sesión con tu nombre de usuario y contraseña.",
+      "logIn": "Iniciar sesión"
+    },
+    "pending": {
+      "heading": "Revisa tu correo",
+      "text": "Te hemos enviado un correo con un enlace para terminar de crear tu cuenta."
+    }
+  },
   "fields": {
     "username": {
       "label": "Nombre de usuario",
@@ -45,6 +56,17 @@
         "email": "El correo electrónico no es válido.",
         "maxLength": "El correo electrónico debe tener como máximo {{maxLength}} caracteres."
       }
+    },
+    "password": {
+      "label": "Contraseña",
+      "description": "La contraseña que usarás para iniciar sesión.",
+      "required": "La contraseña es obligatoria."
+    },
+    "confirmPassword": {
+      "label": "Repite la contraseña",
+      "description": "Escribe la misma contraseña otra vez para confirmarla.",
+      "required": "Por favor, repite tu contraseña.",
+      "mismatch": "Las contraseñas no coinciden."
     },
     "affiliation": {
       "label": "Afiliación",

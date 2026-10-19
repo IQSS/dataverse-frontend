@@ -1,4 +1,6 @@
 import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
+import { SignUpDTO } from '@/users/domain/useCases/DTOs/SignUpDTO'
+import { SignUpResult } from '@/users/domain/models/SignUpResult'
 import { TokenInfo } from '@/users/domain/models/TokenInfo'
 import { User } from '@/users/domain/models/User'
 import { UserMother } from '@tests/component/users/domain/models/UserMother'
@@ -48,6 +50,14 @@ export class UserMockRepository extends UserJSDataverseRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  signUp(_signUpDTO: SignUpDTO): Promise<SignUpResult> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ status: 'created', identifier: '@alovelace' })
       }, FakerHelper.loadingTimout())
     })
   }

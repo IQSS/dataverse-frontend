@@ -20,6 +20,9 @@ window.__APP_CONFIG__ = {
     // All auth-related storage keys will be prefixed with this string
     localStorageKeyPrefix: 'DV_'
   },
+  // Optional. Show "Sign Up" links to the sign-up page. Requires the backend's
+  // dataverse.feature.api-builtin-user-signup feature flag and :AllowSignUp.
+  signUpEnabled: true,
   // UI languages available to users (if more than one is provided a language switcher will be shown)
   languages: [
     { code: 'en', name: 'English' },

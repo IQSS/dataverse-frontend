@@ -32,6 +32,7 @@ function buildTestConfig(): AppConfig {
       logoutEndpoint: Cypress.env('oidcLogoutEndpoint') as string,
       localStorageKeyPrefix: Cypress.env('oidcLocalStorageKeyPrefix') as string
     },
+    signUpEnabled: Cypress.env('signUpEnabled') as boolean | undefined,
     languages: Cypress.env('languages') as { code: string; name: string }[],
     defaultLanguage: Cypress.env('defaultLanguage') as string,
     branding,

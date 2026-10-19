@@ -10,6 +10,17 @@
   },
   "accountInfo": "Account Information",
   "aboutPrefilledFields": "Some fields in this form are pre-filled with information from your identity provider and cannot be changed at this stage.\nThis ensures consistency and security. Please complete the remaining fields to finish your registration.",
+  "builtinSignUp": {
+    "created": {
+      "heading": "Account Created",
+      "text": "Your account {{identifier}} is ready. We've sent you a welcome email with a link to confirm your email address. You can log in now with your username and password.",
+      "logIn": "Log In"
+    },
+    "pending": {
+      "heading": "Check Your Email",
+      "text": "We've sent you an email with a link to finish creating your account."
+    }
+  },
   "fields": {
     "username": {
       "label": "Username",
@@ -45,6 +56,17 @@
         "email": "Email is invalid.",
         "maxLength": "Email must be at most {{maxLength}} characters."
       }
+    },
+    "password": {
+      "label": "Password",
+      "description": "The password you will use to log in.",
+      "required": "Password is required."
+    },
+    "confirmPassword": {
+      "label": "Retype Password",
+      "description": "Type the same password again to confirm it.",
+      "required": "Please retype your password.",
+      "mismatch": "Passwords do not match."
     },
     "affiliation": {
       "label": "Affiliation",
