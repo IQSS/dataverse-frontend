@@ -1,4 +1,5 @@
 import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
+import { OrcidSignUpConnection } from '@/users/domain/models/OrcidSignUpConnection'
 import { SignUpDTO } from '@/users/domain/useCases/DTOs/SignUpDTO'
 import { SignUpResult } from '@/users/domain/models/SignUpResult'
 import { TokenInfo } from '@/users/domain/models/TokenInfo'
@@ -58,6 +59,31 @@ export class UserMockRepository extends UserJSDataverseRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({ status: 'created', identifier: '@alovelace' })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getOrcidSignUpAuthorizationUrl(_redirectUri: string): Promise<string> {
+    return Promise.resolve('https://sandbox.orcid.org/oauth/authorize')
+  }
+
+  connectOrcidForSignUp(): Promise<OrcidSignUpConnection> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          orcid: 'https://orcid.org/0000-0002-1825-0097',
+          orcidToken: 'mock-orcid-token',
+          firstName: 'Josiah',
+          lastName: 'Carberry'
+        })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getAuthenticatedOrcid(): Promise<string | null> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('https://orcid.org/0000-0002-1825-0097')
       }, FakerHelper.loadingTimout())
     })
   }

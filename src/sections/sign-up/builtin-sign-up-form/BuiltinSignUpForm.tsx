@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, FormProvider, RegisterOptions, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button, Col, Form, Stack } from '@iqss/dataverse-design-system'
@@ -9,19 +9,11 @@ import { Validator } from '@/shared/helpers/Validator'
 import { FormFieldsSkeleton } from '../valid-token-not-linked-account-form/FormFieldsSkeleton'
 import { SignUpStatus, useSignUp } from './useSignUp'
 import { SignUpSuccess } from './SignUpSuccess'
+import { BuiltinSignUpFormData, SignUpDraft } from './types'
+import { useOrcidSignUp } from './useOrcidSignUp'
+import { OrcidIcon } from '@/sections/shared/orcid/OrcidIcon'
+import { requireAppConfig } from '@/config'
 import styles from '../valid-token-not-linked-account-form/FormFields.module.scss'
-
-export interface BuiltinSignUpFormData {
-  username: string
-  firstName: string
-  lastName: string
-  emailAddress: string
-  password: string
-  confirmPassword: string
-  affiliation: string
-  position: string
-  termsAccepted: boolean
-}
 
 type TextFieldName = Exclude<keyof BuiltinSignUpFormData, 'termsAccepted'>
 
@@ -39,6 +31,14 @@ const DEFAULT_VALUES: BuiltinSignUpFormData = {
 
 const MAX_LENGTH = 255
 
+const ORCID_PREFILL_FIELDS = [
+  'firstName',
+  'lastName',
+  'emailAddress',
+  'affiliation',
+  'position'
+] as const
+
 interface BuiltinSignUpFormProps {
   dataverseInfoRepository: DataverseInfoRepository
 }
@@ -53,19 +53,45 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
     error: errorTermsOfUse
   } = useGetTermsOfUse(dataverseInfoRepository)
 
+  const isOrcidEnabled = requireAppConfig().signUpWithOrcidEnabled === true
+  const [orcidFieldError, setOrcidFieldError] = useState<string | null>(null)
+
   const form = useForm<BuiltinSignUpFormData>({ mode: 'onChange', defaultValues: DEFAULT_VALUES })
+  const orcid = useOrcidSignUp(userRepository)
 
   const { status, result, submitError, submit } = useSignUp(
     userRepository,
     (fieldErrors) => {
       Object.entries(fieldErrors).forEach(([field, message]) => {
-        if (field in DEFAULT_VALUES) {
+        if (field === 'orcid') {
+          setOrcidFieldError(message)
+        } else if (field in DEFAULT_VALUES) {
           form.setError(field as keyof BuiltinSignUpFormData, { type: 'server', message })
         }
       })
     },
     () => formContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   )
+
+  useEffect(() => {
+    if (orcid.restoredDraft) {
+      form.reset({ ...DEFAULT_VALUES, ...orcid.restoredDraft })
+    }
+  }, [orcid.restoredDraft, form])
+
+  useEffect(() => {
+    const connection = orcid.connection
+    if (!connection) {
+      return
+    }
+    setOrcidFieldError(null)
+    ORCID_PREFILL_FIELDS.forEach((field) => {
+      const orcidValue = connection[field]
+      if (orcidValue && !form.getValues(field)) {
+        form.setValue(field, orcidValue, { shouldValidate: true })
+      }
+    })
+  }, [orcid.connection, form])
 
   if (isLoadingTermsOfUse) {
     return <FormFieldsSkeleton />
@@ -131,6 +157,19 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
     { name: 'position', type: 'text', autoComplete: 'organization-title' }
   ]
 
+  const currentDraft = (): SignUpDraft => {
+    const values = form.getValues()
+    return {
+      username: values.username,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      emailAddress: values.emailAddress,
+      affiliation: values.affiliation,
+      position: values.position,
+      termsAccepted: values.termsAccepted
+    }
+  }
+
   const onSubmit = (formData: BuiltinSignUpFormData) =>
     submit({
       username: formData.username,
@@ -140,9 +179,11 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
       password: formData.password,
       affiliation: formData.affiliation || undefined,
       position: formData.position || undefined,
-      termsAccepted: formData.termsAccepted
+      termsAccepted: formData.termsAccepted,
+      orcidToken: orcid.connection?.orcidToken
     })
 
+  const orcidError = orcidFieldError ?? orcid.error
   const isSubmitting = status === SignUpStatus.IsSubmitting
   const hasAcceptedTheTermsOfUse = form.watch('termsAccepted')
 
@@ -159,6 +200,60 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
           onSubmit={form.handleSubmit(onSubmit)}
           noValidate={true}
           data-testid="builtin-sign-up-form">
+          {isOrcidEnabled && (
+            <Form.Group className={styles['form-group']}>
+              <Form.Group.Label message={t('fields.orcid.description')} column md={3}>
+                {t('fields.orcid.label')}
+              </Form.Group.Label>
+              <Col md={6}>
+                <Stack direction="vertical" gap={1}>
+                  {orcid.connection ? (
+                    <Stack direction="horizontal" gap={2} data-testid="orcid-connected">
+                      <OrcidIcon />
+                      <a href={orcid.connection.orcid} target="_blank" rel="noreferrer">
+                        {orcid.connection.orcid}
+                      </a>
+                      <Button
+                        variant="link"
+                        type="button"
+                        className="p-0"
+                        onClick={() => {
+                          setOrcidFieldError(null)
+                          orcid.disconnect()
+                        }}>
+                        {t('fields.orcid.remove')}
+                      </Button>
+                    </Stack>
+                  ) : (
+                    <>
+                      <Form.Group.Text>{t('fields.orcid.helperText')}</Form.Group.Text>
+                      <div>
+                        <Button
+                          variant="secondary"
+                          type="button"
+                          disabled={orcid.isConnecting}
+                          onClick={() => void orcid.startConnection(currentDraft())}
+                          data-testid="connect-orcid-button">
+                          <Stack direction="horizontal" gap={2}>
+                            <OrcidIcon />
+                            {orcid.isConnecting
+                              ? t('fields.orcid.connecting')
+                              : t('fields.orcid.connect')}
+                          </Stack>
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                  {orcidError && (
+                    <div className="text-danger small" role="alert" data-testid="orcid-error">
+                      {orcidError}
+                    </div>
+                  )}
+                </Stack>
+              </Col>
+            </Form.Group>
+          )}
+
           {textFields.map(({ name, type, autoComplete }) => (
             <Form.Group key={name} controlId={name} className={styles['form-group']}>
               <Form.Group.Label

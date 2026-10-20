@@ -33,6 +33,7 @@ function buildTestConfig(): AppConfig {
       localStorageKeyPrefix: Cypress.env('oidcLocalStorageKeyPrefix') as string
     },
     signUpEnabled: Cypress.env('signUpEnabled') as boolean | undefined,
+    signUpWithOrcidEnabled: Cypress.env('signUpWithOrcidEnabled') as boolean | undefined,
     languages: Cypress.env('languages') as { code: string; name: string }[],
     defaultLanguage: Cypress.env('defaultLanguage') as string,
     branding,

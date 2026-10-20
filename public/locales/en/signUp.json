@@ -22,6 +22,15 @@
     }
   },
   "fields": {
+    "orcid": {
+      "label": "ORCID iD",
+      "description": "Optional. Your ORCID iD is added to your account and used as your author identifier when you create datasets.",
+      "helperText": "Optional. Connect first to fill in your details from your ORCID record. If you've already typed a password, you'll need to enter it again.",
+      "connect": "Create or Connect your ORCID iD",
+      "connecting": "Connecting to ORCID…",
+      "remove": "Remove",
+      "cancelled": "Connecting your ORCID iD was cancelled. You can try again or sign up without it."
+    },
     "username": {
       "label": "Username",
       "description": "Between 2-60 characters, and can use “a-z”, “0-9”, “_” for your username.",

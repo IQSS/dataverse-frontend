@@ -21,6 +21,7 @@ const AppConfigSchema = z.object({
     localStorageKeyPrefix: z.string()
   }),
   signUpEnabled: z.boolean().optional(),
+  signUpWithOrcidEnabled: z.boolean().optional(),
   defaultLanguage: z.string(),
   languages: z.array(
     z.object({

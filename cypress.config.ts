@@ -100,6 +100,7 @@ export default defineConfig({
     oidcLogoutEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/logout',
     oidcLocalStorageKeyPrefix: 'DV_',
     signUpEnabled: true,
+    signUpWithOrcidEnabled: true,
     languages: [
       { code: 'en', name: 'English' },
       { code: 'es', name: 'Español' }

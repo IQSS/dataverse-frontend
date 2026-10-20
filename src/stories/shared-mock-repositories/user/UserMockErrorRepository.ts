@@ -57,4 +57,12 @@ export class UserMockErrorRepository extends UserMockRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  getAuthenticatedOrcid(): Promise<string | null> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong getting the ORCID iD. Try again later.')
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

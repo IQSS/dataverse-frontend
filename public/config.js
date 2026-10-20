@@ -23,6 +23,9 @@ window.__APP_CONFIG__ = {
   // Optional. Show "Sign Up" links to the sign-up page. Requires the backend's
   // dataverse.feature.api-builtin-user-signup feature flag and :AllowSignUp.
   signUpEnabled: true,
+  // Optional. Let new users connect their ORCID iD on the sign-up form. Requires an ORCID OAuth2
+  // provider in the backend and this SPA's sign-up URL in dataverse.api.signup.orcid-redirect-uris.
+  signUpWithOrcidEnabled: true,
   // UI languages available to users (if more than one is provided a language switcher will be shown)
   languages: [
     { code: 'en', name: 'English' },

@@ -7,4 +7,5 @@ export interface SignUpDTO {
   affiliation?: string
   position?: string
   termsAccepted: boolean
+  orcidToken?: string
 }

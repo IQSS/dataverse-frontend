@@ -23,7 +23,9 @@
     "familyName": "Family Name",
     "email": "Email",
     "affiliation": "Affiliation",
-    "position": "Position"
+    "position": "Position",
+    "orcid": "ORCID iD",
+    "orcidNotConnected": "Not connected"
   },
   "myData": {
     "title": "My Data",
