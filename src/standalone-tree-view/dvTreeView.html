@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dataverse Tree View — Standalone Demo</title>
+    <link rel="stylesheet" href="standalone-page.css" />
+  </head>
+  <body>
+    <!--
+      Direct-embed example for any HTML page:
+
+        <div id="dv-tree-view"></div>
+        <script>
+          window.dvTreeViewConfig = {
+            siteUrl:          'https://your-dataverse.edu',
+            datasetPid:       'doi:10.5072/FK2/XXXXX',
+            datasetVersionId: ':latest',
+            bearerToken:      '...',   // optional — pass when the host
+                                       // can produce a token (any non-JSF
+                                       // host, cross-origin embed, …)
+            locale:           'en'
+          };
+        </script>
+        <script type="module" src="/reusable-components/dv-tree-view.js"></script>
+
+      Same-origin JSF embedding can omit `bearerToken` and source the
+      other fields from EL expressions; the bundle then authenticates
+      with the user's JSESSIONID session cookie. Cross-origin or
+      non-JSF hosts MUST pass a bearer token (the SDK never sends
+      cookies to a different origin).
+    -->
+
+    <div id="dv-tree-view"></div>
+
+    <script>
+      // For browser testing: read config from URL params
+      const params = new URLSearchParams(window.location.search)
+      const bearerToken = params.get('bearerToken') ?? undefined
+      window.dvTreeViewConfig = {
+        siteUrl: params.get('siteUrl') ?? 'http://localhost:8000',
+        datasetPid: params.get('datasetPid') ?? '',
+        datasetVersionId: params.get('datasetVersionId') ?? ':latest',
+        locale: params.get('locale') ?? 'en',
+        ...(bearerToken !== undefined && { bearerToken })
+      }
+    </script>
+    <script type="module" src="reusable-components/dv-tree-view.js"></script>
+  </body>
+</html>

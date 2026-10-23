@@ -97,3 +97,7 @@ export function useGuestbookRepositories() {
 
   return { guestbookRepository }
 }
+
+export function useOptionalDatasetRepository(): DatasetRepository | undefined {
+  return useContext(RepositoriesContext)?.datasetRepository
+}

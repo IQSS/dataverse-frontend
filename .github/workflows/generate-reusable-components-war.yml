@@ -1,0 +1,80 @@
+name: generate-reusable-components-war
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Create .npmrc
+        run: |
+          cp .npmrc.example .npmrc
+          sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Dataverse UI Library
+        working-directory: packages/design-system
+        run: npm run build
+
+      - name: Build reusable components
+        run: npm run build-reusable-components
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reusable-components-dist
+          path: ./dist-reusable-components/reusable-components
+
+  generate-war:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: '11'
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: reusable-components-dist
+          path: ./dist-reusable-components/reusable-components
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "value=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build war file
+        working-directory: ./deployment/reusable-components
+        run: mvn package "-Dversion=${{ steps.version.outputs.value }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reusable-components-war
+          path: ./deployment/reusable-components/target/reusable-components.war
+
+      - name: Attach war to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" ./deployment/reusable-components/target/reusable-components.war --clobber

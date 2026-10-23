@@ -36,6 +36,10 @@ export default defineConfig({
   preview: {
     port: 5173
   },
+  optimizeDeps: {
+    entries: ['index.html', 'src/index.app.tsx'],
+    include: ['react-dom/client']
+  },
   server: {
     //https://github.com/vitejs/vite/discussions/3396
     host: true,

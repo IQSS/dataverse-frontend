@@ -1,0 +1,41 @@
+@use '../standalone-shared/shadow-tokens';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+
+.dv-uploader-root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.standalone-error {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff5f5;
+  border: 1px solid #dc3545;
+  border-radius: 8px;
+  text-align: center;
+
+  h1 {
+    color: #dc3545;
+    margin-bottom: 1rem;
+    font-size: $dv-brand-font-size;
+  }
+
+  p {
+    color: #721c24;
+    margin-bottom: 1rem;
+  }
+
+  code {
+    display: block;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    font-family: monospace;
+    text-align: left;
+    overflow-x: auto;
+    font-size: 14px;
+    word-break: break-all;
+  }
+}
