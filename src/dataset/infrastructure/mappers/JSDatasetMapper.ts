@@ -53,6 +53,9 @@ export class JSDatasetMapper {
     fileStore?: string,
     storageDriver?: DatasetStorageDriver
   ): Dataset {
+    const isInReview =
+      jsDataset.versionInfo.state === DatasetVersionState.DRAFT &&
+      jsDatasetLocks.some((lock) => lock.lockType === 'InReview')
     const version = JSDatasetVersionMapper.toVersion(
       jsDataset.versionId,
       jsDataset.versionInfo,
@@ -61,7 +64,8 @@ export class JSDatasetMapper {
       jsDataset.versionInfo.lastUpdateTime,
       jsDataset.publicationDate,
       jsDataset.termsOfUse?.termsOfAccess,
-      jsDataset.versionInfo.deaccessionNote as string
+      jsDataset.versionInfo.deaccessionNote as string,
+      isInReview
     )
     return new Dataset.Builder(
       jsDataset.id,

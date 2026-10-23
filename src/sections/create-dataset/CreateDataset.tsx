@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
 import { type MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
@@ -44,7 +44,10 @@ export function CreateDataset({
     collectionId
   )
 
-  const datasetTypes = collection?.allowedDatasetTypes ?? []
+  const datasetTypes = useMemo(
+    () => collection?.allowedDatasetTypes ?? [],
+    [collection?.allowedDatasetTypes]
+  )
 
   const { collectionUserPermissions, isLoading: isLoadingCollectionUserPermissions } =
     useGetCollectionUserPermissions({

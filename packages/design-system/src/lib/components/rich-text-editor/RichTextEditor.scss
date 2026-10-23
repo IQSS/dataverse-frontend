@@ -1,6 +1,14 @@
 @use 'sass:color';
 @import 'src/lib/assets/styles/design-tokens/colors.module';
 
+// box-sizing matches Reboot behavior in case it's not imported
+.rich-text-editor-wrapper,
+.rich-text-editor-wrapper *,
+.rich-text-editor-wrapper *::before,
+.rich-text-editor-wrapper *::after {
+  box-sizing: border-box;
+}
+
 .rich-text-editor-wrapper {
   display: flex;
   flex-direction: column;
