@@ -1,4 +1,5 @@
 import {
+  cancellationDetail,
   createBlobSink,
   createServiceWorkerSink,
   pullDrivenStream,
@@ -90,6 +91,20 @@ describe('workerUrlForBase', () => {
 
   it('handles a renamed base', () => {
     expect(workerUrlForBase('/spa')).to.equal('/spa/zip-download-sw.js')
+  })
+})
+
+describe('cancellationDetail', () => {
+  it('names the error class and message', () => {
+    expect(cancellationDetail(new TypeError('bad input'))).to.equal('TypeError: bad input')
+  })
+
+  it('stringifies a plain reason', () => {
+    expect(cancellationDetail('tab closed')).to.equal('tab closed')
+  })
+
+  it('explains an absent reason instead of printing undefined', () => {
+    expect(cancellationDetail(undefined)).to.equal('No reason supplied')
   })
 })
 
@@ -540,6 +555,7 @@ describe('ZIP worker completion protocol', () => {
       onChunk?: (chunk: Uint8Array) => void
       onRegister?: (registration: Registration) => void
       onUnregister?: () => void
+      onEvent?: (event: { type: string }) => void
     } = {}
   ) => {
     const worker = {
@@ -584,7 +600,8 @@ describe('ZIP worker completion protocol', () => {
       firstByteMs: 100,
       connect: () => Promise.resolve(worker),
       probe: () => Promise.resolve(true),
-      navigate: args.navigate ?? (() => () => undefined)
+      navigate: args.navigate ?? (() => () => undefined),
+      onEvent: args.onEvent
     })
     if (!sink) throw new Error('Test sink unavailable')
     return sink
@@ -703,6 +720,113 @@ describe('ZIP worker completion protocol', () => {
       setTimeout(() => abort.abort('test interruption'), 20)
       expect(await errorFrom(saving)).to.contain('cancelled')
       expect(cancelled).to.equal(true)
+    })
+  })
+
+  it('fails the download when the worker reports an error', () => {
+    cy.then(async () => {
+      const sink = await setup({
+        onRegister: (registration) =>
+          registration.ack.postMessage({
+            type: 'zipdl-error',
+            id: registration.id,
+            reason: 'disk full'
+          })
+      })
+      expect(await errorFrom(sink.save({ name: 'broken.zip', body: body() }))).to.contain(
+        'could not finish'
+      )
+    })
+  })
+  it('reports a worker-side cancellation as the browser walking away', () => {
+    cy.then(async () => {
+      const sink = await setup({
+        onRegister: (registration) =>
+          registration.ack.postMessage({ type: 'zipdl-cancelled', id: registration.id })
+      })
+      expect(await errorFrom(sink.save({ name: 'gone.zip', body: body() }))).to.contain(
+        'stopped reading'
+      )
+    })
+  })
+  it('rejects a close report with an invalid byte count', () => {
+    cy.then(async () => {
+      const sink = await setup({
+        onRegister: (registration) =>
+          registration.ack.postMessage({ type: 'zipdl-closed', id: registration.id, bytes: -1 })
+      })
+      expect(await errorFrom(sink.save({ name: 'negative.zip', body: body() }))).to.contain(
+        'invalid byte count'
+      )
+    })
+  })
+  it('fails when the worker closes before the producer has finished', () => {
+    cy.then(async () => {
+      const sink = await setup({
+        onRegister: (registration) =>
+          registration.ack.postMessage({ type: 'zipdl-closed', id: registration.id, bytes: 0 })
+      })
+      const endless = new ReadableStream<Uint8Array>()
+      expect(await errorFrom(sink.save({ name: 'early.zip', body: endless }))).to.contain(
+        'closed before the producer finished'
+      )
+    })
+  })
+  it('ignores replies for other downloads and surfaces untyped ones as diagnostics', () => {
+    cy.then(async () => {
+      const events: string[] = []
+      const sink = await setup({
+        onEvent: (event) => events.push(event.type),
+        onRegister: (registration) => {
+          registration.ack.postMessage({ type: 'zipdl-error', id: 'someone-else' })
+          registration.ack.postMessage({ id: registration.id })
+        }
+      })
+      await sink.save({ name: 'noisy.zip', body: body() })
+      expect(events).to.include('unknown-worker-message')
+      expect(events).to.include('sink-complete')
+    })
+  })
+  it('stops reading the source when the worker cancels over the chunk port', () => {
+    cy.then(async () => {
+      let cancelled = false
+      const sink = await setup({
+        onRegister: (registration) =>
+          (registration.port as MessagePort).postMessage({ type: 'cancel', reason: 'tab closed' })
+      })
+      const saving = sink.save({
+        name: 'port-cancel.zip',
+        body: new ReadableStream<Uint8Array>({
+          cancel() {
+            cancelled = true
+          }
+        })
+      })
+      expect(await errorFrom(saving)).to.contain('stopped reading')
+      expect(cancelled).to.equal(true)
+    })
+  })
+  it('refuses a negative expected length before touching the worker', () => {
+    cy.then(async () => {
+      let registered = false
+      let cancelReason: unknown
+      const sink = await setup({
+        onRegister: () => {
+          registered = true
+        }
+      })
+      const saving = sink.save({
+        name: 'bad-length.zip',
+        expectedBytes: -1,
+        body: new ReadableStream<Uint8Array>({
+          cancel(reason) {
+            cancelReason = reason
+          }
+        })
+      })
+      expect(await errorFrom(saving)).to.contain('nonnegative safe integer')
+      expect(cancelReason).to.equal('Invalid ZIP length')
+      expect(registered).to.equal(false)
     })
   })
 })
