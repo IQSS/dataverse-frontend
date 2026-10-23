@@ -12,6 +12,7 @@ import {
   FileTreeFolderMother
 } from '../../../../files/domain/models/FileTreeItemMother'
 import { FileTreePageMother } from '../../../../files/domain/models/FileTreePageMother'
+import TrayStyles from '../../../../../../src/sections/dataset/dataset-files/files-tree/FilesTreeDownloadTray.module.scss'
 
 const datasetVersion = DatasetVersionMother.create()
 
@@ -632,6 +633,12 @@ describe('FilesTree', () => {
     cy.findByLabelText(/Download file sample\.txt/i).click()
     cy.findByTestId('files-tree-download-tray').should('be.visible')
     cy.contains(/download complete/i).should('exist')
+    cy.findByTestId('files-tree-download-tray').within(() => {
+      cy.findAllByRole('button', { name: /^Close$/ })
+        .first()
+        .click()
+    })
+    cy.findByTestId('files-tree-download-tray').should('not.have.class', TrayStyles['tray-open'])
   })
 
   it('onCurrentPathChange fires when the user expands a folder', () => {
@@ -842,5 +849,74 @@ describe('FilesTree', () => {
     // and calls loadMore for us — second fetch is implicit. Wait for b.txt.
     cy.findByText('b.txt').should('exist')
     cy.then(() => expect(issued).to.be.gte(2))
+  })
+
+  it('retries loading the root when Retry is clicked after a failure', () => {
+    let calls = 0
+    const root = FileTreePageMother.create({
+      path: '',
+      items: [
+        FileTreeFileMother.create({ id: 1, name: 'after-retry.txt', path: 'after-retry.txt' })
+      ]
+    })
+    const repo: FileTreeRepository = {
+      getNode: () => {
+        calls++
+        return calls === 1 ? Promise.reject(new Error('boom')) : Promise.resolve(root)
+      }
+    }
+    cy.customMount(
+      <FilesTree
+        treeRepository={repo}
+        datasetPersistentId="doi:10.5072/FK2/AAA"
+        datasetVersion={datasetVersion}
+      />
+    )
+    cy.findByTestId('files-tree-error').should('exist')
+    cy.findByRole('button', { name: /^Retry$/ }).click()
+    cy.findByText('after-retry.txt').should('exist')
+  })
+
+  it('shows an error toast when listing a selected folder for download fails', () => {
+    const dataFolder = FileTreeFolderMother.create({ name: 'data', path: 'data' })
+    const root = FileTreePageMother.create({ path: '', items: [dataFolder] })
+    const repo: FileTreeRepository = {
+      getNode: (params: { path?: string }) =>
+        (params.path ?? '') === ''
+          ? Promise.resolve(root)
+          : Promise.reject(new Error('listing failed'))
+    }
+    cy.customMount(
+      <FilesTree
+        treeRepository={repo}
+        datasetPersistentId="doi:10.5072/FK2/AAA"
+        datasetVersion={datasetVersion}
+      />
+    )
+    cy.findByText('data').should('exist')
+    cy.findByTestId('files-tree-checkbox-data').click()
+    cy.findByTestId('files-tree-download-button').click()
+    cy.findByText('Something went wrong downloading the file. Try again later.').should('exist')
+  })
+
+  it('the header select-all checkbox selects every visible file', () => {
+    const root = FileTreePageMother.create({
+      path: '',
+      items: [
+        FileTreeFileMother.create({ id: 1, name: 'a.txt', path: 'a.txt', size: 1500 }),
+        FileTreeFileMother.create({ id: 2, name: 'b.txt', path: 'b.txt', size: 500 })
+      ]
+    })
+    const repo = new FakeTreeRepository({ '': root })
+    cy.customMount(
+      <FilesTree
+        treeRepository={repo}
+        datasetPersistentId="doi:10.5072/FK2/AAA"
+        datasetVersion={datasetVersion}
+      />
+    )
+    cy.findByText('a.txt').should('exist')
+    cy.findByTestId('files-tree-header-select-all').click()
+    cy.findByTestId('files-tree-selection-summary').should('contain.text', '2')
   })
 })

@@ -9,6 +9,14 @@ import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { QueryParamKey } from '@/sections/Route.enum'
 import { DatasetNonNumericVersion } from '@/dataset/domain/models/Dataset'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { NotImplementedModalProvider } from '@/sections/not-implemented/NotImplementedModalProvider'
+import { NotImplementedModal } from '@/sections/not-implemented/NotImplementedModal'
+import { useNotImplementedModal } from '@/sections/not-implemented/NotImplementedModalContext'
+
+const NotImplementedModalHost = () => {
+  const { isModalOpen, hideModal } = useNotImplementedModal()
+  return <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
+}
 
 describe('EditDatasetMenu', () => {
   it('renders the EditDatasetMenu if the user has update dataset permissions', () => {
@@ -303,5 +311,28 @@ describe('EditDatasetMenu', () => {
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
     cy.findByRole('button', { name: 'Private URL' }).should('exist')
+  })
+  ;['Private URL', 'Thumbnails + Widgets'].forEach((item) => {
+    it(`opens the not-implemented modal for the ${item} item`, () => {
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithAllAllowed(),
+        locks: [],
+        hasValidTermsOfAccess: true,
+        version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
+      })
+
+      cy.mountAuthenticated(
+        <NotImplementedModalProvider>
+          <WithRepositories datasetRepository={new DatasetMockRepository()}>
+            <EditDatasetMenu dataset={dataset} />
+          </WithRepositories>
+          <NotImplementedModalHost />
+        </NotImplementedModalProvider>
+      )
+
+      cy.findByRole('button', { name: 'Edit Dataset' }).click()
+      cy.findByRole('button', { name: item }).click()
+      cy.findByText('This feature is not implemented yet in the Modern version.').should('exist')
+    })
   })
 })

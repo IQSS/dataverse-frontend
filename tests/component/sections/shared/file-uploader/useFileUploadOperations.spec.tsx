@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import {
   useFileUploadOperations,
   FileUploadOperationsConfig,
@@ -181,6 +181,62 @@ describe('useFileUploadOperations', () => {
   })
 
   describe('retryUpload', () => {
+    it('records progress and storage id, then marks the file done when the retry succeeds', async () => {
+      const updateFile = cy.stub()
+      const fileRepository = {
+        uploadFile: (
+          _datasetId: number | string,
+          _file: unknown,
+          progress: (now: number) => void,
+          _abortController: AbortController,
+          storageIdSetter: (storageId: string) => void
+        ) => {
+          progress(50)
+          storageIdSetter('storage-1')
+          return Promise.resolve()
+        }
+      } as unknown as FileRepository
+      const config = createConfig({ updateFile, fileRepository })
+      const { result } = renderHook(() => useFileUploadOperations(config))
+      const mockFile = createMockFile('retry-done.txt')
+
+      await act(async () => {
+        await result.current.retryUpload(mockFile)
+      })
+
+      await waitFor(() => {
+        expect(updateFile).to.have.been.calledWithMatch(Cypress.sinon.match.string, {
+          progress: 50
+        })
+        expect(updateFile).to.have.been.calledWithMatch(Cypress.sinon.match.string, {
+          storageId: 'storage-1'
+        })
+        expect(updateFile).to.have.been.calledWithMatch(Cypress.sinon.match.string, {
+          status: FileUploadStatus.DONE
+        })
+      })
+    })
+
+    it('marks the file failed when the retry rejects', async () => {
+      const updateFile = cy.stub()
+      const fileRepository = {
+        uploadFile: () => Promise.reject(new Error('network down'))
+      } as unknown as FileRepository
+      const config = createConfig({ updateFile, fileRepository })
+      const { result } = renderHook(() => useFileUploadOperations(config))
+      const mockFile = createMockFile('retry-failed.txt')
+
+      await act(async () => {
+        await result.current.retryUpload(mockFile)
+      })
+
+      await waitFor(() => {
+        expect(updateFile).to.have.been.calledWithMatch(Cypress.sinon.match.string, {
+          status: FileUploadStatus.FAILED
+        })
+      })
+    })
+
     it('should reset file status to uploading before retry', async () => {
       const updateFile = cy.stub()
       const config = createConfig({ updateFile })
