@@ -1183,6 +1183,15 @@ Edit it to match your installation:
   `<keycloak-url>/realms/<realm>/protocol/openid-connect/{auth,token,logout}`.
 - `oidc.localStorageKeyPrefix`, `branding`, `homepage`, `footer`, `languages`, `bannerMessage`: adjust as needed.
 
+For v0.4.0, `backendUrl` is still required: set it explicitly to your Dataverse backend URL, such as
+`https://dataverse.example.edu`, without `/modern` or `/api`. Leaving it empty or omitting it requires a frontend
+build that includes the same-origin fallback described above.
+
+If Keycloak reports "no such client", verify that `oidc.clientId` exactly matches the SPA client registered in the
+realm used by the configured OIDC endpoints. Development defaults such as `test` may need to be replaced with your
+production client ID (for example, `spa` if that is the client registered in your production realm). Updating the
+endpoint URLs alone does not update the client ID.
+
 In the OIDC client, allow redirects back to the frontend base path, for example
 `https://dataverse.example.edu/modern/*`.
 
