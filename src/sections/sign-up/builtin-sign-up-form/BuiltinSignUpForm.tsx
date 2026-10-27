@@ -11,11 +11,12 @@ import { SignUpStatus, useSignUp } from './useSignUp'
 import { SignUpSuccess } from './SignUpSuccess'
 import { BuiltinSignUpFormData, SignUpDraft } from './types'
 import { useOrcidSignUp } from './useOrcidSignUp'
+import { AffiliationField } from './AffiliationField'
 import { OrcidIcon } from '@/sections/shared/orcid/OrcidIcon'
 import { requireAppConfig } from '@/config'
 import styles from '../valid-token-not-linked-account-form/FormFields.module.scss'
 
-type TextFieldName = Exclude<keyof BuiltinSignUpFormData, 'termsAccepted'>
+type TextFieldName = Exclude<keyof BuiltinSignUpFormData, 'termsAccepted' | 'affiliationRor'>
 
 const DEFAULT_VALUES: BuiltinSignUpFormData = {
   username: '',
@@ -25,6 +26,7 @@ const DEFAULT_VALUES: BuiltinSignUpFormData = {
   password: '',
   confirmPassword: '',
   affiliation: '',
+  affiliationRor: '',
   position: '',
   termsAccepted: false
 }
@@ -32,10 +34,10 @@ const DEFAULT_VALUES: BuiltinSignUpFormData = {
 const MAX_LENGTH = 255
 
 const ORCID_PREFILL_FIELDS = [
+  'username',
   'firstName',
   'lastName',
   'emailAddress',
-  'affiliation',
   'position'
 ] as const
 
@@ -59,7 +61,7 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
   const form = useForm<BuiltinSignUpFormData>({ mode: 'onChange', defaultValues: DEFAULT_VALUES })
   const orcid = useOrcidSignUp(userRepository)
 
-  const { status, result, submitError, submit } = useSignUp(
+  const { status, result, isLoggedIn, submitError, submit } = useSignUp(
     userRepository,
     (fieldErrors) => {
       Object.entries(fieldErrors).forEach(([field, message]) => {
@@ -91,7 +93,13 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
         form.setValue(field, orcidValue, { shouldValidate: true })
       }
     })
+    if (connection.affiliation && !form.getValues('affiliation')) {
+      form.setValue('affiliation', connection.affiliation, { shouldValidate: true })
+      form.setValue('affiliationRor', connection.affiliationRor ?? '')
+    }
   }, [orcid.connection, form])
+
+  const affiliationRor = form.watch('affiliationRor')
 
   if (isLoadingTermsOfUse) {
     return <FormFieldsSkeleton />
@@ -102,7 +110,7 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
   }
 
   if (status === SignUpStatus.Succeeded && result) {
-    return <SignUpSuccess result={result} />
+    return <SignUpSuccess result={result} isLoggedIn={isLoggedIn} />
   }
 
   const maxLengthRule = (field: string) => ({
@@ -165,6 +173,7 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
       lastName: values.lastName,
       emailAddress: values.emailAddress,
       affiliation: values.affiliation,
+      affiliationRor: values.affiliationRor,
       position: values.position,
       termsAccepted: values.termsAccepted
     }
@@ -269,23 +278,37 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
                 rules={rules[name]}
                 render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
                   <Col md={6}>
-                    <Stack direction="vertical" gap={1}>
-                      {name === 'username' && (
-                        <Form.Group.Text>{t('fields.username.helperText')}</Form.Group.Text>
-                      )}
-                      <div>
-                        <Form.Group.Input
-                          type={type}
-                          value={value}
-                          onChange={onChange}
-                          isInvalid={invalid}
-                          ref={ref}
-                          autoComplete={autoComplete}
-                          aria-required={Boolean(rules[name].required)}
-                        />
-                        <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-                      </div>
-                    </Stack>
+                    {name === 'affiliation' ? (
+                      <AffiliationField
+                        value={value}
+                        rorId={affiliationRor}
+                        isInvalid={invalid}
+                        errorMessage={error?.message}
+                        inputRef={ref}
+                        onChange={(newValue) => {
+                          onChange(newValue)
+                          form.setValue('affiliationRor', '')
+                        }}
+                      />
+                    ) : (
+                      <Stack direction="vertical" gap={1}>
+                        {name === 'username' && (
+                          <Form.Group.Text>{t('fields.username.helperText')}</Form.Group.Text>
+                        )}
+                        <div>
+                          <Form.Group.Input
+                            type={type}
+                            value={value}
+                            onChange={onChange}
+                            isInvalid={invalid}
+                            ref={ref}
+                            autoComplete={autoComplete}
+                            aria-required={Boolean(rules[name].required)}
+                          />
+                          <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                        </div>
+                      </Stack>
+                    )}
                   </Col>
                 )}
               />

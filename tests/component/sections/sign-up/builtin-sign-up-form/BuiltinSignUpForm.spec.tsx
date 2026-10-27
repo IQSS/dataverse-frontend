@@ -9,6 +9,8 @@ import { SIGN_UP_DRAFT_STORAGE_KEY } from '@/sections/sign-up/builtin-sign-up-fo
 
 const userRepository: UserRepository = {} as UserRepository
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
+const tokenEndpoint = Cypress.env('oidcTokenEndpoint') as string
+const storageKeyPrefix = Cypress.env('oidcLocalStorageKeyPrefix') as string
 
 const authContextValue = (logIn: IAuthContext['logIn']): IAuthContext => ({
   token: '',
@@ -46,10 +48,48 @@ const fillValidForm = () => {
 describe('BuiltinSignUpForm', () => {
   beforeEach(() => {
     cy.viewport(1280, 720)
+    cy.intercept('POST', tokenEndpoint, { statusCode: 401, body: {} })
     dataverseInfoRepository.getTermsOfUse = cy.stub().resolves('<p>Terms of use</p>')
   })
 
-  it('submits the form and shows the account created view with a log in button', () => {
+  it('logs the new user in and shows the account created view with a return to homepage button', () => {
+    cy.intercept('POST', tokenEndpoint, {
+      statusCode: 200,
+      body: {
+        access_token: 'new-access-token',
+        expires_in: 300,
+        refresh_token: 'new-refresh-token',
+        refresh_expires_in: 1800
+      }
+    }).as('tokenRequest')
+    userRepository.signUp = cy.stub().resolves({ status: 'created', identifier: '@alovelace' })
+    const logIn = cy.stub().as('logIn')
+    mountForm(logIn)
+
+    fillValidForm()
+    cy.findByRole('button', { name: 'Create Account' }).click()
+
+    cy.wait('@tokenRequest').then(({ request }) => {
+      const body = new URLSearchParams(request.body as string)
+      expect(body.get('grant_type')).to.equal('password')
+      expect(body.get('username')).to.equal('alovelace')
+      expect(body.get('password')).to.equal('Str0ngPassw0rd')
+    })
+    cy.findByTestId('sign-up-created-text').should('contain.text', "you're now logged in")
+    cy.findByTestId('sign-up-log-in-button').should('not.exist')
+    cy.findByTestId('sign-up-return-to-homepage-button').should('exist')
+    cy.window().then((win) => {
+      expect(win.localStorage.getItem(`${storageKeyPrefix}token`)).to.equal(
+        JSON.stringify('new-access-token')
+      )
+      expect(win.localStorage.getItem(`${storageKeyPrefix}refreshToken`)).to.equal(
+        JSON.stringify('new-refresh-token')
+      )
+    })
+    cy.get('@logIn').should('not.have.been.called')
+  })
+
+  it('submits the form and shows a log in button when logging in automatically fails', () => {
     userRepository.signUp = cy
       .stub()
       .as('signUp')
@@ -72,12 +112,14 @@ describe('BuiltinSignUpForm', () => {
       orcidToken: undefined
     })
     cy.findByTestId('sign-up-created-text').should('contain.text', '@alovelace')
+    cy.findByTestId('sign-up-return-to-homepage-button').should('not.exist')
 
     cy.findByTestId('sign-up-log-in-button').click()
     cy.get('@logIn').should('have.been.calledOnce')
   })
 
-  it('shows the check your email view when the sign-up is pending', () => {
+  it('shows the check your email view without logging in when the sign-up is pending', () => {
+    cy.intercept('POST', tokenEndpoint, cy.spy().as('tokenRequest'))
     userRepository.signUp = cy.stub().resolves({ status: 'pending' })
     mountForm()
 
@@ -86,6 +128,7 @@ describe('BuiltinSignUpForm', () => {
 
     cy.findByTestId('sign-up-pending-text').should('exist')
     cy.findByTestId('sign-up-created-text').should('not.exist')
+    cy.get('@tokenRequest').should('not.have.been.called')
   })
 
   it('validates required fields, username format and matching passwords before submitting', () => {
@@ -131,6 +174,16 @@ describe('BuiltinSignUpForm', () => {
     cy.findByRole('button', { name: 'Create Account' }).should('be.disabled')
     cy.findByTestId('termsAcceptedCheckbox').check()
     cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
+  })
+
+  it('has a free text affiliation without a separate ROR field or ROR logo', () => {
+    userRepository.signUp = cy.stub()
+    mountForm()
+
+    cy.get('#affiliation').type('Harvard University')
+
+    cy.get('#affiliationRor').should('not.exist')
+    cy.findByTestId('affiliation-ror').should('not.exist')
   })
 
   it('shows an error when the terms of use cannot be loaded', () => {
@@ -217,6 +270,49 @@ describe('BuiltinSignUpForm', () => {
         'have.been.calledOnceWith',
         Cypress.sinon.match({ username: 'alovelace', orcidToken: 'orcid-token' })
       )
+    })
+
+    it('fills in the username suggested from ORCID when no draft username was typed', () => {
+      userRepository.connectOrcidForSignUp = cy.stub().resolves({
+        orcid: orcidUrl,
+        orcidToken: 'orcid-token',
+        username: 'Ada.Lovelace',
+        firstName: 'Ada',
+        lastName: 'Lovelace'
+      })
+      mountForm(() => {}, ['/sign-up?code=orcid-code&state=orcid-state'])
+
+      cy.findByTestId('orcid-connected').should('exist')
+      cy.get('#username').should('have.value', 'Ada.Lovelace')
+      cy.get('#firstName').should('have.value', 'Ada')
+      cy.get('#lastName').should('have.value', 'Lovelace')
+    })
+
+    describe('ROR', () => {
+      beforeEach(() => {
+        userRepository.connectOrcidForSignUp = cy.stub().resolves({
+          orcid: orcidUrl,
+          orcidToken: 'orcid-token',
+          affiliation: 'Harvard University',
+          affiliationRor: 'https://ror.org/03vek6s52'
+        })
+        mountForm(() => {}, ['/sign-up?code=orcid-code&state=orcid-state'])
+        cy.get('#affiliation').should('have.value', 'Harvard University')
+      })
+
+      it('shows the ROR logo linking to the ROR ID from ORCID', () => {
+        cy.findByTestId('affiliation-ror')
+          .should('have.attr', 'href', 'https://ror.org/03vek6s52')
+          .and('have.attr', 'title', 'Linked to ROR ID https://ror.org/03vek6s52')
+          .find('img')
+          .should('be.visible')
+      })
+
+      it('removes the ROR logo when the affiliation is changed', () => {
+        cy.get('#affiliation').type(' Library')
+
+        cy.findByTestId('affiliation-ror').should('not.exist')
+      })
     })
 
     it('removes the connected ORCID iD so it is not sent', () => {

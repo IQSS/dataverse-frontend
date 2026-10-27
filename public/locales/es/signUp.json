@@ -14,7 +14,9 @@
     "created": {
       "heading": "Cuenta creada",
       "text": "Tu cuenta {{identifier}} está lista. Te hemos enviado un correo de bienvenida con un enlace para confirmar tu dirección de correo. Ya puedes iniciar sesión con tu nombre de usuario y contraseña.",
-      "logIn": "Iniciar sesión"
+      "logIn": "Iniciar sesión",
+      "loggedInText": "Tu cuenta {{identifier}} está lista y ya has iniciado sesión. Te hemos enviado un correo de bienvenida con un enlace para confirmar tu dirección de correo.",
+      "returnToHomepage": "Volver a la página de inicio"
     },
     "pending": {
       "heading": "Revisa tu correo",
@@ -25,7 +27,7 @@
     "orcid": {
       "label": "ORCID iD",
       "description": "Opcional. Tu ORCID iD se añade a tu cuenta y se usa como identificador de autor cuando creas datasets.",
-      "helperText": "Opcional. Conéctalo primero para completar tus datos desde tu registro ORCID. Si ya escribiste una contraseña, tendrás que escribirla otra vez.",
+      "helperText": "Opcional. Conéctalo primero para completar tus datos desde tu ORCID iD. Si ya escribiste una contraseña, tendrás que escribirla otra vez.",
       "connect": "Crea o conecta tu ORCID iD",
       "connecting": "Conectando con ORCID…",
       "remove": "Quitar",
@@ -79,10 +81,11 @@
     },
     "affiliation": {
       "label": "Afiliación",
-      "description": "La organización con la que estás afiliado.",
+      "description": "El nombre de la entidad afiliada con el autor, p. ej. el nombre de una organización",
       "invalid": {
         "maxLength": "La afiliación debe tener como máximo {{maxLength}} caracteres."
-      }
+      },
+      "rorLink": "Vinculada al ROR ID {{- rorId}}"
     },
     "position": {
       "label": "Cargo",

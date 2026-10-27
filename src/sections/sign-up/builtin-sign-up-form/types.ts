@@ -6,6 +6,7 @@ export interface BuiltinSignUpFormData {
   password: string
   confirmPassword: string
   affiliation: string
+  affiliationRor: string
   position: string
   termsAccepted: boolean
 }

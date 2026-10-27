@@ -14,7 +14,9 @@
     "created": {
       "heading": "Account Created",
       "text": "Your account {{identifier}} is ready. We've sent you a welcome email with a link to confirm your email address. You can log in now with your username and password.",
-      "logIn": "Log In"
+      "logIn": "Log In",
+      "loggedInText": "Your account {{identifier}} is ready and you're now logged in. We've sent you a welcome email with a link to confirm your email address.",
+      "returnToHomepage": "Return to Homepage"
     },
     "pending": {
       "heading": "Check Your Email",
@@ -25,7 +27,7 @@
     "orcid": {
       "label": "ORCID iD",
       "description": "Optional. Your ORCID iD is added to your account and used as your author identifier when you create datasets.",
-      "helperText": "Optional. Connect first to fill in your details from your ORCID record. If you've already typed a password, you'll need to enter it again.",
+      "helperText": "Optional. Connect first to fill in your details from your ORCID iD. If you've already typed a password, you'll need to enter it again.",
       "connect": "Create or Connect your ORCID iD",
       "connecting": "Connecting to ORCID…",
       "remove": "Remove",
@@ -79,10 +81,11 @@
     },
     "affiliation": {
       "label": "Affiliation",
-      "description": "The organization with which you are affiliated.",
+      "description": "The name of the entity affiliated with the author, e.g. an organization's name",
       "invalid": {
         "maxLength": "Affiliation must be at most {{maxLength}} characters."
-      }
+      },
+      "rorLink": "Linked to ROR ID {{- rorId}}"
     },
     "position": {
       "label": "Position",

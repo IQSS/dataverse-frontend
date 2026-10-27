@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { AuthContext } from 'react-oauth2-code-pkce'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button, Stack } from '@iqss/dataverse-design-system'
 import { SignUpResult } from '@/users/domain/models/SignUpResult'
@@ -8,11 +9,13 @@ import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/Au
 
 interface SignUpSuccessProps {
   result: SignUpResult
+  isLoggedIn: boolean
 }
 
-export const SignUpSuccess = ({ result }: SignUpSuccessProps) => {
+export const SignUpSuccess = ({ result, isLoggedIn }: SignUpSuccessProps) => {
   const { t } = useTranslation('signUp')
   const { logIn: oidcLogin } = useContext(AuthContext)
+  const navigate = useNavigate()
 
   if (result.status === 'pending') {
     return (
@@ -29,15 +32,25 @@ export const SignUpSuccess = ({ result }: SignUpSuccessProps) => {
         customHeading={t('builtinSignUp.created.heading')}
         dismissible={false}>
         <span data-testid="sign-up-created-text">
-          {t('builtinSignUp.created.text', { identifier: result.identifier })}
+          {t(isLoggedIn ? 'builtinSignUp.created.loggedInText' : 'builtinSignUp.created.text', {
+            identifier: result.identifier
+          })}
         </span>
       </Alert>
       <div>
-        <Button
-          onClick={() => oidcLogin(encodeReturnToPathInStateQueryParam(Route.HOME))}
-          data-testid="sign-up-log-in-button">
-          {t('builtinSignUp.created.logIn')}
-        </Button>
+        {isLoggedIn ? (
+          <Button
+            onClick={() => navigate(Route.HOME)}
+            data-testid="sign-up-return-to-homepage-button">
+            {t('builtinSignUp.created.returnToHomepage')}
+          </Button>
+        ) : (
+          <Button
+            onClick={() => oidcLogin(encodeReturnToPathInStateQueryParam(Route.HOME))}
+            data-testid="sign-up-log-in-button">
+            {t('builtinSignUp.created.logIn')}
+          </Button>
+        )}
       </div>
     </Stack>
   )
