@@ -1,12 +1,13 @@
 import { FormEvent, useContext, useState } from 'react'
 import { AuthContext } from 'react-oauth2-code-pkce'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Button, Col, DropdownButtonItem, Modal, Form } from '@iqss/dataverse-design-system'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 import { useSession } from '../../../session/SessionContext'
 import { Route } from '../../../Route.enum'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
+import { requireAppConfig } from '@/config'
 import styles from './AccessFileMenu.module.scss'
 
 interface RequestAccessButtonProps {
@@ -90,7 +91,13 @@ const RequestAccessLoginMessage = ({ handleClose }: { handleClose: () => void })
     <>
       <Modal.Body>
         <p className={styles['request-access-login-message']}>
-          <ExclamationTriangle /> You need to <a href={Route.SIGN_UP_JSF}>Sign Up</a> or{' '}
+          <ExclamationTriangle /> You need to{' '}
+          {requireAppConfig().signUpEnabled === true ? (
+            <Link to={Route.SIGN_UP}>Sign Up</Link>
+          ) : (
+            <a href={Route.SIGN_UP_JSF}>Sign Up</a>
+          )}{' '}
+          or{' '}
           <Button
             variant="link"
             onClick={() => oidcLogin(encodeReturnToPathInStateQueryParam(`${pathname}${search}`))}

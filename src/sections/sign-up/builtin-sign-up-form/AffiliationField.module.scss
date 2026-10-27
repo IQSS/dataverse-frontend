@@ -1,0 +1,33 @@
+.field {
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  right: calc(0.75rem + 1px);
+  left: calc(0.75rem + 1px);
+  display: flex;
+  align-items: center;
+  height: calc(1.5em + 0.75rem + 2px);
+  overflow: hidden;
+  font-size: 1rem;
+  line-height: 1.5;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.mirror {
+  color: transparent;
+}
+
+.ror-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+  pointer-events: auto;
+}
+
+.ror-logo {
+  height: 1.1em;
+}

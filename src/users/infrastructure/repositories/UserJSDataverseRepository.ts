@@ -11,7 +11,19 @@ import {
 } from '@iqss/dataverse-client-javascript'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { JSUserMapper } from '../mappers/JSUserMapper'
+import { isAxiosError } from 'axios'
+import { axiosInstance } from '@/axiosInstance'
 import { UserDTO } from '@/users/domain/useCases/DTOs/UserDTO'
+import { SignUpDTO } from '@/users/domain/useCases/DTOs/SignUpDTO'
+import { SignUpResult } from '@/users/domain/models/SignUpResult'
+import { SignUpError } from '@/users/domain/models/SignUpError'
+import { OrcidSignUpConnection } from '@/users/domain/models/OrcidSignUpConnection'
+import { OrcidSignUpCallbackDTO } from '@/users/domain/useCases/DTOs/OrcidSignUpCallbackDTO'
+
+interface SignUpErrorPayload {
+  message?: string
+  fieldErrors?: Record<string, string>
+}
 
 interface ApiTokenInfoPayload {
   apiToken: string
@@ -54,5 +66,65 @@ export class UserJSDataverseRepository implements UserRepository {
 
   register(user: UserDTO): Promise<void> {
     return registerUser.execute(user)
+  }
+
+  async signUp(signUpDTO: SignUpDTO): Promise<SignUpResult> {
+    try {
+      const response = await axiosInstance.post<{ data?: { identifier?: string } }>(
+        '/api/users/signup',
+        signUpDTO,
+        { excludeToken: true }
+      )
+
+      if (response.status === 202) {
+        return { status: 'pending' }
+      }
+
+      return { status: 'created', identifier: response.data.data?.identifier ?? '' }
+    } catch (error) {
+      throw UserJSDataverseRepository.toSignUpError(error)
+    }
+  }
+
+  async getOrcidSignUpAuthorizationUrl(redirectUri: string): Promise<string> {
+    try {
+      const response = await axiosInstance.get<{ data: { authorizationUrl: string } }>(
+        '/api/users/signup/orcid/authorize',
+        { params: { redirectUri }, excludeToken: true }
+      )
+      return response.data.data.authorizationUrl
+    } catch (error) {
+      throw UserJSDataverseRepository.toSignUpError(error)
+    }
+  }
+
+  async connectOrcidForSignUp(callback: OrcidSignUpCallbackDTO): Promise<OrcidSignUpConnection> {
+    try {
+      const response = await axiosInstance.post<{ data: OrcidSignUpConnection }>(
+        '/api/users/signup/orcid',
+        callback,
+        { excludeToken: true }
+      )
+      return response.data.data
+    } catch (error) {
+      throw UserJSDataverseRepository.toSignUpError(error)
+    }
+  }
+
+  async getAuthenticatedOrcid(): Promise<string | null> {
+    const response = await axiosInstance.get<{ data?: { authenticatedOrcid?: string } }>(
+      '/api/users/:me'
+    )
+    return response.data.data?.authenticatedOrcid ?? null
+  }
+
+  private static toSignUpError(error: unknown): unknown {
+    if (isAxiosError<SignUpErrorPayload>(error) && error.response) {
+      return new SignUpError(
+        error.response.data?.message ?? error.message,
+        error.response.data?.fieldErrors ?? {}
+      )
+    }
+    return error
   }
 }

@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { AuthContext } from 'react-oauth2-code-pkce'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button, Navbar } from '@iqss/dataverse-design-system'
 import dataverse_logo from '@/assets/dataverse_brand_icon.svg'
@@ -9,6 +9,7 @@ import { useSession } from '@/sections/session/SessionContext'
 import { LoggedInHeaderActions } from './LoggedInHeaderActions'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
+import { requireAppConfig } from '@/config'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import styles from './Header.module.scss'
 
@@ -22,7 +23,9 @@ export function Header({ notficationRepository }: HeaderProps) {
   const { user } = useSession()
   const { pathname, search } = useLocation()
 
-  const { logIn: oidcLogin } = useContext(AuthContext)
+  const { logIn: oidcLogin, token } = useContext(AuthContext)
+  const navigate = useNavigate()
+  const isSignUpEnabled = requireAppConfig().signUpEnabled === true
 
   const handleOidcLogIn = () => {
     const state = encodeReturnToPathInStateQueryParam(`${pathname}${search}`)
@@ -42,13 +45,24 @@ export function Header({ notficationRepository }: HeaderProps) {
       {user ? (
         <LoggedInHeaderActions user={user} notificationRepository={notficationRepository} />
       ) : (
-        <Button
-          onClick={handleOidcLogIn}
-          variant="link"
-          className={styles['login-btn']}
-          data-testid="oidc-login">
-          {t('logIn')}
-        </Button>
+        <>
+          <Button
+            onClick={handleOidcLogIn}
+            variant="link"
+            className={styles['login-btn']}
+            data-testid="oidc-login">
+            {t('logIn')}
+          </Button>
+          {isSignUpEnabled && !token && (
+            <Button
+              onClick={() => navigate(Route.SIGN_UP)}
+              variant="link"
+              className={styles['login-btn']}
+              data-testid="sign-up-link">
+              {t('signUp')}
+            </Button>
+          )}
+        </>
       )}
     </Navbar>
   )
