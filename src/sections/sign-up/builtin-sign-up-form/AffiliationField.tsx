@@ -25,7 +25,7 @@ export const AffiliationField = ({
   const rorLabel = t('fields.affiliation.rorLink', { rorId })
 
   return (
-    <div className={styles.field}>
+    <Form.InputGroup hasValidation className={styles['input-group']}>
       <Form.Group.Input
         type="text"
         value={value}
@@ -35,23 +35,19 @@ export const AffiliationField = ({
         autoComplete="organization"
       />
       {value && rorId && (
-        <div className={styles.overlay}>
-          <span className={styles.mirror} aria-hidden="true">
-            {value}
-          </span>
+        <Form.InputGroup.Text>
           <a
             href={rorId}
             target="_blank"
             rel="noreferrer"
             title={rorLabel}
             aria-label={rorLabel}
-            className={styles['ror-link']}
             data-testid="affiliation-ror">
             <img src={rorLogo} alt="" className={styles['ror-logo']} />
           </a>
-        </div>
+        </Form.InputGroup.Text>
       )}
       <Form.Group.Feedback type="invalid">{errorMessage}</Form.Group.Feedback>
-    </div>
+    </Form.InputGroup>
   )
 }

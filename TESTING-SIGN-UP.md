@@ -185,8 +185,8 @@ use your real ORCID record.
 saved anywhere else.
 
 ```bash
-read -p "ORCID sandbox Client ID: " ORCID_ID
-read -s -p "ORCID sandbox Client secret: " ORCID_SECRET; echo
+printf "ORCID sandbox Client ID: "; read ORCID_ID
+printf "ORCID sandbox Client secret: "; stty -echo; read ORCID_SECRET; stty echo; echo
 
 docker exec -i dev_dataverse curl -s -X POST -H "Content-Type: application/json" \
   http://localhost:8080/api/admin/authenticationProviders --data @- <<EOF
@@ -200,9 +200,13 @@ docker exec -i dev_dataverse curl -s -X POST -H "Content-Type: application/json"
 }
 EOF
 unset ORCID_SECRET
+
+docker restart dev_dataverse dev_nginx_proxy
 ```
 
-`"enabled": false` keeps "Log In with ORCID" off the login page. Connecting an ORCID iD while signing up still works.
+`"enabled": false` keeps "Log In with ORCID" off the login page. Connecting an ORCID iD while signing up still works,
+but Dataverse only loads a disabled ORCID provider when it starts, which is why the last line restarts it. Dataverse
+then needs 2–3 minutes before the check below works.
 
 **5c. Turn on the ORCID row in the Modern UI**
 
@@ -268,13 +272,14 @@ You can then delete the `~/dataverse-signup-test` folder.
 | What you see                                           | What to do                                                                                                                                                             |
 | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `mvn` fails with "release version 21 not supported"    | Maven is using an older Java. Install JDK 21 and check `mvn -version` shows it.                                                                                        |
-| `502 Bad Gateway` at `/modern`                         | The Modern UI is still starting. Wait for `Local: http://localhost:5173/` in `docker logs -f dev_frontend`.                                                            |
+| `502 Bad Gateway` at `/modern`                         | The Modern UI is still starting. Wait for `Local: http://localhost:5173/` in `docker logs -f dev_frontend`. If you restarted a container, also run `docker restart dev_nginx_proxy`. |
 | `/api/users/signup` says "API endpoint does not exist" | Dataverse isn't running your build. Repeat Step 2, then `./rm-env.sh` and `./run-env.sh unstable` again.                                                               |
 | Sign-up says "Sign-up via API is not enabled"          | The dev environment wasn't started from this branch's `dev-env`. Run Step 3 from `dataverse-frontend/dev-env`.                                                         |
 | "port is already allocated"                            | Another program or Dataverse environment uses port 8000, 8080 or 1080. Stop it, then run Step 3 again.                                                                 |
 | No "Sign Up" link                                      | Hard-reload the page (Shift+Reload). `public/config.js` must have `signUpEnabled: true`.                                                                               |
 | Keycloak login says "Invalid parameter: redirect_uri"  | Open `http://localhost:8000/modern` and click **Log In** again. The default `test` client allows `localhost`, not `127.0.0.1`; see Step 5 for allowing both hostnames. |
 | ORCID says the redirect URI is invalid                 | The app's redirect URI must be exactly `http://127.0.0.1:8000/modern/sign-up`, and the page must be opened at `127.0.0.1`.                                             |
-| "ORCID is not configured on this installation."        | Step 5b didn't succeed. Run it again and check it printed `"status":"OK"`.                                                                                             |
+| "ORCID is not configured on this installation."        | Step 5b didn't succeed, or Dataverse wasn't restarted after it. Run it again, including the restart, and check it printed `"status":"OK"`.                              |
+| ORCID connect fails with "Internal server error"       | The client ID or secret was saved empty. Run Step 5b again and type both when asked.                                                                                   |
 | The ORCID row doesn't appear                           | Step 5c wasn't applied. Check `grep signUpWithOrcidEnabled public/config.js`, then reload.                                                                             |
 | Uploading a file fails                                 | Not part of this test, but see "File Storage" in `DEVELOPER_GUIDE.md`.                                                                                                 |
