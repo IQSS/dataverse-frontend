@@ -7,10 +7,14 @@ import {
   getCurrentApiToken,
   recreateCurrentApiToken,
   deleteCurrentApiToken,
-  registerUser
+  registerUser,
+  signUp,
+  getOrcidSignUpAuthorizationUrl,
+  WriteError
 } from '@iqss/dataverse-client-javascript'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { JSUserMapper } from '../mappers/JSUserMapper'
+import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { isAxiosError } from 'axios'
 import { axiosInstance } from '@/axiosInstance'
 import { UserDTO } from '@/users/domain/useCases/DTOs/UserDTO'
@@ -68,34 +72,16 @@ export class UserJSDataverseRepository implements UserRepository {
     return registerUser.execute(user)
   }
 
-  async signUp(signUpDTO: SignUpDTO): Promise<SignUpResult> {
-    try {
-      const response = await axiosInstance.post<{ data?: { identifier?: string } }>(
-        '/api/users/signup',
-        signUpDTO,
-        { excludeToken: true }
-      )
-
-      if (response.status === 202) {
-        return { status: 'pending' }
-      }
-
-      return { status: 'created', identifier: response.data.data?.identifier ?? '' }
-    } catch (error) {
+  signUp(signUpDTO: SignUpDTO): Promise<SignUpResult> {
+    return signUp.execute(signUpDTO).catch((error) => {
       throw UserJSDataverseRepository.toSignUpError(error)
-    }
+    })
   }
 
-  async getOrcidSignUpAuthorizationUrl(redirectUri: string): Promise<string> {
-    try {
-      const response = await axiosInstance.get<{ data: { authorizationUrl: string } }>(
-        '/api/users/signup/orcid/authorize',
-        { params: { redirectUri }, excludeToken: true }
-      )
-      return response.data.data.authorizationUrl
-    } catch (error) {
+  getOrcidSignUpAuthorizationUrl(redirectUri: string): Promise<string> {
+    return getOrcidSignUpAuthorizationUrl.execute(redirectUri).catch((error) => {
       throw UserJSDataverseRepository.toSignUpError(error)
-    }
+    })
   }
 
   async connectOrcidForSignUp(callback: OrcidSignUpCallbackDTO): Promise<OrcidSignUpConnection> {
@@ -111,14 +97,19 @@ export class UserJSDataverseRepository implements UserRepository {
     }
   }
 
-  async getAuthenticatedOrcid(): Promise<string | null> {
-    const response = await axiosInstance.get<{ data?: { authenticatedOrcid?: string } }>(
-      '/api/users/:me'
-    )
-    return response.data.data?.authenticatedOrcid ?? null
+  getAuthenticatedOrcid(): Promise<string | null> {
+    return getCurrentAuthenticatedUser
+      .execute()
+      .then((authenticatedUser: AuthenticatedUser) => authenticatedUser.authenticatedOrcid ?? null)
   }
 
   private static toSignUpError(error: unknown): unknown {
+    if (error instanceof WriteError || error instanceof ReadError) {
+      return new SignUpError(
+        new JSDataverseWriteErrorHandler(error).getReasonWithoutStatusCode() ?? error.message,
+        error.fieldErrors ?? {}
+      )
+    }
     if (isAxiosError<SignUpErrorPayload>(error) && error.response) {
       return new SignUpError(
         error.response.data?.message ?? error.message,
