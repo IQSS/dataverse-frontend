@@ -13,7 +13,7 @@ jobs:
     # Avoid being triggered by forks. See https://github.com/IQSS/dataverse-frontend/issues/1042
     if: '! github.event.pull_request.head.repo.fork'
     # Operating System
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Job steps
     steps:
       - name: Checkout repository

@@ -13,7 +13,7 @@ jobs:
     # Avoid being triggered by forks
     if: '! github.event.pull_request.head.repo.fork'
     # Operating System
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Job steps
     steps:
       - name: Checkout repository
