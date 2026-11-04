@@ -4,12 +4,20 @@ on:
   push:
   pull_request:
     types: [opened, reopened, synchronize]
+  workflow_dispatch:
+    inputs:
+      coverage-branch:
+        description: 'Branch whose Coveralls baseline should be rebuilt'
+        required: true
+        default: develop
+        type: string
 
 env:
   E2E_DATAVERSE_IMAGE_TAG: unstable
 
 jobs:
   e2e:
+    if: github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
 
     steps:
@@ -79,6 +87,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.coverage-branch || '' }}
+
+      - name: Identify baseline source commit
+        if: github.event_name == 'workflow_dispatch'
+        id: coverage-source
+        run: echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v3
         with:
@@ -112,13 +127,20 @@ jobs:
         run: npm run test:coverage-all
 
       - name: Merge coverage
-        run: npm run test:coverage-merge
+        # Keep the corrected merge logic when rebuilding an older branch's baseline.
+        run: |
+          test -s coverage/lcov.info
+          test -s packages/design-system/coverage/lcov.info
+          mkdir -p merged-coverage
+          ./node_modules/.bin/lcov-result-merger '{coverage,packages/design-system/coverage}/lcov.info' 'merged-coverage/lcov.info' --prepend-source-files
 
       - name: Upload coverage report to Coveralls
         uses: coverallsapp/github-action@v2
         with:
           path-to-lcov: './merged-coverage/lcov.info'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          git-branch: ${{ inputs.coverage-branch || '' }}
+          git-commit: ${{ steps.coverage-source.outputs.commit || '' }}
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v4
