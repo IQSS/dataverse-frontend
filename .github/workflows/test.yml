@@ -139,6 +139,8 @@ jobs:
         with:
           path-to-lcov: './merged-coverage/lcov.info'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Re-runs must create a fresh build instead of reusing a finalized report.
+          build-number: ${{ github.run_id }}-${{ github.run_attempt }}
           git-branch: ${{ inputs.coverage-branch || '' }}
           git-commit: ${{ steps.coverage-source.outputs.commit || '' }}
 
