@@ -51,6 +51,14 @@
     "learnAbout": "Aprender sobre",
     "standards": "Estándares de citación de datos"
   },
+  "publicationRelationTypes": {
+    "IsCitedBy": "Es citado por",
+    "Cites": "Cita",
+    "IsSupplementTo": "Es suplemento de",
+    "IsSupplementedBy": "Es complementado por",
+    "IsReferencedBy": "Es referenciado por",
+    "References": "Referencia"
+  },
   "datasetMetadataForm": {
     "metadataTip": {
       "title": "Consejo de metadatos",
