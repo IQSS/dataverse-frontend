@@ -78,8 +78,8 @@ export class UserJSDataverseRepository implements UserRepository {
     })
   }
 
-  getOrcidSignUpAuthorizationUrl(redirectUri: string): Promise<string> {
-    return getOrcidSignUpAuthorizationUrl.execute(redirectUri).catch((error) => {
+  getOrcidSignUpAuthorizationUrl(redirectUri: string, codeChallenge: string): Promise<string> {
+    return getOrcidSignUpAuthorizationUrl.execute(redirectUri, codeChallenge).catch((error) => {
       throw UserJSDataverseRepository.toSignUpError(error)
     })
   }

@@ -63,7 +63,7 @@ export class UserMockRepository extends UserJSDataverseRepository {
     })
   }
 
-  getOrcidSignUpAuthorizationUrl(_redirectUri: string): Promise<string> {
+  getOrcidSignUpAuthorizationUrl(_redirectUri: string, _codeChallenge: string): Promise<string> {
     return Promise.resolve('https://sandbox.orcid.org/oauth/authorize')
   }
 

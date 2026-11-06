@@ -13,7 +13,7 @@ export interface UserRepository {
   deleteApiToken: () => Promise<void>
   register: (user: UserDTO) => Promise<void>
   signUp: (signUpDTO: SignUpDTO) => Promise<SignUpResult>
-  getOrcidSignUpAuthorizationUrl: (redirectUri: string) => Promise<string>
+  getOrcidSignUpAuthorizationUrl: (redirectUri: string, codeChallenge: string) => Promise<string>
   connectOrcidForSignUp: (callback: OrcidSignUpCallbackDTO) => Promise<OrcidSignUpConnection>
   getAuthenticatedOrcid: () => Promise<string | null>
 }

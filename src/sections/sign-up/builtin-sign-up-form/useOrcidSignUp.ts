@@ -9,11 +9,44 @@ import { Route } from '@/sections/Route.enum'
 import { SignUpDraft } from './types'
 
 export const SIGN_UP_DRAFT_STORAGE_KEY = 'dataverse.signUp.draft'
+export const ORCID_CODE_VERIFIER_STORAGE_KEY = 'dataverse.signUp.orcidCodeVerifier'
 
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 
 export const getOrcidSignUpRedirectUri = (): string =>
   `${window.location.origin}${BASENAME_URL}${Route.SIGN_UP}`
+
+const toBase64Url = (bytes: Uint8Array): string =>
+  btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '')
+
+export const createOrcidCodeVerifier = (): string =>
+  toBase64Url(crypto.getRandomValues(new Uint8Array(32)))
+
+export const toOrcidCodeChallenge = async (codeVerifier: string): Promise<string> =>
+  toBase64Url(
+    new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier)))
+  )
+
+const saveCodeVerifier = (codeVerifier: string) => {
+  try {
+    sessionStorage.setItem(ORCID_CODE_VERIFIER_STORAGE_KEY, codeVerifier)
+  } catch {
+    return
+  }
+}
+
+const takeCodeVerifier = (): string => {
+  try {
+    const codeVerifier = sessionStorage.getItem(ORCID_CODE_VERIFIER_STORAGE_KEY)
+    sessionStorage.removeItem(ORCID_CODE_VERIFIER_STORAGE_KEY)
+    return codeVerifier ?? ''
+  } catch {
+    return ''
+  }
+}
 
 const saveDraft = (draft: SignUpDraft) => {
   try {
@@ -61,6 +94,7 @@ export const useOrcidSignUp = (userRepository: UserRepository): UseOrcidSignUpRe
     }
     handledCallback.current = true
 
+    const codeVerifier = takeCodeVerifier()
     setRestoredDraft(takeDraft())
     setSearchParams({}, { replace: true })
 
@@ -70,7 +104,12 @@ export const useOrcidSignUp = (userRepository: UserRepository): UseOrcidSignUpRe
     }
 
     setIsConnecting(true)
-    connectOrcidForSignUp(userRepository, { code, state, redirectUri: getOrcidSignUpRedirectUri() })
+    connectOrcidForSignUp(userRepository, {
+      code,
+      state,
+      redirectUri: getOrcidSignUpRedirectUri(),
+      codeVerifier
+    })
       .then((orcidConnection) => {
         setConnection(orcidConnection)
         setError(null)
@@ -85,11 +124,14 @@ export const useOrcidSignUp = (userRepository: UserRepository): UseOrcidSignUpRe
     setError(null)
     setIsConnecting(true)
     try {
+      const codeVerifier = createOrcidCodeVerifier()
       const authorizationUrl = await getOrcidSignUpAuthorizationUrl(
         userRepository,
-        getOrcidSignUpRedirectUri()
+        getOrcidSignUpRedirectUri(),
+        await toOrcidCodeChallenge(codeVerifier)
       )
       saveDraft(draft)
+      saveCodeVerifier(codeVerifier)
       window.location.assign(authorizationUrl)
     } catch (startError) {
       setError(startError instanceof Error ? startError.message : String(startError))
