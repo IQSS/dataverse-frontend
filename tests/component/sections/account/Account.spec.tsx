@@ -4,6 +4,7 @@ import { CollectionMockRepository } from '@/stories/collection/CollectionMockRep
 import { RoleMockRepository } from '@/stories/account/RoleMockRepository'
 import { NotificationType } from '@/notifications/domain/models/Notification'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
 
 const mockRepository = {
   getAllNotificationsByUser: () =>
@@ -48,10 +49,16 @@ const mockRepository = {
   deleteNotification: (_id: number) => Promise.resolve(),
   getUnreadNotificationsCount: () => Promise.resolve(1)
 }
+const userRepository = {
+  getAuthenticatedOrcid: () => Promise.resolve(null)
+} as unknown as UserRepository
+
 describe('Account', () => {
   it('should render the component', () => {
     cy.mountAuthenticated(
-      <WithRepositories collectionRepository={new CollectionMockRepository()}>
+      <WithRepositories
+        collectionRepository={new CollectionMockRepository()}
+        userRepository={userRepository}>
         <Account
           defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
           roleRepository={new RoleMockRepository()}
@@ -69,7 +76,9 @@ describe('Account', () => {
 
   it('clicks on the Account Information tab', () => {
     cy.mountAuthenticated(
-      <WithRepositories collectionRepository={new CollectionMockRepository()}>
+      <WithRepositories
+        collectionRepository={new CollectionMockRepository()}
+        userRepository={userRepository}>
         <Account
           defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.notifications}
           roleRepository={new RoleMockRepository()}

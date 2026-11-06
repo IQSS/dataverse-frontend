@@ -48,6 +48,11 @@ export default defineConfig({
   preview: {
     port: 5173
   },
+  server: {
+    watch: {
+      ignored: ['**/coverage/**', '**/.nyc_output/**']
+    }
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
