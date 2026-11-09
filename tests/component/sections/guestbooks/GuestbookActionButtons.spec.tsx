@@ -89,12 +89,13 @@ describe('GuestbookActionButtons', () => {
     cy.findByRole('button', { name: 'Enable' }).should('exist')
   })
 
-  it('shows the delete action only when the guestbook is disabled and places it after download responses', () => {
-    cy.customMount(<GuestbookActionButtonsTestWrapper />)
-
-    cy.findByRole('button', { name: 'Delete' }).should('not.exist')
-
+  it('shows the delete action for both enabled and disabled guestbooks and places it after download responses', () => {
+    // the behavior should be changed after we implement the delete button
     cy.customMount(<GuestbookActionButtonsTestWrapper isEnabled={false} />)
+
+    cy.findByRole('button', { name: 'Delete' }).should('exist')
+
+    cy.customMount(<GuestbookActionButtonsTestWrapper />)
 
     cy.findByRole('button', { name: 'Delete' }).should('exist')
     cy.findByRole('group', { name: 'Action' })
