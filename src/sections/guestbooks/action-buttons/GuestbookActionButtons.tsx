@@ -78,18 +78,17 @@ export const GuestbookActionButtons = ({
             <Download />
           </Button>
         </Tooltip>
-        {!isEnabled && (
-          <Tooltip placement="top" overlay={t('actions.delete')}>
-            <Button
-              variant="secondary"
-              size="sm"
-              // TODO: Wire this to delete guestbook once the backend endpoint is available.
-              onClick={() => setShowNotImplementedModal(true)}
-              aria-label={t('actions.delete')}>
-              <Trash />
-            </Button>
-          </Tooltip>
-        )}
+        <Tooltip placement="top" overlay={t('actions.delete')}>
+          <Button
+            variant="secondary"
+            size="sm"
+            // TODO: Wire this to delete guestbook once the backend endpoint is available.
+            // Delete button should only be shown if the guestbook is not in use.
+            onClick={() => setShowNotImplementedModal(true)}
+            aria-label={t('actions.delete')}>
+            <Trash />
+          </Button>
+        </Tooltip>
         <Button
           variant="secondary"
           size="sm"

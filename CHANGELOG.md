@@ -8,7 +8,12 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Manage Guestbooks: Edit guestbooks, and copy guestbooks into a prefilled creation form. (#1006)
+- Guestbook Responses page with pagination, sorting within the current page, custom question responses, and CSV download. (#1006)
+
 ### Changed
+
+- Rename the "View" action to "Preview" for guestbooks and dataset templates to match JSF. (#1006)
 
 ### Fixed
 
