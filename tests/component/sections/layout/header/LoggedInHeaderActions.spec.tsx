@@ -2,6 +2,7 @@ import { UserMother } from '../../../users/domain/models/UserMother'
 import { LoggedInHeaderActions } from '../../../../../src/sections/layout/header/LoggedInHeaderActions'
 import { CollectionRepository } from '../../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '../../../collection/domain/models/CollectionMother'
+import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
@@ -10,6 +11,7 @@ import { WithRepositories } from '@tests/component/WithRepositories'
 const testUser = UserMother.create()
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const notificationRepository: NotificationRepository = {} as unknown as NotificationRepository
+const datasetRepository: DatasetRepository = {} as DatasetRepository
 const userPermissionsMock = CollectionMother.createUserPermissions()
 
 describe('LoggedInHeaderActions', () => {
@@ -25,7 +27,11 @@ describe('LoggedInHeaderActions', () => {
     collectionRepository.getById = cy.stub().resolves(CollectionMother.create())
     cy.customMount(
       <WithRepositories collectionRepository={collectionRepository}>
-        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+        <LoggedInHeaderActions
+          user={testUser}
+          notificationRepository={notificationRepository}
+          datasetRepository={datasetRepository}
+        />
       </WithRepositories>
     )
 
@@ -42,7 +48,12 @@ describe('LoggedInHeaderActions', () => {
 
     cy.customMount(
       <WithRepositories collectionRepository={collectionRepository}>
-        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+        <LoggedInHeaderActions
+          user={testUser}
+          collectionRepository={collectionRepository}
+          notificationRepository={notificationRepository}
+          datasetRepository={datasetRepository}
+        />
       </WithRepositories>
     )
 
@@ -63,7 +74,12 @@ describe('LoggedInHeaderActions', () => {
 
     cy.customMount(
       <WithRepositories collectionRepository={collectionRepository}>
-        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+        <LoggedInHeaderActions
+          user={testUser}
+          collectionRepository={collectionRepository}
+          notificationRepository={notificationRepository}
+          datasetRepository={datasetRepository}
+        />
       </WithRepositories>
     )
 
@@ -80,7 +96,12 @@ describe('LoggedInHeaderActions', () => {
 
     cy.customMount(
       <WithRepositories collectionRepository={collectionRepository}>
-        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+        <LoggedInHeaderActions
+          user={testUser}
+          collectionRepository={collectionRepository}
+          notificationRepository={notificationRepository}
+          datasetRepository={datasetRepository}
+        />
       </WithRepositories>
     )
 
@@ -97,7 +118,12 @@ describe('LoggedInHeaderActions', () => {
 
     cy.customMount(
       <WithRepositories collectionRepository={collectionRepository}>
-        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+        <LoggedInHeaderActions
+          user={testUser}
+          collectionRepository={collectionRepository}
+          notificationRepository={notificationRepository}
+          datasetRepository={datasetRepository}
+        />
       </WithRepositories>
     )
 
@@ -111,6 +137,7 @@ describe('LoggedInHeaderActions', () => {
       .should('be.visible')
       .should('not.have.attr', 'aria-disabled', 'false')
   })
+
   it('shows unread notification badge when there are unread notifications', () => {
     notificationRepository.getAllNotificationsByUser = cy.stub().resolves([
       { id: 1, message: 'Notification 1', isRead: false, createdAt: new Date().toISOString() },
@@ -160,7 +187,12 @@ describe('LoggedInHeaderActions', () => {
     cy.clock()
     cy.mountAuthenticated(
       <WithRepositories collectionRepository={collectionRepository}>
-        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+        <LoggedInHeaderActions
+          user={testUser}
+          collectionRepository={collectionRepository}
+          notificationRepository={notificationRepository}
+          datasetRepository={datasetRepository}
+        />
       </WithRepositories>
     )
 

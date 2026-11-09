@@ -11,7 +11,11 @@ import {
   CitationMetadataBlock,
   DatasetMetadataBlock
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
-import { DatasetLockReason, TermsOfAccess } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  DatasetLabelValue,
+  DatasetLockReason,
+  TermsOfAccess
+} from '../../../../../src/dataset/domain/models/Dataset'
 import {
   FileDownloadMode,
   FileDownloadSize,
@@ -207,16 +211,18 @@ const jsDatasetFilesTotalArchivalDownloadSize = 7
 const expectedDataset = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
     labels: [
       { semanticMeaning: 'dataset', value: 'Draft' },
-      { semanticMeaning: 'warning', value: 'Unpublished' }
+      { semanticMeaning: 'warning', value: 'Unpublished' },
+      { semanticMeaning: 'success', value: 'In Review' }
     ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
@@ -319,13 +325,17 @@ const expectedDataset = {
 const expectedDatasetWithPublicationDate = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
-    labels: [{ semanticMeaning: 'dataset', value: 'Draft' }],
+    labels: [
+      { semanticMeaning: 'dataset', value: 'Draft' },
+      { semanticMeaning: 'success', value: 'In Review' }
+    ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     termsOfAccess: termsOfAccess,
     deaccessionNote: undefined,
     latestVersionPublishingStatus: 'draft',
@@ -429,13 +439,17 @@ const expectedDatasetWithPublicationDate = {
 const expectedDatasetWithNextVersionNumbers = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
-    labels: [{ semanticMeaning: 'dataset', value: 'Draft' }],
+    labels: [
+      { semanticMeaning: 'dataset', value: 'Draft' },
+      { semanticMeaning: 'success', value: 'In Review' }
+    ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
@@ -540,16 +554,18 @@ const expectedDatasetWithNextVersionNumbers = {
 const expectedDatasetAlternateVersion = {
   id: 505,
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  datasetType: undefined,
   version: {
     id: 101,
     title: "Darwin's Finches",
     labels: [
       { semanticMeaning: 'dataset', value: 'Draft' },
-      { semanticMeaning: 'warning', value: 'Unpublished' }
+      { semanticMeaning: 'warning', value: 'Unpublished' },
+      { semanticMeaning: 'success', value: 'In Review' }
     ],
     publishingStatus: 'draft',
     isLatest: true,
-    isInReview: false,
+    isInReview: true,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
@@ -974,5 +990,32 @@ describe('JS Dataset Mapper', () => {
     }
     const actual = JSDatasetMapper.toDatasetVersionDiff(jsDatasetVersionDiff)
     expect(expectedDatasetVersionDiff).to.deep.equal(actual)
+  })
+
+  it('does not set isInReview to true when the version is released even if dataset has an InReview lock', () => {
+    const jsReleasedDataset = {
+      ...jsDataset,
+      versionInfo: {
+        ...jsDataset.versionInfo,
+        state: DatasetVersionState.RELEASED,
+        majorNumber: 1,
+        minorNumber: 0
+      }
+    }
+
+    const mapped = JSDatasetMapper.toDataset(
+      jsReleasedDataset,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
+    )
+
+    expect(mapped.version.isInReview).to.equal(false)
+    expect(
+      mapped.version.labels.some((label) => label.value === DatasetLabelValue.IN_REVIEW)
+    ).to.equal(false)
   })
 })

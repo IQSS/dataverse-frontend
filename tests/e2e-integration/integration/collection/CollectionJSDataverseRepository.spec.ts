@@ -40,7 +40,8 @@ const collectionExpected: Collection = {
   ],
   isMetadataBlockRoot: false,
   isFacetRoot: false,
-  childCount: 0
+  childCount: 0,
+  allowedDatasetTypes: undefined
 }
 
 describe('Collection JSDataverse Repository', () => {

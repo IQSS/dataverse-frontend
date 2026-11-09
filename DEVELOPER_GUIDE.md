@@ -17,7 +17,7 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation-setup">Installation & Setup</a></li>
+        <li><a href="#installation--setup">Installation & Setup</a></li>
         <li><a href="#running-the-project-locally">Running the Project Locally</a></li>
       </ul>
     </li>
@@ -191,6 +191,33 @@ Note that both Storybook instances are also published to Chromatic as part of th
 
 ### Running the Project Locally
 
+You have the choice of two backend environments.
+
+#### dataverse repo (backend repo)
+
+Follow the [quickstart](https://guides.dataverse.org/en/latest/developers/dev-environment.html#quickstart) for the main, backend [dataverse](https://github.com/IQSS/dataverse) repo to run all the services the app depends on.
+
+Then start the app like this:
+
+```bash
+# root project directory
+npm start -- --host
+```
+
+We use `--host` to listen on all interfaces to work with the backend services.
+
+You can then try logging in:
+
+- url: http://localhost:8000/modern
+- username: dataverseAdmin
+- password: admin1
+
+Note that because the app only works with S3 and because the default file store for the backend services is the file system, you much change the file storage to S3 for a collection or dataset to upload files.
+
+The "dataverse repo" option is especially good if you want to work on code in both repos at once.
+
+#### dataverse-frontend repo (this repo)
+
 A containerized environment, oriented to local development, is available to be run from the repository.
 
 This environment contains a dockerized instance of the Dataverse backend with its dependent services (database,
@@ -211,8 +238,8 @@ As the script argument, add the name of the Dataverse image tag you want to depl
 ```bash
 # /dev-env/ directory
 
-# copy the .env.example file to .env
-# To test file upload, update the .env file with S3 credentials
+# Copy the .env.example file to .env.
+# File uploads use the LocalStack S3 service included in the development environment.
 $ cp .env.example .env
 
 # Install and run project off latest tagged container image from the develop branch
@@ -241,6 +268,26 @@ Once the script has finished, you will be able to access Dataverse via:
 
 Note: The Dataverse configbaker takes some time to start the application, so the application will not be accessible until
 the bootstrapping is complete.
+
+<br>
+
+**File Storage (LocalStack S3)**
+
+File uploads and downloads use a [LocalStack][localstack_url] container (`dev_localstack`) that emulates Amazon S3, so
+no AWS account or credentials are required. Dataverse is configured with direct upload and download, meaning the browser
+talks to the S3 endpoint itself, at `http://s3.localhost:4566`. The same hostname is used from inside the containers and
+from your browser, so that the presigned URLs Dataverse generates stay valid on both sides.
+
+Most operating systems and all major browsers resolve any `*.localhost` name to the loopback address, so this works out
+of the box. If uploads fail with a DNS or connection error, map the hostname explicitly:
+
+```bash
+$ echo "127.0.0.1 s3.localhost" | sudo tee -a /etc/hosts
+```
+
+Note that the bucket lives on a 128 MB in-memory filesystem: uploaded files are limited by that size and are discarded
+when the container is recreated, while the database keeps its records. Run `./rm-env.sh` and start the environment again
+to get back to a consistent state.
 
 <br>
 
@@ -1141,6 +1188,7 @@ path included will redirect to the frontend application.
 
 [dv_app_docker_image_url]: https://hub.docker.com/r/gdcc/dataverse/tags
 [Github Container Registry]: https://github.com/orgs/gdcc/packages/container/package/dataverse
+[localstack_url]: https://www.localstack.cloud/
 
 <!-- Documentation -->
 <!-- [dv_docs_] -->

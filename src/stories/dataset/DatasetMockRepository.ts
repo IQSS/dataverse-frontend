@@ -21,6 +21,8 @@ import { CollectionSummaryMother } from '@tests/component/collection/domain/mode
 import { DatasetVersionPaginationInfo } from '@/dataset/domain/models/DatasetVersionPaginationInfo'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 import { DatasetReview } from '@/dataset/domain/models/DatasetReview'
+import { DatasetTypeMother } from '@tests/component/dataset/domain/models/DatasetTypeMother'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 import { ExportedDatasetMetadata } from '@/dataset/domain/models/ExportedDatasetMetadata'
 import { DatasetNotNumberedVersion } from '@iqss/dataverse-client-javascript'
 
@@ -257,6 +259,14 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([])
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getAvailableDatasetTypes(): Promise<DatasetType[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([DatasetTypeMother.creatDefaultDatasetType(), ...DatasetTypeMother.createMany(2)])
       }, FakerHelper.loadingTimout())
     })
   }

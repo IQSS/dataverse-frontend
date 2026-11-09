@@ -5,10 +5,17 @@
   margin-bottom: $spacer;
 }
 
+.required-field-text {
+  display: flex;
+  flex-direction: column;
+}
+
 .accordion {
   margin-top: $spacer;
 }
 
 .form-actions {
+  display: flex;
+  gap: 1rem;
   margin-top: $spacer;
 }

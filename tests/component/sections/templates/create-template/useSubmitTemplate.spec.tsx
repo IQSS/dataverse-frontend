@@ -2,8 +2,10 @@ import { act, renderHook } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 import i18next, { i18n as I18nInstance } from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import { createTemplate, WriteError } from '@iqss/dataverse-client-javascript'
+import { WriteError } from '@iqss/dataverse-client-javascript'
 import { TemplateInfo, TemplateInstructionInfo } from '@/templates/domain/models/TemplateInfo'
+import { UpdateTemplateMetadataInfo } from '@/templates/domain/models/UpdateTemplateMetadataInfo'
+import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepository'
 import {
   SubmissionStatus,
   useSubmitTemplate
@@ -25,6 +27,12 @@ const templatePayloadWithInstructions: TemplateInfo = {
   instructions: templateInstructions
 }
 
+const updatePayload: UpdateTemplateMetadataInfo = {
+  name: 'Renamed Template',
+  fields: [],
+  instructions: []
+}
+
 const createI18n = (): I18nInstance => {
   const instance = i18next.createInstance()
   void instance.use(initReactI18next).init({
@@ -40,6 +48,11 @@ const createI18n = (): I18nInstance => {
             errors: {
               saveFailed: 'Save failed.'
             }
+          },
+          editTemplate: {
+            errors: {
+              saveMetadataFailed: 'Update failed.'
+            }
           }
         }
       }
@@ -49,6 +62,8 @@ const createI18n = (): I18nInstance => {
   return instance
 }
 
+const createRepository = (): TemplateRepository => ({} as TemplateRepository)
+
 describe('useSubmitTemplate', () => {
   let i18n: I18nInstance
 
@@ -56,78 +71,180 @@ describe('useSubmitTemplate', () => {
     i18n = createI18n()
   })
 
-  it('should submit the template successfully', async () => {
-    const executeStub = cy.stub(createTemplate, 'execute').resolves()
+  describe('create mode', () => {
+    it('submits the template successfully', async () => {
+      const repository = createRepository()
+      repository.createTemplate = cy.stub().resolves()
 
-    const { result } = renderHook(() => useSubmitTemplate('root'), {
-      wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+      const { result } = renderHook(
+        () =>
+          useSubmitTemplate({
+            mode: 'create',
+            templateRepository: repository,
+            collectionId: 'root'
+          }),
+        {
+          wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+        }
+      )
+
+      expect(result.current.submissionStatus).to.equal(SubmissionStatus.NotSubmitted)
+
+      await act(async () => {
+        const didSubmit = await result.current.submitTemplate(templatePayload)
+        expect(didSubmit).to.equal(true)
+      })
+
+      expect(result.current.submissionStatus).to.equal(SubmissionStatus.SubmitComplete)
+      expect(result.current.submitError).to.equal(null)
+      expect(repository.createTemplate).to.have.been.calledWith(templatePayload, 'root')
     })
 
-    expect(result.current.submissionStatus).to.equal(SubmissionStatus.NotSubmitted)
-    expect(result.current.submitError).to.equal(null)
+    it('submits the template with instructions', async () => {
+      const repository = createRepository()
+      repository.createTemplate = cy.stub().resolves()
 
-    await act(async () => {
-      const didSubmit = await result.current.submitTemplate(templatePayload)
-      expect(didSubmit).to.equal(true)
+      const { result } = renderHook(
+        () =>
+          useSubmitTemplate({
+            mode: 'create',
+            templateRepository: repository,
+            collectionId: 'root'
+          }),
+        {
+          wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+        }
+      )
+
+      await act(async () => {
+        await result.current.submitTemplate(templatePayloadWithInstructions)
+      })
+
+      expect(repository.createTemplate).to.have.been.calledWith(
+        templatePayloadWithInstructions,
+        'root'
+      )
     })
 
-    expect(result.current.submissionStatus).to.equal(SubmissionStatus.SubmitComplete)
-    expect(result.current.submitError).to.equal(null)
-    cy.wrap(executeStub).should('have.been.calledWith', templatePayload, 'root')
+    it('surfaces a WriteError reason as the submit error', async () => {
+      const repository = createRepository()
+      repository.createTemplate = cy.stub().rejects(new WriteError('Write error'))
 
-    executeStub.restore()
+      const { result } = renderHook(
+        () =>
+          useSubmitTemplate({
+            mode: 'create',
+            templateRepository: repository,
+            collectionId: 'root'
+          }),
+        {
+          wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+        }
+      )
+
+      await act(async () => {
+        const didSubmit = await result.current.submitTemplate(templatePayload)
+        expect(didSubmit).to.equal(false)
+      })
+
+      expect(result.current.submissionStatus).to.equal(SubmissionStatus.Errored)
+      expect(result.current.submitError).to.equal('Write error')
+    })
+
+    it('falls back to a generic message for non-WriteError, non-Error rejections', async () => {
+      const repository = createRepository()
+      repository.createTemplate = cy.stub().rejects('Error')
+
+      const { result } = renderHook(
+        () =>
+          useSubmitTemplate({
+            mode: 'create',
+            templateRepository: repository,
+            collectionId: 'root'
+          }),
+        {
+          wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+        }
+      )
+
+      await act(async () => {
+        await result.current.submitTemplate(templatePayload)
+      })
+
+      expect(result.current.submitError).to.equal('Save failed.')
+    })
   })
 
-  it('should handle WriteError responses', async () => {
-    const executeStub = cy.stub(createTemplate, 'execute').rejects(new WriteError('Write error'))
+  describe('edit mode', () => {
+    it('updates the template metadata successfully', async () => {
+      const repository = createRepository()
+      repository.updateTemplateMetadata = cy.stub().resolves()
 
-    const { result } = renderHook(() => useSubmitTemplate('root'), {
-      wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+      const { result } = renderHook(
+        () =>
+          useSubmitTemplate({
+            mode: 'edit',
+            templateRepository: repository,
+            templateId: 42
+          }),
+        {
+          wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+        }
+      )
+
+      await act(async () => {
+        const didSubmit = await result.current.submitTemplate(updatePayload)
+        expect(didSubmit).to.equal(true)
+      })
+
+      expect(result.current.submissionStatus).to.equal(SubmissionStatus.SubmitComplete)
+      expect(repository.updateTemplateMetadata).to.have.been.calledWith(42, updatePayload, true)
     })
 
-    await act(async () => {
-      const didSubmit = await result.current.submitTemplate(templatePayload)
-      expect(didSubmit).to.equal(false)
+    it('uses the edit-mode error message for non-WriteError exceptions without messages', async () => {
+      const repository = createRepository()
+      repository.updateTemplateMetadata = cy.stub().rejects('weird')
+
+      const { result } = renderHook(
+        () =>
+          useSubmitTemplate({
+            mode: 'edit',
+            templateRepository: repository,
+            templateId: 42
+          }),
+        {
+          wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+        }
+      )
+
+      await act(async () => {
+        await result.current.submitTemplate(updatePayload)
+      })
+
+      expect(result.current.submitError).to.equal('Update failed.')
     })
 
-    expect(result.current.submissionStatus).to.equal(SubmissionStatus.Errored)
-    expect(result.current.submitError).to.equal('Write error')
+    it('passes through a regular Error message in edit mode', async () => {
+      const repository = createRepository()
+      repository.updateTemplateMetadata = cy.stub().rejects(new Error('Network down'))
 
-    executeStub.restore()
-  })
+      const { result } = renderHook(
+        () =>
+          useSubmitTemplate({
+            mode: 'edit',
+            templateRepository: repository,
+            templateId: 42
+          }),
+        {
+          wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+        }
+      )
 
-  it('should handle non-WriteError responses with a default message', async () => {
-    const executeStub = cy.stub(createTemplate, 'execute').rejects('Error')
+      await act(async () => {
+        await result.current.submitTemplate(updatePayload)
+      })
 
-    const { result } = renderHook(() => useSubmitTemplate('root'), {
-      wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+      expect(result.current.submitError).to.equal('Network down')
     })
-
-    await act(async () => {
-      const didSubmit = await result.current.submitTemplate(templatePayload)
-      expect(didSubmit).to.equal(false)
-    })
-
-    expect(result.current.submissionStatus).to.equal(SubmissionStatus.Errored)
-    expect(result.current.submitError).to.equal('Save failed.')
-
-    executeStub.restore()
-  })
-
-  it('should submit template with instructions', async () => {
-    const executeStub = cy.stub(createTemplate, 'execute').resolves()
-
-    const { result } = renderHook(() => useSubmitTemplate('root'), {
-      wrapper: ({ children }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
-    })
-
-    await act(async () => {
-      const didSubmit = await result.current.submitTemplate(templatePayloadWithInstructions)
-      expect(didSubmit).to.equal(true)
-    })
-
-    cy.wrap(executeStub).should('have.been.calledWith', templatePayloadWithInstructions, 'root')
-
-    executeStub.restore()
   })
 })

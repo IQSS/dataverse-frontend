@@ -31,6 +31,7 @@ interface DownloadWithTermsAndGuestbookModalProps {
   datasetCustomTerms?: CustomTermsModel
   show: boolean
   handleClose: () => void
+  onAccept?: () => void
 }
 
 type GuestbookFormValues = Record<string, string>
@@ -44,7 +45,8 @@ export function DownloadWithTermsAndGuestbookModal({
   datasetLicense,
   datasetCustomTerms,
   show,
-  handleClose
+  handleClose,
+  onAccept
 }: DownloadWithTermsAndGuestbookModalProps) {
   const { t: tFiles } = useTranslation('files')
   const { t: tDataset } = useTranslation('dataset')
@@ -226,7 +228,8 @@ export function DownloadWithTermsAndGuestbookModal({
     format,
     handleClose,
     accessRepository,
-    downloadFromSignedUrl
+    downloadFromSignedUrl,
+    onSubmitSuccess: onAccept
   })
 
   useEffect(() => {

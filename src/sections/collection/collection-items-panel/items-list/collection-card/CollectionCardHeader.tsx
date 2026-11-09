@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link45deg } from 'react-bootstrap-icons'
 import { Badge, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
 import { Route } from '@/sections/Route.enum'
@@ -11,6 +12,7 @@ interface CollectionCardHeaderProps {
 }
 
 export function CollectionCardHeader({ collectionPreview }: CollectionCardHeaderProps) {
+  const { t } = useTranslation('collection')
   return (
     <header className={styles['card-header-container']}>
       <Stack direction="horizontal" gap={2} className="flex-wrap">
@@ -27,7 +29,7 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
         </span>
 
         <Stack direction="horizontal" gap={1} className="flex-wrap">
-          {!collectionPreview.isReleased && <Badge variant="warning">Unpublished</Badge>}
+          {!collectionPreview.isReleased && <Badge variant="warning">{t('unpublished')}</Badge>}
 
           {collectionPreview.userRoles && (
             <Stack direction="horizontal" gap={1} className="flex-wrap">

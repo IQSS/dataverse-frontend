@@ -3,12 +3,14 @@ import { getMetadataBlockInfoByCollectionId } from '../../../../metadata-block-i
 import { getDisplayedOnCreateMetadataBlockInfoByCollectionId } from '../../../../metadata-block-info/domain/useCases/getDisplayedOnCreateMetadataBlockInfoByCollectionId'
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 import { DatasetMetadataFormMode } from '.'
 
 interface Props {
   mode: DatasetMetadataFormMode
   collectionId: string
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  datasetTypeName?: DatasetType['name']
 }
 
 interface UseGetMetadataBlocksInfoReturn {
@@ -20,7 +22,8 @@ interface UseGetMetadataBlocksInfoReturn {
 export const useGetMetadataBlocksInfo = ({
   mode,
   collectionId,
-  metadataBlockInfoRepository
+  metadataBlockInfoRepository,
+  datasetTypeName
 }: Props): UseGetMetadataBlocksInfoReturn => {
   const [metadataBlocksInfo, setMetadataBlocksInfo] = useState<MetadataBlockInfo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -35,12 +38,15 @@ export const useGetMetadataBlocksInfo = ({
         if (mode === 'edit') {
           metadataBlocks = await getMetadataBlockInfoByCollectionId(
             metadataBlockInfoRepository,
-            collectionId
+            collectionId,
+            false,
+            datasetTypeName
           )
         } else {
           metadataBlocks = await getDisplayedOnCreateMetadataBlockInfoByCollectionId(
             metadataBlockInfoRepository,
-            collectionId
+            collectionId,
+            datasetTypeName
           )
         }
 
@@ -57,7 +63,7 @@ export const useGetMetadataBlocksInfo = ({
     }
 
     void handleGetDatasetMetadataBlockFields()
-  }, [collectionId, metadataBlockInfoRepository, mode])
+  }, [collectionId, metadataBlockInfoRepository, mode, datasetTypeName])
 
   return {
     metadataBlocksInfo,

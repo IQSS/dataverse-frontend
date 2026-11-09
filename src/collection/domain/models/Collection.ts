@@ -2,6 +2,7 @@ import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/Upw
 import { CollectionContact } from './CollectionContact'
 import { CollectionType } from './CollectionType'
 import { CollectionInputLevel } from './CollectionInputLevel'
+import { DatasetType } from '@/dataset/domain/models/DatasetType'
 
 export interface Collection {
   id: string
@@ -16,4 +17,5 @@ export interface Collection {
   isMetadataBlockRoot: boolean
   isFacetRoot: boolean
   childCount: number
+  allowedDatasetTypes?: DatasetType[]
 }

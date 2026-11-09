@@ -1,20 +1,17 @@
 import { startTransition, useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, Button, Col, Form, Row, Spinner } from '@iqss/dataverse-design-system'
 import { Trans, useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
-import {
-  DatasetNonNumericVersionSearchParam,
-  DatasetPublishingStatus
-} from '@/dataset/domain/models/Dataset'
 import { useGetGuestbooksByCollectionId } from '@/sections/guestbooks/useGetGuestbooksByCollectionId'
-import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { useAssignDatasetGuestbook } from './useAssignDatasetGuestbook'
 import { useRemoveDatasetGuestbook } from './useRemoveDatasetGuestbook'
 import { useDataset } from '../../dataset/DatasetContext'
 import { PreviewGuestbookModal } from '@/sections/guestbooks/preview-modal/PreviewGuestbookModal'
+import { buildDatasetTermsReturnUrl } from '../datasetTermsNavigation'
 import { useGuestbookRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { QueryParamKey } from '@/sections/Route.enum'
 import styles from './EditGuestbook.module.scss'
 
 interface EditGuestbookProps {
@@ -29,7 +26,9 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
   const [selectedGuestbookId, setSelectedGuestbookId] = useState<number | undefined>(undefined)
   const [previewGuestbook, setPreviewGuestbook] = useState<Guestbook | undefined>(undefined)
   const { dataset, refreshDataset } = useDataset()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const viewedVersion = searchParams.get(QueryParamKey.VERSION) ?? undefined
   const collectionIdOrAlias = dataset?.parentCollectionNode?.id
   const collectionName = dataset?.parentCollectionNode?.name ?? ''
   const includeInheritedGuestbooks = Boolean(dataset?.parentCollectionNode?.parent)
@@ -38,17 +37,8 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
   const navigateToDatasetView = useCallback(() => {
     if (!dataset) return
 
-    const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
-
-    if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-    } else {
-      searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
-    }
-
-    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
-  }, [dataset, navigate])
+    navigate(buildDatasetTermsReturnUrl(dataset, viewedVersion))
+  }, [dataset, navigate, viewedVersion])
 
   const handleCancel = () => {
     navigateToDatasetView()

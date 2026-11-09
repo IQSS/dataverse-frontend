@@ -18,7 +18,8 @@ export class JSDatasetVersionMapper {
     jsDatasetLastUpdateTime: string,
     jsDatasetPublicationDate?: string,
     jsDatasettermsOfAccess?: TermsOfAccess,
-    jsDatasetDeaccessionedNote?: string
+    jsDatasetDeaccessionedNote?: string,
+    isInReview = false
   ): DatasetVersion {
     return new DatasetVersion.Builder(
       jDatasetVersionId,
@@ -27,7 +28,7 @@ export class JSDatasetVersionMapper {
       this.toStatus(jsDatasetVersionInfo.state),
       jsDatasetCitation,
       true, // TODO Connect with dataset version isLatest
-      false, // TODO Connect with dataset version isInReview
+      isInReview,
       this.toStatus(jsDatasetVersionInfo.state),
       this.toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo, jsDatasetPublicationDate),
       jsDatasetLastUpdateTime,

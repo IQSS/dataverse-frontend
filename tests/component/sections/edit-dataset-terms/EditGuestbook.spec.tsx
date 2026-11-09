@@ -364,7 +364,7 @@ describe('EditGuestbook', () => {
     )
   })
 
-  it('navigates with numeric version query param after successful submit for non-draft datasets', () => {
+  it('navigates with current version query param after successful submit for non-draft datasets', () => {
     ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).resolves(
       undefined
     )
@@ -390,6 +390,62 @@ describe('EditGuestbook', () => {
     cy.findByTestId('location-display').should(
       'have.text',
       '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0'
+    )
+  })
+
+  it('navigates with viewed version from searchParams after successful submit even when latest dataset version is draft', () => {
+    ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).resolves(
+      undefined
+    )
+    const draftDataset = DatasetMother.create({
+      id: 999,
+      persistentId: 'doi:10.5072/FK2/RELEASEDPID',
+      guestbookId: mockGuestbooks[0].id,
+      version: DatasetVersionMother.createDraftAsLatestVersion()
+    })
+
+    cy.customMount(
+      withProviders(
+        <>
+          <EditGuestbook />
+          <LocationDisplay />
+        </>,
+        draftDataset
+      ),
+      ['/datasets/edit-terms?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0']
+    )
+
+    cy.findByLabelText('Secondary Guestbook').click()
+    cy.findByRole('button', { name: 'Save Changes' }).click()
+    cy.findByTestId('location-display').should(
+      'have.text',
+      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0'
+    )
+  })
+
+  it('navigates with viewed version from searchParams after clicking Cancel', () => {
+    const draftDataset = DatasetMother.create({
+      id: 999,
+      persistentId: 'doi:10.5072/FK2/CANCELPID',
+      guestbookId: mockGuestbooks[0].id,
+      version: DatasetVersionMother.createDraftAsLatestVersion()
+    })
+
+    cy.customMount(
+      withProviders(
+        <>
+          <EditGuestbook />
+          <LocationDisplay />
+        </>,
+        draftDataset
+      ),
+      ['/datasets/edit-terms?persistentId=doi%3A10.5072%2FFK2%2FCANCELPID&version=2.0']
+    )
+
+    cy.findByRole('button', { name: 'Cancel' }).click()
+    cy.findByTestId('location-display').should(
+      'have.text',
+      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FCANCELPID&version=2.0'
     )
   })
 
