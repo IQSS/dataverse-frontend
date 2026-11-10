@@ -1,3 +1,4 @@
+import { AlertMessageKey } from '@/alert/domain/models/Alert'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { JSDatasetMapper } from '../../../../../src/dataset/infrastructure/mappers/JSDatasetMapper'
@@ -239,7 +240,10 @@ const expectedDataset = {
   requestedVersion: undefined,
   publicationDate: undefined,
   guestbookId: 1001,
-  alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
+  alerts: [
+    { variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined },
+    { variant: 'warning', messageKey: 'submittedForReview', dynamicFields: undefined }
+  ],
   summaryFields: [
     {
       name: 'citation',
@@ -352,7 +356,10 @@ const expectedDatasetWithPublicationDate = {
   requestedVersion: undefined,
   publicationDate: undefined,
   guestbookId: 1001,
-  alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
+  alerts: [
+    { variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined },
+    { variant: 'warning', messageKey: 'submittedForReview', dynamicFields: undefined }
+  ],
   summaryFields: [
     {
       name: 'citation',
@@ -466,7 +473,10 @@ const expectedDatasetWithNextVersionNumbers = {
   requestedVersion: undefined,
   publicationDate: undefined,
   guestbookId: 1001,
-  alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
+  alerts: [
+    { variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined },
+    { variant: 'warning', messageKey: 'submittedForReview', dynamicFields: undefined }
+  ],
   summaryFields: [
     {
       name: 'citation',
@@ -594,6 +604,11 @@ const expectedDatasetAlternateVersion = {
     {
       variant: 'warning',
       messageKey: 'draftVersion',
+      dynamicFields: undefined
+    },
+    {
+      variant: 'warning',
+      messageKey: 'submittedForReview',
       dynamicFields: undefined
     },
     {
@@ -992,6 +1007,23 @@ describe('JS Dataset Mapper', () => {
     expect(expectedDatasetVersionDiff).to.deep.equal(actual)
   })
 
+  it('does not add a review alert when the draft has no review lock', () => {
+    const mapped = JSDatasetMapper.toDataset(
+      jsDataset,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      [],
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
+    )
+
+    expect(mapped.version.isInReview).to.equal(false)
+    expect(mapped.alerts.map(({ messageKey }) => messageKey)).to.deep.equal([
+      AlertMessageKey.DRAFT_VERSION
+    ])
+  })
+
   it('does not set isInReview to true when the version is released even if dataset has an InReview lock', () => {
     const jsReleasedDataset = {
       ...jsDataset,
@@ -1014,6 +1046,9 @@ describe('JS Dataset Mapper', () => {
     )
 
     expect(mapped.version.isInReview).to.equal(false)
+    expect(
+      mapped.alerts.some(({ messageKey }) => messageKey === AlertMessageKey.SUBMITTED_FOR_REVIEW)
+    ).to.equal(false)
     expect(
       mapped.version.labels.some((label) => label.value === DatasetLabelValue.IN_REVIEW)
     ).to.equal(false)
