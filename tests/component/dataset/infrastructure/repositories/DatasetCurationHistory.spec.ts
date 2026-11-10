@@ -23,7 +23,7 @@ describe('curation history assigner names', () => {
 
   it('resolves each distinct assigner once and preserves order, removals, and timestamps', () => {
     const history = [adminStatus, { ...adminStatus, label: undefined }, { label: 'Final Approval' }]
-    cy.stub(getDatasetCurationStatusHistory, 'execute').resolves(history)
+    const historyStub = cy.stub(getDatasetCurationStatusHistory, 'execute').resolves(history)
     const fetchStub = cy.stub(window, 'fetch').resolves(
       new Response(
         JSON.stringify({
@@ -44,7 +44,7 @@ describe('curation history assigner names', () => {
       expect(fetchStub).to.have.been.calledOnceWith(
         'https://dataverse.example/api/v1/admin/assignee/%40dataverseAdmin'
       )
-      expect(getDatasetCurationStatusHistory.execute).to.have.been.calledWith(datasetId)
+      expect(historyStub).to.have.been.calledWith(datasetId)
     })
   })
 

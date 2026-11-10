@@ -1,14 +1,17 @@
-import { DatasetLabelSemanticMeaning } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  DatasetLabel,
+  DatasetLabelSemanticMeaning
+} from '../../../../../src/dataset/domain/models/Dataset'
 import { DatasetLabels } from '../../../../../src/sections/dataset/dataset-labels/DatasetLabels'
 
 describe('DatasetLabels', () => {
-  const labels = [
-    { value: 'Label 1', semanticMeaning: DatasetLabelSemanticMeaning.DATASET },
-    { value: 'Label 2', semanticMeaning: DatasetLabelSemanticMeaning.FILE },
-    { value: 'Label 3', semanticMeaning: DatasetLabelSemanticMeaning.SUCCESS },
-    { value: 'Label 4', semanticMeaning: DatasetLabelSemanticMeaning.DANGER },
-    { value: 'Label 5', semanticMeaning: DatasetLabelSemanticMeaning.WARNING },
-    { value: 'Label 6', semanticMeaning: DatasetLabelSemanticMeaning.INFO }
+  const labels: DatasetLabel[] = [
+    { value: 'Version 1', semanticMeaning: DatasetLabelSemanticMeaning.DATASET },
+    { value: 'Version 2', semanticMeaning: DatasetLabelSemanticMeaning.FILE },
+    { value: 'Version 3', semanticMeaning: DatasetLabelSemanticMeaning.SUCCESS },
+    { value: 'Version 4', semanticMeaning: DatasetLabelSemanticMeaning.DANGER },
+    { value: 'Version 5', semanticMeaning: DatasetLabelSemanticMeaning.WARNING },
+    { value: 'Version 6', semanticMeaning: DatasetLabelSemanticMeaning.INFO }
   ]
 
   it('should render all labels', () => {
@@ -40,7 +43,7 @@ describe('DatasetLabels', () => {
       .should('have.css', 'background-color', 'rgb(209, 11, 209)')
       .and('have.css', 'color', 'rgb(255, 255, 255)')
       .and('have.css', 'font-weight', '700')
-    cy.findByText('Label 1').should('not.have.css', 'background-color', 'rgb(209, 11, 209)')
+    cy.findByText('Version 1').should('not.have.css', 'background-color', 'rgb(209, 11, 209)')
   })
 
   it('should not render a curation status badge when no label is provided', () => {

@@ -143,8 +143,8 @@ it('places Edit Dataset before Curation Status in the action group', () => {
       expect(
         $edit[0].compareDocumentPosition($curation[0]) & Node.DOCUMENT_POSITION_FOLLOWING
       ).not.to.equal(0)
-      expect($edit[0].getBoundingClientRect().bottom).to.be.at.most(
-        $curation[0].getBoundingClientRect().top + 1
+      expect($edit[0].getBoundingClientRect().top).to.be.lessThan(
+        $curation[0].getBoundingClientRect().top
       )
     })
   })

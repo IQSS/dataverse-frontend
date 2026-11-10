@@ -81,8 +81,9 @@ describe('CurationStatusMenu', () => {
       expect(parseFloat(arrow.borderRightWidth)).to.be.greaterThan(0)
       expect(parseFloat(arrow.borderLeftWidth)).to.equal(0)
       const menu = toggle.parentElement?.querySelector('.dropdown-menu')
-      expect(menu).not.to.equal(null)
-      expect(menu!.getBoundingClientRect().right).to.be.at.most(
+      expect(menu).to.exist
+      if (!menu) throw new Error('Status submenu not found')
+      expect(menu.getBoundingClientRect().right).to.be.at.most(
         toggle.getBoundingClientRect().left + 1
       )
     })
