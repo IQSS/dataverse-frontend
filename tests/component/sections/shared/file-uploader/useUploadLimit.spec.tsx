@@ -32,6 +32,23 @@ describe('useUploadLimit', () => {
     })
   })
 
+  it('formats a files-remaining-only quota without a storage quota', async () => {
+    const fetchUploadLimits = () => Promise.resolve({ numberOfFilesRemaining: 7 })
+    const { result } = renderHook(() =>
+      useUploadLimit(DATASET_PERSISTENT_ID, datasetRepository, fetchUploadLimits)
+    )
+    await waitFor(() => expect(result.current.isLoadingUploadLimits).to.equal(false))
+    expect(result.current.uploadLimit.maxFilesAvailableToUploadFormatted).to.equal('7')
+    expect(result.current.uploadLimit.storageQuotaRemainingFormatted).to.equal(undefined)
+  })
+
+  it('skips fetching entirely when no dataset repository is available (standalone mount)', async () => {
+    const { result } = renderHook(() => useUploadLimit(DATASET_PERSISTENT_ID, undefined))
+    await waitFor(() => expect(result.current.isLoadingUploadLimits).to.equal(false))
+    expect(result.current.uploadLimit).to.deep.equal({})
+    expect(result.current.errorUploadLimits).to.equal(null)
+  })
+
   it('returns empty uploadLimit when no limits are present', async () => {
     const fetchUploadLimits = cy.stub().resolves({})
 

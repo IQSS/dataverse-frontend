@@ -35,6 +35,29 @@ const fileMock = FileMother.create({
 
 describe('FileUploader', () => {
   describe('replace mode', () => {
+    it('rejects dropping more than one file at once', () => {
+      cy.customMount(
+        <TestFileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.REPLACE_FILE}
+          originalFile={fileMock}
+        />
+      )
+
+      cy.findByTestId('file-uploader-drop-zone').selectFile(
+        [
+          { fileName: 'one.json', contents: [{ name: 'one' }] },
+          { fileName: 'two.json', contents: [{ name: 'two' }] }
+        ],
+        { action: 'drag-drop' }
+      )
+
+      cy.findByText('You can only drop one file to replace.').should('exist')
+      cy.findByText('one.json').should('not.exist')
+    })
+
     it('shows the loading configuration spinner while loading the fixity algorithm', () => {
       cy.customMount(
         <TestFileUploader
@@ -191,7 +214,11 @@ describe('FileUploader', () => {
       )
 
       cy.findByText('Select file to add').should('exist').click()
-      cy.get('input[type=file]').selectFile(
+      // Two `input[type=file]` elements live in the drop zone now —
+      // the regular file input and the folder input
+      // (`webkitdirectory`). Target only the file input so cy.selectFile
+      // doesn't fail with "subject contained 2 elements".
+      cy.get('input[type=file]:not([webkitdirectory])').selectFile(
         {
           fileName: 'users1.json',
           contents: [{ name: 'John Doe the 1st' }]
@@ -372,6 +399,40 @@ describe('FileUploader', () => {
   })
 
   describe('add files to dataset mode', () => {
+    it('highlights the drop zone while dragging and clears it when the drag leaves', () => {
+      cy.customMount(
+        <TestFileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.ADD_FILES_TO_DATASET}
+        />
+      )
+
+      cy.findByTestId('file-uploader-drop-zone').as('dnd')
+      cy.get('@dnd').trigger('dragenter')
+      cy.get('@dnd').should('have.class', FileUploadInputStyles.is_dragging)
+      cy.get('@dnd').trigger('dragleave')
+      cy.get('@dnd').should('not.have.class', FileUploadInputStyles.is_dragging)
+    })
+
+    it('opens the folder picker from the Select folder button', () => {
+      cy.customMount(
+        <TestFileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.ADD_FILES_TO_DATASET}
+        />
+      )
+
+      cy.get('input[type=file][webkitdirectory]').then(($input) => {
+        cy.stub($input[0], 'click').as('folderPicker')
+      })
+      cy.findByRole('button', { name: /Select folder to add/ }).click()
+      cy.get('@folderPicker').should('have.been.calledOnce')
+    })
+
     it('shows correct labels related to add files to dataset', () => {
       cy.customMount(
         <TestFileUploader
@@ -386,6 +447,29 @@ describe('FileUploader', () => {
       cy.findByText('Select files to add').should('exist')
       cy.findByText('Drag and drop file here.').should('not.exist')
       cy.findByText('Drag and drop files and/or directories here.').should('exist')
+    })
+
+    it('uploads files picked via the folder input (webkitdirectory)', () => {
+      cy.customMount(
+        <TestFileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.ADD_FILES_TO_DATASET}
+        />
+      )
+
+      // The hidden directory-picker input has its own change handler —
+      // drive it directly, the way the browser does after a folder pick.
+      cy.get('input[type=file][webkitdirectory]').selectFile(
+        {
+          fileName: 'nested.json',
+          contents: [{ name: 'From Folder' }]
+        },
+        { force: true }
+      )
+      cy.findByText('nested.json').should('exist')
+      cy.findByText('1 File uploaded').should('exist')
     })
 
     it('renders the files being uploaded', () => {

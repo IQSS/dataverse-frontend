@@ -742,10 +742,16 @@ describe('DownloadFilesButton', () => {
     cy.findByText('Your download has started.').should('exist')
   })
 
-  it('does not render the AccessDatasetMenu if the file store does not start with "s3"', () => {
+  it('does not render the AccessDatasetMenu when the dataset storage driver is not S3-compatible', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
-      fileStore: 'non-s3-file-store'
+      storageDriver: {
+        name: 'localfs1',
+        type: 'file',
+        label: 'LocalFilesystem',
+        directUpload: false,
+        directDownload: false
+      }
     })
     const files = FilePreviewMother.createMany(2, {
       metadata: FileMetadataMother.createTabular()
@@ -758,6 +764,27 @@ describe('DownloadFilesButton', () => {
     )
 
     cy.get('#download-files').should('not.exist')
+  })
+
+  it('renders for an S3 store without download redirect, since the zip is served by the access API', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      storageDriver: {
+        name: 'minio1',
+        type: 's3',
+        label: 'MinIO',
+        directUpload: false,
+        directDownload: false
+      }
+    })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
+    })
+    cy.mountAuthenticated(
+      withDataset(<DownloadFilesButton files={files} fileSelection={{}} />, dataset)
+    )
+
+    cy.get('#download-files').should('exist')
   })
 
   it('does not render the AccessDatasetMenu if the dataset is in draft status', () => {

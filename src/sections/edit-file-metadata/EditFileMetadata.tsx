@@ -12,18 +12,15 @@ import {
 } from '@/sections/edit-file-metadata/EditFilesList'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { useFile } from '@/sections/file/useFile'
+import { EditFileMetadataReferrer } from './EditFileMetadataReferrer'
 import styles from './EditFileMetadata.module.scss'
+
+export { EditFileMetadataReferrer } from './EditFileMetadataReferrer'
 
 interface EditFileMetadataProps {
   fileId: number
   fileRepository: FileRepository
   referrer: EditFileMetadataReferrer
-}
-
-// From where the user is coming from
-export enum EditFileMetadataReferrer {
-  DATASET = 'dataset',
-  FILE = 'file'
 }
 
 export const EditFileMetadata = ({ fileId, fileRepository, referrer }: EditFileMetadataProps) => {

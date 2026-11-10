@@ -92,6 +92,17 @@
         "@typescript-eslint/no-unsafe-call": 0,
         "testing-library/prefer-screen-queries": 0
       }
+    },
+    {
+      "files": ["public/*.js"],
+      "env": { "serviceworker": true, "browser": true },
+      "rules": {
+        "@typescript-eslint/no-unsafe-argument": 0,
+        "@typescript-eslint/no-unsafe-assignment": 0,
+        "@typescript-eslint/no-unsafe-call": 0,
+        "@typescript-eslint/no-unsafe-member-access": 0,
+        "@typescript-eslint/no-unsafe-return": 0
+      }
     }
   ],
   "ignorePatterns": ["packages/design-system/dist/**", "dev-env/**", "public/keycloakify-dev-resources"]

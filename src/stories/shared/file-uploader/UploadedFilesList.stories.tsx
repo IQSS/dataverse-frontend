@@ -69,6 +69,7 @@ export const Default: Story = {
       <UploadedFilesList
         datasetPersistentId="doi:10.5072/FK2/8YOKQI"
         fileRepository={new FileMockRepository()}
+        onCancel={() => console.log('Cancel clicked')}
       />
     </WithFileUploaderContext>
   )

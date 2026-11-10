@@ -1,0 +1,66 @@
+:host {
+  font-family: var(--bs-body-font-family, 'Helvetica Neue', helvetica, arial, sans-serif);
+  line-height: 1.5;
+  color: #212529;
+  display: block;
+
+  --bs-body-font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+  --bs-body-font-size: 16px;
+  --bs-body-font-weight: 400;
+  --bs-body-line-height: 1.5;
+  --bs-body-color: #212529;
+  --bs-body-bg: #fff;
+  --bs-font-sans-serif: 'Helvetica Neue', helvetica, arial, sans-serif;
+  --bs-font-monospace: sfmono-regular, menlo, monaco, consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+  --bs-primary: #0d6efd;
+  --bs-primary-rgb: 13, 110, 253;
+  --bs-secondary: #6c757d;
+  --bs-secondary-rgb: 108, 117, 125;
+  --bs-secondary-color: #6c757d;
+  --bs-secondary-bg: #e9ecef;
+  --bs-tertiary-color: #adb5bd;
+  --bs-tertiary-bg: #f8f9fa;
+  --bs-success: #198754;
+  --bs-danger: #dc3545;
+  --bs-warning: #ffc107;
+  --bs-info: #0dcaf0;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
+  --bs-white: #fff;
+  --bs-black: #000;
+  --bs-border-color: #dee2e6;
+  --bs-border-color-translucent: rgb(0 0 0 / 17.5%);
+  --bs-border-width: 1px;
+  --bs-border-radius: 6px;
+  --bs-border-radius-sm: 4px;
+  --bs-border-radius-lg: 8px;
+}
+
+:host .btn {
+  --bs-btn-font-size: 16px;
+}
+
+:host .btn.btn-sm {
+  --bs-btn-font-size: 14px;
+}
+
+:host .btn.btn-lg {
+  --bs-btn-font-size: 18px;
+}
+
+:host .accordion-button {
+  --bs-accordion-btn-font-size: 16px;
+
+  font-size: var(--bs-accordion-btn-font-size);
+}
+
+:host .form-control,
+:host .form-select {
+  font-size: 16px;
+}
+
+:host .form-control.form-control-sm,
+:host .form-select.form-select-sm {
+  font-size: 14px;
+}

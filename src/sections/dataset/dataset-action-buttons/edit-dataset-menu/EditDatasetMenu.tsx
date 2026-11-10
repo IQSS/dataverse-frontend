@@ -84,8 +84,7 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
       asButtonGroup
       variant="secondary"
       disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
-      {/* TODO: remove this when we can handle non-S3 files */}
-      {dataset?.fileStore?.startsWith('s3') && (
+      {dataset?.storageDriver?.type === 's3' && dataset.storageDriver.directUpload && (
         <DropdownButtonItem
           eventKey={EditDatasetMenuItems.FILES_UPLOAD}
           as="button"

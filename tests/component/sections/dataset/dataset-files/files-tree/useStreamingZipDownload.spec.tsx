@@ -1,0 +1,2429 @@
+import { useState } from 'react'
+import {
+  initForUrl,
+  makeDigestAccumulator,
+  useStreamingZipDownload
+} from '../../../../../../src/sections/dataset/dataset-files/files-tree/useStreamingZipDownload'
+import { FilesTreeDownloadTray } from '../../../../../../src/sections/dataset/dataset-files/files-tree/FilesTreeDownloadTray'
+import { FileTreeFile } from '../../../../../../src/files/domain/models/FileTreeItem'
+import {
+  ZipSink,
+  createBlobSink,
+  pullDrivenStream,
+  transferableChunk
+} from '../../../../../../src/sections/dataset/dataset-files/files-tree/zipStreamSink'
+import { FileTreeFileMother } from '../../../../files/domain/models/FileTreeItemMother'
+
+/**
+ * Harness component: renders the tray plus a kick-off button that
+ * starts the engine. Lets the spec drive the engine end-to-end via the
+ * same code path the host (FilesTree) uses.
+ */
+function StreamingZipHarness({
+  files,
+  zipName,
+  strategy,
+  partSize,
+  partRetries = 0,
+  partRetryDelayMs = 0,
+  fetchInit,
+  sink,
+  onApi
+}: {
+  files: FileTreeFile[]
+  zipName?: string
+  strategy?: 'pause' | 'skip' | 'twopass'
+  partSize?: number
+  partRetryDelayMs?: number
+  fetchInit?: RequestInit | (() => RequestInit | undefined)
+  sink?: ZipSink
+  onApi?: (api: ReturnType<typeof useStreamingZipDownload>) => void
+  /**
+   * Defaults to 0 so the existing pause-on-fail tests still see a
+   * single attempt per file. Tests that exercise the auto-retry path
+   * pass an explicit value.
+   */
+  partRetries?: number
+}) {
+  const api = useStreamingZipDownload()
+  const [open, setOpen] = useState(false)
+  onApi?.(api)
+  return (
+    <>
+      <button
+        type="button"
+        data-testid="harness-start"
+        onClick={() => {
+          api.start({
+            files,
+            zipName,
+            strategy,
+            partSize,
+            partRetries,
+            fetchInit,
+            sink: sink ?? createBlobSink(),
+            partRetryDelayMs
+          })
+          setOpen(true)
+        }}>
+        Start
+      </button>
+      <button type="button" data-testid="harness-retry-current" onClick={() => api.retryCurrent()}>
+        Spam Retry
+      </button>
+      <button type="button" data-testid="harness-finalize" onClick={() => api.finalizeRun()}>
+        Finalize
+      </button>
+      <FilesTreeDownloadTray
+        api={api}
+        open={open}
+        onClose={() => {
+          setOpen(false)
+          api.close()
+        }}
+      />
+    </>
+  )
+}
+
+function fakeResponseBody(content: string): Response {
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(new TextEncoder().encode(content))
+      controller.close()
+    }
+  })
+  return new Response(stream, {
+    status: 200,
+    headers: { 'content-type': 'application/octet-stream' }
+  })
+}
+
+type FetchHandler = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
+
+/**
+ * Installs the per-test fetch handler on the cypress iframe window
+ * AFTER the harness has mounted. Doing this before mount can race with
+ * cypress's iframe lifecycle; doing it after is deterministic.
+ *
+ * Direct assignment (rather than `cy.stub(win, 'fetch')`) sidesteps a
+ * Sinon defineProperty failure when the runtime declares fetch as a
+ * non-configurable getter.
+ */
+function installFetchHandler(handler: FetchHandler) {
+  cy.window().then((win) => {
+    ;(win as unknown as { fetch: FetchHandler }).fetch = handler
+    // Suppress the actual download trigger so cypress's runner doesn't
+    // navigate when the engine clicks the synthetic anchor.
+    cy.stub(win.HTMLAnchorElement.prototype, 'click')
+      .as('anchorClick')
+      .callsFake(() => undefined)
+  })
+}
+
+describe('useStreamingZipDownload + FilesTreeDownloadTray', () => {
+  it('streams two files into a zip on the happy path', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 5,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'b.txt',
+        path: 'b.txt',
+        size: 5,
+        downloadUrl: '/access/2'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="test.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAAAA'))
+      if (url.endsWith('/access/2')) return Promise.resolve(fakeResponseBody('BBBBB'))
+      return Promise.reject(new Error(`unexpected fetch ${url}`))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray').should('be.visible')
+    cy.findByTestId('files-tree-download-tray-meta').should('contain.text', '2 / 2')
+    cy.contains(/download complete/i).should('exist')
+  })
+
+  it('reports a response without a body as a failed file', () => {
+    cy.customMount(
+      <StreamingZipHarness
+        files={[FileTreeFileMother.create({ id: 1, name: 'a.txt', path: 'a.txt', size: 3 })]}
+      />
+    )
+    installFetchHandler(() => Promise.resolve(new Response(null, { status: 204 })))
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should(
+      'contain.text',
+      'the server returned no file content'
+    )
+    cy.findByTestId('files-tree-download-tray-meta').should('contain.text', '0 / 1')
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
+  it('pauses on first failure and resumes on retry', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'b.txt',
+        path: 'b.txt',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="retry.zip" />)
+
+    let attempts = 0
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      if (url.endsWith('/access/2')) {
+        attempts += 1
+        if (attempts === 1) return Promise.reject(new Error('network blip'))
+        return Promise.resolve(fakeResponseBody('BBB'))
+      }
+      return Promise.reject(new Error(`unexpected fetch ${url}`))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/Retry this file/i).click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(attempts).to.equal(2)
+    })
+  })
+
+  it('skips a failed file when "Skip" is clicked and lists it in the manifest', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'broken.bin',
+        path: 'broken.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="skip.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      return Promise.reject(new Error('permanently broken'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/^Skip$/).click()
+    cy.contains(/Download complete — 1 skipped/i).should('exist')
+  })
+
+  it('switches to two-pass on "Skip & retry at end" and finishes after retry', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'flaky.bin',
+        path: 'flaky.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      }),
+      FileTreeFileMother.create({
+        id: 3,
+        name: 'c.txt',
+        path: 'c.txt',
+        size: 3,
+        downloadUrl: '/access/3'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="twopass.zip" />)
+
+    let flakyAttempts = 0
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      if (url.endsWith('/access/3')) return Promise.resolve(fakeResponseBody('CCC'))
+      if (url.endsWith('/access/2')) {
+        flakyAttempts += 1
+        // Fails on the first pass; succeeds during the second-pass retry.
+        if (flakyAttempts === 1) return Promise.reject(new Error('flaky network'))
+        return Promise.resolve(fakeResponseBody('BBB'))
+      }
+      return Promise.reject(new Error(`unexpected fetch ${url}`))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/Skip & retry at end/i).click()
+
+    cy.findByTestId('files-tree-download-tray-twopass').should('be.visible')
+    cy.contains(/Download 1 missing file/i).click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(flakyAttempts).to.equal(2)
+    })
+  })
+
+  it('demotes a file that fails BOTH passes into the manifest instead of dropping it', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'cursed.bin',
+        path: 'cursed.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="twopass-cursed.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      // Fails in pass 1 AND in the pass-2 retry.
+      return Promise.reject(new Error('cursed network'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/Skip & retry at end/i).click()
+    cy.findByTestId('files-tree-download-tray-twopass').should('be.visible')
+    cy.contains(/Download 1 missing file/i).click()
+    // The second-pass survivor must surface as a skip — previously it
+    // vanished: run ended plain 'done' with the file absent from both
+    // the zip and manifest.txt.
+    cy.contains(/Download complete — 1 skipped/i).should('exist')
+  })
+
+  it('closing the tray mid-run cancels the engine and never saves a zip', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'slow.bin',
+        path: 'slow.bin',
+        size: 4,
+        downloadUrl: '/access/slow'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="closed-midrun.zip" />)
+    let releaseFetch: ((r: Response) => void) | undefined
+    installFetchHandler(
+      () =>
+        new Promise<Response>((resolve) => {
+          releaseFetch = resolve
+        })
+    )
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray').should('be.visible')
+    // Close while status is 'running' — the header × is always enabled.
+    cy.findByRole('button', { name: /close/i }).click()
+    // The tray element stays mounted; `open` only drives the slide-in
+    // class, so closing must drop it (and the engine state resets).
+    cy.findByTestId('files-tree-download-tray')
+      .invoke('attr', 'class')
+      .should('not.contain', 'tray-open')
+    // Let the in-flight fetch settle AFTER the close; the pre-save
+    // cancellation guard must still hold (close() no longer resets it),
+    // so no surprise download fires.
+    cy.then(() => releaseFetch?.(fakeResponseBody('DATA')))
+    cy.wait(100)
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
+  it('closing the tray while paused resolves the pending decision as cancel', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'broken.bin',
+        path: 'broken.bin',
+        size: 3,
+        downloadUrl: '/access/broken'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="closed-paused.zip" />)
+    installFetchHandler(() => Promise.reject(new Error('hard failure')))
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    // Close during 'paused' — previously this nulled the decision promise
+    // without resolving it, leaking the suspended generator forever.
+    cy.findByRole('button', { name: /close/i }).click()
+    cy.findByTestId('files-tree-download-tray')
+      .invoke('attr', 'class')
+      .should('not.contain', 'tray-open')
+    cy.wait(100)
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
+  it('finalize at the awaiting-retry gate saves the first-pass zip with a manifest', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'gone.bin',
+        path: 'gone.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="finalize.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      return Promise.reject(new Error('gone'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/Skip & retry at end/i).click()
+    cy.findByTestId('files-tree-download-tray-twopass').should('be.visible')
+    // The tray overlay covers the harness button; force past the
+    // hit-test — we're driving the API, not the overlay.
+    cy.findByTestId('harness-finalize').click({ force: true })
+    // No second pass: the run completes, the deferred failure is demoted
+    // to a skip (visible in the title), and the zip actually saves.
+    cy.contains(/Download complete — 1 skipped/i).should('exist')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+  })
+
+  it('closing the tray at the awaiting-retry gate cancels instead of leaking the decision', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'gone.bin',
+        path: 'gone.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+
+    // No zipName on purpose: exercises the 'dataset.zip' default too.
+    cy.customMount(<StreamingZipHarness files={files} />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      return Promise.reject(new Error('gone'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/Skip & retry at end/i).click()
+    cy.findByTestId('files-tree-download-tray-twopass').should('be.visible')
+    cy.findByRole('button', { name: /close/i }).click()
+    cy.findByTestId('files-tree-download-tray')
+      .invoke('attr', 'class')
+      .should('not.contain', 'tray-open')
+    cy.wait(100)
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
+  it('closing mid-run with more files queued drops the rest of the queue', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'slow.bin',
+        path: 'slow.bin',
+        size: 4,
+        downloadUrl: '/access/slow'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'queued.bin',
+        path: 'queued.bin',
+        size: 4,
+        downloadUrl: '/access/queued'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="queue-drop.zip" />)
+    let releaseFetch: ((r: Response) => void) | undefined
+    let fetches = 0
+    installFetchHandler(() => {
+      fetches += 1
+      return new Promise<Response>((resolve) => {
+        releaseFetch = resolve
+      })
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray').should('be.visible')
+    cy.findByRole('button', { name: /close/i }).click()
+    // Release the first file AFTER the close; the loop-top cancellation
+    // check must stop before ever fetching the second file.
+    cy.then(() => releaseFetch?.(fakeResponseBody('DATA')))
+    cy.wait(150)
+    cy.then(() => expect(fetches).to.equal(1))
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
+  it('demotion after pass 2 keeps an earlier explicit skip non-recoverable', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'skipme.bin',
+        path: 'skipme.bin',
+        size: 3,
+        downloadUrl: '/access/skipme'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'cursed.bin',
+        path: 'cursed.bin',
+        size: 3,
+        downloadUrl: '/access/cursed'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="mixed.zip" />)
+    installFetchHandler(() => Promise.reject(new Error('always broken')))
+
+    cy.findByTestId('harness-start').click()
+    // First failure: explicit Skip (non-recoverable in failedSoFar).
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/^Skip$/).click()
+    // Second failure: defer to a second pass, then fail it again.
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/Skip & retry at end/i).click()
+    cy.findByTestId('files-tree-download-tray-twopass').should('be.visible')
+    cy.contains(/Download 1 missing file/i).click()
+    // Both files end up skipped: the explicit skip plus the demoted
+    // second-pass survivor.
+    cy.contains(/Download complete — 2 skipped/i).should('exist')
+  })
+
+  it('cancels the run from the pause-on-fail dialog and reports cancelled state', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'broken.bin',
+        path: 'broken.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="cancel.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      return Promise.reject(new Error('permanently broken'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    // Cancel the run from the always-visible footer Cancel button.
+    cy.contains(/^Cancel$/).click()
+    cy.contains(/download cancelled/i).should('exist')
+  })
+
+  it('treats a non-OK HTTP response (500) as a failure under pause strategy', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'server-error.bin',
+        path: 'server-error.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="non-ok.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      // Non-OK response — should hit the `if (!response.ok)` failure path
+      // rather than the network-error catch branch. Engine treats it the
+      // same as a thrown fetch and pauses for the user's decision.
+      return Promise.resolve(
+        new Response('boom', { status: 500, statusText: 'Internal Server Error' })
+      )
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/HTTP 500/i).should('exist')
+    cy.contains(/^Skip$/).click()
+    cy.contains(/Download complete — 1 skipped/i).should('exist')
+  })
+
+  it('starts in skip strategy and silently drops failures into the manifest', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'broken.bin',
+        path: 'broken.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      }),
+      FileTreeFileMother.create({
+        id: 3,
+        name: 'c.txt',
+        path: 'c.txt',
+        size: 3,
+        downloadUrl: '/access/3'
+      })
+    ]
+
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="skip-from-start.zip" strategy="skip" />
+    )
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      if (url.endsWith('/access/3')) return Promise.resolve(fakeResponseBody('CCC'))
+      return Promise.reject(new Error('permanently broken'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    // No pause dialog: the engine never stops because strategy === 'skip'
+    // from the very first call. Goes straight to "Download complete".
+    cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+    cy.contains(/Download complete — 1 skipped/i).should('exist')
+  })
+
+  it('does nothing when start() is called with an empty file list', () => {
+    cy.customMount(<StreamingZipHarness files={[]} zipName="empty.zip" />)
+    // No fetch handler needed — the engine should not call fetch at all.
+    cy.findByTestId('harness-start').click()
+    // Tray is the only thing the harness renders for the engine; with
+    // nothing to do the engine stays in idle.
+    cy.findByTestId('files-tree-download-tray').should('exist')
+    cy.contains(/download complete/i).should('not.exist')
+    cy.contains(/download cancelled/i).should('not.exist')
+  })
+
+  it('ignores stray decision clicks fired with no pending decision', () => {
+    // Spam-clicking "Retry" when the engine isn't paused must not throw
+    // and must not affect a subsequent run. Exercises the `if (!bag)`
+    // guard in sendDecision.
+    cy.customMount(<StreamingZipHarness files={[]} zipName="stray.zip" />)
+    cy.findByTestId('harness-retry-current').click()
+    cy.findByTestId('harness-retry-current').click()
+    // Tray is open from prior render of the harness — stray clicks must
+    // not have triggered any state-change visible to the user.
+    cy.contains(/download complete/i).should('not.exist')
+  })
+
+  it('silently retries a transient failure when partRetries is set', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'flaky.txt',
+        path: 'flaky.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="auto-retry.zip" partRetries={3} />)
+
+    let attempts = 0
+    installFetchHandler(() => {
+      attempts += 1
+      // Fail once, then succeed. With partRetries=3 the engine should
+      // retry inline and never surface the failure dialog.
+      if (attempts === 1) return Promise.reject(new Error('transient blip'))
+      return Promise.resolve(fakeResponseBody('AAA'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+    cy.then(() => {
+      expect(attempts).to.equal(2)
+    })
+  })
+
+  it('re-reads fetchInit on every attempt so an expired token is replaced', () => {
+    // A large zip can outlive the token it started with. The engine must ask
+    // for credentials per request, not reuse the ones captured at start.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'long.txt',
+        path: 'long.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      })
+    ]
+
+    let issued = 0
+    const fetchInit = () => {
+      issued += 1
+      return { headers: { Authorization: `Bearer token-${issued}` } }
+    }
+
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        zipName="refresh.zip"
+        partRetries={3}
+        fetchInit={fetchInit}
+      />
+    )
+
+    const seen: (string | null)[] = []
+    let attempts = 0
+    installFetchHandler((_input, init) => {
+      seen.push(new Headers(init?.headers ?? undefined).get('Authorization'))
+      attempts += 1
+      // First attempt fails the way an expired token would.
+      if (attempts === 1) return Promise.reject(new Error('token expired'))
+      return Promise.resolve(fakeResponseBody('AAA'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(seen).to.deep.equal(['Bearer token-1', 'Bearer token-2'])
+    })
+  })
+
+  it('guards against closing the tab while the zip is in progress, and stands down when done', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'slow.txt',
+        path: 'slow.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="guard.zip" />)
+
+    let release: (() => void) | undefined
+    installFetchHandler(
+      () =>
+        new Promise<Response>((resolve) => {
+          release = () => resolve(fakeResponseBody('AAA'))
+        })
+    )
+
+    const fireBeforeUnload = (): boolean => {
+      const event = new Event('beforeunload', { cancelable: true })
+      window.dispatchEvent(event)
+      return event.defaultPrevented
+    }
+
+    cy.then(() => {
+      expect(fireBeforeUnload(), 'idle: no guard').to.equal(false)
+    })
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray').should('be.visible')
+    cy.then(() => {
+      expect(fireBeforeUnload(), 'running: guarded').to.equal(true)
+      release?.()
+    })
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(fireBeforeUnload(), 'done: released').to.equal(false)
+    })
+  })
+
+  it('ignores a cancelled run that finishes after a new run started', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="stale.zip" />)
+
+    let releaseFirst: (() => void) | undefined
+    let calls = 0
+    installFetchHandler(() => {
+      calls += 1
+      if (calls === 1) {
+        return new Promise<Response>((resolve) => {
+          releaseFirst = () => resolve(fakeResponseBody('AAA'))
+        })
+      }
+      return Promise.resolve(fakeResponseBody('AAA'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray').should('be.visible')
+    cy.findByRole('button', { name: /cancel/i }).click()
+    cy.contains(/download cancelled/i).should('exist')
+    cy.findAllByRole('button', { name: /close/i }).first().click()
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      releaseFirst?.()
+    })
+    cy.wait(200)
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.contains(/download complete/i).should('exist')
+  })
+
+  it('does not burn retry budget on a terminal 4xx (e.g. 403)', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'denied.txt',
+        path: 'denied.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      })
+    ]
+    // partRetries=3 would otherwise let the engine attempt the same
+    // request 4 times. 403 is a "user error" — the user genuinely lacks
+    // access — and burning the budget on it just delays the failure
+    // tray. The engine bails on the first attempt and surfaces the
+    // failure immediately.
+    cy.customMount(<StreamingZipHarness files={files} zipName="403.zip" partRetries={3} />)
+
+    let attempts = 0
+    installFetchHandler(() => {
+      attempts += 1
+      return Promise.resolve(new Response('forbidden', { status: 403, statusText: 'Forbidden' }))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.contains(/HTTP 403/i).should('exist')
+    cy.then(() => {
+      expect(attempts).to.equal(1)
+    })
+  })
+
+  for (const status of [408, 425, 429, 503]) {
+    it(`retries a transient HTTP ${status} response`, () => {
+      const files: FileTreeFile[] = [
+        FileTreeFileMother.create({
+          id: 1,
+          name: 'flaky.txt',
+          path: 'flaky.txt',
+          size: 3,
+          downloadUrl: '/access/1'
+        })
+      ]
+      cy.customMount(<StreamingZipHarness files={files} zipName="503.zip" partRetries={3} />)
+
+      let attempts = 0
+      installFetchHandler(() => {
+        attempts += 1
+        if (attempts === 1) {
+          return Promise.resolve(
+            new Response('temporarily unavailable', {
+              status,
+              statusText: 'Service Unavailable'
+            })
+          )
+        }
+        return Promise.resolve(fakeResponseBody('AAA'))
+      })
+
+      cy.findByTestId('harness-start').click()
+      cy.contains(/download complete/i).should('exist')
+      cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+      cy.then(() => {
+        expect(attempts).to.equal(2)
+      })
+    })
+  }
+
+  it('uses three automatic retries by default before waiting for a decision', () => {
+    let api: ReturnType<typeof useStreamingZipDownload>
+    const files = chunkedFile(3)
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        onApi={(current) => {
+          api = current
+        }}
+      />
+    )
+    let attempts = 0
+    installFetchHandler(() => {
+      attempts++
+      return Promise.resolve(new Response('', { status: 503 }))
+    })
+    cy.then(() => api.start({ files, sink: createBlobSink() }))
+    cy.wrap(null).should(() => {
+      expect(api.state.status).to.equal('paused')
+      expect(attempts).to.equal(4)
+    })
+    cy.get('@anchorClick').should('not.have.been.called')
+    cy.then(() => api.cancel())
+  })
+
+  for (const downloadUrl of ['/access/1', '/access/1?format=original']) {
+    it(`re-presigns ${downloadUrl} when a non-first chunk gets 403, then resumes`, () => {
+      // Simulates the long-running download case: the first chunk got a
+      // 60-minute presigned URL, the user is on a slow link, the 50th
+      // chunk arrives after the URL has expired and S3 returns 403.
+      // The engine refreshes the presigning by hitting Dataverse's
+      // access endpoint with `gbrecs=true` (so it doesn't double-count
+      // in the guestbook) and resumes from the failed offset. Without
+      // the refresh, the whole zip would die and any large file > the
+      // configured `url-expiration-minutes` would be undownloadable.
+      const total = 12 // 3 chunks at partSize=4
+      const files: FileTreeFile[] = [
+        FileTreeFileMother.create({
+          id: 1,
+          name: 'long.bin',
+          path: 'long.bin',
+          size: total,
+          downloadUrl
+        })
+      ]
+      cy.customMount(
+        <StreamingZipHarness files={files} zipName="repesign.zip" partSize={4} partRetries={0} />
+      )
+
+      let chunk1AttemptsOnOriginal = 0
+      let refreshHits = 0
+      installFetchHandler((input, init) => {
+        const url = String(input)
+        const headers = new Headers(init?.headers ?? undefined)
+        const range = headers.get('Range') ?? ''
+        const slice = (start: number, end: number) =>
+          new Response(new TextEncoder().encode('ABCDEFGHIJKL'.slice(start, end + 1)), {
+            status: 206,
+            statusText: 'Partial Content',
+            headers: {
+              'content-type': 'application/octet-stream',
+              'content-range': `bytes ${start}-${end}/${total}`
+            }
+          })
+
+        // The re-presign path appends `gbrecs=true` to the original URL.
+        // Treat any URL with that flag as the "fresh" URL — return the
+        // requested range bytes from it.
+        if (url.includes('gbrecs=true')) {
+          const refreshedUrl = new URL(url, window.location.origin)
+          expect(refreshedUrl.searchParams.get('gbrecs')).to.equal('true')
+          expect(refreshedUrl.searchParams.get('format')).to.equal(
+            downloadUrl.includes('?') ? 'original' : null
+          )
+          refreshHits += 1
+          const m = /^bytes=(\d+)-(\d+)$/.exec(range) as RegExpExecArray
+          return Promise.resolve(slice(Number(m[1]), Number(m[2])))
+        }
+
+        // Chunk 0 (bytes=0-3) succeeds normally on the original URL.
+        if (range === 'bytes=0-3') {
+          return Promise.resolve(slice(0, 3))
+        }
+
+        // Chunk 1 (bytes=4-7) on the original URL returns 403 ONCE — the
+        // expired-URL signal. After re-presign it goes through the
+        // gbrecs=true branch above. Subsequent parts use the cached new
+        // URL and never hit this branch again.
+        if (range === 'bytes=4-7') {
+          chunk1AttemptsOnOriginal += 1
+          return Promise.resolve(new Response('expired', { status: 403, statusText: 'Forbidden' }))
+        }
+
+        return Promise.reject(new Error(`unexpected fetch: ${url} ${range}`))
+      })
+
+      cy.findByTestId('harness-start').click()
+      cy.contains(/download complete/i).should('exist')
+      cy.then(() => {
+        // Chunk 1 hit the original URL exactly once (the 403); the
+        // refresh path picked up chunks 1 AND 2 from there on. So:
+        //   - 1 hit on the original URL with bytes=4-7 (the 403)
+        //   - 2 refresh hits (bytes=4-7 retried + bytes=8-11 fresh)
+        expect(chunk1AttemptsOnOriginal).to.equal(1)
+        expect(refreshHits).to.equal(2)
+      })
+    })
+  }
+
+  it('errors out when the re-presign request itself returns 403 (real access denial)', () => {
+    // Same shape as above, but the re-presign also fails — so the user
+    // genuinely lost access to the file mid-download (admin revoked
+    // the grant, or the embargo flipped). The engine has nothing to
+    // recover from; the stream errors out cleanly.
+    const total = 8 // 2 chunks at partSize=4
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'revoked.bin',
+        path: 'revoked.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="revoked.zip" partSize={4} partRetries={0} />
+    )
+
+    installFetchHandler((input, init) => {
+      const url = String(input)
+      const headers = new Headers(init?.headers ?? undefined)
+      const range = headers.get('Range') ?? ''
+      if (url.includes('gbrecs=true')) {
+        // The re-presign also gets 403 → terminal failure.
+        return Promise.resolve(
+          new Response('still forbidden', { status: 403, statusText: 'Forbidden' })
+        )
+      }
+      if (range === 'bytes=0-3') {
+        return Promise.resolve(
+          new Response(new TextEncoder().encode('ABCD'), {
+            status: 206,
+            statusText: 'Partial Content',
+            headers: { 'content-range': `bytes 0-3/${total}` }
+          })
+        )
+      }
+      // Chunk 1 returns 403 → triggers re-presign → which also 403s.
+      return Promise.resolve(new Response('expired', { status: 403, statusText: 'Forbidden' }))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('contain.text', 'HTTP 403')
+    cy.contains(/download complete/i, { timeout: 5_000 }).should('not.exist')
+  })
+
+  it('re-presigns on retry when a part fails without a readable status', () => {
+    const total = 12
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'opaque.bin',
+        path: 'opaque.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="opaque.zip" partSize={4} partRetries={0} />
+    )
+
+    let refreshHits = 0
+    installFetchHandler((input, init) => {
+      const url = String(input)
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const slice = (start: number, end: number) =>
+        new Response(new TextEncoder().encode('ABCDEFGHIJKL'.slice(start, end + 1)), {
+          status: 206,
+          statusText: 'Partial Content',
+          headers: {
+            'content-type': 'application/octet-stream',
+            'content-range': `bytes ${start}-${end}/${total}`
+          }
+        })
+
+      if (url.includes('gbrecs=true')) {
+        refreshHits += 1
+        const parsed = /^bytes=(\d+)-(\d+)$/.exec(range) as RegExpExecArray
+        return Promise.resolve(slice(Number(parsed[1]), Number(parsed[2])))
+      }
+      if (range === 'bytes=0-3') {
+        return Promise.resolve(slice(0, 3))
+      }
+      return Promise.reject(new TypeError('Failed to fetch'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /retry this file/i }).click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(refreshHits).to.equal(2)
+    })
+  })
+
+  it('reports an unreadable storage response when the fresh link also fails', () => {
+    const total = 8
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'blocked.bin',
+        path: 'blocked.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="blocked.zip" partSize={4} partRetries={0} />
+    )
+
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      if (range === 'bytes=0-3') {
+        return Promise.resolve(
+          new Response(new TextEncoder().encode('ABCD'), {
+            status: 206,
+            statusText: 'Partial Content',
+            headers: {
+              'content-type': 'application/octet-stream',
+              'content-range': `bytes 0-3/${total}`
+            }
+          })
+        )
+      }
+      return Promise.reject(new TypeError('Failed to fetch'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /retry this file/i }).click()
+    cy.findByTestId('files-tree-download-tray-failure').should('contain.text', 'fresh link')
+  })
+
+  it('keeps the HTTP status when the fresh link is genuinely denied', () => {
+    const total = 8
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'denied.bin',
+        path: 'denied.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="denied.zip" partSize={4} partRetries={0} />
+    )
+
+    installFetchHandler((input, init) => {
+      const url = String(input)
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      if (url.includes('gbrecs=true')) {
+        return Promise.resolve(new Response('denied', { status: 403, statusText: 'Forbidden' }))
+      }
+      if (range === 'bytes=0-3') {
+        return Promise.resolve(
+          new Response(new TextEncoder().encode('ABCD'), {
+            status: 206,
+            statusText: 'Partial Content',
+            headers: {
+              'content-type': 'application/octet-stream',
+              'content-range': `bytes 0-3/${total}`
+            }
+          })
+        )
+      }
+      return Promise.reject(new TypeError('Failed to fetch'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /retry this file/i }).click()
+    cy.findByTestId('files-tree-download-tray-failure').should('contain.text', 'HTTP 403')
+  })
+
+  it('verifies the MD5 checksum and finishes silently when it matches', () => {
+    // Bytes "hello" have a well-known MD5 digest; we make the tree row
+    // advertise that digest. After download the engine should have
+    // streamed the bytes through `md5.create()/update()/hex()` and
+    // matched — no entry in `verificationFailures`, no tray scolding.
+    const md5OfHello = '5d41402abc4b2a76b9719d911017c592'
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'MD5', value: md5OfHello }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-ok.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    // Specifically NOT the "failed checksum verification" wording — the
+    // match path should reach the plain "Download complete" title.
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
+  it('reports a verification failure when MD5 digest does not match', () => {
+    // The tree row claims the file's MD5 is "000…000" but the bytes
+    // streamed in are "hello". The engine streams the file through the
+    // zip (bytes are committed; you can't unwrite a stream client-zip
+    // is consuming), then on stream-close finalises the digest, finds
+    // the mismatch, and pushes into `verificationFailures`. The tray
+    // title surfaces the count; the manifest entry inside the zip
+    // would list which files to re-download.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'MD5', value: '00000000000000000000000000000000' }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-bad.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/failed checksum verification/i).should('be.visible')
+  })
+
+  it('verifies a SHA-256 checksum via the buffered subtle.digest path', () => {
+    // SHA-* algorithms can't stream through `crypto.subtle.digest`
+    // (one-shot API), so the accumulator buffers chunks and digests at
+    // close. This pins the SHA branch of `makeDigestAccumulator` — same
+    // shape as the upload helper's SHA path.
+    // sha256("hello") computed externally.
+    const sha256OfHello = '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824'
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'SHA-256', value: sha256OfHello }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-sha.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
+  it('verifies a SHA-1 checksum via the buffered subtle.digest path', () => {
+    // Same shape as the SHA-256 test — covers the SHA-1 arm of the
+    // algorithm ternary in `makeDigestAccumulator`. sha1("hello").
+    const sha1OfHello = 'aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d'
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'SHA-1', value: sha1OfHello }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-sha1.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
+  it('verifies a SHA-512 checksum via the buffered subtle.digest path', () => {
+    // Covers the SHA-512 arm of the algorithm ternary. sha512("hello").
+    const sha512OfHello =
+      '9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca72323c3d99ba5c11d7c7acc6e14b8c5da0c4663475c2e5c3adef46f73bcdec043'
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'SHA-512', value: sha512OfHello }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-sha512.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
+  it('silently skips verification when the algorithm is unsupported', () => {
+    // Tree advertises a checksum with an algorithm we don't know how to
+    // compute (e.g. a future hash). `makeDigestAccumulator` returns
+    // null; `buildChunkedStream` treats null the same as "no checksum
+    // present" — no accumulator, no comparison, no failure. The
+    // download succeeds without a verification claim either way.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'h.txt',
+        path: 'h.txt',
+        size: 5,
+        downloadUrl: '/access/1',
+        checksum: { type: 'BLAKE3', value: 'whatever' }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-unsupported.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
+  it('manifest combines skip failures and verification failures with a blank-line separator', () => {
+    // A run that hits BOTH a fetch-level skip AND a verification
+    // mismatch exercises the manifest's combined-section logic — the
+    // skipped-files section, followed by a blank line, followed by
+    // the verification-failed section. Without the separator branch
+    // the two would run together. Use `skip` strategy so the fetch
+    // failure goes silently to the manifest without a pause dialog.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'broken.bin',
+        path: 'broken.bin',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'verifyfail.txt',
+        path: 'verifyfail.txt',
+        size: 5,
+        downloadUrl: '/access/2',
+        checksum: { type: 'MD5', value: '00000000000000000000000000000000' }
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="combined.zip" strategy="skip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.reject(new Error('permanently broken'))
+      if (url.endsWith('/access/2')) return Promise.resolve(fakeResponseBody('hello'))
+      return Promise.reject(new Error(`unexpected fetch ${url}`))
+    })
+
+    cy.findByTestId('harness-start').click()
+    // Verification-failure title takes precedence over skipped title
+    // when both happen in the same run (see tray's else-if chain).
+    cy.contains(/failed checksum verification/i).should('be.visible')
+  })
+
+  it('skips verification when the file has no checksum advertised', () => {
+    // Tree omits the per-file `checksum` block (e.g. ingested-tabular
+    // default form on the backend; older server). Engine treats this
+    // as "not verifiable" rather than "failed verification" — no
+    // accumulator is constructed, no comparison runs, manifest stays
+    // empty.
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'noChecksum.txt',
+        path: 'noChecksum.txt',
+        size: 5,
+        downloadUrl: '/access/1'
+        // checksum: undefined
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="verify-none.zip" />)
+    installFetchHandler(() => Promise.resolve(fakeResponseBody('hello')))
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.contains(/failed checksum verification/i).should('not.exist')
+  })
+
+  it('chunks a large file into sequential Range requests', () => {
+    const total = 12 // → 3 parts at partSize=4
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'big.bin',
+        path: 'big.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="chunked.zip" partSize={4} partRetries={0} />
+    )
+
+    const seenRanges: string[] = []
+    installFetchHandler((input, init) => {
+      const url = String(input)
+      expect(url).to.equal('/access/1')
+      const headers = new Headers(init?.headers ?? undefined)
+      const range = headers.get('Range') ?? ''
+      seenRanges.push(range)
+      const m = /^bytes=(\d+)-(\d+)$/.exec(range)
+      expect(m).to.not.equal(null)
+      const start = Number((m as RegExpExecArray)[1])
+      const end = Number((m as RegExpExecArray)[2])
+      const slice = 'ABCDEFGHIJKL'.slice(start, end + 1)
+      const stream = new ReadableStream<Uint8Array>({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode(slice))
+          controller.close()
+        }
+      })
+      return Promise.resolve(
+        new Response(stream, {
+          status: 206,
+          statusText: 'Partial Content',
+          headers: {
+            'content-type': 'application/octet-stream',
+            'content-range': `bytes ${start}-${end}/${total}`
+          }
+        })
+      )
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(seenRanges).to.deep.equal(['bytes=0-3', 'bytes=4-7', 'bytes=8-11'])
+    })
+  })
+
+  it('errors out when a non-first part of a chunked file exhausts its retries', () => {
+    const total = 12
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'big.bin',
+        path: 'big.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="part-fail.zip" partSize={4} partRetries={0} />
+    )
+
+    installFetchHandler((_input, init) => {
+      const headers = new Headers(init?.headers ?? undefined)
+      const range = headers.get('Range') ?? ''
+      if (range === 'bytes=0-3') {
+        const stream = new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode('AAAA'))
+            controller.close()
+          }
+        })
+        return Promise.resolve(
+          new Response(stream, {
+            status: 206,
+            statusText: 'Partial Content',
+            headers: {
+              'content-type': 'application/octet-stream',
+              'content-range': `bytes 0-3/${total}`
+            }
+          })
+        )
+      }
+      return Promise.reject(new Error('mid-stream drop'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('contain.text', 'mid-stream drop')
+    cy.contains(/download complete/i, { timeout: 5_000 }).should('not.exist')
+  })
+
+  function partResponse(body: string, start: number, total: number): Response {
+    const stream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode(body))
+        controller.close()
+      }
+    })
+    return new Response(stream, {
+      status: 206,
+      statusText: 'Partial Content',
+      headers: {
+        'content-type': 'application/octet-stream',
+        'content-range': `bytes ${start}-${start + body.length - 1}/${total}`
+      }
+    })
+  }
+
+  // The zip is stored, so the entry's bytes follow its local header verbatim.
+  function storedEntryBytes(zip: Uint8Array, name: string, length: number): string {
+    const nameBytes = new TextEncoder().encode(name)
+    for (let i = 0; i + 30 + nameBytes.length <= zip.length; i++) {
+      if (zip[i] !== 0x50 || zip[i + 1] !== 0x4b || zip[i + 2] !== 0x03 || zip[i + 3] !== 0x04)
+        continue
+      const nameLen = zip[i + 26] | (zip[i + 27] << 8)
+      const extraLen = zip[i + 28] | (zip[i + 29] << 8)
+      const nameStart = i + 30
+      const found = new TextDecoder().decode(zip.slice(nameStart, nameStart + nameLen))
+      if (found !== name) continue
+      const dataStart = nameStart + nameLen + extraLen
+      return new TextDecoder().decode(zip.slice(dataStart, dataStart + length))
+    }
+    throw new Error(`entry ${name} not found`)
+  }
+
+  let lastObjectUrlBlob: Blob | null = null
+  function captureObjectUrls() {
+    lastObjectUrlBlob = null
+    cy.window().then((win) => {
+      cy.stub(win.URL, 'createObjectURL').callsFake((blob: Blob) => {
+        lastObjectUrlBlob = blob
+        return 'blob:captured'
+      })
+      cy.stub(win.URL, 'revokeObjectURL').callsFake(() => undefined)
+    })
+  }
+  function capturedZip(): Blob {
+    if (!lastObjectUrlBlob) throw new Error('no blob was handed to createObjectURL')
+    return lastObjectUrlBlob
+  }
+
+  function chunkedFile(total: number) {
+    return [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'big.bin',
+        path: 'big.bin',
+        size: total,
+        downloadUrl: '/access/1',
+        checksum: { type: 'MD5', value: 'e1b6b2b3211076a71632bbf2ad0edc05' }
+      })
+    ]
+  }
+
+  it('keeps the error manifest separate from existing files and folders', () => {
+    const paths = ['MANIFEST.txt', 'manifest-1.txt/a.txt', 'missing.txt']
+    const files = paths.map((path, id) =>
+      FileTreeFileMother.create({ id, name: path.split('/').pop() as string, path, size: 3 })
+    )
+    cy.customMount(<StreamingZipHarness files={files} strategy="skip" />)
+    captureObjectUrls()
+    installFetchHandler((input) =>
+      String(input).endsWith('/2')
+        ? Promise.reject(new Error('unavailable'))
+        : Promise.resolve(fakeResponseBody('abc'))
+    )
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(async () => {
+      const zip = new Uint8Array(await capturedZip().arrayBuffer())
+      expect(storedEntryBytes(zip, 'MANIFEST.txt', 3)).to.equal('abc')
+      expect(storedEntryBytes(zip, 'manifest-1.txt/a.txt', 3)).to.equal('abc')
+      expect(storedEntryBytes(zip, 'manifest-2.txt', 100)).to.contain('missing.txt — unavailable')
+    })
+  })
+
+  it('resumes a failed non-first part from its own offset after Retry and the entry is byte-identical', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="resume.zip" partSize={4} partRetries={0} />
+    )
+    captureObjectUrls()
+
+    const ranges: string[] = []
+    let secondPartAttempts = 0
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      ranges.push(range)
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      if (start === 4 && secondPartAttempts++ === 0) {
+        return Promise.reject(new Error('mid-stream drop'))
+      }
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /abort download/i }).should('exist')
+    cy.findByRole('button', { name: /^skip$/i }).should('not.exist')
+    cy.findByRole('button', { name: /skip & retry at end/i }).should('not.exist')
+    cy.findByRole('button', { name: /retry this file/i }).click()
+
+    cy.contains(/download complete/i).should('exist')
+    cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+    cy.get('@anchorClick').should('have.been.calledOnce')
+    cy.then(() => {
+      expect(ranges).to.deep.equal(['bytes=0-3', 'bytes=4-7', 'bytes=4-7', 'bytes=8-11'])
+    })
+    cy.then(async () => {
+      const zip = new Uint8Array(await capturedZip().arrayBuffer())
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+    })
+    cy.contains(/checksum/i).should('not.exist')
+  })
+
+  it('resumes from the exact byte when a part body drops halfway', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="drop.zip" partSize={4} partRetries={0} />
+    )
+    captureObjectUrls()
+
+    const ranges: string[] = []
+    let dropped = false
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      ranges.push(range)
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      if (start === 4 && !dropped) {
+        dropped = true
+        let pulls = 0
+        const stream = new ReadableStream<Uint8Array>({
+          pull(controller) {
+            if (pulls++ === 0) controller.enqueue(new TextEncoder().encode('BB'))
+            else controller.error(new Error('connection reset'))
+          }
+        })
+        return Promise.resolve(
+          new Response(stream, {
+            status: 206,
+            headers: {
+              'content-type': 'application/octet-stream',
+              'content-range': `bytes 4-7/${source.length}`
+            }
+          })
+        )
+      }
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /retry this file/i }).click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(ranges).to.deep.equal(['bytes=0-3', 'bytes=4-7', 'bytes=6-9', 'bytes=10-11'])
+    })
+    cy.then(async () => {
+      const zip = new Uint8Array(await capturedZip().arrayBuffer())
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+    })
+    cy.contains(/checksum/i).should('not.exist')
+  })
+
+  for (const ending of ['error', 'short response'] as const) {
+    it(`automatically resumes a mid-body ${ending} without duplicating bytes`, () => {
+      const source = 'AAAABBBBCCCC'
+      const states: string[] = []
+      cy.customMount(
+        <StreamingZipHarness
+          files={chunkedFile(source.length)}
+          partSize={4}
+          partRetries={2}
+          onApi={(api) => states.push(api.state.status)}
+        />
+      )
+      captureObjectUrls()
+      const ranges: string[] = []
+      let dropped = false
+      installFetchHandler((_input, init) => {
+        const range = new Headers(init?.headers).get('Range') ?? ''
+        ranges.push(range)
+        const start = Number(range.replace('bytes=', '').split('-')[0])
+        if (start === 4 && !dropped) {
+          dropped = true
+          let sent = false
+          return Promise.resolve(
+            new Response(
+              new ReadableStream({
+                pull(controller) {
+                  if (!sent) {
+                    sent = true
+                    controller.enqueue(new TextEncoder().encode('BB'))
+                  } else if (ending === 'error') controller.error(new Error('connection reset'))
+                  else controller.close()
+                }
+              }),
+              { status: 206 }
+            )
+          )
+        }
+        return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+      })
+      cy.findByTestId('harness-start').click()
+      cy.contains(/download complete/i).should('exist')
+      cy.then(async () => {
+        expect(states).not.to.include('paused')
+        expect(ranges).to.deep.equal(['bytes=0-3', 'bytes=4-7', 'bytes=6-9', 'bytes=10-11'])
+        const zip = new Uint8Array(await capturedZip().arrayBuffer())
+        expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+      })
+    })
+  }
+
+  it('bounds repeated body failures despite partial progress, then allows manual Retry', () => {
+    const source = 'AAAABBBBCCCC'
+    cy.customMount(
+      <StreamingZipHarness files={chunkedFile(source.length)} partSize={4} partRetries={2} />
+    )
+    captureObjectUrls()
+    const ranges: string[] = []
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers).get('Range') ?? ''
+      ranges.push(range)
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      if (ranges.length <= 3) {
+        let sent = false
+        return Promise.resolve(
+          new Response(
+            new ReadableStream({
+              pull(controller) {
+                if (!sent) {
+                  sent = true
+                  controller.enqueue(new TextEncoder().encode(source.slice(start, start + 2)))
+                } else controller.error(new Error('connection reset'))
+              }
+            }),
+            { status: 206 }
+          )
+        )
+      }
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.then(() => expect(ranges).to.deep.equal(['bytes=0-3', 'bytes=2-5', 'bytes=4-7']))
+    cy.findByRole('button', { name: /retry this file/i }).click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(async () => {
+      expect(ranges).to.deep.equal([
+        'bytes=0-3',
+        'bytes=2-5',
+        'bytes=4-7',
+        'bytes=6-9',
+        'bytes=10-11'
+      ])
+      const zip = new Uint8Array(await capturedZip().arrayBuffer())
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+    })
+  })
+
+  for (const failure of ['request', 'body'] as const) {
+    it(`cancels during a ${failure} retry delay without fetching again or saving a partial ZIP`, () => {
+      let api: ReturnType<typeof useStreamingZipDownload>
+      let attempts = 0
+      cy.customMount(
+        <StreamingZipHarness
+          files={chunkedFile(12)}
+          partSize={4}
+          partRetries={2}
+          partRetryDelayMs={1000}
+          onApi={(current) => {
+            api = current
+          }}
+        />
+      )
+      installFetchHandler(() => {
+        attempts++
+        if (failure === 'request') return Promise.resolve(new Response('', { status: 503 }))
+        return Promise.resolve(partResponse('AA', 0, 12))
+      })
+      cy.findByTestId('harness-start').click()
+      cy.wrap(null).should(() => expect(attempts).to.equal(1))
+      cy.wait(50)
+      cy.then(() => api.cancel())
+      cy.contains(/download cancelled/i).should('exist')
+      cy.wait(1100)
+      cy.then(() => expect(attempts).to.equal(1))
+      cy.get('@anchorClick').should('not.have.been.called')
+      cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+    })
+  }
+
+  it('preserves the caller signal when completing a download', () => {
+    const caller = new AbortController()
+    cy.customMount(
+      <StreamingZipHarness files={chunkedFile(3)} fetchInit={{ signal: caller.signal }} />
+    )
+    let requestSignal: AbortSignal | null | undefined
+    installFetchHandler((_input, init) => {
+      requestSignal = init?.signal
+      return Promise.resolve(fakeResponseBody('abc'))
+    })
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(requestSignal).not.to.equal(caller.signal)
+      expect(requestSignal?.aborted, 'completed run is cleaned up').to.equal(true)
+      expect(caller.signal.aborted, 'caller can reuse its signal').to.equal(false)
+    })
+    cy.get('@anchorClick').should('have.been.calledOnce')
+  })
+
+  it('aborts the download when Abort is chosen mid-entry', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="abort.zip" partSize={4} partRetries={0} />
+    )
+
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      if (start === 4) return Promise.reject(new Error('mid-stream drop'))
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /abort download/i }).click()
+    cy.contains(/download cancelled/i).should('exist')
+    cy.wait(300)
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
+  for (const error of [new Error('connection reset'), 'connection reset']) {
+    it(`aborts an unranged body failure thrown as ${typeof error} without saving a partial ZIP`, () => {
+      const source = 'AAAABBBBCCCC'
+      const files = chunkedFile(source.length)
+      cy.customMount(
+        <StreamingZipHarness
+          files={files}
+          zipName="norange-drop.zip"
+          partSize={4}
+          partRetries={0}
+        />
+      )
+
+      installFetchHandler(() => {
+        let pulls = 0
+        const stream = new ReadableStream<Uint8Array>({
+          pull(controller) {
+            if (pulls++ === 0) controller.enqueue(new TextEncoder().encode('AAAA'))
+            else controller.error(error)
+          }
+        })
+        return Promise.resolve(
+          new Response(stream, {
+            status: 200,
+            headers: { 'content-type': 'application/octet-stream' }
+          })
+        )
+      })
+
+      cy.findByTestId('harness-start').click()
+      cy.contains(/download failed/i).should('exist')
+      cy.findByTestId('files-tree-download-tray-failure').should('not.exist')
+      cy.get('@anchorClick').should('not.have.been.called')
+    })
+  }
+
+  it('falls back to a single stream when the server returns 200 to a Range request', () => {
+    const total = 12 // larger than partSize, but server ignores Range
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'no-range.bin',
+        path: 'no-range.bin',
+        size: total,
+        downloadUrl: '/access/1'
+      })
+    ]
+
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="full-200.zip" partSize={4} partRetries={0} />
+    )
+
+    let calls = 0
+    installFetchHandler(() => {
+      calls += 1
+      // Server replies 200 with the full body even though Range was set.
+      // The engine must NOT issue a second Range fetch.
+      return Promise.resolve(fakeResponseBody('ABCDEFGHIJKL'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      expect(calls).to.equal(1)
+    })
+  })
+
+  it('switches to skip-with-manifest on "Skip all remaining failures"', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'broken-1.bin',
+        path: 'broken-1.bin',
+        size: 3,
+        downloadUrl: '/access/2'
+      }),
+      FileTreeFileMother.create({
+        id: 3,
+        name: 'broken-2.bin',
+        path: 'broken-2.bin',
+        size: 3,
+        downloadUrl: '/access/3'
+      })
+    ]
+
+    cy.customMount(<StreamingZipHarness files={files} zipName="skip-all.zip" />)
+    installFetchHandler((input) => {
+      const url = String(input)
+      if (url.endsWith('/access/1')) return Promise.resolve(fakeResponseBody('AAA'))
+      return Promise.reject(new Error('permanently broken'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    // First failure → tray pauses with the failure dialog.
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    // "Skip all remaining failures" switches the engine to skip mode;
+    // the second failure no longer pauses the run.
+    cy.contains(/Skip all remaining failures/i).click()
+    // Both broken-* files end up skipped → manifest line in the title.
+    cy.contains(/Download complete — 2 skipped/i).should('exist')
+  })
+
+  it('refuses to resume when the server answers a ranged retry with the whole file', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    cy.customMount(
+      <StreamingZipHarness files={files} zipName="whole.zip" partSize={4} partRetries={0} />
+    )
+    captureObjectUrls()
+
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      if (start === 0) return Promise.resolve(partResponse(source.slice(0, 4), 0, source.length))
+      return Promise.resolve(
+        new Response(new TextEncoder().encode(source), {
+          status: 200,
+          headers: { 'content-type': 'application/octet-stream' }
+        })
+      )
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('contain.text', 'whole file')
+    cy.get('@anchorClick').should('not.have.been.called')
+  })
+
+  for (const status of [404, 416]) {
+    it(`streams the whole file when the server refuses ranges with HTTP ${status}`, () => {
+      const source = 'AAAABBBBCCCC'
+      const files = chunkedFile(source.length)
+      cy.customMount(
+        <StreamingZipHarness files={files} zipName="norange.zip" partSize={4} partRetries={0} />
+      )
+      captureObjectUrls()
+
+      const ranges: (string | null)[] = []
+      installFetchHandler((_input, init) => {
+        const range = new Headers(init?.headers ?? undefined).get('Range')
+        ranges.push(range)
+        if (range) {
+          return Promise.resolve(
+            new Response('Range headers are not supported on dynamically-generated content', {
+              status,
+              statusText: 'Range refused'
+            })
+          )
+        }
+        return Promise.resolve(
+          new Response(new TextEncoder().encode(source), {
+            status: 200,
+            headers: { 'content-type': 'application/octet-stream' }
+          })
+        )
+      })
+
+      cy.findByTestId('harness-start').click()
+      cy.contains(/download complete/i).should('exist')
+      cy.then(() => {
+        expect(ranges).to.deep.equal(['bytes=0-3', null])
+      })
+      cy.then(async () => {
+        const zip = new Uint8Array(await capturedZip().arrayBuffer())
+        expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+      })
+    })
+  }
+
+  it('refuses a selection over the cap before fetching anything', () => {
+    const threeGb = 3 * 1024 * 1024 * 1024
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'huge.bin',
+        path: 'huge.bin',
+        size: threeGb,
+        downloadUrl: '/access/1'
+      })
+    ]
+    cy.customMount(<StreamingZipHarness files={files} zipName="huge.zip" partRetries={0} />)
+
+    let fetches = 0
+    installFetchHandler(() => {
+      fetches += 1
+      return Promise.reject(new Error('should not have fetched'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/too large for this page/i).should('exist')
+    cy.get('@anchorClick').should('not.have.been.called')
+    cy.then(() => {
+      expect(fetches, 'no bytes were requested').to.equal(0)
+    })
+  })
+
+  function centralDirectorySize(zip: Uint8Array): number {
+    const view = new DataView(zip.buffer, zip.byteOffset, zip.byteLength)
+    for (let at = zip.length - 22; at >= 0; at--) {
+      if (view.getUint32(at, true) === 0x06054b50) return view.getUint32(at + 12, true)
+    }
+    return -1
+  }
+
+  it('survives a sink that transfers every chunk, as the MessageChannel path does', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    const received: Uint8Array[] = []
+    const transferringSink = {
+      streaming: true,
+      save: async ({ body }: { name: string; body: ReadableStream<Uint8Array> }) => {
+        const reader = body.getReader()
+        for (;;) {
+          const { value, done } = await reader.read()
+          if (done) break
+          if (!value) continue
+          const buffer = transferableChunk(value)
+          const delivered = structuredClone(buffer, { transfer: [buffer] })
+          received.push(new Uint8Array(delivered))
+        }
+      }
+    }
+
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        zipName="transferred.zip"
+        partSize={4}
+        partRetries={0}
+        sink={transferringSink}
+      />
+    )
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.then(() => {
+      const total = received.reduce((n, c) => n + c.byteLength, 0)
+      const zip = new Uint8Array(total)
+      let at = 0
+      for (const chunk of received) {
+        zip.set(chunk, at)
+        at += chunk.byteLength
+      }
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+      expect(centralDirectorySize(zip), 'end of central directory is intact').to.be.greaterThan(0)
+    })
+  })
+
+  for (const action of ['cancel', 'close', 'restart', 'unmount'] as const) {
+    it(`aborts a pending fetch on ${action} and errors the abandoned zip`, () => {
+      let api: ReturnType<typeof useStreamingZipDownload>
+      let signal: AbortSignal | null | undefined
+      let attempts = 0
+      const outcomes: string[] = []
+      const sink: ZipSink = {
+        streaming: true,
+        browserCanStream: true,
+        save: async ({ body }) => {
+          await new Response(body).arrayBuffer().then(
+            () => outcomes.push('done'),
+            () => outcomes.push('errored')
+          )
+        }
+      }
+      cy.customMount(
+        <StreamingZipHarness
+          files={[FileTreeFileMother.create({ id: 1, name: 'a.txt', path: 'a.txt', size: 3 })]}
+          sink={sink}
+          partRetries={3}
+          onApi={(current) => {
+            api = current
+          }}
+        />
+      )
+      installFetchHandler((_input, init) => {
+        if (attempts++ > 0) return Promise.resolve(fakeResponseBody('abc'))
+        signal = init?.signal
+        return new Promise((_resolve, reject) => {
+          signal?.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')))
+        })
+      })
+
+      cy.findByTestId('harness-start').click()
+      cy.wrap(null).should(() => expect(attempts).to.equal(1))
+      if (action === 'restart') cy.findByTestId('harness-start').click({ force: true })
+      else if (action === 'unmount') cy.customMount(<div />)
+      else cy.then(() => api[action]())
+      cy.wrap(null).should(() => {
+        expect(signal?.aborted).to.equal(true)
+        expect(outcomes).to.include('errored')
+        expect(attempts).to.equal(action === 'restart' ? 2 : 1)
+      })
+      if (action === 'restart') cy.contains(/download complete/i).should('exist')
+    })
+  }
+
+  it('errors the stream when cancelled while paused before an entry starts', () => {
+    const files: FileTreeFile[] = [
+      FileTreeFileMother.create({
+        id: 1,
+        name: 'a.txt',
+        path: 'a.txt',
+        size: 3,
+        downloadUrl: '/access/1'
+      }),
+      FileTreeFileMother.create({
+        id: 2,
+        name: 'b.txt',
+        path: 'b.txt',
+        size: 3,
+        downloadUrl: '/access/2'
+      })
+    ]
+    let cancelRun: () => void = () => undefined
+    let outcome = 'never finished'
+    const streamingSink = {
+      streaming: true,
+      save: async ({ body }: { name: string; body: ReadableStream<Uint8Array> }) => {
+        const reader = body.getReader()
+        try {
+          for (;;) {
+            const { done } = await reader.read()
+            if (done) {
+              outcome = 'closed cleanly'
+              return
+            }
+          }
+        } catch {
+          outcome = 'errored'
+        }
+      }
+    }
+
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        zipName="paused-cancel.zip"
+        partRetries={0}
+        sink={streamingSink}
+        onApi={(api) => {
+          cancelRun = api.cancel
+        }}
+      />
+    )
+    installFetchHandler((input) => {
+      if (String(input).endsWith('/access/1')) {
+        return Promise.resolve(
+          new Response(new TextEncoder().encode('AAA'), {
+            status: 200,
+            headers: { 'content-type': 'application/octet-stream' }
+          })
+        )
+      }
+      return Promise.reject(new Error('b.txt is unavailable'))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.findByTestId('files-tree-download-tray-failure').should('be.visible')
+    cy.findByRole('button', { name: /^skip$/i }).should('exist')
+    cy.then(() => {
+      cancelRun()
+    })
+    cy.contains(/download cancelled/i).should('exist')
+    cy.then(() => {
+      expect(outcome).to.equal('errored')
+    })
+  })
+
+  it('handles cancellation by the ZIP consumer without an unhandled generator rejection', () => {
+    const source = 'AAAABBBBCCCC'
+    const unhandled: unknown[] = []
+    const streamingSink: ZipSink = {
+      streaming: true,
+      browserCanStream: true,
+      save: async ({ body }) => {
+        const onRejection = (event: PromiseRejectionEvent) => unhandled.push(event.reason)
+        window.addEventListener('unhandledrejection', onRejection)
+        try {
+          const pipe = pullDrivenStream(body)
+          const reader = pipe.readable.getReader()
+          await reader.read()
+          await reader.cancel('cancelled by the download')
+          await new Promise((resolve) => setTimeout(resolve, 20))
+          await pipe.done
+        } finally {
+          window.removeEventListener('unhandledrejection', onRejection)
+        }
+      }
+    }
+    cy.customMount(
+      <StreamingZipHarness files={chunkedFile(source.length)} sink={streamingSink} partSize={4} />
+    )
+    installFetchHandler(() => Promise.resolve(partResponse(source.slice(0, 4), 0, source.length)))
+    cy.findByTestId('harness-start').click()
+    cy.contains('the browser stopped reading the download').should('exist')
+    cy.then(() => {
+      expect(unhandled).to.deep.equal([])
+    })
+  })
+
+  it('errors the stream on cancel so the browser cannot finalise a partial zip', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    let cancelRun: () => void = () => undefined
+    let outcome = 'never finished'
+    const streamingSink = {
+      streaming: true,
+      save: async ({ body }: { name: string; body: ReadableStream<Uint8Array> }) => {
+        const reader = body.getReader()
+        let first = true
+        try {
+          for (;;) {
+            const { done } = await reader.read()
+            if (done) {
+              outcome = 'closed cleanly'
+              return
+            }
+            if (first) {
+              first = false
+              cancelRun()
+            }
+          }
+        } catch {
+          outcome = 'errored'
+        }
+      }
+    }
+
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        zipName="cancelled.zip"
+        partSize={4}
+        partRetries={0}
+        sink={streamingSink}
+        onApi={(api) => {
+          cancelRun = api.cancel
+        }}
+      />
+    )
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download cancelled/i).should('exist')
+    cy.then(() => {
+      expect(outcome).to.equal('errored')
+    })
+  })
+
+  it('pipes the zip into a streaming sink without ever materialising a blob', () => {
+    const source = 'AAAABBBBCCCC'
+    const files = chunkedFile(source.length)
+    const received: Uint8Array[] = []
+    let sawStream = false
+    const streamingSink = {
+      streaming: true,
+      save: async ({ body }: { name: string; body: ReadableStream<Uint8Array> }) => {
+        sawStream = body instanceof ReadableStream
+        const reader = body.getReader()
+        for (;;) {
+          const { value, done } = await reader.read()
+          if (done) break
+          if (value) received.push(value)
+        }
+      }
+    }
+
+    cy.customMount(
+      <StreamingZipHarness
+        files={files}
+        zipName="streamed.zip"
+        partSize={4}
+        partRetries={0}
+        sink={streamingSink}
+      />
+    )
+    captureObjectUrls()
+    installFetchHandler((_input, init) => {
+      const range = new Headers(init?.headers ?? undefined).get('Range') ?? ''
+      const start = Number(range.replace('bytes=', '').split('-')[0])
+      return Promise.resolve(partResponse(source.slice(start, start + 4), start, source.length))
+    })
+
+    cy.findByTestId('harness-start').click()
+    cy.contains(/download complete/i).should('exist')
+    cy.get('@anchorClick').should('not.have.been.called')
+    cy.then(() => {
+      expect(sawStream, 'sink was handed a ReadableStream').to.equal(true)
+      expect(received.length, 'zip arrived in more than one chunk').to.be.greaterThan(1)
+      const total = received.reduce((n, c) => n + c.byteLength, 0)
+      const zip = new Uint8Array(total)
+      let at = 0
+      for (const chunk of received) {
+        zip.set(chunk, at)
+        at += chunk.byteLength
+      }
+      expect(storedEntryBytes(zip, 'big.bin', source.length)).to.equal(source)
+    })
+  })
+})
+
+describe('initForUrl', () => {
+  const bearerInit: RequestInit = { headers: { Authorization: 'Bearer token-123' } }
+
+  it('keeps the init untouched for same-origin part URLs', () => {
+    const out = initForUrl(
+      '/api/access/datafile/1?gbrecs=true',
+      '/api/access/datafile/1',
+      bearerInit
+    )
+    expect(out).to.equal(bearerInit)
+  })
+
+  it('strips Authorization when the part URL is cross-origin (presigned S3)', () => {
+    const out = initForUrl(
+      'https://minio.example:9000/bucket/key?X-Amz-Signature=abc',
+      '/api/access/datafile/1',
+      bearerInit
+    )
+    expect(new Headers(out?.headers).has('Authorization')).to.equal(false)
+  })
+
+  it('passes through an init without headers', () => {
+    const out = initForUrl('https://minio.example:9000/k', '/api/access/datafile/1', {
+      credentials: 'same-origin'
+    })
+    expect(out).to.deep.equal({ credentials: 'same-origin' })
+  })
+})
+
+describe('makeDigestAccumulator', () => {
+  const source = new Uint8Array(96 * 1024)
+  for (let i = 0; i < source.length; i++) source[i] = (i * 31 + (i >> 8)) & 255
+
+  const hex = (buf: ArrayBuffer) =>
+    Array.from(new Uint8Array(buf))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('')
+
+  const feedInChunks = async (algorithm: string, chunk: number) => {
+    const acc = makeDigestAccumulator(algorithm)
+    expect(acc, 'accumulator for ' + algorithm).to.not.equal(null)
+    for (let at = 0; at < source.length; at += chunk) {
+      acc?.update(source.subarray(at, Math.min(at + chunk, source.length)))
+    }
+    return acc?.finalize()
+  }
+
+  const algorithms = ['SHA-1', 'SHA-256', 'SHA-512']
+
+  algorithms.forEach((algorithm) => {
+    it('matches subtle.digest for ' + algorithm + ' when fed in many chunks', () => {
+      cy.then(async () => {
+        const expected = hex(await window.crypto.subtle.digest(algorithm, source))
+        expect(await feedInChunks(algorithm, 7)).to.equal(expected)
+      })
+    })
+  })
+
+  it('gives the same digest whatever the chunk boundaries are', () => {
+    cy.then(async () => {
+      const one = await feedInChunks('SHA-256', source.length)
+      const many = await feedInChunks('SHA-256', 1024)
+      const odd = await feedInChunks('SHA-256', 13)
+      expect(many).to.equal(one)
+      expect(odd).to.equal(one)
+    })
+  })
+
+  it('returns null for an algorithm it cannot compute', () => {
+    expect(makeDigestAccumulator('CRC32')).to.equal(null)
+  })
+})

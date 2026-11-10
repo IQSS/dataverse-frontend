@@ -21,8 +21,8 @@ export function DatasetUploadFilesButton() {
     return <></>
   }
 
-  // TODO: remove this when we can handle non-S3 files
-  if (!dataset?.fileStore?.startsWith('s3')) {
+  const driver = dataset.storageDriver
+  if (!driver || driver.type !== 's3' || !driver.directUpload) {
     return <></>
   }
 

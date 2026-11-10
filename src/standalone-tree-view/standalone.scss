@@ -1,0 +1,28 @@
+@use '../standalone-shared/shadow-tokens';
+
+.dv-tree-view-root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.standalone-error {
+  max-width: 600px;
+  margin: 1rem auto;
+  padding: 1rem;
+  border: 1px solid var(--bs-danger, #dc3545);
+  background: rgb(220 53 69 / 6%);
+  border-radius: 4px;
+  font-family: var(--bs-font-sans-serif, system-ui, sans-serif);
+
+  p {
+    margin: 0.25rem 0;
+  }
+
+  code {
+    font-family: var(--bs-font-monospace, monospace);
+    background: var(--bs-light, #f8f9fa);
+    padding: 0 4px;
+    border-radius: 2px;
+  }
+}

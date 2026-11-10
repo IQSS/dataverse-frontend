@@ -2,21 +2,30 @@ import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import { UploadedFileDTO, WriteError } from '@iqss/dataverse-client-javascript'
 import { replaceFile } from '@/files/domain/useCases/replaceFile'
-import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { UploadedFileDTOMapper } from '@/files/infrastructure/mappers/UploadedFileDTOMapper'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { useFileUploaderContext } from './context/FileUploaderContext'
 import { UploadedFile } from './context/fileUploaderReducer'
+import { UploaderFileRepository, FullUploaderFileRepository } from './types'
 
 interface UseReplaceFileReturn {
   submitReplaceFile: (originalFileID: number, file: UploadedFile) => Promise<void>
 }
 
-export const useReplaceFile = (fileRepository: FileRepository): UseReplaceFileReturn => {
+function hasReplaceMethod(repo: UploaderFileRepository): repo is FullUploaderFileRepository {
+  return 'replace' in repo && typeof repo.replace === 'function'
+}
+
+export const useReplaceFile = (fileRepository: UploaderFileRepository): UseReplaceFileReturn => {
   const { setIsSaving, setReplaceOperationInfo, removeAllFiles } = useFileUploaderContext()
   const { t } = useTranslation('shared')
 
   const submitReplaceFile = async (originalFileID: number, newFileInfo: UploadedFile) => {
+    if (!hasReplaceMethod(fileRepository)) {
+      toast.error('File replacement is not supported in standalone mode')
+      return
+    }
+
     setIsSaving(true)
 
     const newFileDTO: UploadedFileDTO = UploadedFileDTOMapper.toUploadedFileDTO(
@@ -37,7 +46,7 @@ export const useReplaceFile = (fileRepository: FileRepository): UseReplaceFileRe
 
       removeAllFiles()
       setReplaceOperationInfo({ success: true, newFileIdentifier })
-    } catch (err: WriteError | unknown) {
+    } catch (err: unknown) {
       if (err instanceof WriteError) {
         const error = new JSDataverseWriteErrorHandler(err)
         const formattedError =

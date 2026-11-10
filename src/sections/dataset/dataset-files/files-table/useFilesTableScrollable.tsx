@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDeepCompareMemo } from 'use-deep-compare'
 import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
@@ -36,9 +36,14 @@ export function useFilesTableScrollable(
     return result
   }, [selectedRowsModels, rowSelection])
 
+  const columns = useMemo(
+    () => createColumnsDefinition(paginationInfo, fileSelection, accumulatedFilesCount),
+    [paginationInfo, fileSelection, accumulatedFilesCount]
+  )
+
   const table = useReactTable({
     data: files,
-    columns: createColumnsDefinition(paginationInfo, fileSelection, accumulatedFilesCount),
+    columns,
     state: {
       rowSelection: rowSelection
     },

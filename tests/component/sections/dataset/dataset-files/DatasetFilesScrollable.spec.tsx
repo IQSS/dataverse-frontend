@@ -25,6 +25,10 @@ import { getCellStyle } from '../../../../../src/sections/dataset/dataset-files/
 import { DatasetMockRepository } from '../../../../../src/stories/dataset/DatasetMockRepository'
 import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { FileTreePageMother } from '../../../files/domain/models/FileTreePageMother'
+import { FileTreeFileMother } from '../../../files/domain/models/FileTreeItemMother'
+import { FileTreeRepository } from '../../../../../src/files/domain/repositories/FileTreeRepository'
+import { FileTreePage } from '../../../../../src/files/domain/models/FileTreePage'
 
 const TOTAL_FILES_COUNT = 200
 const ONLY_4_FILES_COUNT = 4
@@ -104,6 +108,28 @@ describe('DatasetFilesScrollable', () => {
     cy.wait(1000)
     cy.findByRole('table').should('exist')
     cy.findByRole('columnheader', { name: /Files/ }).should('exist')
+  })
+
+  it('renders the files tree in scrollable mode when ?view=tree is set', () => {
+    const treePage: FileTreePage = FileTreePageMother.create({
+      path: '',
+      items: [FileTreeFileMother.create({ id: 99, name: 'tree-file.txt', path: 'tree-file.txt' })]
+    })
+    const fileTreeRepository: FileTreeRepository = {
+      getNode: () => Promise.resolve(treePage)
+    }
+    cy.customMount(
+      <WithRepositories datasetRepository={datasetRepository}>
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+          fileTreeRepository={fileTreeRepository}
+        />
+      </WithRepositories>,
+      ['/?view=tree']
+    )
+    cy.findByText('tree-file.txt').should('exist')
   })
 
   it('check that the files sections are rendered even without edit permissions', () => {
