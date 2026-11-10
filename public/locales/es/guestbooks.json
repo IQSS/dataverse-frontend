@@ -8,20 +8,24 @@
     "enable": "Habilitar",
     "disable": "Deshabilitar",
     "downloadAllResponses": "Descargar todas las respuestas",
-    "view": "Ver",
+    "view": "Vista previa",
     "copy": "Copiar",
     "edit": "Editar",
+    "delete": "Eliminar",
     "downloadResponses": "Descargar respuestas",
     "viewResponses": "Ver respuestas"
   },
   "errors": {
     "getGuestbook": "Algo salió mal al obtener el libro de visitas. Inténtalo de nuevo más tarde.",
+    "editGuestbook": "Algo salió mal al editar el libro de visitas. Inténtalo de nuevo más tarde.",
+    "getGuestbookResponses": "Algo salió mal al obtener las respuestas del libro de visitas. Inténtalo de nuevo más tarde.",
     "toggleEnabled": "Algo salió mal al actualizar el estado del libro de visitas. Inténtalo de nuevo más tarde.",
     "downloadResponses": "Algo salió mal al descargar las respuestas del libro de visitas. Inténtalo de nuevo más tarde."
   },
   "alerts": {
     "statusUpdated": "El estado del libro de visitas se ha actualizado.",
-    "downloadStarted": "La descarga ha comenzado."
+    "downloadStarted": "La descarga ha comenzado.",
+    "updated": "El libro de visitas se ha actualizado."
   },
   "preview": {
     "title": "Vista previa del libro de visitas",
@@ -94,5 +98,31 @@
     },
     "submit": "Crear libro de visitas del dataset",
     "cancel": "Cancelar"
+  },
+  "edit": {
+    "title": "Editar libro de visitas del dataset"
+  },
+  "responses": {
+    "title": "Respuestas del libro de visitas",
+    "info": "Haz clic en \"Descargar respuestas\" para descargar todas las respuestas recopiladas para este libro de visitas como archivo CSV. Para navegar y analizar las respuestas recopiladas, recomendamos importar este archivo CSV en Excel, Google Sheets o software similar.",
+    "guestbookName": "Nombre del libro de visitas",
+    "downloadButton": "Descargar respuestas",
+    "count_one": "{{count}} respuesta",
+    "count_other": "{{count}} respuestas",
+    "noRecords": "No se encontraron registros.",
+    "table": {
+      "dataset": "Dataset",
+      "date": "Fecha",
+      "type": "Tipo",
+      "file": "Fichero",
+      "user": "Usuario",
+      "customQuestions": "Preguntas personalizadas"
+    },
+    "eventTypes": {
+      "AccessRequest": "Solicitud de acceso",
+      "Download": "Descarga",
+      "Subset": "Subconjunto",
+      "Explore": "Explorar"
+    }
   }
 }

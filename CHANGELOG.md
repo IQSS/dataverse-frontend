@@ -8,7 +8,12 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Manage Guestbooks: Edit guestbooks, and copy guestbooks into a prefilled creation form. (#1006)
+- Guestbook Responses page with pagination, sorting within the current page, custom question responses, and CSV download. (#1006)
+
 ### Changed
+
+- Rename the "View" action to "Preview" for guestbooks and dataset templates to match JSF. (#1006)
 
 ### Fixed
 
@@ -29,9 +34,9 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Edit Dataset Template Integration: "Edit Template" dropdown on the Dataset Templates listing now opens the Metadata or Terms editor and shows a "Template updated" toast on return.
 - External Tools: Added guestbook and terms modal for Dataverse external tools.
 - Manage Guestbooks page integration, including:
-  - a guestbooks table with sorting, enable/disable actions, preview, and per-guestbook response download
+  - a guestbooks table with sorting, edit, enable/disable actions, preview, and per-guestbook response download
   - Create Guestbook and Download All Responses actions
-  - the Create Guestbook page
+  - the Create and Edit Guestbook pages
   - a checkbox for including guestbooks from parent collections
 - Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Dataset Page: added a sidebar to show dataset reviews
