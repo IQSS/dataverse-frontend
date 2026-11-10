@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useSession } from '../../../session/SessionContext'
 import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
-import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
 import { PublishDatasetModal } from '../../publish-dataset/PublishDatasetModal'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 
@@ -63,7 +62,6 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
             {t('datasetActionButtons.publish.returnToAuthor')}
           </DropdownButtonItem>
         )}
-        <ChangeCurationStatusMenu />
       </DropdownButton>
     </>
   )

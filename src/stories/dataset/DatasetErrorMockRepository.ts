@@ -17,6 +17,10 @@ import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits
 import { DatasetReview } from '@/dataset/domain/models/DatasetReview'
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
 import { ExportedDatasetMetadata } from '@/dataset/domain/models/ExportedDatasetMetadata'
+import {
+  DatasetCurationStatus,
+  DatasetReviewSubmission
+} from '@/dataset/domain/models/DatasetCuration'
 import { DatasetNotNumberedVersion } from '@iqss/dataverse-client-javascript'
 
 export class DatasetErrorMockRepository implements DatasetMockRepository {
@@ -231,6 +235,54 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
   }
 
   getAvailableDatasetTypes(): Promise<DatasetType[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getAllowedCurationLabels(_datasetId: string | number): Promise<string[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getCurationStatus(_datasetId: string | number): Promise<DatasetCurationStatus | null> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getCurationStatusHistory(_datasetId: string | number): Promise<DatasetCurationStatus[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  setCurationStatus(_datasetId: string | number, _label: string): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  deleteCurationStatus(_datasetId: string | number): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  submitForReview(_datasetId: string | number): Promise<DatasetReviewSubmission> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

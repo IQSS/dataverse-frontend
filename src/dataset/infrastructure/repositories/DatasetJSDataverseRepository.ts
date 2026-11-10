@@ -8,6 +8,7 @@ import {
 } from '../../domain/models/Dataset'
 import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
+  ApiConfig,
   createDataset,
   CreatedDatasetIdentifiers as JSDatasetIdentifiers,
   Dataset as JSDataset,
@@ -51,7 +52,13 @@ import {
   DatasetType,
   getDatasetAvailableDatasetTypes,
   exportDatasetMetadata,
-  DatasetNotNumberedVersion
+  DatasetNotNumberedVersion,
+  getAllowedDatasetCurationLabels,
+  getDatasetCurationStatus,
+  getDatasetCurationStatusHistory,
+  setDatasetCurationStatus,
+  deleteDatasetCurationStatus,
+  submitDatasetForReview
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -73,6 +80,10 @@ import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetUploadLimits } from '@/dataset/domain/models/DatasetUploadLimits'
 import { DatasetReview } from '@/dataset/domain/models/DatasetReview'
 import { ExportedDatasetMetadata } from '@/dataset/domain/models/ExportedDatasetMetadata'
+import {
+  DatasetCurationStatus,
+  DatasetReviewSubmission
+} from '@/dataset/domain/models/DatasetCuration'
 
 const includeDeaccessioned = true
 
@@ -511,5 +522,51 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   getDatasetReviews(datasetId: string | number): Promise<DatasetReview[]> {
     return getDatasetReviews.execute(datasetId)
+  }
+
+  getAllowedCurationLabels(datasetId: string | number): Promise<string[]> {
+    return getAllowedDatasetCurationLabels.execute(datasetId)
+  }
+
+  getCurationStatus(datasetId: string | number): Promise<DatasetCurationStatus | null> {
+    return getDatasetCurationStatus.execute(datasetId)
+  }
+
+  async getCurationStatusHistory(datasetId: string | number): Promise<DatasetCurationStatus[]> {
+    const history = await getDatasetCurationStatusHistory.execute(datasetId)
+    const assigners = [...new Set(history.flatMap(({ assigner }) => (assigner ? [assigner] : [])))]
+    const displayNames = new Map<string, string>()
+
+    await Promise.all(
+      assigners.map(async (assigner) => {
+        try {
+          const response = await fetch(
+            `${ApiConfig.dataverseApiUrl}/admin/assignee/${encodeURIComponent(assigner)}`
+          )
+          if (!response.ok) return
+          const result = (await response.json()) as { data?: { title?: string } }
+          if (result.data?.title) displayNames.set(assigner, result.data.title)
+        } catch {
+          // Keep the history available when a display name cannot be resolved.
+        }
+      })
+    )
+
+    return history.map((status) => ({
+      ...status,
+      assignerDisplayName: status.assigner ? displayNames.get(status.assigner) : undefined
+    }))
+  }
+
+  setCurationStatus(datasetId: string | number, label: string): Promise<void> {
+    return setDatasetCurationStatus.execute(datasetId, label)
+  }
+
+  deleteCurationStatus(datasetId: string | number): Promise<void> {
+    return deleteDatasetCurationStatus.execute(datasetId)
+  }
+
+  submitForReview(datasetId: string | number): Promise<DatasetReviewSubmission> {
+    return submitDatasetForReview.execute(datasetId)
   }
 }

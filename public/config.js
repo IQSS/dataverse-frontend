@@ -2,9 +2,11 @@
 // Edit values to match your environment.
 // This file is loaded at runtime (no rebuild required) and validated against src/config.ts schema.
 
+const devProxyOrigin = window.location.origin
+
 window.__APP_CONFIG__ = {
   // Base URL of your Dataverse backend
-  backendUrl: 'http://localhost:8000',
+  backendUrl: devProxyOrigin,
   // Optional banner shown at the top of the app when set. Basic HTML markup is supported.
   // Use a string for one message across all languages, or map language codes to localized messages.
   bannerMessage: {
@@ -14,9 +16,9 @@ window.__APP_CONFIG__ = {
   // OIDC provider settings
   oidc: {
     clientId: 'test',
-    authorizationEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/auth',
-    tokenEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/token',
-    logoutEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/logout',
+    authorizationEndpoint: `${devProxyOrigin}/realms/test/protocol/openid-connect/auth`,
+    tokenEndpoint: `${devProxyOrigin}/realms/test/protocol/openid-connect/token`,
+    logoutEndpoint: `${devProxyOrigin}/realms/test/protocol/openid-connect/logout`,
     // All auth-related storage keys will be prefixed with this string
     localStorageKeyPrefix: 'DV_'
   },

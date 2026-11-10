@@ -3,6 +3,7 @@ import { ButtonGroup } from '@iqss/dataverse-design-system'
 import { Dataset, DatasetPublishingStatus } from '@/dataset/domain/models/Dataset'
 import { AccessDatasetMenu } from './access-dataset-menu/AccessDatasetMenu'
 import { PublishDatasetMenu } from './publish-dataset-menu/PublishDatasetMenu'
+import { CurationStatusMenu } from './curation-status-menu/CurationStatusMenu'
 import { SubmitForReviewButton } from './submit-for-review-button/SubmitForReviewButton'
 import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
 import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
@@ -39,6 +40,7 @@ export function DatasetActionButtons({ dataset, contactRepository }: DatasetActi
       <PublishDatasetMenu dataset={dataset} />
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} />
+      <CurationStatusMenu datasetId={dataset.persistentId} />
       <LinkAndUnlinkActions dataset={dataset} />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
         <ContactButton

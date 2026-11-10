@@ -27,6 +27,7 @@ interface DropdownButtonProps {
   customToggleClassname?: string
   customToggleMenuClassname?: string
   align?: 'end' | 'start'
+  drop?: 'up' | 'down' | 'start' | 'end'
   size?: 'sm' | 'lg'
 }
 
@@ -44,13 +45,19 @@ export function DropdownButton({
   customToggleClassname,
   customToggleMenuClassname,
   align,
+  drop,
   size,
   children
 }: DropdownButtonProps) {
   // If customToggle is provided, use Dropdown instead of DropdownButtonBS
   if (customToggle) {
     return (
-      <Dropdown id={id} onSelect={onSelect} className={customToggleClassname} align={align}>
+      <Dropdown
+        id={id}
+        onSelect={onSelect}
+        className={customToggleClassname}
+        align={align}
+        drop={drop}>
         <Dropdown.Toggle as={customToggle} />
         <Dropdown.Menu className={customToggleMenuClassname}>{children}</Dropdown.Menu>
       </Dropdown>
@@ -73,6 +80,7 @@ export function DropdownButton({
       as={asButtonGroup ? ButtonGroup : undefined}
       disabled={disabled}
       align={align}
+      drop={drop}
       onSelect={onSelect}>
       {children}
     </DropdownButtonBS>

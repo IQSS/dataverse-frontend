@@ -15,6 +15,7 @@ import { DatasetUploadLimits } from '../models/DatasetUploadLimits'
 import { DatasetReview } from '../models/DatasetReview'
 import { DatasetType } from '../models/DatasetType'
 import { ExportedDatasetMetadata } from '../models/ExportedDatasetMetadata'
+import { DatasetCurationStatus, DatasetReviewSubmission } from '../models/DatasetCuration'
 import { DatasetNotNumberedVersion } from '@iqss/dataverse-client-javascript'
 
 export interface DatasetRepository {
@@ -85,4 +86,10 @@ export interface DatasetRepository {
   getDatasetUploadLimits: (datasetId: string | number) => Promise<DatasetUploadLimits>
   getDatasetReviews: (datasetId: string | number) => Promise<DatasetReview[]>
   getAvailableDatasetTypes: () => Promise<DatasetType[]>
+  getAllowedCurationLabels: (datasetId: string | number) => Promise<string[]>
+  getCurationStatus: (datasetId: string | number) => Promise<DatasetCurationStatus | null>
+  getCurationStatusHistory: (datasetId: string | number) => Promise<DatasetCurationStatus[]>
+  setCurationStatus: (datasetId: string | number, label: string) => Promise<void>
+  deleteCurationStatus: (datasetId: string | number) => Promise<void>
+  submitForReview: (datasetId: string | number) => Promise<DatasetReviewSubmission>
 }

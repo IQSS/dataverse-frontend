@@ -31,14 +31,16 @@
     "title": "Dataset Action Buttons",
     "submitForReview": {
       "enabled": "Submit for Review",
-      "disabled": "Submitted for Review"
+      "disabled": "Submitted for Review",
+      "submit": "Submit",
+      "message": "You will not be able to make changes to this dataset while it is in review.",
+      "success": "Your dataset has been submitted for review.",
+      "defaultError": "Something went wrong submitting the dataset for review. Try again later."
     },
     "publish": {
       "title": "Publish Dataset",
       "publish": "Publish",
-      "returnToAuthor": "Return to Author",
-      "changeCurationStatus": "Change Curation Status",
-      "removeCurrentStatus": "Remove Current Status"
+      "returnToAuthor": "Return to Author"
     },
     "linkDataset": {
       "title": "Link Dataset",
@@ -95,6 +97,10 @@
     "contactOwner": "Contact Owner"
   },
   "alerts": {
+    "submittedForReview": {
+      "heading": "Submitted for Review",
+      "alertText": "The draft version of this dataset is currently under review prior to publication."
+    },
     "publishInProgress": {
       "heading": "Publish in Progress",
       "alertText": "The dataset is locked while the persistent identifiers are being registered or updated, and/or the physical files are being validated."
@@ -395,5 +401,24 @@
     "defaultGuestbookUpdateError": "An error occurred while updating the dataset guestbook. Please try again.",
     "defaultLicenseUpdateError": "An error occurred while updating the dataset license. Please try again.",
     "defaultTermsOfAccessUpdateError": "An error occurred while updating the dataset terms of access. Please try again."
+  },
+  "curationStatus": {
+    "menuTitle": "Curation Status",
+    "changeStatus": "Change Curation Status",
+    "removeCurrentStatus": "Remove Current Status",
+    "viewHistory": "View Curation Status History",
+    "changed": "Curation Status is now \"{{label}}\"",
+    "removed": "Curation Status Removed",
+    "changeError": "Unable to change Curation Status. Please contact the administrator.",
+    "history": {
+      "title": "Curation Status History",
+      "status": "Status",
+      "date": "Date",
+      "assigner": "Assigner",
+      "removed": "Status removed",
+      "empty": "There is no curation status history for this dataset.",
+      "loading": "Loading curation status history",
+      "error": "Something went wrong getting the curation status history. Try again later."
+    }
   }
 }

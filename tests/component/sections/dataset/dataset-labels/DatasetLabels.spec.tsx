@@ -32,4 +32,20 @@ describe('DatasetLabels', () => {
     cy.findByText(labels[4].value).should('have.class', 'bg-warning')
     cy.findByText(labels[5].value).should('have.class', 'bg-info')
   })
+
+  it('renders a purple curation badge with bold white text without recoloring other labels', () => {
+    cy.mount(<DatasetLabels labels={labels} curationStatusLabel="Privacy Review" />)
+
+    cy.findByText('Privacy Review')
+      .should('have.css', 'background-color', 'rgb(209, 11, 209)')
+      .and('have.css', 'color', 'rgb(255, 255, 255)')
+      .and('have.css', 'font-weight', '700')
+    cy.findByText('Label 1').should('not.have.css', 'background-color', 'rgb(209, 11, 209)')
+  })
+
+  it('should not render a curation status badge when no label is provided', () => {
+    cy.mount(<DatasetLabels labels={[]} />)
+
+    cy.get('.badge').should('not.exist')
+  })
 })
