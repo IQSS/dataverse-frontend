@@ -18,7 +18,12 @@ import { useIsFirstRender } from './useIsFirstRender'
 export const DEFAULT_LOCALES = { select: 'Select...' }
 export const SELECT_MENU_SEARCH_DEBOUNCE_TIME = 400
 
-export type Option = { value: string; label: string; description?: string }
+export type Option = {
+  value: string
+  label: string
+  description?: string
+  group?: string
+}
 
 export type InputOptions = string[] | Option[]
 
@@ -29,6 +34,7 @@ type BaseProps = {
   isInvalid?: boolean
   inputButtonId?: string
   locales?: { select?: string }
+  hidePlaceholderOption?: boolean
 }
 
 type SingleProps = BaseProps & {
@@ -56,7 +62,8 @@ export const SelectAdvanced = forwardRef(
       isDisabled = false,
       isInvalid = false,
       inputButtonId,
-      locales
+      locales,
+      hidePlaceholderOption = false
     }: SelectAdvancedProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
@@ -194,6 +201,7 @@ export const SelectAdvanced = forwardRef(
           isSearchable={isSearchable}
           menuId={menuId}
           selectWord={locales?.select ?? DEFAULT_LOCALES.select}
+          hidePlaceholderOption={hidePlaceholderOption}
         />
       </DropdownBS>
     )

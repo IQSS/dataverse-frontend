@@ -10,6 +10,9 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 - Manage Guestbooks: Edit guestbooks, and copy guestbooks into a prefilled creation form. (#1006)
 - Guestbook Responses page with pagination, sorting within the current page, custom question responses, and CSV download. (#1006)
+- Dataset Page: "Styled Citation" now supports selecting any CSL citation style and renders the citation formatted in that style, using citeproc-js in the browser.
+- Dataset Page: added a copy icon in front of "Cite Dataset" to support a quick copy of citation in default style.
+- File Page: added a File Metrics: File Download Count.
 
 ### Changed
 
@@ -40,7 +43,6 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
   - a checkbox for including guestbooks from parent collections
 - Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Dataset Page: added a sidebar to show dataset reviews.
-- File Page: added a File Metrics: File Download Count.
 
 ### Changed
 

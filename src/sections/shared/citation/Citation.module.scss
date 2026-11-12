@@ -13,16 +13,27 @@
   color: $dv-info-border-color;
 }
 
+.citationStyleLabel {
+  margin-top: 15px;
+}
+
 .styledCitationBox {
-  padding: 0.5rem 1rem;
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none;
-  background-color: #f7f7f9;
-  border: solid 1px $dv-border-color;
-  border-radius: 4px;
+
+  :global(.csl-left-margin) {
+    display: none;
+  }
 }
 
 .styledCitationButton {
   color: $dv-link-color !important;
+}
+
+.copyCitationButtonWrapper {
+  display: flex;
+  align-items: center;
+  margin-right: -12px;
+  margin-bottom: -2px;
 }

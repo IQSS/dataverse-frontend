@@ -32,6 +32,7 @@
     "ajv-draft-04": "1.0.0",
     "async-mutex": "0.5.0",
     "bootstrap": "5.2.3",
+    "citeproc": "2.4.63",
     "classnames": "2.5.1",
     "dompurify": "3.2.7",
     "html-react-parser": "3.0.16",
