@@ -118,6 +118,14 @@ export class DatasetHelper extends DataverseApiHelper {
     return { ...response, persistentId }
   }
 
+  static async createDraftWithTitle(persistentId: string, title: string): Promise<void> {
+    await this.request(
+      `/datasets/:persistentId/editMetadata?persistentId=${persistentId}&replace=true`,
+      'PUT',
+      { fields: [{ typeName: 'title', value: title }] }
+    )
+  }
+
   static async getLocks(persistentId: string): Promise<{
     status: string
     persistentId: string
@@ -305,6 +313,17 @@ export class DatasetHelper extends DataverseApiHelper {
       `/dataverses/${collectionIdOrAlias}/templates`,
       'GET'
     )
+  }
+
+  static async setTemplateAsDefault(
+    templateId: number,
+    collectionAlias = ROOT_COLLECTION_ALIAS
+  ): Promise<void> {
+    return this.request(`/dataverses/${collectionAlias}/defaultTemplate/${templateId}`, 'PUT')
+  }
+
+  static async unsetTemplateAsDefault(collectionAlias = ROOT_COLLECTION_ALIAS): Promise<void> {
+    return this.request(`/dataverses/${collectionAlias}/defaultTemplate`, 'DELETE')
   }
 
   static async deleteDatasetTemplate(templateId: number): Promise<void> {

@@ -197,8 +197,14 @@ describe('AccessFileMenu', () => {
 
   it('opens the guestbook modal before starting the file download', () => {
     const guestbookRepository: GuestbookRepository = {
+      createGuestbook: cy.stub().resolves(1),
+      editGuestbook: cy.stub().resolves(),
       getGuestbook: cy.stub().as('getGuestbook').resolves(guestbook),
       getGuestbooksByCollectionId: cy.stub().resolves([]),
+      getGuestbookResponsesByGuestbookId: cy.stub(),
+      setGuestbookEnabled: cy.stub(),
+      downloadGuestbookResponsesByCollectionId: cy.stub(),
+      downloadGuestbookResponsesByGuestbookId: cy.stub(),
       assignDatasetGuestbook: cy.stub().resolves(),
       removeDatasetGuestbook: cy.stub().resolves()
     }
@@ -328,8 +334,14 @@ describe('AccessFileMenu', () => {
 
   it('opens the terms modal when custom terms exist without a guestbook', () => {
     const guestbookRepository: GuestbookRepository = {
+      createGuestbook: cy.stub().resolves(1),
+      editGuestbook: cy.stub().resolves(),
       getGuestbook: cy.stub().as('getGuestbook').resolves(guestbook),
       getGuestbooksByCollectionId: cy.stub().resolves([]),
+      getGuestbookResponsesByGuestbookId: cy.stub(),
+      setGuestbookEnabled: cy.stub(),
+      downloadGuestbookResponsesByCollectionId: cy.stub(),
+      downloadGuestbookResponsesByGuestbookId: cy.stub(),
       assignDatasetGuestbook: cy.stub().resolves(),
       removeDatasetGuestbook: cy.stub().resolves()
     }

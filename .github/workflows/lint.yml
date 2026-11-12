@@ -3,7 +3,7 @@ name: lint
 on:
   push:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize]
 
 jobs:
   lint:
@@ -31,7 +31,7 @@ jobs:
         run: npm run build
 
       - name: Type check
-        run: tsc --noEmit
+        run: npx tsc --noEmit
 
       - name: ESLint
         run: npm run lint:eslint

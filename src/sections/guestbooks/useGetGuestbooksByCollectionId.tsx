@@ -2,18 +2,23 @@ import { useCallback, useEffect, useState } from 'react'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { getGuestbooksByCollectionId } from '@/guestbooks/domain/useCases/getGuestbooksByCollectionId'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 
 interface UseGetGuestbooksByCollectionIdProps {
   guestbookRepository: GuestbookRepository
   collectionIdOrAlias?: number | string
   autoFetch?: boolean
+  includeStats?: boolean
+  includeInherited?: boolean
 }
 
 export const useGetGuestbooksByCollectionId = ({
   guestbookRepository,
   collectionIdOrAlias,
-  autoFetch = true
+  autoFetch = true,
+  includeStats = false,
+  includeInherited = false
 }: UseGetGuestbooksByCollectionIdProps) => {
   const [guestbooks, setGuestbooks] = useState<Guestbook[]>([])
   const [isLoadingGuestbooksByCollectionId, setIsLoadingGuestbooksByCollectionId] =
@@ -34,8 +39,11 @@ export const useGetGuestbooksByCollectionId = ({
     setErrorGetGuestbooksByCollectionId(null)
 
     try {
-      const fetchedGuestbooks = await guestbookRepository.getGuestbooksByCollectionId(
-        collectionIdOrAlias
+      const fetchedGuestbooks = await getGuestbooksByCollectionId(
+        guestbookRepository,
+        collectionIdOrAlias,
+        includeStats,
+        includeInherited
       )
       setGuestbooks(Array.isArray(fetchedGuestbooks) ? fetchedGuestbooks : [])
     } catch (err) {
@@ -53,7 +61,7 @@ export const useGetGuestbooksByCollectionId = ({
     } finally {
       setIsLoadingGuestbooksByCollectionId(false)
     }
-  }, [collectionIdOrAlias, guestbookRepository])
+  }, [collectionIdOrAlias, guestbookRepository, includeInherited, includeStats])
 
   useEffect(() => {
     if (autoFetch) {

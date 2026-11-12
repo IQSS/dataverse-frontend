@@ -82,5 +82,6 @@
     "helper": "Elige a cuál de tus colecciones te gustaría vincular esta colección.",
     "save": "Guardar colección vinculada",
     "success": "<wrapper>{{linkedCollectionName}} se ha vinculado correctamente a <a>{{linkingCollectionName}}</a></wrapper>"
-  }
+  },
+  "unpublished": "No publicado"
 }

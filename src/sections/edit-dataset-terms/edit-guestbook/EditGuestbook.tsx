@@ -1,20 +1,17 @@
-import { startTransition, useCallback, useEffect, useState } from 'react'
+import { startTransition, useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, Button, Col, Form, Row, Spinner } from '@iqss/dataverse-design-system'
 import { Trans, useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
-import {
-  DatasetNonNumericVersionSearchParam,
-  DatasetPublishingStatus
-} from '@/dataset/domain/models/Dataset'
 import { useGetGuestbooksByCollectionId } from '@/sections/guestbooks/useGetGuestbooksByCollectionId'
-import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { useAssignDatasetGuestbook } from './useAssignDatasetGuestbook'
 import { useRemoveDatasetGuestbook } from './useRemoveDatasetGuestbook'
 import { useDataset } from '../../dataset/DatasetContext'
 import { PreviewGuestbookModal } from '@/sections/guestbooks/preview-modal/PreviewGuestbookModal'
+import { buildDatasetTermsReturnUrl } from '../datasetTermsNavigation'
 import { useGuestbookRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
+import { QueryParamKey } from '@/sections/Route.enum'
 import styles from './EditGuestbook.module.scss'
 
 interface EditGuestbookProps {
@@ -29,24 +26,19 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
   const [selectedGuestbookId, setSelectedGuestbookId] = useState<number | undefined>(undefined)
   const [previewGuestbook, setPreviewGuestbook] = useState<Guestbook | undefined>(undefined)
   const { dataset, refreshDataset } = useDataset()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const viewedVersion = searchParams.get(QueryParamKey.VERSION) ?? undefined
   const collectionIdOrAlias = dataset?.parentCollectionNode?.id
   const collectionName = dataset?.parentCollectionNode?.name ?? ''
+  const includeInheritedGuestbooks = Boolean(dataset?.parentCollectionNode?.parent)
+  //TODO: we should add includeInheritedGuestbooks boolean to dataset api response
 
   const navigateToDatasetView = useCallback(() => {
     if (!dataset) return
 
-    const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
-
-    if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-    } else {
-      searchParams.set(QueryParamKey.VERSION, dataset.version.number.toString())
-    }
-
-    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
-  }, [dataset, navigate])
+    navigate(buildDatasetTermsReturnUrl(dataset, viewedVersion))
+  }, [dataset, navigate, viewedVersion])
 
   const handleCancel = () => {
     navigateToDatasetView()
@@ -55,8 +47,13 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
   const { guestbooks, isLoadingGuestbooksByCollectionId, errorGetGuestbooksByCollectionId } =
     useGetGuestbooksByCollectionId({
       guestbookRepository,
-      collectionIdOrAlias
+      collectionIdOrAlias,
+      includeInherited: includeInheritedGuestbooks
     })
+  const enabledGuestbooks = useMemo(
+    () => guestbooks.filter((guestbook) => guestbook.enabled),
+    [guestbooks]
+  )
   const {
     handleAssignDatasetGuestbook,
     isLoadingAssignDatasetGuestbook,
@@ -83,7 +80,7 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
   })
 
   useEffect(() => {
-    if (guestbooks.length === 0) {
+    if (enabledGuestbooks.length === 0) {
       setSelectedGuestbookId(undefined)
       return
     }
@@ -93,14 +90,14 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
     if (currentDatasetGuestbookId === undefined) {
       setSelectedGuestbookId((currentSelectedGuestbookId) =>
         currentSelectedGuestbookId !== undefined &&
-        guestbooks.some((guestbook) => guestbook.id === currentSelectedGuestbookId)
+        enabledGuestbooks.some((guestbook) => guestbook.id === currentSelectedGuestbookId)
           ? currentSelectedGuestbookId
           : undefined
       )
       return
     }
 
-    const hasCurrentDatasetGuestbook = guestbooks.some(
+    const hasCurrentDatasetGuestbook = enabledGuestbooks.some(
       (guestbook) => guestbook.id === currentDatasetGuestbookId
     )
 
@@ -112,14 +109,14 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
     setSelectedGuestbookId((currentSelectedGuestbookId) => {
       if (
         currentSelectedGuestbookId !== undefined &&
-        guestbooks.some((guestbook) => guestbook.id === currentSelectedGuestbookId)
+        enabledGuestbooks.some((guestbook) => guestbook.id === currentSelectedGuestbookId)
       ) {
         return currentSelectedGuestbookId
       }
 
       return currentDatasetGuestbookId
     })
-  }, [dataset?.guestbookId, guestbooks])
+  }, [dataset?.guestbookId, enabledGuestbooks])
 
   useEffect(() => {
     onFormStateChange?.(selectedGuestbookId !== dataset?.guestbookId)
@@ -167,7 +164,7 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
               />
               {!isLoadingGuestbooksByCollectionId &&
                 !errorGetGuestbooksByCollectionId &&
-                guestbooks.length === 0 && (
+                enabledGuestbooks.length === 0 && (
                   <div style={{ marginTop: '10px' }}>
                     {t('editTerms.guestbook.noGuestbooksEnabled', { collectionName })}
                   </div>
@@ -176,7 +173,7 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
 
             {!isLoadingGuestbooksByCollectionId &&
               !errorGetGuestbooksByCollectionId &&
-              guestbooks.length > 0 &&
+              enabledGuestbooks.length > 0 &&
               selectedGuestbookId !== undefined && (
                 <div style={{ marginTop: '10px' }}>
                   <Button
@@ -208,9 +205,9 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
 
             {!isLoadingGuestbooksByCollectionId &&
               !errorGetGuestbooksByCollectionId &&
-              guestbooks.length > 0 && (
+              enabledGuestbooks.length > 0 && (
                 <div className={styles['guestbook-list']}>
-                  {guestbooks.map((guestbook) => (
+                  {enabledGuestbooks.map((guestbook) => (
                     <div
                       key={guestbook.id}
                       className={`${styles['guestbook-option']}${
@@ -253,7 +250,7 @@ export function EditGuestbook({ onPreview, onFormStateChange }: EditGuestbookPro
           <Button
             type="submit"
             disabled={
-              guestbooks.length === 0 ||
+              enabledGuestbooks.length === 0 ||
               (selectedGuestbookId === undefined && dataset?.guestbookId === undefined) ||
               selectedGuestbookId === dataset?.guestbookId ||
               isLoadingAssignDatasetGuestbook ||

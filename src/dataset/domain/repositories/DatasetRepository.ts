@@ -13,6 +13,7 @@ import { CollectionSummary } from '@/collection/domain/models/CollectionSummary'
 import { DatasetVersionPaginationInfo } from '../models/DatasetVersionPaginationInfo'
 import { DatasetUploadLimits } from '../models/DatasetUploadLimits'
 import { DatasetReview } from '../models/DatasetReview'
+import { DatasetType } from '../models/DatasetType'
 import { ExportedDatasetMetadata } from '../models/ExportedDatasetMetadata'
 import { DatasetNotNumberedVersion } from '@iqss/dataverse-client-javascript'
 
@@ -32,7 +33,11 @@ export interface DatasetRepository {
     includeDeaccessioned: boolean
   ) => Promise<DatasetVersionDiff>
 
-  create: (dataset: DatasetDTO, collectionId: string) => Promise<{ persistentId: string }>
+  create: (
+    dataset: DatasetDTO,
+    collectionId: string,
+    datasetType?: DatasetType['name']
+  ) => Promise<{ persistentId: string }>
   updateMetadata: (
     datasetId: string | number,
     datasetDTO: DatasetDTO,
@@ -79,4 +84,5 @@ export interface DatasetRepository {
   getDatasetLinkedCollections: (datasetId: string | number) => Promise<CollectionSummary[]>
   getDatasetUploadLimits: (datasetId: string | number) => Promise<DatasetUploadLimits>
   getDatasetReviews: (datasetId: string | number) => Promise<DatasetReview[]>
+  getAvailableDatasetTypes: () => Promise<DatasetType[]>
 }

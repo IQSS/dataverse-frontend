@@ -842,9 +842,11 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "*"
+        "http://localhost:8000/modern/*"
       ],
-      "webOrigins": [],
+      "webOrigins": [
+        "http://localhost:8000"
+      ],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -2396,7 +2398,7 @@
     "clientSessionMaxLifespan": "0",
     "frontendUrl": ""
   },
-  "keycloakVersion": "26.3.2",
+  "keycloakVersion": "26.7.2",
   "userManagedAccessAllowed": false,
   "organizationsEnabled": false,
   "verifiableCredentialsEnabled": false,

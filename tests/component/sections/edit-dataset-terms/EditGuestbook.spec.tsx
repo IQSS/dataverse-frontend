@@ -57,6 +57,19 @@ const mockGuestbooks: Guestbook[] = [
   }
 ]
 
+const disabledGuestbook: Guestbook = {
+  id: 3,
+  name: 'Disabled Guestbook',
+  enabled: false,
+  emailRequired: true,
+  nameRequired: false,
+  institutionRequired: false,
+  positionRequired: false,
+  customQuestions: [],
+  createTime: '2026-01-01T00:00:00.000Z',
+  dataverseId: 1
+}
+
 describe('EditGuestbook', () => {
   const withProviders = (component: ReactNode, dataset: Dataset) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
@@ -88,8 +101,14 @@ describe('EditGuestbook', () => {
 
   beforeEach(() => {
     guestbookRepository = {
+      createGuestbook: cy.stub(),
+      editGuestbook: cy.stub(),
       getGuestbook: cy.stub(),
       getGuestbooksByCollectionId: cy.stub().resolves(mockGuestbooks),
+      getGuestbookResponsesByGuestbookId: cy.stub(),
+      setGuestbookEnabled: cy.stub(),
+      downloadGuestbookResponsesByCollectionId: cy.stub(),
+      downloadGuestbookResponsesByGuestbookId: cy.stub(),
       assignDatasetGuestbook: cy.stub().resolves(undefined),
       removeDatasetGuestbook: cy.stub().resolves(undefined)
     }
@@ -102,8 +121,32 @@ describe('EditGuestbook', () => {
 
     cy.findByLabelText('Data Request Guestbook').should('be.checked')
     cy.findByLabelText('Secondary Guestbook').should('not.be.checked')
+    cy.wrap(
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    ).should('have.been.calledWith', 'root', false, false)
     cy.findByRole('button', { name: 'Clear Selection' }).should('be.enabled')
     cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+  })
+
+  it('includes inherited guestbooks when the dataset is in a subcollection', () => {
+    const dataset = DatasetMother.create({
+      guestbookId: mockGuestbooks[0].id,
+      hierarchy: UpwardHierarchyNodeMother.createDataset({
+        parent: UpwardHierarchyNodeMother.createSubCollection({
+          id: '17',
+          name: 'SubCollection',
+          parent: UpwardHierarchyNodeMother.createCollection({ id: 'root', name: 'Root' })
+        })
+      })
+    })
+
+    cy.customMount(
+      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
+    )
+
+    cy.wrap(
+      guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>
+    ).should('have.been.calledWith', '17', false, true)
   })
 
   it('enables Save Changes when selecting a different guestbook', () => {
@@ -146,6 +189,22 @@ describe('EditGuestbook', () => {
     cy.findByLabelText('Secondary Guestbook').should('not.be.checked')
     cy.findByRole('button', { name: 'Clear Selection' }).should('not.exist')
     cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+  })
+
+  it('does not show disabled guestbooks in the list', () => {
+    ;(guestbookRepository.getGuestbooksByCollectionId as Cypress.Agent<sinon.SinonStub>).resolves([
+      ...mockGuestbooks,
+      disabledGuestbook
+    ])
+    const dataset = DatasetMother.create({ guestbookId: undefined })
+
+    cy.customMount(
+      withProviders(<EditGuestbook guestbookRepository={guestbookRepository} />, dataset)
+    )
+
+    cy.findByLabelText('Data Request Guestbook').should('exist')
+    cy.findByLabelText('Secondary Guestbook').should('exist')
+    cy.findByLabelText('Disabled Guestbook').should('not.exist')
   })
 
   it('clears the selected guestbook when clicking Clear Selection', () => {
@@ -305,7 +364,7 @@ describe('EditGuestbook', () => {
     )
   })
 
-  it('navigates with numeric version query param after successful submit for non-draft datasets', () => {
+  it('navigates with current version query param after successful submit for non-draft datasets', () => {
     ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).resolves(
       undefined
     )
@@ -331,6 +390,62 @@ describe('EditGuestbook', () => {
     cy.findByTestId('location-display').should(
       'have.text',
       '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0'
+    )
+  })
+
+  it('navigates with viewed version from searchParams after successful submit even when latest dataset version is draft', () => {
+    ;(guestbookRepository.assignDatasetGuestbook as Cypress.Agent<sinon.SinonStub>).resolves(
+      undefined
+    )
+    const draftDataset = DatasetMother.create({
+      id: 999,
+      persistentId: 'doi:10.5072/FK2/RELEASEDPID',
+      guestbookId: mockGuestbooks[0].id,
+      version: DatasetVersionMother.createDraftAsLatestVersion()
+    })
+
+    cy.customMount(
+      withProviders(
+        <>
+          <EditGuestbook />
+          <LocationDisplay />
+        </>,
+        draftDataset
+      ),
+      ['/datasets/edit-terms?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0']
+    )
+
+    cy.findByLabelText('Secondary Guestbook').click()
+    cy.findByRole('button', { name: 'Save Changes' }).click()
+    cy.findByTestId('location-display').should(
+      'have.text',
+      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FRELEASEDPID&version=1.0'
+    )
+  })
+
+  it('navigates with viewed version from searchParams after clicking Cancel', () => {
+    const draftDataset = DatasetMother.create({
+      id: 999,
+      persistentId: 'doi:10.5072/FK2/CANCELPID',
+      guestbookId: mockGuestbooks[0].id,
+      version: DatasetVersionMother.createDraftAsLatestVersion()
+    })
+
+    cy.customMount(
+      withProviders(
+        <>
+          <EditGuestbook />
+          <LocationDisplay />
+        </>,
+        draftDataset
+      ),
+      ['/datasets/edit-terms?persistentId=doi%3A10.5072%2FFK2%2FCANCELPID&version=2.0']
+    )
+
+    cy.findByRole('button', { name: 'Cancel' }).click()
+    cy.findByTestId('location-display').should(
+      'have.text',
+      '/datasets?persistentId=doi%3A10.5072%2FFK2%2FCANCELPID&version=2.0'
     )
   })
 
