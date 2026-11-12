@@ -59,6 +59,12 @@ import { WithRepositories } from '@tests/component/WithRepositories'
 
 export type RouterInitialEntry = string | Partial<Location>
 
+Cypress.Commands.add('setLanguage', (language: string) => {
+  return cy.then(async () => {
+    await i18next.changeLanguage(language)
+  })
+})
+
 Cypress.Commands.add(
   'customMount',
   (component: ReactNode, initialEntries?: RouterInitialEntry[]) => {

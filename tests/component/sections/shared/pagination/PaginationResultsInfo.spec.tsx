@@ -2,12 +2,8 @@ import { FilePaginationInfo } from '../../../../../src/files/domain/models/FileP
 import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
 import { PaginationResultsInfo } from '../../../../../src/sections/shared/pagination/PaginationResultsInfo'
 import { PaginationInfo } from '../../../../../src/shared/pagination/domain/models/PaginationInfo'
-import i18n from '@/i18n'
 
 describe('PaginationResultsInfo', () => {
-  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
-  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
-
   it('shows the correct results info', () => {
     cy.customMount(
       <PaginationResultsInfo
@@ -19,7 +15,7 @@ describe('PaginationResultsInfo', () => {
   })
 
   it('formats result counts with the active language', () => {
-    cy.wrap(i18n.changeLanguage('es')).then(() => {
+    cy.setLanguage('es').then(() => {
       cy.customMount(
         <PaginationResultsInfo
           paginationInfo={

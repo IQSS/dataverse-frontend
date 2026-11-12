@@ -14,7 +14,6 @@ import { requireAppConfig } from '@/config'
 import { WithRepositories } from '@tests/component/WithRepositories'
 import { DatasetMockRepository } from '@/stories/dataset/DatasetMockRepository'
 import { type ComponentProps } from 'react'
-import i18n from '@/i18n'
 
 const appConfig = requireAppConfig()
 
@@ -26,9 +25,6 @@ const FileMetadata = (props: ComponentProps<typeof FileMetadataComponent>) => (
 )
 
 describe('FileMetadata', () => {
-  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
-  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
-
   const mountFileMetadata = (props: Partial<ComponentProps<typeof FileMetadata>> = {}) => {
     cy.customMount(
       <FileMetadata
@@ -435,7 +431,7 @@ describe('FileMetadata', () => {
       tabularData: FileTabularDataMother.create({ variables: 53_305, observations: 4_940 })
     })
 
-    cy.wrap(i18n.changeLanguage('es')).then(() => {
+    cy.setLanguage('es').then(() => {
       mountFileMetadata({ metadata })
     })
 

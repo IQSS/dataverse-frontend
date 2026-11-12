@@ -1,11 +1,7 @@
 import { DatasetPublishingStatus } from '../../../../../../../../../src/dataset/domain/models/Dataset'
 import { FileDownloads } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileDownloads'
-import i18n from '@/i18n'
 
 describe('FileDownloads', () => {
-  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
-  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
-
   it('renders the number of downloads when file is RELEASED', () => {
     const downloads = 10
     const status = DatasetPublishingStatus.RELEASED
@@ -15,7 +11,7 @@ describe('FileDownloads', () => {
   })
 
   it('formats the download count with the active language', () => {
-    cy.wrap(i18n.changeLanguage('es')).then(() => {
+    cy.setLanguage('es').then(() => {
       cy.customMount(
         <FileDownloads
           downloadCount={53_305}

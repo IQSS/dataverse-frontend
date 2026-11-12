@@ -14,7 +14,6 @@ import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProv
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { WithRepositories } from '@tests/component/WithRepositories'
-import i18n from '@/i18n'
 
 const guestbook: Guestbook = {
   id: 10,
@@ -73,9 +72,6 @@ function withAccessRepository(
 }
 
 describe('AccessDatasetMenu', () => {
-  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
-  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
-
   it('updates download sizes when the interface language changes', () => {
     cy.customMount(
       withAccessRepository(
@@ -101,7 +97,7 @@ describe('AccessDatasetMenu', () => {
 
     cy.findByRole('button', { name: 'Access Dataset' }).click()
     cy.findByText(/180\.3 KB/).should('be.visible')
-    cy.then(() => i18n.changeLanguage('es'))
+    cy.setLanguage('es')
     cy.findByText(/180,3 KB/).should('be.visible')
   })
 

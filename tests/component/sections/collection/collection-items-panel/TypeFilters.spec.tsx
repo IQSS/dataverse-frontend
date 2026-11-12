@@ -1,11 +1,7 @@
 import { TypeFilters } from '@/sections/collection/collection-items-panel/filter-panel/type-filters/TypeFilters'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import i18n from '@/i18n'
 
 describe('TypeFilters', () => {
-  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
-  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
-
   it('sets default selected checkboxes based on current item types prop', () => {
     const onItemTypesChange = cy.stub().as('onItemTypesChange')
     cy.customMount(
@@ -23,7 +19,7 @@ describe('TypeFilters', () => {
   })
 
   it('formats type counts with the active language', () => {
-    cy.wrap(i18n.changeLanguage('es')).then(() => {
+    cy.setLanguage('es').then(() => {
       cy.customMount(
         <TypeFilters
           onItemTypesChange={cy.stub()}

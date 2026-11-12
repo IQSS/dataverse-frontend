@@ -1,11 +1,7 @@
 import { FileLabelType } from '../../../../../src/files/domain/models/FileMetadata'
 import { FileLabels } from '../../../../../src/sections/file/file-labels/FileLabels'
-import i18n from '@/i18n'
 
 describe('FileLabels', () => {
-  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
-  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
-
   it('renders labels with correct variants and values', () => {
     const labels = [
       { value: 'Category 1', type: FileLabelType.CATEGORY },
@@ -26,7 +22,7 @@ describe('FileLabels', () => {
       { value: 'Data', type: FileLabelType.TAG }
     ]
 
-    cy.wrap(i18n.changeLanguage('es')).then(() => {
+    cy.setLanguage('es').then(() => {
       cy.customMount(<FileLabels labels={labels} />)
     })
 

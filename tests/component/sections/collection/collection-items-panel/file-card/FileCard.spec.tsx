@@ -1,15 +1,10 @@
 import { FileCard } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCard'
 import { FileItemTypePreviewMother } from '@tests/component/files/domain/models/FileItemTypePreviewMother'
 import { DateHelper } from '@/shared/helpers/DateHelper'
-import { FileCardHelper } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCardHelper'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 import { FileLabelType } from '@/files/domain/models/FileMetadata'
-import i18n from '@/i18n'
 
 describe('FileCard', () => {
-  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
-  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
-
   it('should render the card', () => {
     const userRoles = ['Admin', 'Contributor']
     const filePreview = FileItemTypePreviewMother.create({ userRoles: userRoles })
@@ -21,7 +16,6 @@ describe('FileCard', () => {
     cy.contains(DateHelper.toDisplayFormat(filePreview.releaseOrCreateDate)).should('exist')
     cy.contains(filePreview.fileType).should('exist')
     filePreview.checksum?.type && cy.contains(filePreview.checksum?.type).should('exist')
-    cy.contains(FileCardHelper.formatBytesToCompactNumber(filePreview.sizeInBytes)).should('exist')
     filePreview.description && cy.findByText(filePreview.description).should('exist')
     filePreview.datasetName && cy.findByText(filePreview.datasetName).should('exist')
     filePreview.tags &&
@@ -43,7 +37,6 @@ describe('FileCard', () => {
     cy.contains(DateHelper.toDisplayFormat(filePreview.releaseOrCreateDate)).should('exist')
     cy.contains(filePreview.fileType).should('exist')
     filePreview.checksum?.type && cy.contains(filePreview.checksum?.type).should('exist')
-    cy.contains(FileCardHelper.formatBytesToCompactNumber(filePreview.sizeInBytes)).should('exist')
     filePreview.description && cy.findByText(filePreview.description).should('exist')
     filePreview.datasetName && cy.findByText(filePreview.datasetName).should('exist')
     filePreview.tags &&
@@ -66,7 +59,6 @@ describe('FileCard', () => {
     cy.contains(DateHelper.toDisplayFormat(filePreview.releaseOrCreateDate)).should('exist')
     cy.contains(filePreview.fileType).should('exist')
     filePreview.checksum?.type && cy.contains(filePreview.checksum?.type).should('exist')
-    cy.contains(FileCardHelper.formatBytesToCompactNumber(filePreview.sizeInBytes)).should('exist')
     filePreview.description && cy.findByText(filePreview.description).should('exist')
     filePreview.datasetName && cy.findByText(filePreview.datasetName).should('exist')
     filePreview.tags &&
@@ -85,6 +77,21 @@ describe('FileCard', () => {
     cy.findByTestId('file-labels').children().should('have.length', 0)
   })
 
+  it('converts bytes to binary-based file sizes and updates the locale without remounting', () => {
+    const filePreview = FileItemTypePreviewMother.create({ sizeInBytes: 180_300 })
+    cy.customMount(<FileCard filePreview={filePreview} />)
+
+    cy.findByText('- 176.1 KB').should('exist')
+
+    cy.setLanguage('es')
+    cy.findByText('- 176,1 KB').should('exist')
+    cy.findByText('- 176.1 KB').should('not.exist')
+
+    cy.setLanguage('en')
+    cy.findByText('- 176.1 KB').should('exist')
+    cy.findByText('- 176,1 KB').should('not.exist')
+  })
+
   it('localizes the date, file type, system label, and tabular counts in Spanish', () => {
     const filePreview = FileItemTypePreviewMother.create({
       releaseOrCreateDate: new Date(2026, 8, 2, 12),
@@ -95,9 +102,8 @@ describe('FileCard', () => {
       tags: [{ value: 'Data', type: FileLabelType.CATEGORY }]
     })
 
-    cy.wrap(i18n.changeLanguage('es')).then(() => {
-      cy.customMount(<FileCard filePreview={filePreview} />)
-    })
+    cy.setLanguage('es')
+    cy.customMount(<FileCard filePreview={filePreview} />)
 
     cy.findByText(/2 sept 2026/).should('exist')
     cy.findByText('Valores separados por tabuladores').should('exist')

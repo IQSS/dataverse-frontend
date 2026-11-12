@@ -2,14 +2,10 @@ import { FacetsFilters } from '@/sections/collection/collection-items-panel/filt
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import styles from '@/sections/collection/collection-items-panel/filter-panel/facets-filters/FacetsFilters.module.scss'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
-import i18n from '@/i18n'
 
 const facets = CollectionItemsMother.createItemsFacets()
 
 describe('FacetsFilters', () => {
-  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
-  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
-
   it('should render skeleton while loading collection items and no facets', () => {
     cy.customMount(
       <FacetsFilters facets={[]} onFacetChange={cy.stub()} isLoadingCollectionItems={true} />
@@ -101,7 +97,7 @@ describe('FacetsFilters', () => {
       }
     ]
 
-    cy.wrap(i18n.changeLanguage('es')).then(() => {
+    cy.setLanguage('es').then(() => {
       cy.customMount(
         <FacetsFilters
           facets={localizedFacets}

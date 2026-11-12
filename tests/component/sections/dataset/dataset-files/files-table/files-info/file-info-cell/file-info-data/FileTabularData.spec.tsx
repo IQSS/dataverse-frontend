@@ -1,11 +1,7 @@
 import { FileTabularData } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileTabularData'
 import styles from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/FileInfoCell.module.scss'
-import i18n from '@/i18n'
 
 describe('FileTabularData', () => {
-  beforeEach(() => cy.wrap(i18n.changeLanguage('en')))
-  afterEach(() => cy.wrap(i18n.changeLanguage('en')))
-
   it('renders the tabular data and CopyToClipboardButton when tabularData is provided', () => {
     const tabularData = {
       variables: 10,
@@ -20,7 +16,7 @@ describe('FileTabularData', () => {
   })
 
   it('formats counts with the active language', () => {
-    cy.wrap(i18n.changeLanguage('es')).then(() => {
+    cy.setLanguage('es').then(() => {
       cy.customMount(
         <FileTabularData tabularData={{ variables: 53_305, observations: 4_940, unf: undefined }} />
       )
