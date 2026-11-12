@@ -2,12 +2,9 @@
 // Edit values to match your environment.
 // This file is loaded at runtime (no rebuild required) and validated against src/config.ts schema.
 
-// Follows the host the page was opened on: localhost:8000, or 127.0.0.1:8000 for the ORCID sandbox.
-const devProxyOrigin = window.location.origin
-
 window.__APP_CONFIG__ = {
   // Base URL of your Dataverse backend
-  backendUrl: devProxyOrigin,
+  backendUrl: 'http://localhost:8000',
   // Optional banner shown at the top of the app when set. Basic HTML markup is supported.
   // Use a string for one message across all languages, or map language codes to localized messages.
   bannerMessage: {
@@ -17,9 +14,9 @@ window.__APP_CONFIG__ = {
   // OIDC provider settings
   oidc: {
     clientId: 'test',
-    authorizationEndpoint: `${devProxyOrigin}/realms/test/protocol/openid-connect/auth`,
-    tokenEndpoint: `${devProxyOrigin}/realms/test/protocol/openid-connect/token`,
-    logoutEndpoint: `${devProxyOrigin}/realms/test/protocol/openid-connect/logout`,
+    authorizationEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/auth',
+    tokenEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/token',
+    logoutEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/logout',
     // All auth-related storage keys will be prefixed with this string
     localStorageKeyPrefix: 'DV_'
   },
@@ -27,8 +24,8 @@ window.__APP_CONFIG__ = {
   // dataverse.feature.api-builtin-user-signup feature flag and :AllowSignUp.
   signUpEnabled: true,
   // Optional. Let new users connect their ORCID iD on the sign-up form. Requires an ORCID OAuth2
-  // provider in the backend and this SPA's sign-up URL in dataverse.api.signup.orcid-redirect-uris.
-  signUpWithOrcidEnabled: true,
+  // provider in the backend. ORCID doesn't accept localhost redirect URIs, so it is turned off on localhost.
+  signUpWithOrcidEnabled: window.location.hostname !== 'localhost',
   // UI languages available to users (if more than one is provided a language switcher will be shown)
   languages: [
     { code: 'en', name: 'English' },

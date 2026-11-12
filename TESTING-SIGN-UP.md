@@ -208,14 +208,19 @@ docker restart dev_dataverse dev_nginx_proxy
 but Dataverse only loads a disabled ORCID provider when it starts, which is why the last line restarts it. Dataverse
 then needs 2–3 minutes before the check below works.
 
-**5c. Turn on the ORCID row in the Modern UI**
+**5c. Point the Modern UI at `127.0.0.1` for ORCID testing**
+
+`public/config.js` uses `localhost`, and the ORCID row is hidden on `localhost` because ORCID doesn't accept
+`localhost` redirect URIs. While you test ORCID, temporarily change it to `127.0.0.1`:
 
 ```bash
 cd ~/dataverse-signup-test/dataverse-frontend
-sed -i.bak 's/signUpWithOrcidEnabled: false/signUpWithOrcidEnabled: true/' public/config.js && rm public/config.js.bak
+sed -i.bak 's#http://localhost:8000#http://127.0.0.1:8000#g' public/config.js && rm public/config.js.bak
+grep -c "127.0.0.1:8000" public/config.js   # 4
 ```
 
-No restart is needed; just reload the page.
+No restart is needed; just reload the page. Undo it when you're done with ORCID (`git checkout public/config.js`,
+also in Step 7), so that normal login at `localhost` works again.
 
 **Check:**
 
@@ -228,10 +233,10 @@ curl -s "http://localhost:8000/api/users/signup/orcid/authorize?redirectUri=http
 
 Open **http://127.0.0.1:8000/modern/sign-up**. Use `127.0.0.1`, not `localhost`, for this part.
 
-The ORCID callback and normal Keycloak login have separate redirect settings. After testing ORCID sign-up,
-return to **http://localhost:8000/modern** before clicking **Log In**. To support normal login on both hostnames,
-add `http://127.0.0.1:8000/modern/*` to the Keycloak `test` client's **Valid redirect URIs** and
-`http://127.0.0.1:8000` to its **Web origins**, keeping the existing `localhost` entries.
+While `config.js` points at `127.0.0.1`, **Log In** goes to Keycloak at `127.0.0.1`, which the default Keycloak `test`
+client doesn't allow ("Invalid parameter: redirect_uri"). After signing up, the success page may then show a
+**Log In** button instead of logging you in. That's expected here; undo Step 5c and log in at
+http://localhost:8000/modern to check the new account.
 
 - [ ] The form has a "Create or Connect your ORCID iD" row.
 - [ ] Type a username, then click it and sign in at ORCID. You come back to the form, and the username you typed
@@ -259,7 +264,7 @@ cd ~/dataverse-signup-test/dataverse-frontend/dev-env
 ./rm-env.sh                          # stops everything and deletes the test data
 
 cd ..
-git checkout public/config.js        # undo Step 5c
+git checkout public/config.js        # undo Step 5c, if you haven't already
 docker image rm gdcc/dataverse:unstable gdcc/configbaker:unstable   # optional: remove the images you built
 ```
 
@@ -277,9 +282,9 @@ You can then delete the `~/dataverse-signup-test` folder.
 | Sign-up says "Sign-up via API is not enabled"          | The dev environment wasn't started from this branch's `dev-env`. Run Step 3 from `dataverse-frontend/dev-env`.                                                                       |
 | "port is already allocated"                            | Another program or Dataverse environment uses port 8000, 8080 or 1080. Stop it, then run Step 3 again.                                                                               |
 | No "Sign Up" link                                      | Hard-reload the page (Shift+Reload). `public/config.js` must have `signUpEnabled: true`.                                                                                             |
-| Keycloak login says "Invalid parameter: redirect_uri"  | Open `http://localhost:8000/modern` and click **Log In** again. The default `test` client allows `localhost`, not `127.0.0.1`; see Step 5 for allowing both hostnames.               |
+| Keycloak login says "Invalid parameter: redirect_uri"  | Open `http://localhost:8000/modern` and click **Log In** again. The default `test` client allows `localhost`, not `127.0.0.1`. If you changed `config.js` in Step 5c, undo it first. |
 | ORCID says the redirect URI is invalid                 | The app's redirect URI must be exactly `http://127.0.0.1:8000/modern/sign-up`, and the page must be opened at `127.0.0.1`.                                                           |
 | "ORCID is not configured on this installation."        | Step 5b didn't succeed, or Dataverse wasn't restarted after it. Run it again, including the restart, and check it printed `"status":"OK"`.                                           |
 | ORCID connect fails with "Internal server error"       | The client ID or secret was saved empty. Run Step 5b again and type both when asked.                                                                                                 |
-| The ORCID row doesn't appear                           | Step 5c wasn't applied. Check `grep signUpWithOrcidEnabled public/config.js`, then reload.                                                                                           |
+| The ORCID row doesn't appear                           | The page must be opened at `http://127.0.0.1:8000`, not `localhost`, and Step 5c must be applied. Check `grep -c 127.0.0.1:8000 public/config.js` prints 4, then reload.             |
 | Uploading a file fails                                 | Not part of this test, but see "File Storage" in `DEVELOPER_GUIDE.md`.                                                                                                               |
