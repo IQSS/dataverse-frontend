@@ -161,7 +161,7 @@ export function DownloadWithTermsAndGuestbookModal({
       institution?: string
       position?: string
     }
-    const questionWithId = question as GuestbookCustomQuestion & { id?: number | string }
+    const questionWithId = question as GuestbookCustomQuestion & { id?: number }
 
     if (questionWithId?.id !== undefined) {
       return questionWithId.id

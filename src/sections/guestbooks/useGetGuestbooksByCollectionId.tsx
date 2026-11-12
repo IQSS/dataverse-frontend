@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { getGuestbooksByCollectionId } from '@/guestbooks/domain/useCases/getGuestbooksByCollectionId'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
 
 interface UseGetGuestbooksByCollectionIdProps {
@@ -38,7 +39,8 @@ export const useGetGuestbooksByCollectionId = ({
     setErrorGetGuestbooksByCollectionId(null)
 
     try {
-      const fetchedGuestbooks = await guestbookRepository.getGuestbooksByCollectionId(
+      const fetchedGuestbooks = await getGuestbooksByCollectionId(
+        guestbookRepository,
         collectionIdOrAlias,
         includeStats,
         includeInherited
