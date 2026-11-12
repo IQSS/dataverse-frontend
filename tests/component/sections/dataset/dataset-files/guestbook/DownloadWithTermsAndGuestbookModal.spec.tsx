@@ -211,6 +211,7 @@ describe('DownloadWithTermsAndGuestbookModal', () => {
 
     guestbookRepository = {
       createGuestbook: cy.stub(),
+      editGuestbook: cy.stub(),
       getGuestbook: cy
         .stub()
         .as('getGuestbook')

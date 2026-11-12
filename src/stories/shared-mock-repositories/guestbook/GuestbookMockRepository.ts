@@ -1,7 +1,7 @@
-import { type CreateGuestbookDTO } from '@iqss/dataverse-client-javascript'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import type { Guestbook as JSDataverseGuestbook } from '@iqss/dataverse-client-javascript'
+import { GuestbookDTO } from '@/guestbooks/domain/useCases/DTOs/GuestbookDTO'
 import { GuestbookResponseSubset } from '@/guestbooks/domain/models/GuestbookResponse'
 
 export const storybookGuestbook: Guestbook = {
@@ -45,8 +45,12 @@ export const storybookClientGuestbooks: JSDataverseGuestbook[] = [
 ]
 
 export class GuestbookMockRepository implements GuestbookRepository {
-  createGuestbook(_collectionIdOrAlias: number | string, _guestbook: CreateGuestbookDTO) {
+  createGuestbook(_collectionIdOrAlias: number | string, _guestbook: GuestbookDTO) {
     return Promise.resolve(storybookGuestbook.id)
+  }
+
+  editGuestbook(_guestbookId: number, _guestbook: GuestbookDTO): Promise<void> {
+    return Promise.resolve()
   }
 
   getGuestbook(_guestbookId: number): Promise<Guestbook> {
