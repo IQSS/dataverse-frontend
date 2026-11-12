@@ -82,6 +82,7 @@
     "save": "Guardar colección vinculada",
     "success": "<wrapper>{{linkedCollectionName}} se ha vinculado correctamente a <a>{{linkingCollectionName}}</a></wrapper>"
   },
+  "unpublished": "No publicado",
   "facets": {
     "names": {
       "subject": "Tema",

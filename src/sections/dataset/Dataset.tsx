@@ -32,6 +32,8 @@ import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInf
 import { useAnonymized } from './anonymized/AnonymizedContext'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import { DatasetReviews } from './dataset-reviews/DatasetReviews'
+import { AlertMessageKey } from '@/alert/domain/models/Alert'
+import { DatasetNotAuthorized } from './dataset-not-authorized/DatasetNotAuthorized'
 
 interface DatasetProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -52,7 +54,7 @@ export function Dataset({
 }: DatasetProps) {
   const { datasetRepository } = useDatasetRepositories()
   const { setIsLoading } = useLoading()
-  const { dataset, isLoading: isDatasetLoading } = useDataset()
+  const { dataset, isLoading: isDatasetLoading, isNotAuthorized } = useDataset()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -83,6 +85,13 @@ export function Dataset({
     return <DatasetSkeleton />
   }
 
+  if (
+    isNotAuthorized ||
+    dataset?.alerts.some((alert) => alert.messageKey === AlertMessageKey.NOT_AUTHORIZED)
+  ) {
+    return <DatasetNotAuthorized />
+  }
+
   if (!dataset) {
     return <NotFoundPage dvObjectNotFoundType="dataset" />
   }
@@ -105,7 +114,7 @@ export function Dataset({
     }
   }
 
-  const currentVersionNumber = dataset.version.number.toString()
+  const currentVersionNumber = dataset.version.number.toSearchParam()
   const canUpdateDataset = dataset.permissions.canUpdateDataset
   const termsTabTitle = canUpdateDataset ? t('termsTabTitle') : t('termsTabTitleReadOnly')
 

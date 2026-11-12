@@ -1,12 +1,13 @@
-import { type CreateGuestbookDTO } from '@iqss/dataverse-client-javascript'
+import { GuestbookDTO } from '../useCases/DTOs/GuestbookDTO'
 import { Guestbook } from '../models/Guestbook'
 import { GuestbookResponseSubset } from '../models/GuestbookResponse'
 
 export interface GuestbookRepository {
   createGuestbook: (
     collectionIdOrAlias: number | string,
-    guestbook: CreateGuestbookDTO
+    guestbook: GuestbookDTO
   ) => Promise<number>
+  editGuestbook: (guestbookId: number, guestbook: GuestbookDTO) => Promise<void>
   getGuestbook: (guestbookId: number) => Promise<Guestbook>
   getGuestbooksByCollectionId: (
     collectionIdOrAlias: number | string,
