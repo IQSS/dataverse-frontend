@@ -31,7 +31,8 @@ describe('ReturnToAuthorModal', () => {
   })
 
   it('submits the reason, closes, and refreshes the dataset', () => {
-    const submit = mountModal().as('submit')
+    const submit = cy.stub().as('submit').resolves()
+    mountModal(submit)
     cy.findByRole('textbox').type('Please add files.')
     cy.findByRole('button', { name: 'Continue' }).click()
     cy.wrap(submit).should(

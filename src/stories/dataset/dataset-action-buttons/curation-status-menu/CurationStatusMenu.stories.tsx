@@ -12,7 +12,13 @@ import {
   curationHistory
 } from '../../dataset-curation-status/CurationStoryRepository'
 
-function CurationExample({ empty = false, readOnly = false, error = false }) {
+interface CurationExampleProps {
+  empty?: boolean
+  readOnly?: boolean
+  error?: boolean
+}
+
+function CurationExample({ empty = false, readOnly = false, error = false }: CurationExampleProps) {
   const [repository] = useState(() => {
     const repo = new CurationStoryRepository(empty ? null : curationHistory[0])
     if (error) repo.setCurationStatus = () => Promise.reject(new Error('Service unavailable'))
