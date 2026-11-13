@@ -2,6 +2,7 @@ import { FormattedCitation } from '@/dataset/domain/models/DatasetCitation'
 import { CopyToClipboardButton } from '@/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/copy-to-clipboard-button/CopyToClipboardButton'
 import { Button, Form, Modal, Stack } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import { htmlToPlainText } from '@/shared/helpers/htmlToPlainText'
 import styles from '../Citation.module.scss'
 
 interface ViewStyledCitationModalProps {
@@ -20,7 +21,7 @@ export const ViewStyledCitationModal = ({
   const modalTitle = t('styledCitation')
   //TODO: Implement more CSL Style and its corresponding parsing logic
 
-  const parsedCitationContent = parse(citation?.content || '')
+  const parsedCitationContent = htmlToPlainText(citation?.content ?? '')
   return (
     <Modal show={show} onHide={handleClose} centered ariaLabel={modalTitle}>
       <Modal.Header>
@@ -52,5 +53,5 @@ export const ViewStyledCitationModal = ({
 }
 
 export function parse(citation: string): string {
-  return citation.replace(/<[^>]+>/g, '')
+  return htmlToPlainText(citation)
 }
