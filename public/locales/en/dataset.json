@@ -420,5 +420,15 @@
       "loading": "Loading curation status history",
       "error": "Something went wrong getting the curation status history. Try again later."
     }
+  },
+  "returnToAuthor": {
+    "title": "Return to Author",
+    "message": "Return this dataset to contributor for modification. The reason for return entered below will be sent by email to the author.",
+    "reason": "Reason for return",
+    "placeholder": "Please enter a reason for returning this dataset to its author(s).",
+    "remaining": "{{count}} characters remaining.",
+    "continue": "Continue",
+    "error": "Unable to return this dataset to its author. Please try again.",
+    "success": "Dataset returned to author."
   }
 }

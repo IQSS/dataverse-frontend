@@ -282,6 +282,10 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     })
   }
 
+  returnToAuthor(_datasetId: string | number, _reasonForReturn: string): Promise<void> {
+    return Promise.reject(new Error('Error thrown from mock'))
+  }
+
   submitForReview(_datasetId: string | number): Promise<DatasetReviewSubmission> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {

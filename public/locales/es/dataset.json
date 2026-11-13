@@ -418,5 +418,15 @@
       "loading": "Cargando historial del estado de curación",
       "error": "Se produjo un error al obtener el historial del estado de curación. Inténtelo de nuevo más tarde."
     }
+  },
+  "returnToAuthor": {
+    "title": "Devolver al autor",
+    "message": "Devuelva este conjunto de datos al colaborador para que lo modifique. El motivo indicado a continuación se enviará al autor por correo electrónico.",
+    "reason": "Motivo de la devolución",
+    "placeholder": "Introduzca un motivo para devolver este conjunto de datos a su(s) autor(es).",
+    "remaining": "{{count}} caracteres restantes.",
+    "continue": "Continuar",
+    "error": "No se pudo devolver este conjunto de datos a su autor. Inténtelo de nuevo.",
+    "success": "Conjunto de datos devuelto al autor."
   }
 }

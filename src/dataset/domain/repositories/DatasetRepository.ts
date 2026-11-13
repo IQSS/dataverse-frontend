@@ -91,5 +91,6 @@ export interface DatasetRepository {
   getCurationStatusHistory: (datasetId: string | number) => Promise<DatasetCurationStatus[]>
   setCurationStatus: (datasetId: string | number, label: string) => Promise<void>
   deleteCurationStatus: (datasetId: string | number) => Promise<void>
+  returnToAuthor: (datasetId: string | number, reasonForReturn: string) => Promise<void>
   submitForReview: (datasetId: string | number) => Promise<DatasetReviewSubmission>
 }

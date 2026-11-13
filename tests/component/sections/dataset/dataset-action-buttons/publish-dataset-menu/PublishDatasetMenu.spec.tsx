@@ -188,7 +188,10 @@ describe('PublishDatasetMenu', () => {
       .click()
       .should('be.enabled')
 
-    cy.findByRole('button', { name: 'Return to Author' }).should('exist')
+    cy.findByRole('button', { name: 'Return to Author' }).click()
+    cy.findByRole('dialog', { name: 'Return to Author' }).should('be.visible')
+    cy.findByRole('textbox', { name: 'Reason for return' }).should('be.visible')
+    cy.findByRole('dialog').should('have.length', 1)
   })
 
   it('shows the PublishDatasetModal when the Publish button is clicked', () => {

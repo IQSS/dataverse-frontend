@@ -1,3 +1,4 @@
+import { ReturnToAuthorModal } from '../../return-to-author/ReturnToAuthorModal'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
@@ -15,6 +16,7 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
   const { user } = useSession()
   const { t } = useTranslation('dataset')
   const [showModal, setShowModal] = useState(false)
+  const [showReturnModal, setShowReturnModal] = useState(false)
 
   if (
     !dataset.version.isLatest ||
@@ -23,10 +25,6 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
     !dataset.permissions.canPublishDataset
   ) {
     return <></>
-  }
-
-  const handleSelect = () => {
-    setShowModal(true)
   }
 
   return (
@@ -48,21 +46,30 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
       <DropdownButton
         id={`publish-dataset-menu`}
         title={t('datasetActionButtons.publish.title')}
-        onSelect={handleSelect}
         asButtonGroup
         variant="secondary"
         disabled={
           dataset.checkIsLockedFromPublishing(user.persistentId) ||
-          !dataset.hasValidTermsOfAccess ||
-          !dataset.isValid
+          ((!dataset.hasValidTermsOfAccess || !dataset.isValid) && !dataset.version.isInReview)
         }>
-        <DropdownButtonItem>{t('datasetActionButtons.publish.publish')}</DropdownButtonItem>
+        <DropdownButtonItem
+          disabled={!dataset.hasValidTermsOfAccess || !dataset.isValid}
+          onClick={() => setShowModal(true)}>
+          {t('datasetActionButtons.publish.publish')}
+        </DropdownButtonItem>
         {dataset.version.isInReview && (
-          <DropdownButtonItem>
+          <DropdownButtonItem onClick={() => setShowReturnModal(true)}>
             {t('datasetActionButtons.publish.returnToAuthor')}
           </DropdownButtonItem>
         )}
       </DropdownButton>
+      {showReturnModal && (
+        <ReturnToAuthorModal
+          datasetId={dataset.persistentId}
+          repository={datasetRepository}
+          handleClose={() => setShowReturnModal(false)}
+        />
+      )}
     </>
   )
 }

@@ -336,6 +336,10 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
+  returnToAuthor(_datasetId: string | number, _reasonForReturn: string): Promise<void> {
+    return Promise.resolve()
+  }
+
   submitForReview(_datasetId: string | number): Promise<DatasetReviewSubmission> {
     return new Promise((resolve) => {
       setTimeout(() => {

@@ -9,6 +9,7 @@ import {
 import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
   ApiConfig,
+  returnDatasetToAuthor,
   createDataset,
   CreatedDatasetIdentifiers as JSDatasetIdentifiers,
   Dataset as JSDataset,
@@ -564,6 +565,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   deleteCurationStatus(datasetId: string | number): Promise<void> {
     return deleteDatasetCurationStatus.execute(datasetId)
+  }
+
+  returnToAuthor(datasetId: string | number, reasonForReturn: string): Promise<void> {
+    return returnDatasetToAuthor.execute(datasetId, reasonForReturn)
   }
 
   submitForReview(datasetId: string | number): Promise<DatasetReviewSubmission> {
