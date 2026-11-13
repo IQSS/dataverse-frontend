@@ -197,3 +197,48 @@ it('shows  private url message  only if privateUrl exists and user cannot edit',
     })
   })
 })
+
+describe('review alerts', () => {
+  const mountAlerts = (inReview: boolean, canPublishDataset: boolean) => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersion({ isInReview: inReview }),
+      permissions: DatasetPermissionsMother.create({ canUpdateDataset: true, canPublishDataset })
+    })
+    cy.mount(
+      <AlertProvider>
+        <DatasetAlertsWrapper alerts={dataset.alerts} />
+      </AlertProvider>
+    )
+  }
+
+  it('shows the publication reminder before the review alert with matching warning styling', () => {
+    mountAlerts(true, true)
+    cy.findAllByRole('alert')
+      .should('have.length', 2)
+      .then(($alerts) => {
+        expect($alerts.eq(0)).to.contain.text('This draft version needs to be published')
+        expect($alerts.eq(1)).to.contain.text('Submitted for Review')
+        expect($alerts.eq(0)).to.have.class('alert-warning')
+        expect($alerts.eq(1)).to.have.class('alert-warning')
+      })
+    cy.findByText('Submitted for Review').should('have.prop', 'tagName', 'B')
+    cy.findAllByRole('alert')
+      .eq(1)
+      .should(
+        'contain.text',
+        'The draft version of this dataset is currently under review prior to publication.'
+      )
+  })
+
+  it('shows the review alert to an editor without publish permission', () => {
+    mountAlerts(true, false)
+    cy.findAllByRole('alert').should('have.length', 1).and('contain.text', 'Submitted for Review')
+    cy.findByText('This draft version needs to be published').should('not.exist')
+  })
+
+  it('does not show the review alert for a draft that is not under review', () => {
+    mountAlerts(false, true)
+    cy.findByText('Submitted for Review').should('not.exist')
+    cy.findByText('This draft version needs to be published').should('exist')
+  })
+})

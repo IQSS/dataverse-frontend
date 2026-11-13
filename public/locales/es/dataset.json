@@ -31,14 +31,16 @@
     "title": "Botones de acción del dataset",
     "submitForReview": {
       "enabled": "Enviar para revisión",
-      "disabled": "Enviado para revisión"
+      "disabled": "Enviado para revisión",
+      "submit": "Enviar",
+      "message": "No podrá realizar cambios en este conjunto de datos mientras esté en revisión.",
+      "success": "Su conjunto de datos ha sido enviado para revisión.",
+      "defaultError": "Se produjo un error al enviar el conjunto de datos para revisión. Inténtelo de nuevo más tarde."
     },
     "publish": {
       "title": "Publicar dataset",
       "publish": "Publicar",
-      "returnToAuthor": "Devolver al autor",
-      "changeCurationStatus": "Cambiar estado de curación",
-      "removeCurrentStatus": "Eliminar estado actual"
+      "returnToAuthor": "Devolver al autor"
     },
     "linkDataset": {
       "title": "Vincular dataset",
@@ -95,6 +97,10 @@
     "contactOwner": "Contactar al propietario"
   },
   "alerts": {
+    "submittedForReview": {
+      "heading": "Enviado para revisión",
+      "alertText": "La versión borrador de este conjunto de datos se encuentra actualmente en revisión antes de su publicación."
+    },
     "publishInProgress": {
       "heading": "Publicación en progreso",
       "alertText": "El dataset está bloqueado mientras se registran o actualizan los identificadores persistentes y/o se validan los ficheros físicos."
@@ -393,5 +399,34 @@
     "defaultGuestbookUpdateError": "Ocurrió un error al actualizar el libro de visitas del dataset. Inténtalo de nuevo.",
     "defaultLicenseUpdateError": "Ocurrió un error al actualizar la licencia del dataset. Inténtalo de nuevo.",
     "defaultTermsOfAccessUpdateError": "Ocurrió un error al actualizar los términos de acceso del dataset. Inténtalo de nuevo."
+  },
+  "curationStatus": {
+    "menuTitle": "Estado de curación",
+    "changeStatus": "Cambiar estado de curación",
+    "removeCurrentStatus": "Eliminar estado actual",
+    "viewHistory": "Ver historial del estado de curación",
+    "changed": "El estado de curación ahora es \"{{label}}\"",
+    "removed": "Estado de curación eliminado",
+    "changeError": "No se pudo cambiar el estado de curación. Póngase en contacto con el administrador.",
+    "history": {
+      "title": "Historial del estado de curación",
+      "status": "Estado",
+      "date": "Fecha",
+      "assigner": "Asignado por",
+      "removed": "Estado eliminado",
+      "empty": "No hay historial de estado de curación para este conjunto de datos.",
+      "loading": "Cargando historial del estado de curación",
+      "error": "Se produjo un error al obtener el historial del estado de curación. Inténtelo de nuevo más tarde."
+    }
+  },
+  "returnToAuthor": {
+    "title": "Devolver al autor",
+    "message": "Devuelva este conjunto de datos al colaborador para que lo modifique. El motivo indicado a continuación se enviará al autor por correo electrónico.",
+    "reason": "Motivo de la devolución",
+    "placeholder": "Introduzca un motivo para devolver este conjunto de datos a su(s) autor(es).",
+    "remaining": "{{count}} caracteres restantes.",
+    "continue": "Continuar",
+    "error": "No se pudo devolver este conjunto de datos a su autor. Inténtelo de nuevo.",
+    "success": "Conjunto de datos devuelto al autor."
   }
 }

@@ -24,6 +24,8 @@ const projectRoot = resolveProjectRoot(__dirname)
 
 export default defineConfig({
   root: projectRoot,
+  // Keep the running app's optimized dependencies separate from component tests.
+  cacheDir: path.resolve(projectRoot, 'node_modules/.vite-dev-server'),
   base: '/modern',
   define: createSpaVersionDefines(projectRoot),
   plugins: [

@@ -8,6 +8,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Dataset curation status management for the latest draft: users with publish permission can assign or remove configured labels, with a status badge and history showing formatted timestamps and assigner display names. (#1124)
+- Display a "Submitted for Review" alert on dataset drafts under review. (#1124)
 - Manage Guestbooks: Edit guestbooks, and copy guestbooks into a prefilled creation form. (#1006)
 - Guestbook Responses page with pagination, sorting within the current page, custom question responses, and CSV download. (#1006)
 - Storage Driver selection in Create Collection form, with dynamic fetching of available storage drivers from the backend.

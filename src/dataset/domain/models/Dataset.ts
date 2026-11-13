@@ -549,6 +549,12 @@ export class Dataset {
       ) {
         this.alerts.push(new Alert('warning', AlertMessageKey.DRAFT_VERSION))
       }
+      if (
+        this.version.publishingStatus === DatasetPublishingStatus.DRAFT &&
+        this.version.isInReview
+      ) {
+        this.alerts.push(new Alert('warning', AlertMessageKey.SUBMITTED_FOR_REVIEW))
+      }
       if (this.requestedVersion) {
         if (this.version.latestVersionPublishingStatus == DatasetPublishingStatus.RELEASED) {
           const dynamicFields = {

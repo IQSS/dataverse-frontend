@@ -11,6 +11,8 @@ import {
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { WithRepositories } from '@tests/component/WithRepositories'
 
+import { DatasetCurationStatusContext } from '@/sections/dataset/dataset-curation-status/DatasetCurationStatusContext'
+
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const contactRepository: ContactRepository = {} as ContactRepository
@@ -112,5 +114,38 @@ describe('DatasetActionButtons', () => {
     )
 
     cy.findByRole('button', { name: 'Share' }).should('not.exist')
+  })
+})
+
+it('places Edit Dataset before Curation Status in the action group', () => {
+  const dataset = DatasetMother.create({
+    version: DatasetVersionMother.createDraftAsLatestVersion(),
+    permissions: DatasetPermissionsMother.createWithAllAllowed()
+  })
+  cy.mountAuthenticated(
+    <WithRepositories
+      collectionRepository={collectionRepository}
+      datasetRepository={datasetRepository}>
+      <DatasetCurationStatusContext.Provider
+        value={{
+          currentStatus: null,
+          allowedLabels: ['Privacy Review'],
+          canSeeCurationStatus: true,
+          canChangeCurationStatus: true,
+          refreshCurationStatus: cy.stub()
+        }}>
+        <DatasetActionButtons dataset={dataset} contactRepository={contactRepository} />
+      </DatasetCurationStatusContext.Provider>
+    </WithRepositories>
+  )
+  cy.findByRole('button', { name: 'Edit Dataset' }).then(($edit) => {
+    cy.findByRole('button', { name: 'Curation Status' }).should(($curation) => {
+      expect(
+        $edit[0].compareDocumentPosition($curation[0]) & Node.DOCUMENT_POSITION_FOLLOWING
+      ).not.to.equal(0)
+      expect($edit[0].getBoundingClientRect().top).to.be.lessThan(
+        $curation[0].getBoundingClientRect().top
+      )
+    })
   })
 })
