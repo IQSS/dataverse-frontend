@@ -23,7 +23,8 @@ export const TypeFilters = ({
   isLoadingCollectionItems,
   countPerObjectType
 }: TypeFiltersProps) => {
-  const { t } = useTranslation('collection')
+  const { t, i18n } = useTranslation('collection')
+  const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language)
 
   const handleItemTypeChange = (type: CollectionItemType, checked: boolean) => {
     onItemTypesChange({ type, checked })
@@ -55,7 +56,7 @@ export const TypeFilters = ({
               {t('collectionFilterTypeLabel')}{' '}
               {countPerObjectType?.collections !== undefined &&
                 currentItemTypes?.includes(CollectionItemType.COLLECTION) && (
-                  <small>{`(${Intl.NumberFormat().format(countPerObjectType.collections)})`}</small>
+                  <small>{`(${numberFormatter.format(countPerObjectType.collections)})`}</small>
                 )}
             </span>
           </>
@@ -75,7 +76,7 @@ export const TypeFilters = ({
               {t('datasetFilterTypeLabel')}{' '}
               {countPerObjectType?.datasets !== undefined &&
                 currentItemTypes?.includes(CollectionItemType.DATASET) && (
-                  <small>{`(${Intl.NumberFormat().format(countPerObjectType.datasets)})`}</small>
+                  <small>{`(${numberFormatter.format(countPerObjectType.datasets)})`}</small>
                 )}
             </span>
           </>
@@ -95,7 +96,7 @@ export const TypeFilters = ({
               {t('fileFilterTypeLabel')}{' '}
               {countPerObjectType?.files !== undefined &&
                 currentItemTypes?.includes(CollectionItemType.FILE) && (
-                  <small>{`(${Intl.NumberFormat().format(countPerObjectType.files)})`}</small>
+                  <small>{`(${numberFormatter.format(countPerObjectType.files)})`}</small>
                 )}
             </span>
           </>

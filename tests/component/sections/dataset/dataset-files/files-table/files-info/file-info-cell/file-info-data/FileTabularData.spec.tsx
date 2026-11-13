@@ -15,6 +15,16 @@ describe('FileTabularData', () => {
     cy.findByRole('button', { name: /Copy to clipboard icon/ }).should('exist')
   })
 
+  it('formats counts with the active language', () => {
+    cy.setLanguage('es').then(() => {
+      cy.customMount(
+        <FileTabularData tabularData={{ variables: 53_305, observations: 4_940, unf: undefined }} />
+      )
+    })
+
+    cy.findByText(/53\.305 Variables, 4940 Observaciones/).should('exist')
+  })
+
   it('renders an empty fragment when tabularData is not provided', () => {
     cy.customMount(<FileTabularData tabularData={undefined} />)
 
