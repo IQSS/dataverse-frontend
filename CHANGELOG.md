@@ -10,6 +10,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 - Manage Guestbooks: Edit guestbooks, and copy guestbooks into a prefilled creation form. (#1006)
 - Guestbook Responses page with pagination, sorting within the current page, custom question responses, and CSV download. (#1006)
+- Storage Driver selection in Create Collection form, with dynamic fetching of available storage drivers from the backend.
 
 ### Changed
 

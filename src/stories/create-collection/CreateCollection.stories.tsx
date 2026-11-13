@@ -11,7 +11,9 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
 import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
-import { WithRepositories } from '../WithRepositories'
+import { RepositoriesStoryProvider, WithRepositories } from '../WithRepositories'
+import { SessionContext } from '@/sections/session/SessionContext'
+import { UserMother } from '@tests/component/users/domain/models/UserMother'
 
 import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/ROOT_COLLECTION_ALIAS'
 
@@ -36,6 +38,70 @@ export const Default: Story = {
     />
   )
 }
+
+const collectionRepositoryWithStorageDrivers = new CollectionMockRepository()
+collectionRepositoryWithStorageDrivers.getAllowedStorageDrivers = () => {
+  return Promise.resolve({
+    s3: 's3',
+    file1: 'FileSystem'
+  })
+}
+collectionRepositoryWithStorageDrivers.getStorageDriver = () => {
+  return Promise.resolve({
+    name: 's3',
+    type: 's3',
+    label: 's3',
+    directUpload: true,
+    directDownload: true,
+    uploadOutOfBand: false
+  })
+}
+
+const collectionRepositoryWithInheritedStorageDriver = new CollectionMockRepository()
+collectionRepositoryWithInheritedStorageDriver.getAllowedStorageDrivers = () => {
+  return Promise.resolve({
+    s3: 's3',
+    file1: 'FileSystem'
+  })
+}
+collectionRepositoryWithInheritedStorageDriver.getStorageDriver = (
+  _collectionIdOrAlias,
+  getEffective
+) => {
+  if (!getEffective) {
+    return Promise.resolve(undefined)
+  }
+
+  return Promise.resolve({
+    name: 's3',
+    type: 's3',
+    label: 's3',
+    directUpload: true,
+    directDownload: true,
+    uploadOutOfBand: false
+  })
+}
+
+export const SuperUserWithStorageDriver: Story = {
+  render: () => (
+    <SessionContext.Provider
+      value={{
+        user: UserMother.createSuperUser(),
+        setUser: () => {},
+        isLoadingUser: false,
+        sessionError: null,
+        refetchUserSession: () => Promise.resolve()
+      }}>
+      <RepositoriesStoryProvider collectionRepository={collectionRepositoryWithStorageDrivers}>
+        <CreateCollection
+          parentCollectionId={ROOT_COLLECTION_ALIAS}
+          metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+        />
+      </RepositoriesStoryProvider>
+    </SessionContext.Provider>
+  )
+}
+
 export const Loading: Story = {
   decorators: [WithRepositories({ collectionRepository: new CollectionLoadingMockRepository() })],
   render: () => (
