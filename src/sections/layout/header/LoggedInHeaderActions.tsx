@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Navbar } from '@iqss/dataverse-design-system'
 import { User } from '@/users/domain/models/User'
 import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
@@ -27,6 +27,7 @@ export const LoggedInHeaderActions = ({
   const { t } = useTranslation('header')
   const { logOut } = useContext(AuthContext)
   const { setUser } = useContext(SessionContext)
+  const navigate = useNavigate()
   const unreadCount = useUnreadCount(user, notificationRepository)
   const { collection } = useCollection(collectionRepository)
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
@@ -45,6 +46,7 @@ export const LoggedInHeaderActions = ({
   const canUserAddDatasetToRoot = Boolean(collectionUserPermissions?.canAddDataset)
 
   const handleLogout = () => {
+    navigate(Route.HOME, { replace: true })
     setUser(null)
     logOut()
   }

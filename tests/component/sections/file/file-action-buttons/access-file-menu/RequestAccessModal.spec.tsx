@@ -1,6 +1,7 @@
 import { RequestAccessModal } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/RequestAccessModal'
 import { Route } from '../../../../../../src/sections/Route.enum'
 import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
+import { applyTestAppConfig } from '@tests/support/bootstrapAppConfig'
 
 describe('RequestAccessModal', () => {
   it('renders the RequestAccessModal', () => {
@@ -21,12 +22,27 @@ describe('RequestAccessModal', () => {
 
     cy.findByRole('button', { name: 'Log In' }).should('exist')
 
-    cy.findByRole('link', { name: 'Sign Up' })
-      .should('exist')
-      .should('have.attr', 'href', Route.SIGN_UP_JSF)
+    cy.findByRole('link', { name: 'Sign Up' }).should('have.attr', 'href', Route.SIGN_UP)
 
     cy.findByText('Close').click()
     cy.findByRole('dialog').should('not.exist')
+  })
+
+  it('links Sign Up to the JSF sign-up page when sign-up is disabled in the app config', () => {
+    const defaultSignUpEnabled = Cypress.env('signUpEnabled') as boolean
+    Cypress.env('signUpEnabled', false)
+    applyTestAppConfig()
+
+    const file = FilePreviewMother.create()
+    cy.customMount(<RequestAccessModal fileId={file.id} />)
+    cy.findByRole('button', { name: 'Request Access' }).click()
+
+    cy.findByRole('link', { name: 'Sign Up' }).should('have.attr', 'href', Route.SIGN_UP_JSF)
+
+    cy.then(() => {
+      Cypress.env('signUpEnabled', defaultSignUpEnabled)
+      applyTestAppConfig()
+    })
   })
 
   it('shows request access modal when button is clicked and user is logged in', () => {
