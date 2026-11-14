@@ -13,6 +13,25 @@ describe('MarkdownComponent', () => {
     cy.get('p').should('exist')
     cy.get('a').should('have.attr', 'href').and('eq', 'https://dataverse.org')
   })
+
+  it('renders raw URLs as clickable links', () => {
+    const markdown =
+      'check https://github.com/IQSS/dataverse-frontend/pull/1006#issuecomment-6751611367'
+
+    cy.customMount(<MarkdownComponent markdown={markdown} />)
+    cy.get('a')
+      .should(
+        'have.attr',
+        'href',
+        'https://github.com/IQSS/dataverse-frontend/pull/1006#issuecomment-6751611367'
+      )
+      .and('have.attr', 'target', '_blank')
+      .and('have.attr', 'rel', 'noreferrer')
+      .and(
+        'have.text',
+        'https://github.com/IQSS/dataverse-frontend/pull/1006#issuecomment-6751611367'
+      )
+  })
 })
 
 it('updates Markdown correctly', () => {
