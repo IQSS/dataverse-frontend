@@ -1269,7 +1269,9 @@ describe('DatasetMetadataForm', () => {
           <LocationDisplay />
         </WithRepositories>,
         [
-          `/datasets/edit-metadata?persistentId=${encodeURIComponent(dataset.persistentId)}&version=1.0`
+          `/datasets/edit-metadata?persistentId=${encodeURIComponent(
+            dataset.persistentId
+          )}&version=1.0`
         ]
       )
 
