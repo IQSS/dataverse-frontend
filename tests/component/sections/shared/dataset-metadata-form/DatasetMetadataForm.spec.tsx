@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import { MetadataBlockName } from '@/dataset/domain/models/Dataset'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
@@ -11,6 +12,11 @@ import { UserMother } from '../../../users/domain/models/UserMother'
 import { TemplateMother } from '@tests/component/sections/templates/TemplateMother'
 import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 import { WithRepositories } from '@tests/component/WithRepositories'
+
+const LocationDisplay = () => {
+  const location = useLocation()
+  return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>
+}
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -1225,6 +1231,57 @@ describe('DatasetMetadataForm', () => {
 
       cy.findAllByRole('button', { name: 'Cancel' }).should('exist').should('have.length', 2)
     })
+
+    it('navigates back to the current dataset page when clicking Cancel button in edit mode', () => {
+      cy.customMount(
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="edit"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetPersistentID={dataset.persistentId}
+            datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            datasetLastUpdateTime={dataset.version.lastUpdateTime}
+          />
+          <LocationDisplay />
+        </WithRepositories>
+      )
+
+      cy.findAllByRole('button', { name: 'Cancel' }).first().click()
+
+      cy.findByTestId('location-display').should(
+        'have.text',
+        `/datasets?persistentId=${encodeURIComponent(dataset.persistentId)}`
+      )
+    })
+
+    it('navigates back to the current dataset page preserving viewed version when clicking Cancel button in edit mode', () => {
+      cy.customMount(
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="edit"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            datasetPersistentID={dataset.persistentId}
+            datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            datasetLastUpdateTime={dataset.version.lastUpdateTime}
+          />
+          <LocationDisplay />
+        </WithRepositories>,
+        [
+          `/datasets/edit-metadata?persistentId=${encodeURIComponent(
+            dataset.persistentId
+          )}&version=1.0`
+        ]
+      )
+
+      cy.findAllByRole('button', { name: 'Cancel' }).last().click()
+
+      cy.findByTestId('location-display').should(
+        'have.text',
+        `/datasets?persistentId=${encodeURIComponent(dataset.persistentId)}&version=1.0`
+      )
+    })
   })
 
   describe('should display required errors when submitting the form with required fields empty', () => {
@@ -1543,7 +1600,7 @@ describe('DatasetMetadataForm', () => {
     cy.findByText('Error').should('exist')
   })
 
-  it('cancel button is clickable', () => {
+  it('cancel button is clickable and navigates to collection page on create mode', () => {
     cy.customMount(
       <WithRepositories datasetRepository={datasetRepository}>
         <DatasetMetadataForm
@@ -1551,10 +1608,13 @@ describe('DatasetMetadataForm', () => {
           collectionId="root"
           metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
+        <LocationDisplay />
       </WithRepositories>
     )
 
     cy.findByText(/Cancel/i).click()
+
+    cy.findByTestId('location-display').should('have.text', '/collections/root')
   })
 
   it('open closed accordion that has fields with errors on it and scrolls to the focused field', () => {
