@@ -1251,7 +1251,7 @@ describe('DatasetMetadataForm', () => {
 
       cy.findByTestId('location-display').should(
         'have.text',
-        `/datasets?persistentId=${dataset.persistentId}`
+        `/datasets?persistentId=${encodeURIComponent(dataset.persistentId)}`
       )
     })
 
@@ -1268,14 +1268,16 @@ describe('DatasetMetadataForm', () => {
           />
           <LocationDisplay />
         </WithRepositories>,
-        [`/datasets/edit-metadata?persistentId=${dataset.persistentId}&version=1.0`]
+        [
+          `/datasets/edit-metadata?persistentId=${encodeURIComponent(dataset.persistentId)}&version=1.0`
+        ]
       )
 
       cy.findAllByRole('button', { name: 'Cancel' }).last().click()
 
       cy.findByTestId('location-display').should(
         'have.text',
-        `/datasets?persistentId=${dataset.persistentId}&version=1.0`
+        `/datasets?persistentId=${encodeURIComponent(dataset.persistentId)}&version=1.0`
       )
     })
   })

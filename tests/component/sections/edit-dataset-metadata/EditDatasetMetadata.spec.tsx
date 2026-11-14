@@ -122,14 +122,16 @@ describe('EditDatasetMetadata', () => {
         <LocationDisplay />
       </>,
       dataset,
-      [`/datasets/edit-metadata?persistentId=${dataset.persistentId}&version=1.0`]
+      [
+        `/datasets/edit-metadata?persistentId=${encodeURIComponent(dataset.persistentId)}&version=1.0`
+      ]
     )
 
     cy.findAllByRole('button', { name: 'Cancel' }).first().click()
 
     cy.findByTestId('location-display').should(
       'have.text',
-      `/datasets?persistentId=${dataset.persistentId}&version=1.0`
+      `/datasets?persistentId=${encodeURIComponent(dataset.persistentId)}&version=1.0`
     )
   })
 })
