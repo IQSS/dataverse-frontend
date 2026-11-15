@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import TurndownService from 'turndown'
-import { Badge } from '@iqss/dataverse-design-system'
+import { Badge, Tooltip } from '@iqss/dataverse-design-system'
 import { Collection } from '../../collection/domain/models/Collection'
 import { DatasetLabelSemanticMeaning } from '../../dataset/domain/models/Dataset'
 import { MarkdownComponent } from '../dataset/markdown/MarkdownComponent'
@@ -14,6 +14,7 @@ const turndownService = new TurndownService()
 
 export function CollectionInfo({ collection }: CollectionInfoProps) {
   const { t } = useTranslation('collection')
+  const { t: tShared } = useTranslation('shared')
 
   return (
     <>
@@ -25,7 +26,12 @@ export function CollectionInfo({ collection }: CollectionInfoProps) {
           )}
           {!collection.isReleased && (
             <div>
-              <Badge variant={DatasetLabelSemanticMeaning.WARNING}>{t('unpublished')}</Badge>
+              <Tooltip
+                placement="top"
+                overlay={tShared('statusLabels.collection.unpublished')}
+                maxWidth={300}>
+                <Badge variant={DatasetLabelSemanticMeaning.WARNING}>{t('unpublished')}</Badge>
+              </Tooltip>
             </div>
           )}
         </div>

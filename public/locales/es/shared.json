@@ -47,6 +47,26 @@
     },
     "pageSize": "{{item}}s por página"
   },
+  "statusLabels": {
+    "collection": {
+      "unpublished": "Esta colección no está publicada, publíquela para que otros puedan verla. Una vez pública, ya no se puede despublicar."
+    },
+    "dataset": {
+      "draft": "Esta versión del conjunto de datos está en estado de borrador, publíquela para que otros puedan ver estos cambios.",
+      "unpublished": "Este conjunto de datos nunca ha sido publicado, publíquelo para que otros puedan verlo.",
+      "deaccessioned": "Esta versión ha sido retirada y ya no está disponible.",
+      "embargoed": "Este conjunto de datos está actualmente bajo embargo.",
+      "inReview": "Este conjunto de datos está actualmente en revisión.",
+      "version": "Se puede acceder a versiones anteriores en la pestaña \"Versiones\" de este conjunto de datos."
+    },
+    "file": {
+      "draft": "Esta versión del archivo está en estado de borrador, se publicará cuando publique el conjunto de datos que lo aloja.",
+      "unpublished": "Este archivo nunca ha sido publicado, se publicará cuando publique el conjunto de datos que lo aloja.",
+      "deaccessioned": "Esta versión ha sido retirada y ya no está disponible.",
+      "inReview": "Este archivo se encuentra en un conjunto de datos que está actualmente en revisión.",
+      "version": "Se puede acceder a versiones anteriores en la pestaña \"Versiones\" de este archivo."
+    }
+  },
   "citationBlock": {
     "learnAbout": "Aprender sobre",
     "standards": "Estándares de citación de datos"
