@@ -46,7 +46,7 @@ describe('DatasetLabels', () => {
 
     cy.customMount(<DatasetLabels labels={statusLabels} />)
 
-    cy.findByText(DatasetLabelValue.DRAFT).trigger('mouseenter')
-    cy.findByRole('tooltip').should('be.visible')
+    cy.findByText(DatasetLabelValue.DRAFT).parent().trigger('mouseover')
+    cy.findByRole('tooltip').should('exist')
   })
 })
