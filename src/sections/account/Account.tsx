@@ -7,6 +7,7 @@ import { NotificationRepository } from '@/notifications/domain/repositories/Noti
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { AccountInfoSection } from './account-info-section/AccountInfoSection'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
+import { useDocumentTitle, DEFAULT_DOCUMENT_TITLE } from '../../shared/hooks/useDocumentTitle'
 import { MyDataItemsPanel } from '@/sections/account/my-data-section/MyDataItemsPanel'
 import { RoleJSDataverseRepository } from '@/roles/infrastructure/repositories/RoleJSDataverseRepository'
 import styles from './Account.module.scss'
@@ -28,6 +29,7 @@ export const Account = ({
   const { t } = useTranslation('account')
   const [_, setSearchParams] = useSearchParams()
   const { setIsLoading } = useLoading()
+  useDocumentTitle(t('pageTitle'), { parentTitle: DEFAULT_DOCUMENT_TITLE })
 
   useEffect(() => setIsLoading(false), [setIsLoading])
 

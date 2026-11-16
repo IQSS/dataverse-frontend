@@ -1,6 +1,7 @@
 import { ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
+import { useDocumentTitle } from '../../shared/hooks/useDocumentTitle'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { type UseCollectionQueryParamsReturnType } from './useGetCollectionQueryParams'
 import { useHistoryTracker } from '@/router/HistoryTrackerProvider'
@@ -51,6 +52,7 @@ export function Collection({
     isLoading: isLoadingCollection,
     refetchCollection
   } = useCollection(collectionRepository, collectionIdFromParams)
+  useDocumentTitle(collection?.name)
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: collectionIdFromParams,
     collectionRepository
