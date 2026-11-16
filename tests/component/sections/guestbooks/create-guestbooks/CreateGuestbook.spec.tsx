@@ -269,6 +269,25 @@ describe('CreateGuestbook', () => {
 
     cy.findByText(/Something went wrong creating the guestbook/i).should('exist')
   })
+
+  it('associates labels and controlIds with custom question inputs for accessibility', () => {
+    mountCreateGuestbook()
+
+    cy.get('label[for="custom-question-0-type"]').should('have.text', 'Question Type')
+    cy.get('select#custom-question-0-type').should('exist')
+
+    cy.get('label[for="custom-question-0-text"]').should('have.text', 'Question Text')
+    cy.get('input#custom-question-0-text').should('exist')
+
+    cy.get('select#custom-question-0-type').select('options')
+
+    cy.get('label[for="custom-question-0-option-0"]').should('have.text', 'Response Options')
+    cy.get('input#custom-question-0-option-0').should('exist')
+
+    cy.findByLabelText('Add response option').click()
+    cy.get('input#custom-question-0-option-1').should('exist')
+    cy.findByLabelText('Response Options 2').should('exist')
+  })
 })
 
 describe('CreateGuestbookButton', () => {

@@ -243,42 +243,46 @@ export const GuestbookForm = ({
             <div key={question.draftId} className={styles['question-block']}>
               <Row className="g-3 align-items-end">
                 <Col sm={3}>
-                  <Form.Group.Label>
-                    {t('create.fields.customQuestions.typeLabel')}
-                  </Form.Group.Label>
-                  <Form.Group.Select
-                    value={question.type}
-                    onChange={(event) =>
-                      updateQuestion(question.draftId, (current) => ({
-                        ...current,
-                        type: event.target.value as GuestbookQuestionType
-                      }))
-                    }>
-                    <option value="text">
-                      {t('create.fields.customQuestions.types.singleLine')}
-                    </option>
-                    <option value="textarea">
-                      {t('create.fields.customQuestions.types.multipleLine')}
-                    </option>
-                    <option value="options">
-                      {t('create.fields.customQuestions.types.multipleChoice')}
-                    </option>
-                  </Form.Group.Select>
+                  <Form.Group controlId={`custom-question-${questionIndex}-type`} className="mb-0">
+                    <Form.Group.Label>
+                      {t('create.fields.customQuestions.typeLabel')}
+                    </Form.Group.Label>
+                    <Form.Group.Select
+                      value={question.type}
+                      onChange={(event) =>
+                        updateQuestion(question.draftId, (current) => ({
+                          ...current,
+                          type: event.target.value as GuestbookQuestionType
+                        }))
+                      }>
+                      <option value="text">
+                        {t('create.fields.customQuestions.types.singleLine')}
+                      </option>
+                      <option value="textarea">
+                        {t('create.fields.customQuestions.types.multipleLine')}
+                      </option>
+                      <option value="options">
+                        {t('create.fields.customQuestions.types.multipleChoice')}
+                      </option>
+                    </Form.Group.Select>
+                  </Form.Group>
                 </Col>
                 <Col sm={7}>
-                  <Form.Group.Label>
-                    {t('create.fields.customQuestions.questionText')}
-                  </Form.Group.Label>
-                  <Form.Group.Input
-                    type="text"
-                    value={question.questionText}
-                    onChange={(event) =>
-                      updateQuestion(question.draftId, (current) => ({
-                        ...current,
-                        questionText: event.target.value
-                      }))
-                    }
-                  />
+                  <Form.Group controlId={`custom-question-${questionIndex}-text`} className="mb-0">
+                    <Form.Group.Label>
+                      {t('create.fields.customQuestions.questionText')}
+                    </Form.Group.Label>
+                    <Form.Group.Input
+                      type="text"
+                      value={question.questionText}
+                      onChange={(event) =>
+                        updateQuestion(question.draftId, (current) => ({
+                          ...current,
+                          questionText: event.target.value
+                        }))
+                      }
+                    />
+                  </Form.Group>
                 </Col>
                 <Col sm={2}>
                   <div className={styles['question-controls']}>
@@ -310,7 +314,7 @@ export const GuestbookForm = ({
                       <div />
                     </Col>
                     <Col sm={7}>
-                      <Form.Group.Label>
+                      <Form.Group.Label htmlFor={`custom-question-${questionIndex}-option-0`}>
                         {t('create.fields.customQuestions.responseOptions')}
                       </Form.Group.Label>
                     </Col>
@@ -323,20 +327,27 @@ export const GuestbookForm = ({
                         <div />
                       </Col>
                       <Col sm={7}>
-                        <Form.Group.Input
-                          type="text"
-                          value={responseOption.value}
-                          onChange={(event) =>
-                            updateQuestion(question.draftId, (current) => ({
-                              ...current,
-                              responseOptions: current.responseOptions.map((option, index) =>
-                                index === optionIndex
-                                  ? { ...option, value: event.target.value }
-                                  : option
-                              )
-                            }))
-                          }
-                        />
+                        <Form.Group
+                          controlId={`custom-question-${questionIndex}-option-${optionIndex}`}
+                          className="mb-0">
+                          <Form.Group.Input
+                            type="text"
+                            value={responseOption.value}
+                            aria-label={`${t('create.fields.customQuestions.responseOptions')} ${
+                              optionIndex + 1
+                            }`}
+                            onChange={(event) =>
+                              updateQuestion(question.draftId, (current) => ({
+                                ...current,
+                                responseOptions: current.responseOptions.map((option, index) =>
+                                  index === optionIndex
+                                    ? { ...option, value: event.target.value }
+                                    : option
+                                )
+                              }))
+                            }
+                          />
+                        </Form.Group>
                       </Col>
                       <Col sm={2}>
                         <div className={styles['question-controls']}>
