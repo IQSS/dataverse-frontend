@@ -14,6 +14,8 @@ import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/met
 import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
 import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
 import { RepositoriesStoryProvider, WithRepositories } from '../WithRepositories'
+import { SessionContext } from '@/sections/session/SessionContext'
+import { UserMother } from '@tests/component/users/domain/models/UserMother'
 
 const meta: Meta<typeof EditCollection> = {
   title: 'Pages/Edit Collection',
@@ -27,32 +29,38 @@ const meta: Meta<typeof EditCollection> = {
 export default meta
 type Story = StoryObj<typeof EditCollection>
 
-export const Default: Story = {
-  render: () => {
-    const collectionRepo = new CollectionMockRepository()
-    collectionRepo.getById = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(
-            CollectionMother.create({
+const createScienceCollectionRepository = () => {
+  const collectionRepo = new CollectionMockRepository()
+  collectionRepo.getById = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(
+          CollectionMother.create({
+            id: 'science',
+            isReleased: true,
+            name: 'Collection Name',
+            description: 'We do all the science.',
+            affiliation: 'Scientific Research University',
+            hierarchy: UpwardHierarchyNodeMother.createCollection({
               id: 'science',
-              isReleased: true,
               name: 'Collection Name',
-              description: 'We do all the science.',
-              affiliation: 'Scientific Research University',
-              hierarchy: UpwardHierarchyNodeMother.createCollection({
-                id: 'science',
-                name: 'Collection Name',
-                parent: UpwardHierarchyNodeMother.createCollection({
-                  id: ROOT_COLLECTION_ALIAS,
-                  name: 'Root'
-                })
+              parent: UpwardHierarchyNodeMother.createCollection({
+                id: ROOT_COLLECTION_ALIAS,
+                name: 'Root'
               })
             })
-          )
-        }, FakerHelper.loadingTimout())
-      })
-    }
+          })
+        )
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  return collectionRepo
+}
+
+export const Default: Story = {
+  render: () => {
+    const collectionRepo = createScienceCollectionRepository()
 
     return (
       <RepositoriesStoryProvider collectionRepository={collectionRepo}>
@@ -61,6 +69,50 @@ export const Default: Story = {
           metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         />
       </RepositoriesStoryProvider>
+    )
+  }
+}
+
+export const SuperUserWithStorageDriver: Story = {
+  render: () => {
+    const collectionRepo = createScienceCollectionRepository()
+    collectionRepo.getAllowedStorageDrivers = () => {
+      return Promise.resolve({
+        s3: 's3',
+        file1: 'FileSystem'
+      })
+    }
+    collectionRepo.getStorageDriver = (_collectionIdOrAlias, getEffective) => {
+      if (!getEffective) {
+        return Promise.resolve(undefined)
+      }
+
+      return Promise.resolve({
+        name: 's3',
+        type: 's3',
+        label: 's3',
+        directUpload: true,
+        directDownload: true,
+        uploadOutOfBand: false
+      })
+    }
+
+    return (
+      <SessionContext.Provider
+        value={{
+          user: UserMother.createSuperUser(),
+          setUser: () => {},
+          isLoadingUser: false,
+          sessionError: null,
+          refetchUserSession: () => Promise.resolve()
+        }}>
+        <RepositoriesStoryProvider collectionRepository={collectionRepo}>
+          <EditCollection
+            collectionId="science"
+            metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+          />
+        </RepositoriesStoryProvider>
+      </SessionContext.Provider>
     )
   }
 }

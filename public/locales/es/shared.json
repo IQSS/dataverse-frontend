@@ -130,7 +130,8 @@
       },
       "storage": {
         "label": "Almacenamiento",
-        "description": "Un servicio de almacenamiento que se usará para los conjuntos de datos en esta colección."
+        "description": "Un servicio de almacenamiento que se usará para los conjuntos de datos en esta colección.",
+        "inheritedOrDefaultOption": "Usar el driver de almacenamiento heredado o predeterminado ({{storageDriver}})"
       },
       "type": {
         "label": "Categoría",
