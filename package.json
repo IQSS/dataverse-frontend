@@ -51,6 +51,7 @@
     "react-router-dom": "6.23.1",
     "react-toastify": "11.0.2",
     "react-topbar-progress-indicator": "4.1.1",
+    "remark-gfm": "3.0.1",
     "sass": "1.58.1",
     "sweetalert2": "11.23.0",
     "sweetalert2-react-content": "5.1.0",

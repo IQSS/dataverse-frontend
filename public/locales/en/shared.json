@@ -130,7 +130,8 @@
       },
       "storage": {
         "label": "Storage",
-        "description": "A storage service to be used for datasets in this collection."
+        "description": "A storage service to be used for datasets in this collection.",
+        "inheritedOrDefaultOption": "Use inherited or default storage driver ({{storageDriver}})"
       },
       "type": {
         "label": "Category",
