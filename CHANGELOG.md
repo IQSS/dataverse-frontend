@@ -18,6 +18,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Allow plain text URLs to be clickable in dataset description and metadata fields. (#1147)
 - Auto-select the entire citation text when clicked or highlighted on dataset and file pages. (#1119)
 - Normalize directory slashes when validating unique file path combination in file uploader. (#1106)
 - Display "In Review" status label on dataset page when a draft version is under review. (#1094)
