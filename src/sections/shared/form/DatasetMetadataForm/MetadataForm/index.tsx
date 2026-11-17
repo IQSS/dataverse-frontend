@@ -70,8 +70,9 @@ export const MetadataForm = ({
 
   const handleCancel = () => {
     if (onEditMode && datasetPersistentID) {
-      const returnSearchParams = new URLSearchParams()
-      returnSearchParams.set(QueryParamKey.PERSISTENT_ID, datasetPersistentID)
+   const returnSearchParams = new URLSearchParams({
+        [QueryParamKey.PERSISTENT_ID]: datasetPersistentID
+      })
 
       if (viewedVersion) {
         returnSearchParams.set(QueryParamKey.VERSION, viewedVersion)
@@ -80,7 +81,6 @@ export const MetadataForm = ({
       navigate(`${Route.DATASETS}?${returnSearchParams.toString()}`)
       return
     }
-
     navigate(RouteWithParams.COLLECTIONS(collectionId))
   }
 

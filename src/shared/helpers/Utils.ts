@@ -44,4 +44,8 @@ export class Utils {
 
     return true
   }
+
+  static htmlToPlainText(html: string): string {
+    return new DOMParser().parseFromString(html, 'text/html').body.textContent ?? ''
+  }
 }
