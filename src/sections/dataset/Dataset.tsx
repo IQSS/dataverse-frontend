@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -70,12 +71,13 @@ export function Dataset({
 
   useEffect(() => {
     if (publishInProgress && publishCompleted && dataset) {
+      toast.success(t('publishedAlert'))
       navigate(`${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}`, {
         state: {},
         replace: true
       })
     }
-  }, [publishInProgress, publishCompleted, dataset, navigate])
+  }, [publishInProgress, publishCompleted, dataset, navigate, t])
 
   useEffect(() => {
     setIsLoading(isDatasetLoading)
