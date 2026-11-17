@@ -1,18 +1,23 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
 import { useSession } from '@/sections/session/SessionContext'
-import { Accordion, Alert, Button } from '@iqss/dataverse-design-system'
+import { Alert, Button } from '@iqss/dataverse-design-system'
 import { type MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { type DatasetMetadataFormValues } from '../MetadataFieldsHelper'
 import { type DatasetMetadataFormMode } from '..'
 import { SubmissionStatus, useSubmitDataset } from '../useSubmitDataset'
-import { MetadataBlockFormFields } from './MetadataBlockFormFields'
+import { MetadataBlocksAccordion } from './MetadataBlocksAccordion'
+import { RequiredFieldsFirstLayout } from './RequiredFieldsFirstLayout/RequiredFieldsFirstLayout'
+import { RequiredFieldsCounter } from './RequiredFieldsFirstLayout/RequiredFieldsCounter'
+import { RequiredFieldsHelper } from './RequiredFieldsFirstLayout/RequiredFieldsHelper'
 import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { usePrefillFieldsWithUserData } from './usePrefillFieldsWithUserData'
+import { applyPrefillValues, getUserDataPrefillValues } from './userDataPrefill'
+import { revealFirstInvalidField, revealFormField } from './revealFormField'
 import { DatasetTemplateInstruction } from '@/templates/domain/models/Template'
 import { useDatasetRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
@@ -44,7 +49,6 @@ export const MetadataForm = ({
   const navigate = useNavigate()
   const { t } = useTranslation('shared')
 
-  const accordionRef = useRef<HTMLDivElement>(null)
   const formContainerRef = useRef<HTMLDivElement>(null)
 
   const onCreateMode = mode === 'create'
@@ -65,39 +69,36 @@ export const MetadataForm = ({
 
   usePrefillFieldsWithUserData({ mode, user, formDefaultValues, setValue })
 
+  // On create mode the fields are laid out by what is still required, so we need to know which
+  // fields are required and which values the form starts with (defaults plus the account prefill)
+  const requiredFields = useMemo(
+    () => (onCreateMode ? RequiredFieldsHelper.collectRequiredFields(metadataBlocksInfo) : []),
+    [onCreateMode, metadataBlocksInfo]
+  )
+
+  const accountPrefillValues = useMemo(
+    () => (onCreateMode && user ? getUserDataPrefillValues(formDefaultValues, user) : []),
+    [onCreateMode, user, formDefaultValues]
+  )
+
+  const initialValues = useMemo(
+    () => applyPrefillValues(formDefaultValues, accountPrefillValues),
+    [formDefaultValues, accountPrefillValues]
+  )
+
   const handleCancel = () => {
     navigate(RouteWithParams.COLLECTIONS(collectionId))
   }
 
   const onInvalidSubmit = (errors: FieldErrors<DatasetMetadataFormValues>) => {
-    if (!accordionRef.current) return
-    /*
-    Get the first metadata block accordion item with an error, and if it's collapsed, open it
-    Only for the case when accordion is closed, otherwise focus is already handled by react-hook-form
-    */
-    const firstMetadataBlockNameWithError = Object.keys(errors)[0]
+    if (!formContainerRef.current) return
+    // Open any folded section hiding the first field with an error, then scroll to it and focus it
+    revealFirstInvalidField(formContainerRef.current, errors)
+  }
 
-    const accordionItemsButtons: HTMLButtonElement[] = Array.from(
-      accordionRef.current.querySelectorAll('button.accordion-button')
-    )
-
-    accordionItemsButtons.forEach((button) => {
-      const parentItem = button.closest('.accordion-item')
-      const itemBlockName = parentItem?.id.split('-').pop()
-      const buttonIsCollapsed = button.classList.contains('collapsed')
-
-      if (itemBlockName === firstMetadataBlockNameWithError && buttonIsCollapsed) {
-        button.click()
-
-        setTimeout(
-          /* istanbul ignore next */ () => {
-            const focusedElement = document.activeElement
-            focusedElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          },
-          800
-        )
-      }
-    })
+  const goToField = (controlName: string) => {
+    if (!formContainerRef.current) return
+    revealFormField(formContainerRef.current, controlName)
   }
 
   function onSubmitDatasetError() {
@@ -162,24 +163,22 @@ export const MetadataForm = ({
             </Alert>
           )}
 
-          {metadataBlocksInfo.length > 0 && (
-            <Accordion defaultActiveKey="0" ref={accordionRef}>
-              {metadataBlocksInfo.map((metadataBlock, index) => (
-                <Accordion.Item
-                  eventKey={index.toString()}
-                  id={`metadata-block-item-${metadataBlock.name}`}
-                  key={metadataBlock.id}>
-                  <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
-                  <Accordion.Body>
-                    <MetadataBlockFormFields
-                      metadataBlock={metadataBlock}
-                      datasetTemplateInstructions={datasetTemplateInstructions}
-                    />
-                  </Accordion.Body>
-                </Accordion.Item>
-              ))}
-            </Accordion>
-          )}
+          {metadataBlocksInfo.length > 0 &&
+            (onCreateMode ? (
+              <RequiredFieldsFirstLayout
+                metadataBlocksInfo={metadataBlocksInfo}
+                requiredFields={requiredFields}
+                initialValues={initialValues}
+                accountPrefillValues={accountPrefillValues}
+                user={user}
+                datasetTemplateInstructions={datasetTemplateInstructions}
+              />
+            ) : (
+              <MetadataBlocksAccordion
+                metadataBlocksInfo={metadataBlocksInfo}
+                datasetTemplateInstructions={datasetTemplateInstructions}
+              />
+            ))}
 
           <SeparationLine />
 
@@ -192,17 +191,22 @@ export const MetadataForm = ({
             </Alert>
           )}
           <div className={styles['bottom-buttons-container']}>
-            <Button type="submit" disabled={disableSubmitButton}>
-              {onCreateMode ? t('datasetMetadataForm.saveDataset') : t('saveChanges')}
-            </Button>
-            <Button
-              withSpacing
-              variant="secondary"
-              type="button"
-              onClick={handleCancel}
-              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-              {t('cancel')}
-            </Button>
+            {onCreateMode && (
+              <RequiredFieldsCounter requiredFields={requiredFields} onGoToField={goToField} />
+            )}
+            <div className={styles['bottom-buttons']}>
+              <Button type="submit" disabled={disableSubmitButton}>
+                {onCreateMode ? t('datasetMetadataForm.saveDataset') : t('saveChanges')}
+              </Button>
+              <Button
+                withSpacing
+                variant="secondary"
+                type="button"
+                onClick={handleCancel}
+                disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+                {t('cancel')}
+              </Button>
+            </div>
           </div>
         </form>
       </FormProvider>

@@ -93,7 +93,34 @@
       "submitting": "Form Submitting",
       "submissionSuccess": "Form submission successful"
     },
-    "saveDataset": "Save Dataset"
+    "saveDataset": "Save Dataset",
+    "requiredFieldsFirst": {
+      "stillNeeded": {
+        "title": "Still needed",
+        "summary_one": "{{count}} required field is empty",
+        "summary_other": "{{count}} required fields are empty",
+        "allFilled": "All required fields are filled"
+      },
+      "completed": {
+        "title": "Completed",
+        "summary": "Required fields already filled in, from your account or a template",
+        "fromAccount": "From your account:",
+        "orcid": "ORCID iD {{orcid}}",
+        "ror": "ROR ID {{ror}}"
+      },
+      "optional": {
+        "title": "Optional fields",
+        "summary_one": "{{count}} field, folded away",
+        "summary_other": "{{count}} fields, folded away",
+        "more": "and {{count}} more"
+      },
+      "counter": {
+        "stillEmpty_one": "{{count}} required field still empty",
+        "stillEmpty_other": "{{count}} required fields still empty",
+        "goToNext": "Go to the next one",
+        "allFilled": "All required fields are filled"
+      }
+    }
   },
   "collectionForm": {
     "fields": {

@@ -1,12 +1,15 @@
 import { useEffect, useRef } from 'react'
 import { type UseFormSetValue } from 'react-hook-form'
 import { type User } from '@/users/domain/models/User'
-import {
-  type ComposedSingleFieldValue,
-  type DatasetMetadataFormValues
-} from '../MetadataFieldsHelper'
+import { type DatasetMetadataFormValues } from '../MetadataFieldsHelper'
 import { type DatasetMetadataFormMode } from '..'
-import { DateHelper } from '@/shared/helpers/DateHelper'
+import { getUserDataPrefillValues } from './userDataPrefill'
+
+type SetFieldValue = (
+  fieldName: string,
+  value: string,
+  options?: { shouldValidate: boolean }
+) => void
 
 interface UsePrefillFieldsWithUserDataProps {
   mode: DatasetMetadataFormMode
@@ -19,6 +22,7 @@ interface UsePrefillFieldsWithUserDataProps {
  * This hook is used to prefill specific fields with user data when in create mode.
  * It checks if the user is available and if the mode is 'create'.
  * It also ensures that it does not overwrite any existing values in the formDefaultValues that might come from a template.
+ * Which fields get which values is decided by getUserDataPrefillValues.
  */
 
 export const usePrefillFieldsWithUserData = ({
@@ -32,49 +36,16 @@ export const usePrefillFieldsWithUserData = ({
     if (didPrefillRef.current) return
     if (mode !== 'create' || !user) return
 
-    const displayName = `${user.lastName}, ${user.firstName}`
+    // The field paths are built at runtime (for example "citation.author.0.authorName"), which the
+    // typed setValue cannot follow, so we call it through a plainly typed alias
+    const setFieldValue = setValue as unknown as SetFieldValue
 
-    const authorName0 = (formDefaultValues?.citation?.author as ComposedSingleFieldValue[])?.[0]
-      .authorName
-    const datasetContact0 = (
-      formDefaultValues?.citation?.datasetContact as ComposedSingleFieldValue[]
-    )?.[0].datasetContactName
-    const datasetContactEmail0 = (
-      formDefaultValues?.citation?.datasetContact as ComposedSingleFieldValue[]
-    )?.[0].datasetContactEmail
-    const depositor = formDefaultValues?.citation?.depositor as string
-    const dateOfDeposit = formDefaultValues?.citation?.dateOfDeposit as string
-    const datasetContactAffiliation = (
-      formDefaultValues?.citation?.datasetContact as ComposedSingleFieldValue[]
-    )?.[0].datasetContactAffiliation
-    const authorAffiliation0 = (
-      formDefaultValues?.citation?.author as ComposedSingleFieldValue[]
-    )?.[0].authorAffiliation
-
-    if (!datasetContact0 && !datasetContactEmail0) {
-      setValue('citation.datasetContact.0.datasetContactName', displayName)
-      setValue('citation.datasetContact.0.datasetContactEmail', user.email, {
-        shouldValidate: true
-      })
-    }
-
-    if (!depositor) {
-      setValue('citation.depositor', displayName)
-    }
-    if (!dateOfDeposit) {
-      setValue('citation.dateOfDeposit', DateHelper.toISO8601Format(new Date()))
-    }
-
-    if (!authorName0 && !authorAffiliation0) {
-      setValue('citation.author.0.authorName', displayName)
-    }
-
-    if (user.affiliation) {
-      if (!authorName0 && !datasetContactAffiliation && !authorAffiliation0) {
-        setValue('citation.datasetContact.0.datasetContactAffiliation', user.affiliation)
-        setValue('citation.author.0.authorAffiliation', user.affiliation)
+    getUserDataPrefillValues(formDefaultValues, user).forEach(
+      ({ fieldName, value, shouldValidate }) => {
+        setFieldValue(fieldName, value, shouldValidate ? { shouldValidate: true } : undefined)
       }
-    }
+    )
+
     didPrefillRef.current = true
   }, [setValue, user, mode, formDefaultValues])
 }
