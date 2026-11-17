@@ -2,6 +2,7 @@ import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookR
 
 export const createGuestbookRepositoryStub = (): GuestbookRepository => ({
   createGuestbook: cy.stub(),
+  editGuestbook: cy.stub(),
   getGuestbook: cy.stub(),
   getGuestbooksByCollectionId: cy.stub(),
   getGuestbookResponsesByGuestbookId: cy.stub(),

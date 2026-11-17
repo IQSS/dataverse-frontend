@@ -3,11 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Button, Form, Table, Alert } from '@iqss/dataverse-design-system'
 import { CaretDown, CaretUp, ChevronExpand, Download } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { downloadGuestbookResponsesByCollectionId } from '@/guestbooks/domain/useCases/downloadGuestbookResponsesByCollectionId'
 import { downloadGuestbookResponsesByGuestbookId } from '@/guestbooks/domain/useCases/downloadGuestbookResponsesByGuestbookId'
 import { setGuestbookEnabled } from '@/guestbooks/domain/useCases/setGuestbookEnabled'
+import { RouteWithParams } from '@/sections/Route.enum'
 import { useCollection } from '@/sections/collection/useCollection'
 import { NotFoundPage } from '@/sections/not-found-page/NotFoundPage'
 import { BreadcrumbsGenerator } from '@/sections/shared/hierarchy/BreadcrumbsGenerator'
@@ -30,6 +32,7 @@ interface GuestbooksProps {
 
 export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksProps) => {
   const { t } = useTranslation('guestbooks')
+  const navigate = useNavigate()
   const [includeGuestbooksFromParent, setIncludeGuestbooksFromParent] = useState(true)
   const [sortBy, setSortBy] = useState<'name' | 'created' | 'usage' | 'responses' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
@@ -374,6 +377,17 @@ export const Guestbooks = ({ collectionRepository, collectionId }: GuestbooksPro
                   <GuestbookActionButtons
                     isEnabled={guestbook.enabled}
                     onView={() => setGuestbookToPreview(guestbook)}
+                    onCopy={() =>
+                      navigate(RouteWithParams.GUESTBOOKS_CREATE(collectionId), {
+                        state: { guestbookToCopy: guestbook }
+                      })
+                    }
+                    onEdit={() =>
+                      navigate(RouteWithParams.GUESTBOOKS_EDIT(collectionId, guestbook.id))
+                    }
+                    onViewResponses={() =>
+                      navigate(RouteWithParams.GUESTBOOKS_RESPONSES(collectionId, guestbook.id))
+                    }
                     onToggleEnabled={() => handleToggleEnabled(guestbook)}
                     canToggleEnabled={isGuestbookFromCurrentCollection(guestbook)}
                     canEdit={isGuestbookFromCurrentCollection(guestbook)}

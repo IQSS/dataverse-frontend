@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { type CreateGuestbookDTO, WriteError } from '@iqss/dataverse-client-javascript'
+import { WriteError } from '@iqss/dataverse-client-javascript'
+import { GuestbookDTO } from '@/guestbooks/domain/useCases/DTOs/GuestbookDTO'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { createGuestbook } from '@/guestbooks/domain/useCases/createGuestbook'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
@@ -18,7 +19,7 @@ export const useCreateGuestbook = ({
   const [isCreatingGuestbook, setIsCreatingGuestbook] = useState(false)
   const [errorCreatingGuestbook, setErrorCreatingGuestbook] = useState<string | null>(null)
 
-  const handleCreateGuestbook = async (guestbook: CreateGuestbookDTO) => {
+  const handleCreateGuestbook = async (guestbook: GuestbookDTO) => {
     setIsCreatingGuestbook(true)
     setErrorCreatingGuestbook(null)
 

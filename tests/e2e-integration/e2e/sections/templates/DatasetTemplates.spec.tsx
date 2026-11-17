@@ -68,7 +68,7 @@ describe('Dataset Templates', () => {
     cy.findByText(templateName)
       .closest('tr')
       .within(() => {
-        cy.findByRole('button', { name: 'View' }).click({ force: true })
+        cy.findByRole('button', { name: 'Preview' }).click({ force: true })
       })
 
     cy.findByText(/Dataset Template Preview/i).should('exist')

@@ -4,13 +4,13 @@ export interface GuestbookResponse {
   datasetPid: string
   date: string
   type: EventType
-  fileName?: string
-  fileId?: number
-  filePid?: string
-  userName: string
   email?: string
+  fileId?: number
+  fileName?: string
+  filePid?: string
   institution?: string
   position?: string
+  userName: string
   customQuestions?: GuestbookResponseCustomQuestion[]
 }
 

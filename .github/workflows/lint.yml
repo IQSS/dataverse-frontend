@@ -31,7 +31,7 @@ jobs:
         run: npm run build
 
       - name: Type check
-        run: tsc --noEmit
+        run: npx tsc --noEmit
 
       - name: ESLint
         run: npm run lint:eslint

@@ -11,6 +11,7 @@ describe('useRemoveDatasetGuestbook', () => {
     onSuccessfulRemoveDatasetGuestbook = cy.stub().as('onSuccessfulRemoveDatasetGuestbook')
     guestbookRepository = {
       createGuestbook: cy.stub(),
+      editGuestbook: cy.stub(),
       getGuestbook: cy.stub(),
       getGuestbooksByCollectionId: cy.stub(),
       getGuestbookResponsesByGuestbookId: cy.stub(),

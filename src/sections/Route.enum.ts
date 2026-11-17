@@ -23,6 +23,8 @@ export enum Route {
   COLLECTION_TEMPLATES = '/:collectionId/templates',
   GUESTBOOKS = '/:collectionId/guestbooks',
   GUESTBOOKS_CREATE = '/:collectionId/guestbooks/create',
+  GUESTBOOKS_EDIT = '/:collectionId/guestbooks/:guestbookId/edit',
+  GUESTBOOKS_RESPONSES = '/:collectionId/guestbooks/:guestbookId/responses',
   TEMPLATES_CREATE = '/:collectionId/templates/create',
   TEMPLATES_EDIT = '/templates/edit',
   FEATURED_ITEM = '/featured-item/:parentCollectionId/:featuredItemId',
@@ -42,6 +44,10 @@ export const RouteWithParams = {
   COLLECTION_TEMPLATES: (collectionId: string) => `/${collectionId}/templates`,
   GUESTBOOKS: (collectionId: string) => `/${collectionId}/guestbooks`,
   GUESTBOOKS_CREATE: (collectionId: string) => `/${collectionId}/guestbooks/create`,
+  GUESTBOOKS_EDIT: (collectionId: string, guestbookId: number | string) =>
+    `/${collectionId}/guestbooks/${guestbookId}/edit`,
+  GUESTBOOKS_RESPONSES: (collectionId: string, guestbookId: number | string) =>
+    `/${collectionId}/guestbooks/${guestbookId}/responses`,
   TEMPLATES_CREATE: (collectionId: string) => `/${collectionId}/templates/create`,
   TEMPLATES_EDIT: (
     collectionId: string,

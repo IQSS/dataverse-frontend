@@ -11,6 +11,7 @@ describe('useAssignDatasetGuestbook', () => {
     onSuccessfulAssignDatasetGuestbook = cy.stub().as('onSuccessfulAssignDatasetGuestbook')
     guestbookRepository = {
       createGuestbook: cy.stub(),
+      editGuestbook: cy.stub(),
       getGuestbook: cy.stub(),
       getGuestbooksByCollectionId: cy.stub(),
       getGuestbookResponsesByGuestbookId: cy.stub(),

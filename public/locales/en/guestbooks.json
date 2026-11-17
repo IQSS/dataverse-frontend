@@ -8,20 +8,24 @@
     "enable": "Enable",
     "disable": "Disable",
     "downloadAllResponses": "Download All Responses",
-    "view": "View",
+    "view": "Preview",
     "copy": "Copy",
     "edit": "Edit",
+    "delete": "Delete",
     "downloadResponses": "Download responses",
     "viewResponses": "View Responses"
   },
   "errors": {
     "getGuestbook": "Something went wrong getting the guestbook. Try again later.",
+    "editGuestbook": "Something went wrong editing the guestbook. Try again later.",
+    "getGuestbookResponses": "Something went wrong getting guestbook responses. Try again later.",
     "toggleEnabled": "Something went wrong updating the guestbook status. Try again later.",
     "downloadResponses": "Something went wrong downloading guestbook responses. Try again later."
   },
   "alerts": {
     "statusUpdated": "The guestbook status has been updated.",
-    "downloadStarted": "Your download has started."
+    "downloadStarted": "Your download has started.",
+    "updated": "The guestbook has been updated."
   },
   "preview": {
     "title": "Preview Guestbook",
@@ -94,5 +98,31 @@
     },
     "submit": "Create Dataset Guestbook",
     "cancel": "Cancel"
+  },
+  "edit": {
+    "title": "Edit Dataset Guestbook"
+  },
+  "responses": {
+    "title": "Guestbook Responses",
+    "info": "Click \"Download Responses\" to download all collected responses for this guestbook, as a CSV file. To navigate and analyze your collected responses, we recommend importing this CSV file into Excel, Google Sheets or similar software.",
+    "guestbookName": "Guestbook Name",
+    "downloadButton": "Download Responses",
+    "count_one": "{{count}} Response",
+    "count_other": "{{count}} Responses",
+    "noRecords": "No records found.",
+    "table": {
+      "dataset": "Dataset",
+      "date": "Date",
+      "type": "Type",
+      "file": "File",
+      "user": "User",
+      "customQuestions": "Custom Questions"
+    },
+    "eventTypes": {
+      "AccessRequest": "Access Request",
+      "Download": "Download",
+      "Subset": "Subset",
+      "Explore": "Explore"
+    }
   }
 }

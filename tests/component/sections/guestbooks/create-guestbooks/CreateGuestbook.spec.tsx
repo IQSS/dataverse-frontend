@@ -1,19 +1,23 @@
 import { act, renderHook } from '@testing-library/react'
-import { type CreateGuestbookDTO, WriteError } from '@iqss/dataverse-client-javascript'
+import { WriteError } from '@iqss/dataverse-client-javascript'
+import { useLocation } from 'react-router-dom'
 import { CreateGuestbook } from '@/sections/guestbooks/create-guestbooks/CreateGuestbook'
+import { CreateGuestbookButton } from '@/sections/guestbooks/create-guestbooks/CreateGuestbookButton'
 import { useCreateGuestbook } from '@/sections/guestbooks/create-guestbooks/useCreateGuestbook'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
+import { GuestbookDTO } from '@/guestbooks/domain/useCases/DTOs/GuestbookDTO'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { createGuestbookRepositoryStub } from '../createGuestbookRepositoryStub'
 import { WithRepositories } from '@tests/component/WithRepositories'
 
 type CreateGuestbookStub = sinon.SinonStub<
-  [collectionIdOrAlias: number | string, guestbook: CreateGuestbookDTO],
+  [collectionIdOrAlias: number | string, guestbook: GuestbookDTO],
   Promise<number>
 >
 
-const guestbook: CreateGuestbookDTO = {
+const guestbook: GuestbookDTO = {
   name: 'Test Guestbook',
   enabled: false,
   emailRequired: true,
@@ -29,6 +33,32 @@ const guestbook: CreateGuestbookDTO = {
       hidden: false
     }
   ]
+}
+
+const sourceGuestbookToCopy: Guestbook = {
+  id: 10,
+  name: 'Source Guestbook',
+  enabled: false,
+  emailRequired: true,
+  nameRequired: true,
+  institutionRequired: true,
+  positionRequired: false,
+  customQuestions: [
+    {
+      id: 21,
+      question: 'Preferred format',
+      required: true,
+      displayOrder: 0,
+      type: 'options',
+      hidden: false,
+      optionValues: [
+        { id: 31, value: 'CSV', displayOrder: 0 },
+        { id: 32, value: 'JSON', displayOrder: 1 }
+      ]
+    }
+  ],
+  createTime: '2026-01-01T00:00:00.000Z',
+  dataverseId: 17
 }
 
 describe('CreateGuestbook', () => {
@@ -54,8 +84,15 @@ describe('CreateGuestbook', () => {
         <CreateGuestbook collectionId="root" collectionRepository={collectionRepository} />
       </WithRepositories>
     )
+  const mountCopyGuestbook = () =>
+    cy.customMount(
+      <WithRepositories guestbookRepository={guestbookRepository}>
+        <CreateGuestbook collectionId="root" collectionRepository={collectionRepository} />
+      </WithRepositories>,
+      [{ pathname: '/root/guestbooks/create', state: { guestbookToCopy: sourceGuestbookToCopy } }]
+    )
 
-  const expectGuestbookCreatedWith = (expectedGuestbook: CreateGuestbookDTO) => {
+  const expectGuestbookCreatedWith = (expectedGuestbook: GuestbookDTO) => {
     cy.wrap(null).should(() => {
       expect(createGuestbookStub).to.have.been.calledOnce
 
@@ -74,6 +111,47 @@ describe('CreateGuestbook', () => {
     cy.wrap(null).should(() => {
       expect(createGuestbookStub).to.have.been.calledOnce
       expect(createGuestbookStub.getCall(0).args[1].enabled).to.equal(true)
+    })
+  })
+
+  it('prefills a copied guestbook and submits it as a new guestbook', () => {
+    mountCopyGuestbook()
+
+    cy.findByDisplayValue('Copy of Source Guestbook').should('exist')
+    cy.findByLabelText('Name').should('be.checked')
+    cy.findByLabelText('Email').should('be.checked')
+    cy.findByLabelText('Institution').should('be.checked')
+    cy.findByLabelText('Position').should('not.be.checked')
+    cy.findByDisplayValue('Preferred format').should('exist')
+    cy.findByDisplayValue('CSV').should('exist')
+    cy.findByDisplayValue('JSON').should('exist')
+    cy.findByLabelText('Required field').should('be.checked')
+
+    cy.get('button[type="submit"]').click()
+    cy.wrap(guestbookRepository.getGuestbook as Cypress.Agent<sinon.SinonStub>).should(
+      'not.have.been.called'
+    )
+
+    expectGuestbookCreatedWith({
+      name: 'Copy of Source Guestbook',
+      enabled: false,
+      nameRequired: true,
+      emailRequired: true,
+      institutionRequired: true,
+      positionRequired: false,
+      customQuestions: [
+        {
+          question: 'Preferred format',
+          required: true,
+          displayOrder: 0,
+          type: 'options',
+          hidden: false,
+          optionValues: [
+            { value: 'CSV', displayOrder: 0 },
+            { value: 'JSON', displayOrder: 1 }
+          ]
+        }
+      ]
     })
   })
 
@@ -169,6 +247,49 @@ describe('CreateGuestbook', () => {
         }
       ]
     })
+  })
+
+  it('renders collection not found page when the collection cannot be fetched', () => {
+    collectionRepository.getById = cy.stub().rejects(new Error('missing collection'))
+
+    mountCreateGuestbook()
+
+    cy.findByTestId('not-found-page').should('exist')
+    cy.findByText(/We can't find the/i).should('exist')
+    cy.findByText('Collection').should('exist')
+  })
+
+  it('shows an error alert when creating the guestbook fails', () => {
+    createGuestbookStub.rejects(new Error('unexpected'))
+
+    mountCreateGuestbook()
+
+    cy.get('#guestbook-name').type('Research Use Guestbook')
+    cy.get('button[type="submit"]').click()
+
+    cy.findByText(/Something went wrong creating the guestbook/i).should('exist')
+  })
+})
+
+describe('CreateGuestbookButton', () => {
+  const LocationDisplay = () => {
+    const location = useLocation()
+
+    return <div data-testid="location-display">{location.pathname}</div>
+  }
+
+  it('navigates to the create guestbook page when clicked', () => {
+    cy.customMount(
+      <>
+        <CreateGuestbookButton collectionId="root" />
+        <LocationDisplay />
+      </>,
+      ['/root/guestbooks']
+    )
+
+    cy.findByRole('button', { name: 'Create Dataset Guestbook' }).click()
+
+    cy.findByTestId('location-display').should('have.text', '/root/guestbooks/create')
   })
 })
 
