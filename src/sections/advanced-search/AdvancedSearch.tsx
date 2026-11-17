@@ -5,6 +5,7 @@ import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/reposi
 import { useGetCollectionMetadataBlocksInfo } from '@/shared/hooks/useGetCollectionMetadataBlocksInfo'
 import { useCollection } from '../collection/useCollection'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
+import { useDocumentTitle, DEFAULT_DOCUMENT_TITLE } from '../../shared/hooks/useDocumentTitle'
 import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
@@ -38,6 +39,7 @@ export const AdvancedSearch = ({
     collectionRepository,
     collectionId
   )
+  useDocumentTitle(t('pageTitle'), { parentTitle: collection?.name || DEFAULT_DOCUMENT_TITLE })
   const {
     metadataBlocksInfo,
     isLoading: isLoadingCollectionMetadataBlocks,
