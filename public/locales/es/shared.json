@@ -110,8 +110,8 @@
       },
       "optional": {
         "title": "Campos opcionales",
-        "summary_one": "{{count}} campo, plegado",
-        "summary_other": "{{count}} campos, plegados",
+        "summary_one": "{{count}} campo",
+        "summary_other": "{{count}} campos",
         "more": "y {{count}} más"
       },
       "counter": {

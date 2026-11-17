@@ -110,8 +110,8 @@
       },
       "optional": {
         "title": "Optional fields",
-        "summary_one": "{{count}} field, folded away",
-        "summary_other": "{{count}} fields, folded away",
+        "summary_one": "{{count}} field",
+        "summary_other": "{{count}} fields",
         "more": "and {{count}} more"
       },
       "counter": {
