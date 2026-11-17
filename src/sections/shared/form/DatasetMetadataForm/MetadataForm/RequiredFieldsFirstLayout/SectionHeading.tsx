@@ -15,8 +15,19 @@ export const SectionHeading = ({ title, summary, preview }: SectionHeadingProps)
   <span className={styles['section-heading']}>
     <span>
       <span className={styles['section-title']}>{title}</span>
-      {summary && <span className={styles['section-summary']}>{summary}</span>}
+      {/* The spaces keep the pieces apart when the heading is read aloud */}
+      {summary && (
+        <>
+          {' '}
+          <span className={styles['section-summary']}>{summary}</span>
+        </>
+      )}
     </span>
-    {preview && <span className={styles['section-preview']}>{preview}</span>}
+    {preview && (
+      <>
+        {' '}
+        <span className={styles['section-preview']}>{preview}</span>
+      </>
+    )}
   </span>
 )
