@@ -545,6 +545,15 @@ export class Dataset {
     private withAlerts(): void {
       if (
         this.version.publishingStatus === DatasetPublishingStatus.DRAFT &&
+        this.version.isLatest &&
+        !this.version.isInReview &&
+        this.permissions.canUpdateDataset &&
+        !this.permissions.canPublishDataset
+      ) {
+        this.alerts.push(new Alert('info', AlertMessageKey.REVIEW_REQUIRED))
+      }
+      if (
+        this.version.publishingStatus === DatasetPublishingStatus.DRAFT &&
         this.permissions.canPublishDataset
       ) {
         this.alerts.push(new Alert('warning', AlertMessageKey.DRAFT_VERSION))

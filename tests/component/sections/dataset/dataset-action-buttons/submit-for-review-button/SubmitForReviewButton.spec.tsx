@@ -9,6 +9,33 @@ import { WriteError } from '@iqss/dataverse-client-javascript'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { useState } from 'react'
+import { AlertProvider } from '@/sections/alerts/AlertProvider'
+import { DatasetAlerts } from '@/sections/dataset/dataset-alerts/DatasetAlerts'
+import useUpdateDatasetAlerts from '@/sections/dataset/useUpdateDatasetAlerts'
+
+function ReviewWorkflow() {
+  const [dataset, setDataset] = useState(submittableDataset)
+  useUpdateDatasetAlerts({ dataset })
+
+  return (
+    <DatasetContext.Provider
+      value={{
+        dataset,
+        isLoading: false,
+        refreshDataset: () =>
+          setDataset(
+            DatasetMother.create({
+              ...dataset,
+              version: DatasetVersionMother.createDraftAsLatestVersionInReview()
+            })
+          )
+      }}>
+      <DatasetAlerts />
+      <SubmitForReviewButton dataset={dataset} />
+    </DatasetContext.Provider>
+  )
+}
 
 const submittableDataset = () =>
   DatasetMother.create({
@@ -40,6 +67,34 @@ const mountWithRepository = (datasetRepository: DatasetRepository) => {
 }
 
 describe('SubmitForReviewButton', () => {
+  it('shows the review alert after successful submission refreshes the dataset', () => {
+    const submitForReview = cy.stub().resolves({ inReview: true, message: 'Submitted' })
+    cy.mountAuthenticated(
+      <WithRepositories datasetRepository={{ submitForReview } as unknown as DatasetRepository}>
+        <AlertProvider>
+          <ReviewWorkflow />
+        </AlertProvider>
+      </WithRepositories>
+    )
+
+    cy.findByText('Submitted for Review').should('not.exist')
+    cy.findByText('This draft version needs to be submitted for review.').should('be.visible')
+    cy.findByRole('button', { name: 'Submit for Review' }).click()
+    cy.findByRole('button', { name: 'Submit', exact: true }).click()
+
+    cy.wrap(submitForReview).should('have.been.calledOnce')
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByRole('button', { name: 'Submitted for Review' }).should('be.disabled')
+    cy.findByText('This draft version needs to be submitted for review.').should('not.exist')
+    cy.findAllByRole('alert')
+      .filter('.alert-warning')
+      .should('have.length', 1)
+      .and('contain.text', 'Submitted for Review')
+      .and(
+        'contain.text',
+        'The draft version of this dataset is currently under review prior to publication.'
+      )
+  })
   it('renders the SubmitForReviewButton if is dataset latest version and it is a draft and the dataset is not locked in workflow and the user has dataset update permissions and the user do not have publish dataset permissions', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),

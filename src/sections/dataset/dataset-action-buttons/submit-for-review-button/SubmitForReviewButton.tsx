@@ -66,6 +66,12 @@ export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
         handleSubmit={() => void handleSubmitForReview(dataset.persistentId)}
         isSubmitting={isSubmitting}
         errorSubmitting={errorSubmitting}
+        license={dataset.license}
+        handleCustomTermsClick={() => {
+          const url = new URL(window.location.href)
+          url.searchParams.set('tab', 'terms')
+          window.open(url.toString(), '_blank', 'noopener,noreferrer')
+        }}
       />
     </>
   )

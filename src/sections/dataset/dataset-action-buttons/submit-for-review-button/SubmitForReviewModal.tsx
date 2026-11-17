@@ -1,5 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Alert, Button, Modal, Spinner, Stack } from '@iqss/dataverse-design-system'
+import { ExclamationTriangle } from 'react-bootstrap-icons'
+import { DatasetLicense } from '@/dataset/domain/models/Dataset'
+import { PublishLicense } from '@/sections/dataset/publish-dataset/PublishLicense'
+import styles from '@/sections/dataset/publish-dataset/PublishDatasetHelpText.module.scss'
 
 interface SubmitForReviewModalProps {
   show: boolean
@@ -7,6 +11,8 @@ interface SubmitForReviewModalProps {
   handleSubmit: () => void
   isSubmitting: boolean
   errorSubmitting: string | null
+  license?: DatasetLicense
+  handleCustomTermsClick: () => void
 }
 
 export function SubmitForReviewModal({
@@ -14,20 +20,26 @@ export function SubmitForReviewModal({
   handleClose,
   handleSubmit,
   isSubmitting,
-  errorSubmitting
+  errorSubmitting,
+  license,
+  handleCustomTermsClick
 }: SubmitForReviewModalProps) {
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
   const title = t('datasetActionButtons.submitForReview.enabled')
 
   return (
-    <Modal ariaLabel={title} show={show} onHide={isSubmitting ? () => {} : handleClose} centered>
+    <Modal ariaLabel={title} show={show} onHide={isSubmitting ? () => {} : handleClose} size="xl">
       <Modal.Header>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Stack gap={2}>
-          <p className="mb-0">{t('datasetActionButtons.submitForReview.message')}</p>
+        <Stack direction="vertical" gap={3}>
+          <p className={styles.warningText}>
+            <ExclamationTriangle aria-hidden="true" />{' '}
+            {t('datasetActionButtons.submitForReview.message')}
+          </p>
+          <PublishLicense license={license} handleCustomTermsClick={handleCustomTermsClick} />
           {errorSubmitting && (
             <Alert variant="danger" dismissible={false}>
               {errorSubmitting}
@@ -42,7 +54,12 @@ export function SubmitForReviewModal({
             {isSubmitting && <Spinner variant="light" animation="border" size="sm" />}
           </Stack>
         </Button>
-        <Button variant="secondary" onClick={handleClose} type="button" disabled={isSubmitting}>
+        <Button
+          withSpacing
+          variant="secondary"
+          onClick={handleClose}
+          type="button"
+          disabled={isSubmitting}>
           {tShared('cancel')}
         </Button>
       </Modal.Footer>

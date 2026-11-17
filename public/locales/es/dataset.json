@@ -97,6 +97,10 @@
     "contactOwner": "Contactar al propietario"
   },
   "alerts": {
+    "reviewRequired": {
+      "heading": "Información",
+      "alertText": "<strong>Esta versión borrador debe enviarse para revisión.</strong> Cuando esté lista para compartir, por favor <strong>envíela para revisión</strong>."
+    },
     "submittedForReview": {
       "heading": "Enviado para revisión",
       "alertText": "La versión borrador de este conjunto de datos se encuentra actualmente en revisión antes de su publicación."

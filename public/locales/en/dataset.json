@@ -97,6 +97,10 @@
     "contactOwner": "Contact Owner"
   },
   "alerts": {
+    "reviewRequired": {
+      "heading": "Info",
+      "alertText": "<strong>This draft version needs to be submitted for review.</strong> When ready for sharing, please <strong>submit it for review</strong>."
+    },
     "submittedForReview": {
       "heading": "Submitted for Review",
       "alertText": "The draft version of this dataset is currently under review prior to publication."

@@ -548,7 +548,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           const result = (await response.json()) as { data?: { title?: string } }
           if (result.data?.title) displayNames.set(assigner, result.data.title)
         } catch {
-          // Keep the history available when a display name cannot be resolved.
+          return
         }
       })
     )
