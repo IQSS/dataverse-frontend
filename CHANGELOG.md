@@ -13,6 +13,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Dataset Page: "Styled Citation" now supports selecting any CSL citation style and renders the citation formatted in that style, using citeproc-js in the browser.
 - Dataset Page: added a copy icon in front of "Cite Dataset" to support a quick copy of citation in default style.
 - File Page: added a File Metrics: File Download Count.
+- Storage Driver selection in Create Collection form, with dynamic fetching of available storage drivers from the backend.
 
 ### Changed
 
@@ -20,6 +21,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Show success toast notification when dataset publishing completes. (#1129)
+- Allow plain text URLs to be clickable in dataset description and metadata fields. (#1147)
 - Auto-select the entire citation text when clicked or highlighted on dataset and file pages. (#1119)
 - Normalize directory slashes when validating unique file path combination in file uploader. (#1106)
 - Display "In Review" status label on dataset page when a draft version is under review. (#1094)

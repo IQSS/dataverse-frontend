@@ -298,4 +298,85 @@ describe('EditDatasetMenu', () => {
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
     cy.findByRole('button', { name: 'Private URL' }).should('exist')
   })
+
+  it('renders the Edit Private URL if user can manage dataset permissions', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.create({
+        canUpdateDataset: true,
+        canManageDatasetPermissions: true,
+        canManageFilesPermissions: false
+      }),
+      locks: [],
+      hasValidTermsOfAccess: true
+    })
+
+    cy.mountAuthenticated(
+      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+    )
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Private URL' }).should('exist')
+  })
+
+  it('does not render permissions or private URL options if user cannot manage dataset or file permissions', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.create({
+        canUpdateDataset: true,
+        canManageDatasetPermissions: false,
+        canManageFilesPermissions: false
+      }),
+      locks: [],
+      hasValidTermsOfAccess: true
+    })
+
+    cy.mountAuthenticated(
+      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+    )
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Permissions' }).should('not.exist')
+    cy.findByRole('button', { name: 'Private URL' }).should('not.exist')
+  })
+
+  it('renders only the dataset permissions submenu item if user can manage dataset permissions', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.create({
+        canUpdateDataset: true,
+        canManageDatasetPermissions: true,
+        canManageFilesPermissions: false
+      }),
+      locks: [],
+      hasValidTermsOfAccess: true
+    })
+
+    cy.mountAuthenticated(
+      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+    )
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Permissions' }).click()
+    cy.findByRole('button', { name: 'Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'File' }).should('not.exist')
+  })
+
+  it('renders only the file permissions submenu item if user can manage file permissions', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.create({
+        canUpdateDataset: true,
+        canManageDatasetPermissions: false,
+        canManageFilesPermissions: true
+      }),
+      locks: [],
+      hasValidTermsOfAccess: true
+    })
+
+    cy.mountAuthenticated(
+      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+    )
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Permissions' }).click()
+    cy.findByRole('button', { name: 'Dataset' }).should('not.exist')
+    cy.findByRole('button', { name: 'File' }).should('exist')
+  })
 })
