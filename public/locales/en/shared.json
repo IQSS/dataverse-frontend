@@ -47,6 +47,26 @@
     },
     "pageSize": "{{item}}s per page"
   },
+  "statusLabels": {
+    "collection": {
+      "unpublished": "This collection is not published, publish it so that others can see it. Once public, it can no longer be unpublished."
+    },
+    "dataset": {
+      "draft": "This version of the dataset is in draft state, publish it so that others can see these changes.",
+      "unpublished": "This dataset has never been published, publish it so that others can see it.",
+      "deaccessioned": "This version has been deaccessioned and is no longer available.",
+      "embargoed": "This dataset is currently under embargo.",
+      "inReview": "This dataset is currently under review.",
+      "version": "Previous versions can be accessed in the \"Versions\" tab of this dataset."
+    },
+    "file": {
+      "draft": "This version of the file is in draft state, it will be published when you publish the hosting dataset.",
+      "unpublished": "This file has never been published, it will be published when you publish the hosting dataset.",
+      "deaccessioned": "This version has been deaccessioned and is no longer available.",
+      "inReview": "This file is in a dataset currently under review.",
+      "version": "Previous versions can be accessed in the \"Versions\" tab of this file."
+    }
+  },
   "citationBlock": {
     "learnAbout": "Learn About",
     "standards": "Data Citation Standards"

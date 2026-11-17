@@ -1,5 +1,6 @@
+import { useTranslation } from 'react-i18next'
 import { Link45deg } from 'react-bootstrap-icons'
-import { Badge, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
+import { Badge, Icon, IconName, Stack, Tooltip } from '@iqss/dataverse-design-system'
 import { Route } from '@/sections/Route.enum'
 import { DatasetCardHelper } from './DatasetCardHelper'
 import { DatasetVersion } from '@/dataset/domain/models/Dataset'
@@ -23,9 +24,25 @@ export function DatasetCardHeader({
   userRoles,
   isLinked
 }: DatasetCardHeaderProps) {
+  const { t: tShared } = useTranslation('shared')
   const publicationStatusesFiltered = publicationStatuses
     .filter((status) => status !== PublicationStatus.Published)
     .sort((a, b) => a.localeCompare(b))
+
+  const getStatusTooltip = (status: PublicationStatus): string | undefined => {
+    switch (status) {
+      case PublicationStatus.Draft:
+        return tShared('statusLabels.dataset.draft')
+      case PublicationStatus.Unpublished:
+        return tShared('statusLabels.dataset.unpublished')
+      case PublicationStatus.Deaccessioned:
+        return tShared('statusLabels.dataset.deaccessioned')
+      case PublicationStatus.InReview:
+        return tShared('statusLabels.dataset.inReview')
+      default:
+        return undefined
+    }
+  }
 
   return (
     <header className={styles['card-header-container']}>
@@ -44,11 +61,22 @@ export function DatasetCardHeader({
         <Stack direction="horizontal" gap={1} className="flex-wrap">
           {publicationStatusesFiltered.length > 0 && (
             <Stack direction="horizontal" gap={1} className="flex-wrap">
-              {publicationStatusesFiltered.map((status) => (
-                <Badge key={status} variant={BADGE_VARIANT_BY_PUBLICATION_STATUS[status]}>
-                  {status}
-                </Badge>
-              ))}
+              {publicationStatusesFiltered.map((status) => {
+                const tooltipText = getStatusTooltip(status)
+                const badge = (
+                  <Badge key={status} variant={BADGE_VARIANT_BY_PUBLICATION_STATUS[status]}>
+                    {status}
+                  </Badge>
+                )
+                if (tooltipText) {
+                  return (
+                    <Tooltip key={status} placement="top" overlay={tooltipText} maxWidth={300}>
+                      {badge}
+                    </Tooltip>
+                  )
+                }
+                return badge
+              })}
             </Stack>
           )}
 
@@ -81,7 +109,7 @@ export function DatasetCardHeader({
 
 const BADGE_VARIANT_BY_PUBLICATION_STATUS: Record<
   PublicationStatus,
-  'primary' | 'secondary' | 'success' | 'danger' | 'warning'
+  'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'
 > = {
   [PublicationStatus.Draft]: 'primary',
   [PublicationStatus.InReview]: 'success',

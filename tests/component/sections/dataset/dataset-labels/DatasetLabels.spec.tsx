@@ -1,4 +1,7 @@
-import { DatasetLabelSemanticMeaning } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  DatasetLabelSemanticMeaning,
+  DatasetLabelValue
+} from '../../../../../src/dataset/domain/models/Dataset'
 import { DatasetLabels } from '../../../../../src/sections/dataset/dataset-labels/DatasetLabels'
 
 describe('DatasetLabels', () => {
@@ -12,7 +15,7 @@ describe('DatasetLabels', () => {
   ]
 
   it('should render all labels', () => {
-    cy.mount(<DatasetLabels labels={labels} />)
+    cy.customMount(<DatasetLabels labels={labels} />)
 
     cy.findByText(labels[0].value).should('exist')
     cy.findByText(labels[1].value).should('exist')
@@ -23,7 +26,7 @@ describe('DatasetLabels', () => {
   })
 
   it('should render labels with correct variant', () => {
-    cy.mount(<DatasetLabels labels={labels} />)
+    cy.customMount(<DatasetLabels labels={labels} />)
 
     cy.findByText(labels[0].value).should('have.class', 'bg-primary')
     cy.findByText(labels[1].value).should('have.class', 'bg-secondary')
@@ -31,5 +34,19 @@ describe('DatasetLabels', () => {
     cy.findByText(labels[3].value).should('have.class', 'bg-danger')
     cy.findByText(labels[4].value).should('have.class', 'bg-warning')
     cy.findByText(labels[5].value).should('have.class', 'bg-info')
+  })
+
+  it('should render tooltip on hover for draft label', () => {
+    const statusLabels = [
+      {
+        value: DatasetLabelValue.DRAFT,
+        semanticMeaning: DatasetLabelSemanticMeaning.DATASET
+      }
+    ]
+
+    cy.customMount(<DatasetLabels labels={statusLabels} />)
+
+    cy.findByText(DatasetLabelValue.DRAFT).parent().trigger('mouseover')
+    cy.findByRole('tooltip').should('exist')
   })
 })

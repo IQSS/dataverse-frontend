@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Link45deg } from 'react-bootstrap-icons'
-import { Badge, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
+import { Badge, Icon, IconName, Stack, Tooltip } from '@iqss/dataverse-design-system'
 import { Route } from '@/sections/Route.enum'
 import { CollectionItemTypePreview } from '@/collection/domain/models/CollectionItemTypePreview'
 import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
@@ -13,6 +13,7 @@ interface CollectionCardHeaderProps {
 
 export function CollectionCardHeader({ collectionPreview }: CollectionCardHeaderProps) {
   const { t } = useTranslation('collection')
+  const { t: tShared } = useTranslation('shared')
   return (
     <header className={styles['card-header-container']}>
       <Stack direction="horizontal" gap={2} className="flex-wrap">
@@ -29,7 +30,14 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
         </span>
 
         <Stack direction="horizontal" gap={1} className="flex-wrap">
-          {!collectionPreview.isReleased && <Badge variant="warning">{t('unpublished')}</Badge>}
+          {!collectionPreview.isReleased && (
+            <Tooltip
+              placement="top"
+              overlay={tShared('statusLabels.collection.unpublished')}
+              maxWidth={300}>
+              <Badge variant="warning">{t('unpublished')}</Badge>
+            </Tooltip>
+          )}
 
           {collectionPreview.userRoles && (
             <Stack direction="horizontal" gap={1} className="flex-wrap">
