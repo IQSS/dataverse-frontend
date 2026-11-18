@@ -316,7 +316,11 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
           ))}
 
           <Form.Group className={styles['form-group']}>
-            <Form.Group.Label message={t('fields.termsAccepted.description')} column md={3}>
+            <Form.Group.Label
+              message={t('fields.termsAccepted.description')}
+              required
+              column
+              md={3}>
               {t('fields.termsAccepted.primaryLabel')}
             </Form.Group.Label>
             <Controller

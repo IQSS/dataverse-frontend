@@ -842,10 +842,12 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:8000/modern/*"
+        "http://localhost:8000/modern/*",
+        "http://127.0.0.1:8000/modern/*"
       ],
       "webOrigins": [
-        "http://localhost:8000"
+        "http://localhost:8000",
+        "http://127.0.0.1:8000"
       ],
       "notBefore": 0,
       "bearerOnly": false,

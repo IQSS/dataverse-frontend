@@ -4,7 +4,7 @@
 
 window.__APP_CONFIG__ = {
   // Base URL of your Dataverse backend
-  backendUrl: 'http://localhost:8000',
+  backendUrl: `http://${window.location.hostname}:8000`,
   // Optional banner shown at the top of the app when set. Basic HTML markup is supported.
   // Use a string for one message across all languages, or map language codes to localized messages.
   bannerMessage: {

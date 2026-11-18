@@ -9,6 +9,11 @@ This guide sets up everything on your computer: the Dataverse backend from
 Modern UI from this branch. You don't need to change any code or configuration by hand. You can follow it yourself,
 or ask an AI coding assistant to "follow TESTING-SIGN-UP.md".
 
+The backend code comes from the `dataverse` repository, but everything runs from this repository's `dev-env`
+folder, not from the `dataverse` repository's own Docker setup. `dev-env` runs your backend build together with what
+the Modern UI needs: the Modern UI itself, an nginx proxy that serves `/modern` and `/api` at
+http://localhost:8000, Keycloak for login, and the sign-up settings.
+
 The first setup takes about 30–45 minutes, most of it waiting for builds.
 
 ---
@@ -19,6 +24,10 @@ If a person asked you to run this file:
 
 - Run the steps in order and tell the person in plain language what each step is doing.
 - Each step has a **Check**. Don't continue until it passes. If it fails, look at **Troubleshooting** at the end.
+- Always build the backend with Maven from the `spa-builtin-user-signup` branch, up to date with GitHub (Steps 1
+  and 2). Don't use a prebuilt Dataverse image instead, even if one is available.
+- Stop and ask the person to do Step 3a themselves (the GitHub token), then check `.npmrc` has an `@iqss:registry`
+  line without printing the file.
 - Stop and ask the person before Step 5 (ORCID). It needs their own ORCID sandbox account, which you can't create.
 - Never ask for passwords or secrets in chat. The person types the ORCID client secret into their terminal themselves.
 - Don't commit, push, or open pull requests. Changes made by this guide are for local testing only.
@@ -53,15 +62,25 @@ git clone --branch spa-builtin-user-signup https://github.com/IQSS/dataverse.git
 git clone --branch feature/create-sign-up https://github.com/IQSS/dataverse-frontend.git
 ```
 
-If you already have the repositories, `git fetch` and check out those two branches instead.
+If you already have the repositories, update them to the latest version of those two branches instead:
 
-**Check:** `git -C dataverse branch --show-current` prints `spa-builtin-user-signup`, and
-`git -C dataverse-frontend branch --show-current` prints `feature/create-sign-up`.
+```bash
+git -C dataverse fetch origin && git -C dataverse checkout spa-builtin-user-signup && git -C dataverse pull --ff-only
+git -C dataverse-frontend fetch origin && git -C dataverse-frontend checkout feature/create-sign-up && git -C dataverse-frontend pull --ff-only
+```
+
+**Check:** both commands print `OK`:
+
+```bash
+[ "$(git -C dataverse rev-parse HEAD)" = "$(git -C dataverse rev-parse origin/spa-builtin-user-signup)" ] && echo OK
+[ "$(git -C dataverse-frontend rev-parse HEAD)" = "$(git -C dataverse-frontend rev-parse origin/feature/create-sign-up)" ] && echo OK
+```
 
 ## Step 2. Build the backend with Maven
 
-This builds Dataverse from the backend PR into a local Docker image called `gdcc/dataverse:unstable`. The Modern
-UI's dev environment uses that image in Step 3.
+This builds Dataverse from the backend PR's branch, `spa-builtin-user-signup`, into a local Docker image called
+`gdcc/dataverse:unstable`. The Modern UI's dev environment uses that image in Step 3. Always build it yourself like
+this: prebuilt Dataverse images, including the public `unstable` image, don't have the exact code being tested.
 
 ```bash
 cd ~/dataverse-signup-test/dataverse
@@ -77,15 +96,38 @@ This takes 5–15 minutes the first time.
 
 ## Step 3. Start the Modern UI and the backend
 
+**3a. Create `.npmrc` with a GitHub token (once).** The Modern UI uses a preview version of
+`@iqss/dataverse-client-javascript` that is only on GitHub Packages, and installing it needs a GitHub token:
+
+1. At https://github.com/settings/tokens, choose **Generate new token (classic)**, select only the `read:packages`
+   scope, and copy the token.
+2. Create `~/dataverse-signup-test/dataverse-frontend/.npmrc` with this content, putting your token in place of
+   `<YOUR_GITHUB_TOKEN>`. If you already have an `.npmrc` with a GitHub token and the `@iqss:registry` line, keep it.
+
+```properties
+legacy-peer-deps=true
+//npm.pkg.github.com/:_authToken=<YOUR_GITHUB_TOKEN>
+@iqss:registry=https://npm.pkg.github.com/
+```
+
+Create this file yourself. Don't paste the token into a chat with an AI assistant.
+
+**3b. Start everything**
+
 ```bash
-cd ~/dataverse-signup-test/dataverse-frontend
+cd ~/dataverse-signup-test/dataverse-frontend/dev-env
 
-# The dev environment needs an .npmrc file. This minimal one is enough; skip this if you already have one.
-[ -f .npmrc ] || echo "legacy-peer-deps=true" > .npmrc
+# Settings for the dev environment. REGISTRY=docker.io makes it use the image you built in Step 2.
+[ -f .env ] || cp .env.example .env
+sed -i.bak 's/^REGISTRY=.*/REGISTRY=docker.io/' .env && rm .env.bak
+grep REGISTRY .env   # REGISTRY=docker.io
 
-cd dev-env
 ./run-env.sh unstable
 ```
+
+`./run-env.sh` deletes any existing `dev_*` environment and its data first, then starts a new one from the image
+named `<REGISTRY>/gdcc/dataverse:<tag>`. With `REGISTRY=docker.io` and the tag `unstable`, that's your Step 2 build.
+Any other `REGISTRY` makes it download a public image instead, which doesn't have the code being tested.
 
 This starts Dataverse, the database, Solr, Keycloak (login), a mail catcher, and the Modern UI. They need a few
 minutes to start. Wait for the setup container to finish:
@@ -122,9 +164,9 @@ curl -s -X POST -H "Content-Type: application/json" http://localhost:8000/api/us
 
 Open **http://localhost:8000/modern** in your browser.
 
-Use `localhost` for normal login. The default Keycloak `test` client allows redirects to
-`http://localhost:8000/modern/*` only. Opening the Modern UI at `127.0.0.1` and clicking **Log In** instead produces
-"Invalid parameter: redirect_uri". Open the `localhost` URL above and click **Log In** again.
+The Keycloak `test` client accepts both `http://localhost:8000/modern/*` and `http://127.0.0.1:8000/modern/*`, so
+logging in (and the automatic login right after sign-up) works on either host. If your environment was created before
+this change, recreate it with `./run-env.sh unstable` so Keycloak imports the updated realm.
 
 Useful pages while testing:
 
@@ -274,17 +316,19 @@ You can then delete the `~/dataverse-signup-test` folder.
 
 ## Troubleshooting
 
-| What you see                                           | What to do                                                                                                                                                                           |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `mvn` fails with "release version 21 not supported"    | Maven is using an older Java. Install JDK 21 and check `mvn -version` shows it.                                                                                                      |
-| `502 Bad Gateway` at `/modern`                         | The Modern UI is still starting. Wait for `Local: http://localhost:5173/` in `docker logs -f dev_frontend`. If you restarted a container, also run `docker restart dev_nginx_proxy`. |
-| `/api/users/signup` says "API endpoint does not exist" | Dataverse isn't running your build. Repeat Step 2, then `./rm-env.sh` and `./run-env.sh unstable` again.                                                                             |
-| Sign-up says "Sign-up via API is not enabled"          | The dev environment wasn't started from this branch's `dev-env`. Run Step 3 from `dataverse-frontend/dev-env`.                                                                       |
-| "port is already allocated"                            | Another program or Dataverse environment uses port 8000, 8080 or 1080. Stop it, then run Step 3 again.                                                                               |
-| No "Sign Up" link                                      | Hard-reload the page (Shift+Reload). `public/config.js` must have `signUpEnabled: true`.                                                                                             |
-| Keycloak login says "Invalid parameter: redirect_uri"  | Open `http://localhost:8000/modern` and click **Log In** again. The default `test` client allows `localhost`, not `127.0.0.1`. If you changed `config.js` in Step 5c, undo it first. |
-| ORCID says the redirect URI is invalid                 | The app's redirect URI must be exactly `http://127.0.0.1:8000/modern/sign-up`, and the page must be opened at `127.0.0.1`.                                                           |
-| "ORCID is not configured on this installation."        | Step 5b didn't succeed, or Dataverse wasn't restarted after it. Run it again, including the restart, and check it printed `"status":"OK"`.                                           |
-| ORCID connect fails with "Internal server error"       | The client ID or secret was saved empty. Run Step 5b again and type both when asked.                                                                                                 |
-| The ORCID row doesn't appear                           | The page must be opened at `http://127.0.0.1:8000`, not `localhost`, and Step 5c must be applied. Check `grep -c 127.0.0.1:8000 public/config.js` prints 4, then reload.             |
-| Uploading a file fails                                 | Not part of this test, but see "File Storage" in `DEVELOPER_GUIDE.md`.                                                                                                               |
+| What you see                                                                                  | What to do                                                                                                                                                                           |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `mvn` fails with "release version 21 not supported"                                           | Maven is using an older Java. Install JDK 21 and check `mvn -version` shows it.                                                                                                      |
+| `502 Bad Gateway` at `/modern`                                                                | The Modern UI is still starting. Wait for `Local: http://localhost:5173/` in `docker logs -f dev_frontend`. If you restarted a container, also run `docker restart dev_nginx_proxy`. |
+| `dev_frontend` fails with `E401`, `E404` or `ETARGET` for `@iqss/dataverse-client-javascript` | `.npmrc` is missing the GitHub token or the `@iqss:registry` line. Fix it as in Step 3a, then `./rm-env.sh` and `./run-env.sh unstable` again.                                       |
+| `pull access denied` or "manifest unknown" for `gdcc/dataverse`                               | Step 2 didn't finish, or `REGISTRY` in `dev-env/.env` isn't `docker.io`. Check `docker image ls gdcc/dataverse:unstable`, fix `.env`, and run Step 3b again.                         |
+| `/api/users/signup` says "API endpoint does not exist"                                        | Dataverse isn't running your build. Repeat Step 2, then `./rm-env.sh` and `./run-env.sh unstable` again.                                                                             |
+| Sign-up says "Sign-up via API is not enabled"                                                 | The dev environment wasn't started from this branch's `dev-env`. Run Step 3 from `dataverse-frontend/dev-env`.                                                                       |
+| "port is already allocated"                                                                   | Another program or Dataverse environment uses port 8000, 8080 or 1080. Stop it, then run Step 3 again.                                                                               |
+| No "Sign Up" link                                                                             | Hard-reload the page (Shift+Reload). `public/config.js` must have `signUpEnabled: true`.                                                                                             |
+| Keycloak login says "Invalid parameter: redirect_uri"                                         | Open `http://localhost:8000/modern` and click **Log In** again. The default `test` client allows `localhost`, not `127.0.0.1`. If you changed `config.js` in Step 5c, undo it first. |
+| ORCID says the redirect URI is invalid                                                        | The app's redirect URI must be exactly `http://127.0.0.1:8000/modern/sign-up`, and the page must be opened at `127.0.0.1`.                                                           |
+| "ORCID is not configured on this installation."                                               | Step 5b didn't succeed, or Dataverse wasn't restarted after it. Run it again, including the restart, and check it printed `"status":"OK"`.                                           |
+| ORCID connect fails with "Internal server error"                                              | The client ID or secret was saved empty. Run Step 5b again and type both when asked.                                                                                                 |
+| The ORCID row doesn't appear                                                                  | The page must be opened at `http://127.0.0.1:8000`, not `localhost`, and Step 5c must be applied. Check `grep -c 127.0.0.1:8000 public/config.js` prints 4, then reload.             |
+| Uploading a file fails                                                                        | Not part of this test, but see "File Storage" in `DEVELOPER_GUIDE.md`.                                                                                                               |

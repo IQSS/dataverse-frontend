@@ -171,6 +171,14 @@ describe('BuiltinSignUpForm', () => {
     cy.get('#username').should('have.class', 'is-invalid')
   })
 
+  it('marks the general terms of use as required', () => {
+    mountForm()
+
+    cy.contains('label', 'General Terms of Use')
+      .findByRole('img', { name: 'Required input symbol' })
+      .should('exist')
+  })
+
   it('disables the submit button until the terms of use are accepted', () => {
     userRepository.signUp = cy.stub()
     mountForm()

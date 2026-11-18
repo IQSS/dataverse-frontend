@@ -5,6 +5,7 @@ import { WithLoggedInUser } from '../../WithLoggedInUser'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 import { NotificationMockRepository } from '@/stories/account/NotificationMockRepository'
 import { RepositoriesStoryProvider } from '@/stories/WithRepositories'
+import { withAppConfig } from '@/stories/WithAppConfig'
 
 const meta: Meta<typeof Header> = {
   title: 'Layout/Header',
@@ -16,6 +17,18 @@ export default meta
 type Story = StoryObj<typeof Header>
 
 export const LoggedOut: Story = {
+  decorators: [withAppConfig({ signUpEnabled: false })],
+  render: () => {
+    return (
+      <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
+        <Header notficationRepository={new NotificationMockRepository()} />
+      </RepositoriesStoryProvider>
+    )
+  }
+}
+
+export const LoggedOutWithSignUp: Story = {
+  decorators: [withAppConfig({ signUpEnabled: true })],
   render: () => {
     return (
       <RepositoriesStoryProvider collectionRepository={new CollectionMockRepository()}>
