@@ -25,9 +25,14 @@ export function useUnreadCount(user: User, notificationRepository: NotificationR
   const fetchUnread = useCallback(
     async (refreshCycleId?: number) => {
       if (user) {
-        const count = await getUnreadNotificationsCount(notificationRepository)
-        if (refreshCycleId === undefined || refreshCycleRef.current === refreshCycleId) {
-          setUnreadCount(count)
+        try {
+          const count = await getUnreadNotificationsCount(notificationRepository)
+          if (refreshCycleId === undefined || refreshCycleRef.current === refreshCycleId) {
+            setUnreadCount(count)
+          }
+        } catch {
+          // Notification counts are noncritical. A request can be rejected while the user is
+          // logging out, so leave the current count in place and retry on the next refresh.
         }
       }
     },
