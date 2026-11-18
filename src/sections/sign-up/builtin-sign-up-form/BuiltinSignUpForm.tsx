@@ -67,7 +67,7 @@ export const BuiltinSignUpForm = ({ dataverseInfoRepository }: BuiltinSignUpForm
       Object.entries(fieldErrors).forEach(([field, message]) => {
         if (field === 'orcid') {
           setOrcidFieldError(message)
-        } else if (field in DEFAULT_VALUES) {
+        } else if (Object.hasOwn(DEFAULT_VALUES, field)) {
           form.setError(field as keyof BuiltinSignUpFormData, { type: 'server', message })
         }
       })

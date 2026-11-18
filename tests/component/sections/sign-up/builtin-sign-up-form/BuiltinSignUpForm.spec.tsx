@@ -6,8 +6,8 @@ import { BuiltinSignUpForm } from '@/sections/sign-up/builtin-sign-up-form/Built
 import { WithRepositories } from '@tests/component/WithRepositories'
 import { applyTestAppConfig } from '@tests/support/bootstrapAppConfig'
 import {
-  ORCID_CODE_VERIFIER_STORAGE_KEY,
-  SIGN_UP_DRAFT_STORAGE_KEY,
+  ORCID_CODE_VERIFIER_SESSION_STORAGE_KEY,
+  SIGN_UP_DRAFT_SESSION_STORAGE_KEY,
   toOrcidCodeChallenge
 } from '@/sections/sign-up/builtin-sign-up-form/useOrcidSignUp'
 
@@ -211,8 +211,8 @@ describe('BuiltinSignUpForm', () => {
     const defaultSignUpWithOrcidEnabled = Cypress.env('signUpWithOrcidEnabled') as boolean
 
     beforeEach(() => {
-      sessionStorage.removeItem(SIGN_UP_DRAFT_STORAGE_KEY)
-      sessionStorage.removeItem(ORCID_CODE_VERIFIER_STORAGE_KEY)
+      sessionStorage.removeItem(SIGN_UP_DRAFT_SESSION_STORAGE_KEY)
+      sessionStorage.removeItem(ORCID_CODE_VERIFIER_SESSION_STORAGE_KEY)
     })
 
     afterEach(() => {
@@ -238,14 +238,14 @@ describe('BuiltinSignUpForm', () => {
         Cypress.sinon.match(/^[A-Za-z0-9_-]{43}$/)
       )
       cy.get('@getAuthorizationUrl').then(async (stub) => {
-        const codeVerifier = sessionStorage.getItem(ORCID_CODE_VERIFIER_STORAGE_KEY) ?? ''
+        const codeVerifier = sessionStorage.getItem(ORCID_CODE_VERIFIER_SESSION_STORAGE_KEY) ?? ''
         const [, codeChallenge] = (stub as unknown as sinon.SinonStub).firstCall.args as string[]
         expect(codeVerifier).to.match(/^[A-Za-z0-9_-]{43}$/)
         expect(codeChallenge).to.equal(await toOrcidCodeChallenge(codeVerifier))
       })
       cy.window().then(() => {
         const draft = JSON.parse(
-          sessionStorage.getItem(SIGN_UP_DRAFT_STORAGE_KEY) ?? '{}'
+          sessionStorage.getItem(SIGN_UP_DRAFT_SESSION_STORAGE_KEY) ?? '{}'
         ) as Record<string, unknown>
         expect(draft.username).to.equal('alovelace')
         expect(draft).not.to.have.property('password')
@@ -254,9 +254,9 @@ describe('BuiltinSignUpForm', () => {
     })
 
     it('connects the ORCID iD on return, restores the draft, pre-fills empty fields and sends the orcidToken', () => {
-      sessionStorage.setItem(ORCID_CODE_VERIFIER_STORAGE_KEY, 'stored-code-verifier')
+      sessionStorage.setItem(ORCID_CODE_VERIFIER_SESSION_STORAGE_KEY, 'stored-code-verifier')
       sessionStorage.setItem(
-        SIGN_UP_DRAFT_STORAGE_KEY,
+        SIGN_UP_DRAFT_SESSION_STORAGE_KEY,
         JSON.stringify({ username: 'alovelace', lastName: 'Byron', termsAccepted: false })
       )
       userRepository.connectOrcidForSignUp = cy.stub().as('connectOrcid').resolves({
@@ -281,7 +281,7 @@ describe('BuiltinSignUpForm', () => {
         })
       )
       cy.window().then(() => {
-        expect(sessionStorage.getItem(ORCID_CODE_VERIFIER_STORAGE_KEY)).to.equal(null)
+        expect(sessionStorage.getItem(ORCID_CODE_VERIFIER_SESSION_STORAGE_KEY)).to.equal(null)
       })
       cy.findByTestId('orcid-connected').should('contain.text', orcidUrl)
       cy.get('#username').should('have.value', 'alovelace')

@@ -8,8 +8,8 @@ import { getOrcidSignUpAuthorizationUrl } from '@/users/domain/useCases/getOrcid
 import { Route } from '@/sections/Route.enum'
 import { SignUpDraft } from './types'
 
-export const SIGN_UP_DRAFT_STORAGE_KEY = 'dataverse.signUp.draft'
-export const ORCID_CODE_VERIFIER_STORAGE_KEY = 'dataverse.signUp.orcidCodeVerifier'
+export const SIGN_UP_DRAFT_SESSION_STORAGE_KEY = 'DV_signUpDraft'
+export const ORCID_CODE_VERIFIER_SESSION_STORAGE_KEY = 'DV_signUpOrcidCodeVerifier'
 
 const BASENAME_URL = import.meta.env.BASE_URL ?? ''
 
@@ -32,7 +32,7 @@ export const toOrcidCodeChallenge = async (codeVerifier: string): Promise<string
 
 const saveCodeVerifier = (codeVerifier: string) => {
   try {
-    sessionStorage.setItem(ORCID_CODE_VERIFIER_STORAGE_KEY, codeVerifier)
+    sessionStorage.setItem(ORCID_CODE_VERIFIER_SESSION_STORAGE_KEY, codeVerifier)
   } catch {
     return
   }
@@ -40,8 +40,8 @@ const saveCodeVerifier = (codeVerifier: string) => {
 
 const takeCodeVerifier = (): string => {
   try {
-    const codeVerifier = sessionStorage.getItem(ORCID_CODE_VERIFIER_STORAGE_KEY)
-    sessionStorage.removeItem(ORCID_CODE_VERIFIER_STORAGE_KEY)
+    const codeVerifier = sessionStorage.getItem(ORCID_CODE_VERIFIER_SESSION_STORAGE_KEY)
+    sessionStorage.removeItem(ORCID_CODE_VERIFIER_SESSION_STORAGE_KEY)
     return codeVerifier ?? ''
   } catch {
     return ''
@@ -50,7 +50,7 @@ const takeCodeVerifier = (): string => {
 
 const saveDraft = (draft: SignUpDraft) => {
   try {
-    sessionStorage.setItem(SIGN_UP_DRAFT_STORAGE_KEY, JSON.stringify(draft))
+    sessionStorage.setItem(SIGN_UP_DRAFT_SESSION_STORAGE_KEY, JSON.stringify(draft))
   } catch {
     return
   }
@@ -58,8 +58,8 @@ const saveDraft = (draft: SignUpDraft) => {
 
 const takeDraft = (): SignUpDraft | null => {
   try {
-    const raw = sessionStorage.getItem(SIGN_UP_DRAFT_STORAGE_KEY)
-    sessionStorage.removeItem(SIGN_UP_DRAFT_STORAGE_KEY)
+    const raw = sessionStorage.getItem(SIGN_UP_DRAFT_SESSION_STORAGE_KEY)
+    sessionStorage.removeItem(SIGN_UP_DRAFT_SESSION_STORAGE_KEY)
     return raw ? (JSON.parse(raw) as SignUpDraft) : null
   } catch {
     return null
