@@ -3,7 +3,8 @@
 // This file is loaded at runtime (no rebuild required) and validated against src/config.ts schema.
 
 window.__APP_CONFIG__ = {
-  // Base URL of your Dataverse backend
+  // Base URL of your Dataverse backend.
+  // Omit or leave empty to use the origin the app is served from (e.g. when deployed in the same Payara as Dataverse).
   backendUrl: 'http://localhost:8000',
   // Optional banner shown at the top of the app when set. Basic HTML markup is supported.
   // Use a string for one message across all languages, or map language codes to localized messages.
