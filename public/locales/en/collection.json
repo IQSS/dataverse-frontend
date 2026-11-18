@@ -49,6 +49,7 @@
     "helpText": "Share this collection on your favorite social media networks."
   },
   "editedAlert": "You have successfully updated your collection!",
+  "storageDriverUpdateFailed": "The collection was created, but the storage driver could not be updated.",
   "editCollection": {
     "edit": "Edit",
     "generalInfo": "General Information",

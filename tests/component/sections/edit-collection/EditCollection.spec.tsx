@@ -54,7 +54,7 @@ describe('EditCollection', () => {
       return Cypress.Promise.delay(DELAYED_TIME).then(() => collection)
     })
 
-    cy.customMount(
+    cy.mountAuthenticated(
       <WithRepositories collectionRepository={collectionRepository}>
         <EditCollection
           collectionId="root"
@@ -74,7 +74,7 @@ describe('EditCollection', () => {
   })
 
   it('should render the correct breadcrumbs', () => {
-    cy.customMount(
+    cy.mountAuthenticated(
       <WithRepositories collectionRepository={collectionRepository}>
         <EditCollection
           collectionId="root"
@@ -94,7 +94,7 @@ describe('EditCollection', () => {
   it('should show page not found when collection does not exist', () => {
     collectionRepository.getById = cy.stub().resolves(null)
 
-    cy.customMount(
+    cy.mountAuthenticated(
       <WithRepositories collectionRepository={collectionRepository}>
         <EditCollection
           collectionId="root"

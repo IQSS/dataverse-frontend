@@ -49,6 +49,7 @@
     "helpText": "Comparte esta colección en tus redes sociales favoritas."
   },
   "editedAlert": "¡Has actualizado tu colección correctamente!",
+  "storageDriverUpdateFailed": "La colección se creó, pero no se pudo actualizar el driver de almacenamiento.",
   "editCollection": {
     "edit": "Editar",
     "generalInfo": "Información general",

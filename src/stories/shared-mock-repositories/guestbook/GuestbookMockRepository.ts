@@ -1,5 +1,6 @@
 import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { Guestbook } from '@/guestbooks/domain/models/Guestbook'
+import type { Guestbook as JSDataverseGuestbook } from '@iqss/dataverse-client-javascript'
 import { GuestbookDTO } from '@/guestbooks/domain/useCases/DTOs/GuestbookDTO'
 import { GuestbookResponseSubset } from '@/guestbooks/domain/models/GuestbookResponse'
 
@@ -25,6 +26,23 @@ export const storybookGuestbook: Guestbook = {
   usageCount: 7,
   responseCount: 3
 }
+
+export const storybookClientGuestbooks: JSDataverseGuestbook[] = [
+  {
+    id: storybookGuestbook.id,
+    name: storybookGuestbook.name,
+    enabled: storybookGuestbook.enabled,
+    nameRequired: storybookGuestbook.nameRequired,
+    emailRequired: storybookGuestbook.emailRequired,
+    institutionRequired: storybookGuestbook.institutionRequired,
+    positionRequired: storybookGuestbook.positionRequired,
+    createTime: storybookGuestbook.createTime,
+    dataverseId: storybookGuestbook.dataverseId,
+    customQuestions: storybookGuestbook.customQuestions.map(({ id, ...question }) =>
+      typeof id === 'number' ? { ...question, id } : question
+    )
+  }
+]
 
 export class GuestbookMockRepository implements GuestbookRepository {
   createGuestbook(_collectionIdOrAlias: number | string, _guestbook: GuestbookDTO) {

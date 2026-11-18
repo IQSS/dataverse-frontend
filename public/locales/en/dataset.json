@@ -1,4 +1,5 @@
 {
+  "publishedAlert": "Your dataset is now public.",
   "datasetType": {
     "label": "Dataset Type"
   },
