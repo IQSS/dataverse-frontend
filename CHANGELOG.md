@@ -9,6 +9,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Added
 
 - Create Dataset: group the required fields first ("Still needed" and "Completed", pulled from every metadata block and labelled with it), fold the optional fields away by block, and show a counter of empty required fields next to Save that jumps to the next one. (#1160)
+- Create Dataset: when a collection's input levels require a child field of a compound field (such as Country / Nation inside Geographic Coverage), show the compound field as required and ask for the child field before saving, taking the input levels from the ancestor a collection inherits them from. (#1160)
 - Manage Guestbooks: Edit guestbooks, and copy guestbooks into a prefilled creation form. (#1006)
 - Guestbook Responses page with pagination, sorting within the current page, custom question responses, and CSV download. (#1006)
 - Storage Driver selection in Create Collection form, with dynamic fetching of available storage drivers from the backend.

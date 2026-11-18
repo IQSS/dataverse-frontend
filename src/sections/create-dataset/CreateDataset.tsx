@@ -20,6 +20,7 @@ import { TemplateRepository } from '@/templates/domain/repositories/TemplateRepo
 import { useCollectionRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
 import { DatasetTypeSelect } from './dataset-type-select/DatasetTypeSelect'
+import { useCollectionInputLevels } from './useCollectionInputLevels'
 
 interface CreateDatasetProps {
   templateRepository: TemplateRepository
@@ -43,6 +44,10 @@ export function CreateDataset({
     collectionRepository,
     collectionId
   )
+
+  // The fields the collection (or the ancestor it inherits them from) requires, so the form can ask for them
+  const { inputLevels: collectionInputLevels, isLoading: isLoadingCollectionInputLevels } =
+    useCollectionInputLevels({ collectionRepository, collection })
 
   const datasetTypes = useMemo(
     () => collection?.allowedDatasetTypes ?? [],
@@ -77,7 +82,10 @@ export function CreateDataset({
   }
 
   const isLoadingData =
-    isLoadingCollectionUserPermissions || isLoadingCollection || isLoadingDatasetTemplates
+    isLoadingCollectionUserPermissions ||
+    isLoadingCollection ||
+    isLoadingCollectionInputLevels ||
+    isLoadingDatasetTemplates
 
   useEffect(() => {
     setIsLoading(isLoadingData)
@@ -182,6 +190,7 @@ export function CreateDataset({
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           datasetTemplate={selectedTemplate ?? undefined}
           datasetTypeName={selectedType ? selectedType.name : undefined}
+          collectionInputLevels={collectionInputLevels}
           key={formKey}
         />
       </section>

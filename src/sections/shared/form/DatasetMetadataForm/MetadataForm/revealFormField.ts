@@ -45,6 +45,9 @@ export function revealFormField(container: HTMLElement, fieldName: string): void
 
   setTimeout(
     /* istanbul ignore next */ () => {
+      // The form may have been left (or re-mounted) in the meantime
+      if (!target.isConnected) return
+
       target.scrollIntoView({ behavior: 'smooth', block: 'center' })
       focusField(target)
     },

@@ -9,6 +9,7 @@ import { DatasetMetadataBlocks } from '../../../../dataset/domain/models/Dataset
 import { Alert } from '@iqss/dataverse-design-system'
 import { Template } from '@/templates/domain/models/Template'
 import { DatasetType } from '@/dataset/domain/models/DatasetType'
+import { CollectionInputLevel } from '@/collection/domain/models/CollectionInputLevel'
 
 type DatasetMetadataFormProps =
   | {
@@ -20,6 +21,7 @@ type DatasetMetadataFormProps =
       datasetLastUpdateTime?: never
       datasetTemplate?: Template
       datasetTypeName?: DatasetType['name']
+      collectionInputLevels?: CollectionInputLevel[]
     }
   | {
       mode: 'edit'
@@ -30,6 +32,7 @@ type DatasetMetadataFormProps =
       datasetLastUpdateTime?: string
       datasetTemplate?: never
       datasetTypeName?: DatasetType['name']
+      collectionInputLevels?: never
     }
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
@@ -42,7 +45,8 @@ export const DatasetMetadataForm = ({
   datasetMetadaBlocksCurrentValues,
   datasetLastUpdateTime,
   datasetTemplate,
-  datasetTypeName
+  datasetTypeName,
+  collectionInputLevels
 }: DatasetMetadataFormProps) => {
   const { setIsLoading } = useLoading()
 
@@ -96,7 +100,8 @@ export const DatasetMetadataForm = ({
     metadataBlocksInfoForDisplayOnCreate,
     metadataBlocksInfoForDisplayOnEdit,
     datasetMetadaBlocksCurrentValues,
-    datasetTemplate?.datasetMetadataBlocks
+    datasetTemplate?.datasetMetadataBlocks,
+    collectionInputLevels
   )
 
   const formDefaultValues = MetadataFieldsHelper.getFormDefaultValues(metadataBlocksInfo)

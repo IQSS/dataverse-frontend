@@ -199,3 +199,36 @@ export const CollectionRequiringMoreFields: Story = {
     </NotImplementedModalProvider>
   )
 }
+
+// A collection whose settings require two parts of grouped fields: the Keyword Term (Keyword is displayed
+// on create as optional) and the Other Identifier Identifier (Other Identifier is not displayed on create at all)
+const collectionRepositoryRequiringPartsOfGroupedFields = new CollectionMockRepository()
+collectionRepositoryRequiringPartsOfGroupedFields.getById = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        ...CollectionMother.createRealistic(),
+        inputLevels: [
+          { datasetFieldName: 'keywordValue', include: true, required: true },
+          { datasetFieldName: 'otherIdValue', include: true, required: true }
+        ]
+      })
+    }, FakerHelper.loadingTimout())
+  })
+}
+
+export const CollectionRequiringPartsOfGroupedFields: Story = {
+  render: () => (
+    <NotImplementedModalProvider>
+      <RepositoriesStoryProvider
+        collectionRepository={collectionRepositoryRequiringPartsOfGroupedFields}
+        datasetRepository={new DatasetMockRepository()}>
+        <CreateDataset
+          templateRepository={new TemplateMockRepository()}
+          metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+          collectionId={'collectionId'}
+        />
+      </RepositoriesStoryProvider>
+    </NotImplementedModalProvider>
+  )
+}

@@ -1605,6 +1605,78 @@ describe('DatasetMetadataForm', () => {
       .should('be.visible')
   })
 
+  describe('when the collection requires a part of a grouped field', () => {
+    // The Keyword Term (Keyword is displayed on create as optional) and the Other Identifier Identifier
+    // (Other Identifier is not displayed on create at all)
+    const collectionInputLevels = [
+      { datasetFieldName: 'keywordValue', include: true, required: true },
+      { datasetFieldName: 'otherIdValue', include: true, required: true }
+    ]
+
+    beforeEach(() => {
+      cy.customMount(
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            collectionInputLevels={collectionInputLevels}
+          />
+        </WithRepositories>
+      )
+    })
+
+    it('shows the grouped fields among the required ones, with only the required part marked as required', () => {
+      cy.findByTestId('still-needed-section').within(() => {
+        cy.findByText('Keyword')
+          .closest('.row')
+          .within(() => {
+            cy.findByLabelText(/^Term\s*\*?$/).should('have.attr', 'aria-required', 'true')
+            cy.findByLabelText(/^Term URI/).should('have.attr', 'aria-required', 'false')
+          })
+
+        cy.findByText('Other Identifier')
+          .closest('.row')
+          .within(() => {
+            cy.findByLabelText(/^Identifier\s*\*?$/).should('have.attr', 'aria-required', 'true')
+            cy.findByLabelText(/^Agency/).should('have.attr', 'aria-required', 'false')
+          })
+      })
+
+      cy.findByTestId('optional-fields-section').within(() => {
+        cy.findByText('Keyword').should('not.exist')
+        cy.findByText('Other Identifier').should('not.exist')
+      })
+
+      // Nothing is pre-filled here (no user repository), so the eight required fields are empty
+      cy.findByTestId('required-fields-counter').should(
+        'contain.text',
+        '8 required fields still empty'
+      )
+    })
+
+    it('asks for the required part when saving and counts the grouped field as filled once it is typed', () => {
+      cy.findByText('Save Dataset').click()
+
+      cy.findByText('Keyword Term is required').should('exist')
+      cy.findByText('Other Identifier Identifier is required').should('exist')
+
+      cy.findByText('Keyword')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText(/^Term\s*\*?$/).type('Health')
+        })
+
+      cy.findByText('Keyword Term is required').should('not.exist')
+      // The field stays where it is while typing (sections are only split when the form loads), so the
+      // counter is what tells the user the grouped field now counts as filled
+      cy.findByTestId('required-fields-counter').should(
+        'contain.text',
+        '7 required fields still empty'
+      )
+    })
+  })
+
   describe('When dataset creation fails', () => {
     it('should show create error message from the client-javascript client when the dataset creation fails', () => {
       datasetRepository.create = cy
