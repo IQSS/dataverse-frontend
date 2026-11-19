@@ -17,6 +17,7 @@ import { getFileExternalToolResolved } from '@/externalTools/domain/useCases/Get
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { File } from '@/files/domain/models/File'
 import type { GuestbookResponseDTO } from '@/access/domain/repositories/AccessRepository'
+import { EMPTY_GUESTBOOK_RESPONSE } from '@/shared/helpers/DownloadHelper'
 import { FilePageHelper } from '../FilePageHelper'
 import { useExternalToolsRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './FileEmbeddedExternalTool.module.scss'
@@ -52,18 +53,20 @@ export const FileEmbeddedExternalTool = ({
 
   const moreThanOneTool = applicableTools.length > 1
   const isDraft = file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT
-  const hasGuestbook = file.guestbookId !== undefined
+  const requiresGuestbook =
+    file.guestbookId !== undefined && (!isDraft || Boolean(file.metadata.publicationDate))
   const hasCustomTerms = file.datasetCustomTerms !== undefined
   const hasNonDefaultLicense =
     file.datasetLicense !== undefined && file.datasetLicense.name !== defaultLicense.name
-  const requiresTermsAndGuestbook =
-    !isDraft &&
-    (hasGuestbook ||
-      (!file.permissions.canEditOwnerDataset && (hasCustomTerms || hasNonDefaultLicense)))
+  const canEditDataset = file.permissions.canEditOwnerDataset
+  const requiresTerms = !isDraft && (hasCustomTerms || hasNonDefaultLicense)
+  const requiresTermsAndGuestbook = !canEditDataset && (requiresGuestbook || requiresTerms)
   const isWaitingForTermsAndGuestbook = requiresTermsAndGuestbook && !acceptedResponse
+  const editorGuestbookResponse =
+    canEditDataset && requiresGuestbook ? EMPTY_GUESTBOOK_RESPONSE.guestbookResponse : undefined
   const guestbookResponse = requiresTermsAndGuestbook
     ? acceptedResponse?.guestbookResponse
-    : undefined
+    : editorGuestbookResponse
   const locale = i18n.languages[0]
 
   const handleToolSelect = (eventKey: string | null) => setToolIdSelected(Number(eventKey))

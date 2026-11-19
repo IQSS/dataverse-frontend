@@ -7,6 +7,9 @@ import { ComponentProps } from 'react'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { FileExternalToolResolvedMother } from '@tests/component/externalTools/domain/models/FileExternalToolResolvedMother'
 import { FileMother } from '@tests/component/files/domain/models/FileMother'
+import { FileMetadataMother } from '@tests/component/files/domain/models/FileMetadataMother'
+import { DatasetVersionMother } from '@tests/component/dataset/domain/models/DatasetMother'
+import type { DatasetVersion } from '@/dataset/domain/models/Dataset'
 import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
 import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
 import { CustomTermsMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
@@ -194,11 +197,13 @@ describe('FileEmbeddedExternalTool', () => {
       .should('have.attr', 'src', filePreviewToolResolved.toolUrlResolved)
   })
 
-  it('sends the guestbook response to the tool API for preview and for a new window', () => {
+  const verifyGuestbookToolLaunch = (datasetVersion: DatasetVersion) => {
     ApiConfig.init('/api/v1', DataverseApiAuthMechanism.SESSION_COOKIE)
     const file = FileMother.createRealistic({
       guestbookId: 10,
-      permissions: FilePermissionsMother.create({ canEditOwnerDataset: true })
+      datasetVersion,
+      metadata: FileMetadataMother.createWithPublicationDate(),
+      permissions: FilePermissionsMother.create({ canEditOwnerDataset: false })
     })
     const guestbookRepository = {
       getGuestbook: cy.stub().resolves({
@@ -270,6 +275,102 @@ describe('FileEmbeddedExternalTool', () => {
       .should('deep.equal', { preview: false, locale: 'en', guestbookResponse })
     cy.wrap(newWindow).its('location.href').should('equal', newWindowUrl)
     cy.get('@submitGuestbookForDatafileDownload').should('not.have.been.called')
+  }
+
+  it('sends the guestbook response for preview and a new window from a published version', () => {
+    verifyGuestbookToolLaunch(DatasetVersionMother.createRealistic())
+  })
+
+  it('sends the guestbook response for an already-published file from a draft version', () => {
+    verifyGuestbookToolLaunch(
+      DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased()
+    )
+  })
+
+  it('launches both tool views for a dataset editor with no guestbook form', () => {
+    const file = FileMother.createRealistic({
+      guestbookId: 10,
+      datasetVersion:
+        DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
+      metadata: FileMetadataMother.createWithPublicationDate(),
+      permissions: FilePermissionsMother.create({ canEditOwnerDataset: true })
+    })
+    const resolveTool = cy.stub()
+    resolveTool.onFirstCall().resolves(filePreviewToolResolved)
+    resolveTool.onSecondCall().resolves(fileQueryToolResolved)
+    externalToolsRepository.getFileExternalToolResolved = resolveTool
+
+    const newWindow = { closed: false, opener: null, location: { href: '' } }
+    cy.window().then((win) => {
+      cy.stub(win, 'open').returns(newWindow)
+    })
+
+    cy.customMount(
+      <FileEmbeddedExternalToolWithRepositories
+        file={file}
+        isInView
+        applicableTools={[filePreviewTool]}
+        toolTypeSelectedQueryParam={undefined}
+      />
+    )
+
+    cy.findByTestId('external-tool-iframe').should(
+      'have.attr',
+      'src',
+      filePreviewToolResolved.toolUrlResolved
+    )
+    cy.findByRole('dialog').should('not.exist')
+    cy.wrap(resolveTool).should('have.been.calledWithExactly', file.id, filePreviewTool.id, {
+      preview: true,
+      locale: 'en',
+      guestbookResponse: {}
+    })
+
+    cy.findByRole('button', { name: 'Open in New Window' }).click()
+    cy.wrap(resolveTool).should('have.been.calledWithExactly', file.id, filePreviewTool.id, {
+      preview: false,
+      locale: 'en',
+      guestbookResponse: {}
+    })
+    cy.wrap(newWindow).its('location.href').should('equal', fileQueryToolResolved.toolUrlResolved)
+  })
+
+  it('loads a newly uploaded draft file before the guestbook is required', () => {
+    const file = FileMother.createRealistic({
+      guestbookId: 10,
+      datasetVersion:
+        DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
+      metadata: FileMetadataMother.createWithNoPublicationDate()
+    })
+    externalToolsRepository.getFileExternalToolResolved = cy
+      .stub()
+      .as('getFileExternalToolResolved')
+      .resolves(filePreviewToolResolved)
+
+    cy.customMount(
+      <FileEmbeddedExternalToolWithRepositories
+        file={file}
+        isInView
+        applicableTools={[filePreviewTool]}
+        toolTypeSelectedQueryParam={undefined}
+      />
+    )
+
+    cy.findByTestId('external-tool-iframe').should(
+      'have.attr',
+      'src',
+      filePreviewToolResolved.toolUrlResolved
+    )
+    cy.findByRole('dialog').should('not.exist')
+    cy.get('@getFileExternalToolResolved').should(
+      'have.been.calledWithExactly',
+      file.id,
+      filePreviewTool.id,
+      {
+        preview: true,
+        locale: 'en'
+      }
+    )
   })
 
   it('allows reopening the terms dialog after canceling it', () => {
