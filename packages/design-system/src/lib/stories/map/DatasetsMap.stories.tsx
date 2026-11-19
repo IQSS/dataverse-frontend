@@ -17,8 +17,6 @@ const mockItems: GeoDatasetItem[] = [
     detailsPageUrl: '',
     authors: 'Author Name',
     publicationDate: '2026-01-01',
-    pinLat: 52.6,
-    pinLon: 6.5,
     bboxes: [
       [
         [52.6 - 0.1, 6.5 - 0.1],
@@ -32,8 +30,6 @@ const mockItems: GeoDatasetItem[] = [
     detailsPageUrl: '',
     authors: 'Author Name',
     publicationDate: '2026-01-01',
-    pinLat: 53,
-    pinLon: 6.5,
     bboxes: [
       [
         [53 - 0.1, 6.5 - 0.1],
@@ -47,8 +43,6 @@ const mockItems: GeoDatasetItem[] = [
     detailsPageUrl: '',
     authors: 'Author Name',
     publicationDate: '2026-01-01',
-    pinLat: 52.8,
-    pinLon: 6.2,
     bboxes: [
       [
         [52.8 - 0.1, 6.2 - 0.1],
@@ -62,8 +56,6 @@ const mockItems: GeoDatasetItem[] = [
     detailsPageUrl: '',
     authors: 'Author Name',
     publicationDate: '2026-01-01',
-    pinLat: 52.8,
-    pinLon: 8,
     bboxes: [
       [
         [52.8 - 5, 8 - 10],
@@ -77,8 +69,6 @@ const mockItems: GeoDatasetItem[] = [
     detailsPageUrl: '',
     authors: 'Author Name',
     publicationDate: '2026-01-01',
-    pinLat: 52.8,
-    pinLon: 10.35,
     bboxes: [
       [
         [52.8 - 0.1, 10.2 - 0.1],
@@ -117,8 +107,6 @@ const terminalClusterItems: GeoDatasetItem[] = Array.from({ length: 4 }, (_, ind
   detailsPageUrl: '',
   authors: `Author ${index + 1}`,
   publicationDate: '2026-01-01',
-  pinLat: 52.8,
-  pinLon: 8,
   bboxes: [
     [
       [52.7, 7.9],
@@ -156,8 +144,6 @@ const customColorItems: GeoDatasetItem[] = [
     detailsPageUrl: '',
     authors: 'Individual Author',
     publicationDate: '2026-01-01',
-    pinLat: 52.8,
-    pinLon: 11,
     bboxes: [
       [
         [52.7, 10.9],
@@ -166,18 +152,16 @@ const customColorItems: GeoDatasetItem[] = [
     ]
   },
   ...customClusterPositions.map(
-    ([pinLat, pinLon], index): GeoDatasetItem => ({
+    ([latitude, longitude], index): GeoDatasetItem => ({
       persistentId: `doi:10.1234/custom-cluster-${index + 1}`,
       name: `Dataset in separable cluster ${index + 1}`,
       detailsPageUrl: '',
       authors: `Cluster Author ${index + 1}`,
       publicationDate: '2026-01-01',
-      pinLat,
-      pinLon,
       bboxes: [
         [
-          [pinLat - 0.1, pinLon - 0.1],
-          [pinLat + 0.1, pinLon + 0.1]
+          [latitude - 0.1, longitude - 0.1],
+          [latitude + 0.1, longitude + 0.1]
         ]
       ]
     })

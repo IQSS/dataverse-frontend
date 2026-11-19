@@ -1,20 +1,19 @@
 /**
  * Represents a dataset with geographic information, for display on DatasetsMap.
  *
- * `pinLat`/`pinLon` determine where the marker is placed.
- * `bboxes` are bounding boxes shown on marker hover/click.
+ * `bboxes` must contain at least one bounding box.
  * The remaining fields (`name`, `authors`, `publicationDate`, `detailsPageUrl`, `persistentId`)
  * are displayed in a popup that opens on marker click.
  */
+export type DatasetBoundingBox = [[number, number], [number, number]]
+
 export interface GeoDatasetItem {
   persistentId: string
   name: string
   detailsPageUrl: string
   authors: string
   publicationDate: string
-  pinLat: number
-  pinLon: number
-  bboxes: [[number, number], [number, number]][]
+  bboxes: DatasetBoundingBox[]
 }
 
 export interface DatasetMapColors {

@@ -47,8 +47,6 @@ function extractGeoItem(item: SearchItem): GeoDatasetItem | null {
   if (!bboxField?.value?.length) return null
 
   const bboxes: [[number, number], [number, number]][] = []
-  let latSum = 0
-  let lonSum = 0
 
   for (const bbox of bboxField.value) {
     const south = parseFloat(bbox.southLatitude?.value ?? '')
@@ -60,8 +58,6 @@ function extractGeoItem(item: SearchItem): GeoDatasetItem | null {
       [south, west],
       [north, east]
     ])
-    latSum += (south + north) / 2
-    lonSum += (west + east) / 2
   }
 
   if (bboxes.length === 0) return null
@@ -76,9 +72,7 @@ function extractGeoItem(item: SearchItem): GeoDatasetItem | null {
     detailsPageUrl: `${window.location.origin}/dataset.xhtml?persistentId=${item.global_id ?? ''}`,
     authors,
     publicationDate: item.published_at?.substring(0, 10) ?? '',
-    pinLat: latSum / bboxes.length,
-    pinLon: lonSum / bboxes.length,
-    bboxes: bboxes
+    bboxes
   }
 }
 

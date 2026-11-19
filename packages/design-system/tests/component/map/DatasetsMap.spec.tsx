@@ -8,8 +8,6 @@ const terminalItems: GeoDatasetItem[] = [
     detailsPageUrl: '#first',
     authors: 'First Author',
     publicationDate: '2026-01-01',
-    pinLat: 52.8,
-    pinLon: 8,
     bboxes: [
       [
         [52.7999, 7.9999],
@@ -23,8 +21,6 @@ const terminalItems: GeoDatasetItem[] = [
     detailsPageUrl: '#second',
     authors: 'Second Author',
     publicationDate: '2026-02-02',
-    pinLat: 52.8,
-    pinLon: 8,
     bboxes: [
       [
         [52.7998, 7.9998],
@@ -38,8 +34,12 @@ const almostCoincidentItems: GeoDatasetItem[] = [
   terminalItems[0],
   {
     ...terminalItems[1],
-    pinLat: terminalItems[1].pinLat + 0.00001,
-    pinLon: terminalItems[1].pinLon + 0.00001
+    bboxes: [
+      [
+        [52.79981, 7.99981],
+        [52.80021, 8.00021]
+      ]
+    ]
   }
 ]
 
@@ -49,16 +49,24 @@ function createSeparableClusterItems(
   longitude: number,
   prefix: string
 ): GeoDatasetItem[] {
-  return Array.from({ length: count }, (_, index) => ({
-    persistentId: `doi:10.1234/${prefix}-${index}`,
-    name: `${prefix} dataset ${index}`,
-    detailsPageUrl: `#${prefix}-${index}`,
-    authors: 'Author',
-    publicationDate: '2026-01-01',
-    pinLat: index === count - 1 ? latitude + 0.05 : latitude,
-    pinLon: index === count - 1 ? longitude + 0.05 : longitude,
-    bboxes: []
-  }))
+  return Array.from({ length: count }, (_, index) => {
+    const markerLatitude = index === count - 1 ? latitude + 0.05 : latitude
+    const markerLongitude = index === count - 1 ? longitude + 0.05 : longitude
+
+    return {
+      persistentId: `doi:10.1234/${prefix}-${index}`,
+      name: `${prefix} dataset ${index}`,
+      detailsPageUrl: `#${prefix}-${index}`,
+      authors: 'Author',
+      publicationDate: '2026-01-01',
+      bboxes: [
+        [
+          [markerLatitude - 0.0001, markerLongitude - 0.0001],
+          [markerLatitude + 0.0001, markerLongitude + 0.0001]
+        ]
+      ]
+    }
+  })
 }
 
 function mountMap(

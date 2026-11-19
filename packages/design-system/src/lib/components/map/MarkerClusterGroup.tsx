@@ -3,6 +3,7 @@ import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet.markercluster'
 import { DatasetMapColors, GeoDatasetItem, TerminalClusterBehavior } from './types'
+import { getDatasetMarkerPosition } from './getDatasetMarkerPosition'
 import { isTerminalCluster } from './isTerminalCluster'
 import { createClusterIcon, createMarkerPinIcon, resolveClusterColors } from './MarkerClusterIcons'
 import { TerminalClusterPopup, TerminalPopupState } from './TerminalClusterPopup'
@@ -77,7 +78,7 @@ export function MarkerClusterGroup({ items, colors, terminalClusterBehavior }: P
     })
 
     const markerList = items.map((item, index) => {
-      const marker = L.marker([item.pinLat, item.pinLon], {
+      const marker = L.marker(getDatasetMarkerPosition(item.bboxes), {
         icon: markerIcon
       })
       itemByMarker.set(marker, { item, index })
