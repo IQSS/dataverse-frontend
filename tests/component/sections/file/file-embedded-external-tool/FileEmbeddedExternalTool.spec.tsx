@@ -1,7 +1,8 @@
 import { ExternalToolsRepository } from '@/externalTools/domain/repositories/ExternalToolsRepository'
 import { FileEmbeddedExternalTool } from '@/sections/file/file-embedded-external-tool/FileEmbeddedExternalTool'
 import { FilePageHelper } from '@/sections/file/FilePageHelper'
-import { WriteError } from '@iqss/dataverse-client-javascript'
+import { ApiConfig, WriteError } from '@iqss/dataverse-client-javascript'
+import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 import { ComponentProps } from 'react'
 import { ExternalToolsMother } from '@tests/component/externalTools/domain/models/ExternalToolsMother'
 import { FileExternalToolResolvedMother } from '@tests/component/externalTools/domain/models/FileExternalToolResolvedMother'
@@ -10,6 +11,8 @@ import { AccessRepository } from '@/access/domain/repositories/AccessRepository'
 import { AccessRepositoryProvider } from '@/sections/access/AccessRepositoryProvider'
 import { CustomTermsMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 import { FilePermissionsMother } from '@tests/component/files/domain/models/FilePermissionsMother'
+import { ExternalToolsJSDataverseRepository } from '@/externalTools/infrastructure/repositories/ExternalToolsJSDataverseRepository'
+import { GuestbookRepository } from '@/guestbooks/domain/repositories/GuestbookRepository'
 import { WithRepositories } from '@tests/component/WithRepositories'
 
 const externalToolsRepository: ExternalToolsRepository = {} as ExternalToolsRepository // Used for fetching the tool resolved URL
@@ -184,11 +187,89 @@ describe('FileEmbeddedExternalTool', () => {
 
     cy.findByRole('button', { name: 'Accept' }).click()
 
-    cy.get('@submitGuestbookForDatafileDownload').should('have.been.calledOnce')
+    cy.get('@submitGuestbookForDatafileDownload').should('not.have.been.called')
     cy.findByRole('dialog').should('not.exist')
     cy.findByTestId('external-tool-iframe')
       .should('exist')
       .should('have.attr', 'src', filePreviewToolResolved.toolUrlResolved)
+  })
+
+  it('sends the guestbook response to the tool API for preview and for a new window', () => {
+    ApiConfig.init('/api/v1', DataverseApiAuthMechanism.SESSION_COOKIE)
+    const file = FileMother.createRealistic({
+      guestbookId: 10,
+      permissions: FilePermissionsMother.create({ canEditOwnerDataset: true })
+    })
+    const guestbookRepository = {
+      getGuestbook: cy.stub().resolves({
+        id: file.guestbookId,
+        name: 'File guestbook',
+        nameRequired: true,
+        emailRequired: true,
+        customQuestions: []
+      })
+    } as GuestbookRepository
+    accessRepository.submitGuestbookForDatafileDownload = cy
+      .stub()
+      .as('submitGuestbookForDatafileDownload')
+      .resolves('unused-signed-url')
+
+    const previewUrl = '/preview-tool?preview=true'
+    const newWindowUrl = '/preview-tool?preview=false'
+    cy.intercept(
+      'POST',
+      `**/api/v1/files/${file.id}/externalTool/${filePreviewTool.id}/toolUrl`,
+      (req) => {
+        const { preview } = req.body as { preview: boolean }
+        req.alias = preview ? 'getPreviewUrl' : 'getNewWindowUrl'
+        req.reply({
+          status: 'OK',
+          data: {
+            toolUrl: preview ? previewUrl : newWindowUrl,
+            displayName: filePreviewTool.displayName,
+            fileId: file.id,
+            preview
+          }
+        })
+      }
+    )
+    cy.intercept('GET', '**/preview-tool?preview=true', { body: '' })
+    const newWindow = { closed: false, opener: null, location: { href: '' } }
+    cy.window().then((win) => {
+      cy.stub(win, 'open').returns(newWindow)
+    })
+
+    cy.customMount(
+      <AccessRepositoryProvider repository={accessRepository}>
+        <WithRepositories
+          externalToolsRepository={new ExternalToolsJSDataverseRepository()}
+          guestbookRepository={guestbookRepository}>
+          <FileEmbeddedExternalTool
+            file={file}
+            isInView
+            applicableTools={[filePreviewTool]}
+            toolTypeSelectedQueryParam={undefined}
+          />
+        </WithRepositories>
+      </AccessRepositoryProvider>
+    )
+
+    cy.findByLabelText(/^Name/).type('Test Reader')
+    cy.findByLabelText(/^Email/).type('reader@example.com')
+    cy.findByRole('button', { name: 'Accept' }).click()
+
+    const guestbookResponse = { name: 'Test Reader', email: 'reader@example.com', answers: [] }
+    cy.wait('@getPreviewUrl')
+      .its('request.body')
+      .should('deep.equal', { preview: true, locale: 'en', guestbookResponse })
+    cy.findByTestId('external-tool-iframe').should('have.attr', 'src', previewUrl)
+
+    cy.findByRole('button', { name: 'Open in New Window' }).click()
+    cy.wait('@getNewWindowUrl')
+      .its('request.body')
+      .should('deep.equal', { preview: false, locale: 'en', guestbookResponse })
+    cy.wrap(newWindow).its('location.href').should('equal', newWindowUrl)
+    cy.get('@submitGuestbookForDatafileDownload').should('not.have.been.called')
   })
 
   it('allows reopening the terms dialog after canceling it', () => {
