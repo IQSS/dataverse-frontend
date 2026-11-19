@@ -45,6 +45,8 @@ export const MetadataForm = ({
   const [searchParams] = useSearchParams()
   const { t } = useTranslation('shared')
 
+  const viewedVersion = searchParams.get(QueryParamKey.VERSION)
+
   const accordionRef = useRef<HTMLDivElement>(null)
   const formContainerRef = useRef<HTMLDivElement>(null)
 
@@ -68,14 +70,15 @@ export const MetadataForm = ({
 
   const handleCancel = () => {
     if (onEditMode && datasetPersistentID) {
-      const returnParams = new URLSearchParams({
+      const returnSearchParams = new URLSearchParams({
         [QueryParamKey.PERSISTENT_ID]: datasetPersistentID
       })
-      const version = searchParams.get(QueryParamKey.VERSION)
-      if (version) {
-        returnParams.set(QueryParamKey.VERSION, version)
+
+      if (viewedVersion) {
+        returnSearchParams.set(QueryParamKey.VERSION, viewedVersion)
       }
-      navigate(`${Route.DATASETS}?${returnParams.toString()}`)
+
+      navigate(`${Route.DATASETS}?${returnSearchParams.toString()}`)
       return
     }
     navigate(RouteWithParams.COLLECTIONS(collectionId))
