@@ -70,7 +70,7 @@ export const MetadataForm = ({
 
   const handleCancel = () => {
     if (onEditMode && datasetPersistentID) {
-   const returnSearchParams = new URLSearchParams({
+      const returnSearchParams = new URLSearchParams({
         [QueryParamKey.PERSISTENT_ID]: datasetPersistentID
       })
 
