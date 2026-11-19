@@ -17,6 +17,13 @@ const vlOptions = [
   { value: 'gardening', label: 'Gardening' }
 ]
 
+const groupedOptions = [
+  { value: 'reading', label: 'Reading', group: 'Indoor' },
+  { value: 'cooking', label: 'Cooking', group: 'Indoor' },
+  { value: 'swimming', label: 'Swimming', group: 'Outdoor' },
+  { value: 'running', label: 'Running', group: 'Outdoor' }
+]
+
 describe('SelectAdvanced', () => {
   describe('should render correctly', () => {
     it('on single selection', () => {
@@ -118,6 +125,78 @@ describe('SelectAdvanced', () => {
       cy.findByText('Gardening').should('exist')
 
       cy.findAllByRole('option').should('have.length', 6)
+    })
+  })
+
+  describe('should render group headers when options define a group', () => {
+    it('shows a header above each group in the unfiltered menu', () => {
+      cy.mount(<SelectAdvanced options={groupedOptions} />)
+
+      toggleOptionsMenu()
+
+      cy.findByText('Indoor').should('exist')
+      cy.findByText('Outdoor').should('exist')
+      cy.findAllByRole('option').should('have.length', 5) // 4 options + 1 Select... option
+    })
+
+    it('shows a header above each group on multiple selection', () => {
+      cy.mount(<SelectAdvanced isMultiple options={groupedOptions} />)
+
+      toggleOptionsMenu()
+
+      cy.findByText('Indoor').should('exist')
+      cy.findByText('Outdoor').should('exist')
+      cy.findAllByRole('option').should('have.length', 4)
+    })
+
+    it('hides group headers once a search filters the options', () => {
+      cy.mount(<SelectAdvanced options={groupedOptions} />)
+
+      toggleOptionsMenu()
+      cy.findByPlaceholderText('Search...').type('Reading')
+
+      cy.findByText('Indoor').should('not.exist')
+      cy.findByText('Outdoor').should('not.exist')
+      cy.findByText('Reading').should('exist')
+    })
+
+    it('does not show any group header when options have no group', () => {
+      cy.mount(
+        <SelectAdvanced
+          options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
+        />
+      )
+
+      toggleOptionsMenu()
+
+      cy.findByText('Indoor').should('not.exist')
+      cy.findByText('Outdoor').should('not.exist')
+    })
+  })
+
+  describe('should hide the placeholder option when hidePlaceholderOption is true', () => {
+    it('on single selection', () => {
+      cy.mount(
+        <SelectAdvanced
+          options={['Reading', 'Swimming', 'Running']}
+          defaultValue={'Reading'}
+          hidePlaceholderOption
+        />
+      )
+
+      toggleOptionsMenu()
+
+      cy.findByText('Select...').should('not.exist')
+      cy.findAllByRole('option').should('have.length', 3)
+    })
+
+    it('still shows the placeholder option by default', () => {
+      cy.mount(<SelectAdvanced options={['Reading', 'Swimming', 'Running']} />)
+
+      toggleOptionsMenu()
+
+      cy.findAllByText('Select...').should('exist')
+      cy.findAllByRole('option').should('have.length', 4)
     })
   })
 

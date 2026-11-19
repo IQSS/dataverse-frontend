@@ -40,7 +40,8 @@ export interface FileRepository {
   ) => Promise<FileVersionSummarySubset>
   getFileCitationByFormat: (
     fileId: number | string,
-    format: FileCitationFormat
+    format: FileCitationFormat,
+    versionNumber?: DatasetVersionNumber
   ) => Promise<FormattedFileCitation>
   getById: (id: number, datasetVersionNumber?: string) => Promise<File | undefined>
   getMultipleFileDownloadUrl: (ids: number[], downloadMode: FileDownloadMode) => string
