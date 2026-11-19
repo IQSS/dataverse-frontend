@@ -17,9 +17,10 @@ const VARIANT_BY_SEMANTIC_MEANING: Record<
 
 interface DatasetLabelsProps {
   labels: DatasetLabel[]
+  curationStatusLabel?: string
 }
 
-export function DatasetLabels({ labels }: DatasetLabelsProps) {
+export function DatasetLabels({ labels, curationStatusLabel }: DatasetLabelsProps) {
   return (
     <div className={styles['dataset-labels-container']}>
       {labels.map((label: DatasetLabel, index) => {
@@ -31,6 +32,11 @@ export function DatasetLabels({ labels }: DatasetLabelsProps) {
           </Badge>
         )
       })}
+      {curationStatusLabel && (
+        <Badge variant="info" className={styles['curation-status']}>
+          {curationStatusLabel}
+        </Badge>
+      )}
     </div>
   )
 }

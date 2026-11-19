@@ -1,0 +1,13 @@
+.status-submenu :global(.dropdown-toggle) {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  text-align: left;
+
+  &::before {
+    margin-right: 0;
+  }
+}

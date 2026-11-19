@@ -18,6 +18,12 @@ export default meta
 type Story = StoryObj<typeof SelectAdvanced>
 
 const exampleOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4']
+const groupedOptions = [
+  { value: 'author-contacted', label: 'Author Contacted', group: 'Review' },
+  { value: 'privacy-review', label: 'Privacy Review', group: 'Review' },
+  { value: 'awaiting-publication', label: 'Awaiting Publication', group: 'Approval' },
+  { value: 'final-approval', label: 'Final Approval', group: 'Approval' }
+]
 
 export const Single: Story = {
   render: () => (
@@ -30,6 +36,34 @@ export const Multiple: Story = {
   render: () => (
     <CanvasFixedHeight height={250}>
       <SelectAdvanced isMultiple options={exampleOptions} />
+    </CanvasFixedHeight>
+  )
+}
+
+export const SingleWithGroupedOptions: Story = {
+  render: () => (
+    <CanvasFixedHeight height={320}>
+      <SelectAdvanced options={groupedOptions} />
+    </CanvasFixedHeight>
+  )
+}
+
+export const MultipleWithGroupedOptions: Story = {
+  render: () => (
+    <CanvasFixedHeight height={320}>
+      <SelectAdvanced isMultiple options={groupedOptions} />
+    </CanvasFixedHeight>
+  )
+}
+
+export const SingleWithoutPlaceholderOption: Story = {
+  render: () => (
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced
+        options={exampleOptions}
+        defaultValue={exampleOptions[0]}
+        hidePlaceholderOption
+      />
     </CanvasFixedHeight>
   )
 }

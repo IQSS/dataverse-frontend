@@ -8,6 +8,9 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Added
 
+- Dataset curation status management for the latest draft: users with publish permission can assign or remove configured labels, with a status badge and history showing formatted timestamps and assigner display names. (#1124)
+- Submit for Review: dataset editors without publish permission can submit drafts for review through a confirmation modal displaying the dataset license, with alerts before and after submission. (#1124)
+- Return to Author: curators can return datasets under review to their authors with a required reason. (#1124)
 - Manage Guestbooks: Edit guestbooks, and copy guestbooks into a prefilled creation form. (#1006)
 - Guestbook Responses page with pagination, sorting within the current page, custom question responses, and CSV download. (#1006)
 - Dataset Page: "Styled Citation" now supports selecting any CSL citation style and renders the citation formatted in that style, using citeproc-js in the browser.

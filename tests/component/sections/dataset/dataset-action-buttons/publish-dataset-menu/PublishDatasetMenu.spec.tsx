@@ -7,15 +7,9 @@ import {
 } from '../../../../dataset/domain/models/DatasetMother'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { SettingMother } from '../../../../settings/domain/models/SettingMother'
-import { SettingsProvider } from '../../../../../../src/sections/settings/SettingsProvider'
-import { DataverseInfoMockEmptyRepository } from '@/stories/shared-mock-repositories/info/DataverseInfoMockEmptyRepository'
-import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { WithRepositories } from '@tests/component/WithRepositories'
 const collectionRepository = {} as CollectionRepository
 const datasetRepository = {} as DatasetRepository
-
-let dataverseInfoRepository: DataverseInfoRepository
 
 const mountAuthenticatedPublishDatasetMenu = (
   component: JSX.Element,
@@ -37,10 +31,6 @@ const mountUnauthenticatedPublishDatasetMenu = (
     </WithRepositories>
   )
 describe('PublishDatasetMenu', () => {
-  beforeEach(() => {
-    dataverseInfoRepository = new DataverseInfoMockEmptyRepository()
-  })
-
   it('renders the PublishDatasetMenu if is dataset latest version and it is a draft and publishing is allowed', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
@@ -60,7 +50,7 @@ describe('PublishDatasetMenu', () => {
     cy.findByRole('button', { name: 'Publish' }).should('exist')
   })
 
-  it('renders the PublishDatasetMenu with the Change Curation Status sub menu', () => {
+  it('does not render the Change Curation Status sub menu inside the PublishDatasetMenu', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
@@ -69,19 +59,11 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    dataverseInfoRepository.getExternalStatusesAllowed = cy
-      .stub()
-      .resolves(SettingMother.createExternalStatusesAllowed(['Author Contacted', 'Privacy Review']))
-
-    mountAuthenticatedPublishDatasetMenu(
-      <SettingsProvider dataverseInfoRepository={dataverseInfoRepository}>
-        <PublishDatasetMenu dataset={dataset} />
-      </SettingsProvider>
-    )
+    mountAuthenticatedPublishDatasetMenu(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' }).click()
 
-    cy.findByRole('button', { name: 'Change Curation Status' }).should('exist')
+    cy.findByRole('button', { name: 'Change Curation Status' }).should('not.exist')
   })
 
   it('does not render if the user is not authenticated', () => {
@@ -206,7 +188,10 @@ describe('PublishDatasetMenu', () => {
       .click()
       .should('be.enabled')
 
-    cy.findByRole('button', { name: 'Return to Author' }).should('exist')
+    cy.findByRole('button', { name: 'Return to Author' }).click()
+    cy.findByRole('dialog', { name: 'Return to Author' }).should('be.visible')
+    cy.findByRole('textbox', { name: 'Reason for return' }).should('be.visible')
+    cy.findByRole('dialog').should('have.length', 1)
   })
 
   it('shows the PublishDatasetModal when the Publish button is clicked', () => {

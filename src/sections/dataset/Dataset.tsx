@@ -35,6 +35,9 @@ import { useDatasetRepositories } from '@/shared/contexts/repositories/Repositor
 import { DatasetReviews } from './dataset-reviews/DatasetReviews'
 import { AlertMessageKey } from '@/alert/domain/models/Alert'
 import { DatasetNotAuthorized } from './dataset-not-authorized/DatasetNotAuthorized'
+import { useSession } from '../session/SessionContext'
+import { DatasetCurationStatusContext } from './dataset-curation-status/DatasetCurationStatusContext'
+import { useLoadDatasetCurationStatus } from './dataset-curation-status/useLoadDatasetCurationStatus'
 
 interface DatasetProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -64,6 +67,12 @@ export function Dataset({
   const [activeTab, setActiveTab] = useState<string>(tab)
   const termsTabRef = useRef<HTMLDivElement>(null)
   const { anonymizedView } = useAnonymized()
+  const { user } = useSession()
+  const curationStatus = useLoadDatasetCurationStatus({
+    datasetRepository,
+    dataset,
+    isAuthenticated: user !== null
+  })
   useUpdateDatasetAlerts({
     dataset,
     publishInProgress
@@ -121,7 +130,7 @@ export function Dataset({
   const termsTabTitle = canUpdateDataset ? t('termsTabTitle') : t('termsTabTitleReadOnly')
 
   return (
-    <>
+    <DatasetCurationStatusContext.Provider value={curationStatus}>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
 
       <BreadcrumbsGenerator hierarchy={dataset.hierarchy} />
@@ -135,7 +144,10 @@ export function Dataset({
         </div>
         <header className={styles.header}>
           <h1>{dataset.version.title}</h1>
-          <DatasetLabels labels={dataset.version.labels} />
+          <DatasetLabels
+            labels={dataset.version.labels}
+            curationStatusLabel={curationStatus.currentStatus?.label}
+          />
         </header>
         <div className={styles.container}>
           <Row>
@@ -238,6 +250,6 @@ export function Dataset({
           <SeparationLine />
         </div>
       </article>
-    </>
+    </DatasetCurationStatusContext.Provider>
   )
 }

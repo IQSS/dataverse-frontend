@@ -1,3 +1,7 @@
+import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
+import { WithRepositories } from '@/stories/WithRepositories'
+import { WithToasts } from '@/stories/WithToasts'
+import { DatasetMockRepository } from '../../DatasetMockRepository'
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../../WithI18next'
 import { WithSettings } from '../../../WithSettings'
@@ -10,9 +14,16 @@ import {
 import { SubmitForReviewButton } from '../../../../sections/dataset/dataset-action-buttons/submit-for-review-button/SubmitForReviewButton'
 
 const meta: Meta<typeof SubmitForReviewButton> = {
+  tags: ['curation-workflow'],
   title: 'Sections/Dataset Page/DatasetActionButtons/SubmitForReviewButton',
   component: SubmitForReviewButton,
-  decorators: [WithI18next, WithSettings],
+  decorators: [
+    WithI18next,
+    WithSettings,
+    WithLoggedInUser,
+    WithToasts,
+    WithRepositories({ datasetRepository: new DatasetMockRepository() })
+  ],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }

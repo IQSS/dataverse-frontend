@@ -4,6 +4,8 @@ import { Alert as DesignSystemAlert } from '@iqss/dataverse-design-system'
 type AlertVariant = ComponentProps<typeof DesignSystemAlert>['variant']
 
 export enum AlertMessageKey {
+  REVIEW_REQUIRED = 'reviewRequired',
+  SUBMITTED_FOR_REVIEW = 'submittedForReview',
   DRAFT_VERSION = 'draftVersion',
   REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound',
   REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT = 'requestedVersionNotFoundShowDraft',

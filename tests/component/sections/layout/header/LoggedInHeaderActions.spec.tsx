@@ -157,6 +157,21 @@ describe('LoggedInHeaderActions', () => {
     cy.get('[data-testid="unread-notifications-badge"]').should('have.length', 2)
   })
 
+  it('does not reject when loading the unread notification count fails', () => {
+    const unreadCountStub = cy.stub().rejects(new Error('Unauthorized'))
+    notificationRepository.getUnreadNotificationsCount = unreadCountStub
+
+    cy.mountAuthenticated(
+      <WithRepositories collectionRepository={collectionRepository}>
+        <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+      </WithRepositories>
+    )
+
+    cy.wrap(unreadCountStub).should('have.been.calledOnce')
+    cy.get('#dropdown-user').should('exist')
+    cy.get('[data-testid="unread-notifications-badge"]').should('not.exist')
+  })
+
   it('refreshes unread notification badge when notifications update', () => {
     const unreadCountStub = cy.stub()
     unreadCountStub.onFirstCall().resolves(3)
