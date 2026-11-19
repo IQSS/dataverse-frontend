@@ -1,0 +1,86 @@
+.marker-pin-icon {
+  border: 0;
+  background: transparent;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 35%));
+}
+
+.marker-pin-icon svg {
+  display: block;
+  overflow: visible;
+}
+
+.marker-pin-shape {
+  stroke-width: 2;
+}
+
+.marker-pin-count {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+}
+
+.cluster-icon {
+  border: 0;
+  background: transparent;
+}
+
+.cluster-outer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+
+.cluster-inner {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  font: 12px/30px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  color: #000;
+  text-align: center;
+}
+
+.carousel-popup {
+  min-width: 220px;
+}
+
+.dataset-details {
+  overflow-wrap: anywhere;
+}
+
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.carousel-button {
+  border: 0;
+  background: transparent;
+  color: #0d6efd;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: #0a58ca;
+  }
+}
+
+.carousel-position {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.carousel-page-input {
+  appearance: textfield;
+  text-align: right;
+}

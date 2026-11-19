@@ -1,56 +1,104 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useMap } from 'react-leaflet'
 import L from 'leaflet'
-import markerIconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
-import markerIconUrl from 'leaflet/dist/images/marker-icon.png'
-import markerShadowUrl from 'leaflet/dist/images/marker-shadow.png'
 import 'leaflet.markercluster'
-import { GeoDatasetItem } from './types'
-
-const datasetMarkerIcon = L.icon({
-  iconUrl: markerIconUrl,
-  iconRetinaUrl: markerIconRetinaUrl,
-  shadowUrl: markerShadowUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41]
-})
+import { DatasetMapColors, GeoDatasetItem, TerminalClusterBehavior } from './types'
+import { isTerminalCluster } from './isTerminalCluster'
+import { createClusterIcon, createMarkerPinIcon, resolveClusterColors } from './MarkerClusterIcons'
+import { TerminalClusterPopup, TerminalPopupState } from './TerminalClusterPopup'
+import { areaPreviewStyle, createBoundingBox } from './mapAreaPreview'
 
 interface Props {
   items: GeoDatasetItem[]
+  colors?: DatasetMapColors
+  terminalClusterBehavior: TerminalClusterBehavior
 }
 
-export function MarkerClusterGroup({ items }: Props) {
+interface IndexedDatasetItem {
+  item: GeoDatasetItem
+  index: number
+}
+
+interface ClusterActivationEvent extends L.LeafletEvent {
+  layer: L.MarkerCluster
+  originalEvent?: KeyboardEvent
+}
+
+export function MarkerClusterGroup({ items, colors, terminalClusterBehavior }: Props) {
   const map = useMap()
+  const [terminalPopup, setTerminalPopup] = useState<TerminalPopupState | null>(null)
+
+  const boundingBoxColor = colors?.boundingBox ?? '#3388ff'
+  const pinPrimary = colors?.pinPrimary ?? '#3388ff'
+  const pinSecondary = colors?.pinSecondary ?? '#fff'
+  const terminalPinPrimary = colors?.terminalPinPrimary ?? '#3388ff'
+  const terminalPinSecondary = colors?.terminalPinSecondary ?? '#fff'
+  const clusterSmall = colors?.clusterSmall ?? '#6ecc39'
+  const clusterMedium = colors?.clusterMedium ?? '#f0c20c'
+  const clusterLarge = colors?.clusterLarge ?? '#f18017'
+  const clusterPreview = colors?.clusterPreview ?? '#3388ff'
 
   useEffect(() => {
-    const cluster = L.markerClusterGroup()
+    setTerminalPopup(null)
 
-    const markerList = items.map((item) => {
-      const marker = L.marker([item.pinLat, item.pinLon], { icon: datasetMarkerIcon })
+    const markerIcon = createMarkerPinIcon(1, 'dataset-map-dataset-marker', {
+      fill: pinPrimary,
+      border: pinSecondary,
+      text: pinSecondary
+    })
+    const terminalPinColors = {
+      fill: terminalPinPrimary,
+      border: terminalPinSecondary,
+      text: terminalPinSecondary
+    }
+    const clusterColors = {
+      small: resolveClusterColors(clusterSmall),
+      medium: resolveClusterColors(clusterMedium),
+      large: resolveClusterColors(clusterLarge)
+    }
+
+    const itemByMarker = new Map<L.Marker, IndexedDatasetItem>()
+    const hideMarkerRectangles: (() => void)[] = []
+    const cluster = L.markerClusterGroup({
+      spiderfyOnMaxZoom: false,
+      zoomToBoundsOnClick: false,
+      polygonOptions: {
+        ...areaPreviewStyle,
+        color: clusterPreview,
+        fillColor: clusterPreview
+      },
+      iconCreateFunction: (markerCluster) =>
+        createClusterIcon(
+          isTerminalCluster(markerCluster),
+          markerCluster.getChildCount(),
+          terminalPinColors,
+          clusterColors
+        )
+    })
+
+    const markerList = items.map((item, index) => {
+      const marker = L.marker([item.pinLat, item.pinLon], {
+        icon: markerIcon
+      })
+      itemByMarker.set(marker, { item, index })
 
       let rects: L.Rectangle[] = []
       let inCluster = true
 
       const showRects = () => {
         if (rects.length === 0) {
-          rects = item.bboxes.map((bounds) =>
-            L.rectangle(bounds, { color: '#0d6efd', weight: 0.5, fillOpacity: 0.1 })
-          )
-          rects.forEach((r) => map.addLayer(r))
+          rects = item.bboxes.map((bounds) => createBoundingBox(bounds, boundingBoxColor))
+          rects.forEach((rectangle) => map.addLayer(rectangle))
         }
       }
 
       const hideRects = () => {
-        rects.forEach((r) => map.removeLayer(r))
+        rects.forEach((rectangle) => map.removeLayer(rectangle))
         rects = []
       }
+      hideMarkerRectangles.push(hideRects)
 
-      marker.on('mouseover', () => {
-        showRects()
-      })
+      marker.on('mouseover', showRects)
 
       marker.on('mouseout', () => {
         if (!marker.isPopupOpen()) {
@@ -66,9 +114,11 @@ export function MarkerClusterGroup({ items }: Props) {
           inCluster = false
 
           showRects()
-          const combined = L.featureGroup(rects).getBounds()
-          if (!map.getBounds().contains(combined)) {
-            map.fitBounds(combined, { padding: [20, 20] })
+          if (rects.length > 0) {
+            const combinedBounds = L.featureGroup(rects).getBounds()
+            if (!map.getBounds().contains(combinedBounds)) {
+              map.fitBounds(combinedBounds, { padding: [20, 20] })
+            }
           }
         }
       })
@@ -91,6 +141,45 @@ export function MarkerClusterGroup({ items }: Props) {
       return marker
     })
 
+    const activateCluster = (event: ClusterActivationEvent) => {
+      const isEnterKeyActivation =
+        event.type === 'clusterkeypress' && event.originalEvent?.keyCode === 13
+
+      if (
+        event.type === 'clusterkeypress' &&
+        event.originalEvent &&
+        event.originalEvent.keyCode !== 13
+      ) {
+        return
+      }
+
+      const markerCluster = event.layer
+      if (!isTerminalCluster(markerCluster)) {
+        setTerminalPopup(null)
+        markerCluster.zoomToBounds()
+      } else if (terminalClusterBehavior === 'spiderfy') {
+        setTerminalPopup(null)
+        markerCluster.spiderfy()
+      } else {
+        const clusterItems = markerCluster
+          .getAllChildMarkers()
+          .map((marker) => itemByMarker.get(marker))
+          .filter((entry): entry is IndexedDatasetItem => entry !== undefined)
+          .sort((first, second) => first.index - second.index)
+          .map(({ item }) => item)
+
+        if (clusterItems.length > 0) {
+          setTerminalPopup({ position: markerCluster.getLatLng(), items: clusterItems })
+        }
+      }
+
+      // The activated cluster may be replaced during zooming or spiderfying.
+      if (isEnterKeyActivation) {
+        map.getContainer().focus()
+      }
+    }
+
+    cluster.on('clusterclick clusterkeypress', activateCluster as L.LeafletEventHandlerFn)
     cluster.addLayers(markerList)
     map.addLayer(cluster)
 
@@ -99,12 +188,37 @@ export function MarkerClusterGroup({ items }: Props) {
     }
 
     return () => {
-      for (const m of markerList) {
-        if (map.hasLayer(m)) map.removeLayer(m)
+      cluster.off('clusterclick clusterkeypress', activateCluster as L.LeafletEventHandlerFn)
+      hideMarkerRectangles.forEach((hideRectangles) => hideRectangles())
+      for (const marker of markerList) {
+        if (map.hasLayer(marker)) map.removeLayer(marker)
       }
       map.removeLayer(cluster)
     }
-  }, [map, items])
+  }, [
+    map,
+    items,
+    boundingBoxColor,
+    pinPrimary,
+    pinSecondary,
+    terminalPinPrimary,
+    terminalPinSecondary,
+    clusterSmall,
+    clusterMedium,
+    clusterLarge,
+    clusterPreview,
+    terminalClusterBehavior
+  ])
 
-  return null
+  return terminalPopup ? (
+    <TerminalClusterPopup
+      key={`${terminalPopup.position.lat},${terminalPopup.position.lng}:${terminalPopup.items
+        .map((item) => item.persistentId)
+        .join('|')}`}
+      position={terminalPopup.position}
+      items={terminalPopup.items}
+      boundingBoxColor={boundingBoxColor}
+      onClose={() => setTerminalPopup(null)}
+    />
+  ) : null
 }

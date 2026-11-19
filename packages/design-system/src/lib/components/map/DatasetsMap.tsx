@@ -28,7 +28,9 @@ export function DatasetsMap({
   error,
   hasMore,
   loadMore,
-  mapHeight
+  mapHeight,
+  colors,
+  terminalClusterBehavior = 'carousel-popup'
 }: CollectionMapData) {
   return (
     <div className={styles['map-wrapper']}>
@@ -66,7 +68,11 @@ export function DatasetsMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
         />
-        <MarkerClusterGroup items={items} />
+        <MarkerClusterGroup
+          items={items}
+          colors={colors}
+          terminalClusterBehavior={terminalClusterBehavior}
+        />
         <MapSizeInvalidator isVisible={isVisible} />
       </MapContainer>
     </div>

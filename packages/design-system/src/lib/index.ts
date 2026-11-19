@@ -35,4 +35,9 @@ export { CloseButton } from './components/close-button/CloseButton'
 export { Offcanvas } from './components/offcanvas/Offcanvas'
 export { RichTextEditor } from './components/rich-text-editor/RichTextEditor'
 export { DatasetsMap } from './components/map/DatasetsMap'
-export type { GeoDatasetItem, CollectionMapData } from './components/map/types'
+export type {
+  GeoDatasetItem,
+  CollectionMapData,
+  DatasetMapColors,
+  TerminalClusterBehavior
+} from './components/map/types'

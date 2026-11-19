@@ -1,0 +1,237 @@
+import { DatasetsMap } from '../../../src/lib/components/map/DatasetsMap'
+import { GeoDatasetItem } from '../../../src/lib/components/map/types'
+
+const terminalItems: GeoDatasetItem[] = [
+  {
+    persistentId: 'doi:10.1234/1',
+    name: 'First colocated dataset',
+    detailsPageUrl: '#first',
+    authors: 'First Author',
+    publicationDate: '2026-01-01',
+    pinLat: 52.8,
+    pinLon: 8,
+    bboxes: [
+      [
+        [52.7999, 7.9999],
+        [52.8001, 8.0001]
+      ]
+    ]
+  },
+  {
+    persistentId: 'doi:10.1234/2',
+    name: 'Second colocated dataset',
+    detailsPageUrl: '#second',
+    authors: 'Second Author',
+    publicationDate: '2026-02-02',
+    pinLat: 52.8,
+    pinLon: 8,
+    bboxes: [
+      [
+        [52.7998, 7.9998],
+        [52.8002, 8.0002]
+      ]
+    ]
+  }
+]
+
+const almostCoincidentItems: GeoDatasetItem[] = [
+  terminalItems[0],
+  {
+    ...terminalItems[1],
+    pinLat: terminalItems[1].pinLat + 0.00001,
+    pinLon: terminalItems[1].pinLon + 0.00001
+  }
+]
+
+function createSeparableClusterItems(
+  count: number,
+  latitude: number,
+  longitude: number,
+  prefix: string
+): GeoDatasetItem[] {
+  return Array.from({ length: count }, (_, index) => ({
+    persistentId: `doi:10.1234/${prefix}-${index}`,
+    name: `${prefix} dataset ${index}`,
+    detailsPageUrl: `#${prefix}-${index}`,
+    authors: 'Author',
+    publicationDate: '2026-01-01',
+    pinLat: index === count - 1 ? latitude + 0.05 : latitude,
+    pinLon: index === count - 1 ? longitude + 0.05 : longitude,
+    bboxes: []
+  }))
+}
+
+function mountMap(
+  overrides: Partial<React.ComponentProps<typeof DatasetsMap>> = {},
+  items = terminalItems
+) {
+  cy.mount(
+    <DatasetsMap
+      isVisible
+      items={items}
+      totalCount={items.length}
+      isLoading={false}
+      error={null}
+      hasMore={false}
+      loadMore={() => undefined}
+      mapHeight={400}
+      {...overrides}
+    />
+  )
+}
+
+function getSettledCluster() {
+  cy.get('.leaflet-container').should('not.have.class', 'leaflet-zoom-anim')
+  return cy.get('.dataset-map-terminal-marker').should('have.length', 1)
+}
+
+describe('DatasetsMap marker clusters', () => {
+  beforeEach(() => {
+    cy.intercept('GET', 'https://*.tile.openstreetmap.org/**', { statusCode: 204 })
+  })
+
+  it('opens a carousel popup for a terminal cluster by default', () => {
+    mountMap()
+
+    getSettledCluster()
+      .should('not.have.class', 'marker-cluster')
+      .and('contain.text', '2')
+      .and('have.css', 'width', '32px')
+      .and('have.css', 'height', '48px')
+      .click()
+    cy.get('.dataset-map-terminal-marker text').then(([count]) => {
+      const bounds = (count as unknown as SVGGraphicsElement).getBBox()
+      expect(bounds.y + bounds.height / 2).to.be.closeTo(16, 0.5)
+    })
+    cy.findByRole('link', { name: 'First colocated dataset' }).should('exist')
+    cy.findByRole('spinbutton', { name: 'Dataset number, 1 to 2' }).should('have.value', '1')
+    cy.findByText('/ 2').should('exist')
+
+    cy.findByRole('button', { name: 'Next dataset' }).click()
+    cy.findByRole('link', { name: 'Second colocated dataset' }).should('exist')
+    cy.findByRole('spinbutton', { name: 'Dataset number, 1 to 2' }).should('have.value', '2')
+
+    cy.findByRole('spinbutton', { name: 'Dataset number, 1 to 2' }).clear().type('1')
+    cy.findByRole('link', { name: 'First colocated dataset' }).should('exist')
+    cy.get('.leaflet-container').should('not.have.class', 'leaflet-zoom-anim')
+  })
+
+  it('can spiderfy a terminal cluster instead', () => {
+    mountMap({ terminalClusterBehavior: 'spiderfy' })
+
+    getSettledCluster().click()
+    cy.get('.dataset-map-dataset-marker').should('have.length', 2).and('contain.text', '1')
+    cy.get('.leaflet-popup').should('not.exist')
+    cy.get('.leaflet-container').should('not.have.class', 'leaflet-cluster-anim')
+  })
+
+  it('treats distinct coordinates that remain clustered at maximum zoom as terminal', () => {
+    mountMap({}, almostCoincidentItems)
+
+    getSettledCluster().should('contain.text', '2').click()
+    cy.findByRole('link', { name: 'First colocated dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Next dataset' }).click()
+    cy.findByRole('link', { name: 'Second colocated dataset' }).should('exist')
+  })
+
+  it('applies custom bounding-box stroke and fill colors', () => {
+    mountMap(
+      {
+        colors: {
+          boundingBox: '#dc3545',
+          pinPrimary: '#198754',
+          pinSecondary: '#f8f9fa'
+        }
+      },
+      [terminalItems[0]]
+    )
+
+    cy.get('.dataset-map-dataset-marker')
+      .should('contain.text', '1')
+      .and('have.css', 'width', '32px')
+      .and('have.css', 'height', '48px')
+      .trigger('mouseover')
+    cy.get('.dataset-map-dataset-marker path')
+      .should('have.attr', 'fill', '#198754')
+      .and('have.attr', 'stroke', '#f8f9fa')
+    cy.get('.dataset-map-dataset-marker text').should('have.attr', 'fill', '#f8f9fa')
+    cy.get('.leaflet-overlay-pane path')
+      .should('have.attr', 'stroke', '#dc3545')
+      .and('have.attr', 'fill', '#dc3545')
+      .and('have.attr', 'stroke-width', '2.5')
+      .and('have.attr', 'stroke-opacity', '0.8')
+      .and('have.attr', 'fill-opacity', '0.2')
+  })
+
+  it('applies colors to terminal cluster pins independently', () => {
+    mountMap({
+      colors: {
+        terminalPinPrimary: '#6f42c1',
+        terminalPinSecondary: '#ffc107'
+      }
+    })
+
+    getSettledCluster()
+    cy.get('.dataset-map-terminal-marker path')
+      .should('have.attr', 'fill', '#6f42c1')
+      .and('have.attr', 'stroke', '#ffc107')
+    cy.get('.dataset-map-terminal-marker text').should('have.attr', 'fill', '#ffc107')
+  })
+
+  it('applies independent colors to all three separable cluster sizes', () => {
+    const items = [
+      ...createSeparableClusterItems(3, 50, 10, 'small'),
+      ...createSeparableClusterItems(10, 40, -100, 'medium'),
+      ...createSeparableClusterItems(101, -30, 130, 'large')
+    ]
+
+    mountMap(
+      {
+        colors: {
+          clusterSmall: '#111111',
+          clusterMedium: '#333333',
+          clusterLarge: '#555555',
+          clusterPreview: '#6f42c1'
+        }
+      },
+      items
+    )
+
+    cy.get('.leaflet-container').should('not.have.class', 'leaflet-zoom-anim')
+    cy.get('.dataset-map-cluster-small > div')
+      .should('have.attr', 'style')
+      .and('contain', '#111111')
+    cy.get('.dataset-map-cluster-small > div > div')
+      .should('have.attr', 'style')
+      .and('contain', '#111111')
+    cy.get('.dataset-map-cluster-medium > div')
+      .should('have.attr', 'style')
+      .and('contain', '#333333')
+    cy.get('.dataset-map-cluster-medium > div > div')
+      .should('have.attr', 'style')
+      .and('contain', '#333333')
+    cy.get('.dataset-map-cluster-large > div')
+      .should('have.attr', 'style')
+      .and('contain', '#555555')
+    cy.get('.dataset-map-cluster-large > div > div')
+      .should('have.attr', 'style')
+      .and('contain', '#555555')
+    cy.get('.dataset-map-cluster span').should('have.css', 'color', 'rgb(0, 0, 0)')
+    cy.get('.dataset-map-cluster-small > div').then(([outer]) => {
+      const inner = outer.firstElementChild as HTMLElement
+      const outerBounds = outer.getBoundingClientRect()
+      const innerBounds = inner.getBoundingClientRect()
+
+      expect(innerBounds.left - outerBounds.left).to.be.closeTo(5, 0.5)
+      expect(innerBounds.top - outerBounds.top).to.be.closeTo(5, 0.5)
+    })
+    cy.wait(500) // Let Leaflet replace transient cluster nodes after its initial zoom animation.
+    cy.get('.dataset-map-cluster-small').last().trigger('mouseover')
+    cy.get('.leaflet-overlay-pane path')
+      .should('have.attr', 'stroke', '#6f42c1')
+      .and('have.attr', 'fill', '#6f42c1')
+      .and('have.attr', 'stroke-width', '2.5')
+      .and('have.attr', 'stroke-opacity', '0.8')
+      .and('have.attr', 'fill-opacity', '0.2')
+  })
+})

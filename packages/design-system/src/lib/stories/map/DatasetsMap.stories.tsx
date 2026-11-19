@@ -111,6 +111,98 @@ export const CustomHeight: Story = {
   }
 }
 
+const terminalClusterItems: GeoDatasetItem[] = Array.from({ length: 4 }, (_, index) => ({
+  persistentId: `doi:10.1234/terminal-${index + 1}`,
+  name: `Dataset at the same location ${index + 1}`,
+  detailsPageUrl: '',
+  authors: `Author ${index + 1}`,
+  publicationDate: '2026-01-01',
+  pinLat: 52.8,
+  pinLon: 8,
+  bboxes: [
+    [
+      [52.7, 7.9],
+      [52.9, 8.1]
+    ]
+  ]
+}))
+
+export const TerminalClusterCarousel: Story = {
+  args: {
+    ...Default.args,
+    items: terminalClusterItems,
+    totalCount: terminalClusterItems.length
+  }
+}
+
+export const TerminalClusterSpiderfy: Story = {
+  args: {
+    ...TerminalClusterCarousel.args,
+    terminalClusterBehavior: 'spiderfy'
+  }
+}
+
+const customClusterPositions = [
+  [52.8, 5],
+  [52.9, 5.1],
+  [52.8, 5.2]
+] as const
+
+const customColorItems: GeoDatasetItem[] = [
+  ...terminalClusterItems,
+  {
+    persistentId: 'doi:10.1234/custom-single',
+    name: 'Individual dataset pin',
+    detailsPageUrl: '',
+    authors: 'Individual Author',
+    publicationDate: '2026-01-01',
+    pinLat: 52.8,
+    pinLon: 11,
+    bboxes: [
+      [
+        [52.7, 10.9],
+        [52.9, 11.1]
+      ]
+    ]
+  },
+  ...customClusterPositions.map(
+    ([pinLat, pinLon], index): GeoDatasetItem => ({
+      persistentId: `doi:10.1234/custom-cluster-${index + 1}`,
+      name: `Dataset in separable cluster ${index + 1}`,
+      detailsPageUrl: '',
+      authors: `Cluster Author ${index + 1}`,
+      publicationDate: '2026-01-01',
+      pinLat,
+      pinLon,
+      bboxes: [
+        [
+          [pinLat - 0.1, pinLon - 0.1],
+          [pinLat + 0.1, pinLon + 0.1]
+        ]
+      ]
+    })
+  )
+]
+
+export const CustomObjectColors: Story = {
+  args: {
+    ...TerminalClusterCarousel.args,
+    items: customColorItems,
+    totalCount: customColorItems.length,
+    colors: {
+      boundingBox: '#6f42c1',
+      pinPrimary: '#198754',
+      pinSecondary: '#ffffff',
+      terminalPinPrimary: '#6f42c1',
+      terminalPinSecondary: '#ffffff',
+      clusterSmall: '#0d6efd',
+      clusterMedium: '#ffc107',
+      clusterLarge: '#dc3545',
+      clusterPreview: '#6f42c1'
+    }
+  }
+}
+
 export const Loading: Story = {
   args: {
     ...Default.args,
