@@ -201,6 +201,7 @@ export function File({
               <Tabs.Tab eventKey={FilePageHelper.EXT_TOOL_TAB_KEY} title={externalToolTabTitle}>
                 <div className={styles['tab-container']}>
                   <FileEmbeddedExternalTool
+                    key={`${file.id}-${file.datasetVersion.id}-${file.guestbookId ?? ''}`}
                     file={file}
                     applicableTools={fileApplicablePreviewOrQueryTools}
                     toolTypeSelectedQueryParam={toolTypeSelectedQueryParam}

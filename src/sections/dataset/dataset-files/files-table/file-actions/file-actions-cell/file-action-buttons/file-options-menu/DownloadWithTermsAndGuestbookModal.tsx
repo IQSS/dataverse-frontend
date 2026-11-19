@@ -31,7 +31,7 @@ interface DownloadWithTermsAndGuestbookModalProps {
   datasetCustomTerms?: CustomTermsModel
   show: boolean
   handleClose: () => void
-  onAccept?: () => void
+  onAccept?: (response: GuestbookResponseDTO) => void
 }
 
 type GuestbookFormValues = Record<string, string>
@@ -229,7 +229,7 @@ export function DownloadWithTermsAndGuestbookModal({
     handleClose,
     accessRepository,
     downloadFromSignedUrl,
-    onSubmitSuccess: onAccept
+    onAccept
   })
 
   useEffect(() => {
