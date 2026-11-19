@@ -21,6 +21,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Fix file previews and the "Open in New Window" action when a dataset requires a Guestbook or terms confirmation. (#1164)
 - Show success toast notification when dataset publishing completes. (#1129)
 - Allow plain text URLs to be clickable in dataset description and metadata fields. (#1147)
 - Auto-select the entire citation text when clicked or highlighted on dataset and file pages. (#1119)
