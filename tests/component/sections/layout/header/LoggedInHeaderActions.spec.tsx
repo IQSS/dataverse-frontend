@@ -7,12 +7,15 @@ import { AuthContext } from 'react-oauth2-code-pkce'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { needsUpdateStore } from '@/notifications/domain/hooks/needsUpdateStore'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { useLocation } from 'react-router-dom'
 
 const testUser = UserMother.create()
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const notificationRepository: NotificationRepository = {} as unknown as NotificationRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const userPermissionsMock = CollectionMother.createUserPermissions()
+
+const CurrentPath = () => <span data-testid="current-path">{useLocation().pathname}</span>
 
 describe('LoggedInHeaderActions', () => {
   beforeEach(() => {
@@ -235,6 +238,39 @@ describe('LoggedInHeaderActions', () => {
 
     cy.get('#dropdown-user').should('exist').click()
     cy.findByTestId('oidc-logout').should('exist').click()
+    cy.get('@logoutStub').should('have.been.calledOnce')
+  })
+
+  it('leaves the current page for the home page before logging out', () => {
+    collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
+    collectionRepository.getById = cy.stub().resolves(CollectionMother.create())
+
+    cy.customMount(
+      <AuthContext.Provider
+        value={{
+          token: 'fake-token-it-doesnt-matter-just-testing-logout-fn',
+          idToken: undefined,
+          logIn: () => {},
+          logOut: cy.stub().as('logoutStub'),
+          loginInProgress: false,
+          tokenData: undefined,
+          idTokenData: undefined,
+          error: null,
+          login: () => {}
+        }}>
+        <WithRepositories collectionRepository={collectionRepository}>
+          <LoggedInHeaderActions user={testUser} notificationRepository={notificationRepository} />
+          <CurrentPath />
+        </WithRepositories>
+      </AuthContext.Provider>,
+      ['/account']
+    )
+
+    cy.findByTestId('current-path').should('have.text', '/account')
+    cy.get('#dropdown-user').should('exist').click()
+    cy.findByTestId('oidc-logout').should('exist').click()
+
+    cy.findByTestId('current-path').should('have.text', '/')
     cy.get('@logoutStub').should('have.been.calledOnce')
   })
 })

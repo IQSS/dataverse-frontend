@@ -23,7 +23,9 @@
     "familyName": "Apellido",
     "email": "Correo electrónico",
     "affiliation": "Afiliación",
-    "position": "Cargo"
+    "position": "Cargo",
+    "orcid": "ORCID iD",
+    "orcidNotConnected": "No conectado"
   },
   "myData": {
     "title": "Mis datos",

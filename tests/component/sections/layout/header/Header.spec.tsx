@@ -4,6 +4,8 @@ import { CollectionMother } from '@tests/component/collection/domain/models/Coll
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { NotificationRepository } from '@/notifications/domain/repositories/NotificationRepository'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { AuthContext, IAuthContext } from 'react-oauth2-code-pkce'
+import { applyTestAppConfig } from '@tests/support/bootstrapAppConfig'
 
 const testUser = UserMother.create()
 const rootCollection = CollectionMother.create({ id: 'root' })
@@ -91,5 +93,71 @@ describe('Header component', () => {
     )
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByRole('button', { name: 'Log In' }).click()
+  })
+
+  describe('Sign Up link', () => {
+    const defaultSignUpEnabled = Cypress.env('signUpEnabled') as boolean
+
+    afterEach(() => {
+      Cypress.env('signUpEnabled', defaultSignUpEnabled)
+      applyTestAppConfig()
+    })
+
+    const mountWithToken = (token: string) =>
+      cy.customMount(
+        <AuthContext.Provider
+          value={
+            {
+              token,
+              idToken: undefined,
+              logIn: () => {},
+              logOut: () => {},
+              loginInProgress: false,
+              tokenData: undefined,
+              idTokenData: undefined,
+              error: null,
+              login: () => {}
+            } as IAuthContext
+          }>
+          <WithRepositories collectionRepository={collectionRepository}>
+            <Header notficationRepository={notificationRepository} />
+          </WithRepositories>
+        </AuthContext.Provider>
+      )
+
+    it('displays the Sign Up link when sign-up is enabled and the user is not logged in', () => {
+      mountWithToken('')
+
+      cy.findByRole('button', { name: 'Toggle navigation' }).click()
+      cy.findByTestId('sign-up-link').should('have.text', 'Sign Up').click()
+    })
+
+    it('does not display the Sign Up link when sign-up is disabled in the app config', () => {
+      Cypress.env('signUpEnabled', false)
+      applyTestAppConfig()
+      mountWithToken('')
+
+      cy.findByRole('button', { name: 'Toggle navigation' }).click()
+      cy.findByRole('button', { name: 'Log In' }).should('exist')
+      cy.findByTestId('sign-up-link').should('not.exist')
+    })
+
+    it('does not display the Sign Up link while a user with a token but no linked account finishes registration', () => {
+      mountWithToken('valid-token')
+
+      cy.findByRole('button', { name: 'Toggle navigation' }).click()
+      cy.findByTestId('sign-up-link').should('not.exist')
+    })
+
+    it('does not display the Sign Up link when the user is logged in', () => {
+      cy.mountAuthenticated(
+        <WithRepositories collectionRepository={collectionRepository}>
+          <Header notficationRepository={notificationRepository} />
+        </WithRepositories>
+      )
+
+      cy.findByRole('button', { name: 'Toggle navigation' }).click()
+      cy.findByTestId('sign-up-link').should('not.exist')
+    })
   })
 })

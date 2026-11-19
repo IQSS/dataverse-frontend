@@ -4,6 +4,8 @@ import { Alert, Tabs } from '@iqss/dataverse-design-system'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { ValidTokenNotLinkedAccountForm } from './valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
+import { BuiltinSignUpForm } from './builtin-sign-up-form/BuiltinSignUpForm'
+import { requireAppConfig } from '@/config'
 import styles from './SignUp.module.scss'
 
 interface SignUpProps {
@@ -17,6 +19,7 @@ export const SignUp = ({
 }: SignUpProps) => {
   const { t } = useTranslation('signUp')
   const { setIsLoading } = useLoading()
+  const isSignUpEnabled = requireAppConfig().signUpEnabled === true
 
   useEffect(() => setIsLoading(false), [setIsLoading])
 
@@ -31,9 +34,6 @@ export const SignUp = ({
           </Alert>
         )}
 
-        {/* TODO: Handle new signups from here */}
-
-        {/* For now we are only handling the case of registering users who are already logged into the oidc provider but do not have a dataverse account. */}
         {hasValidTokenButNotLinkedAccount && (
           <>
             <Alert variant="info" customHeading={t('hasValidTokenButNotLinkedAccount.heading')}>
@@ -62,6 +62,9 @@ export const SignUp = ({
           <div className={styles['tab-container']}>
             {hasValidTokenButNotLinkedAccount && (
               <ValidTokenNotLinkedAccountForm dataverseInfoRepository={dataverseInfoRepository} />
+            )}
+            {!hasValidTokenButNotLinkedAccount && isSignUpEnabled && (
+              <BuiltinSignUpForm dataverseInfoRepository={dataverseInfoRepository} />
             )}
           </div>
         </Tabs.Tab>

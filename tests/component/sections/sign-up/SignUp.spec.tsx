@@ -4,6 +4,7 @@ import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { AuthContextMother } from '@tests/component/auth/AuthContextMother'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { WithRepositories } from '@tests/component/WithRepositories'
+import { applyTestAppConfig } from '@tests/support/bootstrapAppConfig'
 
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
 const userRepository: UserRepository = {} as UserRepository
@@ -41,6 +42,7 @@ describe('SignUp', () => {
     cy.findByTestId('default-create-account-alert-text').should('not.exist')
 
     cy.findByTestId('valid-token-not-linked-account-form').should('exist')
+    cy.findByTestId('builtin-sign-up-form').should('not.exist')
   })
 
   // For now we are only rendering the form for the case when theres is a valid token but is not linked to any account, but we prepare the test for other cases
@@ -72,5 +74,29 @@ describe('SignUp', () => {
     cy.findByTestId('valid-token-not-linked-account-about-prefilled-fields').should('not.exist')
 
     cy.findByTestId('valid-token-not-linked-account-form').should('not.exist')
+    cy.findByTestId('builtin-sign-up-form').should('exist')
+  })
+
+  it('does not render the sign-up form when sign-up is disabled in the app config', () => {
+    const defaultSignUpEnabled = Cypress.env('signUpEnabled') as boolean
+    Cypress.env('signUpEnabled', false)
+    applyTestAppConfig()
+
+    cy.customMount(
+      <WithRepositories userRepository={userRepository}>
+        <SignUp
+          dataverseInfoRepository={dataverseInfoRepository}
+          hasValidTokenButNotLinkedAccount={false}
+        />
+      </WithRepositories>
+    )
+
+    cy.findByTestId('default-create-account-alert-text').should('exist')
+    cy.findByTestId('builtin-sign-up-form').should('not.exist')
+
+    cy.then(() => {
+      Cypress.env('signUpEnabled', defaultSignUpEnabled)
+      applyTestAppConfig()
+    })
   })
 })

@@ -23,16 +23,28 @@ const meta: Meta<typeof Account> = {
 export default meta
 type Story = StoryObj<typeof Account>
 
+class UserWithoutOrcidMockRepository extends UserMockRepository {
+  getAuthenticatedOrcid(): Promise<string | null> {
+    return Promise.resolve(null)
+  }
+}
+
+const renderAccount = (userRepository: UserMockRepository) => (
+  <RepositoriesStoryProvider
+    collectionRepository={new CollectionMockRepository()}
+    userRepository={userRepository}>
+    <Account
+      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
+      roleRepository={new RoleMockRepository()}
+      notificationRepository={new NotificationMockRepository()}
+    />
+  </RepositoriesStoryProvider>
+)
+
 export const Default: Story = {
-  render: () => (
-    <RepositoriesStoryProvider
-      collectionRepository={new CollectionMockRepository()}
-      userRepository={new UserMockRepository()}>
-      <Account
-        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
-        roleRepository={new RoleMockRepository()}
-        notificationRepository={new NotificationMockRepository()}
-      />
-    </RepositoriesStoryProvider>
-  )
+  render: () => renderAccount(new UserMockRepository())
+}
+
+export const WithoutOrcid: Story = {
+  render: () => renderAccount(new UserWithoutOrcidMockRepository())
 }
