@@ -1,3 +1,5 @@
+import type { TileLayerProps } from 'react-leaflet'
+
 /**
  * Represents a dataset with geographic information, for display on DatasetsMap.
  *
@@ -28,6 +30,9 @@ export interface DatasetMapColors {
   clusterPreview?: string // preview area shown on cluster hover
 }
 
+/** Overrides for the tile layer used by default. */
+export type DatasetMapTileLayer = Partial<TileLayerProps>
+
 /** Behavior of clusters that cannot be separated even at maximum zoom. */
 export type TerminalClusterBehavior = 'carousel-popup' | 'spiderfy'
 
@@ -43,6 +48,7 @@ export interface CollectionMapData {
   loadMore: () => void
   isVisible: boolean
   mapHeight?: string | number //string: css value. number: pixels. defaults to 480px.
+  tileLayer?: DatasetMapTileLayer
   colors?: DatasetMapColors
   terminalClusterBehavior?: TerminalClusterBehavior // defaults to carousel-popup
   markerPlacement?: DatasetMarkerPlacement // defaults to bounding-box-centers

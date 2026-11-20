@@ -29,6 +29,7 @@ export function DatasetsMap({
   hasMore,
   loadMore,
   mapHeight,
+  tileLayer,
   colors,
   terminalClusterBehavior = 'carousel-popup',
   markerPlacement = 'bounding-box-centers'
@@ -65,9 +66,13 @@ export function DatasetsMap({
         style={{ height: mapHeight }}
         className={styles['map-container']}>
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          maxZoom={19}
+          {...tileLayer}
+          attribution={
+            tileLayer?.attribution ??
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }
+          url={tileLayer?.url ?? 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'}
+          maxZoom={tileLayer?.maxZoom ?? 19}
         />
         <MarkerClusterGroup
           items={items}

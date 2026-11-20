@@ -142,6 +142,25 @@ describe('DatasetsMap marker clusters', () => {
     cy.get('.leaflet-container').should('not.have.class', 'leaflet-zoom-anim')
   })
 
+  it('supports custom tile-layer properties', () => {
+    mountMap({
+      tileLayer: {
+        url: 'https://tiles.example.test/{z}/{x}/{y}.png',
+        attribution: 'Custom map provider',
+        className: 'custom-base-map',
+        maxZoom: 12
+      }
+    })
+
+    cy.get('.leaflet-control-attribution').should('contain.text', 'Custom map provider')
+    cy.get('.leaflet-tile-pane .custom-base-map img')
+      .should('exist')
+      .and('have.attr', 'src')
+      .and('match', /^https:\/\/tiles\.example\.test\/\d+\/\d+\/\d+\.png$/)
+    cy.get('.leaflet-container').should('not.have.class', 'leaflet-zoom-anim')
+    cy.wait(500) // Let Leaflet finish any zoom transition caused by the custom maximum zoom.
+  })
+
   it('can spiderfy a terminal cluster instead', () => {
     mountMap({ terminalClusterBehavior: 'spiderfy' })
 
