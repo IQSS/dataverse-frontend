@@ -43,6 +43,24 @@ const almostCoincidentItems: GeoDatasetItem[] = [
   }
 ]
 
+const multiBoundingBoxItem: GeoDatasetItem = {
+  persistentId: 'doi:10.1234/multiple-boxes',
+  name: 'Dataset with multiple bounding boxes',
+  detailsPageUrl: '#multiple-boxes',
+  authors: 'Multiple Boxes Author',
+  publicationDate: '2026-03-03',
+  bboxes: [
+    [
+      [48.8, 2.2],
+      [49, 2.4]
+    ],
+    [
+      [55.5, 12.5],
+      [55.7, 12.7]
+    ]
+  ]
+}
+
 function createSeparableClusterItems(
   count: number,
   latitude: number,
@@ -140,6 +158,35 @@ describe('DatasetsMap marker clusters', () => {
     cy.findByRole('link', { name: 'First colocated dataset' }).should('exist')
     cy.findByRole('button', { name: 'Next dataset' }).click()
     cy.findByRole('link', { name: 'Second colocated dataset' }).should('exist')
+  })
+
+  it('can place one marker at the dataset center', () => {
+    mountMap({ markerPlacement: 'dataset-center' }, [multiBoundingBoxItem])
+
+    cy.get('.dataset-map-dataset-marker').should('have.length', 1).trigger('mouseover')
+    cy.get('.leaflet-overlay-pane path').should('have.length', 2)
+    cy.findByText('1 of 1 results displayed').should('exist')
+  })
+
+  it('places one marker per bounding box by default with the same dataset popup', () => {
+    mountMap({}, [multiBoundingBoxItem])
+
+    cy.get('.dataset-map-dataset-marker').should('have.length', 2).first().trigger('mouseover')
+    cy.get('.leaflet-overlay-pane path').should('have.length', 1)
+    cy.get('.dataset-map-dataset-marker').first().trigger('mouseout').click()
+    cy.get('.leaflet-overlay-pane path').should('have.length', 1)
+    cy.findByRole('link', { name: multiBoundingBoxItem.name }).should(
+      'have.attr',
+      'href',
+      multiBoundingBoxItem.detailsPageUrl
+    )
+    cy.findByText('1 of 1 results displayed').should('exist')
+    cy.get('.leaflet-container')
+      .should('not.have.class', 'leaflet-zoom-anim')
+      .and('not.have.class', 'leaflet-pan-anim')
+    cy.get('.leaflet-popup-close-button').click({ force: true })
+    cy.get('.leaflet-popup').should('not.exist')
+    cy.wait(500) // Let Leaflet finish its delayed zoom-transition callback before unmounting.
   })
 
   it('applies custom bounding-box stroke and fill colors', () => {

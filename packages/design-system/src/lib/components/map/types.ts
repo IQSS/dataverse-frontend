@@ -31,6 +31,9 @@ export interface DatasetMapColors {
 /** Behavior of clusters that cannot be separated even at maximum zoom. */
 export type TerminalClusterBehavior = 'carousel-popup' | 'spiderfy'
 
+/** Determines whether datasets with multiple bounding boxes place one centered marker, or one per box. */
+export type DatasetMarkerPlacement = 'bounding-box-centers' | 'dataset-center'
+
 export interface CollectionMapData {
   items: GeoDatasetItem[]
   totalCount: number
@@ -41,5 +44,6 @@ export interface CollectionMapData {
   isVisible: boolean
   mapHeight?: string | number //string: css value. number: pixels. defaults to 480px.
   colors?: DatasetMapColors
-  terminalClusterBehavior?: TerminalClusterBehavior
+  terminalClusterBehavior?: TerminalClusterBehavior // defaults to carousel-popup
+  markerPlacement?: DatasetMarkerPlacement // defaults to bounding-box-centers
 }

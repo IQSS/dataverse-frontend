@@ -30,7 +30,8 @@ export function DatasetsMap({
   loadMore,
   mapHeight,
   colors,
-  terminalClusterBehavior = 'carousel-popup'
+  terminalClusterBehavior = 'carousel-popup',
+  markerPlacement = 'bounding-box-centers'
 }: CollectionMapData) {
   return (
     <div className={styles['map-wrapper']}>
@@ -72,6 +73,7 @@ export function DatasetsMap({
           items={items}
           colors={colors}
           terminalClusterBehavior={terminalClusterBehavior}
+          markerPlacement={markerPlacement}
         />
         <MapSizeInvalidator isVisible={isVisible} />
       </MapContainer>

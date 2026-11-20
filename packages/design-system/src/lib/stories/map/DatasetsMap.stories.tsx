@@ -101,6 +101,13 @@ export const CustomHeight: Story = {
   }
 }
 
+export const OnePinPerDataset: Story = {
+  args: {
+    ...Default.args,
+    markerPlacement: 'dataset-center'
+  }
+}
+
 const terminalClusterItems: GeoDatasetItem[] = Array.from({ length: 4 }, (_, index) => ({
   persistentId: `doi:10.1234/terminal-${index + 1}`,
   name: `Dataset at the same location ${index + 1}`,

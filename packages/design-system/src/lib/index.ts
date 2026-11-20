@@ -40,5 +40,6 @@ export type {
   DatasetBoundingBox,
   CollectionMapData,
   DatasetMapColors,
+  DatasetMarkerPlacement,
   TerminalClusterBehavior
 } from './components/map/types'

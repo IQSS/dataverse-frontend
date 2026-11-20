@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet.markercluster'
-import { DatasetMapColors, GeoDatasetItem, TerminalClusterBehavior } from './types'
+import {
+  DatasetMapColors,
+  DatasetMarkerPlacement,
+  GeoDatasetItem,
+  TerminalClusterBehavior
+} from './types'
 import { getDatasetMarkerPosition } from './getDatasetMarkerPosition'
 import { isTerminalCluster } from './isTerminalCluster'
 import { createClusterIcon, createMarkerPinIcon, resolveClusterColors } from './MarkerClusterIcons'
@@ -13,10 +18,12 @@ interface Props {
   items: GeoDatasetItem[]
   colors?: DatasetMapColors
   terminalClusterBehavior: TerminalClusterBehavior
+  markerPlacement: DatasetMarkerPlacement
 }
 
-interface IndexedDatasetItem {
+interface IndexedDatasetMarker {
   item: GeoDatasetItem
+  bboxes: GeoDatasetItem['bboxes']
   index: number
 }
 
@@ -25,7 +32,12 @@ interface ClusterActivationEvent extends L.LeafletEvent {
   originalEvent?: KeyboardEvent
 }
 
-export function MarkerClusterGroup({ items, colors, terminalClusterBehavior }: Props) {
+export function MarkerClusterGroup({
+  items,
+  colors,
+  terminalClusterBehavior,
+  markerPlacement
+}: Props) {
   const map = useMap()
   const [terminalPopup, setTerminalPopup] = useState<TerminalPopupState | null>(null)
 
@@ -58,7 +70,7 @@ export function MarkerClusterGroup({ items, colors, terminalClusterBehavior }: P
       large: resolveClusterColors(clusterLarge)
     }
 
-    const itemByMarker = new Map<L.Marker, IndexedDatasetItem>()
+    const itemByMarker = new Map<L.Marker, IndexedDatasetMarker>()
     const hideMarkerRectangles: (() => void)[] = []
     const cluster = L.markerClusterGroup({
       spiderfyOnMaxZoom: false,
@@ -77,18 +89,30 @@ export function MarkerClusterGroup({ items, colors, terminalClusterBehavior }: P
         )
     })
 
-    const markerList = items.map((item, index) => {
-      const marker = L.marker(getDatasetMarkerPosition(item.bboxes), {
+    const markerItems = items.flatMap((item) => {
+      const datasetCenter = getDatasetMarkerPosition(item.bboxes)
+
+      return markerPlacement === 'bounding-box-centers'
+        ? item.bboxes.map((bbox) => ({
+            item,
+            bboxes: [bbox],
+            position: getDatasetMarkerPosition([bbox])
+          }))
+        : [{ item, bboxes: item.bboxes, position: datasetCenter }]
+    })
+
+    const markerList = markerItems.map(({ item, bboxes, position }, index) => {
+      const marker = L.marker(position, {
         icon: markerIcon
       })
-      itemByMarker.set(marker, { item, index })
+      itemByMarker.set(marker, { item, bboxes, index })
 
       let rects: L.Rectangle[] = []
       let inCluster = true
 
       const showRects = () => {
         if (rects.length === 0) {
-          rects = item.bboxes.map((bounds) => createBoundingBox(bounds, boundingBoxColor))
+          rects = bboxes.map((bounds) => createBoundingBox(bounds, boundingBoxColor))
           rects.forEach((rectangle) => map.addLayer(rectangle))
         }
       }
@@ -165,9 +189,9 @@ export function MarkerClusterGroup({ items, colors, terminalClusterBehavior }: P
         const clusterItems = markerCluster
           .getAllChildMarkers()
           .map((marker) => itemByMarker.get(marker))
-          .filter((entry): entry is IndexedDatasetItem => entry !== undefined)
+          .filter((entry): entry is IndexedDatasetMarker => entry !== undefined)
           .sort((first, second) => first.index - second.index)
-          .map(({ item }) => item)
+          .map(({ item, bboxes }) => ({ item, bboxes }))
 
         if (clusterItems.length > 0) {
           setTerminalPopup({ position: markerCluster.getLatLng(), items: clusterItems })
@@ -208,13 +232,14 @@ export function MarkerClusterGroup({ items, colors, terminalClusterBehavior }: P
     clusterMedium,
     clusterLarge,
     clusterPreview,
-    terminalClusterBehavior
+    terminalClusterBehavior,
+    markerPlacement
   ])
 
   return terminalPopup ? (
     <TerminalClusterPopup
       key={`${terminalPopup.position.lat},${terminalPopup.position.lng}:${terminalPopup.items
-        .map((item) => item.persistentId)
+        .map(({ item }) => item.persistentId)
         .join('|')}`}
       position={terminalPopup.position}
       items={terminalPopup.items}

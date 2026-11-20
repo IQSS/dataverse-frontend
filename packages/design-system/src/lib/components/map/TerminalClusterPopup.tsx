@@ -9,9 +9,14 @@ import styles from './MarkerClusterGroup.module.scss'
 // Explicit 7px popup offset is needed because this popup is positioned independently of its marker.
 const terminalClusterPopupOffset = markerPinPopupAnchor.add(L.point(0, 7))
 
+export interface TerminalPopupItem {
+  item: GeoDatasetItem
+  bboxes: GeoDatasetItem['bboxes']
+}
+
 export interface TerminalPopupState {
   position: L.LatLng
-  items: GeoDatasetItem[]
+  items: TerminalPopupItem[]
 }
 
 interface Props extends TerminalPopupState {
@@ -23,14 +28,15 @@ export function TerminalClusterPopup({ position, items, boundingBoxColor, onClos
   const map = useMap()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [pageInput, setPageInput] = useState('1')
-  const currentItem = items[currentIndex]
+  const currentEntry = items[currentIndex]
+  const currentItem = currentEntry.item
 
   useEffect(() => {
     setPageInput(String(currentIndex + 1))
   }, [currentIndex])
 
   useEffect(() => {
-    const rectangles = currentItem.bboxes.map((bounds) =>
+    const rectangles = currentEntry.bboxes.map((bounds) =>
       createBoundingBox(bounds, boundingBoxColor).addTo(map)
     )
 
@@ -44,7 +50,7 @@ export function TerminalClusterPopup({ position, items, boundingBoxColor, onClos
     return () => {
       rectangles.forEach((rectangle) => map.removeLayer(rectangle))
     }
-  }, [boundingBoxColor, currentItem, map])
+  }, [boundingBoxColor, currentEntry, map])
 
   const showPreviousItem = () => {
     setCurrentIndex((current) => (current - 1 + items.length) % items.length)
