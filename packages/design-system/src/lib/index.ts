@@ -34,3 +34,13 @@ export { TransferList, type TransferListItem } from './components/transfer-list/
 export { CloseButton } from './components/close-button/CloseButton'
 export { Offcanvas } from './components/offcanvas/Offcanvas'
 export { RichTextEditor } from './components/rich-text-editor/RichTextEditor'
+export { DatasetsMap } from './components/map/DatasetsMap'
+export type {
+  GeoDatasetItem,
+  DatasetBoundingBox,
+  CollectionMapData,
+  DatasetMapColors,
+  DatasetMapTileLayer,
+  DatasetMarkerPlacement,
+  TerminalClusterBehavior
+} from './components/map/types'
