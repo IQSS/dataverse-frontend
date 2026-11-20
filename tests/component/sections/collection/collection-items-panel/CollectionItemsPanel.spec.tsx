@@ -366,6 +366,122 @@ describe('CollectionItemsPanel', () => {
     cy.findByTestId('collection-items-list-infinite-scroll-skeleton').should('exist')
   })
 
+  it('keeps repeated infinite scrolling within the items list page boundary', () => {
+    cy.customMount(
+      <>
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: undefined
+          }}
+          addDataSlot={null}
+        />
+        <footer data-testid="collection-page-footer" style={{ height: 160 }}>
+          Footer
+        </footer>
+      </>
+    )
+
+    let initialPageScrollHeight = 0
+    let initialListScrollHeight = 0
+
+    cy.findByTestId('items-list').should('exist').children().should('have.length', 10)
+
+    cy.document().then((document) => {
+      initialPageScrollHeight = document.documentElement.scrollHeight
+      expect(initialPageScrollHeight).to.equal(document.body.scrollHeight)
+    })
+
+    cy.findByTestId('items-list-scrollable-container').then(($itemsList) => {
+      initialListScrollHeight = $itemsList[0].scrollHeight
+    })
+
+    for (const expectedItemCount of [20, 30, 40, 50, 60]) {
+      cy.findByTestId('items-list-scrollable-container').scrollTo('bottom')
+      cy.findByTestId('items-list').children().should('have.length', expectedItemCount)
+    }
+
+    cy.findByTestId('items-list-scrollable-container').then(($itemsList) => {
+      const itemsList = $itemsList[0]
+      const stickyHeader = itemsList.querySelector(':scope > header')
+
+      expect(itemsList.scrollHeight).to.be.greaterThan(initialListScrollHeight)
+      expect(stickyHeader).not.to.equal(null)
+      expect(getComputedStyle(stickyHeader as HTMLElement).position).to.equal('sticky')
+      expect((stickyHeader as HTMLElement).getBoundingClientRect().top).to.be.closeTo(
+        itemsList.getBoundingClientRect().top,
+        1
+      )
+    })
+
+    cy.findByRole('button', { name: /Sort/ }).should('be.visible')
+
+    cy.findByTestId('collection-page-footer').then(($footer) => {
+      const pageWindow = $footer[0].ownerDocument.defaultView
+      const footerBottom = Math.ceil(
+        $footer[0].getBoundingClientRect().bottom + (pageWindow?.scrollY ?? 0)
+      )
+
+      cy.document().then((document) => {
+        expect(document.documentElement.scrollHeight).to.equal(initialPageScrollHeight)
+        expect(document.documentElement.scrollHeight).to.equal(document.body.scrollHeight)
+        expect(document.documentElement.scrollHeight).to.be.closeTo(footerBottom, 1)
+      })
+    })
+  })
+
+  it('resets the items list scroll position after search, sort and filter changes', () => {
+    cy.customMount(
+      <CollectionItemsPanel
+        collectionId={ROOT_COLLECTION_ALIAS}
+        collectionRepository={collectionRepository}
+        collectionQueryParams={{
+          pageQuery: 1,
+          searchQuery: undefined,
+          typesQuery: undefined,
+          filtersQuery: undefined
+        }}
+        addDataSlot={null}
+      />
+    )
+
+    const moveItemsListAwayFromTop = () => {
+      cy.findByTestId('items-list-scrollable-container').then(($itemsList) => {
+        const itemsList = $itemsList[0]
+        const scrollTop = Math.min(100, itemsList.scrollHeight - itemsList.clientHeight)
+
+        expect(scrollTop).to.be.greaterThan(0)
+        itemsList.scrollTop = scrollTop
+        expect(itemsList.scrollTop).to.equal(scrollTop)
+      })
+    }
+
+    const expectItemsListAtTop = () => {
+      cy.findByTestId('items-list-scrollable-container').should(($itemsList) => {
+        expect($itemsList[0].scrollTop).to.equal(0)
+      })
+    }
+
+    cy.findByTestId('items-list').should('exist').children().should('have.length', 10)
+
+    moveItemsListAwayFromTop()
+    cy.findByPlaceholderText('Search this collection...').type('test search{enter}')
+    expectItemsListAtTop()
+
+    moveItemsListAwayFromTop()
+    cy.findByRole('button', { name: /Sort/ }).click()
+    cy.findByRole('button', { name: /Name \(A-Z\)/ }).click()
+    expectItemsListAtTop()
+
+    moveItemsListAwayFromTop()
+    cy.findByRole('checkbox', { name: /Files/ }).click()
+    expectItemsListAtTop()
+  })
+
   it('renders 4 items with no more to load, correct results in header, and no bottom skeleton loader', () => {
     const first4Elements = items.slice(0, 4)
     const first4ElementsWithCount: CollectionItemSubset = {
