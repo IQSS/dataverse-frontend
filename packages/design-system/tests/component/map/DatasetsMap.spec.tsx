@@ -61,6 +61,35 @@ const multiBoundingBoxItem: GeoDatasetItem = {
   ]
 }
 
+const popupSwitchItems: GeoDatasetItem[] = [
+  {
+    persistentId: 'doi:10.1234/popup-switch-1',
+    name: 'First nearby dataset',
+    detailsPageUrl: '#popup-switch-1',
+    authors: 'First Author',
+    publicationDate: '2026-01-01',
+    bboxes: [
+      [
+        [-40, -40],
+        [40, 40]
+      ]
+    ]
+  },
+  {
+    persistentId: 'doi:10.1234/popup-switch-2',
+    name: 'Second nearby dataset',
+    detailsPageUrl: '#popup-switch-2',
+    authors: 'Second Author',
+    publicationDate: '2026-02-02',
+    bboxes: [
+      [
+        [-0.1, 9.9],
+        [0.1, 10.1]
+      ]
+    ]
+  }
+]
+
 function createSeparableClusterItems(
   count: number,
   latitude: number,
@@ -205,6 +234,43 @@ describe('DatasetsMap marker clusters', () => {
       .and('not.have.class', 'leaflet-pan-anim')
     cy.get('.leaflet-popup-close-button').click({ force: true })
     cy.get('.leaflet-popup').should('not.exist')
+    cy.wait(500) // Let Leaflet finish its delayed zoom-transition callback before unmounting.
+  })
+
+  it('keeps the newly opened nearby marker outside its cluster when switching popups', () => {
+    mountMap({}, popupSwitchItems)
+
+    cy.get('.leaflet-control-zoom-out').click()
+    cy.wait(300)
+    cy.get('.leaflet-control-zoom-out').click()
+    cy.wait(300)
+    cy.get('.leaflet-control-zoom-out').click()
+    cy.wait(300)
+    cy.get('.leaflet-control-zoom-out').click()
+    cy.wait(300)
+    cy.get('.leaflet-control-zoom-out').click()
+    cy.wait(300)
+    cy.get('.dataset-map-cluster-small').should('have.length', 1).click()
+    cy.wait(300)
+    cy.get('.dataset-map-dataset-marker').should('have.length', 2)
+    cy.get('.dataset-map-dataset-marker').last().click()
+    cy.findByRole('link', { name: 'First nearby dataset' }).should('exist')
+    cy.wait(500)
+    cy.get('.leaflet-container')
+      .should('not.have.class', 'leaflet-zoom-anim')
+      .and('not.have.class', 'leaflet-pan-anim')
+    // The opened marker is removed from the cluster and appended directly to the map,
+    // leaving the other marker first in DOM order.
+    cy.get('.dataset-map-dataset-marker').should('have.length', 2)
+    cy.get('.dataset-map-dataset-marker').first().click()
+    cy.findByRole('link', { name: 'Second nearby dataset' }).should('exist')
+
+    cy.get('.leaflet-overlay-pane path').should('have.length', 1)
+    cy.get('.dataset-map-cluster-small').should('not.exist')
+    cy.get('.dataset-map-dataset-marker').should('have.length', 2)
+    cy.get('.leaflet-container')
+      .should('not.have.class', 'leaflet-zoom-anim')
+      .and('not.have.class', 'leaflet-pan-anim')
     cy.wait(500) // Let Leaflet finish its delayed zoom-transition callback before unmounting.
   })
 

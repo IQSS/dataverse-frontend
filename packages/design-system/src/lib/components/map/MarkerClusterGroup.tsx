@@ -72,6 +72,7 @@ export function MarkerClusterGroup({
 
     const itemByMarker = new Map<L.Marker, IndexedDatasetMarker>()
     const hideMarkerRectangles: (() => void)[] = []
+    const pendingClusterRestores = new Set<ReturnType<typeof setTimeout>>()
     const cluster = L.markerClusterGroup({
       spiderfyOnMaxZoom: false,
       zoomToBoundsOnClick: false,
@@ -156,11 +157,17 @@ export function MarkerClusterGroup({
 
       marker.on('popupclose', () => {
         hideRects()
-        if (!inCluster) {
-          inCluster = true
-          map.removeLayer(marker)
-          cluster.addLayer(marker)
-        }
+
+        // Delay reclustering until the newly clicked marker opened, to prevent the cluster collapsing around it.
+        const restoreTimeout = setTimeout(() => {
+          pendingClusterRestores.delete(restoreTimeout)
+          if (!marker.isPopupOpen() && !inCluster) {
+            inCluster = true
+            map.removeLayer(marker)
+            cluster.addLayer(marker)
+          }
+        }, 0)
+        pendingClusterRestores.add(restoreTimeout)
       })
 
       return marker
@@ -214,6 +221,7 @@ export function MarkerClusterGroup({
 
     return () => {
       cluster.off('clusterclick clusterkeypress', activateCluster as L.LeafletEventHandlerFn)
+      pendingClusterRestores.forEach((restoreTimeout) => clearTimeout(restoreTimeout))
       hideMarkerRectangles.forEach((hideRectangles) => hideRectangles())
       for (const marker of markerList) {
         if (map.hasLayer(marker)) map.removeLayer(marker)
