@@ -61,7 +61,7 @@ export function DatasetsMap({
       <MapContainer
         center={[51.1, 10.382]}
         zoom={3}
-        scrollWheelZoom={false}
+        scrollWheelZoom
         style={{ height: mapHeight }}
         className={styles['map-container']}>
         <TileLayer
