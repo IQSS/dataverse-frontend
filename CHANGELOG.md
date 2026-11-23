@@ -12,6 +12,9 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 - Create Dataset: when a collection's input levels require a child field of a compound field (such as Country / Nation inside Geographic Coverage), show the compound field as required and ask for the child field before saving, taking the input levels from the ancestor a collection inherits them from. (#1160)
 - Manage Guestbooks: Edit guestbooks, and copy guestbooks into a prefilled creation form. (#1006)
 - Guestbook Responses page with pagination, sorting within the current page, custom question responses, and CSV download. (#1006)
+- Dataset Page: "Styled Citation" now supports selecting any CSL citation style and renders the citation formatted in that style, using citeproc-js in the browser.
+- Dataset Page: added a copy icon in front of "Cite Dataset" to support a quick copy of citation in default style.
+- File Page: added a File Metrics: File Download Count.
 - Storage Driver selection in Create Collection form, with dynamic fetching of available storage drivers from the backend.
 
 ### Changed
@@ -45,7 +48,6 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
   - a checkbox for including guestbooks from parent collections
 - Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Dataset Page: added a sidebar to show dataset reviews.
-- File Page: added a File Metrics: File Download Count.
 
 ### Changed
 

@@ -1,5 +1,5 @@
 import { useMemo, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
 import { useSession } from '@/sections/session/SessionContext'
@@ -13,7 +13,7 @@ import { RequiredFieldsFirstLayout } from './RequiredFieldsFirstLayout/RequiredF
 import { RequiredFieldsCounter } from './RequiredFieldsFirstLayout/RequiredFieldsCounter'
 import { RequiredFieldsHelper } from './RequiredFieldsFirstLayout/RequiredFieldsHelper'
 import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
-import { RouteWithParams } from '@/sections/Route.enum'
+import { QueryParamKey, Route, RouteWithParams } from '@/sections/Route.enum'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { usePrefillFieldsWithUserData } from './usePrefillFieldsWithUserData'
 import { applyPrefillValues, getUserDataPrefillValues } from './userDataPrefill'
@@ -47,6 +47,7 @@ export const MetadataForm = ({
   const { datasetRepository } = useDatasetRepositories()
   const { user } = useSession()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { t } = useTranslation('shared')
 
   const formContainerRef = useRef<HTMLDivElement>(null)
@@ -87,6 +88,17 @@ export const MetadataForm = ({
   )
 
   const handleCancel = () => {
+    if (onEditMode && datasetPersistentID) {
+      const returnParams = new URLSearchParams({
+        [QueryParamKey.PERSISTENT_ID]: datasetPersistentID
+      })
+      const version = searchParams.get(QueryParamKey.VERSION)
+      if (version) {
+        returnParams.set(QueryParamKey.VERSION, version)
+      }
+      navigate(`${Route.DATASETS}?${returnParams.toString()}`)
+      return
+    }
     navigate(RouteWithParams.COLLECTIONS(collectionId))
   }
 
