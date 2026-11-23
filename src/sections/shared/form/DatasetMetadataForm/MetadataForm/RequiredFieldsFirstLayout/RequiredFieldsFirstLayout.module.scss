@@ -1,0 +1,88 @@
+.layout {
+  margin-bottom: 1rem;
+}
+
+.section-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-right: 1rem;
+}
+
+.section-title {
+  font-weight: 600;
+}
+
+// The summary and preview take the header's own colour (dark when folded, blue when open), so
+// they keep enough contrast on the open header's light blue background
+.section-summary {
+  margin-left: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.section-preview {
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.block-group + .block-group {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--dv-bs-border-color, #dee2e6);
+}
+
+.block-heading {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--dv-bs-secondary-color, #6c757d);
+}
+
+.field-container {
+  scroll-margin-top: 70px;
+}
+
+.account-note {
+  margin: -0.5rem 0 1rem;
+}
+
+.counter {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid transparent;
+  border-radius: 2rem;
+}
+
+.counter-pending {
+  color: #664d03;
+  background-color: #fff3cd;
+  border-color: #ffecb5;
+}
+
+.counter-done {
+  color: #0f5132;
+  background-color: #d1e7dd;
+  border-color: #badbcc;
+}
+
+// The link keeps the counter's own text colour (enough contrast on the yellow background) and
+// relies on the underline to read as a link
+.counter-link {
+  padding: 0;
+  font-weight: 600;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: 0;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration-thickness: 2px;
+  }
+}

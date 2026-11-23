@@ -15,6 +15,7 @@ import {
   MetadataFieldsHelper
 } from '../../../../../src/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 import { defaultLicense } from '../../../../../src/dataset/domain/models/Dataset'
+import { CollectionInputLevel } from '../../../../../src/collection/domain/models/CollectionInputLevel'
 
 const buildMetadataField = (overrides: Partial<MetadataField> = {}): MetadataField => ({
   name: 'field',
@@ -1676,6 +1677,48 @@ describe('MetadataFieldsHelper', () => {
       expect(result.map((block) => block.name)).to.deep.equal(['citation', 'geo'])
     })
 
+    it('marks the fields the collection requires as required and orders the fields in create mode', () => {
+      const result = MetadataFieldsHelper.defineMetadataBlockInfo(
+        'create',
+        createBlocks,
+        editBlocks,
+        undefined,
+        undefined,
+        [{ datasetFieldName: 'producer.name', include: true, required: true }]
+      )
+
+      const citationFields = result.find((block) => block.name === 'citation')?.metadataFields
+
+      expect(Object.keys(citationFields ?? {})).to.deep.equal(['subject', 'title', 'producer/name'])
+      expect(citationFields?.['producer/name']).to.include({
+        name: 'producer/name',
+        isRequired: true
+      })
+      expect(result.map((block) => block.name)).to.deep.equal(['citation'])
+    })
+
+    it('applies the collection input levels together with a template in create mode', () => {
+      const result = MetadataFieldsHelper.defineMetadataBlockInfo(
+        'create',
+        createBlocks,
+        editBlocks,
+        undefined,
+        [{ name: 'citation', fields: { 'producer.name': 'Ada Lovelace' } }],
+        [{ datasetFieldName: 'bounding.box', include: true, required: true }]
+      )
+
+      const citationFields = result.find((block) => block.name === 'citation')?.metadataFields
+      const geoFields = result.find((block) => block.name === 'geo')?.metadataFields
+
+      expect(citationFields?.['producer/name']).to.include({
+        name: 'producer/name',
+        value: 'Ada Lovelace',
+        isRequired: false
+      })
+      expect(geoFields?.['bounding/box']).to.include({ name: 'bounding/box', isRequired: true })
+      expect(result.map((block) => block.name)).to.deep.equal(['citation', 'geo'])
+    })
+
     it('adds current dataset values and orders fields in edit mode', () => {
       const result = MetadataFieldsHelper.defineMetadataBlockInfo(
         'edit',
@@ -1700,6 +1743,207 @@ describe('MetadataFieldsHelper', () => {
       expect(fields.title.value).to.equal('Dataset title')
       expect(fields.subject.value).to.deep.equal(['Medicine'])
       expect(fields['producer/name'].value).to.equal('Grace Hopper')
+    })
+  })
+
+  describe('addCollectionRequiredFieldsToMetadataBlocksInfoForDisplayOnCreate', () => {
+    const titleField = buildMetadataField({
+      name: 'title',
+      displayName: 'Title',
+      title: 'Title',
+      isRequired: true,
+      displayOrder: 0
+    })
+    const keywordField = buildMetadataField({
+      name: 'keyword',
+      displayName: 'Keyword',
+      title: 'Keyword',
+      typeClass: 'compound',
+      type: 'NONE',
+      multiple: true,
+      displayOrder: 3,
+      childMetadataFields: {
+        keywordValue: buildMetadataField({
+          name: 'keywordValue',
+          displayName: 'Keyword Term',
+          title: 'Term',
+          displayOrder: 4
+        }),
+        keywordTermURI: buildMetadataField({
+          name: 'keywordTermURI',
+          displayName: 'Keyword Term URI',
+          title: 'Term URI',
+          displayOrder: 5
+        })
+      }
+    })
+    const otherIdField = buildMetadataField({
+      name: 'otherId',
+      displayName: 'Other Identifier',
+      title: 'Other Identifier',
+      typeClass: 'compound',
+      type: 'NONE',
+      multiple: true,
+      displayOnCreate: false,
+      displayOrder: 1,
+      childMetadataFields: {
+        otherIdAgency: buildMetadataField({
+          name: 'otherIdAgency',
+          displayName: 'Other Identifier Agency',
+          title: 'Agency',
+          displayOnCreate: false,
+          displayOrder: 2
+        }),
+        otherIdValue: buildMetadataField({
+          name: 'otherIdValue',
+          displayName: 'Other Identifier Identifier',
+          title: 'Identifier',
+          displayOnCreate: false,
+          displayOrder: 3
+        })
+      }
+    })
+    const coverageField = buildMetadataField({
+      name: 'coverage',
+      displayName: 'Geographic Coverage',
+      title: 'Geographic Coverage',
+      typeClass: 'compound',
+      type: 'NONE',
+      displayOnCreate: false,
+      displayOrder: 0,
+      childMetadataFields: {
+        country: buildMetadataField({
+          name: 'country',
+          displayName: 'Country / Nation',
+          title: 'Country / Nation',
+          displayOnCreate: false,
+          displayOrder: 1
+        })
+      }
+    })
+    const unitField = buildMetadataField({
+      name: 'unit',
+      displayName: 'Geographic Unit',
+      title: 'Geographic Unit',
+      displayOnCreate: false,
+      displayOrder: 2
+    })
+    const depthField = buildMetadataField({
+      name: 'coverage/Depth',
+      displayName: 'Depth',
+      title: 'Depth',
+      displayOnCreate: false,
+      displayOrder: 3
+    })
+
+    const createBlocks: MetadataBlockInfo[] = [
+      {
+        id: 1,
+        name: 'citation',
+        displayName: 'Citation Metadata',
+        displayOnCreate: true,
+        metadataFields: { title: titleField, keyword: keywordField }
+      }
+    ]
+
+    const editBlocks: MetadataBlockInfo[] = [
+      {
+        id: 1,
+        name: 'citation',
+        displayName: 'Citation Metadata',
+        displayOnCreate: true,
+        metadataFields: { title: titleField, otherId: otherIdField, keyword: keywordField }
+      },
+      {
+        id: 2,
+        name: 'geospatial',
+        displayName: 'Geospatial Metadata',
+        displayOnCreate: false,
+        metadataFields: { coverage: coverageField, unit: unitField, 'coverage/Depth': depthField }
+      }
+    ]
+
+    const requiredByCollection = (datasetFieldName: string): CollectionInputLevel => ({
+      datasetFieldName,
+      include: true,
+      required: true
+    })
+
+    const apply = (inputLevels: CollectionInputLevel[] | undefined) =>
+      MetadataFieldsHelper.addCollectionRequiredFieldsToMetadataBlocksInfoForDisplayOnCreate(
+        createBlocks,
+        editBlocks,
+        inputLevels
+      )
+
+    it('returns the create metadata blocks untouched when the collection requires nothing', () => {
+      expect(apply(undefined)).to.equal(createBlocks)
+      expect(apply([])).to.equal(createBlocks)
+      expect(
+        apply([
+          { datasetFieldName: 'keywordValue', include: true, required: false },
+          { datasetFieldName: 'otherIdValue', include: false, required: true }
+        ])
+      ).to.equal(createBlocks)
+    })
+
+    it('marks a composed field and its child field as required when the collection requires the child field', () => {
+      const result = apply([requiredByCollection('keywordValue')])
+      const keyword = result[0].metadataFields.keyword
+
+      expect(keyword.isRequired).to.equal(true)
+      expect(keyword.childMetadataFields?.keywordValue.isRequired).to.equal(true)
+      expect(keyword.childMetadataFields?.keywordTermURI.isRequired).to.equal(false)
+      expect(Object.keys(result[0].metadataFields)).to.deep.equal(['title', 'keyword'])
+      expect(result.map((block) => block.name)).to.deep.equal(['citation'])
+
+      // The metadata blocks given are not changed
+      expect(createBlocks[0].metadataFields.keyword.isRequired).to.equal(false)
+      expect(keywordField.childMetadataFields?.keywordValue.isRequired).to.equal(false)
+    })
+
+    it('copies a composed field missing from the create metadata blocks when the collection requires one of its child fields', () => {
+      const result = apply([requiredByCollection('otherIdValue')])
+      const otherId = result[0].metadataFields.otherId
+
+      expect(Object.keys(result[0].metadataFields)).to.deep.equal(['title', 'keyword', 'otherId'])
+      expect(otherId.isRequired).to.equal(true)
+      expect(otherId.childMetadataFields?.otherIdValue.isRequired).to.equal(true)
+      expect(otherId.childMetadataFields?.otherIdAgency.isRequired).to.equal(false)
+      expect(result[0].metadataFields.keyword.isRequired).to.equal(false)
+    })
+
+    it('copies the block too when it is missing from the create metadata blocks', () => {
+      const result = apply([requiredByCollection('country')])
+      const geospatial = result.find((block) => block.name === 'geospatial')
+
+      expect(result.map((block) => block.name)).to.deep.equal(['citation', 'geospatial'])
+      expect(geospatial).to.include({ id: 2, displayName: 'Geospatial Metadata' })
+      expect(Object.keys(geospatial?.metadataFields ?? {})).to.deep.equal(['coverage'])
+      expect(geospatial?.metadataFields.coverage.isRequired).to.equal(true)
+      expect(geospatial?.metadataFields.coverage.childMetadataFields?.country.isRequired).to.equal(
+        true
+      )
+    })
+
+    it('adds a field the collection requires that is missing from the create metadata blocks', () => {
+      const result = apply([requiredByCollection('unit')])
+      const geospatial = result.find((block) => block.name === 'geospatial')
+
+      expect(Object.keys(geospatial?.metadataFields ?? {})).to.deep.equal(['unit'])
+      expect(geospatial?.metadataFields.unit.isRequired).to.equal(true)
+    })
+
+    it('matches the field names with dots the collection uses', () => {
+      const result = apply([requiredByCollection('coverage.Depth')])
+      const geospatial = result.find((block) => block.name === 'geospatial')
+
+      expect(Object.keys(geospatial?.metadataFields ?? {})).to.deep.equal(['coverage/Depth'])
+      expect(geospatial?.metadataFields['coverage/Depth'].isRequired).to.equal(true)
+    })
+
+    it('ignores field names it does not know', () => {
+      expect(apply([requiredByCollection('unknownField')])).to.deep.equal(createBlocks)
     })
   })
 

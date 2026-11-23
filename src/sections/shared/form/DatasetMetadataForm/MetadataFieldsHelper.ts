@@ -24,6 +24,7 @@ import {
   TemplateFieldInfo,
   TemplateFieldValue
 } from '../../../../templates/domain/models/TemplateInfo'
+import { CollectionInputLevel } from '../../../../collection/domain/models/CollectionInputLevel'
 
 export type DatasetMetadataFormValues = Record<string, MetadataBlockFormValues>
 
@@ -600,6 +601,8 @@ export class MetadataFieldsHelper {
    * In create mode, if a template is provided, it adds the fields and values from the template to the metadata blocks info.
    * In edit mode, it adds the current dataset values to the metadata blocks info.
    * Normalizes field names by replacing dots with slashes to avoid issues with react-hook-form. (e.g. coverage.Spectral.MinimumWavelength -> coverage/Spectral/MinimumWavelength)
+   * In create mode, if the collection input levels are provided, it marks as required the fields the collection requires
+   * that the metadata blocks info for display on create does not report as such (see addCollectionRequiredFieldsToMetadataBlocksInfoForDisplayOnCreate).
    * Finally, it orders the fields by display order.
    */
   public static defineMetadataBlockInfo(
@@ -607,7 +610,8 @@ export class MetadataFieldsHelper {
     metadataBlocksInfoForDisplayOnCreate: MetadataBlockInfo[],
     metadataBlocksInfoForDisplayOnEdit: MetadataBlockInfo[],
     datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks | undefined,
-    templateMetadataBlocks: DatasetMetadataBlock[] | undefined
+    templateMetadataBlocks: DatasetMetadataBlock[] | undefined,
+    collectionInputLevels?: CollectionInputLevel[]
   ): MetadataBlockInfo[] {
     // Replace field names with dots to slashes, to avoid issues with the form library react-hook-form
     const normalizedMetadataBlocksInfoForDisplayOnCreate =
@@ -618,9 +622,19 @@ export class MetadataFieldsHelper {
 
     // CREATE MODE
     if (mode === 'create') {
+      // Mark as required the fields the collection requires, adding the ones missing from the metadata blocks info for create
+      const metadataBlocksInfoWithCollectionRequiredFields =
+        this.addCollectionRequiredFieldsToMetadataBlocksInfoForDisplayOnCreate(
+          normalizedMetadataBlocksInfoForDisplayOnCreate,
+          normalizedMetadataBlocksInfoForDisplayOnEdit,
+          collectionInputLevels
+        )
+
       // If we have no template, we just return the metadata blocks info for create with normalized field names
       if (!templateMetadataBlocks) {
-        return normalizedMetadataBlocksInfoForDisplayOnCreate
+        return collectionInputLevels?.length
+          ? this.orderFieldsByDisplayOrder(metadataBlocksInfoWithCollectionRequiredFields)
+          : metadataBlocksInfoWithCollectionRequiredFields
       }
 
       // 1) Normalize dataset template fields
@@ -630,7 +644,7 @@ export class MetadataFieldsHelper {
       // 2) Add missing fields from the template to the metadata blocks info for create
       const metadataBlocksInfoWithAddedFieldsFromTemplate =
         this.addFieldsFromTemplateToMetadataBlocksInfoForDisplayOnCreate(
-          normalizedMetadataBlocksInfoForDisplayOnCreate,
+          metadataBlocksInfoWithCollectionRequiredFields,
           normalizedMetadataBlocksInfoForDisplayOnEdit,
           normalizedDatasetTemplateMetadataBlocksValues
         )
@@ -668,6 +682,88 @@ export class MetadataFieldsHelper {
 
       return metadataBlocksInfoOrdered
     }
+  }
+
+  /**
+   * A collection can require a single child field of a composed field, such as Country / Nation inside
+   * Geographic Coverage. Dataverse then refuses a dataset that leaves it empty, but the metadata blocks
+   * info for display on create reports the composed field as optional, or leaves it out altogether.
+   *
+   * This marks as required every field the collection requires and every composed field with a child
+   * field the collection requires, copying the field (and its block) from the metadata blocks info for
+   * display on edit when it is missing from the one for display on create, so the form asks for it
+   * before the dataset is sent.
+   */
+  public static addCollectionRequiredFieldsToMetadataBlocksInfoForDisplayOnCreate(
+    metadataBlocksInfoForDisplayOnCreate: MetadataBlockInfo[],
+    metadataBlocksInfoForDisplayOnEdit: MetadataBlockInfo[],
+    collectionInputLevels: CollectionInputLevel[] | undefined
+  ): MetadataBlockInfo[] {
+    const requiredFieldNames = new Set(
+      (collectionInputLevels ?? [])
+        .filter((inputLevel) => inputLevel.include && inputLevel.required)
+        .map((inputLevel) => this.replaceDotWithSlash(inputLevel.datasetFieldName))
+    )
+
+    if (requiredFieldNames.size === 0) {
+      return metadataBlocksInfoForDisplayOnCreate
+    }
+
+    const createCopy: MetadataBlockInfo[] = structuredClone(metadataBlocksInfoForDisplayOnCreate)
+
+    const createMap = createCopy.reduce<Record<string, MetadataBlockInfo>>((acc, block) => {
+      acc[block.name] = block
+      return acc
+    }, {})
+
+    for (const editBlock of metadataBlocksInfoForDisplayOnEdit) {
+      for (const editField of Object.values(editBlock.metadataFields)) {
+        const isRequiredByCollection = requiredFieldNames.has(editField.name)
+        const childFieldNamesRequiredByCollection = Object.values(
+          editField.childMetadataFields ?? {}
+        )
+          .map((childField) => childField.name)
+          .filter((childFieldName) => requiredFieldNames.has(childFieldName))
+
+        if (!isRequiredByCollection && childFieldNamesRequiredByCollection.length === 0) {
+          continue
+        }
+
+        // We ensure the block exists in the "create" array
+        let createBlock = createMap[editBlock.name]
+
+        if (!createBlock) {
+          createBlock = {
+            id: editBlock.id,
+            name: editBlock.name,
+            displayName: editBlock.displayName,
+            metadataFields: {},
+            displayOnCreate: editBlock.displayOnCreate
+          }
+          createMap[editBlock.name] = createBlock
+          createCopy.push(createBlock)
+        }
+
+        // We ensure the field exists in the "create" block, copying it from "edit" if needed
+        let createField = createBlock.metadataFields[editField.name]
+
+        if (!createField) {
+          createField = structuredClone(editField)
+          createBlock.metadataFields[editField.name] = createField
+        }
+
+        createField.isRequired = true
+
+        for (const childFieldName of childFieldNamesRequiredByCollection) {
+          const childField = createField.childMetadataFields?.[childFieldName]
+          if (childField) {
+            childField.isRequired = true
+          }
+        }
+      }
+    }
+
+    return createCopy
   }
 
   public static addFieldsFromTemplateToMetadataBlocksInfoForDisplayOnCreate(

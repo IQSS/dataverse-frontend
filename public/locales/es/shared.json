@@ -93,7 +93,34 @@
       "submitting": "Formulario enviándose",
       "submissionSuccess": "Envío del formulario exitoso"
     },
-    "saveDataset": "Guardar dataset"
+    "saveDataset": "Guardar dataset",
+    "requiredFieldsFirst": {
+      "stillNeeded": {
+        "title": "Pendientes",
+        "summary_one": "{{count}} campo obligatorio está vacío",
+        "summary_other": "{{count}} campos obligatorios están vacíos",
+        "allFilled": "Todos los campos obligatorios están completos"
+      },
+      "completed": {
+        "title": "Completados",
+        "summary": "Campos obligatorios ya completados, desde tu cuenta o una plantilla",
+        "fromAccount": "Desde tu cuenta:",
+        "orcid": "ORCID iD {{orcid}}",
+        "ror": "ROR ID {{ror}}"
+      },
+      "optional": {
+        "title": "Campos opcionales",
+        "summary_one": "{{count}} campo",
+        "summary_other": "{{count}} campos",
+        "more": "y {{count}} más"
+      },
+      "counter": {
+        "stillEmpty_one": "{{count}} campo obligatorio aún vacío",
+        "stillEmpty_other": "{{count}} campos obligatorios aún vacíos",
+        "goToNext": "Ir al siguiente",
+        "allFilled": "Todos los campos obligatorios están completos"
+      }
+    }
   },
   "collectionForm": {
     "fields": {

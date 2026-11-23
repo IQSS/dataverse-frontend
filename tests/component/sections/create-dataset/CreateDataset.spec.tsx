@@ -9,6 +9,7 @@ import { CollectionMother } from '../../collection/domain/models/CollectionMothe
 import { TemplateMother } from '@tests/component/sections/templates/TemplateMother'
 import { WithRepositories } from '@tests/component/WithRepositories'
 import { DatasetTypeMother } from '@tests/component/dataset/domain/models/DatasetTypeMother'
+import { UpwardHierarchyNodeMother } from '../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const templateRepository: TemplateRepository = {} as TemplateRepository
@@ -456,6 +457,89 @@ describe('Create Dataset', () => {
       cy.get('@datasetTypeSelect').within(() => {
         cy.get('[role="menu"]').should('not.be.visible')
       })
+    })
+  })
+
+  describe('fields required by the collection', () => {
+    const requireKeywordTerm = [{ datasetFieldName: 'keywordValue', include: true, required: true }]
+
+    const mount = () =>
+      mountCreateDataset(
+        <CreateDataset
+          templateRepository={templateRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionId={'test-collectionId'}
+        />
+      )
+
+    const subCollectionOf = (parentId: string) =>
+      CollectionMother.create({
+        name: COLLECTION_NAME,
+        id: 'test-alias',
+        isMetadataBlockRoot: false,
+        inputLevels: [],
+        hierarchy: UpwardHierarchyNodeMother.createSubCollection({
+          name: COLLECTION_NAME,
+          id: 'test-alias',
+          parent: UpwardHierarchyNodeMother.createCollection({ name: 'Parent', id: parentId })
+        })
+      })
+
+    it('gives the input levels of the collection to the form, so a required part of a grouped field makes the field required', () => {
+      collectionRepository.getById = cy.stub().resolves(
+        CollectionMother.create({
+          name: COLLECTION_NAME,
+          id: 'test-alias',
+          inputLevels: requireKeywordTerm
+        })
+      )
+
+      mount()
+
+      cy.findByTestId('still-needed-section').within(() => {
+        cy.findByText('Keyword').should('exist')
+      })
+    })
+
+    it('takes the input levels from the ancestor a collection inherits its metadata settings from', () => {
+      const parentCollection = CollectionMother.create({
+        name: 'Parent',
+        id: 'parent-alias',
+        isMetadataBlockRoot: true,
+        inputLevels: requireKeywordTerm
+      })
+      collectionRepository.getById = cy
+        .stub()
+        .callsFake((id: string) =>
+          Promise.resolve(
+            id === 'parent-alias' ? parentCollection : subCollectionOf('parent-alias')
+          )
+        )
+
+      mount()
+
+      cy.findByTestId('still-needed-section').within(() => {
+        cy.findByText('Keyword').should('exist')
+      })
+      cy.wrap(collectionRepository.getById).should('have.been.calledWith', 'parent-alias')
+    })
+
+    it('falls back to the input levels of the collection itself when its ancestor cannot be fetched', () => {
+      collectionRepository.getById = cy
+        .stub()
+        .callsFake((id: string) =>
+          id === 'parent-alias'
+            ? Promise.reject(new Error('Not allowed to see the parent collection'))
+            : Promise.resolve(subCollectionOf('parent-alias'))
+        )
+
+      mount()
+
+      cy.findByTestId('metadata-form').should('exist')
+      cy.findByTestId('still-needed-section').within(() => {
+        cy.findByText('Keyword').should('not.exist')
+      })
+      cy.findByTestId('optional-fields-section').should('exist')
     })
   })
 })

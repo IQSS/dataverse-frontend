@@ -261,8 +261,10 @@ describe('DatasetMetadataForm', () => {
         />
       </WithRepositories>
     )
-    cy.findByText(/Citation Metadata/i).should('exist')
-    cy.findByText(/Geospatial Metadata/i).should('exist')
+    // On create mode a block is named above its required fields and again as the folded section
+    // of its optional fields, so a block name can appear more than once
+    cy.findAllByText(/Citation Metadata/i).should('exist')
+    cy.findAllByText(/Geospatial Metadata/i).should('exist')
     cy.findByText(/Social Sciences and Humanities Metadata/i).should('not.exist')
     cy.findByText(/Astronomy and Astrophysics Metadata/i).should('not.exist')
     cy.findByText(/Life Sciences Metadata/i).should('not.exist')
@@ -282,8 +284,8 @@ describe('DatasetMetadataForm', () => {
       )
     })
     it('renders the correct form fields from Citation Metadata Block', () => {
-      // 1st Accordion with Citation Metadata
-      cy.get('.accordion > :nth-child(1)').within(() => {
+      // The required fields of the block come first, in the "Still needed" section, under the block name
+      cy.findByTestId('still-needed-section').within(() => {
         cy.findByText(/Citation Metadata/i).should('exist')
 
         cy.findByText('Title').should('exist')
@@ -375,6 +377,15 @@ describe('DatasetMetadataForm', () => {
         cy.findByText('Subject2').should('exist')
         cy.findByText('Subject3').should('exist')
         cy.findByText('Subject4').should('exist')
+      })
+
+      // The optional fields of the block are folded away, still grouped under the block name
+      cy.findByTestId('optional-fields-section').within(() => {
+        // Open the optional fields and wait for them to open
+        cy.get('.accordion-button').first().click()
+        cy.wait(300)
+
+        cy.findByText(/Citation Metadata/i).should('exist')
 
         // Composed field
         cy.findByText('Keyword')
@@ -444,18 +455,9 @@ describe('DatasetMetadataForm', () => {
     })
 
     it('renders the correct form fields from Geospatial Metadata Block', () => {
-      // 2nd Accordion with Geospatial Metadata
-      cy.get('.accordion > :nth-child(2)').within(() => {
-        // Open accordion and wait for it to open
-        cy.get('.accordion-button').click()
-        cy.wait(300)
-
+      // Geographic Coverage is required, so it is pulled into the "Still needed" section under the block name
+      cy.findByTestId('still-needed-section').within(() => {
         cy.findByText(/Geospatial Metadata/i).should('exist')
-
-        cy.findByLabelText('Geographic Unit')
-          .should('exist')
-          .should('have.attr', 'aria-required', 'false')
-          .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
         // Composed field
         cy.findByText('Geographic Coverage')
@@ -487,6 +489,20 @@ describe('DatasetMetadataForm', () => {
 
             cy.findByLabelText(`Add Geographic Coverage`).should('not.exist')
           })
+      })
+
+      // Geographic Unit is optional, so it stays in the folded section of its block
+      cy.findByTestId('optional-fields-section').within(() => {
+        // Open the optional fields, then the block, and wait for them to open
+        cy.get('.accordion-button').first().click()
+        cy.wait(300)
+        cy.findByText(/Geospatial Metadata/i).click()
+        cy.wait(300)
+
+        cy.findByLabelText('Geographic Unit')
+          .should('exist')
+          .should('have.attr', 'aria-required', 'false')
+          .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
       })
     })
     it('renders Save Dataset and Cancel buttons once', () => {
@@ -1238,8 +1254,6 @@ describe('DatasetMetadataForm', () => {
           />
         </WithRepositories>
       )
-      // Fill one non required field to undisable the Save button, is disabled if fields are not dirty
-      cy.findByLabelText(/^Notes/i).type('Some note')
 
       cy.findByText(/Save Dataset/i).click()
 
@@ -1356,16 +1370,9 @@ describe('DatasetMetadataForm', () => {
         />
       </WithRepositories>
     )
-    cy.get('.accordion > :nth-child(1)').within(() => {
-      cy.findByText('Keyword')
-        .should('exist')
-        .closest('.row')
-        .within(() => {
-          cy.findByLabelText('Term URI', { exact: true }).type('html://test.com')
 
-          cy.findByText('Keyword Term URI html://test.com is not a valid URL.').should('exist')
-        })
-
+    // The required fields, from the Citation and the Astrophysics blocks, are in the "Still needed" section
+    cy.findByTestId('still-needed-section').within(() => {
       cy.findByText('Description')
         .should('exist')
         .closest('.row')
@@ -1381,13 +1388,6 @@ describe('DatasetMetadataForm', () => {
           cy.findByLabelText(/^E-mail/i).type('test')
           cy.findByText('Point of Contact E-mail test is not a valid email.').should('exist')
         })
-    })
-
-    // 3rd should be the Astronomy and Astrophysics Metadata block
-    cy.get('.accordion > :nth-child(3)').within(() => {
-      // Open accordion and wait for it to open
-      cy.get('.accordion-button').click()
-      cy.wait(300)
 
       cy.findByText('Object Density').should('exist')
       cy.findByLabelText(/Object Density/)
@@ -1400,6 +1400,22 @@ describe('DatasetMetadataForm', () => {
         .should('exist')
         .type('30.5')
       cy.findByText('Object Count is not a valid integer.').should('exist')
+    })
+
+    // The optional fields are folded away, grouped by block
+    cy.findByTestId('optional-fields-section').within(() => {
+      // Open the optional fields and wait for them to open
+      cy.get('.accordion-button').first().click()
+      cy.wait(300)
+
+      cy.findByText('Keyword')
+        .should('exist')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText('Term URI', { exact: true }).type('html://test.com')
+
+          cy.findByText('Keyword Term URI html://test.com is not a valid URL.').should('exist')
+        })
     })
   })
 
@@ -1418,16 +1434,9 @@ describe('DatasetMetadataForm', () => {
         />
       </WithRepositories>
     )
-    cy.get('.accordion > :nth-child(1)').within(() => {
-      cy.findByText('Keyword')
-        .should('exist')
-        .closest('.row')
-        .within(() => {
-          cy.findByLabelText('Term URI', { exact: true }).type('http://test.com')
 
-          cy.findByText('Keyword Term URI http://test.com is not a valid URL.').should('not.exist')
-        })
-
+    // The required fields, from the Citation and the Astrophysics blocks, are in the "Still needed" section
+    cy.findByTestId('still-needed-section').within(() => {
       cy.findByText('Description')
         .should('exist')
         .closest('.row')
@@ -1445,13 +1454,6 @@ describe('DatasetMetadataForm', () => {
             'not.exist'
           )
         })
-    })
-
-    // 3rd should be the Astronomy and Astrophysics Metadata block
-    cy.get('.accordion > :nth-child(3)').within(() => {
-      // Open accordion and wait for it to open
-      cy.get('.accordion-button').click()
-      cy.wait(300)
 
       cy.findByText('Object Density').should('exist')
       cy.findByLabelText(/Object Density/)
@@ -1464,6 +1466,26 @@ describe('DatasetMetadataForm', () => {
         .should('exist')
         .type('30')
       cy.findByText('Object Count is not a valid integer.').should('not.exist')
+    })
+
+    // The optional fields are folded away, grouped by block
+    cy.findByTestId('optional-fields-section').within(() => {
+      // Open the optional fields and wait for them to open
+      cy.get('.accordion-button').first().click()
+      cy.wait(300)
+
+      cy.findByText('Keyword')
+        .should('exist')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText('Term URI', { exact: true }).type('http://test.com')
+
+          cy.findByText('Keyword Term URI http://test.com is not a valid URL.').should('not.exist')
+        })
+
+      // The Astronomy and Astrophysics block is folded inside the optional fields
+      cy.findByText('Astronomy and Astrophysics Metadata').click()
+      cy.wait(300)
 
       cy.findByText('Some Date').should('exist')
       cy.findByLabelText(/Some Date/)
@@ -1557,7 +1579,7 @@ describe('DatasetMetadataForm', () => {
     cy.findByText(/Cancel/i).click()
   })
 
-  it('open closed accordion that has fields with errors on it and scrolls to the focused field', () => {
+  it('opens the folded section that has fields with errors on it and scrolls to the focused field', () => {
     cy.customMount(
       <WithRepositories datasetRepository={datasetRepository}>
         <DatasetMetadataForm
@@ -1568,11 +1590,10 @@ describe('DatasetMetadataForm', () => {
       </WithRepositories>
     )
 
-    // Fill one non required field to undisable the Save button, is disabled if fields are not dirty
-    cy.findByLabelText('Notes').type('Some note')
-
-    // We are closing the accordion as it is open by default
-    cy.get(':nth-child(1) > .accordion-header > .accordion-button').click()
+    // We are folding the "Still needed" section as it is open by default
+    cy.findByTestId('still-needed-section').within(() => {
+      cy.get('.accordion-button').first().click()
+    })
 
     cy.wait(300)
 
@@ -1582,6 +1603,78 @@ describe('DatasetMetadataForm', () => {
     cy.findByLabelText(/^Title/i)
       .should('have.focus')
       .should('be.visible')
+  })
+
+  describe('when the collection requires a part of a grouped field', () => {
+    // The Keyword Term (Keyword is displayed on create as optional) and the Other Identifier Identifier
+    // (Other Identifier is not displayed on create at all)
+    const collectionInputLevels = [
+      { datasetFieldName: 'keywordValue', include: true, required: true },
+      { datasetFieldName: 'otherIdValue', include: true, required: true }
+    ]
+
+    beforeEach(() => {
+      cy.customMount(
+        <WithRepositories datasetRepository={datasetRepository}>
+          <DatasetMetadataForm
+            mode="create"
+            collectionId="root"
+            metadataBlockInfoRepository={metadataBlockInfoRepository}
+            collectionInputLevels={collectionInputLevels}
+          />
+        </WithRepositories>
+      )
+    })
+
+    it('shows the grouped fields among the required ones, with only the required part marked as required', () => {
+      cy.findByTestId('still-needed-section').within(() => {
+        cy.findByText('Keyword')
+          .closest('.row')
+          .within(() => {
+            cy.findByLabelText(/^Term\s*\*?$/).should('have.attr', 'aria-required', 'true')
+            cy.findByLabelText(/^Term URI/).should('have.attr', 'aria-required', 'false')
+          })
+
+        cy.findByText('Other Identifier')
+          .closest('.row')
+          .within(() => {
+            cy.findByLabelText(/^Identifier\s*\*?$/).should('have.attr', 'aria-required', 'true')
+            cy.findByLabelText(/^Agency/).should('have.attr', 'aria-required', 'false')
+          })
+      })
+
+      cy.findByTestId('optional-fields-section').within(() => {
+        cy.findByText('Keyword').should('not.exist')
+        cy.findByText('Other Identifier').should('not.exist')
+      })
+
+      // Nothing is pre-filled here (no user repository), so the eight required fields are empty
+      cy.findByTestId('required-fields-counter').should(
+        'contain.text',
+        '8 required fields still empty'
+      )
+    })
+
+    it('asks for the required part when saving and counts the grouped field as filled once it is typed', () => {
+      cy.findByText('Save Dataset').click()
+
+      cy.findByText('Keyword Term is required').should('exist')
+      cy.findByText('Other Identifier Identifier is required').should('exist')
+
+      cy.findByText('Keyword')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText(/^Term\s*\*?$/).type('Health')
+        })
+
+      cy.findByText('Keyword Term is required').should('not.exist')
+      // The field stays where it is while typing (sections are only split when the form loads), so the
+      // counter is what tells the user the grouped field now counts as filled
+      cy.findByTestId('required-fields-counter').should(
+        'contain.text',
+        '7 required fields still empty'
+      )
+    })
   })
 
   describe('When dataset creation fails', () => {
@@ -1603,8 +1696,13 @@ describe('DatasetMetadataForm', () => {
         </WithRepositories>
       )
 
-      // Fill one non required field to undisable the Save button, is disabled if fields are not dirty
-      cy.findByLabelText('Title').type('Some note')
+      // No field is required in this collection, so every field is folded away as optional
+      cy.findByTestId('optional-fields-section').within(() => {
+        cy.get('.accordion-button').first().click()
+        cy.wait(300)
+
+        cy.findByLabelText('Title').type('Some note')
+      })
 
       cy.findByText(/Save Dataset/i).click()
 
@@ -2062,10 +2160,11 @@ describe('DatasetMetadataForm', () => {
       // The astro metadata block is not part of the fields for display on create
       // but as the template includes a field from that block, the block should be added to the form and the field should be shown and pre-filled
 
-      // We need to open the astro accordion as it is closed by default and the field is inside it
-      cy.get('.accordion > :nth-child(2)').within(() => {
-        // Open accordion and wait for it to open
-        cy.get('.accordion-button').click()
+      // Its fields are optional, so they sit in the folded optional fields, inside the block's own folded section
+      cy.findByTestId('optional-fields-section').within(() => {
+        cy.get('.accordion-button').first().click()
+        cy.wait(300)
+        cy.findByText('Astronomy and Astrophysics Metadata').click()
         cy.wait(300)
 
         cy.findByLabelText(/Object Density/)
