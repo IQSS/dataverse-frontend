@@ -100,13 +100,9 @@ jobs:
           name: built-site
           path: ./dist
 
-      - name: Get branch name
-        id: branch-name
-        uses: tj-actions/branch-names@v6
-
       - name: Build war file
         working-directory: ./deployment/payara
-        run: mvn package "-Dversion=${{ steps.branch-name.outputs.current_branch }}"
+        run: mvn package "-Dversion=${{ github.ref_name }}"
 
       # For BETA environment
       - name: Copy war file to remote BETA instance
