@@ -43,6 +43,23 @@ const almostCoincidentItems: GeoDatasetItem[] = [
   }
 ]
 
+const terminalAndNearbyItems: GeoDatasetItem[] = [
+  ...terminalItems,
+  {
+    persistentId: 'doi:10.1234/nearby',
+    name: 'Nearby dataset',
+    detailsPageUrl: '#nearby',
+    authors: 'Nearby Author',
+    publicationDate: '2026-03-03',
+    bboxes: [
+      [
+        [52.7999, 8.4999],
+        [52.8001, 8.5001]
+      ]
+    ]
+  }
+]
+
 const multiBoundingBoxItem: GeoDatasetItem = {
   persistentId: 'doi:10.1234/multiple-boxes',
   name: 'Dataset with multiple bounding boxes',
@@ -169,6 +186,21 @@ describe('DatasetsMap marker clusters', () => {
     cy.findByRole('spinbutton', { name: 'Dataset number, 1 to 2' }).clear().type('1')
     cy.findByRole('link', { name: 'First colocated dataset' }).should('exist')
     cy.get('.leaflet-container').should('not.have.class', 'leaflet-zoom-anim')
+  })
+
+  it('keeps a terminal marker outside the clustering logic while its popup is open', () => {
+    mountMap({}, terminalAndNearbyItems)
+
+    getSettledCluster().click()
+    cy.findByRole('link', { name: 'First colocated dataset' }).should('exist')
+
+    for (let zoom = 0; zoom < 4; zoom++) {
+      cy.get('.leaflet-control-zoom-out').click()
+      cy.wait(300)
+    }
+
+    cy.get('.dataset-map-terminal-marker').should('have.length', 1).and('contain.text', '2')
+    cy.findByRole('link', { name: 'First colocated dataset' }).should('exist')
   })
 
   it('supports custom tile-layer properties', () => {

@@ -32,6 +32,18 @@ interface ClusterActivationEvent extends L.LeafletEvent {
   originalEvent?: KeyboardEvent
 }
 
+interface DisplayedTerminalPopup extends TerminalPopupState {
+  onClose: () => void
+}
+
+interface ActiveTerminalMarker {
+  marker: L.Marker
+  childMarkers: L.Marker[]
+  popup: DisplayedTerminalPopup
+  restoreTimeout?: ReturnType<typeof setTimeout>
+  restored: boolean
+}
+
 export function MarkerClusterGroup({
   items,
   colors,
@@ -39,7 +51,7 @@ export function MarkerClusterGroup({
   markerPlacement
 }: Props) {
   const map = useMap()
-  const [terminalPopup, setTerminalPopup] = useState<TerminalPopupState | null>(null)
+  const [terminalPopup, setTerminalPopup] = useState<DisplayedTerminalPopup | null>(null)
 
   const boundingBoxColor = colors?.boundingBox ?? '#3388ff'
   const pinPrimary = colors?.pinPrimary ?? '#3388ff'
@@ -73,6 +85,7 @@ export function MarkerClusterGroup({
     const itemByMarker = new Map<L.Marker, IndexedDatasetMarker>()
     const hideMarkerRectangles: (() => void)[] = []
     const pendingClusterRestores = new Set<ReturnType<typeof setTimeout>>()
+    let activeTerminalMarker: ActiveTerminalMarker | null = null
     const cluster = L.markerClusterGroup({
       spiderfyOnMaxZoom: false,
       zoomToBoundsOnClick: false,
@@ -173,6 +186,70 @@ export function MarkerClusterGroup({
       return marker
     })
 
+    const restoreTerminalMarker = (activeMarker: ActiveTerminalMarker) => {
+      if (activeMarker.restored) return
+
+      activeMarker.restored = true
+      map.removeLayer(activeMarker.marker)
+      cluster.addLayers(activeMarker.childMarkers)
+      if (activeTerminalMarker === activeMarker) activeTerminalMarker = null
+    }
+
+    const scheduleTerminalMarkerRestore = (activeMarker: ActiveTerminalMarker) => {
+      if (activeMarker.restored || activeMarker.restoreTimeout !== undefined) return
+
+      // lets another clicked marker open before reclustering this one.
+      const restoreTimeout = setTimeout(() => {
+        pendingClusterRestores.delete(restoreTimeout)
+        activeMarker.restoreTimeout = undefined
+        restoreTerminalMarker(activeMarker)
+      }, 0)
+      activeMarker.restoreTimeout = restoreTimeout
+      pendingClusterRestores.add(restoreTimeout)
+    }
+
+    const keepTerminalMarkerOpen = (markerCluster: L.MarkerCluster, popup: TerminalPopupState) => {
+      const childMarkers = markerCluster.getAllChildMarkers()
+
+      if (activeTerminalMarker) restoreTerminalMarker(activeTerminalMarker)
+
+      cluster.removeLayers(childMarkers)
+      const marker = L.marker(popup.position, {
+        icon: createMarkerPinIcon(
+          childMarkers.length,
+          'dataset-map-terminal-marker',
+          terminalPinColors
+        )
+      })
+      const displayedPopup: DisplayedTerminalPopup = {
+        ...popup,
+        onClose: () => {
+          setTerminalPopup((currentPopup) =>
+            currentPopup === displayedPopup ? null : currentPopup
+          )
+          scheduleTerminalMarkerRestore(activeMarker)
+        }
+      }
+      const activeMarker: ActiveTerminalMarker = {
+        marker,
+        childMarkers,
+        popup: displayedPopup,
+        restored: false
+      }
+
+      marker.on('click', () => {
+        if (activeMarker.restoreTimeout !== undefined) {
+          clearTimeout(activeMarker.restoreTimeout)
+          pendingClusterRestores.delete(activeMarker.restoreTimeout)
+          activeMarker.restoreTimeout = undefined
+        }
+        if (!activeMarker.restored) setTerminalPopup(activeMarker.popup)
+      })
+      marker.addTo(map)
+      activeTerminalMarker = activeMarker
+      setTerminalPopup(displayedPopup)
+    }
+
     const activateCluster = (event: ClusterActivationEvent) => {
       const isEnterKeyActivation =
         event.type === 'clusterkeypress' && event.originalEvent?.keyCode === 13
@@ -201,7 +278,10 @@ export function MarkerClusterGroup({
           .map(({ item, bboxes }) => ({ item, bboxes }))
 
         if (clusterItems.length > 0) {
-          setTerminalPopup({ position: markerCluster.getLatLng(), items: clusterItems })
+          keepTerminalMarkerOpen(markerCluster, {
+            position: markerCluster.getLatLng(),
+            items: clusterItems
+          })
         }
       }
 
@@ -222,6 +302,10 @@ export function MarkerClusterGroup({
     return () => {
       cluster.off('clusterclick clusterkeypress', activateCluster as L.LeafletEventHandlerFn)
       pendingClusterRestores.forEach((restoreTimeout) => clearTimeout(restoreTimeout))
+      if (activeTerminalMarker) {
+        activeTerminalMarker.restored = true
+        map.removeLayer(activeTerminalMarker.marker)
+      }
       hideMarkerRectangles.forEach((hideRectangles) => hideRectangles())
       for (const marker of markerList) {
         if (map.hasLayer(marker)) map.removeLayer(marker)
@@ -252,7 +336,7 @@ export function MarkerClusterGroup({
       position={terminalPopup.position}
       items={terminalPopup.items}
       boundingBoxColor={boundingBoxColor}
-      onClose={() => setTerminalPopup(null)}
+      onClose={terminalPopup.onClose}
     />
   ) : null
 }
