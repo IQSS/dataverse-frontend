@@ -1,9 +1,11 @@
+import i18n from '@/i18n'
+
 export class DateHelper {
   static toDisplayFormat(date: Date): string {
     if (!date) {
       return ''
     }
-    return date.toLocaleDateString(Intl.DateTimeFormat().resolvedOptions().locale, {
+    return date.toLocaleDateString(DateHelper.getActiveLocale(), {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -13,8 +15,7 @@ export class DateHelper {
     if (!date) {
       return ''
     }
-    const locale = Intl.DateTimeFormat().resolvedOptions().locale
-    return date.toLocaleString(locale, {
+    return date.toLocaleString(DateHelper.getActiveLocale(), {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -29,7 +30,7 @@ export class DateHelper {
     if (!date) {
       return ''
     }
-    return date.toLocaleDateString(Intl.DateTimeFormat().resolvedOptions().locale, {
+    return date.toLocaleDateString(DateHelper.getActiveLocale(), {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
@@ -38,5 +39,9 @@ export class DateHelper {
 
   static toISO8601Format(date: Date): string {
     return date.toISOString().split('T')[0]
+  }
+
+  private static getActiveLocale(): string | undefined {
+    return i18n.resolvedLanguage || i18n.languages[0]
   }
 }

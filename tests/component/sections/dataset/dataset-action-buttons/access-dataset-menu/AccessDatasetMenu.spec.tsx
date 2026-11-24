@@ -72,6 +72,35 @@ function withAccessRepository(
 }
 
 describe('AccessDatasetMenu', () => {
+  it('updates download sizes when the interface language changes', () => {
+    cy.customMount(
+      withAccessRepository(
+        <Suspense fallback="loading">
+          <TranslationPreloader>
+            <AccessDatasetMenu
+              fileDownloadSizes={[
+                DatasetFileDownloadSizeMother.createOriginal({
+                  value: 180.3,
+                  unit: FileSizeUnit.KILOBYTES
+                })
+              ]}
+              hasOneTabularFileAtLeast={false}
+              version={DatasetVersionMother.createReleased()}
+              permissions={DatasetPermissionsMother.createWithFilesDownloadAllowed()}
+              fileStore="s3"
+              persistentId="doi:10.5072/FK2/ABCDEFGH"
+            />
+          </TranslationPreloader>
+        </Suspense>
+      )
+    )
+
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.findByText(/180\.3 KB/).should('be.visible')
+    cy.setLanguage('es')
+    cy.findByText(/180,3 KB/).should('be.visible')
+  })
+
   it('renders the AccessDatasetMenu if the user has download files permissions and the dataset is not deaccessioned', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()

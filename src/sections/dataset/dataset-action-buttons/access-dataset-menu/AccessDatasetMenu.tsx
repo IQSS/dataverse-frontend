@@ -137,7 +137,7 @@ const DatasetDownloadOptions = ({
   requiresTermsOrGuestbook,
   onDownloadWithGuestbook
 }: DatasetDownloadOptionsProps) => {
-  const { t } = useTranslation('dataset')
+  const { t, i18n } = useTranslation('dataset')
   const { t: tFiles } = useTranslation('files')
   const accessRepository = useAccessRepository()
 
@@ -173,7 +173,7 @@ const DatasetDownloadOptions = ({
 
   function getFormattedFileSize(mode: FileDownloadMode): string {
     const foundSize = fileDownloadSizes.find((size) => size.mode === mode)
-    return foundSize ? foundSize.toString() : ''
+    return foundSize ? foundSize.toString(i18n.resolvedLanguage || i18n.language) : ''
   }
 
   return hasOneTabularFileAtLeast ? (

@@ -1,4 +1,5 @@
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
+import { FileSize, FileSizeUnit } from '@/files/domain/models/FileMetadata'
 
 export class FileCardHelper {
   static getDatasetSearchParams(persistentId: string, isDraft: boolean): Record<string, string> {
@@ -16,14 +17,7 @@ export class FileCardHelper {
     return params
   }
 
-  static formatBytesToCompactNumber(bytes: number): string {
-    const byteValueNumberFormatter = Intl.NumberFormat(undefined, {
-      notation: 'compact',
-      style: 'unit',
-      unit: 'byte',
-      unitDisplay: 'narrow'
-    })
-
-    return byteValueNumberFormatter.format(bytes)
+  static formatFileSize(bytes: number, locale?: string): string {
+    return new FileSize(bytes, FileSizeUnit.BYTES).toString(locale)
   }
 }

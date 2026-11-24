@@ -4,7 +4,6 @@ import { FooterMother } from './footer/FooterMother'
 import { Layout } from '../../../../src/sections/layout/Layout'
 import { applyTestAppConfig } from '../../../support/bootstrapAppConfig'
 import type { AppConfig } from '@/config'
-import i18next from '@/i18n'
 
 describe('Layout', () => {
   const sandbox: SinonSandbox = createSandbox()
@@ -19,7 +18,6 @@ describe('Layout', () => {
     Cypress.env('bannerMessage', defaultBannerMessageEnv)
     applyTestAppConfig()
     cy.clearAllLocalStorage()
-    cy.wrap(i18next.changeLanguage('en'))
   })
 
   it('renders the header', () => {
@@ -95,7 +93,7 @@ describe('Layout', () => {
     })
     applyTestAppConfig()
 
-    cy.wrap(i18next.changeLanguage('es'))
+    cy.setLanguage('es')
     cy.customMount(<Layout />)
 
     cy.findByRole('alert').should('contain.text', 'Default language banner')

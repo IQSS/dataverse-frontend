@@ -21,6 +21,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Format dates, file sizes, and counts using the active interface language; use consistent 1024-based file-size units in search, detail, and download views; translate known file labels and search facets while preserving custom metadata and raw filter values. (#1063)
 - Show success toast notification when dataset publishing completes. (#1129)
 - Allow plain text URLs to be clickable in dataset description and metadata fields. (#1147)
 - Auto-select the entire citation text when clicked or highlighted on dataset and file pages. (#1119)

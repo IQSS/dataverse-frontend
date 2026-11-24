@@ -28,6 +28,7 @@ import { RouterInitialEntry } from './commands'
 import { ReactNode } from 'react'
 import { User } from '@/users/domain/models/User'
 import { applyTestAppConfig } from './bootstrapAppConfig'
+import { requireAppConfig } from '@/config'
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -56,6 +57,7 @@ declare global {
       login(): Chainable<string>
       logout(): Chainable<JQuery<HTMLElement>>
       compareDate(date: Date, expectedDate: Date): Chainable
+      setLanguage(language: string): Chainable<void>
     }
   }
 }
@@ -65,6 +67,7 @@ Cypress.Commands.add('mount', mount)
 // Apply runtime app config also before each test so we can use Cypress.env to override values and test different scenarios
 beforeEach(() => {
   applyTestAppConfig()
+  return cy.setLanguage(requireAppConfig().defaultLanguage)
 })
 
 // Example use:

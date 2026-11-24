@@ -14,6 +14,25 @@ describe('PaginationResultsInfo', () => {
     cy.findByText('1 to 10 of 11 Items').should('exist')
   })
 
+  it('formats result counts with the active language', () => {
+    cy.setLanguage('es').then(() => {
+      cy.customMount(
+        <PaginationResultsInfo
+          paginationInfo={
+            new PaginationInfo<FilePaginationInfo | DatasetPaginationInfo>(
+              1,
+              10,
+              53_305,
+              'resultado'
+            )
+          }
+        />
+      )
+    })
+
+    cy.findByText('1 a 10 de 53.305 resultados').should('exist')
+  })
+
   it('shows the correct results info when there is 1 item', () => {
     cy.customMount(
       <PaginationResultsInfo

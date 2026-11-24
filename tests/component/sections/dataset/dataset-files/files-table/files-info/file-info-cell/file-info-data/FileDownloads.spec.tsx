@@ -10,6 +10,19 @@ describe('FileDownloads', () => {
     cy.findByText('10 Downloads').should('exist')
   })
 
+  it('formats the download count with the active language', () => {
+    cy.setLanguage('es').then(() => {
+      cy.customMount(
+        <FileDownloads
+          downloadCount={53_305}
+          datasetPublishingStatus={DatasetPublishingStatus.RELEASED}
+        />
+      )
+    })
+
+    cy.findByText('53.305 Descargas').should('exist')
+  })
+
   it('renders an empty fragment when file is not RELEASED', () => {
     const downloads = 10
     const status = DatasetPublishingStatus.DRAFT

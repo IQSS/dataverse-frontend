@@ -18,6 +18,22 @@ describe('TypeFilters', () => {
     cy.findByRole('checkbox', { name: /Files/ }).should('be.checked')
   })
 
+  it('formats type counts with the active language', () => {
+    cy.setLanguage('es').then(() => {
+      cy.customMount(
+        <TypeFilters
+          onItemTypesChange={cy.stub()}
+          isLoadingCollectionItems={false}
+          currentItemTypes={[CollectionItemType.COLLECTION, CollectionItemType.DATASET]}
+          countPerObjectType={{ collections: 53_305, datasets: 4_940, files: 1 }}
+        />
+      )
+    })
+
+    cy.findByRole('checkbox', { name: /Colecciones \(53\.305\)/ }).should('exist')
+    cy.findByRole('checkbox', { name: /Datasets \(4940\)/ }).should('exist')
+  })
+
   it('if there is only one selected checkbox this one is disabled so user can not deselect all of them', () => {
     const onItemTypesChange = cy.stub().as('onItemTypesChange')
 
