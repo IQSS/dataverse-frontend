@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import cn from 'classnames'
+import { toast } from 'react-toastify'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import {
   Alert,
@@ -15,6 +16,8 @@ import { FileExternalToolResolved } from '@/externalTools/domain/models/FileExte
 import { getFileExternalToolResolved } from '@/externalTools/domain/useCases/GetFileExternalToolResolved'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { File } from '@/files/domain/models/File'
+import type { GuestbookResponseDTO } from '@/access/domain/repositories/AccessRepository'
+import { EMPTY_GUESTBOOK_RESPONSE } from '@/shared/helpers/DownloadHelper'
 import { FilePageHelper } from '../FilePageHelper'
 import { useExternalToolsRepositories } from '@/shared/contexts/repositories/RepositoriesProvider'
 import styles from './FileEmbeddedExternalTool.module.scss'
@@ -36,6 +39,7 @@ export const FileEmbeddedExternalTool = ({
 }: FileEmbeddedExternalToolProps) => {
   const { externalToolsRepository } = useExternalToolsRepositories()
   const { t, i18n } = useTranslation('file', { keyPrefix: 'previewTab' })
+  const { t: tShared } = useTranslation('shared')
   const [toolIdSelected, setToolIdSelected] = useState<number>(
     FilePageHelper.getDefaultSelectedToolId(toolTypeSelectedQueryParam, applicableTools)
   )
@@ -44,19 +48,26 @@ export const FileEmbeddedExternalTool = ({
   const [fileExternalToolResolved, setFileExternalToolResolved] =
     useState<FileExternalToolResolved | null>(null)
   const [showTermsAndGuestbookModal, setShowTermsAndGuestbookModal] = useState<boolean>(false)
-  const [termsAndGuestbookAccepted, setTermsAndGuestbookAccepted] = useState<boolean>(false)
+  const [acceptedResponse, setAcceptedResponse] = useState<GuestbookResponseDTO | null>(null)
+  const [isOpeningNewWindow, setIsOpeningNewWindow] = useState(false)
 
   const moreThanOneTool = applicableTools.length > 1
-  const bypassTermsGuard =
-    file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT ||
-    file.permissions.canEditOwnerDataset
-  const hasGuestbook = file.guestbookId !== undefined
+  const isDraft = file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT
+  const requiresGuestbook =
+    file.guestbookId !== undefined && (!isDraft || Boolean(file.metadata.publicationDate))
   const hasCustomTerms = file.datasetCustomTerms !== undefined
   const hasNonDefaultLicense =
     file.datasetLicense !== undefined && file.datasetLicense.name !== defaultLicense.name
-  const requiresTermsAndGuestbook =
-    !bypassTermsGuard && (hasGuestbook || hasCustomTerms || hasNonDefaultLicense)
-  const isWaitingForTermsAndGuestbook = requiresTermsAndGuestbook && !termsAndGuestbookAccepted
+  const canEditDataset = file.permissions.canEditOwnerDataset
+  const requiresTerms = !isDraft && (hasCustomTerms || hasNonDefaultLicense)
+  const requiresTermsAndGuestbook = !canEditDataset && (requiresGuestbook || requiresTerms)
+  const isWaitingForTermsAndGuestbook = requiresTermsAndGuestbook && !acceptedResponse
+  const editorGuestbookResponse =
+    canEditDataset && requiresGuestbook ? EMPTY_GUESTBOOK_RESPONSE.guestbookResponse : undefined
+  const guestbookResponse = requiresTermsAndGuestbook
+    ? acceptedResponse?.guestbookResponse
+    : editorGuestbookResponse
+  const locale = i18n.languages[0]
 
   const handleToolSelect = (eventKey: string | null) => setToolIdSelected(Number(eventKey))
 
@@ -64,6 +75,31 @@ export const FileEmbeddedExternalTool = ({
   const handleOnErrorIframe = () => {
     setIframeLoaded(false)
     setErrorLoadingTool(t('defaultLoadingToolError'))
+  }
+
+  const openToolInNewWindow = async () => {
+    const newWindow = window.open('', '_blank')
+    if (!newWindow || newWindow.closed) {
+      toast.info(tShared('allowPopups'))
+      return
+    }
+
+    newWindow.opener = null
+    setIsOpeningNewWindow(true)
+    try {
+      const tool = await getFileExternalToolResolved(
+        externalToolsRepository,
+        file.id,
+        toolIdSelected,
+        { preview: false, locale, guestbookResponse }
+      )
+      newWindow.location.href = tool.toolUrlResolved
+    } catch {
+      newWindow.close()
+      toast.error(tShared('externalToolOpeningFailed'))
+    } finally {
+      setIsOpeningNewWindow(false)
+    }
   }
 
   // Loads the tool every time the tab is in view or the tool selection changes.
@@ -74,6 +110,7 @@ export const FileEmbeddedExternalTool = ({
       return
     }
 
+    let cancelled = false
     const fetchFileExternalToolResolved = async () => {
       setIframeLoaded(false)
       setErrorLoadingTool(null)
@@ -84,11 +121,12 @@ export const FileEmbeddedExternalTool = ({
           externalToolsRepository,
           file.id,
           toolIdSelected,
-          { preview: true, locale: i18n.languages[0] }
+          { preview: true, locale, ...(guestbookResponse && { guestbookResponse }) }
         )
 
-        setFileExternalToolResolved(fileExternalTool)
+        if (!cancelled) setFileExternalToolResolved(fileExternalTool)
       } catch (err: WriteError | unknown) {
+        if (cancelled) return
         if (err instanceof WriteError) {
           const error = new JSDataverseWriteErrorHandler(err)
           const formattedError =
@@ -101,6 +139,9 @@ export const FileEmbeddedExternalTool = ({
     }
 
     void fetchFileExternalToolResolved()
+    return () => {
+      cancelled = true
+    }
   }, [
     isInView,
     isWaitingForTermsAndGuestbook,
@@ -108,21 +149,21 @@ export const FileEmbeddedExternalTool = ({
     externalToolsRepository,
     file.id,
     t,
-    i18n.languages
+    locale,
+    guestbookResponse
   ])
 
   return (
     <section>
       {requiresTermsAndGuestbook && showTermsAndGuestbookModal && (
         <DownloadWithTermsAndGuestbookModal
-          fileId={file.id}
           guestbookId={file.guestbookId}
           datasetPersistentId={file.datasetPersistentId}
           datasetLicense={file.datasetLicense}
           datasetCustomTerms={file.datasetCustomTerms}
           show={showTermsAndGuestbookModal}
           handleClose={() => setShowTermsAndGuestbookModal(false)}
-          onAccept={() => setTermsAndGuestbookAccepted(true)}
+          onAccept={setAcceptedResponse}
         />
       )}
       <header className={styles.header}>
@@ -145,7 +186,18 @@ export const FileEmbeddedExternalTool = ({
           </DropdownButton>
         )}
 
-        {fileExternalToolResolved && (
+        {fileExternalToolResolved && guestbookResponse && (
+          <Button
+            variant="secondary"
+            size="sm"
+            className="d-flex align-items-center gap-1"
+            disabled={isOpeningNewWindow}
+            onClick={() => void openToolInNewWindow()}>
+            <BoxArrowUpRight size={12} />
+            <span>{t('openInNewWindow')}</span>
+          </Button>
+        )}
+        {fileExternalToolResolved && !guestbookResponse && (
           // eslint-disable-next-line react/jsx-no-target-blank
           <a
             href={FilePageHelper.replacePreviewParamInToolUrl(

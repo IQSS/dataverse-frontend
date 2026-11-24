@@ -1,3 +1,4 @@
+import type { GetFileExternalToolDTO } from '@iqss/dataverse-client-javascript'
 import {
   getDatasetExternalToolResolved,
   getExternalTools,
@@ -27,7 +28,7 @@ export class ExternalToolsJSDataverseRepository implements ExternalToolsReposito
   getFileExternalToolResolved(
     fileId: number | string,
     toolId: number,
-    getExternalToolDTO: GetExternalToolDTO
+    getExternalToolDTO: GetFileExternalToolDTO
   ): Promise<FileExternalToolResolved> {
     return getFileExternalToolResolved
       .execute(fileId, toolId, getExternalToolDTO)

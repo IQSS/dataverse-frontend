@@ -21,6 +21,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Fix file previews and the "Open in New Window" action when a dataset requires a Guestbook or terms confirmation. (#1164)
 - Navigate back to the dataset page instead of the collection page when clicking Cancel on the edit dataset metadata page. (#1146)
 - Show success toast notification when dataset publishing completes. (#1129)
 - Allow plain text URLs to be clickable in dataset description and metadata fields. (#1147)
