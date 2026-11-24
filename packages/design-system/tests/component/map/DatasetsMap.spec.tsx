@@ -178,6 +178,17 @@ describe('DatasetsMap marker clusters', () => {
     cy.findByRole('link', { name: 'First colocated dataset' }).should('exist')
     cy.findByRole('spinbutton', { name: 'Dataset number, 1 to 2' }).should('have.value', '1')
     cy.findByText('/ 2').should('exist')
+    cy.findByRole('spinbutton', { name: 'Dataset number, 1 to 2' }).then(($input) => {
+      cy.findByText('/ 2').then(($total) => {
+        const inputStyle = getComputedStyle($input[0])
+        const totalStyle = getComputedStyle($total[0])
+
+        expect(inputStyle.fontFamily).to.equal(totalStyle.fontFamily)
+        expect(inputStyle.fontSize).to.equal(totalStyle.fontSize)
+        expect(inputStyle.fontStyle).to.equal(totalStyle.fontStyle)
+        expect(inputStyle.fontWeight).to.equal(totalStyle.fontWeight)
+      })
+    })
 
     cy.findByRole('button', { name: 'Next dataset' }).click()
     cy.findByRole('link', { name: 'Second colocated dataset' }).should('exist')
