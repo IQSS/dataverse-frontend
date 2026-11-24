@@ -22,6 +22,8 @@ import { useExternalTools } from '@/shared/contexts/external-tools/ExternalTools
 import { FilePageHelper } from './FilePageHelper'
 import { FileEmbeddedExternalTool } from './file-embedded-external-tool/FileEmbeddedExternalTool'
 import { useScrollTop } from '@/shared/hooks/useScrollTop'
+import { useDocumentTitle, getDefaultInstallationName } from '../../shared/hooks/useDocumentTitle'
+import { DvObjectType } from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { ContactButton } from '../shared/contact/ContactButton'
@@ -73,6 +75,13 @@ export function File({
 
   const isDeaccessioned =
     file?.datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
+
+  const containingCollectionName =
+    file?.hierarchy.parent?.parent?.name ??
+    file?.hierarchy.toArray().find((node) => node.type === DvObjectType.COLLECTION)?.name
+  useDocumentTitle(file?.name, {
+    parentTitle: containingCollectionName || getDefaultInstallationName()
+  })
 
   useEffect(() => {
     setIsLoading(isLoading)

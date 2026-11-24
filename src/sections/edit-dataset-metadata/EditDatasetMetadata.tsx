@@ -4,6 +4,7 @@ import { Alert, Col, Form, Tabs } from '@iqss/dataverse-design-system'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useDataset } from '../dataset/DatasetContext'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
+import { useDocumentTitle, getDefaultInstallationName } from '../../shared/hooks/useDocumentTitle'
 import { HostCollection } from './HostCollection'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
@@ -21,6 +22,11 @@ export const EditDatasetMetadata = ({ metadataBlockInfoRepository }: EditDataset
   const { t } = useTranslation('editDatasetMetadata')
   const { dataset, isLoading } = useDataset()
   const { setIsLoading } = useLoading()
+  const isNotFound = !isLoading && !dataset
+  useDocumentTitle(t('breadcrumbActionItem'), {
+    parentTitle: dataset?.version.title || getDefaultInstallationName(),
+    enabled: !isNotFound && Boolean(dataset)
+  })
 
   useEffect(() => {
     setIsLoading(isLoading)

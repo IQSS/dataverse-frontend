@@ -21,6 +21,7 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 ### Fixed
 
+- Update browser tab title dynamically to reflect page context across collections, datasets, files, and utility pages. (#1047)
 - Show success toast notification when dataset publishing completes. (#1129)
 - Allow plain text URLs to be clickable in dataset description and metadata fields. (#1147)
 - Auto-select the entire citation text when clicked or highlighted on dataset and file pages. (#1119)
