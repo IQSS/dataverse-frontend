@@ -7,7 +7,7 @@ import { FileLabelType } from '@/files/domain/models/FileMetadata'
 describe('FileCard', () => {
   it('should render the card', () => {
     const userRoles = ['Admin', 'Contributor']
-    const filePreview = FileItemTypePreviewMother.create({ userRoles: userRoles })
+    const filePreview = FileItemTypePreviewMother.createRealistic({ userRoles: userRoles })
     cy.customMount(<FileCard filePreview={filePreview} />)
 
     filePreview.restricted

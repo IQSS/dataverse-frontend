@@ -274,10 +274,15 @@ export class FileJSDataverseRepository implements FileRepository {
 
   getFileCitationByFormat(
     fileId: number | string,
-    format: FileCitationFormat
+    format: FileCitationFormat,
+    versionNumber?: DatasetVersionNumber
   ): Promise<FormattedFileCitation> {
     return jsGetFileCitationByFormat
-      .execute(fileId, FileJSDataverseRepository.toJSFileCitationFormat(format))
+      .execute(
+        fileId,
+        FileJSDataverseRepository.toJSFileCitationFormat(format),
+        versionNumber?.toString()
+      )
       .then((content) => ({
         content,
         contentType: FileJSDataverseRepository.getCitationContentType(format)

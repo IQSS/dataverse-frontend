@@ -10,6 +10,10 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 
 - Manage Guestbooks: Edit guestbooks, and copy guestbooks into a prefilled creation form. (#1006)
 - Guestbook Responses page with pagination, sorting within the current page, custom question responses, and CSV download. (#1006)
+- Dataset Page: "Styled Citation" now supports selecting any CSL citation style and renders the citation formatted in that style, using citeproc-js in the browser.
+- Dataset Page: added a copy icon in front of "Cite Dataset" to support a quick copy of citation in default style.
+- File Page: added a File Metrics: File Download Count.
+- Storage Driver selection in Create Collection form, with dynamic fetching of available storage drivers from the backend.
 
 ### Changed
 
@@ -18,6 +22,8 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
 ### Fixed
 
 - Format dates, file sizes, and counts using the active interface language; use consistent 1024-based file-size units in search, detail, and download views; translate known file labels and search facets while preserving custom metadata and raw filter values. (#1063)
+- Show success toast notification when dataset publishing completes. (#1129)
+- Allow plain text URLs to be clickable in dataset description and metadata fields. (#1147)
 - Auto-select the entire citation text when clicked or highlighted on dataset and file pages. (#1119)
 - Normalize directory slashes when validating unique file path combination in file uploader. (#1106)
 - Display "In Review" status label on dataset page when a draft version is under review. (#1094)
@@ -41,7 +47,6 @@ This changelog follows the principles of [Keep a Changelog](https://keepachangel
   - a checkbox for including guestbooks from parent collections
 - Dataset Templates UI integration, including create/edit flows, previews, and skeleton states.
 - Dataset Page: added a sidebar to show dataset reviews.
-- File Page: added a File Metrics: File Download Count.
 
 ### Changed
 

@@ -27,6 +27,34 @@ describe('CopyToClipboardButton', () => {
     cy.findByText('Click to copy Sample text to copy').should('exist')
   })
 
+  it('shows a custom tooltip when tooltipText is provided', () => {
+    const textToCopy = 'Sample text to copy'
+    cy.customMount(
+      <CopyToClipboardButton text={textToCopy} tooltipText="Copy citation to clipboard" />
+    )
+
+    cy.findByRole('button', { name: /Copy to clipboard icon/ }).trigger('mouseover')
+    cy.findByText('Copy citation to clipboard').should('exist')
+    cy.findByText(`Click to copy ${textToCopy}`).should('not.exist')
+  })
+
+  it('copies HTML and plain-text representations when HTML is provided', () => {
+    const textToCopy = 'A styled citation'
+    const htmlToCopy = '<i>A styled citation</i>'
+
+    cy.window().then((win) => {
+      cy.stub(win.navigator.clipboard, 'write').resolves()
+    })
+
+    cy.customMount(<CopyToClipboardButton text={textToCopy} html={htmlToCopy} />)
+    cy.findByRole('button', { name: /Copy to clipboard icon/ }).click()
+
+    cy.window().then((win) => {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      cy.wrap(win.navigator.clipboard.write).should('have.been.calledOnce')
+    })
+  })
+
   it('truncates text when it is too long', () => {
     const textToCopy = '0187a54071542738aa47939e8218e5f2'
     cy.customMount(<CopyToClipboardButton text={textToCopy} />)
