@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 import { LoadingProvider } from '../../../../src/shared/contexts/loading/LoadingProvider'
@@ -8,6 +9,11 @@ import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models
 import { EditDatasetMetadata } from '../../../../src/sections/edit-dataset-metadata/EditDatasetMetadata'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { WithRepositories } from '@tests/component/WithRepositories'
+
+const LocationDisplay = () => {
+  const location = useLocation()
+  return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>
+}
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -19,7 +25,11 @@ const metadataBlocksInfoOnCreateMode =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
 
 describe('EditDatasetMetadata', () => {
-  const mountWithDataset = (component: ReactNode, dataset: DatasetModel | undefined) => {
+  const mountWithDataset = (
+    component: ReactNode,
+    dataset: DatasetModel | undefined,
+    initialEntries?: string[]
+  ) => {
     const searchParams = { persistentId: 'some-persistent-id' }
 
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
@@ -39,7 +49,8 @@ describe('EditDatasetMetadata', () => {
             {component}
           </DatasetProvider>
         </WithRepositories>
-      </LoadingProvider>
+      </LoadingProvider>,
+      initialEntries
     )
   }
 
@@ -102,5 +113,27 @@ describe('EditDatasetMetadata', () => {
     cy.findByTestId('edit-dataset-metadata-skeleton').should('not.exist')
     cy.findByText(/^Dataset Type/i).should('exist')
     cy.findByDisplayValue('dataset').should('exist').should('have.attr', 'readonly', 'readonly')
+  })
+
+  it('navigates back to the dataset page when clicking Cancel button', () => {
+    mountWithDataset(
+      <>
+        <EditDatasetMetadata metadataBlockInfoRepository={metadataBlockInfoRepository} />
+        <LocationDisplay />
+      </>,
+      dataset,
+      [
+        `/datasets/edit-metadata?persistentId=${encodeURIComponent(
+          dataset.persistentId
+        )}&version=1.0`
+      ]
+    )
+
+    cy.findAllByRole('button', { name: 'Cancel' }).first().click()
+
+    cy.findByTestId('location-display').should(
+      'have.text',
+      `/datasets?persistentId=${encodeURIComponent(dataset.persistentId)}&version=1.0`
+    )
   })
 })
