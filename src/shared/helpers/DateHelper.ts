@@ -42,6 +42,6 @@ export class DateHelper {
   }
 
   private static getActiveLocale(): string | undefined {
-    return i18n.resolvedLanguage || i18n.languages[0]
+    return i18n.language || i18n.languages[0]
   }
 }

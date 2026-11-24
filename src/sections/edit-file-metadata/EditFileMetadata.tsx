@@ -72,7 +72,7 @@ export const EditFileMetadata = ({ fileId, fileRepository, referrer }: EditFileM
                 fileRepository={fileRepository}
                 editFileMetadataFormData={createEditFileMetadataFormData(
                   file,
-                  i18n.resolvedLanguage || i18n.language
+                  i18n.language || i18n.resolvedLanguage
                 )}
                 referrer={referrer}
                 datasetPersistentId={file.hierarchy.parent?.persistentId}

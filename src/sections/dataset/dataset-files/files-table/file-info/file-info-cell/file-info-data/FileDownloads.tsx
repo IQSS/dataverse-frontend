@@ -14,7 +14,7 @@ export function FileDownloads({ downloadCount, datasetPublishingStatus }: FileDo
   return (
     <div>
       <span>
-        {new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language).format(downloadCount)}{' '}
+        {new Intl.NumberFormat(i18n.language || i18n.resolvedLanguage).format(downloadCount)}{' '}
         {t('table.downloads')}
       </span>
     </div>

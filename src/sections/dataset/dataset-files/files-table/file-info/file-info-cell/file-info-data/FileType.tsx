@@ -17,7 +17,7 @@ export function FileType({ type, size }: FileTypeProps) {
         {type.value === 'text/tab-separated-values'
           ? t('table.tabularData.name')
           : type.toDisplayFormat()}{' '}
-        - {size.toString(i18n.resolvedLanguage || i18n.language)}
+        - {size.toString(i18n.language || i18n.resolvedLanguage)}
       </span>
     </div>
   )

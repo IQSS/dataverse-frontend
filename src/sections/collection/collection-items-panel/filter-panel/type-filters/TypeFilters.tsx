@@ -24,7 +24,7 @@ export const TypeFilters = ({
   countPerObjectType
 }: TypeFiltersProps) => {
   const { t, i18n } = useTranslation('collection')
-  const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language)
+  const numberFormatter = new Intl.NumberFormat(i18n.language || i18n.resolvedLanguage)
 
   const handleItemTypeChange = (type: CollectionItemType, checked: boolean) => {
     onItemTypesChange({ type, checked })

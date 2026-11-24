@@ -19,7 +19,7 @@ interface FileCardBodyProps {
 
 export const FileCardBody = ({ filePreview }: FileCardBodyProps) => {
   const { t, i18n } = useTranslation('collection')
-  const locale = i18n.resolvedLanguage || i18n.language
+  const locale = i18n.language || i18n.resolvedLanguage
   const bytesFormatted = FileCardHelper.formatFileSize(filePreview.sizeInBytes, locale)
   const variables = filePreview.variables ?? 0
   const observations = filePreview.observations ?? 0

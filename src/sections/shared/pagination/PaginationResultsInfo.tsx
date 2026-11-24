@@ -12,7 +12,7 @@ interface PaginationResultsInfoProps {
 
 export function PaginationResultsInfo({ paginationInfo, accumulated }: PaginationResultsInfoProps) {
   const { t, i18n } = useTranslation('shared', { keyPrefix: 'pagination' })
-  const locale = i18n.resolvedLanguage || i18n.language
+  const locale = i18n.language || i18n.resolvedLanguage
 
   const defineLocale = useCallback(
     (accumulated: number) =>

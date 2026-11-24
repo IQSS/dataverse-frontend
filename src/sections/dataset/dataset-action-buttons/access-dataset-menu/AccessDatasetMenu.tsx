@@ -173,7 +173,7 @@ const DatasetDownloadOptions = ({
 
   function getFormattedFileSize(mode: FileDownloadMode): string {
     const foundSize = fileDownloadSizes.find((size) => size.mode === mode)
-    return foundSize ? foundSize.toString(i18n.resolvedLanguage || i18n.language) : ''
+    return foundSize ? foundSize.toString(i18n.language || i18n.resolvedLanguage) : ''
   }
 
   return hasOneTabularFileAtLeast ? (

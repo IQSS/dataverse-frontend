@@ -11,7 +11,7 @@ export function FileTabularData({
   if (!tabularData) {
     return <></>
   }
-  const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language)
+  const numberFormatter = new Intl.NumberFormat(i18n.language || i18n.resolvedLanguage)
 
   return (
     <div>

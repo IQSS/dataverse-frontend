@@ -38,7 +38,7 @@ export function FileMetadata({
 }: FileMetadataProps) {
   const { t, i18n } = useTranslation('file')
   const appConfig = requireAppConfig()
-  const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language)
+  const numberFormatter = new Intl.NumberFormat(i18n.language || i18n.resolvedLanguage)
 
   return (
     <>
@@ -175,7 +175,7 @@ export function FileMetadata({
               <Col sm={3}>
                 <strong>{t('metadata.fields.size')}</strong>
               </Col>
-              <Col>{metadata.size.toString(i18n.resolvedLanguage || i18n.language)}</Col>
+              <Col>{metadata.size.toString(i18n.language || i18n.resolvedLanguage)}</Col>
             </Row>
             <Row className={styles.row}>
               <Col sm={3}>

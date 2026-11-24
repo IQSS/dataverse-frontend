@@ -60,7 +60,7 @@ export const FacetFilterGroup = ({
   const facetDisplayName = facetNameTranslationKey
     ? t(facetNameTranslationKey, { defaultValue: facet.friendlyName })
     : facet.friendlyName
-  const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language)
+  const numberFormatter = new Intl.NumberFormat(i18n.language || i18n.resolvedLanguage)
 
   const handleShowMore = () => {
     setVisibleCount((prev) => Math.min(prev + FACETS_PER_VIEW, facet.labels.length))
