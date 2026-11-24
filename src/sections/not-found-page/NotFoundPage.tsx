@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Trans, useTranslation } from 'react-i18next'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
-import { useDocumentTitle, DEFAULT_DOCUMENT_TITLE } from '../../shared/hooks/useDocumentTitle'
+import { useDocumentTitle, getDefaultInstallationName } from '../../shared/hooks/useDocumentTitle'
 import { Route } from '../Route.enum'
 import styles from './NotFoundPage.module.scss'
 
@@ -14,7 +14,7 @@ export const NotFoundPage = ({ dvObjectNotFoundType }: NotFoundPageProps) => {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('notFoundPage')
   const { t: tShared } = useTranslation('shared')
-  useDocumentTitle('404 Not Found', { parentTitle: DEFAULT_DOCUMENT_TITLE })
+  useDocumentTitle('404 Not Found', { parentTitle: getDefaultInstallationName() })
 
   useEffect(() => setIsLoading(false), [setIsLoading])
 

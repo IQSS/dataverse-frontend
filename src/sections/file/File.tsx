@@ -22,7 +22,7 @@ import { useExternalTools } from '@/shared/contexts/external-tools/ExternalTools
 import { FilePageHelper } from './FilePageHelper'
 import { FileEmbeddedExternalTool } from './file-embedded-external-tool/FileEmbeddedExternalTool'
 import { useScrollTop } from '@/shared/hooks/useScrollTop'
-import { useDocumentTitle, DEFAULT_DOCUMENT_TITLE } from '../../shared/hooks/useDocumentTitle'
+import { useDocumentTitle, getDefaultInstallationName } from '../../shared/hooks/useDocumentTitle'
 import { DvObjectType } from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
@@ -80,7 +80,7 @@ export function File({
     file?.hierarchy.parent?.parent?.name ??
     file?.hierarchy.toArray().find((node) => node.type === DvObjectType.COLLECTION)?.name
   useDocumentTitle(file?.name, {
-    parentTitle: containingCollectionName || DEFAULT_DOCUMENT_TITLE
+    parentTitle: containingCollectionName || getDefaultInstallationName()
   })
 
   useEffect(() => {

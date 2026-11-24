@@ -22,7 +22,11 @@ import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
 import useCheckPublishCompleted from './useCheckPublishCompleted'
 import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
-import { useDocumentTitle, DEFAULT_DOCUMENT_TITLE } from '../../shared/hooks/useDocumentTitle'
+import {
+  useDocumentTitle,
+  getDefaultInstallationName,
+  setDefaultInstallationName
+} from '../../shared/hooks/useDocumentTitle'
 import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
@@ -69,9 +73,16 @@ export function Dataset({
     dataset,
     publishInProgress
   })
+  const rootCollectionName = dataset?.hierarchy.toArray()[0]?.name
+  useEffect(() => {
+    if (rootCollectionName) {
+      setDefaultInstallationName(rootCollectionName)
+    }
+  }, [rootCollectionName])
+
   const parentCollectionName = dataset?.hierarchy.parent?.name
   useDocumentTitle(dataset?.version.title, {
-    parentTitle: parentCollectionName || DEFAULT_DOCUMENT_TITLE
+    parentTitle: parentCollectionName || getDefaultInstallationName()
   })
 
   useEffect(() => {

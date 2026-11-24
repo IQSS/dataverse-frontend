@@ -5,6 +5,7 @@ import { DataverseHubRepository } from '@/dataverse-hub/domain/repositories/Data
 import { SearchRepository } from '@/search/domain/repositories/SearchRepository'
 import { useGetSearchServices } from '@/search/domain/hooks/useGetSearchServices'
 import { useCollection } from '../collection/useCollection'
+import { useDocumentTitle, setDefaultInstallationName } from '../../shared/hooks/useDocumentTitle'
 import { FeaturedItems } from '../collection/featured-items/FeaturedItems'
 import { useLoading } from '../../shared/contexts/loading/LoadingContext'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
@@ -22,6 +23,12 @@ interface HomepageProps {
 export const Homepage = ({ dataverseHubRepository, searchRepository }: HomepageProps) => {
   const { collectionRepository } = useCollectionRepositories()
   const { collection, isLoading: isLoadingCollection } = useCollection(collectionRepository)
+  useEffect(() => {
+    if (collection?.name) {
+      setDefaultInstallationName(collection.name)
+    }
+  }, [collection?.name])
+  useDocumentTitle(collection?.name)
   const { searchServices, isLoadingSearchServices } = useGetSearchServices({
     searchRepository,
     autoFetch: true
