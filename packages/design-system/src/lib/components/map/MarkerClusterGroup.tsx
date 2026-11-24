@@ -84,6 +84,7 @@ export function MarkerClusterGroup({
 
     const itemByMarker = new Map<L.Marker, IndexedDatasetMarker>()
     const hideMarkerRectangles: (() => void)[] = []
+    const hideClusteredMarkerRectangles: (() => void)[] = []
     const pendingClusterRestores = new Set<ReturnType<typeof setTimeout>>()
     let activeTerminalMarker: ActiveTerminalMarker | null = null
     const cluster = L.markerClusterGroup({
@@ -136,6 +137,11 @@ export function MarkerClusterGroup({
         rects = []
       }
       hideMarkerRectangles.push(hideRects)
+      hideClusteredMarkerRectangles.push(() => {
+        if (!marker.isPopupOpen() && cluster.getVisibleParent(marker) !== marker) {
+          hideRects()
+        }
+      })
 
       marker.on('mouseover', showRects)
 
@@ -185,6 +191,12 @@ export function MarkerClusterGroup({
 
       return marker
     })
+
+    const hideClusteredRectangles = () => {
+      hideClusteredMarkerRectangles.forEach((hideRectangles) => hideRectangles())
+    }
+    map.on('moveend', hideClusteredRectangles)
+    cluster.on('animationend', hideClusteredRectangles)
 
     const restoreTerminalMarker = (activeMarker: ActiveTerminalMarker) => {
       if (activeMarker.restored) return
@@ -300,6 +312,8 @@ export function MarkerClusterGroup({
     }
 
     return () => {
+      map.off('moveend', hideClusteredRectangles)
+      cluster.off('animationend', hideClusteredRectangles)
       cluster.off('clusterclick clusterkeypress', activateCluster as L.LeafletEventHandlerFn)
       pendingClusterRestores.forEach((restoreTimeout) => clearTimeout(restoreTimeout))
       if (activeTerminalMarker) {
