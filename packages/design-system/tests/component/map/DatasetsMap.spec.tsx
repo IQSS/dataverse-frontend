@@ -1,5 +1,5 @@
-import { DatasetsMap } from '../../../src/lib/components/map/DatasetsMap'
-import { GeoDatasetItem } from '../../../src/lib/components/map/types'
+import { DatasetsMap } from '../../../src/lib'
+import { GeoDatasetItem } from '../../../src/lib'
 import { useState } from 'react'
 import L from 'leaflet'
 
