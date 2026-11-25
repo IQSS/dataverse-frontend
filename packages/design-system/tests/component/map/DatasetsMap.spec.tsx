@@ -1,6 +1,7 @@
 import { DatasetsMap } from '../../../src/lib/components/map/DatasetsMap'
 import { GeoDatasetItem } from '../../../src/lib/components/map/types'
 import { useState } from 'react'
+import L from 'leaflet'
 
 function CustomPopupContent({ label }: { label: string }) {
   const [selected, setSelected] = useState(false)
@@ -232,6 +233,7 @@ describe('DatasetsMap marker clusters', () => {
     mountMap({}, [customPopupItem])
 
     cy.get('.dataset-map-dataset-marker').click()
+    cy.findByRole('button', { name: 'Move view to bounding box' }).should('exist')
     cy.findByRole('button', { name: 'Custom dataset content' }).click()
     cy.findByRole('button', { name: 'Custom dataset content selected' }).should('exist')
   })
@@ -298,11 +300,34 @@ describe('DatasetsMap marker clusters', () => {
   })
 
   it('can place one marker at the dataset center', () => {
+    cy.spy(L.Map.prototype, 'fitBounds').as('fitBounds')
     mountMap({ markerPlacement: 'dataset-center' }, [multiBoundingBoxItem])
 
     cy.get('.dataset-map-dataset-marker').should('have.length', 1).trigger('mouseover')
     cy.get('.leaflet-overlay-pane path').should('have.length', 2)
+    cy.get('@fitBounds').should('have.been.calledOnce')
+
+    cy.get('.dataset-map-dataset-marker').click()
+    cy.get('@fitBounds').should('have.been.calledOnce')
+    cy.findByRole('button', { name: 'Move view to bounding boxes' }).trigger('mouseover')
+    cy.findByRole('tooltip').should('have.text', 'Move view to bounding boxes')
+    cy.findByRole('button', { name: 'Move view to bounding boxes' }).click()
+    cy.get('@fitBounds')
+      .should('have.been.calledTwice')
+      .then((fitBoundsSpy) => {
+        const fittedBounds = (fitBoundsSpy as unknown as Cypress.Agent<sinon.SinonSpy>).secondCall
+          .args[0] as L.LatLngBounds
+
+        multiBoundingBoxItem.bboxes.forEach(([southWest, northEast]) => {
+          expect(fittedBounds.contains(southWest)).to.equal(true)
+          expect(fittedBounds.contains(northEast)).to.equal(true)
+        })
+      })
     cy.findByText('1 of 1 results displayed').should('exist')
+    cy.get('.leaflet-container')
+      .should('not.have.class', 'leaflet-zoom-anim')
+      .and('not.have.class', 'leaflet-pan-anim')
+    cy.wait(500) // Let Leaflet finish its delayed zoom-transition callback before unmounting.
   })
 
   it('places one marker per bounding box by default with the same dataset popup', () => {

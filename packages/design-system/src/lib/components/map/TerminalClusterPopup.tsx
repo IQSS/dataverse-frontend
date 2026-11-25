@@ -4,7 +4,8 @@ import { Popup, useMap } from 'react-leaflet'
 import { GeoDatasetItem } from './types'
 import { markerPinPopupAnchor } from './MarkerClusterIcons'
 import { createBoundingBox } from './mapAreaPreview'
-import { DatasetPopupMainContent } from './DatasetPopupMainContent'
+import { DatasetPopupContent } from './DatasetPopupMainContent'
+import { fitBoundingBoxes } from './fitBoundingBoxes'
 import styles from './MarkerClusterGroup.module.scss'
 
 // Explicit 7px popup offset is needed because this popup is positioned independently of its marker.
@@ -41,13 +42,6 @@ export function TerminalClusterPopup({ position, items, boundingBoxColor, onClos
       createBoundingBox(bounds, boundingBoxColor).addTo(map)
     )
 
-    if (rectangles.length > 0) {
-      const combinedBounds = L.featureGroup(rectangles).getBounds()
-      if (!map.getBounds().contains(combinedBounds)) {
-        map.fitBounds(combinedBounds, { padding: [20, 20] })
-      }
-    }
-
     return () => {
       rectangles.forEach((rectangle) => map.removeLayer(rectangle))
     }
@@ -80,7 +74,11 @@ export function TerminalClusterPopup({ position, items, boundingBoxColor, onClos
       offset={terminalClusterPopupOffset}
       eventHandlers={{ remove: onClose }}>
       <div className={styles['carousel-popup']}>
-        <DatasetPopupMainContent item={currentEntry.item} />
+        <DatasetPopupContent
+          item={currentEntry.item}
+          boundingBoxCount={currentEntry.bboxes.length}
+          onBringBoundingBoxesIntoView={() => fitBoundingBoxes(map, currentEntry.bboxes)}
+        />
         <div className={styles['carousel-controls']}>
           <button
             type="button"

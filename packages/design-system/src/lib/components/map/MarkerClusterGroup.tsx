@@ -14,7 +14,8 @@ import { isTerminalCluster } from './isTerminalCluster'
 import { createClusterIcon, createMarkerPinIcon, resolveClusterColors } from './MarkerClusterIcons'
 import { TerminalClusterPopup, TerminalPopupState } from './TerminalClusterPopup'
 import { areaPreviewStyle, createBoundingBox } from './mapAreaPreview'
-import { DatasetPopupMainContent } from './DatasetPopupMainContent'
+import { DatasetPopupContent } from './DatasetPopupMainContent'
+import { fitBoundingBoxes } from './fitBoundingBoxes'
 
 interface Props {
   items: GeoDatasetItem[]
@@ -41,6 +42,7 @@ interface DisplayedTerminalPopup extends TerminalPopupState {
 interface DisplayedDatasetPopup {
   container: HTMLDivElement
   item: GeoDatasetItem
+  bboxes: GeoDatasetItem['bboxes']
   popup: L.Popup
 }
 
@@ -52,7 +54,9 @@ interface ActiveTerminalMarker {
   restored: boolean
 }
 
-function DatasetPopupPortal({ container, item, popup }: DisplayedDatasetPopup) {
+function DatasetPopupPortal({ container, item, bboxes, popup }: DisplayedDatasetPopup) {
+  const map = useMap()
+
   useLayoutEffect(() => {
     popup.update()
 
@@ -69,7 +73,14 @@ function DatasetPopupPortal({ container, item, popup }: DisplayedDatasetPopup) {
     }
   }, [container, popup])
 
-  return createPortal(<DatasetPopupMainContent item={item} />, container)
+  return createPortal(
+    <DatasetPopupContent
+      item={item}
+      boundingBoxCount={bboxes.length}
+      onBringBoundingBoxesIntoView={() => fitBoundingBoxes(map, bboxes)}
+    />,
+    container
+  )
 }
 
 export function MarkerClusterGroup({
@@ -189,12 +200,6 @@ export function MarkerClusterGroup({
           inCluster = false
 
           showRects()
-          if (rects.length > 0) {
-            const combinedBounds = L.featureGroup(rects).getBounds()
-            if (!map.getBounds().contains(combinedBounds)) {
-              map.fitBounds(combinedBounds, { padding: [20, 20] })
-            }
-          }
         }
       })
 
@@ -202,7 +207,7 @@ export function MarkerClusterGroup({
       marker.bindPopup(popupContainer)
       const popup = marker.getPopup()
       marker.on('popupopen', () => {
-        if (popup) setDatasetPopup({ container: popupContainer, item, popup })
+        if (popup) setDatasetPopup({ container: popupContainer, item, bboxes, popup })
       })
 
       marker.on('popupclose', () => {
