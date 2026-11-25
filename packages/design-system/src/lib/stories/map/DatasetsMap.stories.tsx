@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { useState } from 'react'
 import { DatasetsMap } from '../../components/map/DatasetsMap'
 import { GeoDatasetItem } from '../../components/map/types'
 
@@ -146,6 +147,58 @@ export const TerminalClusterSpiderfy: Story = {
   args: {
     ...TerminalClusterCarousel.args,
     terminalClusterBehavior: 'spiderfy'
+  }
+}
+
+function CustomPopupContentExample({ title, category }: { title: string; category: string }) {
+  const [state, setState] = useState(false)
+
+  return (
+    <section style={{ minWidth: 220 }}>
+      <span style={{ color: '#6f42c1', fontSize: '0.75rem', fontWeight: 700 }}>{category}</span>
+      <h3 style={{ margin: '0.25rem 0', fontSize: '1rem' }}>{title}</h3>
+      <p style={{ margin: '0 0 0.75rem' }}>
+        This content is supplied as a custom React element instead of dataset metadata.
+      </p>
+      <button type="button" onClick={() => setState((someState) => !someState)}>
+        {state ? 'Other state' : 'Some state'}
+      </button>
+    </section>
+  )
+}
+
+const customPopupItems: GeoDatasetItem[] = [
+  {
+    popupContent: (
+      <CustomPopupContentExample title="Individual custom popup" category="Single pin" />
+    ),
+    bboxes: [
+      [
+        [52.7, 10.9],
+        [52.9, 11.1]
+      ]
+    ]
+  },
+  ...['First carousel entry', 'Second carousel entry'].map(
+    (title, index): GeoDatasetItem => ({
+      popupContent: (
+        <CustomPopupContentExample title={title} category={`Terminal cluster item ${index + 1}`} />
+      ),
+      bboxes: [
+        [
+          [52.7, 7.9],
+          [52.9, 8.1]
+        ]
+      ]
+    })
+  )
+]
+
+export const CustomPopupContents: Story = {
+  args: {
+    ...Default.args,
+    items: customPopupItems,
+    totalCount: customPopupItems.length
   }
 }
 

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet.markercluster'
@@ -13,6 +14,7 @@ import { isTerminalCluster } from './isTerminalCluster'
 import { createClusterIcon, createMarkerPinIcon, resolveClusterColors } from './MarkerClusterIcons'
 import { TerminalClusterPopup, TerminalPopupState } from './TerminalClusterPopup'
 import { areaPreviewStyle, createBoundingBox } from './mapAreaPreview'
+import { DatasetPopupMainContent } from './DatasetPopupMainContent'
 
 interface Props {
   items: GeoDatasetItem[]
@@ -36,12 +38,38 @@ interface DisplayedTerminalPopup extends TerminalPopupState {
   onClose: () => void
 }
 
+interface DisplayedDatasetPopup {
+  container: HTMLDivElement
+  item: GeoDatasetItem
+  popup: L.Popup
+}
+
 interface ActiveTerminalMarker {
   marker: L.Marker
   childMarkers: L.Marker[]
   popup: DisplayedTerminalPopup
   restoreTimeout?: ReturnType<typeof setTimeout>
   restored: boolean
+}
+
+function DatasetPopupPortal({ container, item, popup }: DisplayedDatasetPopup) {
+  useLayoutEffect(() => {
+    popup.update()
+
+    let updateFrame: number | undefined
+    const resizeObserver = new ResizeObserver(() => {
+      if (updateFrame !== undefined) cancelAnimationFrame(updateFrame)
+      updateFrame = requestAnimationFrame(() => popup.update())
+    })
+    resizeObserver.observe(container)
+
+    return () => {
+      resizeObserver.disconnect()
+      if (updateFrame !== undefined) cancelAnimationFrame(updateFrame)
+    }
+  }, [container, popup])
+
+  return createPortal(<DatasetPopupMainContent item={item} />, container)
 }
 
 export function MarkerClusterGroup({
@@ -52,6 +80,7 @@ export function MarkerClusterGroup({
 }: Props) {
   const map = useMap()
   const [terminalPopup, setTerminalPopup] = useState<DisplayedTerminalPopup | null>(null)
+  const [datasetPopup, setDatasetPopup] = useState<DisplayedDatasetPopup | null>(null)
 
   const boundingBoxColor = colors?.boundingBox ?? '#3388ff'
   const pinPrimary = colors?.pinPrimary ?? '#3388ff'
@@ -65,6 +94,7 @@ export function MarkerClusterGroup({
 
   useEffect(() => {
     setTerminalPopup(null)
+    setDatasetPopup(null)
 
     const markerIcon = createMarkerPinIcon(1, 'dataset-map-dataset-marker', {
       fill: pinPrimary,
@@ -168,13 +198,17 @@ export function MarkerClusterGroup({
         }
       })
 
-      marker.bindPopup(
-        `<a href="${item.detailsPageUrl}">${item.name}</a><br>` +
-          `${item.authors}; ${item.publicationDate}<br>` +
-          `${item.persistentId}`
-      )
+      const popupContainer = document.createElement('div')
+      marker.bindPopup(popupContainer)
+      const popup = marker.getPopup()
+      marker.on('popupopen', () => {
+        if (popup) setDatasetPopup({ container: popupContainer, item, popup })
+      })
 
       marker.on('popupclose', () => {
+        setDatasetPopup((currentPopup) =>
+          currentPopup?.container === popupContainer ? null : currentPopup
+        )
         hideRects()
 
         // Delay reclustering until the newly clicked marker opened, to prevent the cluster collapsing around it.
@@ -287,7 +321,7 @@ export function MarkerClusterGroup({
           .map((marker) => itemByMarker.get(marker))
           .filter((entry): entry is IndexedDatasetMarker => entry !== undefined)
           .sort((first, second) => first.index - second.index)
-          .map(({ item, bboxes }) => ({ item, bboxes }))
+          .map(({ item, bboxes, index }) => ({ item, bboxes, index }))
 
         if (clusterItems.length > 0) {
           keepTerminalMarkerOpen(markerCluster, {
@@ -342,15 +376,20 @@ export function MarkerClusterGroup({
     markerPlacement
   ])
 
-  return terminalPopup ? (
-    <TerminalClusterPopup
-      key={`${terminalPopup.position.lat},${terminalPopup.position.lng}:${terminalPopup.items
-        .map(({ item }) => item.persistentId)
-        .join('|')}`}
-      position={terminalPopup.position}
-      items={terminalPopup.items}
-      boundingBoxColor={boundingBoxColor}
-      onClose={terminalPopup.onClose}
-    />
-  ) : null
+  return (
+    <>
+      {datasetPopup && <DatasetPopupPortal {...datasetPopup} />}
+      {terminalPopup && (
+        <TerminalClusterPopup
+          key={`${terminalPopup.position.lat},${terminalPopup.position.lng}:${terminalPopup.items
+            .map(({ index }) => index)
+            .join('|')}`}
+          position={terminalPopup.position}
+          items={terminalPopup.items}
+          boundingBoxColor={boundingBoxColor}
+          onClose={terminalPopup.onClose}
+        />
+      )}
+    </>
+  )
 }

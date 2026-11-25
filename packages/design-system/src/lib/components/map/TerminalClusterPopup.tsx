@@ -4,6 +4,7 @@ import { Popup, useMap } from 'react-leaflet'
 import { GeoDatasetItem } from './types'
 import { markerPinPopupAnchor } from './MarkerClusterIcons'
 import { createBoundingBox } from './mapAreaPreview'
+import { DatasetPopupMainContent } from './DatasetPopupMainContent'
 import styles from './MarkerClusterGroup.module.scss'
 
 // Explicit 7px popup offset is needed because this popup is positioned independently of its marker.
@@ -12,6 +13,7 @@ const terminalClusterPopupOffset = markerPinPopupAnchor.add(L.point(0, 7))
 export interface TerminalPopupItem {
   item: GeoDatasetItem
   bboxes: GeoDatasetItem['bboxes']
+  index: number
 }
 
 export interface TerminalPopupState {
@@ -29,7 +31,6 @@ export function TerminalClusterPopup({ position, items, boundingBoxColor, onClos
   const [currentIndex, setCurrentIndex] = useState(0)
   const [pageInput, setPageInput] = useState('1')
   const currentEntry = items[currentIndex]
-  const currentItem = currentEntry.item
 
   useEffect(() => {
     setPageInput(String(currentIndex + 1))
@@ -79,13 +80,7 @@ export function TerminalClusterPopup({ position, items, boundingBoxColor, onClos
       offset={terminalClusterPopupOffset}
       eventHandlers={{ remove: onClose }}>
       <div className={styles['carousel-popup']}>
-        <div className={styles['dataset-details']}>
-          <a href={currentItem.detailsPageUrl}>{currentItem.name}</a>
-          <br />
-          {currentItem.authors}; {currentItem.publicationDate}
-          <br />
-          {currentItem.persistentId}
-        </div>
+        <DatasetPopupMainContent item={currentEntry.item} />
         <div className={styles['carousel-controls']}>
           <button
             type="button"

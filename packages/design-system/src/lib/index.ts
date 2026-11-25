@@ -37,6 +37,8 @@ export { RichTextEditor } from './components/rich-text-editor/RichTextEditor'
 export { DatasetsMap } from './components/map/DatasetsMap'
 export type {
   GeoDatasetItem,
+  DefaultPopupDatasetItem,
+  CustomPopupDatasetItem,
   DatasetBoundingBox,
   CollectionMapData,
   DatasetMapColors,

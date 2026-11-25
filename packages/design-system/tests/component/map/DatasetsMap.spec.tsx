@@ -1,5 +1,16 @@
 import { DatasetsMap } from '../../../src/lib/components/map/DatasetsMap'
 import { GeoDatasetItem } from '../../../src/lib/components/map/types'
+import { useState } from 'react'
+
+function CustomPopupContent({ label }: { label: string }) {
+  const [selected, setSelected] = useState(false)
+
+  return (
+    <button type="button" onClick={() => setSelected(true)}>
+      {selected ? `${label} selected` : label}
+    </button>
+  )
+}
 
 const terminalItems: GeoDatasetItem[] = [
   {
@@ -40,6 +51,24 @@ const almostCoincidentItems: GeoDatasetItem[] = [
         [52.80021, 8.00021]
       ]
     ]
+  }
+]
+
+const customPopupItem: GeoDatasetItem = {
+  popupContent: <CustomPopupContent label="Custom dataset content" />,
+  bboxes: [
+    [
+      [48.7999, 2.2999],
+      [48.8001, 2.3001]
+    ]
+  ]
+}
+
+const customTerminalItems: GeoDatasetItem[] = [
+  customPopupItem,
+  {
+    popupContent: <CustomPopupContent label="Second custom dataset content" />,
+    bboxes: customPopupItem.bboxes
   }
 ]
 
@@ -197,6 +226,23 @@ describe('DatasetsMap marker clusters', () => {
     cy.findByRole('spinbutton', { name: 'Dataset number, 1 to 2' }).clear().type('1')
     cy.findByRole('link', { name: 'First colocated dataset' }).should('exist')
     cy.get('.leaflet-container').should('not.have.class', 'leaflet-zoom-anim')
+  })
+
+  it('renders interactive custom content in a dataset popup', () => {
+    mountMap({}, [customPopupItem])
+
+    cy.get('.dataset-map-dataset-marker').click()
+    cy.findByRole('button', { name: 'Custom dataset content' }).click()
+    cy.findByRole('button', { name: 'Custom dataset content selected' }).should('exist')
+  })
+
+  it('renders the custom content for each terminal-cluster carousel item', () => {
+    mountMap({}, customTerminalItems)
+
+    getSettledCluster().click()
+    cy.findByRole('button', { name: 'Custom dataset content' }).should('exist')
+    cy.findByRole('button', { name: 'Next dataset' }).click()
+    cy.findByRole('button', { name: 'Second custom dataset content' }).should('exist')
   })
 
   it('keeps a terminal marker outside the clustering logic while its popup is open', () => {

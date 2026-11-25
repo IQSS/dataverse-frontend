@@ -1,22 +1,32 @@
 import type { TileLayerProps } from 'react-leaflet'
+import type { ReactElement } from 'react'
 
 /**
  * Represents a dataset with geographic information, for display on DatasetsMap.
  *
- * `bboxes` must contain at least one bounding box.
- * The remaining fields (`name`, `authors`, `publicationDate`, `detailsPageUrl`, `persistentId`)
- * are displayed in a popup that opens on marker click.
+ * `bboxes` must contain at least one bounding box. An item either supplies `popupContent`, or
+ * the remaining fields used to build the default popup content.
  */
 export type DatasetBoundingBox = [[number, number], [number, number]]
 
-export interface GeoDatasetItem {
+interface GeoDatasetItemGeometry {
+  bboxes: DatasetBoundingBox[]
+}
+
+export interface DefaultPopupDatasetItem extends GeoDatasetItemGeometry {
+  popupContent?: never
   persistentId: string
   name: string
   detailsPageUrl: string
   authors: string
   publicationDate: string
-  bboxes: DatasetBoundingBox[]
 }
+
+export interface CustomPopupDatasetItem extends GeoDatasetItemGeometry {
+  popupContent: ReactElement
+}
+
+export type GeoDatasetItem = DefaultPopupDatasetItem | CustomPopupDatasetItem
 
 export interface DatasetMapColors {
   boundingBox?: string // bbox preview shown on pin hover
